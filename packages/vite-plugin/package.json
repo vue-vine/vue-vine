@@ -1,0 +1,52 @@
+{
+  "name": "@vue-vine/vite-plugin",
+  "version": "0.0.1",
+  "description": "Official Vite plugin for Vue Vine",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "keywords": [
+    "Vue",
+    "Vite"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "NODE_ENV=development rollup -w -c ./rollup.config.mjs",
+    "build": "NODE_ENV=production rollup -c ./rollup.config.mjs",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "@ast-grep/napi": "^0.5.1",
+    "@vue/compiler-dom": "^3.3.2",
+    "hash-sum": "^2.0.0",
+    "magic-string": "^0.30.0",
+    "merge-source-map": "^1.1.0",
+    "postcss": "^8.4.23",
+    "postcss-selector-parser": "^6.0.13",
+    "source-map-js": "^1.0.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "@types/hash-sum": "^1.0.0",
+    "rollup": "^3.21.7",
+    "vite": "^4.3.4",
+    "vitest": "^0.31.0",
+    "vue": "^3.2.47"
+  }
+}

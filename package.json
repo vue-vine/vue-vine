@@ -1,0 +1,36 @@
+{
+  "name": "vue-vine-workspace",
+  "private": true,
+  "description": "Yet another style to write Vue.js components",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "keywords": [
+    "Vue"
+  ],
+  "scripts": {
+    "play": "pnpm --filter @vue-vine/playground run dev",
+    "dev": "pnpm --filter @vue-vine/vite-plugin run dev",
+    "main:watch": "pnpm --filter vue-vine run watch",
+    "ext:watch": "pnpm --filter vue-vine-extension run watch",
+    "ext:build": "pnpm --filter vue-vine-extension run compile",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "docs:dev": "vitepress dev packages/docs",
+    "docs:build": "vitepress build packages/docs",
+    "docs:preview": "vitepress preview packages/docs",
+    "postinstall": "simple-git-hooks",
+    "clean": "rm -rf node_modules packages/**/node_modules"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.38.6",
+    "eslint": "^8.40.0",
+    "lint-staged": "^13.2.2",
+    "simple-git-hooks": "^2.8.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}

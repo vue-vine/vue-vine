@@ -1,0 +1,44 @@
+{
+  "name": "vue-vine",
+  "version": "0.0.1",
+  "description": "Another style to write Vue.js",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./vite": {
+      "dev": "./dist/vite/index.ts",
+      "types": "./dist/vite/index.d.ts",
+      "require": "./dist/vite/index.js",
+      "import": "./dist/vite/index.mjs"
+    },
+    "./macros": {
+      "dev": "./types/macros.d.ts",
+      "types": "./types/macros.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "watch": "rm -rf dist && rollup -w -c ./rollup.config.mjs",
+    "build": "rm -rf dist && rollup -c ./rollup.config.mjs"
+  },
+  "dependencies": {
+    "@vue-vine/vite-plugin": "workspace:*",
+    "@vueuse/core": "^10.1.2",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.1",
+    "rollup": "^3.21.7",
+    "rollup-plugin-copy": "^3.4.0",
+    "typescript": "^5.0.4"
+  }
+}
