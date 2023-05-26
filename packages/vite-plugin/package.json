@@ -22,8 +22,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "NODE_ENV=development rollup -w -c ./rollup.config.mjs",
-    "build": "NODE_ENV=production rollup -c ./rollup.config.mjs",
+    "dev": "cross-env NODE_ENV=development rollup -w -c ./rollup.config.mjs",
+    "build": "cross-env NODE_ENV=production rollup -c ./rollup.config.mjs",
     "test": "vitest"
   },
   "peerDependencies": {
@@ -44,6 +44,7 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/hash-sum": "^1.0.0",
+    "cross-env": "^7.0.3",
     "rollup": "^3.21.7",
     "vite": "^4.3.4",
     "vitest": "^0.31.0",
