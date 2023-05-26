@@ -13,8 +13,8 @@
     "main:watch": "pnpm --filter vue-vine run watch",
     "ext:watch": "pnpm --filter vue-vine-extension run watch",
     "ext:build": "pnpm --filter vue-vine-extension run compile",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "lint": "eslint . --cache",
+    "lint:fix": "pnpm lint --fix",
     "docs:dev": "vitepress dev packages/docs",
     "docs:build": "vitepress build packages/docs",
     "docs:preview": "vitepress preview packages/docs",
@@ -32,6 +32,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*": "eslint . --fix --cache"
   }
 }

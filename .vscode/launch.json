@@ -16,9 +16,9 @@
         "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
       ],
       "preLaunchTask": {
-				"type": "npm",
-				"script": "ext:watch"
-			}
+        "type": "npm",
+        "script": "ext:watch"
+      }
     },
     {
       "name": "Vine Extension Tests",
