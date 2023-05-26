@@ -1,0 +1,11 @@
+{
+  "name": "vue-vine",
+  "version": "0.0.1",
+  "description": "Another style to write Vue.js",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "dependencies": {
+    "@vue-vine/vite-plugin": "workspace:*",
+    "@vueuse/core": "^10.1.2"
+  }
+}
