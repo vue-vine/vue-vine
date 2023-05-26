@@ -1,0 +1,17 @@
+{
+  "name": "vue-vine-docs",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "Documentation of Vue Vine",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "1.0.0-beta.1",
+    "vue": "^3.2.47"
+  }
+}
