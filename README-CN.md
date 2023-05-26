@@ -16,7 +16,7 @@ Vue Vine 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代
 
 ## 开始使用
 
-**warning:** For now, Vue Vine is still under heavily development. please don't use it in production.
+**warning:** For now, Vue Vine is still under heavily development. Please don't use it in production.
 
 你可以按照下面的步骤操作，启动示例项目来预览
 

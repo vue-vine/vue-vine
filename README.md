@@ -16,7 +16,7 @@ Take a quick view:
 
 ## Get started
 
-**warning:** For now, Vue Vine is still under heavily development. please don't use it in production.
+**warning:** For now, Vue Vine is still under heavily development. Please don't use it in production.
 
 You can try the demo by following steps:
 
@@ -32,6 +32,6 @@ pnpm run dev
 pnpm run play
 ```
 
-1. You can see the demo in `http://localhost:3333/`. 
+1. You can see the demo in `http://localhost:3333/`.
 2. You can add URL query `?sfc` to switch back to SFC style example.
 3. You can inspect the transforming process in `http://localhost:3333/__inspect/`
