@@ -257,7 +257,9 @@ function validateVineFunctionCompProps(
 
     // Every vineProp call must have a type argument
     for (const vinePropCall of foundVinePropCalls) {
-      if (!vinePropCall.field('type_arguments')) {
+      const isWithDefault = vinePropCall.field('function')!.text().includes(VINE_PROP_WITH_DEFAULT_CALL)
+
+      if (!isWithDefault && !vinePropCall.field('type_arguments')) {
         pluginCtx.vineCompileErrors.push(
           vineErr(vineFileCtx, {
             pos: vinePropCall.range().start,
@@ -267,7 +269,6 @@ function validateVineFunctionCompProps(
         return false
       }
 
-      const isWithDefault = vinePropCall.field('function')!.text().includes(VINE_PROP_WITH_DEFAULT_CALL)
       if (isWithDefault) {
         const vinePropCallArgs = vinePropCall.field('arguments')!.children().filter(child => !CALL_PUNCS.includes(child.kind()))
         const defaultValueNode = vinePropCallArgs[0]

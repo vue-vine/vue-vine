@@ -11,4 +11,10 @@
     #354fae 50% 
   );
   --vp-home-hero-image-filter: blur(56px);
+  
+  --vine-bold-text-color: #38a179;
+}
+
+strong {
+  color: var(--vine-bold-text-color);
 }

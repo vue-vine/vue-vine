@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
-    "dev": "pnpm --filter @vue-vine/vite-plugin run dev",
-    "main:watch": "pnpm --filter vue-vine run watch",
+    "dev": "nx build vue-vine && nx watch --projects=@vue-vine/vite-plugin,vue-vine -- nx run \\$NX_PROJECT_NAME:build",
     "ext:watch": "pnpm --filter vue-vine-extension run watch",
     "ext:build": "pnpm --filter vue-vine-extension run compile",
     "lint": "eslint . --cache",
@@ -25,6 +24,8 @@
     "@antfu/eslint-config": "^0.38.6",
     "eslint": "^8.40.0",
     "lint-staged": "^13.2.2",
+    "nx": "16.2.2",
+    "nx-cloud": "latest",
     "simple-git-hooks": "^2.8.1"
   },
   "simple-git-hooks": {

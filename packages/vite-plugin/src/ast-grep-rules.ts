@@ -32,6 +32,18 @@ function invalidMacroCallNotInsideVineFunctionComponent(
   } as const
 }
 
+const topLevelStmtKinds = [
+  'import_statement',
+  'export_statement',
+  'function_declaration',
+  'class_declaration',
+  'abstract_class_declaration',
+  'enum_declaration',
+  'lexical_declaration',
+  'type_alias_declaration',
+  'interface_declaration',
+] as const
+
 export const vineAstGrepUtils = {
   importClause: {
     kind: 'import_clause',
@@ -263,25 +275,9 @@ export const vineAstGrepUtils = {
         {
           matches: 'vineFunctionComponentDeclaration',
         },
-        {
-          kind: 'import_statement',
-        },
-        {
-          kind: 'function_declaration',
-        },
-        {
-          kind: 'class_declaration',
-        },
-        {
-          kind: 'enum_declaration',
-        },
-        {
-          kind: 'lexical_declaration',
-          has: {
-            stopBy: 'end',
-            kind: 'arrow_function',
-          },
-        },
+        ...topLevelStmtKinds.map(kind => ({
+          kind,
+        })),
       ],
     },
   },

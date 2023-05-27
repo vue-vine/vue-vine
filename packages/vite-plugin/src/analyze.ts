@@ -2,7 +2,7 @@ import type { NapiConfig, SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
 import type { VineFileCtx, VineFnCompCtx, VinePluginCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './shared'
-import { ARRAY_PATTERN_PUNCS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL, VineBindingTypes } from './shared'
+import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL, VineBindingTypes } from './shared'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
 
@@ -148,14 +148,17 @@ function analyzeVinePropsByMacroCall(
     const vinePropCalleeSgNode = vinePropCallSgNode.field('function')!
     const isOptional = vinePropCalleeSgNode.text() === VINE_PROP_OPTIONAL_CALL
     const isWithDefault = vinePropCalleeSgNode.text() === VINE_PROP_WITH_DEFAULT_CALL
+    const vinePropCallArgs = vinePropCallSgNode.field('arguments')!.children().slice(1, -1) // Skip parenthesis
+
     // Our validation has guaranteed that `vineProp` must have a type argument
-    const isBool = vinePropCallSgNode.field('type_arguments')!.child(1)!.text() === 'boolean'
+    const isBool = isWithDefault
+      ? BOOL_KINDS.includes(vinePropCallArgs[0].kind())
+      : vinePropCallSgNode.field('type_arguments')?.child(1)!.text() === 'boolean' ?? false
     const propMeta: VinePropMeta = {
       isRequired: !isOptional,
       isBool,
     }
 
-    const vinePropCallArgs = vinePropCallSgNode.field('arguments')!.children().slice(1, -1) // Skip parenthesis
     if (isWithDefault) {
       const [defaultValueNode, validatorFnNode] = vinePropCallArgs
       propMeta.default = defaultValueNode

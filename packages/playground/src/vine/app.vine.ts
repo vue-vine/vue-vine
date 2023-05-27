@@ -1,6 +1,6 @@
 function PostHeader() {
   const title = vineProp<string>(value => value.startsWith('#'))
-  const author = vineProp.withDefault<string>('Anonymous')
+  const author = vineProp.withDefault('Anonymous')
 
   vineStyle.scoped(`
     .blog-title {

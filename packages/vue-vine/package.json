@@ -27,7 +27,7 @@
     "types"
   ],
   "scripts": {
-    "watch": "rm -rf dist && rollup -w -c ./rollup.config.mjs",
+    "dev": "rm -rf dist && rollup -w -c ./rollup.config.mjs",
     "build": "rm -rf dist && rollup -c ./rollup.config.mjs"
   },
   "dependencies": {
