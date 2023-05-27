@@ -6,9 +6,9 @@
 
 ## 背景
 
-在社区中，有很多帖子讨论过希望有一个支持在单个文件中编写多个 Vue 组件的解决方案。Vue Vine 因此而生。
+在社区中，有很多帖子讨论过希望有一个支持在单个文件中编写多个 Vue 组件的解决方案。`Vue Vine` 因此而生。
 
-Vue Vine 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代 Vue SFC，而是作为一种并行的解决方案。
+`Vue Vine` 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代 Vue SFC，而是作为一种并行的解决方案。
 
 下面是一个简单的示例预览：
 
@@ -16,7 +16,7 @@ Vue Vine 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代
 
 ## 开始使用
 
-**warning:** For now, Vue Vine is still under heavily development. please don't use it in production.
+**注意:** 目前，Vue Vine仍处于密集开发阶段，请不要将其用于生产环境。
 
 你可以按照下面的步骤操作，启动示例项目来预览
 
@@ -27,6 +27,10 @@ pnpm install
 
 # 开启插件的构建监听
 pnpm run dev
+
+# 打包 vue-vine
+cd packages/vue-vine
+pnpm run build
 
 # 开启 Playground 的 Vite 开发服务器
 pnpm run play

@@ -6,9 +6,9 @@ Another style of writing Vue components.
 
 ## Why this ?
 
-There are many discussions in community that hopes for a solution that supports writing multiple Vue components in a single file. That's why Vue Vine was born.
+There are many discussions in community that hopes for a solution that supports writing multiple Vue components in a single file. That's why `Vue Vine` was born.
 
-Vue vine was designed to provide more flexibility of managing Vue components. It's not a replacement of Vue SFC, but a parallel solution.
+`Vue vine` was designed to provide more flexibility of managing Vue components. It's not a replacement of Vue SFC, but a parallel solution.
 
 Take a quick view:
 
@@ -16,7 +16,7 @@ Take a quick view:
 
 ## Get started
 
-**warning:** For now, Vue Vine is still under heavily development. please don't use it in production.
+**warning:** For now, `Vue Vine` is still under heavily development, please don't use it in production.
 
 You can try the demo by following steps:
 
@@ -27,6 +27,10 @@ pnpm install
 
 # Start watching the plugin's building
 pnpm run dev
+
+# Build vue-vine
+cd packages/vue-vine
+pnpm run build
 
 # Start Playground's Vite dev server
 pnpm run play
