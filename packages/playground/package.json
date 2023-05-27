@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@8.2.0",
   "scripts": {
-    "dev": "vite --port 3333 --open",
+    "dev": "pnpm --filter vue-vine run build && vite --port 3333 --open",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
