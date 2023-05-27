@@ -4,10 +4,10 @@
   "injectionSelector": "L:meta.function, L:meta.arrow.ts",
   "patterns": [
     {
-      "name": "variable.other.vine-vue-template",
+      "name": "entity.name.function.vine-vue-template",
       "begin": "vine(`)",
       "beginCaptures": {
-        "0": { "name": "meta.name.function.macro.vine-vue-template.start" },
+        "0": { "name": "entity.name.function.macro.vine-vue-template" },
         "1": { "name": "punctuation.definition.string.begin.vine-vue-template" }
       },
       "end": "`",

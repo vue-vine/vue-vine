@@ -18,7 +18,7 @@ Vine uses `.vite.ts` as the file extension, so you know that you're actually wri
 
 Vine component function is a function that returns a tagged template string, which gives the component's template.
 
-```ts
+```vue-vine
 function MyComponent() {
   return vine`<div>Hello World</div>`
 }
@@ -30,7 +30,7 @@ We'll call it **"VCF"** in the rest of this documentation.
 
 You can treat the VCF itself as Vue component's `setup` function, it's the place where you can define your component's logic.
 
-```ts
+```vue-vine
 function MyComponent() {
   const num = ref(0)
   const randomPick = () => {
@@ -54,9 +54,9 @@ In Vine, we just provide a small amount of macros, you can check more details in
 
 ### Props
 
-This section will introduce the second way of defining props for Vine components:
+There're two ways to define props for VCF, one is using `vineProp` macro, and another is giving TypeScript type annotation for function's first formal parameter.
 
-```ts
+```vue-vine
 import { SomeExternalType } from './path/to/somewhere'
 
 function MyComponent(props: {

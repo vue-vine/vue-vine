@@ -1,4 +1,8 @@
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -44,13 +48,13 @@ export default defineConfig({
         items: [
           { text: 'Why Vine', link: '/design/why' },
           { text: 'Specification', link: '/design/spec' },
-          { text: 'Macros', link: '/design/macros' },
         ],
       },
       {
         text: 'Guide',
         items: [
           { text: 'Get Started', link: '/guide/get-started' },
+          { text: 'Macros', link: '/guide/macros' },
 
         ],
       },
@@ -58,6 +62,26 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vue-vine/vue-vine' },
+    ],
+  },
+  markdown: {
+    languages: [
+      {
+        id: 'vue-vine',
+        scopeName: 'source.vue-vine',
+        path: join(
+          __dirname,
+          './vine-ts.tmLanguage.json',
+        ),
+        embeddedLangs: [
+          'vue-html',
+          'css',
+          'scss',
+          'sass',
+          'less',
+          'stylus',
+        ],
+      },
     ],
   },
 })

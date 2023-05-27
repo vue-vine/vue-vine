@@ -46,8 +46,7 @@
           "source.stylus": "stylus"
         },
         "injectTo": [
-          "source.ts",
-          "source.js"
+          "source.ts"
         ]
       },
       {
