@@ -28,10 +28,6 @@ pnpm install
 # Start watching the plugin's building
 pnpm run dev
 
-# Build vue-vine
-cd packages/vue-vine
-pnpm run build
-
 # Start Playground's Vite dev server
 pnpm run play
 ```

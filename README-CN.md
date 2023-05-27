@@ -28,10 +28,6 @@ pnpm install
 # 开启插件的构建监听
 pnpm run dev
 
-# 打包 vue-vine
-cd packages/vue-vine
-pnpm run build
-
 # 开启 Playground 的 Vite 开发服务器
 pnpm run play
 ```
