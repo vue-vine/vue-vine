@@ -26,6 +26,6 @@ defineProps<{
   margin-bottom: 6px;
 }
 .blog-meta-item {
-  margin-right: 8px;
+  margin: 0 8px;
 }
 </style>

@@ -48,14 +48,13 @@ export default defineConfig({
         items: [
           { text: 'Why Vine', link: '/design/why' },
           { text: 'Specification', link: '/design/spec' },
+          { text: 'Macros', link: '/design/macros' },
         ],
       },
       {
         text: 'Guide',
         items: [
           { text: 'Get Started', link: '/guide/get-started' },
-          { text: 'Macros', link: '/guide/macros' },
-
         ],
       },
     ],

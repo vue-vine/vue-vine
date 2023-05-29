@@ -37,8 +37,8 @@ declare global {
   const vineEmits: <D extends Record<string, any[]> = {}>() => VineEmitsDefineResult<D>
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void
-  
   const vineStyle: VineStyleMacro
+  
   const vine: (template: TemplateStringsArray) => VueVineComponent
 
   // CSS lang types helpers

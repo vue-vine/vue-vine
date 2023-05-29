@@ -12,7 +12,7 @@ Before start using it, you're supposed to know the following conventions:
 
 ## File extension
 
-Vine uses `.vite.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is valid for Vine.
+Vine uses `.vite.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
 
 ## Vine component function
 
@@ -25,6 +25,8 @@ function MyComponent() {
 ```
 
 We'll call it **"VCF"** in the rest of this documentation.
+
+Vine compiler will transform this kind of function into a Vue component object in underhood. **So you're supposed to treat it as a not-callable function.**
 
 ### setup
 
