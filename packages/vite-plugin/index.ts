@@ -41,10 +41,10 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
     // 1. Validate all vine restrictions
     validateVine(pluginCtx, vineFileCtx, vineFnCompDecls)
     if (pluginCtx.vineCompileErrors.length > 0) {
+      const allErrMsg = pluginCtx.vineCompileErrors.join('\n')
+      pluginCtx.vineCompileErrors.length = 0
       throw new Error(
-        `Vue Vine compilation failed:\n${
-          pluginCtx.vineCompileErrors.join('\n')
-        }`,
+        `Vue Vine compilation failed:\n${allErrMsg}`,
       )
     }
 
@@ -62,6 +62,7 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
         warnLogger.warn(warn)
       }
     }
+    pluginCtx.vineCompileWarnings.length = 0
 
     return vineFileCtx.fileSourceCode.toString()
   }
