@@ -1,3 +1,5 @@
+import { randomString } from '~/utils'
+
 function PostHeader() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
@@ -52,7 +54,7 @@ function BlogPost(props: {
     loading.value = true
     setTimeout(() => {
       loading.value = false
-      abstract.value = `Something for post #${props.id}...`
+      abstract.value = `Post #${props.id} - ${randomString(30)}`
     }, 2000)
   }
 

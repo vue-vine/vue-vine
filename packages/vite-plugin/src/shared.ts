@@ -20,6 +20,7 @@ export interface VineStyleMeta {
 }
 
 export interface VinePropMeta {
+  isFromMacroDefine: boolean
   isBool: boolean
   isRequired: boolean
   /** Source code node of given validator function */

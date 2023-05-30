@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PostHeader from './PostHeader.vue'
+import { randomString } from '~/utils'
 
 const props = defineProps<{ id: string }>()
 
@@ -9,7 +10,7 @@ function mockPostUpdate() {
   loading.value = true
   setTimeout(() => {
     loading.value = false
-    abstract.value = `Something for #${props.id}...`
+    abstract.value = `Post #${props.id} - ${randomString(30)}`
   }, 2000)
 }
 

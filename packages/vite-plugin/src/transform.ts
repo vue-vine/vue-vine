@@ -243,6 +243,12 @@ export function transformFile(
           }).join(',\n')
       }\n})\n`
     }
+    const propsFromMacro = Object.entries(vineFnCompCtx.props)
+      .filter(([_, propMeta]) => Boolean(propMeta.isFromMacroDefine))
+      .map(([propName]) => propName)
+    if (propsFromMacro.length > 0) {
+      vueImports.set('toRefs', '_toRefs')
+    }
 
     //        2.4.3 Just put all `insideSetupStmts` into `setup` function's body.
     //        2.4.4 Generate `expose` call based on the same logic as Vue SFC
@@ -345,6 +351,10 @@ ${
     }) {
 
 ${propsUseDefaultsStmt}
+${showIf(
+  propsFromMacro.length > 0,
+  `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
+)}
 
 ${insideSetupStmtCode.join('\n')}
 

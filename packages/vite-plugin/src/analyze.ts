@@ -121,6 +121,7 @@ function analyzeVinePropsByFormalParams(
     .forEach((propertySignature) => {
       const propName = propertySignature.field('name')!.text()
       const propMeta: VinePropMeta = {
+        isFromMacroDefine: false,
         isRequired: true,
         isBool: propertySignature.child(1)?.text() === '?' ?? false,
       }
@@ -155,6 +156,7 @@ function analyzeVinePropsByMacroCall(
       ? BOOL_KINDS.includes(vinePropCallArgs[0].kind())
       : vinePropCallSgNode.field('type_arguments')?.child(1)!.text() === 'boolean' ?? false
     const propMeta: VinePropMeta = {
+      isFromMacroDefine: true,
       isRequired: !isOptional,
       isBool,
     }
