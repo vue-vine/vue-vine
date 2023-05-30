@@ -1,9 +1,8 @@
 import type { AtRule, PluginCreator, Rule } from 'postcss'
 import selectorParser from 'postcss-selector-parser'
-import type { VineFileCtx } from '../shared'
+import type { VineCompilerCtx, VineFileCtx } from '../types'
 import type { DiagnosticParams } from '../diagnostics'
 import { vineWarn } from '../diagnostics'
-import { pluginCtx } from '../context'
 
 const animationNameRE = /^(-\w+-)?animation-name$/
 const animationRE = /^(-\w+-)?animation$/
@@ -13,15 +12,18 @@ const processedRules = new WeakSet<Rule>()
 interface ScopedPluginOptions {
   id: string
   fileCtx: VineFileCtx
+  compilerCtx: VineCompilerCtx
 }
 
-const scopedPlugin: PluginCreator<ScopedPluginOptions> = (options?: ScopedPluginOptions) => {
-  const { id = '', fileCtx } = options ?? {}
+const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
+  options?: ScopedPluginOptions,
+) => {
+  const { id = '', fileCtx, compilerCtx } = options ?? {}
   const keyframes = Object.create(null)
   const shortId = id.replace(/^data-v-/, '')
 
   function onPluginWarn(params: DiagnosticParams) {
-    pluginCtx.vineCompileWarnings.push(
+    compilerCtx?.vineCompileWarnings.push(
       vineWarn(fileCtx!, params),
     )
   }

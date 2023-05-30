@@ -1,5 +1,5 @@
 import { compile } from '@vue/compiler-dom'
-import type { VineTemplateBindings } from './shared'
+import type { VineTemplateBindings } from './types'
 
 export function compileVineTemplate(
   source: string,

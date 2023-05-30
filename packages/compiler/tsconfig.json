@@ -12,8 +12,8 @@
   "include": [
     "src",
     "test",
-    "index.ts"
-  ],
+    "index.ts",
+    "../vite-plugin/src/parse-query.ts", "../vite-plugin/src/parse-query.ts"],
   "exclude": [
     "dist"
   ]

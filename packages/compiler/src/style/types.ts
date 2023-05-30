@@ -1,8 +1,8 @@
 import type { RawSourceMap } from 'source-map-js'
-import type { VineFileCtx, VinePluginCtx } from '../shared'
+import type { VineCompilerCtx, VineFileCtx } from '../types'
 
 export type StyleCompileCtx = [
-  pluginCtx: VinePluginCtx,
+  compilerCtx: VineCompilerCtx,
   fileCtx: VineFileCtx,
 ]
 

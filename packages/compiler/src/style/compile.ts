@@ -1,15 +1,15 @@
 import type { RawSourceMap } from 'source-map-js'
 import type { Message, ProcessOptions } from 'postcss'
 import postcss from 'postcss'
-import type { VineProcessorLang } from '../shared'
-import { pluginCtx } from '../context'
+import type { VineCompilerCtx, VineProcessorLang } from '../types'
 import { processors } from './preprocessor'
 import { scopedPlugin } from './scoped-plugin'
 import { trimPlugin } from './trim-plugin'
 
-export async function doCompileStyle(
+export async function compileVineStyle(
+  compilerCtx: VineCompilerCtx,
   params: {
-    fileId: string
+    vineFileId: string
     source: string
     isScoped: boolean
     scopeId: string
@@ -25,14 +25,14 @@ export async function doCompileStyle(
 ) {
   let { source } = params
   const {
-    fileId,
+    vineFileId,
     isScoped,
     scopeId,
     preprocessLang,
     inputSourceMap,
-    preprocessOptions = pluginCtx.options.preprocessOptions ?? {},
-    postcssOptions = pluginCtx.options.postcssOptions,
-    postcssPlugins: userPostcssPlugins = pluginCtx.options.postcssPlugins ?? [],
+    preprocessOptions = compilerCtx.options.preprocessOptions ?? {},
+    postcssOptions = compilerCtx.options.postcssOptions,
+    postcssPlugins: userPostcssPlugins = compilerCtx.options.postcssPlugins ?? [],
   } = params
   const preprocessor = preprocessLang && processors[preprocessLang]
   const preProcessedSource = preprocessor?.(
@@ -56,8 +56,9 @@ export async function doCompileStyle(
     const longId = `data-v-${shortId}`
     postcssPlugins.push(
       scopedPlugin({
+        compilerCtx,
         id: longId,
-        fileCtx: pluginCtx.fileCtxMap.get(fileId)!,
+        fileCtx: compilerCtx.fileCtxMap.get(vineFileId)!,
       }),
     )
   }

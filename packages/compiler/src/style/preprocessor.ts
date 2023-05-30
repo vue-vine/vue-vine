@@ -1,5 +1,5 @@
 import merge from 'merge-source-map'
-import type { VineProcessorLang } from '../shared'
+import type { VineProcessorLang } from '../types'
 import type { StylePreprocessor } from './types'
 
 // scss/.sass processor

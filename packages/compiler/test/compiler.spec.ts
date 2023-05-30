@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { compileVineTemplate } from '../src/compile-template'
-import { VineBindingTypes } from '../src/shared'
+import { compileVineTemplate } from '../src/template'
+import { VineBindingTypes } from '../src/constants'
 
 describe('Template compile', () => {
   test('vue/compiler-dom should work', () => {

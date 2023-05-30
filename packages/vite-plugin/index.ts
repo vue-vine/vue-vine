@@ -1,90 +1,58 @@
 import type { Plugin } from 'vite'
 import { createLogger } from 'vite'
-import { ts } from '@ast-grep/napi'
-import MagicString from 'magic-string'
-import type { VineFileCtx, VinePluginOptions, VineProcessorLang } from './src/shared'
-import { PLUGIN_NAME } from './src/shared'
-import { validateVine } from './src/validate'
-import { ruleVineFunctionComponentDeclaration } from './src/ast-grep-rules'
-import { analyzeVine } from './src/analyze'
-import { transformFile } from './src/transform'
-import type { VineQuery } from './src/utils/parse-query'
-import { QUERY_TYPE_STYLE, parseQuery } from './src/utils/parse-query'
-import { doCompileStyle } from './src/style/compile'
-import { pluginCtx } from './src/context'
+import {
+  compileVineStyle,
+  compileVineTypeScriptFile,
+  createCompilerCtx,
+} from '@vue-vine/compiler'
+import type {
+  VineCompilerOptions,
+  VineProcessorLang,
+} from '@vue-vine/compiler'
+import type { VineQuery } from './src/parse-query'
+import { QUERY_TYPE_STYLE, parseQuery } from './src/parse-query'
 
-const { parse } = ts
-
-function createVinePlugin(options: VinePluginOptions = {}): Plugin {
-  const compileVineTypeScript = (code: string, fileId: string) => {
-    // Using ast-grep to validate vine declarations
-    const sgRoot = parse(code).root()
-    const vineFileCtx: VineFileCtx = {
+function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
+  const compilerCtx = createCompilerCtx(options)
+  const runCompile = (code: string, fileId: string) => {
+    const vineFileCtx = compileVineTypeScriptFile(
+      compilerCtx,
+      code,
       fileId,
-      fileSourceCode: new MagicString(sgRoot.text()),
-      vineFnComps: [],
-      userImports: {},
-      styleDefine: {},
-      vueImportAliases: {},
-      sgRoot,
-    }
-    pluginCtx.fileCtxMap.set(fileId, vineFileCtx)
-
-    const vineFnCompDecls = sgRoot.findAll(
-      ruleVineFunctionComponentDeclaration,
     )
-    if (vineFnCompDecls.length === 0) {
-      // No vine function component declarations found
-      return code
-    }
-
-    // 1. Validate all vine restrictions
-    validateVine(pluginCtx, vineFileCtx, vineFnCompDecls)
-    if (pluginCtx.vineCompileErrors.length > 0) {
-      const allErrMsg = pluginCtx.vineCompileErrors.join('\n')
-      pluginCtx.vineCompileErrors.length = 0
-      throw new Error(
-        `Vue Vine compilation failed:\n${allErrMsg}`,
-      )
-    }
-
-    // No error, add vine function component context
-    // 2. Analysis
-    analyzeVine([pluginCtx, vineFileCtx], vineFnCompDecls)
-
-    // 3. Codegen, or call it "transform"
-    transformFile(vineFileCtx)
 
     // Print all warnings
     const warnLogger = createLogger('warn')
-    if (pluginCtx.vineCompileWarnings.length > 0) {
-      for (const warn of pluginCtx.vineCompileWarnings) {
+    if (compilerCtx.vineCompileWarnings.length > 0) {
+      for (const warn of compilerCtx.vineCompileWarnings) {
         warnLogger.warn(warn)
       }
     }
-    pluginCtx.vineCompileWarnings.length = 0
+    compilerCtx.vineCompileWarnings.length = 0
 
     return vineFileCtx.fileSourceCode.toString()
   }
-  const compileVineStyle = async (
+  const runCompileStyle = async (
     styleSource: string,
     query: VineQuery,
-    fileId: string,
+    vineFileId: string,
   ) => {
-    const { code: compiled } = await doCompileStyle({
-      fileId,
-      source: styleSource,
-      isScoped: query.scoped,
-      scopeId: query.scopeId,
-      preprocessLang: query.lang as VineProcessorLang,
-    })
+    const { code: compiled } = await compileVineStyle(
+      compilerCtx,
+      {
+        vineFileId,
+        source: styleSource,
+        isScoped: query.scoped,
+        scopeId: query.scopeId,
+        preprocessLang: query.lang as VineProcessorLang,
+      },
+    )
 
     return compiled
   }
 
-  pluginCtx.options = options
   return {
-    name: PLUGIN_NAME,
+    name: 'vue-vine-plugin',
     // Must before Vue plugin
     // to retain the original TypeScript code
     enforce: 'pre',
@@ -99,7 +67,7 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
       const { fileId, query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
         const fullFileId = `${fileId}.vine.ts`
-        const styleSource = pluginCtx.fileCtxMap
+        const styleSource = compilerCtx.fileCtxMap
           .get(fullFileId)!
           .styleDefine[query.scopeId]
           .source
@@ -111,10 +79,10 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
     async transform(code, id) {
       const { fileId, query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE) {
-        const compiledStyle = await compileVineStyle(
+        const compiledStyle = await runCompileStyle(
           code,
           query,
-          `${fileId}.vine.ts`,
+          `${fileId /* This is virtual file id */}.vine.ts`,
         )
         return {
           code: compiledStyle,
@@ -125,7 +93,7 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
       }
 
       return {
-        code: compileVineTypeScript(code, id),
+        code: runCompile(code, id),
       }
     },
   }
@@ -133,5 +101,4 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
 
 export {
   createVinePlugin as vinePlugin,
-  VinePluginOptions,
 }
