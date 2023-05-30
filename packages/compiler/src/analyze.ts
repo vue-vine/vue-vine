@@ -1,13 +1,14 @@
 import type { NapiConfig, SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
-import type { VineFileCtx, VineFnCompCtx, VinePluginCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './shared'
-import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL, VineBindingTypes } from './shared'
+import type { VineCompilerCtx, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
+import { VineBindingTypes } from './types'
+import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
 
 type AnalyzeCtx = [
-  pluginCtx: VinePluginCtx,
+  compilerCtx: VineCompilerCtx,
   vineFileCtx: VineFileCtx,
   vineFnCompCtx: VineFnCompCtx,
 ]
@@ -694,7 +695,7 @@ function analyzeDifferentKindVineFunctionDecls(
 }
 
 function buildVineFnCompCtx(
-  [pluginCtx, vineFileCtx]: [VinePluginCtx, VineFileCtx],
+  [compilerCtx, vineFileCtx]: [VineCompilerCtx, VineFileCtx],
   vineFnSgNode: SgNode,
 ): VineFnCompCtx {
   // Check if it's an export statement
@@ -725,7 +726,7 @@ function buildVineFnCompCtx(
     templateSource: vineTemplateSource,
   }
 
-  const analyzeCtx: AnalyzeCtx = [pluginCtx, vineFileCtx, vineFnCompCtx]
+  const analyzeCtx: AnalyzeCtx = [compilerCtx, vineFileCtx, vineFnCompCtx]
 
   // Analyze all import statements in this file
   // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
@@ -744,10 +745,10 @@ function buildVineFnCompCtx(
 }
 
 export function analyzeVine(
-  extendsCtx: [VinePluginCtx, VineFileCtx],
+  extendsCtx: [VineCompilerCtx, VineFileCtx],
   vineFnCompDecls: SgNode[],
 ) {
-  const [pluginCtx, vineFileCtx] = extendsCtx
+  const [compilerCtx, vineFileCtx] = extendsCtx
 
   for (const vineFn of vineFnCompDecls) {
     const vineFnCompCtx = buildVineFnCompCtx(extendsCtx, vineFn)
@@ -757,7 +758,7 @@ export function analyzeVine(
   const makeErrorOnRefHoistedIdentifiers = (vineFnComp: VineFnCompCtx, identifiers: SgNode[]) => {
     for (const id of identifiers) {
       if (vineFnComp.bindings[id.text()] === VineBindingTypes.LITERAL_CONST) {
-        pluginCtx.vineCompileWarnings.push(
+        compilerCtx.vineCompileWarnings.push(
           vineWarn(vineFileCtx, {
             msg: `Cannot reference ${id.text()} in a vineProp validator function because it is declared outside the setup() function.`,
             pos: id.range().start,

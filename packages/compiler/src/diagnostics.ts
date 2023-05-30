@@ -1,4 +1,4 @@
-import type { VineFileCtx } from './shared'
+import type { VineFileCtx } from './types'
 import { createColorful } from './utils/color-string'
 
 const whiteFgRedBg = createColorful(['white', 'bgRed'])

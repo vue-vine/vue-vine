@@ -1,9 +1,10 @@
 import type { SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
-import type { VineFileCtx, VineFnCompCtx } from './shared'
-import { STYLE_LANG_FILE_EXTENSION, VineBindingTypes } from './shared'
-import { compileVineTemplate } from './compile-template'
+import type { VineFileCtx, VineFnCompCtx } from './types'
+import { VineBindingTypes } from './types'
+import { STYLE_LANG_FILE_EXTENSION } from './constants'
+import { compileVineTemplate } from './template'
 import { ruleImportSpecifier, ruleImportStmt } from './ast-grep-rules'
 import { filterJoin, showIf, spaces } from './utils'
 

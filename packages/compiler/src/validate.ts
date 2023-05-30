@@ -14,23 +14,23 @@ import {
   ruleVineStyleCall,
   ruleVineTaggedTemplateString,
 } from './ast-grep-rules'
-import type { VineFileCtx, VinePluginCtx } from './shared'
-import { CALL_PUNCS, SUPPORTED_CSS_LANGS, VINE_PROP_WITH_DEFAULT_CALL, VUE_LIFECYCLE_HOOK_APIS, VUE_REACTIVITY_APIS } from './shared'
+import type { VineCompilerCtx, VineFileCtx } from './types'
+import { CALL_PUNCS, SUPPORTED_CSS_LANGS, VINE_PROP_WITH_DEFAULT_CALL, VUE_LIFECYCLE_HOOK_APIS, VUE_REACTIVITY_APIS } from './constants'
 import { vineErr, vineWarn } from './diagnostics'
 
 type ValidateCtx = [
-  pluginCtx: VinePluginCtx,
+  compilerCtx: VineCompilerCtx,
   vineFileCtx: VineFileCtx,
 ]
 
 function assertOnlyOnce(
-  [pluginCtx, vineFileCtx]: ValidateCtx,
+  [compilerCtx, vineFileCtx]: ValidateCtx,
   target: SgNode[],
   fnName: string,
 ) {
   if (target.length > 1) {
     const errMsg = `Multiple \`${fnName}\` calls are not allowed inside Vue Vine function component`
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -44,7 +44,7 @@ function assertOnlyOnce(
   return true
 }
 function assertCallExprHasOnlyOneObjLitArg(
-  [pluginCtx, vineFileCtx]: ValidateCtx,
+  [compilerCtx, vineFileCtx]: ValidateCtx,
   callExprSgNode: SgNode | undefined,
   fnName: string,
 ) {
@@ -56,7 +56,7 @@ function assertCallExprHasOnlyOneObjLitArg(
   const exposeCallArgs = callExprSgNode.field('arguments')!.children()
   const errMsg = `\`${fnName}\` can only have one object literal argument`
   if (exposeCallArgs.length > 1) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -69,7 +69,7 @@ function assertCallExprHasOnlyOneObjLitArg(
   }
   const exposeCallArg = exposeCallArgs[0]!
   if (exposeCallArg.kind() !== 'object') {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -97,7 +97,7 @@ function isValidVineStyleArg(argNode: SgNode) {
   return false
 }
 function assertVineStyleArgStringAndLangType(
-  [pluginCtx, vineFileCtx]: ValidateCtx,
+  [compilerCtx, vineFileCtx]: ValidateCtx,
   callExprSgNode: SgNode | undefined,
 ) {
   if (!callExprSgNode) {
@@ -109,7 +109,7 @@ function assertVineStyleArgStringAndLangType(
     .filter(node => !CALL_PUNCS.includes(node.kind()))
   const errMsg = 'vineStyle can only have one string argument'
   if (vineStyleCallArgs.length > 1) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -122,7 +122,7 @@ function assertVineStyleArgStringAndLangType(
   }
   const vineStyleCallArg = vineStyleCallArgs[0]!
   if (!isValidVineStyleArg(vineStyleCallArg)) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -135,7 +135,7 @@ function assertVineStyleArgStringAndLangType(
   }
   const hasTemplateStringInterpolation = vineStyleCallArg.findAll(ts.kind('template_substitution'))
   if (hasTemplateStringInterpolation.length > 0) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -147,7 +147,7 @@ function assertVineStyleArgStringAndLangType(
   }
   const isTaggedTemplateStringArg = vineStyleCallArg.kind() === 'call_expression'
   if (isTaggedTemplateStringArg && !SUPPORTED_CSS_LANGS.includes(vineStyleCallArg.field('function')!.text())) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(
         vineFileCtx,
         {
@@ -217,12 +217,12 @@ function validateNotPropMacroCallInsideComp(ctxs: ValidateCtx, vineFnNode: SgNod
 
 /** Check vine tagged template string, it can't contain any interpolation */
 function validateVineTemplateStringNotContainsInterpolation(
-  [pluginCtx, vineFileCtx]: ValidateCtx, vineFnNode: SgNode,
+  [compilerCtx, vineFileCtx]: ValidateCtx, vineFnNode: SgNode,
 ) {
   const vineTemplateSgNode = vineFnNode.find(ruleVineTaggedTemplateString)
   const inteplsInsideTemplate = vineTemplateSgNode!.findAll(ruleHasTemplateStringInterpolation)
   if (inteplsInsideTemplate.length > 0) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: inteplsInsideTemplate[0]!.range().start,
         msg: 'Template string interpolation is not allowed inside Vue Vine template!',
@@ -235,14 +235,14 @@ function validateVineTemplateStringNotContainsInterpolation(
 
 /** Check vine function componet props type annotation must be object type literal */
 function validateVineFunctionCompProps(
-  [pluginCtx, vineFileCtx]: ValidateCtx,
+  [compilerCtx, vineFileCtx]: ValidateCtx,
   vineFnNode: SgNode,
 ) {
   const foundVinePropCalls = vineFnNode.findAll(ruleVinePropCall)
   // All `vineProp` call must inside a variable declaration
   const invalidNoDeclVinePropCalls = vineFnNode.findAll(ruleInvalidNoDeclVinePropCall)
   if (invalidNoDeclVinePropCalls.length > 0) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: invalidNoDeclVinePropCalls[0]!.range().start,
         msg: 'vineProp must declare a variable as single prop!',
@@ -260,7 +260,7 @@ function validateVineFunctionCompProps(
       const isWithDefault = vinePropCall.field('function')!.text().includes(VINE_PROP_WITH_DEFAULT_CALL)
 
       if (!isWithDefault && !vinePropCall.field('type_arguments')) {
-        pluginCtx.vineCompileErrors.push(
+        compilerCtx.vineCompileErrors.push(
           vineErr(vineFileCtx, {
             pos: vinePropCall.range().start,
             msg: 'vineProp call must have a type argument to specify the prop type!',
@@ -277,7 +277,7 @@ function validateVineFunctionCompProps(
           && (defaultValueNode.kind() === 'object'
           || defaultValueNode.kind() === 'array')
         ) {
-          pluginCtx.vineCompileWarnings.push(
+          compilerCtx.vineCompileWarnings.push(
             vineWarn(vineFileCtx, {
               pos: defaultValueNode.range().start,
               msg: 'Providing object/array type default value for vineProp should be wrapped with a function!',
@@ -295,7 +295,7 @@ function validateVineFunctionCompProps(
           && child.field('value')!.field('function')!.text().includes('vineProp'),
       )!
       if (vinePropLexicalDecl.field('kind')!.text() !== 'const') {
-        pluginCtx.vineCompileErrors.push(
+        compilerCtx.vineCompileErrors.push(
           vineErr(vineFileCtx, {
             pos: vinePropDeclarator.range().start,
             msg: 'vineProp declaration must be `const`!',
@@ -312,7 +312,7 @@ function validateVineFunctionCompProps(
 
   const paramsSgNodes = formalParams.children().slice(1, -1) // Skip parentheses
   if (paramsSgNodes.length > 1) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: paramsSgNodes[0]!.range().start,
         msg: 'Vue Vine function component must have only one parameter!',
@@ -325,7 +325,7 @@ function validateVineFunctionCompProps(
   const firstParamPattern = propsAsFirstParamSgNode.field('pattern')
   const firstParamTypeAnnotation = propsAsFirstParamSgNode.field('type')
   if (!firstParamTypeAnnotation) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: propsAsFirstParamSgNode.range().start,
         msg: 'Vue Vine function component props must have type annotation!',
@@ -334,7 +334,7 @@ function validateVineFunctionCompProps(
     return false
   }
   if (firstParamPattern?.kind() === 'object_pattern') {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: firstParamPattern.range().start,
         msg: 'Vue Vine function component props can\'t be destructured on formal parameter!',
@@ -343,7 +343,7 @@ function validateVineFunctionCompProps(
     return false
   }
   if (!firstParamTypeAnnotation?.children().find(child => child.kind() === 'object_type')) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: firstParamTypeAnnotation?.range().start,
         msg: 'Vue Vine function component props type must be object literal!',
@@ -355,7 +355,7 @@ function validateVineFunctionCompProps(
   // Now the vine function component has a explicit props,
   // then it's not allowed to call `vineProp` inside
   if (foundVinePropCalls.length > 0) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: foundVinePropCalls[0]!.range().start,
         msg: 'It\'s not allowed to call vineProp when Vue Vine function component has a explicit props!',
@@ -369,7 +369,7 @@ function validateVineFunctionCompProps(
 
 /** Check vine function component's vineEmits, must have type definition */
 function validateVineFunctionDefineEmits(
-  [pluginCtx, vineFileCtx]: ValidateCtx, vineFnNode: SgNode,
+  [compilerCtx, vineFileCtx]: ValidateCtx, vineFnNode: SgNode,
 ) {
   const tryFindVineEmits = vineFnNode.findAll(ruleVineEmitsCall)
   if (tryFindVineEmits.length === 0) {
@@ -377,7 +377,7 @@ function validateVineFunctionDefineEmits(
     return true
   }
   else if (tryFindVineEmits.length > 1) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: tryFindVineEmits[1]!.range().start,
         msg: 'Vue Vine function component can only have one vineEmits!',
@@ -390,7 +390,7 @@ function validateVineFunctionDefineEmits(
   const typeArgsSgNode = vineEmitsSgNode.field('type_arguments')
   const maybeObjType = typeArgsSgNode?.child(0)
   if (!typeArgsSgNode || !maybeObjType) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: vineEmitsSgNode.range().start,
         msg: 'Vue Vine function component\'s vineEmits must have type definition!',
@@ -399,7 +399,7 @@ function validateVineFunctionDefineEmits(
     return false
   }
   if (maybeObjType.kind() !== 'object_type') {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: maybeObjType.range().start,
         msg: 'Vue Vine function component\'s vineEmits type must be object literal!',
@@ -413,10 +413,10 @@ function validateVineFunctionDefineEmits(
 // ---- Validate in root scope ----
 
 /** Check if there is any outside macro calls */
-function validateNoOutsideMacroCalls([pluginCtx, vineFileCtx]: ValidateCtx, sgRoot: SgNode) {
+function validateNoOutsideMacroCalls([compilerCtx, vineFileCtx]: ValidateCtx, sgRoot: SgNode) {
   const outsideMacroCalls = sgRoot.findAll(ruleInvalidOutsideMacroCalls)
   if (outsideMacroCalls.length > 0) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: outsideMacroCalls[0]!.range().start,
         msg: 'Vine macro calls must be inside Vue Vine function component!',
@@ -427,14 +427,14 @@ function validateNoOutsideMacroCalls([pluginCtx, vineFileCtx]: ValidateCtx, sgRo
   return true
 }
 
-function validateDefineStyleIsNotLexicalDeclaration([pluginCtx, vineFileCtx]: ValidateCtx, sgRoot: SgNode) {
+function validateDefineStyleIsNotLexicalDeclaration([compilerCtx, vineFileCtx]: ValidateCtx, sgRoot: SgNode) {
   const invalidDefStyle = sgRoot.findAll(
     ruleInvalidDefineStyleWithDeclaration,
   )
   if (invalidDefStyle.length === 0) {
     return true
   }
-  pluginCtx.vineCompileErrors.push(
+  compilerCtx.vineCompileErrors.push(
     vineErr(vineFileCtx, {
       pos: invalidDefStyle[0]!.range().start,
       msg: 'vineStyle call must not be a lexical declaration!',
@@ -454,12 +454,12 @@ function isForbiddenVueApiInRootScope(fnName: string) {
 }
 
 function validateNoVueApiCallForCallExpr(
-  [pluginCtx, vineFileCtx]: ValidateCtx,
+  [compilerCtx, vineFileCtx]: ValidateCtx,
   callExpr: SgNode,
 ) {
   const callFnName = callExpr.field('function')!.text()
   if (isForbiddenVueApiInRootScope(callFnName)) {
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(vineFileCtx, {
         pos: callExpr.range().start,
         msg: `Vue reactivity API ${callFnName} is not allowed in root top level scope!`,
@@ -529,11 +529,11 @@ function validateNoInvalidRootScopeStmt(
   validateCtx: ValidateCtx,
   sgRoot: SgNode,
 ) {
-  const [pluginCtx] = validateCtx
+  const [compilerCtx] = validateCtx
   const allInvlidRootScopeStmts = sgRoot.findAll(ruleInvalidRootScopeStmt)
   if (allInvlidRootScopeStmts.length > 0) {
     const invalidStmt = allInvlidRootScopeStmts[0]!
-    pluginCtx.vineCompileErrors.push(
+    compilerCtx.vineCompileErrors.push(
       vineErr(validateCtx[1]!, {
         pos: invalidStmt.range().start,
         msg: `Invalid statement (kind: ${invalidStmt.kind()}) in root top level scope!`,
@@ -558,7 +558,7 @@ const validatesFromVineFn = [
 ] as const
 
 export function validateVine(
-  pluginCtx: VinePluginCtx,
+  compilerCtx: VineCompilerCtx,
   vineFileCtx: VineFileCtx,
   allVineFnCompDecls: SgNode[],
 ) {
@@ -567,7 +567,7 @@ export function validateVine(
     fromNode: SgNode,
   ) => {
     return validates.map(
-      validateFn => validateFn([pluginCtx, vineFileCtx], fromNode),
+      validateFn => validateFn([compilerCtx, vineFileCtx], fromNode),
     ).filter(Boolean).length < validates.length
   }
 
