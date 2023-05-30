@@ -10,8 +10,14 @@ function PostHeader() {
       font-weight: 700;
       margin-bottom: 6px;
     }
+    .blog-meta {
+      margin: 8px 0;
+      padding: 6px;
+      background-color: #333;
+      border-radius: 6px;
+    }
     .blog-meta-item {
-      margin-right: 8px;
+      margin: 0 8px;
     }
   `)
 
