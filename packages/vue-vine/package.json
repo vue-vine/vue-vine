@@ -27,8 +27,8 @@
     "types"
   ],
   "scripts": {
-    "dev": "rm -rf dist && rollup -w -c ./rollup.config.mjs",
-    "build": "rm -rf dist && rollup -c ./rollup.config.mjs"
+    "dev": "rimraf dist && rollup -w -c ./rollup.config.mjs",
+    "build": "rimraf dist && rollup -c ./rollup.config.mjs"
   },
   "dependencies": {
     "@vue-vine/vite-plugin": "workspace:*",
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.1",
+    "rimraf": "^5.0.0",
     "rollup": "^3.21.7",
     "rollup-plugin-copy": "^3.4.0",
     "typescript": "^5.0.4"
