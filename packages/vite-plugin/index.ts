@@ -16,9 +16,22 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx(options)
   const runCompile = (code: string, fileId: string) => {
     const vineFileCtx = compileVineTypeScriptFile(
-      compilerCtx,
       code,
       fileId,
+      {
+        onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
+        onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
+        onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
+        onValidateEnd: () => {
+          if (compilerCtx.vineCompileErrors.length > 0) {
+            const allErrMsg = compilerCtx.vineCompileErrors.join('\n')
+            compilerCtx.vineCompileErrors.length = 0
+            throw new Error(
+              `Vue Vine compilation failed:\n${allErrMsg}`,
+            )
+          }
+        },
+      },
     )
 
     // Print all warnings

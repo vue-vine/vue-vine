@@ -58,11 +58,16 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "dev": "npm run build:tsc && (npm run watch:tsc & npm run watch:esbuild)",
+    "watch:tsc": "tsc -b ./tsconfig.json -w",
+    "build:tsc": "tsc -b ./tsconfig.json",
+    "watch:esbuild": "node ./scripts/esbuild.js --watch",
+    "build:esbuild": "node ./scripts/esbuild.js --minify",
     "pretest": "pnpm run compile && pnpm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "lint": "eslint src --ext ts"
+  },
+  "dependencies": {
+    "@vue-vine/language-server": "workspace:*"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
@@ -73,10 +78,14 @@
     "@types/vscode": "^1.78.0",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
+    "@volar/language-server": "1.5.4",
+    "@volar/vscode": "1.5.4",
     "@vscode/test-electron": "^2.3.0",
+    "esbuild": "^0.15.18",
     "eslint": "^8.39.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vscode-languageclient": "^8.1.0"
   }
 }

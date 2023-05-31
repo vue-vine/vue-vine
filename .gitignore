@@ -6,3 +6,4 @@ dist
 *.log
 out
 .eslintcache
+tsconfig.tsbuildinfo
