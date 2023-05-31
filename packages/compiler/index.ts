@@ -1,6 +1,6 @@
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
-import type { VineCompilerCtx, VineCompilerOptions, VineFileCtx } from './src/constants'
+import type { VineCompilerCtx, VineCompilerOptions, VineFileCtx } from './src/types'
 import { ruleVineFunctionComponentDeclaration } from './src/ast-grep-rules'
 import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
@@ -14,7 +14,7 @@ export {
 export {
   type VineCompilerOptions,
   type VineProcessorLang,
-} from './src/constants'
+} from './src/types'
 
 export function createCompilerCtx(
   options: VineCompilerOptions = {},
