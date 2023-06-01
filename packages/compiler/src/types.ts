@@ -1,11 +1,19 @@
-import type { Pos, SgNode } from '@ast-grep/napi'
+import type { Pos, Range, SgNode } from '@ast-grep/napi'
 import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
 import type MagicString from 'magic-string'
+import type { VineDiagnostic } from './diagnostics'
 
 // Types:
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
 export type VineStyleLang = 'css' | 'postcss' | VineProcessorLang
 export type VineTemplateBindings = Record<string, VueBindingTypes>
+
+export interface VineCompilerHooks {
+  onError: (err: VineDiagnostic) => void
+  onWarn: (warn: VineDiagnostic) => void
+  onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
+  onValidateEnd?: () => void
+}
 
 export interface VineCompilerOptions {
   preprocessOptions?: Record<string, any>
@@ -16,7 +24,9 @@ export interface VineCompilerOptions {
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
+  range: Range
   scoped: boolean
+  fileCtx: VineFileCtx
 }
 
 export interface VinePropMeta {

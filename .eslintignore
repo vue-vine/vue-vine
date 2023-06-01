@@ -4,3 +4,4 @@ pnpm-lock.yaml
 .history
 .eslintrc
 packages/docs/.vitepress/cache
+scripts/*.sh

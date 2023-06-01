@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "ext:watch",
+      "script": "ext:dev",
       "isBackground": true,
       "group": {
         "kind": "build",
