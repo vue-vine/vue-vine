@@ -1,3 +1,4 @@
+import type { Range } from '@ast-grep/napi'
 import type { VineFileCtx } from './types'
 import { createColorful } from './utils/color-string'
 
@@ -8,23 +9,21 @@ const redFgBold = createColorful(['red', 'bold'])
 const ErrorLabel = whiteFgRedBg(' Error ')
 const WarningLabel = whiteFgYellowBg(' Warning ')
 
-// eslint-disable-next-line unused-imports/no-unused-vars
-const spaces = (len: number) => ' '.repeat(len)
-
-export interface Position {
-  line: number
-  column: number
-}
 export interface DiagnosticParams {
   msg: string
-  pos?: Position
+  range: Range
 }
 export interface MakeDiagnosticParams extends DiagnosticParams {
   fileId: string
   msgColorful: (str: string) => string
 }
 
-export function makeDiagnostic(label: string, { msg, fileId, pos, msgColorful }: MakeDiagnosticParams) {
+export interface VineDiagnostic extends DiagnosticParams {
+  full: string
+}
+
+export function makeDiagnostic(label: string, { msg, fileId, range, msgColorful }: MakeDiagnosticParams) {
+  const pos = range?.start
   const posString = pos
     ? `${pos.line + 1}:${pos.column + 1 /* ast-grep Position line/column is zero-based */}`
     : ''
@@ -34,20 +33,22 @@ ${msgColorful(msg)}
 `
 }
 
-export function vineErr(vineFileCtx: VineFileCtx, { msg, pos }: DiagnosticParams) {
-  return makeDiagnostic(ErrorLabel, {
+export function vineErr(vineFileCtx: VineFileCtx, { msg, range }: DiagnosticParams): VineDiagnostic {
+  const full = makeDiagnostic(ErrorLabel, {
     msg,
     fileId: vineFileCtx.fileId,
-    pos,
+    range,
     msgColorful: redFgBold,
   })
+  return { full, msg, range }
 }
 
-export function vineWarn(vineFileCtx: VineFileCtx, { msg, pos }: DiagnosticParams) {
-  return makeDiagnostic(WarningLabel, {
+export function vineWarn(vineFileCtx: VineFileCtx, { msg, range }: DiagnosticParams): VineDiagnostic {
+  const full = makeDiagnostic(WarningLabel, {
     msg,
     fileId: vineFileCtx.fileId,
-    pos,
+    range,
     msgColorful: whiteFgYellowBg,
   })
+  return { full, msg, range }
 }

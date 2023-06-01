@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
-    "dev": "nx build vue-vine && nx watch --projects=@vue-vine/vite-plugin,vue-vine -- nx run \\$NX_PROJECT_NAME:build",
-    "ext:watch": "pnpm --filter vue-vine-extension run watch",
+    "dev": "sh scripts/dev.sh",
+    "ext:dev": "pnpm --filter vue-vine-extension run dev",
     "ext:build": "pnpm --filter vue-vine-extension run compile",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",

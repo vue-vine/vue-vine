@@ -10,27 +10,17 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext"
+        "--inspector",
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext",
+        "--folder-uri=${workspaceRoot}/packages/playground"
       ],
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
       ],
       "preLaunchTask": {
         "type": "npm",
-        "script": "ext:watch"
+        "script": "ext:dev"
       }
-    },
-    {
-      "name": "Vine Extension Tests",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/packages/vscode-ext/out/test/**/*.js"
-      ]
     }
   ]
 }

@@ -1,14 +1,14 @@
 import type { NapiConfig, SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
-import type { VineCompilerCtx, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
+import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
 import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
 
 type AnalyzeCtx = [
-  compilerCtx: VineCompilerCtx,
+  compilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineFnCompCtx: VineFnCompCtx,
 ]
@@ -234,18 +234,21 @@ function analyzeVineOptions(
 
 function getStyleSource(
   vineStyleCallArg: SgNode,
-): [source: string, tag: VineStyleLang] {
+): [sourceNode: SgNode, tag: VineStyleLang] {
   if (vineStyleCallArg.kind() === 'string'
     || vineStyleCallArg.kind() === 'template_string'
   ) {
-    return [vineStyleCallArg.text().slice(1, -1), 'css'] // Remove the quotes
+    return [
+      vineStyleCallArg,
+      'css',
+    ]
   }
   // Our validation has already guaranteed that
   // if it's not a string or template string, it must be an tagged template expression
   const cssLangName = vineStyleCallArg.field('function')!.text()
   const taggedTemplateString = vineStyleCallArg.field('arguments')!
   return [
-    taggedTemplateString.text().slice(1, -1), // Remove the quotes
+    taggedTemplateString,
     cssLangName as VineStyleLang,
   ]
 }
@@ -261,11 +264,13 @@ function analyzeVineStyle(
   }
   const vineStyleCallee = vineStyleCall.field('function')!
   const vineStyleCallArg = vineStyleCall.field('arguments')!.children().slice(1, -1)[0]! // Skip the parentheses
-  const [source, lang] = getStyleSource(vineStyleCallArg)
+  const [sourceNode, lang] = getStyleSource(vineStyleCallArg)
   const styleMeta: VineStyleMeta = {
     lang,
-    source,
+    source: sourceNode.text().slice(1, -1), // Remove the quotes,
+    range: sourceNode.range(),
     scoped: false,
+    fileCtx,
   }
   if (vineStyleCallee.text() === VINE_STYLE_SCOPED_CALL) {
     styleMeta.scoped = true
@@ -695,7 +700,7 @@ function analyzeDifferentKindVineFunctionDecls(
 }
 
 function buildVineFnCompCtx(
-  [compilerCtx, vineFileCtx]: [VineCompilerCtx, VineFileCtx],
+  [compilerHooks, vineFileCtx]: [VineCompilerHooks, VineFileCtx],
   vineFnSgNode: SgNode,
 ): VineFnCompCtx {
   // Check if it's an export statement
@@ -726,7 +731,7 @@ function buildVineFnCompCtx(
     templateSource: vineTemplateSource,
   }
 
-  const analyzeCtx: AnalyzeCtx = [compilerCtx, vineFileCtx, vineFnCompCtx]
+  const analyzeCtx: AnalyzeCtx = [compilerHooks, vineFileCtx, vineFnCompCtx]
 
   // Analyze all import statements in this file
   // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
@@ -745,10 +750,10 @@ function buildVineFnCompCtx(
 }
 
 export function analyzeVine(
-  extendsCtx: [VineCompilerCtx, VineFileCtx],
+  extendsCtx: [VineCompilerHooks, VineFileCtx],
   vineFnCompDecls: SgNode[],
 ) {
-  const [compilerCtx, vineFileCtx] = extendsCtx
+  const [compilerHooks, vineFileCtx] = extendsCtx
 
   for (const vineFn of vineFnCompDecls) {
     const vineFnCompCtx = buildVineFnCompCtx(extendsCtx, vineFn)
@@ -758,7 +763,7 @@ export function analyzeVine(
   const makeErrorOnRefHoistedIdentifiers = (vineFnComp: VineFnCompCtx, identifiers: SgNode[]) => {
     for (const id of identifiers) {
       if (vineFnComp.bindings[id.text()] === VineBindingTypes.LITERAL_CONST) {
-        compilerCtx.vineCompileWarnings.push(
+        compilerHooks.onWarn(
           vineWarn(vineFileCtx, {
             msg: `Cannot reference ${id.text()} in a vineProp validator function because it is declared outside the setup() function.`,
             pos: id.range().start,
