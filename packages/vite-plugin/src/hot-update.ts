@@ -10,7 +10,6 @@ export function handleHotUpdate(
     if (importedModules.size > 0) {
       [...importedModules].forEach((im) => {
         const { query } = parseQuery(im.id as string)
-        console.log(query.type)
         // filter css modules
         if (query.type === 'vine-style') {
           affectedModules.add(im)
