@@ -12,6 +12,7 @@
     "dev": "sh scripts/dev.sh",
     "ext:dev": "pnpm --filter vue-vine-extension run dev",
     "ext:build": "pnpm --filter vue-vine-extension run compile",
+    "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
