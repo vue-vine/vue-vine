@@ -11,6 +11,7 @@ import type {
 } from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
 import { QUERY_TYPE_STYLE, parseQuery } from './src/parse-query'
+import { handleHotUpdate } from './src/hot-update'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx(options)
@@ -108,6 +109,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       return {
         code: runCompile(code, id),
       }
+    },
+    handleHotUpdate(hrmCtx) {
+      return handleHotUpdate(hrmCtx)
     },
   }
 }
