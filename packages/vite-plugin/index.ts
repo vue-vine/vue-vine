@@ -110,9 +110,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         code: runCompile(code, id),
       }
     },
-    handleHotUpdate(hrmCtx) {
-      return handleHotUpdate(hrmCtx)
-    },
+    handleHotUpdate,
   }
 }
 
