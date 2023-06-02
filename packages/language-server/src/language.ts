@@ -10,10 +10,11 @@ import type { VineVirtualFileExtension } from './types'
 function virtualFileName(
   sourceFileName: string,
   extension: VineVirtualFileExtension,
+  extra?: string,
 ) {
   return `${
     sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
-  }.vine-virtual.${extension}`
+  }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
 export const language: Language<VineFile> = {
@@ -59,12 +60,15 @@ export class VineFile implements VirtualFile {
   }
 
   mustRunOnSnapshotUpdated() {
+    this.embeddedFiles = []
+    this.vineCompileErrs = []
+    this.vineCompileWarns = []
+
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
       data: FileRangeCapabilities.full,
     }]
-    this.embeddedFiles = []
     this.textDocument = TextDocument.create(
       this.fileName,
       'vine',
@@ -84,9 +88,10 @@ export class VineFile implements VirtualFile {
   }
 
   addEmbeddedStyleFiles() {
-    for (const styleDefine of Object.values(this.vineFileCtx.styleDefine)) {
-      const { lang, source, range } = styleDefine
+    for (const [scopeId, styleDefine] of Object.entries(this.vineFileCtx.styleDefine)) {
+      const { lang, source, range, fileCtx } = styleDefine
       const { start, end } = range
+      const belongComp = fileCtx.vineFnComps.find(comp => comp.scopeId === scopeId)
       const virtualFileExt: VineVirtualFileExtension = (() => {
         switch (lang) {
           case 'css':
@@ -99,7 +104,11 @@ export class VineFile implements VirtualFile {
         }
       })()
       this.embeddedFiles.push({
-        fileName: virtualFileName(this.sourceFileName, virtualFileExt),
+        fileName: virtualFileName(
+          this.sourceFileName,
+          virtualFileExt,
+          belongComp?.fnName ?? scopeId,
+        ),
         kind: FileKind.TextFile,
         snapshot: {
           getText: (start, end) => source.slice(start, end),

@@ -31,7 +31,7 @@ const plugin: LanguageServerPlugin = (): ReturnType<LanguageServerPlugin> => ({
               start: file.textDocument.positionAt(err.range.start.index),
               end: file.textDocument.positionAt(err.range.end.index),
             },
-            source: 'typescript',
+            source: 'vue-vine',
             message: err.msg,
           })
         }
