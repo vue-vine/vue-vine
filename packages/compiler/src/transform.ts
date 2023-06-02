@@ -1,11 +1,17 @@
 import type { SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
+import hash from 'hash-sum'
 import type { VineFileCtx, VineFnCompCtx } from './types'
 import { VineBindingTypes } from './types'
 import { STYLE_LANG_FILE_EXTENSION } from './constants'
 import { compileVineTemplate } from './template'
-import { ruleImportSpecifier, ruleImportStmt } from './ast-grep-rules'
+import {
+  ruleHasVueRefCallExpr,
+  ruleImportSpecifier,
+  ruleImportStmt,
+  ruleSetUpVariableDeclaration,
+} from './ast-grep-rules'
 import { filterJoin, showIf, spaces } from './utils'
 
 type SetupCtxProperty = 'expose' | 'emits'
@@ -301,7 +307,7 @@ export function transformFile(
     vineFileCtx.fileSourceCode.appendRight(
       vineFnDeclStart.index, `
 ${showIf(vineFnCompCtx.isExport, 'export ')}const ${fnName} = (() => {
-  
+
 ${
   hoisted.length > 0
     ? hoisted.join('\n')
@@ -357,6 +363,8 @@ ${showIf(
   `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
 )}
 
+${compileCSSVars(vineFnCompCtx)}
+
 ${insideSetupStmtCode.join('\n')}
 
 ${
@@ -401,4 +409,71 @@ ${
   }\n${
     styleImportStmts.join('\n')
   }\n\n`)
+}
+
+function compileCSSVars(vineFnCompCtx: VineFnCompCtx) {
+  const { cssBindings, setupStmts } = vineFnCompCtx
+  if (cssBindings.length === 0)
+    return ''
+
+  const varList = genCSSVarsList(cssBindings, setupStmts)
+  const res = genUseCssVarsCode(varList)
+  console.log(res)
+  // TODO find from props
+  return 'console.log("bwsy")'
+}
+
+export const CSS_VARS_HELPER = `useCssVars`
+function genUseCssVarsCode(varList: string){
+  return `_${CSS_VARS_HELPER}(_ctx => ({
+  ${varList}
+}))`
+}
+
+function genCSSVarsList(
+  cssBindings: string[],
+  setupStmts: SgNode[],
+) {
+  let res = ''
+  // find from setup variable
+  cssBindings.forEach((v) => {
+    let varRes = ''
+    for (let i = 0; i < setupStmts.length; i++) {
+      varRes = genCSSVarsListItem(setupStmts[i], v)
+      debugger
+    }
+    res = `${res}${varRes}`
+  })
+  return res
+}
+
+function genCSSVarsListItem(node: SgNode, cssvarName: string) {
+  debugger
+  let res = ''
+  let hashValue = ''
+  let varName = ''
+  const matchRes = node.find(ruleSetUpVariableDeclaration)
+  if (!matchRes) {
+    return ''
+  }
+  else {
+    varName = matchRes.getMatch('VAR')!.text()
+    if (cssvarName !== varName)
+      return ''
+    hashValue = hash(varName)
+  }
+
+  // e.g. const foo = ref('foo')
+  if (node.find(ruleHasVueRefCallExpr)) {
+    if (matchRes) {
+      res = `   '${hashValue}': (${varName}.value),\n`
+    }
+  }
+  else {
+    // e.g. const foo = 'foo'
+    if (matchRes) {
+      res = `   '${hashValue}': (${varName}),\n`
+    }
+  }
+  return res
 }

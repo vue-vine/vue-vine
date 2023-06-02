@@ -115,6 +115,23 @@ export const vineAstGrepUtils = {
       matches: 'vineEmitsCall',
     },
   },
+  setupVariableDeclaration: {
+    any: [
+      {
+        pattern: 'var $VAR',
+      },
+      {
+        pattern: 'let $VAR',
+      },
+      {
+        pattern: 'const $VAR',
+      },
+      {
+        pattern: 'function $VAR',
+      },
+      // TODO: destructuring assignment
+    ],
+  },
   vineMacrosCallRegExps: {
     any: [
       {
@@ -131,6 +148,13 @@ export const vineAstGrepUtils = {
       },
       {
         regex: 'vineOptions',
+      },
+    ],
+  },
+  vueRefCallRegExps: {
+    any: [
+      {
+        regex: 'ref',
       },
     ],
   },
@@ -232,6 +256,14 @@ export const vineAstGrepUtils = {
       stopBy: 'end',
       kind: 'call_expression',
       matches: 'vineMacrosCallRegExps',
+    },
+  },
+
+  hasVueRefCallExpr: {
+    has: {
+      stopBy: 'end',
+      kind: 'call_expression',
+      matches: 'vueRefCallRegExps',
     },
   },
 
@@ -337,7 +369,8 @@ export const ruleInvalidDefineStyleWithDeclaration = fastCreateMatchRuleByUtils(
 export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils('invalidRootScopeStmt')
 export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils('idInsideMacroMayReferenceSetupLocal')
 export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils('hasMacroCallExpr')
-
+export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils('hasVueRefCallExpr')
+export const ruleSetUpVariableDeclaration = fastCreateMatchRuleByUtils('setupVariableDeclaration')
 export const ruleVineTaggedTemplateString = directlyMatchUtil('vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil('importStmt')
 export const ruleImportClause = directlyMatchUtil('importClause')

@@ -10,6 +10,7 @@
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "sh scripts/dev.sh",
+    "dev:windows": "cd scripts && dev.sh",
     "ext:dev": "pnpm --filter vue-vine-extension run dev",
     "ext:build": "pnpm --filter vue-vine-extension run compile",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
