@@ -33,6 +33,7 @@ export class VineFile implements VirtualFile {
 
   fileName!: string
   mappings!: VirtualFile['mappings']
+  codegenStacks = []
   embeddedFiles!: VirtualFile['embeddedFiles']
   textDocument!: TextDocument
 
@@ -114,6 +115,7 @@ export class VineFile implements VirtualFile {
           generatedRange: [0, source.length],
           data: FileRangeCapabilities.full,
         }],
+        codegenStacks: [],
         capabilities: FileCapabilities.full,
         embeddedFiles: [],
       })

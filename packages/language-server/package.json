@@ -12,13 +12,13 @@
     "out/**/*.d.ts"
   ],
   "dependencies": {
-    "@volar/language-core": "1.5.4",
-    "@volar/language-server": "1.5.4",
-    "@volar/language-service": "1.5.4",
+    "@volar/language-core": "1.6.9",
+    "@volar/language-server": "1.6.9",
+    "@volar/language-service": "1.6.9",
     "@vue-vine/compiler": "workspace:*",
-    "volar-service-css": "0.0.2",
-    "volar-service-emmet": "0.0.2",
-    "volar-service-html": "0.0.2",
+    "volar-service-css": "0.0.4",
+    "volar-service-emmet": "0.0.4",
+    "volar-service-html": "0.0.4",
     "vscode-html-languageservice": "^5.0.3",
     "vscode-languageserver-textdocument": "^1.0.8"
   },

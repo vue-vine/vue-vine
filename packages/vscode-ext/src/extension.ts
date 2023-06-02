@@ -1,7 +1,10 @@
 import type { InitializationOptions } from '@volar/language-server'
 import { DiagnosticModel } from '@volar/language-server'
+import * as protocol from '@volar/language-server/protocol'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
+import type { ExportsInfoForLabs } from '@volar/vscode'
+import { supportLabsVersion } from '@volar/vscode'
 
 let client: lsp.BaseLanguageClient
 
@@ -42,6 +45,14 @@ export async function activate(context: vscode.ExtensionContext) {
     () => vscode.window.showInformationMessage('Hello World from Vue Vine syntax highlight!'),
   )
   context.subscriptions.push(disposable)
+
+  return {
+    volarLabs: {
+      version: supportLabsVersion,
+      languageClients: [client],
+      languageServerProtocol: protocol,
+    },
+  } satisfies ExportsInfoForLabs
 }
 
 // This method is called when your extension is deactivated
