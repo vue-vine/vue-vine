@@ -766,7 +766,7 @@ export function analyzeVine(
         compilerHooks.onWarn(
           vineWarn(vineFileCtx, {
             msg: `Cannot reference ${id.text()} in a vineProp validator function because it is declared outside the setup() function.`,
-            pos: id.range().start,
+            range: id.range(),
           }),
         )
       }

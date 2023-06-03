@@ -41,8 +41,8 @@ export interface VinePropMeta {
 
 export interface VineCompilerCtx {
   fileCtxMap: Map<string, VineFileCtx>
-  vineCompileErrors: string[]
-  vineCompileWarnings: string[]
+  vineCompileErrors: VineDiagnostic[]
+  vineCompileWarnings: VineDiagnostic[]
   options: VineCompilerOptions
 }
 

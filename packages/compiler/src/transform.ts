@@ -94,7 +94,7 @@ export function transformFile(
     const compileResult = compileVineTemplate(
       vineFnCompCtx.templateSource,
       {
-        scopeId: vineFnCompCtx.scopeId,
+        scopeId: `data-v-${vineFnCompCtx.scopeId}`,
         bindingMetadata: {
           ...bindings,
           ...inFileCompSharedBindings,
@@ -177,7 +177,7 @@ export function transformFile(
     //        ```
     //        2.2.2 If any prop has default value, check 2.4.2 for more details.
 
-    //    2.3 Generate `emits: ['foo', 'bar', '...]`
+    //    2.3 Generate `emits: ['foo', 'bar', ...]`
     //                         ^ Based on `vineFnCompCtx.emits`
 
     //    2.4 Generate `setup` function, and put all `insideSetupStmts` into it.
@@ -378,7 +378,7 @@ ${
     Boolean(vineFileCtx.styleDefine[vineFnCompCtx.scopeId]),
     `__vine.__scopeId = 'data-v-${vineFnCompCtx.scopeId}'`,
   )}
-  return __vine
+  return __vine /* End of ${vineFnCompCtx.fnName} */
 })()`)
   }
 
