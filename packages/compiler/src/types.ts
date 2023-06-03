@@ -89,7 +89,10 @@ export interface VineFnCompCtx {
   setupStmts: SgNode[]
   hoistSetupStmts: SgNode[]
   insideSetupStmts: SgNode[]
-  templateSource: string
+  template: {
+    source: string
+    range: Range
+  }
   scopeId: string
 }
 

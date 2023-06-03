@@ -709,9 +709,8 @@ function buildVineFnCompCtx(
   const vineFnCompDecl = vineFnSgNode.find(ruleVineFunctionComponentMatching)!
 
   // Get vine template source
-  const vineTemplateSource = vineFnCompDecl.find(
-    ruleVineTaggedTemplateString,
-  )!.field('arguments')!.text().slice(1, -1).trim() // remove the quotes
+  const vineTemolateSgNode = vineFnCompDecl.find(ruleVineTaggedTemplateString)!.field('arguments')!
+  const vineTemplateSource = vineTemolateSgNode.text().slice(1, -1).trim() // remove the quotes
 
   const vineFnCompCtx: VineFnCompCtx = {
     isExport,
@@ -728,7 +727,10 @@ function buildVineFnCompCtx(
     insideSetupStmts: [],
     fnDeclNode: vineFnSgNode,
     fnValueNode: vineFnCompDecl,
-    templateSource: vineTemplateSource,
+    template: {
+      source: vineTemplateSource,
+      range: vineTemolateSgNode.range(),
+    },
   }
 
   const analyzeCtx: AnalyzeCtx = [compilerHooks, vineFileCtx, vineFnCompCtx]

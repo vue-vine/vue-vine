@@ -85,6 +85,31 @@ export class VineFile implements VirtualFile {
   onSnapshotUpdated() {
     this.mustRunOnSnapshotUpdated()
     this.addEmbeddedStyleFiles()
+    this.addEmbeddedTemplateFiles()
+  }
+
+  createEmbeddedFile(
+    source: string,
+    vFileName: string,
+    range: [number, number],
+  ): VirtualFile {
+    return {
+      fileName: vFileName,
+      kind: FileKind.TextFile,
+      snapshot: {
+        getText: (start, end) => source.slice(start, end),
+        getLength: () => source.length,
+        getChangeRange: () => undefined,
+      },
+      mappings: [{
+        sourceRange: range,
+        generatedRange: [0, source.length],
+        data: FileRangeCapabilities.full,
+      }],
+      codegenStacks: [],
+      capabilities: FileCapabilities.full,
+      embeddedFiles: [],
+    }
   }
 
   addEmbeddedStyleFiles() {
@@ -103,31 +128,45 @@ export class VineFile implements VirtualFile {
             return lang
         }
       })()
-      this.embeddedFiles.push({
-        fileName: virtualFileName(
-          this.sourceFileName,
-          virtualFileExt,
-          belongComp?.fnName ?? scopeId,
-        ),
-        kind: FileKind.TextFile,
-        snapshot: {
-          getText: (start, end) => source.slice(start, end),
-          getLength: () => source.length,
-          getChangeRange: () => undefined,
-        },
-        mappings: [{
-          sourceRange: [
+
+      this.embeddedFiles.push(
+        this.createEmbeddedFile(
+          source,
+          virtualFileName(
+            this.sourceFileName,
+            virtualFileExt,
+            belongComp?.fnName ?? scopeId,
+          ),
+          [
             // +1/-1 to skip the first/last quote
             start.index + 1,
             end.index - 1,
           ],
-          generatedRange: [0, source.length],
-          data: FileRangeCapabilities.full,
-        }],
-        codegenStacks: [],
-        capabilities: FileCapabilities.full,
-        embeddedFiles: [],
-      })
+        ),
+      )
+    }
+  }
+
+  addEmbeddedTemplateFiles() {
+    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
+      const { template } = vineFnCompCtx
+      const { source, range } = template
+
+      this.embeddedFiles.push(
+        this.createEmbeddedFile(
+          source,
+          virtualFileName(
+            this.sourceFileName,
+            'html',
+            vineFnCompCtx.fnName ?? vineFnCompCtx.scopeId,
+          ),
+          [
+            // +1/-1 to skip the first/last quote
+            range.start.index + 1,
+            range.end.index - 1,
+          ],
+        ),
+      )
     }
   }
 }
