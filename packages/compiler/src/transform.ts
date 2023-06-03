@@ -92,7 +92,7 @@ export function transformFile(
   for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
     const { bindings } = vineFnCompCtx
     const compileResult = compileVineTemplate(
-      vineFnCompCtx.template.source,
+      vineFnCompCtx.template.text().slice(1, -1), // skip quotes
       {
         scopeId: `data-v-${vineFnCompCtx.scopeId}`,
         bindingMetadata: {

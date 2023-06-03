@@ -727,10 +727,7 @@ function buildVineFnCompCtx(
     insideSetupStmts: [],
     fnDeclNode: vineFnSgNode,
     fnValueNode: vineFnCompDecl,
-    template: {
-      source: vineTemplateSource,
-      range: vineTemolateSgNode.range(),
-    },
+    template: vineTemolateSgNode,
   }
 
   const analyzeCtx: AnalyzeCtx = [compilerHooks, vineFileCtx, vineFnCompCtx]

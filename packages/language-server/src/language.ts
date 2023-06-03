@@ -150,11 +150,11 @@ export class VineFile implements VirtualFile {
   addEmbeddedTemplateFiles() {
     for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
       const { template } = vineFnCompCtx
-      const { source, range } = template
+      const range = template.range()
 
       this.embeddedFiles.push(
         this.createEmbeddedFile(
-          source,
+          template.text().slice(1, -1), // skip quotes
           virtualFileName(
             this.sourceFileName,
             'html',
