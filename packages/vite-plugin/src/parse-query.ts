@@ -1,3 +1,5 @@
+import { QUERY_TYPE_SCRIPT } from './constants'
+
 export interface VineQuery {
   type: string
   scopeId: string
@@ -6,14 +8,11 @@ export interface VineQuery {
 }
 type VineQueryRaw = Record<keyof VineQuery, string>
 
-export const QUERY_TYPE_SCRIPT = 'vine-script'
-export const QUERY_TYPE_STYLE = 'vine-style'
-
 export function parseQuery(id: string) {
   const [fileId, queryRawStr] = id.split('?', 2)
   const rawQuery = Object.fromEntries(new URLSearchParams(queryRawStr)) as VineQueryRaw
   const query: VineQuery = {
-    type: rawQuery.type == null ? 'vine-script' : rawQuery.type,
+    type: rawQuery.type == null ? QUERY_TYPE_SCRIPT : rawQuery.type,
     lang: rawQuery.lang,
     scopeId: rawQuery.scopeId,
     scoped: rawQuery.scoped === 'true',

@@ -10,8 +10,9 @@ import type {
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
-import { QUERY_TYPE_STYLE, parseQuery } from './src/parse-query'
+import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'
+import { QUERY_TYPE_STYLE } from './src/constants'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx(options)
@@ -72,7 +73,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     enforce: 'pre',
     async resolveId(id) {
       const { query } = parseQuery(id)
-      if (query.type === 'vine-style') {
+      if (query.type === QUERY_TYPE_STYLE) {
         // serve vine style requests as virtual modules
         return id
       }
