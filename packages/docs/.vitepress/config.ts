@@ -64,6 +64,10 @@ export default defineConfig({
     ],
   },
   markdown: {
+    theme: {
+      light: 'vitesse-light',
+      dark: 'vitesse-dark',
+    },
     languages: [
       {
         id: 'vue-vine',

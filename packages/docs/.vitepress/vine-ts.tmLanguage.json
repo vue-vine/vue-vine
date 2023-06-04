@@ -4642,6 +4642,9 @@
           "include": "#qstring-double"
         },
         {
+          "include": "#vine-template"
+        },
+        {
           "include": "#template"
         }
       ]
@@ -4696,11 +4699,31 @@
       "name": "constant.character.escape.ts",
       "match": "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)"
     },
-    "template": {
+    "vine-template": {
+      "contentName": "variable.vine-template.ts",
+      "begin": "(vine)(`)",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.vine-template.ts"
+        },
+        "2": {
+          "name": "punctuation.definition.string.vine-template.begin.ts"
+        }
+      },
+      "end": "`",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.vine-template.end.ts"
+        }
+      },
       "patterns": [
         {
-          "include": "#template-call"
-        },
+          "include": "text.html.vue-html"
+        }
+      ]
+    },
+    "template": {
+      "patterns": [
         {
           "contentName": "string.template.ts",
           "begin": "([_$[:alpha:]][_$[:alnum:]]*)?(`)",
@@ -4709,13 +4732,13 @@
               "name": "entity.name.function.tagged-template.ts"
             },
             "2": {
-              "name": "string.template.ts punctuation.definition.string.template.begin.ts"
+              "name": "punctuation.definition.string.template.begin.ts"
             }
           },
           "end": "`",
           "endCaptures": {
             "0": {
-              "name": "string.template.ts punctuation.definition.string.template.end.ts"
+              "name": "punctuation.definition.string.template.end.ts"
             }
           },
           "patterns": [
@@ -4724,9 +4747,6 @@
             },
             {
               "include": "#string-character-escape"
-            },
-            {
-              "include": "text.html.vue-html"
             },
             {
               "include": "source.css"
@@ -4744,6 +4764,9 @@
               "include": "source.stylus"
             }
           ]
+        },
+        {
+          "include": "#template-call"
         }
       ]
     },
