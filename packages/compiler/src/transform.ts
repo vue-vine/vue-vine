@@ -361,9 +361,9 @@ ${insideSetupStmtCode.join('\n')}
 
 ${
   vineFnCompCtx.expose
-    ? `expose({\n${
-        vineFnCompCtx.expose
-      }\n})`
+    ? `expose(${
+        vineFnCompCtx.expose.text()
+      })`
     : '/* No expose */'
 }
 

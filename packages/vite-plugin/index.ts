@@ -26,7 +26,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
         onValidateEnd: () => {
           if (compilerCtx.vineCompileErrors.length > 0) {
-            const allErrMsg = compilerCtx.vineCompileErrors.join('\n')
+            const allErrMsg = compilerCtx.vineCompileErrors
+              .map(diagnositc => diagnositc.full)
+              .join('\n')
             compilerCtx.vineCompileErrors.length = 0
             throw new Error(
               `Vue Vine compilation failed:\n${allErrMsg}`,
@@ -40,7 +42,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     const warnLogger = createLogger('warn')
     if (compilerCtx.vineCompileWarnings.length > 0) {
       for (const warn of compilerCtx.vineCompileWarnings) {
-        warnLogger.warn(warn)
+        warnLogger.warn(warn.full)
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
