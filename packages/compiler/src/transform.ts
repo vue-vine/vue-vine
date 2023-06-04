@@ -304,7 +304,12 @@ ${showIf(vineFnCompCtx.isExport, 'export ')}const ${fnName} = (() => {
   
 ${
   hoisted.length > 0
-    ? hoisted.join('\n')
+    ? hoisted
+      .map(
+        item => typeof item === 'string'
+          ? item
+          : item.text(),
+      ).join('\n')
     : '/* No hoisted */'
 }
 
