@@ -56,7 +56,11 @@ In Vine, we just provide a small amount of macros, you can check more details in
 
 ### Props
 
-There're two ways to define props for VCF, one is using `vineProp` macro, and another is giving TypeScript type annotation for function's first formal parameter.
+There're two ways to define props for VCF, the first one is giving TypeScript type annotation for function's first formal parameter, and another is using `vineProp` macro.
+
+We decide to drop support for props' `type` field, because we hold the opinion that it's not quite useful when we already have TypeScript.
+
+In addition, Vine will treat all props as **required** in default, you can use `?` to mark it optional.
 
 ```vue-vine
 import { SomeExternalType } from './path/to/somewhere'
@@ -69,11 +73,11 @@ function MyComponent(props: {
 }
 ```
 
-When you annotate one prop's type, no matter where it's defined. Vine leaves the type checking task to IDE side, and we'll drop all the types when generating the component object's props.
+When you annotate one prop's type, no matter where it's defined. Vine will transfer type checking to IDE side, and we'll drop all the types when generating the component object's props.
 
 That opinionated behavior is by design at the beginning of my design. Vue 3.3 add a self-implemented type checking to do analysis, but it's no doubt that there will be many unexpected edge cases in the future.
 
-You **must** specify any boolean props with a literal `boolean` annotation, just like what we talked about in the [`vineProp` section](/design/macros#vineprop).
+You **must** specify any boolean props with a literal `boolean` annotation, just like what we'll talk about later in the [`vineProp` section](/design/macros#vineprop).
 
 In a nutshell, if you don't provide a formal parameter for the VCF, and no `vineProp` macro call inside the VCF as well, the props will be `{}`.
 
