@@ -36,7 +36,7 @@
         "scopeName": "source.vine-vue-template-inject",
         "path": "./syntaxes/vine-inject.json",
         "embeddedLanguages": {
-          "meta.embedded.block.vine-vue-template": "vine-vue-template",
+          "text.vine-vue-template": "vine-vue-template",
           "source.vue": "vue",
           "source.css": "css",
           "source.css.scss": "scss",
@@ -44,6 +44,9 @@
           "source.css.postcss": "postcss",
           "source.sass": "sass",
           "source.stylus": "stylus"
+        },
+        "tokenTypes": {
+          "text.vine-vue-template": "other"
         },
         "injectTo": [
           "source.ts"

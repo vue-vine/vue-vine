@@ -4,7 +4,7 @@
   "injectionSelector": "L:meta.function, L:meta.arrow.ts",
   "patterns": [
     {
-      "name": "variable.vine-vue-template",
+      "name": "text.vine-vue-template",
       "begin": "vine(`)",
       "beginCaptures": {
         "0": { "name": "entity.name.function.macro.vine-vue-template" },
