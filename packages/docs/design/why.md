@@ -18,7 +18,7 @@ So... why not try to use a function to create Vue component, but writing "script
 
 That's how Vine was born.
 
-![Quick view](../assets/quick-view.png)
+![Quick view](/quick-view.png)
 
 ## Why it's achievable
 

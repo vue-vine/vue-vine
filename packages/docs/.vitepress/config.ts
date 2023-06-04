@@ -9,10 +9,10 @@ export default defineConfig({
   title: 'Vue Vine',
   description: 'Another style to write Vue.',
   head: [
-    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/assets/favicons/apple-touch-icon.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/assets/favicons/favicon-32x32.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/assets/favicons/favicon-16x16.png' }],
-    ['link', { rel: 'shortcut icon', href: '/assets/favicons/favicon.ico' }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicons/apple-touch-icon.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' }],
+    ['link', { rel: 'shortcut icon', href: '/favicons/favicon.ico' }],
   ],
   themeConfig: {
     search: {
