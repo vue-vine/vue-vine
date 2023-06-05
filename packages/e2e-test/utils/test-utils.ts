@@ -2,9 +2,10 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { expect } from 'vitest'
 import type { ElementHandle } from 'playwright-chromium'
-import { page } from './vitest-setup'
+import { e2eTestCtx } from './vitest-setup'
 
 const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
+
 export function editFile(
   filename: string,
   replacer: (str: string) => string,
@@ -19,6 +20,7 @@ export async function untilUpdated(
   poll: () => Promise<string | null>,
   expected: string,
 ): Promise<void> {
+  await e2eTestCtx.page?.waitForNavigation()
   const maxTries = process.env.CI ? 200 : 50
   for (let tries = 0; tries < maxTries; tries++) {
     const actual = (await poll()) ?? ''
@@ -34,14 +36,14 @@ export async function untilUpdated(
 
 export async function getColor(el: string | ElementHandle): Promise<string | null> {
   const res = await toEl(el)
-  const rgb = res && (await res.evaluate(el => getComputedStyle(el as Element).color))
-  return rgb
+  const cursorStyle = res && (await res.evaluate(el => getComputedStyle(el as Element).color))
+  return cursorStyle
 }
 
 async function toEl(el: string | ElementHandle): Promise<ElementHandle | null> {
   if (typeof el === 'string') {
-    const res = await page.$(el)
+    const res = await e2eTestCtx.page?.$(el)
     return res ?? null
   }
-  return el as ElementHandle
+  return el
 }

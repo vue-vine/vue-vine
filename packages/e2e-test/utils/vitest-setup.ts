@@ -14,14 +14,17 @@ let server: ViteDevServer
 /**
  * Vite Dev Server when testing serve
  */
-// eslint-disable-next-line import/no-mutable-exports
-export let viteServer: ViteDevServer
-// eslint-disable-next-line import/no-mutable-exports
-export let page: Page = undefined!
-// eslint-disable-next-line import/no-mutable-exports
-export let browser: Browser = undefined!
-// eslint-disable-next-line import/no-mutable-exports
-export let viteTestUrl = 'http://localhost:5173'
+export const e2eTestCtx: {
+  viteServer: ViteDevServer | undefined
+  page: Page | undefined
+  browser: Browser | undefined
+  viteTestUrl: string
+} = {
+  viteServer: undefined,
+  page: undefined,
+  browser: undefined,
+  viteTestUrl: 'http://localhost:5173',
+}
 
 beforeAll(async (s) => {
   const suite = s as File
@@ -30,21 +33,21 @@ beforeAll(async (s) => {
     return
   }
 
-  browser = await chromium.launch()
-  page = await browser.newPage()
+  e2eTestCtx.browser = await chromium.launch()
+  e2eTestCtx.page = await e2eTestCtx.browser.newPage()
 
   try {
     await startDefaultServe()
   }
   catch (e) {
-    await page.close()
+    await e2eTestCtx.page.close()
     throw e
   }
 
   return async () => {
-    await page?.close()
-    if (browser) {
-      await browser.close()
+    await e2eTestCtx.page?.close()
+    if (e2eTestCtx.browser) {
+      await e2eTestCtx.browser.close()
     }
   }
 })
@@ -59,7 +62,7 @@ async function startDefaultServe() {
         // During tests we edit the files too fast and sometimes chokidar
         // misses change events, so enforce polling for consistency
         usePolling: true,
-        interval: 100,
+        interval: 1e2,
       },
       host: true,
       fs: {
@@ -86,11 +89,11 @@ async function startDefaultServe() {
 
   process.env.VITE_INLINE = 'inline-serve'
   const testConfig = mergeConfig(options, res?.config || {})
-  viteServer = server = await (await createServer(testConfig)).listen()
+  e2eTestCtx.viteServer = server = await (await createServer(testConfig)).listen()
   // use resolved port/base from server
   const devBase = server.config.base
-  viteTestUrl = `http://localhost:${server.config.server.port}${
+  e2eTestCtx.viteTestUrl = `http://localhost:${server.config.server.port}${
      devBase === '/' ? '' : devBase
    }`
-  await page.goto(viteTestUrl)
+  await e2eTestCtx.page?.goto(e2eTestCtx.viteTestUrl)
 }

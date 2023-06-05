@@ -92,9 +92,9 @@ export function transformFile(
   for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
     const { bindings } = vineFnCompCtx
     const compileResult = compileVineTemplate(
-      vineFnCompCtx.templateSource,
+      vineFnCompCtx.template.text().slice(1, -1), // skip quotes
       {
-        scopeId: vineFnCompCtx.scopeId,
+        scopeId: `data-v-${vineFnCompCtx.scopeId}`,
         bindingMetadata: {
           ...bindings,
           ...inFileCompSharedBindings,
@@ -177,7 +177,7 @@ export function transformFile(
     //        ```
     //        2.2.2 If any prop has default value, check 2.4.2 for more details.
 
-    //    2.3 Generate `emits: ['foo', 'bar', '...]`
+    //    2.3 Generate `emits: ['foo', 'bar', ...]`
     //                         ^ Based on `vineFnCompCtx.emits`
 
     //    2.4 Generate `setup` function, and put all `insideSetupStmts` into it.
@@ -304,7 +304,12 @@ ${showIf(vineFnCompCtx.isExport, 'export ')}const ${fnName} = (() => {
   
 ${
   hoisted.length > 0
-    ? hoisted.join('\n')
+    ? hoisted
+      .map(
+        item => typeof item === 'string'
+          ? item
+          : item.text(),
+      ).join('\n')
     : '/* No hoisted */'
 }
 
@@ -361,9 +366,9 @@ ${insideSetupStmtCode.join('\n')}
 
 ${
   vineFnCompCtx.expose
-    ? `expose({\n${
-        vineFnCompCtx.expose
-      }\n})`
+    ? `expose(${
+        vineFnCompCtx.expose.text()
+      })`
     : '/* No expose */'
 }
 
@@ -378,7 +383,7 @@ ${
     Boolean(vineFileCtx.styleDefine[vineFnCompCtx.scopeId]),
     `__vine.__scopeId = 'data-v-${vineFnCompCtx.scopeId}'`,
   )}
-  return __vine
+  return __vine /* End of ${vineFnCompCtx.fnName} */
 })()`)
   }
 

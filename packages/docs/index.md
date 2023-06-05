@@ -7,7 +7,7 @@ hero:
   text: "Another style to write Vue."
   tagline: "Provides higher freedom for component writing."
   image:
-    src: /assets/vine-logo.png
+    src: /vine-logo.png
     alt: Vue Vine
   actions:
     - theme: brand

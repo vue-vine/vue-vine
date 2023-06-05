@@ -479,7 +479,7 @@
     },
     "vue-builtin-directives": {
       "name": "meta.directive.builtin.vue",
-      "begin": "(v-(?:if|else-if|else|show|for|on|bind|model|slot|once|text|html|memo|pre))(?:\\:([a-zA-Z\\-_]+))?(?:\\.([a-zA-Z\\-_]+))*\\s*(=)?",
+      "begin": "(v-(?:if|else-if|else|show|for|on|bind|model|slot|once|text|html|memo|pre))(?:\\:([a-zA-Z\\-_]+))?(?:\\.([a-zA-Z\\-_]+))*(\\s*=)?",
       "end": "(?<='|\")|(?=[\\s<>`])",
       "captures": {
         "1": {

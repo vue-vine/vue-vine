@@ -41,8 +41,8 @@ export interface VinePropMeta {
 
 export interface VineCompilerCtx {
   fileCtxMap: Map<string, VineFileCtx>
-  vineCompileErrors: string[]
-  vineCompileWarnings: string[]
+  vineCompileErrors: VineDiagnostic[]
+  vineCompileWarnings: VineDiagnostic[]
   options: VineCompilerOptions
 }
 
@@ -89,7 +89,7 @@ export interface VineFnCompCtx {
   setupStmts: SgNode[]
   hoistSetupStmts: SgNode[]
   insideSetupStmts: SgNode[]
-  templateSource: string
+  template: SgNode
   scopeId: string
 }
 
