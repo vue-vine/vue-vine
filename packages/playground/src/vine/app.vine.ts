@@ -96,12 +96,12 @@ export function App() {
   const randomPick = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
-
+  const bgColor = ref('#334155')
   vineStyle(`
     .random-pick-post-btn {
       margin-bottom: 1rem;
       font-size: 1rem;
-      background: #334155;
+      background: v-bind(bgColor);
       border-radius: 0.25rem;
       color: #fff;
       padding: 0.5rem 1rem;
@@ -114,6 +114,9 @@ export function App() {
   return vine`
     <button class="random-pick-post-btn" @click="randomPick">
       Random pick a post
+    </button>
+     <button class="random-pick-post-btn" @click="bgColor = '#42d392'">
+      change bg
     </button>
     <BlogPost :id="id" />
   `
