@@ -1,0 +1,282 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CSS vars injection > Should be able to inject according to each subcomponent of vfc 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
+import 'mockVFCNormal?type=vine-style&scopeId=16827e52&lang=css&scoped=true&virtual.css'
+
+
+const testVFC = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVFC',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+   '7735f590': (color.value),
+
+}))
+
+const color = ref('red')
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-32464621'
+  return __vine /* End of testVFC */
+})()
+
+const testVFCS = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-16827e52\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title-s\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVFCS',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+   'a773608a': (color.value),
+
+}))
+
+const color = ref('red')
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-16827e52'
+  return __vine /* End of testVFCS */
+})()"
+`;
+
+exports[`CSS vars injection > Should be injected based on normal variables 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
+
+
+const testVFC = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title\\" }
+const color = 'red'
+
+  const __vine = _defineComponent({
+    name: 'testVFC',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+   '7735f590': (color),
+
+}))
+
+
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-32464621'
+  return __vine /* End of testVFC */
+})()"
+`;
+
+exports[`CSS vars injection > Should be injected based on props 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  toRefs as _toRefs
+} from 'vue'
+import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
+
+import { useDefaults as _useDefaults } from \\"vue-vine\\"
+
+const testVFC = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVFC',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = _useDefaults(__props, {
+  color: 'red'
+})
+
+const { color } = _toRefs(props)
+
+_useCssVars(_ctx => ({
+   '7735f590': (props.color),
+
+}))
+
+
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-32464621'
+  return __vine /* End of testVFC */
+})()"
+`;
+
+exports[`CSS vars injection > Should be injected based on reactive variables 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+import 'mockVFC?type=vine-style&scopeId=31ccae5a&lang=css&scoped=true&virtual.css'
+
+
+const testVFC = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-31ccae5a\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVFC',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+   '7735f590': (color.value),
+
+}))
+
+const color = ref('red')
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-31ccae5a'
+  return __vine /* End of testVFC */
+})()"
+`;
+
+exports[`CSS vars injection > should work with w/ complex expression 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+import 'testVFCComplex?type=vine-style&scopeId=74b8c2b8&lang=css&scoped=true&virtual.css'
+
+
+const testVFCComplex = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-74b8c2b8\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"title\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVFCComplex',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+   '29a90d81': (foo),
+
+}))
+
+let a = 100
+let b = 200
+let foo = 300
+
+/* No expose */
+
+      return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\" title \\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+  __vine.__scopeId = 'data-v-74b8c2b8'
+  return __vine /* End of testVFCComplex */
+})()
+"
+`;

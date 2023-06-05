@@ -2,7 +2,6 @@ import type { SgNode } from '@ast-grep/napi'
 import type { VineFnCompCtx, VinePropMeta } from './types'
 import { ruleHasVueRefCallExpr, ruleSetUpVariableDeclaration } from './ast-grep-rules'
 
-// TODO: unit test,
 export function compileCSSVars(
   vineFnCompCtx: VineFnCompCtx,
   inline = true,
@@ -13,8 +12,7 @@ export function compileCSSVars(
 
   const varList = genCSSVarsList(cssBindings, setupStmts, props)
   // TODO Compilation in non-inline mode
-  const res = inline && genUseCssVarsCode(varList)
-  return res
+  return inline ? genUseCssVarsCode(varList) : ''
 }
 
 export const CSS_VARS_HELPER = 'useCssVars'
@@ -56,7 +54,6 @@ function genCSSVarsList(
   return res
 }
 
-// TODO 優化 哈希參數
 function genCSSVarsItem(
   node: SgNode,
   name: string,

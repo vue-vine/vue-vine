@@ -65,7 +65,6 @@ export async function compileVineStyle(
   }
 
   // transform css v-bind
-  // TODO: unit test,
   if (source.includes('v-bind')) {
     postcssPlugins.push(cssVarsPlugin({
       fileCtx: compilerCtx.fileCtxMap.get(vineFileId)!,

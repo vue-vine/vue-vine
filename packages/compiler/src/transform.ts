@@ -148,7 +148,6 @@ export function transformFile(
     }
 
     // add useCssVars
-    // TODO: unit test
     if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
       vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
     }
