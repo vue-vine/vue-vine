@@ -3,24 +3,17 @@ import { randomString } from '~/utils'
 function PostHeader() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
-  const color = ref('red')
-  const color2 = ref('red')
-  // const foo = 'red'
-  // const bar = () => 'red'
-  // function fa() {
-  //   return 'red'
-  // }
+
   vineStyle.scoped(`
     .blog-title {
       font-size: 20px;
       font-weight: 700;
       margin-bottom: 6px;
-       background-color: v-bind(color2);
     }
     .blog-meta {
       margin: 8px 0;
       padding: 6px;
-      background-color: v-bind(color);
+      background-color: #333;
       border-radius: 6px;
     }
     .blog-meta-item {
@@ -30,8 +23,8 @@ function PostHeader() {
 
   return vine`
     <header>
-      <div class="blog-title" @click="color = 'blue'">
-        {{ title }} {{color}}
+      <div class="blog-title">
+        {{ title }}
       </div>
       <div class="blog-meta">
         <span class="blog-meta-item">

@@ -5,6 +5,7 @@ import type { VineCompilerCtx, VineProcessorLang } from '../types'
 import { processors } from './preprocessor'
 import { scopedPlugin } from './scoped-plugin'
 import { trimPlugin } from './trim-plugin'
+import { cssVarsPlugin } from './css-vars-plugin'
 
 export async function compileVineStyle(
   compilerCtx: VineCompilerCtx,
@@ -60,6 +61,16 @@ export async function compileVineStyle(
         id: longId,
         fileCtx: compilerCtx.fileCtxMap.get(vineFileId)!,
       }),
+    )
+  }
+
+  // transform css v-bind
+  // TODO: unit test,
+  if (source.includes('v-bind')) {
+    postcssPlugins.push(cssVarsPlugin({
+      fileCtx: compilerCtx.fileCtxMap.get(vineFileId)!,
+      scopeId,
+    }),
     )
   }
 

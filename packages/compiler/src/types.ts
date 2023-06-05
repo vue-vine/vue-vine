@@ -91,7 +91,7 @@ export interface VineFnCompCtx {
   insideSetupStmts: SgNode[]
   templateSource: string
   scopeId: string
-  cssBindings: string[]
+  cssBindings: Record<string, string | null> | null
 }
 
 // Enums:
