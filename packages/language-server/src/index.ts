@@ -28,10 +28,10 @@ const plugin: LanguageServerPlugin = (): ReturnType<LanguageServerPlugin> => ({
           errors.push({
             severity: DiagnosticSeverity.Error,
             range: {
-              start: file.textDocument.positionAt(err.range.start.index),
-              end: file.textDocument.positionAt(err.range.end.index),
+              start: file.textDocument.positionAt(err.range?.start.index ?? 0),
+              end: file.textDocument.positionAt(err.range?.end.index ?? 0),
             },
-            source: 'typescript',
+            source: 'vue-vine',
             message: err.msg,
           })
         }

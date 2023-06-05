@@ -36,7 +36,7 @@
         "scopeName": "source.vine-vue-template-inject",
         "path": "./syntaxes/vine-inject.json",
         "embeddedLanguages": {
-          "meta.embedded.block.vine-vue-template": "vine-vue-template",
+          "text.vine-vue-template": "vine-vue-template",
           "source.vue": "vue",
           "source.css": "css",
           "source.css.scss": "scss",
@@ -44,6 +44,9 @@
           "source.css.postcss": "postcss",
           "source.sass": "sass",
           "source.stylus": "stylus"
+        },
+        "tokenTypes": {
+          "text.vine-vue-template": "other"
         },
         "injectTo": [
           "source.ts"
@@ -78,8 +81,8 @@
     "@types/vscode": "^1.78.0",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
-    "@volar/language-server": "1.5.4",
-    "@volar/vscode": "1.5.4",
+    "@volar/language-server": "1.6.9",
+    "@volar/vscode": "1.6.9",
     "@vscode/test-electron": "^2.3.0",
     "esbuild": "^0.15.18",
     "eslint": "^8.39.0",

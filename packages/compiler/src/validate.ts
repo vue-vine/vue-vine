@@ -53,7 +53,9 @@ function assertCallExprHasOnlyOneObjLitArg(
       fnName
     }\` only one object literal argument: \`callExprSgNode\` is undefined.`)
   }
-  const exposeCallArgs = callExprSgNode.field('arguments')!.children()
+  const exposeCallArgs = callExprSgNode
+    .field('arguments')!.children()
+    .filter(node => !CALL_PUNCS.includes(node.kind()))
   const errMsg = `\`${fnName}\` can only have one object literal argument`
   if (exposeCallArgs.length > 1) {
     compilerHooks.onError(

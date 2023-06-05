@@ -11,7 +11,7 @@ const WarningLabel = whiteFgYellowBg(' Warning ')
 
 export interface DiagnosticParams {
   msg: string
-  range: Range
+  range: Range | null
 }
 export interface MakeDiagnosticParams extends DiagnosticParams {
   fileId: string

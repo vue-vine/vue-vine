@@ -10,8 +10,9 @@ import type {
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
-import { QUERY_TYPE_STYLE, parseQuery } from './src/parse-query'
+import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'
+import { QUERY_TYPE_STYLE } from './src/constants'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx(options)
@@ -25,7 +26,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
         onValidateEnd: () => {
           if (compilerCtx.vineCompileErrors.length > 0) {
-            const allErrMsg = compilerCtx.vineCompileErrors.join('\n')
+            const allErrMsg = compilerCtx.vineCompileErrors
+              .map(diagnositc => diagnositc.full)
+              .join('\n')
             compilerCtx.vineCompileErrors.length = 0
             throw new Error(
               `Vue Vine compilation failed:\n${allErrMsg}`,
@@ -39,7 +42,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     const warnLogger = createLogger('warn')
     if (compilerCtx.vineCompileWarnings.length > 0) {
       for (const warn of compilerCtx.vineCompileWarnings) {
-        warnLogger.warn(warn)
+        warnLogger.warn(warn.full)
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
@@ -72,7 +75,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     enforce: 'pre',
     async resolveId(id) {
       const { query } = parseQuery(id)
-      if (query.type === 'vine-style') {
+      if (query.type === QUERY_TYPE_STYLE) {
         // serve vine style requests as virtual modules
         return id
       }

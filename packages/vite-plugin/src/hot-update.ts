@@ -1,5 +1,6 @@
 import type { HmrContext, ModuleNode } from 'vite'
 import { parseQuery } from './parse-query'
+import { QUERY_TYPE_STYLE } from './constants'
 
 export function handleHotUpdate(
   { modules }: HmrContext,
@@ -13,7 +14,7 @@ export function handleHotUpdate(
           return
         const { query } = parseQuery(im.id)
         // filter css modules
-        if (query.type === 'vine-style') {
+        if (query.type === QUERY_TYPE_STYLE) {
           affectedModules.add(im)
         }
       })

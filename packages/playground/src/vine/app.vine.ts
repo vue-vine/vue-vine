@@ -21,6 +21,11 @@ function PostHeader() {
     }
   `)
 
+  vineExpose({
+    title,
+    author,
+  })
+
   return vine`
     <header>
       <div class="blog-title">

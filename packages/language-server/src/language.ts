@@ -10,10 +10,11 @@ import type { VineVirtualFileExtension } from './types'
 function virtualFileName(
   sourceFileName: string,
   extension: VineVirtualFileExtension,
+  extra?: string,
 ) {
   return `${
     sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
-  }.vine-virtual.${extension}`
+  }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
 export const language: Language<VineFile> = {
@@ -33,6 +34,7 @@ export class VineFile implements VirtualFile {
 
   fileName!: string
   mappings!: VirtualFile['mappings']
+  codegenStacks = []
   embeddedFiles!: VirtualFile['embeddedFiles']
   textDocument!: TextDocument
 
@@ -58,12 +60,15 @@ export class VineFile implements VirtualFile {
   }
 
   mustRunOnSnapshotUpdated() {
+    this.embeddedFiles = []
+    this.vineCompileErrs = []
+    this.vineCompileWarns = []
+
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
       data: FileRangeCapabilities.full,
     }]
-    this.embeddedFiles = []
     this.textDocument = TextDocument.create(
       this.fileName,
       'vine',
@@ -80,12 +85,38 @@ export class VineFile implements VirtualFile {
   onSnapshotUpdated() {
     this.mustRunOnSnapshotUpdated()
     this.addEmbeddedStyleFiles()
+    this.addEmbeddedTemplateFiles()
+  }
+
+  createEmbeddedFile(
+    source: string,
+    vFileName: string,
+    range: [number, number],
+  ): VirtualFile {
+    return {
+      fileName: vFileName,
+      kind: FileKind.TextFile,
+      snapshot: {
+        getText: (start, end) => source.slice(start, end),
+        getLength: () => source.length,
+        getChangeRange: () => undefined,
+      },
+      mappings: [{
+        sourceRange: range,
+        generatedRange: [0, source.length],
+        data: FileRangeCapabilities.full,
+      }],
+      codegenStacks: [],
+      capabilities: FileCapabilities.full,
+      embeddedFiles: [],
+    }
   }
 
   addEmbeddedStyleFiles() {
-    for (const styleDefine of Object.values(this.vineFileCtx.styleDefine)) {
-      const { lang, source, range } = styleDefine
+    for (const [scopeId, styleDefine] of Object.entries(this.vineFileCtx.styleDefine)) {
+      const { lang, source, range, fileCtx } = styleDefine
       const { start, end } = range
+      const belongComp = fileCtx.vineFnComps.find(comp => comp.scopeId === scopeId)
       const virtualFileExt: VineVirtualFileExtension = (() => {
         switch (lang) {
           case 'css':
@@ -97,26 +128,45 @@ export class VineFile implements VirtualFile {
             return lang
         }
       })()
-      this.embeddedFiles.push({
-        fileName: virtualFileName(this.sourceFileName, virtualFileExt),
-        kind: FileKind.TextFile,
-        snapshot: {
-          getText: (start, end) => source.slice(start, end),
-          getLength: () => source.length,
-          getChangeRange: () => undefined,
-        },
-        mappings: [{
-          sourceRange: [
+
+      this.embeddedFiles.push(
+        this.createEmbeddedFile(
+          source,
+          virtualFileName(
+            this.sourceFileName,
+            virtualFileExt,
+            belongComp?.fnName ?? scopeId,
+          ),
+          [
             // +1/-1 to skip the first/last quote
             start.index + 1,
             end.index - 1,
           ],
-          generatedRange: [0, source.length],
-          data: FileRangeCapabilities.full,
-        }],
-        capabilities: FileCapabilities.full,
-        embeddedFiles: [],
-      })
+        ),
+      )
+    }
+  }
+
+  addEmbeddedTemplateFiles() {
+    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
+      const { template } = vineFnCompCtx
+      const range = template.range()
+
+      this.embeddedFiles.push(
+        this.createEmbeddedFile(
+          template.text().slice(1, -1), // skip quotes
+          virtualFileName(
+            this.sourceFileName,
+            'html',
+            vineFnCompCtx.fnName ?? vineFnCompCtx.scopeId,
+          ),
+          [
+            // +1/-1 to skip the first/last quote
+            range.start.index + 1,
+            range.end.index - 1,
+          ],
+        ),
+      )
     }
   }
 }

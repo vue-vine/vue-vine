@@ -3,7 +3,7 @@ import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
 import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
-import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
+import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, CALL_PUNCS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
 import { parseCssVars } from './analyze-css-vars'
@@ -214,7 +214,9 @@ function anaylyzeStoreTheOnlyOneArg(
     return
   }
   // Our validation has already guaranteed that the first argument is an object type.
-  const exposeCallArg = exposeCallSgNode.field('arguments')!.child(0)!
+  const exposeCallArg = exposeCallSgNode
+    .field('arguments')!.children()
+    .filter(node => !CALL_PUNCS.includes(node.kind()))[0]!
   // As compilation, we just need to store the argument source code
   return exposeCallArg
 }
@@ -720,9 +722,8 @@ function buildVineFnCompCtx(
   const vineFnCompDecl = vineFnSgNode.find(ruleVineFunctionComponentMatching)!
 
   // Get vine template source
-  const vineTemplateSource = vineFnCompDecl.find(
-    ruleVineTaggedTemplateString,
-  )!.field('arguments')!.text().slice(1, -1).trim() // remove the quotes
+  const vineTemolateSgNode = vineFnCompDecl.find(ruleVineTaggedTemplateString)!.field('arguments')!
+  const vineTemplateSource = vineTemolateSgNode.text().slice(1, -1).trim() // remove the quotes
 
   const vineFnCompCtx: VineFnCompCtx = {
     isExport,
@@ -739,7 +740,7 @@ function buildVineFnCompCtx(
     insideSetupStmts: [],
     fnDeclNode: vineFnSgNode,
     fnValueNode: vineFnCompDecl,
-    templateSource: vineTemplateSource,
+    template: vineTemolateSgNode,
     cssBindings: null,
   }
 
@@ -778,7 +779,7 @@ export function analyzeVine(
         compilerHooks.onWarn(
           vineWarn(vineFileCtx, {
             msg: `Cannot reference ${id.text()} in a vineProp validator function because it is declared outside the setup() function.`,
-            pos: id.range().start,
+            range: id.range(),
           }),
         )
       }

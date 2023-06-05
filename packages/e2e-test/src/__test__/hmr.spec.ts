@@ -1,50 +1,45 @@
 import { afterEach, describe, expect, test } from 'vitest'
 import { editFile, getColor, untilUpdated } from '../../utils/test-utils'
-import { page } from '../../utils/vitest-setup'
+import { e2eTestCtx } from '../../utils/vitest-setup'
 
 afterEach(() => {
   // reset
-  editFile('app.vine.ts', code => code.replace('color: red', 'color: #fff'))
-  // reset
-  editFile('app.vine.ts', code => code.replace('change', 'Random pick a post'))
-  // reset
-  editFile('app.vine.ts', code => code.replace('ref(\'van\')', 'ref(\'vine\')'))
-  // reset
-  editFile('app.vine.ts', code =>
-    code.replace('<span class="name">\n      {{name}}\n    </span>',
-      '<p class="name">\n      {{name}}\n    </p>'),
+  editFile(
+    'test.vine.ts',
+    code => code
+      .replace('color: blue', 'color: black')
+      .replace('text222', 'text111')
+      .replace('ref(\'vue\')', 'ref(\'vine\')'),
   )
 })
 describe('hmr', () => {
   test('should re-render and preserve state when template is edited', async () => {
+    await e2eTestCtx.page?.click('button.test-btn')
+    editFile('test.vine.ts', code => code.replace('text111', 'text222'))
     await untilUpdated(() => {
-      return page.textContent('button.btn')
-    }, 'Random pick a post')
-
-    editFile('app.vine.ts', code => code.replace('Random pick a post', 'change'))
-    await untilUpdated(() => {
-      return page.textContent('button.btn')
-    }, 'Random pick a post')
+      return e2eTestCtx.page!.textContent('.counter')
+    }, 'Count: 0')
   })
 
   test('should update style and preserve state when style is edited', async () => {
-    expect(await getColor('.btn')).toBe('rgb(255, 255, 255)')
-    editFile('app.vine.ts', code => code.replace('color: #fff', 'color: red'))
-    await untilUpdated(() => getColor('.btn'), 'rgb(255, 0, 0)')
+    expect(await getColor('button.test-btn')).toBe('rgb(0, 0, 0)')
+    editFile('test.vine.ts', code => code.replace('color: black', 'color: blue'))
+    await untilUpdated(() => getColor('button.test-btn'), 'rgb(0, 0, 255)')
+  })
+
+  test('should re-render after element tag has changed', async () => {
+    editFile('test.vine.ts', code =>
+      code.replace(
+        '<p class="name">{{name}}</p>',
+        '<span class="name">{{name}}</span>'),
+    )
+    await untilUpdated(() => e2eTestCtx.page!.textContent('span.name'), 'vine')
   })
 
   test('should reload and reset state when script is edited', async () => {
-    editFile('app.vine.ts', code =>
-      code.replace('ref(\'vine\')', 'ref(\'van\')'),
-    )
-    await untilUpdated(() => page.textContent('.name'), 'van')
-  })
-
-  test('should re-render when template is emptied', async () => {
-    editFile('app.vine.ts', code =>
-      code.replace('<p class="name">\n      {{name}}\n    </p>',
-        '<span class="name">\n      {{name}}\n    </span>'),
-    )
-    await untilUpdated(() => page.textContent('span'), 'vine')
+    await e2eTestCtx.page?.click('button.test-btn')
+    editFile('test.vine.ts', code => code.replace('ref(\'vine\')', 'ref(\'vue\')'))
+    await untilUpdated(() => e2eTestCtx.page!.textContent('.name'), 'vue')
+    expect(await e2eTestCtx.page!.textContent('.counter')).toBe('Count: 0')
   })
 })
