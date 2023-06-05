@@ -97,6 +97,7 @@ export function App() {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
   const bgColor = ref('#334155')
+
   vineStyle(`
     .random-pick-post-btn {
       margin-bottom: 1rem;
