@@ -16,6 +16,5 @@ echo_green "\nBuild vue-vine done!"
 echo_cyan "Start watching changes...\n"
 nx watch \
   --projects=@vue-vine/compiler,@vue-vine/vite-plugin,vue-vine \
-  --includeDependentProjects \
-  -- nx run \$NX_PROJECT_NAME:build
+  -- nx build vue-vine
   
