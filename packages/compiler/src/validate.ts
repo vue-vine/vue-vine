@@ -13,7 +13,7 @@ import {
   ruleVinePropCall,
   ruleVineStyleCall,
   ruleVineTaggedTemplateString,
-} from './ast-grep-rules'
+} from './ast-grep/rules-for-script'
 import type { VineCompilerHooks, VineFileCtx } from './types'
 import { SUPPORTED_CSS_LANGS, VINE_PROP_WITH_DEFAULT_CALL, VUE_LIFECYCLE_HOOK_APIS, VUE_REACTIVITY_APIS } from './constants'
 import { vineErr, vineWarn } from './diagnostics'

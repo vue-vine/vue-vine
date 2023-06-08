@@ -5,10 +5,7 @@ import type { VineFileCtx, VineFnCompCtx } from './types'
 import { VineBindingTypes } from './types'
 import { STYLE_LANG_FILE_EXTENSION } from './constants'
 import { compileVineTemplate } from './template'
-import {
-  ruleImportSpecifier,
-  ruleImportStmt,
-} from './ast-grep-rules'
+import { ruleImportSpecifier, ruleImportStmt } from './ast-grep/rules-for-script'
 import { filterJoin, showIf, spaces } from './utils'
 import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
 

@@ -1,4 +1,5 @@
 import type { NapiConfig } from '@ast-grep/napi'
+import { directlyMatchUtil, directlyReverseUtil, fastCreateMatchRuleByUtils } from './shared'
 
 function macroCallPattern(macroName: string) {
   return {
@@ -45,7 +46,7 @@ const topLevelStmtKinds = [
   'comment',
 ] as const
 
-export const vineAstGrepUtils = {
+export const vineScriptRuleUtils = {
   importClause: {
     kind: 'import_clause',
   },
@@ -297,73 +298,31 @@ export const vineAstGrepUtils = {
     },
   },
 } as const
-type VineAstGrepUtils = typeof vineAstGrepUtils
-type VineAstGrepUtilsName = keyof VineAstGrepUtils
 
-function selectUtilRules(utils: VineAstGrepUtilsName[]) {
-  return Object.fromEntries(
-    Object.entries(vineAstGrepUtils)
-      .filter(
-        ([name]) => utils.includes(name as VineAstGrepUtilsName),
-      ),
-  )
-}
-
-function fastCreateMatchRuleByUtils(
-  utilName: VineAstGrepUtilsName,
-  utilsSpec?: Partial<VineAstGrepUtils>,
-  extraRules?: any,
-  reverse = false,
-): NapiConfig {
-  const rule = {
-    matches: utilName,
-    ...extraRules,
-  }
-  return {
-    rule: reverse ? { not: rule } : rule,
-    utils: utilsSpec ?? vineAstGrepUtils,
-  }
-}
-
-function directlyMatchUtil(utilName: VineAstGrepUtilsName): NapiConfig {
-  return fastCreateMatchRuleByUtils(
-    utilName,
-    selectUtilRules([utilName]),
-  )
-}
-function directlyReverseUtil(utilName: VineAstGrepUtilsName): NapiConfig {
-  return fastCreateMatchRuleByUtils(
-    utilName,
-    selectUtilRules([utilName]),
-    undefined,
-    true,
-  )
-}
-
-export const ruleVineFunctionComponentDeclaration = fastCreateMatchRuleByUtils('vineFunctionComponentDeclaration')
-export const ruleVineFunctionComponentMatching = fastCreateMatchRuleByUtils('vineFunctionComponentMatching')
-export const ruleVineFormalParmasProps = fastCreateMatchRuleByUtils('vineFormalParmasProps')
-export const ruleVineEmitsCall = fastCreateMatchRuleByUtils('validVineEmitsCall')
-export const ruleVineEmitsDeclaration = fastCreateMatchRuleByUtils('vineEmitsDeclaration')
-export const ruleValidVinePropDeclaration = fastCreateMatchRuleByUtils('validVinePropDeclaration')
-export const ruleVinePropValidatorFnBody = fastCreateMatchRuleByUtils('vinePropValidatorFnBody')
-export const ruleInvalidNoDeclVinePropCall = fastCreateMatchRuleByUtils('invalidNoDeclVinePropCall')
-export const ruleInvalidDefineStyleWithDeclaration = fastCreateMatchRuleByUtils('invalidDeclOfVineStyleCall')
-export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils('invalidRootScopeStmt')
-export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils('idInsideMacroMayReferenceSetupLocal')
-export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils('hasMacroCallExpr')
-export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils('hasVueRefCallExpr')
-export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils('setupVariableDeclaration')
-export const ruleVineTaggedTemplateString = directlyMatchUtil('vineTaggedTemplateString')
-export const ruleImportStmt = directlyMatchUtil('importStmt')
-export const ruleImportClause = directlyMatchUtil('importClause')
-export const ruleImportSpecifier = directlyMatchUtil('importSpecifier')
-export const ruleNotImportSpecifier = directlyReverseUtil('importSpecifier')
-export const ruleImportNamespace = directlyMatchUtil('importNamespace')
-export const ruleVineStyleCall = directlyMatchUtil('vineStyleCall')
-export const ruleVinePropCall = directlyMatchUtil('vinePropCall')
-export const ruleVineExposeCall = directlyMatchUtil('vineExposeCall')
-export const ruleVineOptionsCall = directlyMatchUtil('vineOptionsCall')
+export const ruleVineFunctionComponentDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'vineFunctionComponentDeclaration')
+export const ruleVineFunctionComponentMatching = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'vineFunctionComponentMatching')
+export const ruleVineFormalParmasProps = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'vineFormalParmasProps')
+export const ruleVineEmitsCall = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'validVineEmitsCall')
+export const ruleVineEmitsDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'vineEmitsDeclaration')
+export const ruleValidVinePropDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'validVinePropDeclaration')
+export const ruleVinePropValidatorFnBody = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'vinePropValidatorFnBody')
+export const ruleInvalidNoDeclVinePropCall = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'invalidNoDeclVinePropCall')
+export const ruleInvalidDefineStyleWithDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'invalidDeclOfVineStyleCall')
+export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'invalidRootScopeStmt')
+export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'idInsideMacroMayReferenceSetupLocal')
+export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasMacroCallExpr')
+export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasVueRefCallExpr')
+export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'setupVariableDeclaration')
+export const ruleVineTaggedTemplateString = directlyMatchUtil(vineScriptRuleUtils, 'vineTaggedTemplateString')
+export const ruleImportStmt = directlyMatchUtil(vineScriptRuleUtils, 'importStmt')
+export const ruleImportClause = directlyMatchUtil(vineScriptRuleUtils, 'importClause')
+export const ruleImportSpecifier = directlyMatchUtil(vineScriptRuleUtils, 'importSpecifier')
+export const ruleNotImportSpecifier = directlyReverseUtil(vineScriptRuleUtils, 'importSpecifier')
+export const ruleImportNamespace = directlyMatchUtil(vineScriptRuleUtils, 'importNamespace')
+export const ruleVineStyleCall = directlyMatchUtil(vineScriptRuleUtils, 'vineStyleCall')
+export const ruleVinePropCall = directlyMatchUtil(vineScriptRuleUtils, 'vinePropCall')
+export const ruleVineExposeCall = directlyMatchUtil(vineScriptRuleUtils, 'vineExposeCall')
+export const ruleVineOptionsCall = directlyMatchUtil(vineScriptRuleUtils, 'vineOptionsCall')
 
 export const ruleHasTemplateStringInterpolation: NapiConfig = {
   rule: {

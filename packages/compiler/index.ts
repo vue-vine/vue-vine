@@ -1,7 +1,7 @@
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './src/types'
-import { ruleVineFunctionComponentDeclaration } from './src/ast-grep-rules'
+import { ruleVineFunctionComponentDeclaration } from './src/ast-grep/rules-for-script'
 import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
 import { transformFile } from './src/transform'
