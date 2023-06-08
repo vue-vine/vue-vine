@@ -9,17 +9,17 @@ exports[`CSS vars injection > Should be able to inject according to each subcomp
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
-import 'mockVFCNormal?type=vine-style&scopeId=16827e52&lang=css&scoped=true&virtual.css'
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
+import 'mockVCFNormal?type=vine-style&scopeId=6d8b19f4&lang=css&scoped=true&virtual.css'
 
 
-const testVFC = (() => {
+const testVCF = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-c9ba2a26\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title\\" }
 
   const __vine = _defineComponent({
-    name: 'testVFC',
+    name: 'testVCF',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -28,7 +28,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-   '7735f590': (color.value),
+  '2ad0dd52': (color.value),
 
 }))
 
@@ -43,17 +43,17 @@ const color = ref('red')
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-32464621'
-  return __vine /* End of testVFC */
+  __vine.__scopeId = 'data-v-c9ba2a26'
+  return __vine /* End of testVCF */
 })()
 
-const testVFCS = (() => {
+const testVCFS = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-16827e52\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-6d8b19f4\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title-s\\" }
 
   const __vine = _defineComponent({
-    name: 'testVFCS',
+    name: 'testVCFS',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -62,7 +62,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-   'a773608a': (color.value),
+  '13557ae1': (color.value),
 
 }))
 
@@ -77,8 +77,8 @@ const color = ref('red')
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-16827e52'
-  return __vine /* End of testVFCS */
+  __vine.__scopeId = 'data-v-6d8b19f4'
+  return __vine /* End of testVCFS */
 })()"
 `;
 
@@ -91,17 +91,17 @@ exports[`CSS vars injection > Should be injected based on normal variables 1`] =
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
 
 
-const testVFC = (() => {
+const testVCF = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-c9ba2a26\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title\\" }
 const color = 'red'
 
   const __vine = _defineComponent({
-    name: 'testVFC',
+    name: 'testVCF',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -110,7 +110,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-   '7735f590': (color),
+  '2ad0dd52': (color),
 
 }))
 
@@ -125,8 +125,8 @@ _useCssVars(_ctx => ({
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-32464621'
-  return __vine /* End of testVFC */
+  __vine.__scopeId = 'data-v-c9ba2a26'
+  return __vine /* End of testVCF */
 })()"
 `;
 
@@ -140,17 +140,17 @@ exports[`CSS vars injection > Should be injected based on props 1`] = `
   useCssVars as _useCssVars,
   toRefs as _toRefs
 } from 'vue'
-import 'mockVFCNormal?type=vine-style&scopeId=32464621&lang=css&scoped=true&virtual.css'
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
 
 import { useDefaults as _useDefaults } from \\"vue-vine\\"
 
-const testVFC = (() => {
+const testVCF = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-32464621\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-c9ba2a26\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title\\" }
 
   const __vine = _defineComponent({
-    name: 'testVFC',
+    name: 'testVCF',
     props: {
       color: { required: true },
     },
@@ -164,7 +164,7 @@ const props = _useDefaults(__props, {
 const { color } = _toRefs(props)
 
 _useCssVars(_ctx => ({
-   '7735f590': (props.color),
+  '2ad0dd52': (props.color),
 
 }))
 
@@ -179,8 +179,8 @@ _useCssVars(_ctx => ({
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-32464621'
-  return __vine /* End of testVFC */
+  __vine.__scopeId = 'data-v-c9ba2a26'
+  return __vine /* End of testVCF */
 })()"
 `;
 
@@ -193,16 +193,16 @@ exports[`CSS vars injection > Should be injected based on reactive variables 1`]
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVFC?type=vine-style&scopeId=31ccae5a&lang=css&scoped=true&virtual.css'
+import 'mockVCF?type=vine-style&scopeId=11bda7a6&lang=css&scoped=true&virtual.css'
 
 
-const testVFC = (() => {
+const testVCF = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-31ccae5a\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-11bda7a6\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title\\" }
 
   const __vine = _defineComponent({
-    name: 'testVFC',
+    name: 'testVCF',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -211,7 +211,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-   '7735f590': (color.value),
+  '2ad0dd52': (color.value),
 
 }))
 
@@ -226,12 +226,12 @@ const color = ref('red')
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-31ccae5a'
-  return __vine /* End of testVFC */
+  __vine.__scopeId = 'data-v-11bda7a6'
+  return __vine /* End of testVCF */
 })()"
 `;
 
-exports[`CSS vars injection > should work with w/ complex expression 1`] = `
+exports[`CSS vars injection > Should work with w/ complex expression 1`] = `
 "import {
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
@@ -240,16 +240,16 @@ exports[`CSS vars injection > should work with w/ complex expression 1`] = `
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'testVFCComplex?type=vine-style&scopeId=74b8c2b8&lang=css&scoped=true&virtual.css'
+import 'testVCFComplex?type=vine-style&scopeId=2b09f764&lang=css&scoped=true&virtual.css'
 
 
-const testVFCComplex = (() => {
+const testVCFComplex = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-74b8c2b8\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-2b09f764\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title\\" }
 
   const __vine = _defineComponent({
-    name: 'testVFCComplex',
+    name: 'testVCFComplex',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -258,7 +258,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-   '29a90d81': (foo),
+  '5d7b94b2': (foo),
 
 }))
 
@@ -275,8 +275,8 @@ let foo = 300
     }, // End of setup function
   }) // End of component object
 
-  __vine.__scopeId = 'data-v-74b8c2b8'
-  return __vine /* End of testVFCComplex */
+  __vine.__scopeId = 'data-v-2b09f764'
+  return __vine /* End of testVCFComplex */
 })()
 "
 `;

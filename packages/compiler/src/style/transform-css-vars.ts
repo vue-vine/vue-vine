@@ -1,6 +1,7 @@
 import type { SgNode } from '@ast-grep/napi'
-import type { VineFnCompCtx, VinePropMeta } from './types'
-import { ruleHasVueRefCallExpr, ruleSetUpVariableDeclaration } from './ast-grep-rules'
+import type { VineFnCompCtx, VinePropMeta } from '../types'
+import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep-rules'
+import { spaces } from '../utils'
 
 export function compileCSSVars(
   vineFnCompCtx: VineFnCompCtx,
@@ -61,27 +62,33 @@ function genCSSVarsItem(
 ) {
   let res = ''
   let varName = ''
-  const matchRes = node.find(ruleSetUpVariableDeclaration)
+  const matchRes = node.find(ruleSetupVariableDeclaration)
   if (!matchRes) {
     return ''
   }
-  else {
-    varName = matchRes.getMatch('VAR')!.text()
-    if (name !== varName)
-      return ''
+
+  switch (matchRes.kind()) {
+    case 'variable_declarator':
+      varName = matchRes.field('name')!.text()
+      break
+    case 'pair_pattern':
+      varName = matchRes.field('key')!.text()
+      break
+  }
+
+  if (name !== varName) {
+    return ''
   }
 
   // e.g. const foo = ref('foo')
   if (node.find(ruleHasVueRefCallExpr)) {
     if (matchRes) {
-      res = `   '${value}': (${varName}.value),\n`
+      res = `${spaces(2)}'${value}': (${varName}.value),\n`
     }
   }
-  else {
-    // e.g. const foo = 'foo'
-    if (matchRes) {
-      res = `   '${value}': (${varName}),\n`
-    }
+  // e.g. const foo = 'foo'
+  else if (matchRes) {
+    res = `${spaces(2)}'${value}': (${varName}),\n`
   }
   return res
 }
@@ -91,5 +98,5 @@ function genCSSVarsItemProps(
   name: string,
   value: string,
 ) {
-  return propName !== name ? '' : `   '${value}': (props.${name}),\n`
+  return propName !== name ? '' : `${spaces(2)}'${value}': (props.${name}),\n`
 }

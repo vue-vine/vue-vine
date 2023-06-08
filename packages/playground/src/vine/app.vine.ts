@@ -3,6 +3,7 @@ import { randomString } from '~/utils'
 function PostHeader() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
+  const metaBgColor = ref('#333')
 
   vineStyle.scoped(`
     .blog-title {
@@ -11,12 +12,20 @@ function PostHeader() {
       margin-bottom: 6px;
     }
     .blog-meta {
+      display: flex;
+      flex-direction: column;
       margin: 8px 0;
       padding: 6px;
-      background-color: #333;
+      background-color: v-bind(metaBgColor);
       border-radius: 6px;
     }
-    .blog-meta-item {
+    .blog-meta-line {
+      padding: 6px 0;
+    }
+    .blog-meta-line.change-bg {
+      cursor: pointer;
+    }
+    .blog-meta-span {
       margin: 0 8px;
     }
   `)
@@ -32,10 +41,19 @@ function PostHeader() {
         {{ title }}
       </div>
       <div class="blog-meta">
-        <span class="blog-meta-item">
-          <strong>Author: </strong>{{ author }}</span>
-        <span class="blog-meta-item">
-          <strong>Published: </strong>{{ new Date().toLocaleDateString() }}</span>
+        <div class="blog-meta-line">
+          <span class="blog-meta-span">
+            <strong>Author: </strong>{{ author }}
+          </span>
+          <span class="blog-meta-span">
+            <strong>Published: </strong>{{ new Date().toLocaleDateString() }}
+          </span>
+        </div>
+        <div class="blog-meta-line change-bg" @click="metaBgColor = '#59e'">
+          <span class="blog-meta-span">
+            Click here to change this card's background color!
+          </span>
+        </div>
       </div>
     </header>
   `
@@ -96,13 +114,12 @@ export function App() {
   const randomPick = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
-  const bgColor = ref('#334155')
 
   vineStyle(`
     .random-pick-post-btn {
       margin-bottom: 1rem;
       font-size: 1rem;
-      background: v-bind(bgColor);
+      background: #334155;
       border-radius: 0.25rem;
       color: #fff;
       padding: 0.5rem 1rem;
@@ -115,9 +132,6 @@ export function App() {
   return vine`
     <button class="random-pick-post-btn" @click="randomPick">
       Random pick a post
-    </button>
-     <button class="random-pick-post-btn" @click="bgColor = '#42d392'">
-      change bg
     </button>
     <BlogPost :id="id" />
   `

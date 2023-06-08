@@ -3,6 +3,8 @@ defineProps<{
   title: string
   author: string
 }>()
+
+const metaBgColor = ref('#333')
 </script>
 
 <template>
@@ -11,10 +13,19 @@ defineProps<{
       {{ title }}
     </div>
     <div class="blog-meta">
-      <span class="blog-meta-item">
-        <strong>Author: </strong>{{ author }}</span>
-      <span class="blog-meta-item">
-        <strong>Published: </strong>{{ new Date().toLocaleDateString() }}</span>
+      <div class="blog-meta-line">
+        <span class="blog-meta-span">
+          <strong>Author: </strong>{{ author }}
+        </span>
+        <span class="blog-meta-span">
+          <strong>Published: </strong>{{ new Date().toLocaleDateString() }}
+        </span>
+      </div>
+      <div class="blog-meta-line change-bg" @click="metaBgColor = '#59e'">
+        <span class="blog-meta-span">
+          Click here to change this card's background color!
+        </span>
+      </div>
     </div>
   </header>
 </template>
@@ -26,12 +37,20 @@ defineProps<{
   margin-bottom: 6px;
 }
 .blog-meta {
+  display: flex;
+  flex-direction: column;
   margin: 8px 0;
   padding: 6px;
-  background-color: #333;
+  background-color: v-bind(metaBgColor);
   border-radius: 6px;
 }
-.blog-meta-item {
+.blog-meta-line {
+  padding: 6px 0;
+}
+.blog-meta-line.change-bg {
+  cursor: pointer;
+}
+.blog-meta-span {
   margin: 0 8px;
 }
 </style>

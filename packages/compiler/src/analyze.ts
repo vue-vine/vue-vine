@@ -6,7 +6,7 @@ import { VineBindingTypes } from './types'
 import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, CALL_PUNCS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
-import { parseCssVars } from './analyze-css-vars'
+import { parseCssVars } from './style/analyze-css-vars'
 
 type AnalyzeCtx = [
   compilerHooks: VineCompilerHooks,
@@ -618,7 +618,7 @@ function analyzeVineFnBodyStmtForBindings(
 }
 
 function filterStatementWithoutMacroCall(
-  analyzeCtx: AnalyzeCtx,
+  _: AnalyzeCtx,
   stmts: SgNode[],
 ) {
   return stmts.filter((stmt) => {
@@ -723,8 +723,6 @@ function buildVineFnCompCtx(
 
   // Get vine template source
   const vineTemolateSgNode = vineFnCompDecl.find(ruleVineTaggedTemplateString)!.field('arguments')!
-  const vineTemplateSource = vineTemolateSgNode.text().slice(1, -1).trim() // remove the quotes
-
   const vineFnCompCtx: VineFnCompCtx = {
     isExport,
     isAsync: false,

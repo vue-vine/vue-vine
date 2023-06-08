@@ -10,7 +10,7 @@ import {
   ruleImportStmt,
 } from './ast-grep-rules'
 import { filterJoin, showIf, spaces } from './utils'
-import { CSS_VARS_HELPER, compileCSSVars } from './transform-css-vars'
+import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [

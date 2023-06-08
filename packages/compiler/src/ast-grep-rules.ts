@@ -118,43 +118,10 @@ export const vineAstGrepUtils = {
   setupVariableDeclaration: {
     any: [
       {
-        pattern: 'var $VAR',
+        kind: 'variable_declarator',
       },
       {
-        pattern: 'let $VAR',
-      },
-      {
-        pattern: 'const $VAR',
-      },
-      {
-        pattern: 'function $VAR',
-      },
-      // TODO: destructuring assignment
-    ],
-  },
-  vineMacrosCallRegExps: {
-    any: [
-      {
-        regex: 'vineProp',
-      },
-      {
-        regex: 'vineEmits',
-      },
-      {
-        regex: 'vineStyle',
-      },
-      {
-        regex: 'vineExpose',
-      },
-      {
-        regex: 'vineOptions',
-      },
-    ],
-  },
-  vueRefCallRegExps: {
-    any: [
-      {
-        regex: 'ref',
+        kind: 'pair_pattern',
       },
     ],
   },
@@ -255,15 +222,30 @@ export const vineAstGrepUtils = {
     has: {
       stopBy: 'end',
       kind: 'call_expression',
-      matches: 'vineMacrosCallRegExps',
+      any: [
+        {
+          regex: 'vineProp',
+        },
+        {
+          regex: 'vineEmits',
+        },
+        {
+          regex: 'vineStyle',
+        },
+        {
+          regex: 'vineExpose',
+        },
+        {
+          regex: 'vineOptions',
+        },
+      ],
     },
   },
-
   hasVueRefCallExpr: {
     has: {
       stopBy: 'end',
       kind: 'call_expression',
-      matches: 'vueRefCallRegExps',
+      regex: 'ref',
     },
   },
 
@@ -370,7 +352,7 @@ export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils('invalidRootS
 export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils('idInsideMacroMayReferenceSetupLocal')
 export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils('hasMacroCallExpr')
 export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils('hasVueRefCallExpr')
-export const ruleSetUpVariableDeclaration = fastCreateMatchRuleByUtils('setupVariableDeclaration')
+export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils('setupVariableDeclaration')
 export const ruleVineTaggedTemplateString = directlyMatchUtil('vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil('importStmt')
 export const ruleImportClause = directlyMatchUtil('importClause')

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { parseCssVars } from '../src/analyze-css-vars'
+import { parseCssVars } from '../src/style/analyze-css-vars'
 
 describe('analyze css vbind', () => {
   test('Should be able to parse to extract the v-bind value', () => {
