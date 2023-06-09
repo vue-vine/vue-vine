@@ -342,7 +342,7 @@ function isStaticSgNode(node: SgNode): boolean {
 }
 
 function unwrapTSNode(node: SgNode): SgNode {
-  if (TS_NODE_KINDS.includes(node.kind())) {
+  if (node && TS_NODE_KINDS.includes(node.kind())) {
     switch (node.kind()) {
       case 'as_expression':
       case 'non_null_expression':
@@ -511,6 +511,10 @@ function analyzeLexicalDeclNode(
   for (const varDeclarator of allDeclarators) {
     const varNameNode = varDeclarator.field('name')!
     const declValueNode = unwrapTSNode(varDeclarator.field('value')!)
+    // #25
+    if (!declValueNode) {
+      continue
+    }
     if (varNameNode.kind() === 'identifier') {
       if (isCallOf(declValueNode, userReactiveAlias)) {
         // treat reactive() calls as let since it's meant to be mutable
