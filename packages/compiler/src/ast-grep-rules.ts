@@ -42,6 +42,7 @@ const topLevelStmtKinds = [
   'lexical_declaration',
   'type_alias_declaration',
   'interface_declaration',
+  'comment',
 ] as const
 
 export const vineAstGrepUtils = {
