@@ -115,22 +115,13 @@ export const vineAstGrepUtils = {
       matches: 'vineEmitsCall',
     },
   },
-  vineMacrosCallRegExps: {
+  setupVariableDeclaration: {
     any: [
       {
-        regex: 'vineProp',
+        kind: 'variable_declarator',
       },
       {
-        regex: 'vineEmits',
-      },
-      {
-        regex: 'vineStyle',
-      },
-      {
-        regex: 'vineExpose',
-      },
-      {
-        regex: 'vineOptions',
+        kind: 'pair_pattern',
       },
     ],
   },
@@ -231,7 +222,30 @@ export const vineAstGrepUtils = {
     has: {
       stopBy: 'end',
       kind: 'call_expression',
-      matches: 'vineMacrosCallRegExps',
+      any: [
+        {
+          regex: 'vineProp',
+        },
+        {
+          regex: 'vineEmits',
+        },
+        {
+          regex: 'vineStyle',
+        },
+        {
+          regex: 'vineExpose',
+        },
+        {
+          regex: 'vineOptions',
+        },
+      ],
+    },
+  },
+  hasVueRefCallExpr: {
+    has: {
+      stopBy: 'end',
+      kind: 'call_expression',
+      regex: 'ref',
     },
   },
 
@@ -337,7 +351,8 @@ export const ruleInvalidDefineStyleWithDeclaration = fastCreateMatchRuleByUtils(
 export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils('invalidRootScopeStmt')
 export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils('idInsideMacroMayReferenceSetupLocal')
 export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils('hasMacroCallExpr')
-
+export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils('hasVueRefCallExpr')
+export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils('setupVariableDeclaration')
 export const ruleVineTaggedTemplateString = directlyMatchUtil('vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil('importStmt')
 export const ruleImportClause = directlyMatchUtil('importClause')

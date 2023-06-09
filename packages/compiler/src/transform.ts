@@ -5,8 +5,12 @@ import type { VineFileCtx, VineFnCompCtx } from './types'
 import { VineBindingTypes } from './types'
 import { STYLE_LANG_FILE_EXTENSION } from './constants'
 import { compileVineTemplate } from './template'
-import { ruleImportSpecifier, ruleImportStmt } from './ast-grep-rules'
+import {
+  ruleImportSpecifier,
+  ruleImportStmt,
+} from './ast-grep-rules'
 import { filterJoin, showIf, spaces } from './utils'
+import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
@@ -141,6 +145,11 @@ export function transformFile(
     }
     if (!vueImports.has('defineComponent')) {
       vueImports.set('defineComponent', '_defineComponent')
+    }
+
+    // add useCssVars
+    if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
+      vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
     }
 
     const allOtherStmts = preambleSgRoot.children().filter(
@@ -301,7 +310,7 @@ export function transformFile(
     vineFileCtx.fileSourceCode.appendRight(
       vineFnDeclStart.index, `
 ${showIf(vineFnCompCtx.isExport, 'export ')}const ${fnName} = (() => {
-  
+
 ${
   hoisted.length > 0
     ? hoisted
@@ -361,6 +370,8 @@ ${showIf(
   propsFromMacro.length > 0,
   `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
 )}
+
+${compileCSSVars(vineFnCompCtx)}
 
 ${insideSetupStmtCode.join('\n')}
 
