@@ -45,10 +45,6 @@ export const TS_NODE_KINDS = [
   'non_null_expression',
   'satisfies_expression',
 ]
-export const CALL_PUNCS = ['(', ')', ',']
-export const ARRAY_PATTERN_PUNCS = ['[', ']', ',']
-export const OBJECT_PATTERN_PUNCS = ['{', '}', ',', ':']
-export const ENUM_DECL_PUNCS = ['{', '}', ',', '=']
 export const BOOL_KINDS = ['true', 'false']
 
 export const STYLE_LANG_FILE_EXTENSION: Record<VineStyleLang, string> = {

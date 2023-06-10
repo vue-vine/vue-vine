@@ -15,8 +15,9 @@ import {
   ruleVineTaggedTemplateString,
 } from './ast-grep-rules'
 import type { VineCompilerHooks, VineFileCtx } from './types'
-import { CALL_PUNCS, SUPPORTED_CSS_LANGS, VINE_PROP_WITH_DEFAULT_CALL, VUE_LIFECYCLE_HOOK_APIS, VUE_REACTIVITY_APIS } from './constants'
+import { SUPPORTED_CSS_LANGS, VINE_PROP_WITH_DEFAULT_CALL, VUE_LIFECYCLE_HOOK_APIS, VUE_REACTIVITY_APIS } from './constants'
 import { vineErr, vineWarn } from './diagnostics'
+import { isNotUselessPunc } from './utils'
 
 type ValidateCtx = [
   compilerHooks: VineCompilerHooks,
@@ -55,7 +56,7 @@ function assertCallExprHasOnlyOneObjLitArg(
   }
   const exposeCallArgs = callExprSgNode
     .field('arguments')!.children()
-    .filter(node => !CALL_PUNCS.includes(node.kind()))
+    .filter(isNotUselessPunc)
   const errMsg = `\`${fnName}\` can only have one object literal argument`
   if (exposeCallArgs.length > 1) {
     compilerHooks.onError(
@@ -108,7 +109,7 @@ function assertVineStyleArgStringAndLangType(
   const vineStyleCallArgs = callExprSgNode
     .field('arguments')!
     .children()
-    .filter(node => !CALL_PUNCS.includes(node.kind()))
+    .filter(isNotUselessPunc)
   const errMsg = 'vineStyle can only have one string argument'
   if (vineStyleCallArgs.length > 1) {
     compilerHooks.onError(
@@ -272,7 +273,7 @@ function validateVineFunctionCompProps(
       }
 
       if (isWithDefault) {
-        const vinePropCallArgs = vinePropCall.field('arguments')!.children().filter(child => !CALL_PUNCS.includes(child.kind()))
+        const vinePropCallArgs = vinePropCall.field('arguments')!.children().filter(isNotUselessPunc)
         const defaultValueNode = vinePropCallArgs[0]
         if (
           defaultValueNode

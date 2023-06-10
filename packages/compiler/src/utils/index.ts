@@ -1,3 +1,5 @@
+import type { SgNode } from '@ast-grep/napi'
+
 export function concating<T>(
   condition: boolean,
   arr: T[],
@@ -18,4 +20,8 @@ export function filterJoin(
   join: string,
 ) {
   return arr.filter(Boolean).join(join)
+}
+
+export function isNotUselessPunc(node: SgNode) {
+  return !node.isLeaf() || !node.isNamedLeaf()
 }

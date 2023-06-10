@@ -3,10 +3,11 @@ import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
 import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
-import { ARRAY_PATTERN_PUNCS, BOOL_KINDS, CALL_PUNCS, ENUM_DECL_PUNCS, OBJECT_PATTERN_PUNCS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
+import { BOOL_KINDS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
 import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
 import { vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
+import { isNotUselessPunc } from './utils'
 
 type AnalyzeCtx = [
   compilerHooks: VineCompilerHooks,
@@ -216,7 +217,7 @@ function anaylyzeStoreTheOnlyOneArg(
   // Our validation has already guaranteed that the first argument is an object type.
   const exposeCallArg = exposeCallSgNode
     .field('arguments')!.children()
-    .filter(node => !CALL_PUNCS.includes(node.kind()))[0]!
+    .filter(isNotUselessPunc)[0]!
   // As compilation, we just need to store the argument source code
   return exposeCallArg
 }
@@ -418,7 +419,7 @@ function walkObjectPattern(
   isConst: boolean,
 ) {
   const [,,vineFnCompCtx] = analyzeCtx
-  for (const childNode of node.children().filter(c => !OBJECT_PATTERN_PUNCS.includes(c.kind()))) {
+  for (const childNode of node.children().filter(isNotUselessPunc)) {
     if (childNode.kind() === 'shorthand_property_identifier_pattern') {
       const type = isConst
         ? VineBindingTypes.SETUP_MAYBE_REF
@@ -445,7 +446,7 @@ function walkArrayPattern(
   node: SgNode,
   isConst: boolean,
 ) {
-  for (const childNode of node.children().filter(c => !ARRAY_PATTERN_PUNCS.includes(c.kind()))) {
+  for (const childNode of node.children().filter(isNotUselessPunc)) {
     childNode && walkPattern(analyzeCtx, childNode, isConst)
   }
 }
@@ -496,7 +497,9 @@ function analyzeLexicalDeclNode(
 ) {
   const [,vineFileCtx, vineFnCompCtx] = analyzeCtx
   const [kind] = lexicalDeclNode.children()
-  const allDeclarators = lexicalDeclNode.children().slice(1) // Skip `const` or `let`
+  const allDeclarators = lexicalDeclNode
+    .children().slice(1)
+    .filter(isNotUselessPunc)
 
   const userImportAliases = {
     ...vineFileCtx.vueImportAliases,
@@ -568,7 +571,7 @@ function analyzeEnumDeclNode(
 ) {
   const isAllLiteral = enumDeclNode
     .children()
-    .filter(c => !ENUM_DECL_PUNCS.includes(c.kind()))
+    .filter(isNotUselessPunc)
     .every((c) => {
       return c.kind() === 'property_identifier'
         || (
