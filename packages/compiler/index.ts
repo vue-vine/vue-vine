@@ -43,9 +43,15 @@ export function compileVineTypeScriptFile(
   fileId: string,
   compilerHooks: VineCompilerHooks,
 ) {
-  const orgCode = code.replace(/^\s+|\s+$/g, '')
   // Using ast-grep to validate vine declarations
-  const sgRoot = parse(orgCode).root()
+  const sgRoot = parse(
+    // https://github.com/vue-vine/vue-vine/pull/24
+    // ast-grep will exclude the escape characters in the first line, 
+    // which leads to a mismatch between the original code index 
+    // and the actual file index when the range method is used in the conversion stage, 
+    // then the original code cannot be completely removed by MagicString
+    code.trim()
+  ).root()
   const vineFileCtx: VineFileCtx = {
     fileId,
     fileSourceCode: new MagicString(sgRoot.text()),
