@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { findTemplateAllIdentifiers } from '../src/template/parseScript'
 import { compileVineTemplate } from '../src/template'
 import { VineBindingTypes } from '../src/types'
 
@@ -62,6 +63,46 @@ describe('Template compile', () => {
           ])
         ], 64 /* STABLE_FRAGMENT */))
       }"
+    `)
+  })
+})
+
+describe('template parsing tests', () => {
+  test('should extract out all TypeScript part', () => {
+    const allIdentifiers = findTemplateAllIdentifiers(`
+      <div class="main-container" v-bind:class="{
+        display: style.isFlex ? 'flex' : 'block',
+        'flex-direction': style.isColumn ? 'column' : 'row',
+      }">
+        <div class="header-title" v-if="title">{{ title.length > 10 ? title.slice(0, 10) : title }}</div>
+        <div class="labels-bar">
+          <div class="label" v-for="l in labels" :key="l.id">{{ l.text }}</div>
+        </div>
+        <p>
+          Content: {{ content }}
+        </p>
+
+        <div class="footer">
+          <button @click="goPrev">Prev Article</button>
+          <button v-on:click="(i) => navigate(i+1)">Next article</button>
+        </div>
+      </div>
+    `)
+    expect(allIdentifiers.map(id => id.text())).toMatchInlineSnapshot(`
+      [
+        "style",
+        "style",
+        "title",
+        "l",
+        "labels",
+        "l",
+        "goPrev",
+        "i",
+        "navigate",
+        "i",
+        "l",
+        "content",
+      ]
     `)
   })
 })

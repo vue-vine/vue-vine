@@ -1,13 +1,12 @@
 import type { SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
-import type { VineFileCtx, VineFnCompCtx } from './types'
+import type { VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
 import { STYLE_LANG_FILE_EXTENSION } from './constants'
-import { compileVineTemplate } from './template'
-import { ruleImportSpecifier, ruleImportStmt } from './ast-grep/rules-for-script'
 import { filterJoin, showIf, spaces } from './utils'
 import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
+import { createInlineTemplateComposer } from './template/compose'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
@@ -79,8 +78,7 @@ export function transformFile(
   //        so we need to use ast-grep to parse it, and do deduplicate by
   //        analyzing their `import_specifier`.
   let isPrependedUseDefaults = false
-  const templateCompileResults: WeakMap<VineFnCompCtx, string> = new WeakMap()
-  const notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]> = new WeakMap()
+  const styleImportStmts: string[] = []
   const importsMap: Map<string, Map<string, string>> = new Map()
   const inFileCompSharedBindings = Object.fromEntries(
     vineFileCtx.vineFnComps.map(vineFnCompCtx => ([
@@ -88,50 +86,27 @@ export function transformFile(
       VineBindingTypes.SETUP_CONST,
     ])),
   )
-  const styleImportStmts: string[] = []
+
+  // Get template composer based on inline option
+  const {
+    templateCompileResults,
+    notImportPreambleStmtStore,
+    runTemplateCompile,
+  } = createInlineTemplateComposer()
 
   for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
-    const { bindings } = vineFnCompCtx
-    const compileResult = compileVineTemplate(
-      vineFnCompCtx.template.text().slice(1, -1), // skip quotes
-      {
-        scopeId: `data-v-${vineFnCompCtx.scopeId}`,
-        bindingMetadata: {
-          ...bindings,
-          ...inFileCompSharedBindings,
-        },
-      },
-    )
-    templateCompileResults.set(vineFnCompCtx, compileResult.code)
-    const { preamble } = compileResult
-    const preambleSgRoot = ts.parse(preamble).root()
-    const allImportStmts = preambleSgRoot.findAll(ruleImportStmt)
-    for (const importStmt of allImportStmts) {
-      const allImportSpecs = importStmt.findAll(ruleImportSpecifier)
-      const source = importStmt.field('source')!.text().slice(1, -1) // remove quotes
-      for (const importSpec of allImportSpecs) {
-        const importName = importSpec.field('name')!
-        const importAlias = importSpec.field('alias')
-        const specPairs = importsMap.get(source)
-        if (!specPairs) {
-          const newSpecPairs = new Map<string, string>()
-          newSpecPairs.set(
-            importName.text(),
-            importAlias?.text() ?? importName.text(),
-          )
-          importsMap.set(
-            source,
-            newSpecPairs,
-          )
-        }
-        else {
-          specPairs.set(
-            importName.text(),
-            importAlias?.text() ?? importName.text(),
-          )
-        }
-      }
+    const templateSource = vineFnCompCtx.template.text().slice(1, -1) // skip quotes
+    const bindingMetadata = {
+      ...vineFnCompCtx.bindings,
+      ...inFileCompSharedBindings,
     }
+
+    runTemplateCompile({
+      vineFnCompCtx,
+      importsMap,
+      templateSource,
+      bindingMetadata,
+    })
 
     // Add `defineComponent` helper function import specifier
     let vueImports = importsMap.get('vue')
@@ -143,23 +118,9 @@ export function transformFile(
     if (!vueImports.has('defineComponent')) {
       vueImports.set('defineComponent', '_defineComponent')
     }
-
     // add useCssVars
     if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
       vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
-    }
-
-    const allOtherStmts = preambleSgRoot.children().filter(
-      child => child.kind() !== 'import_statement',
-    )
-    for (const otherStmt of allOtherStmts) {
-      notImportPreambleStmtStore.set(
-        vineFnCompCtx,
-        [
-          ...(notImportPreambleStmtStore.get(vineFnCompCtx) ?? []),
-          otherStmt.text(),
-        ],
-      )
     }
 
     // 2. For every vine component function, we need to transform the function declaration
@@ -353,13 +314,11 @@ ${
       '/* No emits */',
     )}
     ${showIf(isNeedAsync, 'async ')}setup(__props${
-      showIf(
-        setupCtxDestructFormalParams.length > 0,
-        `, { ${setupCtxDestructFormalParams.map(({ field, alias }) => {
+      setupCtxDestructFormalParams.length > 0
+        ? `, { ${setupCtxDestructFormalParams.map(({ field, alias }) => {
           return `${field}${showIf(Boolean(alias), `: ${alias}`)}`
-        }).join(', ')} }`,
-        ' /* No setup ctx destructuring */',
-      )
+          }).join(', ')} }`
+        : ' /* No setup ctx destructuring */'
     }) {
 
 ${propsUseDefaultsStmt}
@@ -380,9 +339,9 @@ ${
     : '/* No expose */'
 }
 
-      return ${
-        templateCompileResults.get(vineFnCompCtx)!
-      }
+return ${
+  templateCompileResults.get(vineFnCompCtx)!
+}
 
     }, // End of setup function
   }) // End of component object

@@ -46,9 +46,9 @@ export const vineTemplateRuleUtils = {
 export const templateScriptAttrsRule: NapiConfig = {
   rule: {
     any: [
-      { matches: 'directive_attr' },
       { matches: 'v_bind_attr' },
       { matches: 'v_on_attr' },
+      { matches: 'directive_attr' },
     ],
   },
   utils: selectUtilRules(

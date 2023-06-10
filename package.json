@@ -11,8 +11,8 @@
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "cross-env NODE_ENV=development sh scripts/dev.sh",
     "dev:windows": "cd scripts && cross-env NODE_ENV=development dev.sh",
-    "ext:dev": "pnpm --filter vue-vine-extension run dev",
-    "ext:build": "pnpm --filter vue-vine-extension run compile",
+    "ext:dev": "cross-env NODE_ENV=development pnpm --filter vue-vine-extension run dev",
+    "ext:build": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build:esbuild",
     "test:unit": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "lint": "eslint . --cache",
@@ -21,7 +21,7 @@
     "docs:build": "pnpm --filter vue-vine-docs run build",
     "docs:preview": "pnpm --filter vue-vine-docs run preview",
     "postinstall": "simple-git-hooks",
-    "clean": "rm -rf node_modules packages/**/node_modules"
+    "clean": "sh scripts/clean.sh"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.38.6",
