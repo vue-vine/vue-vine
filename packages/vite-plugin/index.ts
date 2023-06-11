@@ -14,13 +14,19 @@ import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'
 import { QUERY_TYPE_STYLE } from './src/constants'
 
-function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
-  const compilerCtx = createCompilerCtx(options)
-  const runCompile = (code: string, fileId: string) => {
+type VinePluginOptions = Omit<VineCompilerOptions, 'inlineTemplate'>
+
+function createVinePlugin(options: VinePluginOptions): Plugin {
+  const compilerCtx = createCompilerCtx({
+    ...options,
+    inlineTemplate: process.env.NODE_ENV === 'production',
+  })
+  const runCompileScript = (code: string, fileId: string) => {
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
       {
+        onOptionsResolved: cb => cb(compilerCtx.options),
         onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
         onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
         onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
@@ -110,7 +116,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
 
       return {
-        code: runCompile(code, id),
+        code: runCompileScript(code, id),
       }
     },
     handleHotUpdate,
@@ -119,4 +125,5 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
 
 export {
   createVinePlugin as vinePlugin,
+  VinePluginOptions,
 }

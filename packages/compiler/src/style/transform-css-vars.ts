@@ -1,6 +1,6 @@
 import type { SgNode } from '@ast-grep/napi'
 import type { VineFnCompCtx, VinePropMeta } from '../types'
-import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep-rules'
+import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
 import { spaces } from '../utils'
 
 export function compileCSSVars(

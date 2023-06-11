@@ -1,6 +1,9 @@
 import { describe, expect, test } from 'vitest'
+import { html } from '@ast-grep/napi'
+import { findTemplateAllIdentifiers } from '../src/template/parse'
 import { compileVineTemplate } from '../src/template'
 import { VineBindingTypes } from '../src/types'
+import { dedupe } from '../src/utils'
 
 describe('Template compile', () => {
   test('vue/compiler-dom inline mode', () => {
@@ -62,6 +65,45 @@ describe('Template compile', () => {
           ])
         ], 64 /* STABLE_FRAGMENT */))
       }"
+    `)
+  })
+})
+
+describe('template parsing tests', () => {
+  test('should extract out all TypeScript part', () => {
+    const templateAst = html.parse(`
+    <div class="main-container" v-bind:class="{
+      display: style.isFlex ? 'flex' : 'block',
+      'flex-direction': style.isColumn ? 'column' : 'row',
+    }">
+      <div class="header-title" v-if="title">{{ title.length > 10 ? title.slice(0, 10) : title }}</div>
+      <div class="labels-bar">
+        <div class="label" v-for="l in labels" :key="l.id">{{ l.text }}</div>
+      </div>
+      <p>
+        Content: {{ content }}
+      </p>
+
+      <div class="footer">
+        <button @click="goPrev">Prev Article</button>
+        <button v-on:click="(i) => navigate(i+1)">Next article</button>
+      </div>
+    </div>
+    `.trim()).root()
+    const allIdentifiers = findTemplateAllIdentifiers(templateAst)
+    expect(
+      dedupe(allIdentifiers.map(id => id.text())),
+    ).toMatchInlineSnapshot(`
+      [
+        "style",
+        "title",
+        "l",
+        "labels",
+        "goPrev",
+        "i",
+        "navigate",
+        "content",
+      ]
     `)
   })
 })

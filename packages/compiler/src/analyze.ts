@@ -4,7 +4,7 @@ import hashId from 'hash-sum'
 import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
 import { BOOL_KINDS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
-import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep-rules'
+import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
 import { vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isNotUselessPunc } from './utils'
@@ -38,10 +38,12 @@ function analyzeFileImportStmts(
       .field('source')!
       .text()
       .slice(1, -1) // remove quotes
+    const isImportTypeStmt = Boolean(importStmt.child(1)?.text() === 'type')
     const allImportClauses = importStmt.findAll(ruleImportClause)
     for (const importClause of allImportClauses) {
       const importMeta: VineUserImport = {
         source,
+        isType: isImportTypeStmt,
       }
       const allImportSpecs = importClause.findAll(ruleImportSpecifier)
       // Named import: shape like `import { xxx } from '...'`
