@@ -23,6 +23,6 @@ features:
   - title: Simple and intuitive macro API
     details: More clean design of Vue's macro mechanism, less mental burden.
   - title: More fun in Exploring
-    details: The concept is parallel to SFC and can be used independently or in combination.
+    details: Discover you own patterns to manage your components.
 ---
 
