@@ -249,9 +249,9 @@ importers:
 
   packages/vscode-ext:
     dependencies:
-      '@vue-vine/language-server':
+      '@vue-vine/compiler':
         specifier: workspace:*
-        version: link:../language-server
+        version: link:../compiler
     devDependencies:
       '@changesets/changelog-github':
         specifier: ^0.4.8

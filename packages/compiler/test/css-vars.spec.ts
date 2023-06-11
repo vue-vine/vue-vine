@@ -26,6 +26,7 @@ beforeEach(() => {
   mockCompilerCtx = createCompilerCtx({})
 
   mockCompilerHook = {
+    onOptionsResolved: cb => cb(mockCompilerCtx.options),
     onError: () => {},
     onWarn: () => {},
     onBindFileCtx: (fileId, fileCtx) => mockCompilerCtx.fileCtxMap.set(fileId, fileCtx),
