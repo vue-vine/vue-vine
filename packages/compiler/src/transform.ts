@@ -6,7 +6,7 @@ import { VineBindingTypes } from './types'
 import { STYLE_LANG_FILE_EXTENSION } from './constants'
 import { filterJoin, showIf, spaces } from './utils'
 import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
-import { createInlineTemplateComposer } from './template/compose'
+import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
@@ -56,6 +56,7 @@ function mayTransformAwaitExprInsideStmt(targetNode: SgNode) {
 
 export function transformFile(
   vineFileCtx: VineFileCtx,
+  inline = true,
 ) {
   // Processing for .vine.ts File is divided into two parts:
   // 1. Manage all hoisted static code, including:
@@ -79,7 +80,7 @@ export function transformFile(
   //        analyzing their `import_specifier`.
   let isPrependedUseDefaults = false
   const styleImportStmts: string[] = []
-  const importsMap: Map<string, Map<string, string>> = new Map()
+  const generatedImportsMap: Map<string, Map<string, string>> = new Map()
   const inFileCompSharedBindings = Object.fromEntries(
     vineFileCtx.vineFnComps.map(vineFnCompCtx => ([
       vineFnCompCtx.fnName,
@@ -92,27 +93,30 @@ export function transformFile(
     templateCompileResults,
     notImportPreambleStmtStore,
     runTemplateCompile,
-  } = createInlineTemplateComposer()
+  } = inline
+    ? createInlineTemplateComposer()
+    : createSeparateTemplateComposer()
 
   for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
     const templateSource = vineFnCompCtx.template.text().slice(1, -1) // skip quotes
     const bindingMetadata = {
-      ...vineFnCompCtx.bindings,
-      ...inFileCompSharedBindings,
+      scriptBindings: vineFnCompCtx.bindings,
+      fileSharedCompBindings: inFileCompSharedBindings,
     }
 
-    runTemplateCompile({
+    const setupFnReturns = runTemplateCompile({
+      vineFileCtx,
       vineFnCompCtx,
-      importsMap,
+      generatedImportsMap,
       templateSource,
-      bindingMetadata,
+      allBindings: bindingMetadata,
     })
 
     // Add `defineComponent` helper function import specifier
-    let vueImports = importsMap.get('vue')
+    let vueImports = generatedImportsMap.get('vue')
     if (!vueImports) {
       const specs = new Map()
-      importsMap.set('vue', specs)
+      generatedImportsMap.set('vue', specs)
       vueImports = specs
     }
     if (!vueImports.has('defineComponent')) {
@@ -339,12 +343,20 @@ ${
     : '/* No expose */'
 }
 
-return ${
-  templateCompileResults.get(vineFnCompCtx)!
-}
+return ${setupFnReturns}
 
     }, // End of setup function
   }) // End of component object
+
+${showIf(
+    // Not-inline mode, append the standalone template render function
+    // after the component object, and mount the field `render` to it.
+    !inline,
+    `
+${templateCompileResults.get(vineFnCompCtx) ?? ''}
+__vine.render = __sfc_render
+    `,
+)}
 
   ${showIf(
     Boolean(vineFileCtx.styleDefine[vineFnCompCtx.scopeId]),
@@ -356,7 +368,7 @@ return ${
 
   // Merge deduplicated imports in all `preamble` into a single import statement,
   // put it with other imports in this file together and make sure they're hoisted to the top.
-  const mergedImports = [...importsMap.entries()]
+  const mergedImports = [...generatedImportsMap.entries()]
     .map(([source, specPairsMap]) => {
       return `import {\n${
         [...specPairsMap.entries()]

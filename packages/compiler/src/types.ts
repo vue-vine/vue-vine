@@ -9,6 +9,7 @@ export type VineStyleLang = 'css' | 'postcss' | VineProcessorLang
 export type VineTemplateBindings = Record<string, VueBindingTypes>
 
 export interface VineCompilerHooks {
+  onOptionsResolved: (cb: (options: VineCompilerOptions) => void) => void
   onError: (err: VineDiagnostic) => void
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
@@ -16,6 +17,7 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
+  inlineTemplate?: boolean
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]
@@ -48,7 +50,7 @@ export interface VineCompilerCtx {
 
 export interface VineUserImport {
   source: string
-  isType?: boolean
+  isType: boolean
   isNamespace?: boolean
   isDefault?: boolean
 }

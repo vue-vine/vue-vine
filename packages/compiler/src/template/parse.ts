@@ -20,8 +20,7 @@ function processScriptForInterpolation(scriptTexts: string[], interpolationTextN
   scriptTexts.push(text.slice(start, end).trim())
 }
 
-function findTemplateAllScriptSgNode(template: string) {
-  const templateAst = parseHTML(template.trim()).root()
+function findTemplateAllScriptSgNode(templateAst: SgNode) {
   const allScriptAttrs = templateAst.findAll(templateScriptAttrsRule)
   const allInterpolations = templateAst.findAll(templateInterplationRule)
 
@@ -49,8 +48,21 @@ function findTemplateAllScriptSgNode(template: string) {
   }
 }
 
-export function findTemplateAllIdentifiers(template: string) {
-  const tsAst = findTemplateAllScriptSgNode(template)
+export function findMatchedTagName(
+  templateAst: SgNode,
+  names: string[],
+) {
+  const matchedTagNameNodes = templateAst.findAll({
+    rule: {
+      kind: 'tag_name',
+      regex: `(${names.join('|')})`,
+    },
+  })
+  return matchedTagNameNodes.map(node => node.text())
+}
+
+export function findTemplateAllIdentifiers(templateAst: SgNode) {
+  const tsAst = findTemplateAllScriptSgNode(templateAst)
   if (!tsAst) {
     return []
   }

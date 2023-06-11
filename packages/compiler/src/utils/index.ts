@@ -25,3 +25,7 @@ export function filterJoin(
 export function isNotUselessPunc(node: SgNode) {
   return !node.isLeaf() || !node.isNamedLeaf()
 }
+
+export function dedupe<T extends string | number | boolean>(arr: T[]) {
+  return [...new Set(arr)]
+}

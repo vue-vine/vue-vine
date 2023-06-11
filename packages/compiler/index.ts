@@ -25,14 +25,15 @@ export {
 } from './src/types'
 
 export function createCompilerCtx(
-  options: VineCompilerOptions = {},
+  options: VineCompilerOptions,
 ): VineCompilerCtx {
   return {
     fileCtxMap: new Map(),
     vineCompileErrors: [],
     vineCompileWarnings: [],
     options: {
-      // Todo: Maybe some default options ...
+      inlineTemplate: true, // default inline template
+      // Maybe some default options ...
       ...options,
     },
   }
@@ -43,14 +44,18 @@ export function compileVineTypeScriptFile(
   fileId: string,
   compilerHooks: VineCompilerHooks,
 ) {
+  let compilerOptions: VineCompilerOptions | undefined
+  compilerHooks.onOptionsResolved((options) => {
+    compilerOptions = options
+  })
   // Using ast-grep to validate vine declarations
   const sgRoot = parse(
     // https://github.com/vue-vine/vue-vine/pull/24
-    // ast-grep will exclude the escape characters in the first line, 
-    // which leads to a mismatch between the original code index 
-    // and the actual file index when the range method is used in the conversion stage, 
+    // ast-grep will exclude the escape characters in the first line,
+    // which leads to a mismatch between the original code index
+    // and the actual file index when the range method is used in the conversion stage,
     // then the original code cannot be completely removed by MagicString
-    code.trim()
+    code.trim(),
   ).root()
   const vineFileCtx: VineFileCtx = {
     fileId,
@@ -80,7 +85,7 @@ export function compileVineTypeScriptFile(
   analyzeVine([compilerHooks, vineFileCtx], vineFnCompDecls)
 
   // 3. Codegen, or call it "transform"
-  transformFile(vineFileCtx)
+  transformFile(vineFileCtx, compilerOptions?.inlineTemplate ?? true)
 
   return vineFileCtx
 }

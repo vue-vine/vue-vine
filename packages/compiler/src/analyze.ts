@@ -38,10 +38,12 @@ function analyzeFileImportStmts(
       .field('source')!
       .text()
       .slice(1, -1) // remove quotes
+    const isImportTypeStmt = Boolean(importStmt.child(1)?.text() === 'type')
     const allImportClauses = importStmt.findAll(ruleImportClause)
     for (const importClause of allImportClauses) {
       const importMeta: VineUserImport = {
         source,
+        isType: isImportTypeStmt,
       }
       const allImportSpecs = importClause.findAll(ruleImportSpecifier)
       // Named import: shape like `import { xxx } from '...'`
