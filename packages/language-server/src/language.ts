@@ -42,6 +42,7 @@ export class VineFile implements VirtualFile {
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
+    onOptionsResolved: cb => cb({}),
     onError: err => this.vineCompileErrs.push(err),
     onWarn: warn => this.vineCompileWarns.push(warn),
   }

@@ -12,7 +12,7 @@ There are many discussions in community that hopes for a solution that supports 
 
 Take a quick view:
 
-![Quick view](./packages/docs/public/quick-view.png)
+![Quick view](./packages/docs/public/highlight-demo.png)
 
 ## Get started
 

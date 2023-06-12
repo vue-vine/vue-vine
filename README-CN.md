@@ -12,7 +12,7 @@
 
 下面是一个简单的示例预览：
 
-![Quick view](./packages/docs/public/quick-view.png)
+![Quick view](./packages/docs/public/highlight-demo.png)
 
 ## 开始使用
 
