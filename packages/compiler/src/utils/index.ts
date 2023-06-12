@@ -23,7 +23,7 @@ export function filterJoin(
 }
 
 export function isNotUselessPunc(node: SgNode) {
-  return !node.isLeaf() || !node.isNamedLeaf()
+  return node.isNamed()
 }
 
 export function dedupe<T extends string | number | boolean>(arr: T[]) {

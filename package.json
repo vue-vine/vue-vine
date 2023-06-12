@@ -21,17 +21,19 @@
     "docs:build": "pnpm --filter vue-vine-docs run build",
     "docs:preview": "pnpm --filter vue-vine-docs run preview",
     "postinstall": "simple-git-hooks",
-    "clean": "sh scripts/clean.sh"
+    "clean": "sh scripts/clean.sh",
+    "clean:deps": "sh scripts/clean-deps.sh",
+    "update:deps": "sh scripts/update-deps.sh"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.38.6",
     "cross-env": "^7.0.3",
-    "eslint": "^8.40.0",
+    "eslint": "^8.42.0",
     "lint-staged": "^13.2.2",
     "nx": "16.2.2",
     "nx-cloud": "latest",
     "simple-git-hooks": "^2.8.1",
-    "tslib": "^2.5.2",
+    "tslib": "^2.5.3",
     "typescript": "^5.1.3"
   },
   "simple-git-hooks": {

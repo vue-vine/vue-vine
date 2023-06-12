@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { html } from '@ast-grep/napi'
 import { findTemplateAllIdentifiers } from '../src/template/parse'
-import { compileVineTemplate } from '../src/template'
+import { compileVineTemplate } from '../src/template/compose'
 import { VineBindingTypes } from '../src/types'
 import { dedupe } from '../src/utils'
 

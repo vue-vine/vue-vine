@@ -7,7 +7,7 @@ import { ruleImportSpecifier, ruleImportStmt } from '../ast-grep/rules-for-scrip
 import { dedupe } from '../utils'
 import { findMatchedTagName, findTemplateAllIdentifiers } from './parse'
 
-function compileVineTemplate(
+export function compileVineTemplate(
   source: string,
   params: Partial<CompilerOptions>,
 ) {
@@ -212,6 +212,7 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
       const templateAst = html.parse(templateSource).root()
 
       // Find out all the import specifiers which are used in the template.
+      const returnBindingSet = new Set<string>()
       const allIdentifiers = dedupe(findTemplateAllIdentifiers(templateAst).map(idNode => idNode.text()))
       for (const id of allIdentifiers) {
         const importSpecifier = vineFileCtx.userImports[id]
@@ -239,21 +240,27 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
         else {
           setupFnReturns += `${key}, `
         }
+        returnBindingSet.add(key)
       }
 
       // Find out if there are any tagName is component name, which is defined in current file.
       // If so, we need to add it to the return bindings.
-      const allUsedCompTagNames = findMatchedTagName(
-        templateAst,
-        [
-          ...Object.keys(allBindings.fileSharedCompBindings),
-          ...Object.keys(vineFileCtx.userImports).filter(
-            importId => !vineFileCtx.userImports[importId].isType,
-          ),
-        ],
+      const allUsedCompTagNames = dedupe(
+        findMatchedTagName(
+          templateAst,
+          [
+            ...Object.keys(allBindings.fileSharedCompBindings),
+            ...Object.keys(vineFileCtx.userImports).filter(
+              importId => !vineFileCtx.userImports[importId].isType,
+            ),
+          ],
+        ),
       )
       for (const tagName of allUsedCompTagNames) {
-        setupFnReturns += `${tagName}, `
+        if (!returnBindingSet.has(tagName)) {
+          setupFnReturns += `${tagName}, `
+          returnBindingSet.add(tagName)
+        }
       }
 
       setupFnReturns = `${setupFnReturns.replace(/, $/, '')} }`

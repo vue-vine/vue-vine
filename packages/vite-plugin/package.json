@@ -33,13 +33,13 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-commonjs": "^25.0.1",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/hash-sum": "^1.0.0",
-    "rollup": "^3.21.7",
-    "vite": "^4.3.4",
-    "vitest": "^0.31.0",
-    "vue": "^3.2.47"
+    "rollup": "^3.25.0",
+    "vite": "^4.3.9",
+    "vitest": "^0.31.4",
+    "vue": "^3.3.4"
   }
 }
