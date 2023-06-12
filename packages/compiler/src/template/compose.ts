@@ -245,7 +245,12 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
       // If so, we need to add it to the return bindings.
       const allUsedCompTagNames = findMatchedTagName(
         templateAst,
-        Object.keys(allBindings.fileSharedCompBindings),
+        [
+          ...Object.keys(allBindings.fileSharedCompBindings),
+          ...Object.keys(vineFileCtx.userImports).filter(
+            importId => !vineFileCtx.userImports[importId].isType,
+          ),
+        ],
       )
       for (const tagName of allUsedCompTagNames) {
         setupFnReturns += `${tagName}, `
