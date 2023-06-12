@@ -91,7 +91,7 @@ That's because we define Vue component as function in Vine, it's not type compat
 
 ### Restricted TypeScript use case
 
-Although we use TypeScript, we still have some restrictions inside `.vite.ts` files:
+Although we use TypeScript, we still have some restrictions inside `.vine.ts` files:
 
 - All macros are only allowed to show inside Vine component function.
 
