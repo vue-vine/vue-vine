@@ -16,7 +16,7 @@ import { QUERY_TYPE_STYLE } from './src/constants'
 
 type VinePluginOptions = Omit<VineCompilerOptions, 'inlineTemplate'>
 
-function createVinePlugin(options: VinePluginOptions): Plugin {
+function createVinePlugin(options: VinePluginOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx({
     ...options,
     inlineTemplate: process.env.NODE_ENV === 'production',

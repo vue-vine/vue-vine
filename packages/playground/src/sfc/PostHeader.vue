@@ -4,7 +4,8 @@ defineProps<{
   author: string
 }>()
 
-const metaBgColor = ref('#333')
+const isDark = useDark()
+const metaBgColor = ref(isDark ? '#ddd' : '#333')
 </script>
 
 <template>
