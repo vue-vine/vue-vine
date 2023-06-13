@@ -2,9 +2,6 @@ import type { SgNode } from '@ast-grep/napi'
 import { html, ts } from '@ast-grep/napi'
 import { templateInterplationRule, templateScriptAttrsRule } from '../ast-grep/rules-for-template'
 
-const { parse: parseHTML } = html
-const { parse: parseTS } = ts
-
 function processScriptForAttr(scriptTexts: string[], attrNode: SgNode) {
   const attrValueText = attrNode.find(html.kind('attribute_value'))?.text()
   if (!attrValueText) {
@@ -20,7 +17,7 @@ function processScriptForInterpolation(scriptTexts: string[], interpolationTextN
   scriptTexts.push(text.slice(start, end).trim())
 }
 
-function findTemplateAllScriptSgNode(templateAst: SgNode) {
+export function findTemplateAllScriptSgNode(templateAst: SgNode) {
   const allScriptAttrs = templateAst.findAll(templateScriptAttrsRule)
   const allInterpolations = templateAst.findAll(templateInterplationRule)
 
@@ -40,7 +37,7 @@ function findTemplateAllScriptSgNode(templateAst: SgNode) {
     .trim()
 
   try {
-    const tsAst = parseTS(concatedVirtualScript).root()
+    const tsAst = ts.parse(concatedVirtualScript).root()
     return tsAst
   }
   catch (error) {

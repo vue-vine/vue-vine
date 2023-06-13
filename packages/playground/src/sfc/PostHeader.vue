@@ -5,7 +5,12 @@ defineProps<{
 }>()
 
 const isDark = useDark()
-const metaBgColor = ref(isDark ? '#ddd' : '#333')
+const metaBgColor = ref('')
+watchEffect(() => {
+  metaBgColor.value = isDark.value
+    ? '#333'
+    : '#ddd'
+})
 </script>
 
 <template>

@@ -1,12 +1,14 @@
 export function PostHeader() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
+
   const isDark = useDark()
-  const metaBgColor = ref(
-    isDark
-      ? '#ddd'
-      : '#333',
-  )
+  const metaBgColor = ref('')
+  watchEffect(() => {
+    metaBgColor.value = isDark.value
+      ? '#333'
+      : '#ddd'
+  })
 
   vineStyle.scoped(`
     .blog-title {
@@ -34,8 +36,7 @@ export function PostHeader() {
   `)
 
   vineExpose({
-    title,
-    author,
+    metaBgColor,
   })
 
   return vine`

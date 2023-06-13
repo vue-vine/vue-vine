@@ -13,6 +13,10 @@ export {
 } from './src/style/compile'
 
 export {
+  findTemplateAllScriptSgNode,
+} from './src/template/parse'
+
+export {
   type VineDiagnostic,
 } from './src/diagnostics'
 
