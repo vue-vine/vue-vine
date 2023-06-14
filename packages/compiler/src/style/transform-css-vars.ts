@@ -3,17 +3,12 @@ import type { VineFnCompCtx, VinePropMeta } from '../types'
 import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
 import { spaces } from '../utils'
 
-export function compileCSSVars(
-  vineFnCompCtx: VineFnCompCtx,
-  inline = true,
-) {
+export function compileCSSVars(vineFnCompCtx: VineFnCompCtx) {
   const { cssBindings, setupStmts, props } = vineFnCompCtx
   if (!cssBindings)
     return ''
-
   const varList = genCSSVarsList(cssBindings, setupStmts, props)
-  // TODO Compilation in non-inline mode
-  return inline ? genUseCssVarsCode(varList) : ''
+  return genUseCssVarsCode(varList)
 }
 
 export const CSS_VARS_HELPER = 'useCssVars'
