@@ -11,6 +11,7 @@
     "preview": "vitepress preview"
   },
   "devDependencies": {
+    "unplugin-fonts": "^1.0.3",
     "vitepress": "1.0.0-beta.1",
     "vue": "^3.3.4"
   }
