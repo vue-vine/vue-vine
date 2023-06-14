@@ -120,7 +120,7 @@ describe('CSS vars injection', () => {
     expect(code).toMatchSnapshot()
   })
 
-  // #
+  // #34
   test('Should work when props are passed as parameters', () => {
     const mockParamsPropsVCF = 'function testVCF(props: { color: string }) {\n'
       + '  vineStyle(`\n'
