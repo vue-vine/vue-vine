@@ -1,0 +1,96 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transform vcf containing await > do not need result 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent
+} from 'vue'
+
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    async setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+
+
+const p = () => new Promise(resolve => setTimeout(resolve))
+;(
+  ([__temp,__restore] = _withAsyncContext(() => p())),
+  await __temp,
+  __restore()
+)
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, \\"test\\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`transform vcf containing await > need result 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent
+} from 'vue'
+
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    async setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+
+
+const p = () => new Promise(resolve => setTimeout(resolve))
+const res = (
+  ([__temp,__restore] = _withAsyncContext(() => p())),
+  __temp = await __temp,
+  __restore(),
+  __temp
+);
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, \\"test\\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  
+  return __vine /* End of App */
+})()"
+`;

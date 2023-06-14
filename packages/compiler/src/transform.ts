@@ -46,8 +46,8 @@ function mayTransformAwaitExprInsideStmt(targetNode: SgNode) {
   __restore()
 )`
   ms.update(
-    exprNode.range().start.index,
-    exprNode.range().end.index,
+    awaitExpr.range().start.index,
+    awaitExpr.range().end.index,
     transformedExpr,
   )
 
