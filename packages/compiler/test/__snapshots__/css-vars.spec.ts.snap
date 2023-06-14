@@ -10,7 +10,7 @@ exports[`CSS vars injection > Should be able to inject according to each subcomp
   useCssVars as _useCssVars
 } from 'vue'
 import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
-import 'mockVCFNormal?type=vine-style&scopeId=6d8b19f4&lang=css&scoped=true&virtual.css'
+import 'mockVCFNormal?type=vine-style&scopeId=6d8b1a36&lang=css&scoped=true&virtual.css'
 
 
 const testVCF = (() => {
@@ -49,13 +49,13 @@ return (_ctx: any,_cache: any) => {
   return __vine /* End of testVCF */
 })()
 
-const testVCFS = (() => {
+const testVCF2 = (() => {
 
-const _withScopeId = n => (_pushScopeId(\\"data-v-6d8b19f4\\"),n=n(),_popScopeId(),n)
+const _withScopeId = n => (_pushScopeId(\\"data-v-6d8b1a36\\"),n=n(),_popScopeId(),n)
 const _hoisted_1 = { class: \\"title-s\\" }
 
   const __vine = _defineComponent({
-    name: 'testVCFS',
+    name: 'testVCF2',
     /* No props */
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
@@ -64,7 +64,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  '13557ae1': (color.value),
+  '49f4e33c': (color.value),
 
 }))
 
@@ -81,8 +81,8 @@ return (_ctx: any,_cache: any) => {
 
 
 
-  __vine.__scopeId = 'data-v-6d8b19f4'
-  return __vine /* End of testVCFS */
+  __vine.__scopeId = 'data-v-6d8b1a36'
+  return __vine /* End of testVCF2 */
 })()"
 `;
 
