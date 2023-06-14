@@ -4,11 +4,11 @@ import type { VineCompilerHooks } from '../index'
 import { compileVineTypeScriptFile, createCompilerCtx } from '../index'
 import type { VineCompilerCtx } from '../src/types'
 
-let mockVFC = ''
+let mockVCF = ''
 let mockCompilerHook = {} as VineCompilerHooks
 let mockCompilerCtx = {} as VineCompilerCtx
 beforeEach(() => {
-  mockVFC = 'function testVFC() {\n'
+  mockVCF = 'function testVCF() {\n'
     + '  const color = ref(\'red\')\n'
     + '\n'
     + '  vineStyle.scoped(`\n'
@@ -24,7 +24,6 @@ beforeEach(() => {
     + '}'
 
   mockCompilerCtx = createCompilerCtx({})
-
   mockCompilerHook = {
     onOptionsResolved: cb => cb(mockCompilerCtx.options),
     onError: () => {},
@@ -34,33 +33,34 @@ beforeEach(() => {
 })
 describe('CSS vars injection', () => {
   test('Should be injected based on reactive variables', () => {
-    const res = compileVineTypeScriptFile(mockVFC, 'mockVFC', mockCompilerHook)
+    const res = compileVineTypeScriptFile(mockVCF, 'mockVCF', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(`'${hashId('testVFC' + 'color')}': (color.value)`).toBeTruthy()
+    expect(`'${hashId('testVCF' + 'color')}': (color.value)`).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 
   test('Should be injected based on normal variables', () => {
-    const mockVFCNormal = mockVFC.replace('ref(\'red\')', '\'red\'')
-    const res = compileVineTypeScriptFile(mockVFCNormal, 'mockVFCNormal', mockCompilerHook)
+    const mockVCFNormal = mockVCF.replace('ref(\'red\')', '\'red\'')
+    const res = compileVineTypeScriptFile(mockVCFNormal, 'mockVCFNormal', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(`'${hashId('testVFC' + 'color')}': (color)`).toBeTruthy()
+    expect(`'${hashId('testVCF' + 'color')}': (color)`).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 
   test('Should be injected based on props', () => {
-    const mockVFCNormal = mockVFC.replace('ref(\'red\')', 'vineProp.withDefault(\'red\')')
-    const res = compileVineTypeScriptFile(mockVFCNormal, 'mockVFCNormal', mockCompilerHook)
+    const mockVCFNormal = mockVCF.replace('ref(\'red\')', 'vineProp.withDefault(\'red\')')
+    const res = compileVineTypeScriptFile(mockVCFNormal, 'mockVCFNormal', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(`'${hashId('testVFC' + 'color')}': (props.color)`).toBeTruthy()
+    expect(`'${hashId('testVCF' + 'color')}': (props.color)`).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 
   test('Should be able to inject according to each subcomponent of vfc', () => {
-    const mockVFCSub = `${mockVFC}\nfunction testVFCS() {\n`
+    const mockMultipleVCF = `${mockVCF}\n`
+      + 'function testVCF2() {\n'
       + '  const color = ref(\'red\')\n'
       + '\n'
       + '  vineStyle.scoped(`\n'
@@ -75,16 +75,16 @@ describe('CSS vars injection', () => {
       + '  `\n'
       + '}'
 
-    const res = compileVineTypeScriptFile(mockVFCSub, 'mockVFCNormal', mockCompilerHook)
+    const res = compileVineTypeScriptFile(mockMultipleVCF, 'mockVCFNormal', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(`'${hashId('testVFC' + 'color')}': (color.value)`).toBeTruthy()
-    expect(`'${hashId('testVFCS' + 'color')}': (color.value)`).toBeTruthy()
+    expect(`'${hashId('testVCF' + 'color')}': (color.value)`).toBeTruthy()
+    expect(`'${hashId('testVCF2' + 'color')}': (color.value)`).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 
   test('Should work with w/ complex expression', () => {
-    const mockComplex = 'function testVFCComplex() {\n'
+    const mockComplex = 'function testVCFComplex() {\n'
       + '  let a = 100\n'
       + '  let b = 200\n'
       + '  let foo = 300\n'
@@ -111,12 +111,12 @@ describe('CSS vars injection', () => {
       + '     </div>\n'
       + '  `\n'
       + '}\n'
-    const res = compileVineTypeScriptFile(mockComplex, 'testVFCComplex', mockCompilerHook)
+    const res = compileVineTypeScriptFile(mockComplex, 'testVCFComplex', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(`'${hashId('testVFCComplex' + 'a')}': (a)`).toBeTruthy()
-    expect(`'${hashId('testVFCComplex' + 'b')}': (b)`).toBeTruthy()
-    expect(`'${hashId('testVFCComplex' + 'c')}': (c)`).toBeTruthy()
+    expect(`'${hashId('testVCFComplex' + 'a')}': (a)`).toBeTruthy()
+    expect(`'${hashId('testVCFComplex' + 'b')}': (b)`).toBeTruthy()
+    expect(`'${hashId('testVCFComplex' + 'c')}': (c)`).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 })

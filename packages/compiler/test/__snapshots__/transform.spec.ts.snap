@@ -77,7 +77,7 @@ const res = (
   __temp = await __temp,
   __restore(),
   __temp
-);
+)
 
 /* No expose */
 
