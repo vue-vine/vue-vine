@@ -241,6 +241,57 @@ return (_ctx: any,_cache: any) => {
 })()"
 `;
 
+exports[`CSS vars injection > Should work when props are passed as parameters 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+import 'testParamsPropsVCF?type=vine-style&scopeId=f78e9ff8&lang=css&virtual.css'
+
+
+const testVCF = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-f78e9ff8\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"test\\" }
+
+  const __vine = _defineComponent({
+    name: 'testVCF',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'c82b5fd8': (props.color),
+
+}))
+
+
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\"test\\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-f78e9ff8'
+  return __vine /* End of testVCF */
+})()"
+`;
+
 exports[`CSS vars injection > Should work with w/ complex expression 1`] = `
 "import {
   openBlock as _openBlock,

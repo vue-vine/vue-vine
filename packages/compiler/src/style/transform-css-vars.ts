@@ -98,5 +98,17 @@ function genCSSVarsItemProps(
   name: string,
   value: string,
 ) {
-  return propName !== name ? '' : `${spaces(2)}'${value}': (props.${name}),\n`
+  const propValue = `props.${propName}`
+  const isPropNameEqualName = propName === name
+  if (isPropNameEqualName) {
+    // color <-> props.color
+    return `${spaces(2)}'${value}': (${propValue}),\n`
+  }
+  else if (propValue === name) {
+    // props.color <-> props.color
+    return `${spaces(2)}'${value}': (${name}),\n`
+  }
+  else {
+    return ''
+  }
 }
