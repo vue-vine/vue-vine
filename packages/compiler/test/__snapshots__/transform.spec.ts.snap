@@ -94,3 +94,48 @@ return (_ctx: any,_cache: any) => {
   return __vine /* End of App */
 })()"
 `;
+
+exports[`transform vcf containing valid top level declaration > should know top level declared names as LITERAL_CONST 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent
+} from 'vue'
+
+
+const foo = 'foo'
+const bar = () => 'lorem'
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+
+
+console.log(foo, bar())
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(foo) + \\" \\" + _toDisplayString(bar()), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  
+  return __vine /* End of App */
+})()"
+`;

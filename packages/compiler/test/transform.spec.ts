@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { VineCompilerHooks } from '../index'
 import { compileVineTypeScriptFile, createCompilerCtx } from '../index'
 
-function createMockTransformCTX(option = {}) {
+function createMockTransformCtx(option = {}) {
   const mockCompilerCtx = createCompilerCtx(option)
   const mockCompilerHook = {
     onOptionsResolved: cb => cb(mockCompilerCtx.options),
@@ -26,7 +26,7 @@ describe('transform vcf containing await', () => {
       + '    <div>test</div>\n'
       + '  `\n'
       + '}\n'
-    const { mockCompilerHook } = createMockTransformCTX()
+    const { mockCompilerHook } = createMockTransformCtx()
     const res = compileVineTypeScriptFile(content, 'testVCFAwait', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     const matchRes = code.match(/await/g)
@@ -43,12 +43,29 @@ describe('transform vcf containing await', () => {
       + '    <div>test</div>\n'
       + '  `\n'
       + '}\n'
-    const { mockCompilerHook } = createMockTransformCTX()
+    const { mockCompilerHook } = createMockTransformCtx()
     const res = compileVineTypeScriptFile(content, 'testVCFAwait', mockCompilerHook)
     const code = res.fileSourceCode.toString()
     const matchRes = code.match(/await/g)
     expect(matchRes).toBeTruthy()
     expect(matchRes!.length).toBe(1)
+    expect(code).toMatchSnapshot()
+  })
+})
+
+describe('transform vcf containing valid top level declaration', () => {
+  test('should know top level declared names as LITERAL_CONST', () => {
+    const content = 'const foo = \'foo\'\n'
+    + 'const bar = () => \'lorem\'\n'
+    + 'export function App() {\n'
+    + '  console.log(foo, bar())\n'
+    + '  return vine`\n'
+    + '    <div>{{foo}} {{bar()}}</div>\n'
+    + '  `\n'
+    + '}'
+    const { mockCompilerHook } = createMockTransformCtx()
+    const res = compileVineTypeScriptFile(content, 'testVCFContainsTopLevelDecl', mockCompilerHook)
+    const code = res.fileSourceCode.toString()
     expect(code).toMatchSnapshot()
   })
 })

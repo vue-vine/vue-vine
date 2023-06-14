@@ -3,7 +3,7 @@ import { decode, runCommand } from './utils'
 
 const PRE_BUILD_CMD = 'pnpm nx build vue-vine'
 const WATCH_CMD = 'pnpm nx watch --projects=@vue-vine/compiler,@vue-vine/vite-plugin,vue-vine -- nx build vue-vine'
-async function doUpdateDeps() {
+async function runDev() {
   // set log prefix
   setGlobalPrefix('[vue-vine]: ')
 
@@ -22,4 +22,4 @@ async function doUpdateDeps() {
   }
 }
 
-doUpdateDeps()
+runDev()

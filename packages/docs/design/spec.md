@@ -96,5 +96,47 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
 - All macros are only allowed to show inside Vine component function.
 
 - In top-leve scope:
+  
+  **We highly recommend you to only define simple constants and Vine component functions in top-level scope.**
+
   - Expression statement are not allowed, because it may cause side effects.
   - Any Vue reactivity API call is not allowed in declarations.
+
+  For example, the following code is not allowed:
+
+  ```vue-vine
+  // Bare expression statement
+  1 + some_func();
+  new SomeClass()
+
+  // With Vue reactivity API call
+  const foo = ref(0)
+  const bar = computed(() => foo.value + 1)
+
+  // It's not allowed to call any function 
+  // that contains reactivity API call as well.
+  // But compiler can't detect it, 
+  // so it's your responsibility to avoid it.
+  const baz = some_func_contains_reactivity_api_call()
+  ```
+
+  Correspondingly, the following code is allowed:
+
+  ```vue-vine
+  // Simple contants
+  const WIDTH = 100
+
+  // Call a function that has no side effects.
+  // But compiler can't detect it, 
+  // so it's your responsibility to guarantee it.
+  const result = func_with_no_side_effects()
+
+  // Define a function that contains reactivity API call is allowed, 
+  // because this is just how we build "Vue Composable".
+  const valid_fn = () => {
+    const count = ref(0)
+    const inc = () => count.value += 1
+    const dec = () => count.value -= 1
+    return { count, inc, dec }
+  }
+  ```

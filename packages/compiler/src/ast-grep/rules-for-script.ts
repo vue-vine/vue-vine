@@ -250,6 +250,54 @@ export const vineScriptRuleUtils = {
       regex: 'ref',
     },
   },
+  topLevelDeclarationNames: {
+    any: [
+      {
+        kind: 'identifier',
+        inside: {
+          kind: 'variable_declarator',
+          inside: {
+            any: [
+              {
+                kind: 'lexical_declaration',
+              },
+              {
+                kind: 'variable_declaration',
+              },
+            ],
+            inside: {
+              kind: 'program',
+            },
+          },
+        },
+      },
+      {
+        kind: 'identifier',
+        inside: {
+          kind: 'function_declaration',
+          inside: {
+            kind: 'program',
+          },
+        },
+      },
+      {
+        kind: 'type_identifier',
+        inside: {
+          any: [
+            {
+              kind: 'class_declaration',
+            },
+            {
+              kind: 'abstract_class_declaration',
+            },
+          ],
+          inside: {
+            kind: 'program',
+          },
+        },
+      },
+    ],
+  },
 
   // Rules for find invalid.
   invalidOutsideVineStyleCall: invalidMacroCallNotInsideVineFunctionComponent('vineStyleCall'),
@@ -312,6 +360,7 @@ export const ruleInvalidRootScopeStmt = fastCreateMatchRuleByUtils(vineScriptRul
 export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'idInsideMacroMayReferenceSetupLocal')
 export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasMacroCallExpr')
 export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasVueRefCallExpr')
+export const ruleTopLevelDeclarationNames = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'topLevelDeclarationNames')
 export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'setupVariableDeclaration')
 export const ruleVineTaggedTemplateString = directlyMatchUtil(vineScriptRuleUtils, 'vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil(vineScriptRuleUtils, 'importStmt')
