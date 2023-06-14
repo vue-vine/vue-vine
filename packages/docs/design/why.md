@@ -4,7 +4,7 @@
 
 I've seen lots of discussions about supporting **"Multiple components in one SFC file"**, but to be honest, SFC was designed for one component per file, and the related toolchain is also based on this logic and continuously iterated during the development of Vue. Therefore, it is obviously unreasonable to directly support multiple components in one file based on this concept.
 
-Through several Twitter posts' investigation, I found that there is indeed a universal demand for writing multiple components in one file. So I started exploring whether there is another syntax or organizational approach that can best fit into Vue's existing compilation toolchain and utilize existing achievements, while creating more flexibility for users to write components.
+Through several Twitter posts' investigation, I found that there is indeed an universal demand for writing multiple components in one file. So I started exploring whether there is another syntax or organizational approach that can best fit into Vue's existing compilation toolchain and utilize existing achievements, while creating more flexibility for users to write components.
 
 I believe that most programmers like me involved in web front-end development are not able to write UI views "from-top-to-bottom" but with a "from-bottom-to-top" approach. In other words, they start by writing long components, and cut out reusable components later.
 

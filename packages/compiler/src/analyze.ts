@@ -4,7 +4,7 @@ import hashId from 'hash-sum'
 import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
 import { BOOL_KINDS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
-import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
+import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleTopLevelDeclarationNames, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
 import { vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isNotUselessPunc } from './utils'
@@ -671,6 +671,14 @@ function analyzeVineBindings(
       = isSetupConst
         ? VineBindingTypes.SETUP_CONST
         : VineBindingTypes.SETUP_MAYBE_REF
+  }
+
+  // #32 Append all valid declarations in top level scope
+  // to current VCF's bindings, as LITERAL_CONST, telling the
+  // Vue template compiler to remain them as is.
+  const allTopLevelDeclNames = fileCtx.sgRoot.findAll(ruleTopLevelDeclarationNames)
+  for (const declName of allTopLevelDeclNames) {
+    vineFnCompCtx.bindings[declName.text()] = VineBindingTypes.LITERAL_CONST
   }
 }
 

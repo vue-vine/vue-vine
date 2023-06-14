@@ -473,14 +473,15 @@ function validateNoVueApiCallForCallExpr(
   return true
 }
 
-/** It's not allowed to call any Vue reactivity API in root top level scope.
+/** It's not allowed to call any Vue reactivity API in root top level scope,
+ * and not allowed any bare expression statement to avoid side effects.
  * But it's hard and not performant to use a big list of method names regexp in ast-grep
  *
  * So we dive into each direct child statement node, and process by its kind.
  *
  * Since only the following 2 kinds of statement node can contain Vue reactivity API:
- *  - `'expression_statement'`
- *  - `'lexical_declaration'`, maybe under `'export_statement'`
+ *  - `'expression_statement'` // this can be directly rejected without checking reactivity API calls
+ *  - declaration, maybe under `'export_statement'`
  */
 function validateRootScopeStatementsNoVueApiCall(
   validateCtx: ValidateCtx,
@@ -491,7 +492,10 @@ function validateRootScopeStatementsNoVueApiCall(
     .filter(node => needCheckingKindsInRootScope.includes(node.kind()))
   for (const stmtNode of allDirectChildStatements) {
     if (stmtNode.kind() === 'export_statement') {
-      const lexDecl = stmtNode.children().find(node => node.kind() === 'lexical_declaration')
+      const lexDecl = stmtNode.children().find(
+        node => node.kind() === 'lexical_declaration'
+          || node.kind() === 'variable_declaration',
+      )
       if (!lexDecl) {
         continue
       }
@@ -504,7 +508,10 @@ function validateRootScopeStatementsNoVueApiCall(
         return false
       }
     }
-    else if (stmtNode.kind() === 'lexical_declaration') {
+    else if (
+      stmtNode.kind() === 'lexical_declaration'
+      || stmtNode.kind() === 'variable_declaration'
+    ) {
       const declValue = stmtNode.child(1)!.field('value')!
       if (declValue.kind() !== 'call_expression') {
         continue
@@ -515,14 +522,7 @@ function validateRootScopeStatementsNoVueApiCall(
       }
     }
     else if (stmtNode.kind() === 'expression_statement') {
-      const expr = stmtNode.child(0)!
-      if (expr.kind() !== 'call_expression') {
-        continue
-      }
-      const noVueApiCallForCallExpr = validateNoVueApiCallForCallExpr(validateCtx, expr)
-      if (!noVueApiCallForCallExpr) {
-        return false
-      }
+      return false
     }
   }
   return true
