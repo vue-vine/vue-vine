@@ -15,7 +15,6 @@ export async function runCommand(command) {
     try {
       shell.exec(command, {
         cwd: r('../'),
-        stdio: 'inherit',
         shell: true,
         encoding: 'GBK',
       }, (code, output, err) => {
