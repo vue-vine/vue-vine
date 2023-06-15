@@ -238,7 +238,7 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
             += `get ${key}() { return ${key} }, `
             + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
         }
-        else if (bindingMetadata[key] === BindingTypes.PROPS) {
+        else if (bindingMetadata[key] === VineBindingTypes.PROPS) {
           // skip props binding
         }
         else {

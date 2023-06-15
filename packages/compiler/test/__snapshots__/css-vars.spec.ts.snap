@@ -8,8 +8,9 @@ exports[`CSS vars injection & non inlineTemplate > Should be able to inject acco
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
-import 'mockVCF?type=vine-style&scopeId=488ebc72&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+import 'mockVCF?type=vine-style&scopeId=488ebc72&comp=App2&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -101,7 +102,8 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on n
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -154,7 +156,8 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on p
   useCssVars as _useCssVars,
   toRefs as _toRefs
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 import { useDefaults as _useDefaults } from \\"vue-vine\\"
 
@@ -192,7 +195,7 @@ return { color }
 
 
 function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($props.color), 1 /* TEXT */))
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */))
 }
 __vine.render = __sfc_render
     
@@ -210,7 +213,8 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on r
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -262,7 +266,8 @@ exports[`CSS vars injection & non inlineTemplate > Should work when objects are 
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -314,7 +319,8 @@ exports[`CSS vars injection & non inlineTemplate > Should work when props are pa
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -342,7 +348,7 @@ const bgColor = reactive({ color: 'blue' })
 
 /* No expose */
 
-return { color, bgColor }
+return { bgColor }
 
     }, // End of setup function
   }) // End of component object
@@ -367,7 +373,8 @@ exports[`CSS vars injection & non inlineTemplate > Should work when props are pa
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {
@@ -395,7 +402,7 @@ const bgColor = reactive({ color: 'blue' })
 
 /* No expose */
 
-return { color, bgColor }
+return { bgColor }
 
     }, // End of setup function
   }) // End of component object
@@ -419,7 +426,8 @@ exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex e
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=6eee8880&lang=css&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
 
 
 export const App = (() => {

@@ -62,7 +62,12 @@ function normalizeExpression(exp: string) {
 
 const vBindRE = /v-bind\s*\(/g
 
-export function parseCssVars(styles: string[]): string[] {
+export function parseCssVars(
+  styles: string[],
+  hook?: {
+    getIndex(start: number, end: number): void
+  },
+): string[] {
   const vars: string[] = []
   styles.forEach((style) => {
     let match: RegExpExecArray | null = null
@@ -73,6 +78,7 @@ export function parseCssVars(styles: string[]): string[] {
       const start = match.index + match[0].length
       const end = lexBinding(content, start)
       if (end !== null) {
+        hook && hook.getIndex(start, end)
         const variable = normalizeExpression(content.slice(start, end))
         if (!vars.includes(variable)) {
           vars.push(variable)

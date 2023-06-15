@@ -19,7 +19,6 @@ function createMockTransformCtx(option = {}) {
 }
 
 describe('CSS vars injection & non inlineTemplate', () => {
-  // TODO: 验证样式
   test('Should be injected based on reactive variables', () => {
     const content = 'export function App() {\n'
       + '  const color = ref(\'red\')\n'
@@ -42,7 +41,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
-  // TODO: 验证样式
+
   test('Should be injected based on normal variables', () => {
     const content = 'export function App() {\n'
       + '  const color = \'red\'\n'
@@ -65,7 +64,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
-  // TODO: 验证样式
+
   test('Should be injected based on props', () => {
     const content = 'export function App() {\n'
       + '  const color = vineProp.withDefault(\'red\')\n'
@@ -85,7 +84,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
-  // TODO: 验证样式
+
   test('Should be able to inject according to each subcomponent of vfc', () => {
     const content1 = 'export function App() {\n'
      + '  const color = ref(\'red\')\n'
@@ -125,7 +124,6 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code).toMatchSnapshot()
   })
 
-  // TODO: 验证样式
   test('Should work with w/ complex expression', () => {
     const content = 'export function App() {\n'
        + '  let a = 100\n'
@@ -162,7 +160,6 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code).toMatchSnapshot()
   })
 
-  // TODO: 验证样式
   test('Should work when props are passed as parameters', () => {
     const content = 'export function App(props: { color: string }) {\n'
         + '  const bgColor = reactive({ color: \'blue\' })\n'
@@ -185,7 +182,6 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code).toMatchSnapshot()
   })
 
-  // TODO: 验证样式
   test('Should work when props are passed as parameters & alias', () => {
     const content = 'export function App(alias_props: { color: string }) {\n'
         + '  const bgColor = reactive({ color: \'blue\' })\n'
@@ -207,7 +203,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
-  // TODO: 验证样式
+
   test('Should work when objects are destructured or aliased', () => {
     const content = 'export function App() {\n'
       + '  const a = { color: { color: \'red\' } }\n'
