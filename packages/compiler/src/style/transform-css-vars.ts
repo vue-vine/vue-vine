@@ -1,13 +1,16 @@
 import type { SgNode } from '@ast-grep/napi'
 import type { VineFnCompCtx, VinePropMeta } from '../types'
-import { ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
+import { ruleDestructuredAlias, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
 import { spaces } from '../utils'
 
 export const CSS_VARS_HELPER = 'useCssVars'
 function genUseCssVarsCode(varList: string) {
-  return `_${CSS_VARS_HELPER}(_ctx => ({
+  return `_${CSS_VARS_HELPER}(_ctx => {
+    console.log(_ctx)
+    return ({
 ${varList}
-}))`
+})
+  })`
 }
 
 /* function genCSSVarsItem(
@@ -70,7 +73,6 @@ function genCSSVarsItemProps(
   }
 }
 
-// TODO: props 优先级更高
 // 普通变量从 ctx 中获取
 // ref 变量带 value
 // reactive 变量 不变
@@ -110,9 +112,6 @@ function genCSSVarsList(
   return res
 } */
 
-// TODO: 别名
-// TODO：复杂表达式
-// TODO：props 优先级
 function genCSSVarsItemNonInline(
   node: SgNode,
   name: string,
@@ -125,9 +124,26 @@ function genCSSVarsItemNonInline(
     return ''
   }
 
+  function handleVariableDecarator(matchRes: SgNode) {
+    const keyNameSgNode = matchRes.field('name')
+    const destructuredAlias = keyNameSgNode!.findAll(ruleDestructuredAlias)
+    if (destructuredAlias.length === 0) {
+      varName = keyNameSgNode!.text()
+    }
+    else {
+      destructuredAlias.some((node) => {
+        if (node.text() === name || name.startsWith(node.text())) {
+          varName = name
+          return true
+        }
+        return false
+      })
+    }
+  }
+
   switch (matchRes.kind()) {
     case 'variable_declarator':
-      varName = matchRes.field('name')!.text()
+      handleVariableDecarator(matchRes)
       break
     case 'pair_pattern':
       varName = matchRes.field('key')!.text()
@@ -139,7 +155,7 @@ function genCSSVarsItemNonInline(
   }
 
   if (matchRes) {
-    res = `${spaces(2)}'${value}': (_ctx.${varName}),\n`
+    res = `${spaces(2)}'${value}': (_ctx.${name}),\n`
   }
 
   return res
@@ -149,18 +165,11 @@ function genCSSVarsItemPropsNonInline(
   propName: string,
   name: string,
   value: string,
-  propsAlias: string,
 ) {
-  const propsAliasValue = `${propsAlias}.${propName}`
   const isPropNameEqualName = propName === name
   if (isPropNameEqualName) {
     // e.g: color <-> props.color
-    return `${spaces(2)}'${value}': (_ctx.${propsAliasValue}),\n`
-  }
-  else if (propsAliasValue === name) {
-    // e.g: props.color <-> props.color
-    // e.g: alias_props.color <-> alias_props.color
-    return `${spaces(2)}'${value}': (_ctx.${name}),\n`
+    return `${spaces(2)}'${value}': (_ctx.${propName}),\n`
   }
   else {
     return ''
@@ -171,7 +180,6 @@ function genCSSVarsListNonInline(
   cssBindings: Record<string, string | null> | null,
   setupStmts: SgNode[],
   props: Record<string, VinePropMeta>,
-  propsAlias: string,
 ) {
   let res = ''
   if (cssBindings) {
@@ -180,7 +188,7 @@ function genCSSVarsListNonInline(
       let varRes = ''
       // look for from props variable
       for (const key in props) {
-        varRes = genCSSVarsItemPropsNonInline(key, cssBindKey, cssBindValue || '', propsAlias)
+        varRes = genCSSVarsItemPropsNonInline(key, cssBindKey, cssBindValue || '')
         if (varRes)
           break
       }
@@ -205,6 +213,6 @@ export function compileCSSVars(vineFnCompCtx: VineFnCompCtx, inline = false) {
   const { cssBindings, setupStmts, props, propsAlias } = vineFnCompCtx
   if (!cssBindings)
     return ''
-  const varList = !inline ? genCSSVarsListNonInline(cssBindings, setupStmts, props, propsAlias) : ''
+  const varList = !inline ? genCSSVarsListNonInline(cssBindings, setupStmts, props) : ''
   return genUseCssVarsCode(varList)
 }

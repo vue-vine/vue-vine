@@ -1,7 +1,8 @@
-import type { CompilerOptions } from '@vue/compiler-dom'
-import { BindingTypes, compile } from '@vue/compiler-dom'
+import type { BindingTypes, CompilerOptions } from '@vue/compiler-dom'
+import { compile } from '@vue/compiler-dom'
 import type { SgNode } from '@ast-grep/napi'
 import { html, ts } from '@ast-grep/napi'
+import { VineBindingTypes } from '../types'
 import type { VineFileCtx, VineFnCompCtx } from '../types'
 import { ruleImportSpecifier, ruleImportStmt } from '../ast-grep/rules-for-script'
 import { dedupe } from '../utils'
@@ -230,7 +231,7 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
           // skip vue imports since we know they will never change
           setupFnReturns += `get ${key}() { return ${key} }, `
         }
-        else if (bindingMetadata[key] === BindingTypes.SETUP_LET) {
+        else if (bindingMetadata[key] === VineBindingTypes.SETUP_LET) {
           // local let binding, also add setter
           const setArg = key === 'v' ? '_v' : 'v'
           setupFnReturns

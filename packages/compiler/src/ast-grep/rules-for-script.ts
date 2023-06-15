@@ -127,6 +127,17 @@ export const vineScriptRuleUtils = {
       },
     ],
   },
+  // TODO 优化规则
+  destructuredAlias: {
+    any: [
+      {
+        kind: 'shorthand_property_identifier_pattern',
+      },
+      {
+        kind: 'identifier',
+      },
+    ],
+  },
   vineTaggedTemplateString: {
     kind: 'call_expression',
     all: [
@@ -362,6 +373,7 @@ export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUti
 export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasVueRefCallExpr')
 export const ruleTopLevelDeclarationNames = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'topLevelDeclarationNames')
 export const ruleSetupVariableDeclaration = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'setupVariableDeclaration')
+export const ruleDestructuredAlias = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'destructuredAlias')
 export const ruleVineTaggedTemplateString = directlyMatchUtil(vineScriptRuleUtils, 'vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil(vineScriptRuleUtils, 'importStmt')
 export const ruleImportClause = directlyMatchUtil(vineScriptRuleUtils, 'importClause')
