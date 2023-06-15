@@ -15,19 +15,19 @@ export async function runCommand(command) {
     try {
       shell.exec(command, {
         cwd: r('../'),
-        stdio: 'pipe',
         shell: true,
         encoding: 'GBK',
-        silent: true,
-      }, (code, op, err) => {
+      }, (code, output, err) => {
         if (code === 0) {
           resolve(true)
         }
-        if (op && op.toString()) {
-          console.log(op.toString())
-        }
-        if (err) {
+        else if (err) {
           reject(err)
+        }
+
+        const outputStr = output.toString()
+        if (outputStr) {
+          console.log(outputStr)
         }
       })
     }

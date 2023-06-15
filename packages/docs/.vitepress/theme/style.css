@@ -15,6 +15,23 @@
   --vine-bold-text-color: #38a179;
 }
 
+body, html {
+  font-family: Space Grotesk,
+    -apple-system,
+    BlinkMacSystemFont,
+    avenir next,avenir,
+    segoe ui,
+    helvetica neue,
+    helvetica,
+    Cantarell,
+    Ubuntu,
+    roboto,
+    noto,
+    arial,
+    sans-serif;
+  word-spacing: 0.1rem
+}
+
 strong {
   color: var(--vine-bold-text-color);
 }

@@ -14,12 +14,10 @@ import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'
 import { QUERY_TYPE_STYLE } from './src/constants'
 
-type VinePluginOptions = Omit<VineCompilerOptions, 'inlineTemplate'>
-
-function createVinePlugin(options: VinePluginOptions = {}): Plugin {
+function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx({
     ...options,
-    inlineTemplate: process.env.NODE_ENV === 'production',
+    inlineTemplate: options.inlineTemplate ?? process.env.NODE_ENV === 'production',
   })
   const runCompileScript = (code: string, fileId: string) => {
     const vineFileCtx = compileVineTypeScriptFile(
@@ -125,5 +123,4 @@ function createVinePlugin(options: VinePluginOptions = {}): Plugin {
 
 export {
   createVinePlugin as vinePlugin,
-  VinePluginOptions,
 }
