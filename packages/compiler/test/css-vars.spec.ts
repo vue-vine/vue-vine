@@ -1,40 +1,39 @@
-import { beforeEach, describe, expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import hashId from 'hash-sum'
 import type { VineCompilerHooks } from '../index'
 import { compileVineTypeScriptFile, createCompilerCtx } from '../index'
-import type { VineCompilerCtx } from '../src/types'
 
-let mockVCF = ''
-let mockCompilerHook = {} as VineCompilerHooks
-let mockCompilerCtx = {} as VineCompilerCtx
-beforeEach(() => {
-  mockVCF = 'function testVCF() {\n'
-    + '  const color = ref(\'red\')\n'
-    + '\n'
-    + '  vineStyle.scoped(`\n'
-    + '    .blog-title {\n'
-    + '      color: v-bind(color)\n'
-    + '    }\n'
-    + '  `)\n'
-    + '  return vine`\n'
-    + '     <div class="title">\n'
-    + '        title\n'
-    + '     </div>\n'
-    + '  `\n'
-    + '}'
-
-  mockCompilerCtx = createCompilerCtx({ inlineTemplate: true })
-  mockCompilerHook = {
+function createMockTransformCtx(option = {}) {
+  const mockCompilerCtx = createCompilerCtx(option)
+  const mockCompilerHook = {
     onOptionsResolved: cb => cb(mockCompilerCtx.options),
     onError: () => {},
     onWarn: () => {},
     onBindFileCtx: (fileId, fileCtx) => mockCompilerCtx.fileCtxMap.set(fileId, fileCtx),
   } as VineCompilerHooks
-})
-describe('CSS vars injection', () => {
+
+  return {
+    mockCompilerHook,
+    mockCompilerCtx,
+  }
+}
+describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on reactive variables', () => {
-    const res = compileVineTypeScriptFile(mockVCF, 'mockVCF', mockCompilerHook)
+    const content = 'export function TestVCF(){\n'
+      + '  const color = ref(\'color\')\n'
+      + '  vineStyle(`\n'
+      + '    div{\n'
+      + '      color: v-bind(color)\n'
+      + '    }\n'
+      + '  `)\n'
+      + '  return vine`\n'
+      + '    <div>test</div>\n'
+      + '  `\n'
+      + '}'
+    const { mockCompilerHook } = createMockTransformCtx({ inlineTemplate: false })
+    const res = compileVineTypeScriptFile(content, 'mockVCF', mockCompilerHook)
     const code = res.fileSourceCode.toString()
+    debugger
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('testVCF' + 'color')}': (color.value)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
@@ -140,6 +139,24 @@ describe('CSS vars injection', () => {
   })
 
   test('Should work when props are passed as parameters & alias', () => {
+    const mockParamsPropsVCF = 'function testVCF(alias_props: { color: string }) {\n'
+      + '  vineStyle(`\n'
+      + '      .test {\n'
+      + '        color: v-bind(alias_props.color);\n'
+      + '      }\n'
+      + '  `)\n'
+      + '  return vine`\n'
+      + '    <div class="test">test</div>\n'
+      + '  `\n'
+      + '}'
+    const res = compileVineTypeScriptFile(mockParamsPropsVCF, 'testParamsPropsVCF', mockCompilerHook)
+    const code = res.fileSourceCode.toString()
+    expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
+    expect(code.includes(`'${hashId('testVCF' + 'alias_props.color')}': (alias_props.color)`)).toBeTruthy()
+    expect(code).toMatchSnapshot()
+  })
+
+  test('Should work when objects are destructured or aliased', () => {
     const mockParamsPropsVCF = 'function testVCF(alias_props: { color: string }) {\n'
       + '  vineStyle(`\n'
       + '      .test {\n'
