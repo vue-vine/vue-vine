@@ -2,7 +2,11 @@ import type { SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
 import type { VineFnCompCtx } from '../types'
-import { ruleDestructuredAlias, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
+import {
+  ruleCSSComplexExpIdentifier,
+  ruleDestructuredAlias,
+  ruleSetupVariableDeclaration,
+} from '../ast-grep/rules-for-script'
 import { spaces } from '../utils'
 
 export const CSS_VARS_HELPER = 'useCssVars'
@@ -177,9 +181,8 @@ function genCSSVarsItemPropsNonInline(
   }
 }
 
-// TODO: 优化规则
 function findIdentifierFromExp(cssContent: string) {
-  return ts.parse(cssContent).root().findAll({ rule: { any: [{ kind: 'identifier' }] } })
+  return ts.parse(cssContent).root().findAll(ruleCSSComplexExpIdentifier)
 }
 
 function genCSSVarsListNonInline(
@@ -197,12 +200,11 @@ function genCSSVarsListNonInline(
       const cssBindKeySgNodes = findIdentifierFromExp(cssBindKey)
 
       cssBindKeySgNodes.forEach((node) => {
-        const start = node.range().start.index
-        const end = node.range().end.index
+        const range = node.range()
         // overwrite
         // non-inline mode only needs to rewrite the variable to `_ctx.x`
         // e.g (a + b) / 2 + 'px' -> (_ctx.a + _ctx.b) / 2
-        ms.overwrite(start, end, `_ctx.${node.text()}`)
+        ms.overwrite(range.start.index, range.end.index, `_ctx.${node.text()}`)
       })
 
       res = `${res}${spaces(2)}'${cssBindValue}': (${ms.toString()}),\n`
@@ -216,6 +218,7 @@ export function compileCSSVars(vineFnCompCtx: VineFnCompCtx, inline = false) {
   const { cssBindings, setupStmts, props, propsAlias } = vineFnCompCtx
   if (!cssBindings)
     return ''
+  // TODO: inline mode
   const varList = !inline ? genCSSVarsListNonInline(cssBindings) : ''
   return genUseCssVarsCode(varList)
 }
