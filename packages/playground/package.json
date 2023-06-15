@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
-    "sass": "^1.63.3",
+    "sass": "^1.63.4",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20.3.0",
+    "@types/node": "^20.3.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "eslint": "^8.42.0",
     "less": "^4.1.3",

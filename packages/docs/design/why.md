@@ -14,7 +14,7 @@ In the comparison of development experience between Vue and React, the most obvi
 
 Vue also has not-bad support for JSX, however, the issue with JSX is that it's too flexible, and it can't provide enough compile-time information for Vue to optimize. But function style is good, we do like it.
 
-So... why not try to use a function to create Vue component, but writing "script setup" logics and template inside?
+So... Why not try to use a function to create Vue component, but writing "script setup" logics and template inside?
 
 That's how Vine was born.
 
@@ -24,4 +24,6 @@ That's how Vine was born.
 
 After diving into the result of Vue SFC compilation, you'll found that it's actually transformed to a component object. So, there isn't a big difference between compiling a single component and compiling multiple components, all I need to do is just to create multiple component objects.
 
-Templates are compiled based on some binding metadata from user scripts, which implemented the "Auto unwrap" in template. Some static parts can be automatically hoisted out for optimizing. All these processing are provided from the `@vue/compiler-dom` package. 
+Templates are compiled based on some binding metadata from user scripts, which implemented the "Auto unwrap" in template. Some static parts can be automatically hoisted out for optimizing. 
+
+All these processing are provided from the `@vue/compiler-dom` package. 
