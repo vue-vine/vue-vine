@@ -1,0 +1,1139 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 1`] = `
+"import {
+  unref as _unref,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  createElementVNode as _createElementVNode,
+  createVNode as _createVNode,
+  Fragment as _Fragment
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+import 'mockVCF?type=vine-style&scopeId=488ebc72&comp=App2&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_unref(color)),
+  'cc02e9b0': (_unref(bgColor).color),
+
+}))
+
+const color = ref('red')
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_unref(color)), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()
+    
+
+    
+export const App2 = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App2',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  '35afc47c': (_unref(color)),
+  '8855e0a8': (_unref(bgColor).color),
+
+}))
+
+const color = ref('pink')
+const bgColor = reactive({ color: 'green' })
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(_Fragment, null, [
+    _createElementVNode(\\"div\\", null, _toDisplayString(_unref(color)), 1 /* TEXT */),
+    _createVNode(App)
+  ], 64 /* STABLE_FRAGMENT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-488ebc72'
+  return __vine /* End of App2 */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
+"
+div {
+        color: var(--35afc47c);
+        background: var(--8855e0a8);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on normal variables 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+const color = 'red'
+const bgColor = { color: 'blue' }
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (color),
+  'cc02e9b0': (bgColor.color),
+
+}))
+
+
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(color)))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on normal variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on props 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toRefs as _toRefs
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+import { useDefaults as _useDefaults } from \\"vue-vine\\"
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+      bgColor: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = _useDefaults(__props, {
+  color: 'red'
+})
+
+const { color,bgColor } = _toRefs(props)
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (color.value),
+  '6fdc9173': (bgColor.value),
+
+}))
+
+
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(color.value), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on props 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--6fdc9173);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on reactive variables 1`] = `
+"import {
+  unref as _unref,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_unref(color)),
+  'cc02e9b0': (_unref(bgColor).color),
+
+}))
+
+const color = ref('red')
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_unref(color)), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should be injected based on reactive variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when objects are destructured or aliased 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+const a = { color: { color: 'red' } }
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'ec15f98c': (_unref(color2)),
+  'bf8265a0': (_unref(fff).color),
+
+}))
+
+const { color: { color: color2 } } = a
+const { color: fff } = a
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_ctx.color), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when objects are destructured or aliased 2`] = `
+"
+div {
+        color: var(--ec15f98c);
+        background: var(--bf8265a0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters & alias 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const alias_props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (alias_props.color),
+  'cc02e9b0': (_unref(bgColor).color),
+
+}))
+
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(__props.color), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters & alias 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (props.color),
+  'cc02e9b0': (_unref(bgColor).color),
+
+}))
+
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(__props.color), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work with w/ complex expression 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  '33d8fa9b': (_unref(foo)),
+  '0763ccdc': (_unref(foo) + 'px'),
+  '144bac14': ((_unref(a) + _unref(b)) / 2 + 'px'),
+  '7ce50374': (((_unref(a) + _unref(b))) / (2 * _unref(a))),
+
+}))
+
+let a = 100
+let b = 200
+let foo = 300
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_ctx.color), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & inlineTemplate > Should work with w/ complex expression 2`] = `
+"
+p{
+       width: calc(var(--33d8fa9b) - 3px);
+       height: calc(var(--33d8fa9b) - 3px);
+       top: calc(var(--0763ccdc) - 3px);
+}
+div {
+       color: var(--144bac14);
+}
+div {
+       color: var    (--144bac14);
+}
+p {
+       color: var(--7ce50374);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  createElementVNode as _createElementVNode,
+  createVNode as _createVNode,
+  Fragment as _Fragment
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+import 'mockVCF?type=vine-style&scopeId=488ebc72&comp=App2&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+  'cc02e9b0': (_ctx.bgColor.color),
+
+}))
+
+const color = ref('red')
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return { color, bgColor }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()
+    
+
+    
+export const App2 = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App2',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  '35afc47c': (_ctx.color),
+  '8855e0a8': (_ctx.bgColor.color),
+
+}))
+
+const color = ref('pink')
+const bgColor = reactive({ color: 'green' })
+
+/* No expose */
+
+return { color, bgColor, App }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(_Fragment, null, [
+    _createElementVNode(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */),
+    _createVNode($setup[\\"App\\"])
+  ], 64 /* STABLE_FRAGMENT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-488ebc72'
+  return __vine /* End of App2 */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
+"
+div {
+        color: var(--35afc47c);
+        background: var(--8855e0a8);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on normal variables 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+const color = 'red'
+const bgColor = { color: 'blue' }
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+  'cc02e9b0': (_ctx.bgColor.color),
+
+}))
+
+
+
+/* No expose */
+
+return { color, bgColor }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color)))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on normal variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on props 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toRefs as _toRefs
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+import { useDefaults as _useDefaults } from \\"vue-vine\\"
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = _useDefaults(__props, {
+  color: 'red'
+})
+
+const { color } = _toRefs(props)
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+
+}))
+
+
+
+/* No expose */
+
+return { color }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on props 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on reactive variables 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+  'cc02e9b0': (_ctx.bgColor.color),
+
+}))
+
+const color = ref('red')
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return { color, bgColor }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on reactive variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when objects are destructured or aliased 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+const a = { color: { color: 'red' } }
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'ec15f98c': (_ctx.color2),
+  'bf8265a0': (_ctx.fff.color),
+
+}))
+
+const { color: { color: color2 } } = a
+const { color: fff } = a
+
+/* No expose */
+
+return { a, color2, fff }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_ctx.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when objects are destructured or aliased 2`] = `
+"
+div {
+        color: var(--ec15f98c);
+        background: var(--bf8265a0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters & alias 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const alias_props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+  'cc02e9b0': (_ctx.bgColor.color),
+
+}))
+
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return { bgColor }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($props.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters & alias 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  'bd4b0810': (_ctx.color),
+  'cc02e9b0': (_ctx.bgColor.color),
+
+}))
+
+const bgColor = reactive({ color: 'blue' })
+
+/* No expose */
+
+return { bgColor }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($props.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex expression 1`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref
+} from 'vue'
+
+import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
+
+
+export const App = (() => {
+
+/* No hoisted */
+
+  const __vine = _defineComponent({
+    name: 'App',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+_useCssVars(_ctx => ({
+  '33d8fa9b': (_ctx.foo),
+  '0763ccdc': (_ctx.foo + 'px'),
+  '144bac14': ((_ctx.a + _ctx.b) / 2 + 'px'),
+  '7ce50374': (((_ctx.a + _ctx.b)) / (2 * _ctx.a)),
+
+}))
+
+let a = 100
+let b = 200
+let foo = 300
+
+/* No expose */
+
+return { get a() { return a }, set a(v) { a = v }, get b() { return b }, set b(v) { b = v }, get foo() { return foo }, set foo(v) { foo = v } }
+
+    }, // End of setup function
+  }) // End of component object
+
+
+function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_ctx.color), 1 /* TEXT */))
+}
+__vine.render = __sfc_render
+    
+
+  __vine.__scopeId = 'data-v-6eee8880'
+  return __vine /* End of App */
+})()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex expression 2`] = `
+"
+p{
+       width: calc(var(--33d8fa9b) - 3px);
+       height: calc(var(--33d8fa9b) - 3px);
+       top: calc(var(--0763ccdc) - 3px);
+}
+div {
+       color: var(--144bac14);
+}
+div {
+       color: var    (--144bac14);
+}
+p {
+       color: var(--7ce50374);
+}
+    "
+`;

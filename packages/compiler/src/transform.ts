@@ -4,7 +4,7 @@ import MagicString from 'magic-string'
 import type { VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
 import { filterJoin, showIf, spaces } from './utils'
-import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
+import { CSS_VARS_HELPER, UN_REF_HELPER, compileCSSVars } from './style/transform-css-vars'
 import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
 import { sortStyleImport } from './style/order'
 import { ruleImportStmt } from './ast-grep/rules-for-script'
@@ -128,6 +128,7 @@ export function transformFile(
     // add useCssVars
     if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
       vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
+      vueImports.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
     }
 
     // 2. For every vine component function, we need to transform the function declaration
@@ -313,7 +314,7 @@ ${showIf(
   `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
 )}
 
-${compileCSSVars(vineFnCompCtx)}
+${compileCSSVars(vineFnCompCtx, inline)}
 
 ${insideSetupStmtCode.join('\n')}
 
