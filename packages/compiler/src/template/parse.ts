@@ -45,17 +45,23 @@ export function findTemplateAllScriptSgNode(templateAst: SgNode) {
   }
 }
 
+export function findAllTagNameSgNodes(templateAst: SgNode) {
+  const tagNameNodes = templateAst.findAll({
+    rule: {
+      kind: 'tag_name',
+    },
+  })
+  return tagNameNodes
+}
+
 export function findMatchedTagName(
   templateAst: SgNode,
   names: string[],
 ) {
-  const matchedTagNameNodes = templateAst.findAll({
-    rule: {
-      kind: 'tag_name',
-      regex: `(${names.join('|')})`,
-    },
-  })
-  return matchedTagNameNodes.map(node => node.text())
+  const matchedTagNameNodes = findAllTagNameSgNodes(templateAst)
+  return matchedTagNameNodes
+    .filter(tagNode => names.includes(tagNode.text()))
+    .map(tagNode => tagNode.text())
 }
 
 export function findTemplateAllIdentifiers(templateAst: SgNode) {

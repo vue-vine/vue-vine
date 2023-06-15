@@ -3,10 +3,11 @@ import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
 import type { VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
-import { STYLE_LANG_FILE_EXTENSION } from './constants'
 import { filterJoin, showIf, spaces } from './utils'
 import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
 import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
+import { sortStyleImport } from './style/order'
+import { ruleImportStmt } from './ast-grep/rules-for-script'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
@@ -79,7 +80,9 @@ export function transformFile(
   //        so we need to use ast-grep to parse it, and do deduplicate by
   //        analyzing their `import_specifier`.
   let isPrependedUseDefaults = false
-  const styleImportStmts: string[] = []
+  // Traverse file context's `styleDefine`, and generate import statements.
+  // Ordered by their import releationship.
+  const styleImportStmts = sortStyleImport(vineFileCtx)
   const generatedImportsMap: Map<string, Map<string, string>> = new Map()
   const inFileCompSharedBindings = Object.fromEntries(
     vineFileCtx.vineFnComps.map(vineFnCompCtx => ([
@@ -247,27 +250,6 @@ export function transformFile(
       ...vineFnCompCtx.hoistSetupStmts,
     ]
 
-    //    2.6 Traverse file context's `styleDefine`, and generate import statements for everyone.
-    const styleDefine = vineFileCtx.styleDefine[vineFnCompCtx.scopeId]
-    if (styleDefine) {
-      styleImportStmts.push(
-        `import '${
-          vineFileCtx.fileId.replace(/\.vine\.ts$/, '')
-        }?type=vine-style&scopeId=${
-          vineFnCompCtx.scopeId
-        }&lang=${
-          styleDefine.lang
-        }${
-          showIf(
-            Boolean(styleDefine.scoped),
-            '&scoped=true',
-          )
-        }&virtual.${
-          STYLE_LANG_FILE_EXTENSION[styleDefine.lang]
-        }'`,
-      )
-    }
-
     // Do codegen for single component
     vineFileCtx.fileSourceCode.appendRight(
       vineFnDeclStart.index, `
@@ -378,11 +360,24 @@ __vine.render = __sfc_render
           .join(',\n')
       }\n} from '${source}'`
     })
+    .concat(
+      vineFileCtx.sgRoot.findAll(ruleImportStmt)
+        .map((importStmt) => {
+          // Remove all import statements from the source code
+          // because we'll merge them with other generated imports together.
+          vineFileCtx.fileSourceCode.remove(
+            importStmt.range().start.index,
+            importStmt.range().end.index,
+          )
+
+          return importStmt.text()
+        }),
+    )
     .join('\n')
 
   vineFileCtx.fileSourceCode.prepend(`${
     mergedImports
-  }\n${
-    styleImportStmts.join('\n')
+  }\n\n${
+    styleImportStmts
   }\n\n`)
 }
