@@ -6,7 +6,10 @@ exports[`CSS vars injection & non inlineTemplate > Should be able to inject acco
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars
+  useCssVars as _useCssVars,
+  createElementVNode as _createElementVNode,
+  createVNode as _createVNode,
+  Fragment as _Fragment
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -52,7 +55,9 @@ __vine.render = __sfc_render
   __vine.__scopeId = 'data-v-6eee8880'
   return __vine /* End of App */
 })()
+    
 
+    
 export const App2 = (() => {
 
 /* No hoisted */
@@ -72,19 +77,22 @@ _useCssVars(_ctx => ({
 
 }))
 
-const color = ref('red')
-const bgColor = reactive({ color: 'blue' })
+const color = ref('pink')
+const bgColor = reactive({ color: 'green' })
 
 /* No expose */
 
-return { color, bgColor }
+return { color, bgColor, App }
 
     }, // End of setup function
   }) // End of component object
 
 
 function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */))
+  return (_openBlock(), _createElementBlock(_Fragment, null, [
+    _createElementVNode(\\"div\\", null, _toDisplayString($setup.color), 1 /* TEXT */),
+    _createVNode($setup[\\"App\\"])
+  ], 64 /* STABLE_FRAGMENT */))
 }
 __vine.render = __sfc_render
     
@@ -92,6 +100,24 @@ __vine.render = __sfc_render
   __vine.__scopeId = 'data-v-488ebc72'
   return __vine /* End of App2 */
 })()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
+"
+div {
+        color: var(--35afc47c);
+        background: var(--8855e0a8);
+}
+    "
 `;
 
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on normal variables 1`] = `
@@ -145,6 +171,15 @@ __vine.render = __sfc_render
   __vine.__scopeId = 'data-v-6eee8880'
   return __vine /* End of App */
 })()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on normal variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
 `;
 
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on props 1`] = `
@@ -205,6 +240,14 @@ __vine.render = __sfc_render
 })()"
 `;
 
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on props 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+}
+    "
+`;
+
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on reactive variables 1`] = `
 "import {
   toDisplayString as _toDisplayString,
@@ -258,6 +301,15 @@ __vine.render = __sfc_render
 })()"
 `;
 
+exports[`CSS vars injection & non inlineTemplate > Should be injected based on reactive variables 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
 exports[`CSS vars injection & non inlineTemplate > Should work when objects are destructured or aliased 1`] = `
 "import {
   toDisplayString as _toDisplayString,
@@ -309,6 +361,15 @@ __vine.render = __sfc_render
   __vine.__scopeId = 'data-v-6eee8880'
   return __vine /* End of App */
 })()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work when objects are destructured or aliased 2`] = `
+"
+div {
+        color: var(--ec15f98c);
+        background: var(--bf8265a0);
+}
+    "
 `;
 
 exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters & alias 1`] = `
@@ -365,6 +426,15 @@ __vine.render = __sfc_render
 })()"
 `;
 
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters & alias 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
 exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters 1`] = `
 "import {
   toDisplayString as _toDisplayString,
@@ -419,8 +489,18 @@ __vine.render = __sfc_render
 })()"
 `;
 
+exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters 2`] = `
+"
+div {
+        color: var(--bd4b0810);
+        background: var(--cc02e9b0);
+}
+    "
+`;
+
 exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex expression 1`] = `
 "import {
+  toDisplayString as _toDisplayString,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
@@ -464,7 +544,7 @@ return { get a() { return a }, set a(v) { a = v }, get b() { return b }, set b(v
 
 
 function __sfc_render(_ctx: any,_cache: any,$props: any,$setup: any,$data: any,$options: any) {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, \\"test\\"))
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_ctx.color), 1 /* TEXT */))
 }
 __vine.render = __sfc_render
     
@@ -472,4 +552,23 @@ __vine.render = __sfc_render
   __vine.__scopeId = 'data-v-6eee8880'
   return __vine /* End of App */
 })()"
+`;
+
+exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex expression 2`] = `
+"
+p{
+       width: calc(var(--33d8fa9b) - 3px);
+       height: calc(var(--33d8fa9b) - 3px);
+       top: calc(var(--0763ccdc) - 3px);
+}
+div {
+       color: var(--144bac14);
+}
+div {
+       color: var    (--144bac14);
+}
+p {
+       color: var(--7ce50374);
+}
+    "
 `;

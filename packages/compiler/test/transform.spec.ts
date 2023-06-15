@@ -99,7 +99,7 @@ function Component() {
           "Component",
           {
             "Component": "literal-const",
-            "color": "props",
+            "color": "setup-ref",
           },
         ],
       ]
