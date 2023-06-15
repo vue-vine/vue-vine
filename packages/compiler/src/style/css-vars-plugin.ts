@@ -1,5 +1,6 @@
 import type { PluginCreator } from 'postcss'
 import type { VineFileCtx } from '../types'
+import { parseCssVars } from './analyze-css-vars'
 
 interface CSSVarsPluginOptions {
   fileCtx: VineFileCtx
@@ -24,7 +25,7 @@ const cssVarsPlugin: PluginCreator<CSSVarsPluginOptions> = (options) => {
       root.walk((ctx) => {
         if (ctx.type === 'decl' && ctx.value && ctx.value.includes('v-bind')) {
           for (const cbKey in cssBindings) {
-            if (ctx.value.includes(cbKey)) {
+            if (parseCssVars([ctx.value])[0] === cbKey) {
               ctx.value = `var(--${cssBindings[cbKey]})`
               break
             }
