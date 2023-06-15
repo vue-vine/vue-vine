@@ -132,6 +132,7 @@ function analyzeVinePropsByFormalParams(
       }
 
       vineFnCompCtx.props[propName] = propMeta
+      vineFnCompCtx.bindings[propName] = VineBindingTypes.PROPS
     })
 }
 
@@ -177,6 +178,7 @@ function analyzeVinePropsByMacroCall(
 
     // Collect prop's information
     vineFnCompCtx.props[propName] = propMeta
+    vineFnCompCtx.bindings[propName] = VineBindingTypes.PROPS
   }
 }
 

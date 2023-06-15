@@ -5,7 +5,7 @@ import { compileVineTemplate } from '../src/template/compose'
 import { VineBindingTypes } from '../src/types'
 import { dedupe } from '../src/utils'
 
-describe('Template compile', () => {
+describe('Vue Template compile', () => {
   test('vue/compiler-dom inline mode', () => {
     const { code, preamble } = compileVineTemplate(`
       <h1>Hello Vine</h1>
