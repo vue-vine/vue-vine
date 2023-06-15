@@ -1,7 +1,6 @@
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
-import Fonts from 'unplugin-fonts/vite'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
@@ -14,6 +13,9 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' }],
     ['link', { rel: 'shortcut icon', href: '/favicons/favicon.ico' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
   ],
   themeConfig: {
     search: {
@@ -86,15 +88,6 @@ export default defineConfig({
           'stylus',
         ],
       },
-    ],
-  },
-  vite: {
-    plugins: [
-      Fonts({
-        google: {
-          families: ['Space Grotesk'],
-        },
-      }),
     ],
   },
 })

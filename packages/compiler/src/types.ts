@@ -14,6 +14,7 @@ export interface VineCompilerHooks {
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
   onValidateEnd?: () => void
+  onAnalysisEnd?: () => void
 }
 
 export interface VineCompilerOptions {

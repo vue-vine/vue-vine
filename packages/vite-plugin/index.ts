@@ -19,6 +19,17 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     ...options,
     inlineTemplate: options.inlineTemplate ?? process.env.NODE_ENV === 'production',
   })
+  const panicOnCompilerError = () => {
+    if (compilerCtx.vineCompileErrors.length > 0) {
+      const allErrMsg = compilerCtx.vineCompileErrors
+        .map(diagnositc => diagnositc.full)
+        .join('\n')
+      compilerCtx.vineCompileErrors.length = 0
+      throw new Error(
+        `Vue Vine compilation failed:\n${allErrMsg}`,
+      )
+    }
+  }
   const runCompileScript = (code: string, fileId: string) => {
     const vineFileCtx = compileVineTypeScriptFile(
       code,
@@ -28,17 +39,8 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
         onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
         onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
-        onValidateEnd: () => {
-          if (compilerCtx.vineCompileErrors.length > 0) {
-            const allErrMsg = compilerCtx.vineCompileErrors
-              .map(diagnositc => diagnositc.full)
-              .join('\n')
-            compilerCtx.vineCompileErrors.length = 0
-            throw new Error(
-              `Vue Vine compilation failed:\n${allErrMsg}`,
-            )
-          }
-        },
+        onValidateEnd: panicOnCompilerError,
+        onAnalysisEnd: panicOnCompilerError,
       },
     )
 

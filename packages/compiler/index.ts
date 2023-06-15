@@ -87,6 +87,7 @@ export function compileVineTypeScriptFile(
 
   // 2. Analysis
   analyzeVine([compilerHooks, vineFileCtx], vineFnCompDecls)
+  compilerHooks.onAnalysisEnd?.()
 
   // 3. Codegen, or call it "transform"
   transformFile(vineFileCtx, compilerOptions?.inlineTemplate ?? true)

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import type { VineCompilerHooks } from '../index'
+import type { VineCompilerHooks, VineFileCtx } from '../index'
 import { compileVineTypeScriptFile, createCompilerCtx } from '../index'
 
 function createMockTransformCtx(option = {}) {
@@ -17,6 +17,18 @@ function createMockTransformCtx(option = {}) {
   }
 }
 
+function runTransform(
+  content: string,
+  fileName: string,
+) {
+  const { mockCompilerHook } = createMockTransformCtx()
+  return compileVineTypeScriptFile(content, fileName, mockCompilerHook)
+}
+
+function getTransformedCode(fileCtx: VineFileCtx) {
+  return fileCtx.fileSourceCode.toString()
+}
+
 describe('transform vcf containing await', () => {
   test('do not need result', () => {
     const content = 'export async function App() {\n'
@@ -26,9 +38,8 @@ describe('transform vcf containing await', () => {
       + '    <div>test</div>\n'
       + '  `\n'
       + '}\n'
-    const { mockCompilerHook } = createMockTransformCtx()
-    const res = compileVineTypeScriptFile(content, 'testVCFAwait', mockCompilerHook)
-    const code = res.fileSourceCode.toString()
+
+    const code = getTransformedCode(runTransform(content, 'testVCFAwait'))
     const matchRes = code.match(/await/g)
     expect(matchRes).toBeTruthy()
     expect(matchRes!.length).toBe(1)
@@ -43,9 +54,7 @@ describe('transform vcf containing await', () => {
       + '    <div>test</div>\n'
       + '  `\n'
       + '}\n'
-    const { mockCompilerHook } = createMockTransformCtx()
-    const res = compileVineTypeScriptFile(content, 'testVCFAwait', mockCompilerHook)
-    const code = res.fileSourceCode.toString()
+    const code = getTransformedCode(runTransform(content, 'testVCFAwait'))
     const matchRes = code.match(/await/g)
     expect(matchRes).toBeTruthy()
     expect(matchRes!.length).toBe(1)
@@ -63,9 +72,51 @@ describe('transform vcf containing valid top level declaration', () => {
     + '    <div>{{foo}} {{bar()}}</div>\n'
     + '  `\n'
     + '}'
-    const { mockCompilerHook } = createMockTransformCtx()
-    const res = compileVineTypeScriptFile(content, 'testVCFContainsTopLevelDecl', mockCompilerHook)
-    const code = res.fileSourceCode.toString()
+    const code = getTransformedCode(runTransform(content, 'testVCFContainsTopLevelDecl'))
     expect(code).toMatchSnapshot()
+  })
+})
+
+describe('trasnform vcf props binding should be recongnized', () => {
+  test('anything you want to check', () => {
+    const content = `
+function Component() {
+  const color = vineProp.withDefault('red')
+
+  return vine\`
+    <div>{{ color }}</div>
+  \`
+}`
+    const fileCtx = runTransform(content, 'testTransformPlayground')
+    expect(
+      fileCtx.vineFnComps.map(comp => ([
+        comp.fnName,
+        comp.bindings,
+      ])),
+    ).toMatchInlineSnapshot(`
+      [
+        [
+          "Component",
+          {
+            "Component": "literal-const",
+            "color": "props",
+          },
+        ],
+      ]
+    `)
+    expect(getTransformedCode(fileCtx)).toMatchSnapshot()
+  })
+})
+
+describe('trasnform playground', () => {
+  test('anything you want to check', () => {
+    const content = `
+// Write a template here
+    `
+    const playgroundFileId = 'testTransformPlayground'
+    const fileCtx = runTransform(content, playgroundFileId)
+
+    // Put anything you want to check below ...
+    expect(fileCtx.fileId).toBe(playgroundFileId)
   })
 })
