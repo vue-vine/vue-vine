@@ -237,6 +237,9 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
             += `get ${key}() { return ${key} }, `
             + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
         }
+        else if (bindingMetadata[key] === BindingTypes.PROPS) {
+          // skip props binding
+        }
         else {
           setupFnReturns += `${key}, `
         }

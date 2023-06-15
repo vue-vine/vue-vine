@@ -178,7 +178,7 @@ function analyzeVinePropsByMacroCall(
 
     // Collect prop's information
     vineFnCompCtx.props[propName] = propMeta
-    vineFnCompCtx.bindings[propName] = VineBindingTypes.PROPS
+    vineFnCompCtx.bindings[propName] = VineBindingTypes.SETUP_REF
   }
 }
 
