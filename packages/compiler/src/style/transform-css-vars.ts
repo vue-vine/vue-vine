@@ -3,51 +3,11 @@ import type { VineFnCompCtx, VinePropMeta } from '../types'
 import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
 import { spaces } from '../utils'
 
-export function compileCSSVars(vineFnCompCtx: VineFnCompCtx) {
-  const { cssBindings, setupStmts, props } = vineFnCompCtx
-  if (!cssBindings)
-    return ''
-  const varList = genCSSVarsList(cssBindings, setupStmts, props)
-  return genUseCssVarsCode(varList)
-}
-
 export const CSS_VARS_HELPER = 'useCssVars'
 function genUseCssVarsCode(varList: string) {
   return `_${CSS_VARS_HELPER}(_ctx => ({
 ${varList}
 }))`
-}
-
-function genCSSVarsList(
-  cssBindings: Record<string, string | null> | null,
-  setupStmts: SgNode[],
-  props: Record<string, VinePropMeta>,
-) {
-  let res = ''
-  if (cssBindings) {
-    for (const cssBindKey in cssBindings) {
-      const cssBindValue = cssBindings[cssBindKey]
-      let varRes = ''
-      // look for from setup variable
-      for (let i = 0; i < setupStmts.length; i++) {
-        varRes = genCSSVarsItem(setupStmts[i], cssBindKey, cssBindValue || '')
-        if (varRes)
-          break
-      }
-      // look for from props variable
-      if (!varRes) {
-        for (const key in props) {
-          varRes = genCSSVarsItemProps(key, cssBindKey, cssBindValue || '')
-          if (varRes)
-            break
-        }
-      }
-
-      res = `${res}${varRes}`
-    }
-  }
-
-  return res
 }
 
 function genCSSVarsItem(
@@ -92,18 +52,61 @@ function genCSSVarsItemProps(
   propName: string,
   name: string,
   value: string,
+  propsAlias: string,
 ) {
-  const propValue = `props.${propName}`
+  const propsAliasValue = `${propsAlias}.${propName}`
   const isPropNameEqualName = propName === name
   if (isPropNameEqualName) {
-    // color <-> props.color
-    return `${spaces(2)}'${value}': (${propValue}),\n`
+    // e.g: color <-> props.color
+    return `${spaces(2)}'${value}': (${propsAliasValue}),\n`
   }
-  else if (propValue === name) {
-    // props.color <-> props.color
+  else if (propsAliasValue === name) {
+    // e.g: props.color <-> props.color
+    // e.g: alias_props.color <-> alias_props.color
     return `${spaces(2)}'${value}': (${name}),\n`
   }
   else {
     return ''
   }
+}
+
+function genCSSVarsList(
+  cssBindings: Record<string, string | null> | null,
+  setupStmts: SgNode[],
+  props: Record<string, VinePropMeta>,
+  propsAlias: string,
+) {
+  let res = ''
+  if (cssBindings) {
+    for (const cssBindKey in cssBindings) {
+      const cssBindValue = cssBindings[cssBindKey]
+      let varRes = ''
+      // look for from setup variable
+      for (let i = 0; i < setupStmts.length; i++) {
+        varRes = genCSSVarsItem(setupStmts[i], cssBindKey, cssBindValue || '')
+        if (varRes)
+          break
+      }
+      // look for from props variable
+      if (!varRes) {
+        for (const key in props) {
+          varRes = genCSSVarsItemProps(key, cssBindKey, cssBindValue || '', propsAlias)
+          if (varRes)
+            break
+        }
+      }
+
+      res = `${res}${varRes}`
+    }
+  }
+
+  return res
+}
+
+export function compileCSSVars(vineFnCompCtx: VineFnCompCtx) {
+  const { cssBindings, setupStmts, props, propsAlias } = vineFnCompCtx
+  if (!cssBindings)
+    return ''
+  const varList = genCSSVarsList(cssBindings, setupStmts, props, propsAlias)
+  return genUseCssVarsCode(varList)
 }

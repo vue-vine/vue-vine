@@ -202,7 +202,7 @@ export function transformFile(
     //              })
     //              ```
     //              If there's no need for `default`, just generate `const props = __props`, same as SFC compilation.
-    let propsUseDefaultsStmt = 'const props = __props'
+    let propsUseDefaultsStmt = `const ${vineFnCompCtx.propsAlias} = __props`
     if (Object.values(vineFnCompCtx.props).some(meta => Boolean(meta.default))) {
       if (!isPrependedUseDefaults) {
         // Import helper function
