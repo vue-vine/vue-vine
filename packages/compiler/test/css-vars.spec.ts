@@ -19,6 +19,7 @@ function createMockTransformCtx(option = {}) {
 }
 
 describe('CSS vars injection & non inlineTemplate', () => {
+  // TODO: 验证样式
   test('Should be injected based on reactive variables', () => {
     const content = 'export function App() {\n'
       + '  const color = ref(\'red\')\n'
@@ -39,9 +40,9 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
-    // expect(code).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
-
+  // TODO: 验证样式
   test('Should be injected based on normal variables', () => {
     const content = 'export function App() {\n'
       + '  const color = \'red\'\n'
@@ -62,9 +63,9 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
-    // expect(code).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
-
+  // TODO: 验证样式
   test('Should be injected based on props', () => {
     const content = 'export function App() {\n'
       + '  const color = vineProp.withDefault(\'red\')\n'
@@ -82,9 +83,9 @@ describe('CSS vars injection & non inlineTemplate', () => {
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
-    // expect(code).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
-
+  // TODO: 验证样式
   test('Should be able to inject according to each subcomponent of vfc', () => {
     const content1 = 'export function App() {\n'
      + '  const color = ref(\'red\')\n'
@@ -121,46 +122,47 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App2' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App2' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
-  })
-
-  /* test('Should work with w/ complex expression', () => {
-    const mockComplex = 'function testVCFComplex() {\n'
-      + '  let a = 100\n'
-      + '  let b = 200\n'
-      + '  let foo = 300\n'
-      + '\n'
-      + '  vineStyle.scoped(`\n'
-      + '     p {\n'
-      + '       width: calc(v-bind(foo) - 3px);\n'
-      + '       height: calc(v-bind(\'foo\') - 3px);\n'
-      + '       top: calc(v-bind(foo + \'px\') - 3px);\n'
-      + '     }\n'
-      + '     div {\n'
-      + '       color: v-bind((a + b) / 2 + \'px\' );\n'
-      + '     }\n'
-      + '     div {\n'
-      + '       color: v-bind    ((a + b) / 2 + \'px\' );\n'
-      + '     }\n'
-      + '     p {\n'
-      + '       color: v-bind(((a + b)) / (2 * a));\n'
-      + '     }\n'
-      + '  `)\n'
-      + '  return vine`\n'
-      + '     <div class="title">\n'
-      + '        title\n'
-      + '     </div>\n'
-      + '  `\n'
-      + '}\n'
-    const res = compileVineTypeScriptFile(mockComplex, 'testVCFComplex', mockCompilerHook)
-    const code = res.fileSourceCode.toString()
-    expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
-    expect(code.includes(`'${hashId('testVCFComplex' + 'a')}': (a)`)).toBeTruthy()
-    expect(code.includes(`'${hashId('testVCFComplex' + 'b')}': (b)`)).toBeTruthy()
-    expect(code.includes(`'${hashId('testVCFComplex' + 'c')}': (c)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
-*/
-  // TODO: 驗證
+
+  // TODO: 验证样式
+  test('Should work with w/ complex expression', () => {
+    const content = 'export function App() {\n'
+       + '  let a = 100\n'
+       + '  let b = 200\n'
+       + '  let foo = 300\n'
+       + '  vineStyle(`\n'
+       + '    p{\n'
+       + '      width: calc(v-bind(foo) - 3px);\n'
+       + '      height: calc(v-bind(\'foo\') - 3px);\n'
+       + '      top: calc(v-bind(foo + \'px\') - 3px);\n'
+       + '    }\n'
+       + '    div {\n'
+       + '      color: v-bind((a + b) / 2 + \'px\' );\n'
+       + '   }\n'
+       + '   div {\n'
+       + '      color: v-bind    ((a + b) / 2 + \'px\' );\n'
+       + '   }\n'
+       + '   p {\n'
+       + '     color: v-bind(((a + b)) / (2 * a));\n'
+       + '   }\n'
+       + '  `)\n'
+       + '  return vine`\n'
+       + '    <div>test</div>\n'
+       + '  `\n'
+       + '}'
+    const { mockCompilerHook } = createMockTransformCtx({ inlineTemplate: false })
+    const res = compileVineTypeScriptFile(content, 'mockVCF', mockCompilerHook)
+    const code = res.fileSourceCode.toString()
+    expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
+    expect(code.includes('\'33d8fa9b\': (_ctx.foo)')).toBeTruthy()
+    expect(code.includes('\'0763ccdc\': (_ctx.foo + \'px\')')).toBeTruthy()
+    expect(code.includes('\'144bac14\': ((_ctx.a + _ctx.b) / 2 + \'px\')')).toBeTruthy()
+    expect(code.includes('\'7ce50374\': (((_ctx.a + _ctx.b)) / (2 * _ctx.a))')).toBeTruthy()
+    expect(code).toMatchSnapshot()
+  })
+
+  // TODO: 验证样式
   test('Should work when props are passed as parameters', () => {
     const content = 'export function App(props: { color: string }) {\n'
         + '  const bgColor = reactive({ color: \'blue\' })\n'
@@ -180,10 +182,10 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
-    // expect(code).toMatchSnapshot()
+    expect(code).toMatchSnapshot()
   })
 
-  // TODO: 驗證
+  // TODO: 验证样式
   test('Should work when props are passed as parameters & alias', () => {
     const content = 'export function App(alias_props: { color: string }) {\n'
         + '  const bgColor = reactive({ color: \'blue\' })\n'
@@ -203,8 +205,9 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color')}': (_ctx.color)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'bgColor.color')}': (_ctx.bgColor.color)`)).toBeTruthy()
+    expect(code).toMatchSnapshot()
   })
-
+  // TODO: 验证样式
   test('Should work when objects are destructured or aliased', () => {
     const content = 'export function App() {\n'
       + '  const a = { color: { color: \'red\' } }\n'
@@ -226,8 +229,6 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'color2')}': (_ctx.color2)`)).toBeTruthy()
     expect(code.includes(`'${hashId('App' + 'fff.color')}': (_ctx.fff.color)`)).toBeTruthy()
+    expect(code).toMatchSnapshot()
   })
-
-  // TODO: props 优先级更低。。但是這是由 vue 決定的，我們只要匹配其中之一，放到 useCssVars 即可
-  // TODO: 测试样式
 })
