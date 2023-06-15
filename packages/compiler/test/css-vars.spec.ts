@@ -120,7 +120,7 @@ describe('CSS vars injection', () => {
     expect(code).toMatchSnapshot()
   })
 
-  // #34
+  // #34 https://github.com/vue-vine/vue-vine/issues/34
   test('Should work when props are passed as parameters', () => {
     const mockParamsPropsVCF = 'function testVCF(props: { color: string }) {\n'
       + '  vineStyle(`\n'
@@ -136,6 +136,24 @@ describe('CSS vars injection', () => {
     const code = res.fileSourceCode.toString()
     expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
     expect(code.includes(`'${hashId('testVCF' + 'props.color')}': (props.color)`)).toBeTruthy()
+    expect(code).toMatchSnapshot()
+  })
+
+  test('Should work when props are passed as parameters & alias', () => {
+    const mockParamsPropsVCF = 'function testVCF(alias_props: { color: string }) {\n'
+      + '  vineStyle(`\n'
+      + '      .test {\n'
+      + '        color: v-bind(alias_props.color);\n'
+      + '      }\n'
+      + '  `)\n'
+      + '  return vine`\n'
+      + '    <div class="test">test</div>\n'
+      + '  `\n'
+      + '}'
+    const res = compileVineTypeScriptFile(mockParamsPropsVCF, 'testParamsPropsVCF', mockCompilerHook)
+    const code = res.fileSourceCode.toString()
+    expect(code.includes('useCssVars as _useCssVars')).toBeTruthy()
+    expect(code.includes(`'${hashId('testVCF' + 'alias_props.color')}': (alias_props.color)`)).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 })
