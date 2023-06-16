@@ -113,7 +113,7 @@ function Component() {
   })
 })
 
-describe('trasnform playground', () => {
+describe('transform playground', () => {
   test('anything you want to check', () => {
     const content = `
 // Write a template here
