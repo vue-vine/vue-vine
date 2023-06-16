@@ -6,13 +6,13 @@ import { spaces } from '../utils'
 import { VineBindingTypes } from '../types'
 import { CSS_VARS_HELPER } from '../constants'
 
-function findIdentifierFromScriptExp(cssScriptContent: string) {
-  return ts.parse(cssScriptContent).root().findAll({
+function findIdentifierFromExp(cssContent: string) {
+  return ts.parse(cssContent).root().findAll({
     rule: { kind: 'identifier' },
   })
 }
 
-function generateVarsJoinedStr(
+function genCSSVarsList(
   cssBindings: Record<string, string | null> | null,
   propsAlias: string,
   bindings: VineTemplateBindings,
@@ -27,7 +27,7 @@ function generateVarsJoinedStr(
       const ms = new MagicString(cssBindKey)
       // get Identifier sgNode
       // e.g ["(a + b) / 2 + 'px'"] -> ["a", "b"]
-      const cssBindKeySgNodes = findIdentifierFromScriptExp(cssBindKey)
+      const cssBindKeySgNodes = findIdentifierFromExp(cssBindKey)
 
       cssBindKeySgNodes.forEach((node) => {
         const range = node.range()
@@ -37,7 +37,7 @@ function generateVarsJoinedStr(
           range.start.index,
           range.end.index,
           // non-inline mode only needs to rewrite the variable to `_ctx.x`
-          inline ? generateVarValueForCSS(node, bindings, propsAlias) : `_ctx.${node.text()}`,
+          inline ? genCSSVarsValue(node, bindings, propsAlias) : `_ctx.${node.text()}`,
         )
       })
 
@@ -48,7 +48,7 @@ function generateVarsJoinedStr(
   return res
 }
 
-function generateVarValueForCSS(
+function genCSSVarsValue(
   node: SgNode,
   bindings: VineTemplateBindings,
   propsAlias: string,
@@ -89,10 +89,14 @@ export function compileCSSVars(
   vineFnCompCtx: VineFnCompCtx,
   inline = false,
 ) {
-  const { cssBindings, propsAlias, bindings } = vineFnCompCtx
+  const {
+    cssBindings,
+    propsAlias,
+    bindings,
+  } = vineFnCompCtx
   if (!cssBindings)
     return ''
-  const varList = generateVarsJoinedStr(
+  const varList = genCSSVarsList(
     cssBindings,
     propsAlias,
     bindings,

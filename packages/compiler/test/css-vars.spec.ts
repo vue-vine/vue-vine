@@ -22,8 +22,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on reactive variables', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -58,8 +58,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on normal variables', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -94,7 +94,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on props', async () => {
     const style = `
     div {
-      color: v-bind(color);
+        color: v-bind(color);
     }
     `
     const content = `
@@ -126,8 +126,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be able to inject according to each subcomponent of vfc', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content1 = `
@@ -230,8 +230,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when props are passed as parameters', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -265,8 +265,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when props are passed as parameters & alias', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -300,8 +300,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when objects are destructured or aliased', async () => {
     const style = `
     div {
-      color: v-bind(color2);
-      background: v-bind(fff.color);
+        color: v-bind(color2);
+        background: v-bind(fff.color);
     }
     `
     const content = `
@@ -339,8 +339,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should be injected based on reactive variables', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -550,8 +550,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when props are passed as parameters', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -585,8 +585,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when props are passed as parameters & alias', async () => {
     const style = `
     div {
-      color: v-bind(color);
-      background: v-bind(bgColor.color);
+        color: v-bind(color);
+        background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -620,8 +620,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when objects are destructured or aliased', async () => {
     const style = `
     div {
-      color: v-bind(color2);
-      background: v-bind(fff.color);
+        color: v-bind(color2);
+        background: v-bind(fff.color);
     }
     `
     const content = `

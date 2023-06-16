@@ -77,7 +77,7 @@ describe('transform vcf containing valid top level declaration', () => {
   })
 })
 
-describe('trasnform vcf bindings ', () => {
+describe('transform vcf bindings ', () => {
   test('should be recongnized correctly', () => {
     const content = `
 function Component() {
