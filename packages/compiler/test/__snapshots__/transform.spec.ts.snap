@@ -1,5 +1,56 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`transform vcf bindings  > should be recongnized correctly 2`] = `
+"import {
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  toRefs as _toRefs
+} from 'vue'
+
+
+
+import { useDefaults as _useDefaults } from \\"vue-vine\\"
+
+const Component = (() => {
+
+const literal = 'xyz'
+
+  const __vine = _defineComponent({
+    name: 'Component',
+    props: {
+      color: { required: true },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = _useDefaults(__props, {
+  color: 'red'
+})
+
+const { color } = _toRefs(props)
+
+
+
+const [isOpen, toggleOpen] = useToggle()
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(color.value), 1 /* TEXT */))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  
+  return __vine /* End of Component */
+})()"
+`;
+
 exports[`transform vcf containing await > do not need result 1`] = `
 "import {
   openBlock as _openBlock,
@@ -140,56 +191,5 @@ return (_ctx: any,_cache: any) => {
 
   
   return __vine /* End of App */
-})()"
-`;
-
-exports[`transform vcf props binding should be recongnized > anything you want to check 2`] = `
-"import {
-  toDisplayString as _toDisplayString,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  toRefs as _toRefs
-} from 'vue'
-
-
-
-import { useDefaults as _useDefaults } from \\"vue-vine\\"
-
-const Component = (() => {
-
-/* No hoisted */
-
-  const __vine = _defineComponent({
-    name: 'Component',
-    props: {
-      color: { required: true },
-    },
-    /* No emits */
-    setup(__props /* No setup ctx destructuring */) {
-
-const props = _useDefaults(__props, {
-  color: 'red'
-})
-
-const { color } = _toRefs(props)
-
-
-
-
-
-/* No expose */
-
-return (_ctx: any,_cache: any) => {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(color.value), 1 /* TEXT */))
-}
-
-    }, // End of setup function
-  }) // End of component object
-
-
-
-  
-  return __vine /* End of Component */
 })()"
 `;
