@@ -9,8 +9,9 @@ exports[`CSS vars injection > Should be able to inject according to each subcomp
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
-import 'mockVCFNormal?type=vine-style&scopeId=6d8b1a36&lang=css&scoped=true&virtual.css'
+
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&comp=testVCF&lang=css&scoped=true&virtual.css';
+import 'mockVCFNormal?type=vine-style&scopeId=6d8b1a36&comp=testVCF2&lang=css&scoped=true&virtual.css';
 
 
 const testVCF = (() => {
@@ -95,7 +96,8 @@ exports[`CSS vars injection > Should be injected based on normal variables 1`] =
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
+
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&comp=testVCF&lang=css&scoped=true&virtual.css';
 
 
 const testVCF = (() => {
@@ -146,7 +148,8 @@ exports[`CSS vars injection > Should be injected based on props 1`] = `
   useCssVars as _useCssVars,
   toRefs as _toRefs
 } from 'vue'
-import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&lang=css&scoped=true&virtual.css'
+
+import 'mockVCFNormal?type=vine-style&scopeId=c9ba2a26&comp=testVCF&lang=css&scoped=true&virtual.css';
 
 import { useDefaults as _useDefaults } from \\"vue-vine\\"
 
@@ -201,7 +204,8 @@ exports[`CSS vars injection > Should be injected based on reactive variables 1`]
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'mockVCF?type=vine-style&scopeId=11bda7a6&lang=css&scoped=true&virtual.css'
+
+import 'mockVCF?type=vine-style&scopeId=11bda7a6&comp=testVCF&lang=css&scoped=true&virtual.css';
 
 
 const testVCF = (() => {
@@ -250,7 +254,8 @@ exports[`CSS vars injection > Should work with w/ complex expression 1`] = `
   defineComponent as _defineComponent,
   useCssVars as _useCssVars
 } from 'vue'
-import 'testVCFComplex?type=vine-style&scopeId=2b09f764&lang=css&scoped=true&virtual.css'
+
+import 'testVCFComplex?type=vine-style&scopeId=2b09f764&comp=testVCFComplex&lang=css&scoped=true&virtual.css';
 
 
 const testVCFComplex = (() => {

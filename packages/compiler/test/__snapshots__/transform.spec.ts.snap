@@ -9,6 +9,7 @@ exports[`transform vcf containing await > do not need result 1`] = `
 
 
 
+
 export const App = (() => {
 
 /* No hoisted */
@@ -53,6 +54,7 @@ exports[`transform vcf containing await > need result 1`] = `
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent
 } from 'vue'
+
 
 
 
@@ -104,6 +106,7 @@ exports[`transform vcf containing valid top level declaration > should know top 
 } from 'vue'
 
 
+
 const foo = 'foo'
 const bar = () => 'lorem'
 
@@ -140,7 +143,7 @@ return (_ctx: any,_cache: any) => {
 })()"
 `;
 
-exports[`trasnform vcf props binding should be recongnized > anything you want to check 2`] = `
+exports[`trasnform vcf bindings  > should be recongnized correctly 2`] = `
 "import {
   toDisplayString as _toDisplayString,
   openBlock as _openBlock,
@@ -150,11 +153,12 @@ exports[`trasnform vcf props binding should be recongnized > anything you want t
 } from 'vue'
 
 
+
 import { useDefaults as _useDefaults } from \\"vue-vine\\"
 
 const Component = (() => {
 
-/* No hoisted */
+const literal = 'xyz'
 
   const __vine = _defineComponent({
     name: 'Component',
@@ -172,12 +176,12 @@ const { color } = _toRefs(props)
 
 
 
-
+const [isOpen, toggleOpen] = useToggle()
 
 /* No expose */
 
 return (_ctx: any,_cache: any) => {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(__props.color), 1 /* TEXT */))
+  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(color.value), 1 /* TEXT */))
 }
 
     }, // End of setup function
