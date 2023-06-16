@@ -77,7 +77,7 @@ describe('transform vcf containing valid top level declaration', () => {
   })
 })
 
-describe('trasnform vcf props binding should be recongnized', () => {
+describe('transform vcf props binding should be recongnized', () => {
   test('anything you want to check', () => {
     const content = `
 function Component() {
@@ -108,7 +108,7 @@ function Component() {
   })
 })
 
-describe('trasnform playground', () => {
+describe('transform playground', () => {
   test('anything you want to check', () => {
     const content = `
 // Write a template here

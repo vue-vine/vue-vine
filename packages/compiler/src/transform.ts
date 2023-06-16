@@ -128,7 +128,7 @@ export function transformFile(
     // add useCssVars
     if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
       vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
-      vueImports.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
+      inline && vueImports.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
     }
 
     // 2. For every vine component function, we need to transform the function declaration

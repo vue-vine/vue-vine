@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { App as VineApp } from './test.vine'
+import { App as VineApp } from './vine/app.vine'
 import './styles/main.css'
 
 async function loadSFC() {
