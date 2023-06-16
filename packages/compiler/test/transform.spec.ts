@@ -77,11 +77,13 @@ describe('transform vcf containing valid top level declaration', () => {
   })
 })
 
-describe('transform vcf props binding should be recongnized', () => {
-  test('anything you want to check', () => {
+describe('transform vcf bindings ', () => {
+  test('should be recongnized correctly', () => {
     const content = `
 function Component() {
   const color = vineProp.withDefault('red')
+  const literal = 'xyz'
+  const [isOpen, toggleOpen] = useToggle()
 
   return vine\`
     <div>{{ color }}</div>
@@ -100,6 +102,9 @@ function Component() {
           {
             "Component": "literal-const",
             "color": "setup-ref",
+            "isOpen": "setup-maybe-ref",
+            "literal": "literal-const",
+            "toggleOpen": "setup-maybe-ref",
           },
         ],
       ]

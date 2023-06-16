@@ -519,7 +519,10 @@ function analyzeLexicalDeclNode(
     const varNameNode = varDeclarator.field('name')!
     const declValueNode = unwrapTSNode(varDeclarator.field('value')!)
     if (varNameNode.kind() === 'identifier') {
-      if (isCallOf(declValueNode, userReactiveAlias)) {
+      if (isAllLiteral || (isConst && isStaticSgNode(declValueNode))) {
+        bindingType = VineBindingTypes.LITERAL_CONST
+      }
+      else if (isCallOf(declValueNode, userReactiveAlias)) {
         // treat reactive() calls as let since it's meant to be mutable
         bindingType = isConst
           ? VineBindingTypes.SETUP_REACTIVE_CONST
