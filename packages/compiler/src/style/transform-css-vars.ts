@@ -1,102 +1,108 @@
 import type { SgNode } from '@ast-grep/napi'
-import type { VineFnCompCtx, VinePropMeta } from '../types'
-import { ruleHasVueRefCallExpr, ruleSetupVariableDeclaration } from '../ast-grep/rules-for-script'
+import { ts } from '@ast-grep/napi'
+import MagicString from 'magic-string'
+import type { VineFnCompCtx, VineTemplateBindings } from '../types'
 import { spaces } from '../utils'
+import { VineBindingTypes } from '../types'
+import { CSS_VARS_HELPER } from '../constants'
 
-export function compileCSSVars(
-  vineFnCompCtx: VineFnCompCtx,
-  inline = true,
-) {
-  const { cssBindings, setupStmts, props } = vineFnCompCtx
-  if (!cssBindings)
-    return ''
-
-  const varList = genCSSVarsList(cssBindings, setupStmts, props)
-  // TODO Compilation in non-inline mode
-  return inline ? genUseCssVarsCode(varList) : ''
-}
-
-export const CSS_VARS_HELPER = 'useCssVars'
-function genUseCssVarsCode(varList: string) {
-  return `_${CSS_VARS_HELPER}(_ctx => ({
-${varList}
-}))`
+function findIdentifierFromExp(cssContent: string) {
+  return ts.parse(cssContent).root().findAll({
+    rule: { kind: 'identifier' },
+  })
 }
 
 function genCSSVarsList(
   cssBindings: Record<string, string | null> | null,
-  setupStmts: SgNode[],
-  props: Record<string, VinePropMeta>,
+  propsAlias: string,
+  bindings: VineTemplateBindings,
+  inline = false,
 ) {
   let res = ''
   if (cssBindings) {
     for (const cssBindKey in cssBindings) {
+      // get hash
       const cssBindValue = cssBindings[cssBindKey]
-      let varRes = ''
-      // look for from setup variable
-      for (let i = 0; i < setupStmts.length; i++) {
-        varRes = genCSSVarsItem(setupStmts[i], cssBindKey, cssBindValue || '')
-        if (varRes)
-          break
-      }
-      // look for from props variable
-      if (!varRes) {
-        for (const key in props) {
-          varRes = genCSSVarsItemProps(key, cssBindKey, cssBindValue || '')
-          if (varRes)
-            break
-        }
-      }
 
-      res = `${res}${varRes}`
+      const ms = new MagicString(cssBindKey)
+      // get Identifier sgNode
+      // e.g ["(a + b) / 2 + 'px'"] -> ["a", "b"]
+      const cssBindKeySgNodes = findIdentifierFromExp(cssBindKey)
+
+      cssBindKeySgNodes.forEach((node) => {
+        const range = node.range()
+        // overwrite
+        // e.g (a + b) / 2 + 'px' -> (_ctx.a + _ctx.b) / 2
+        ms.overwrite(
+          range.start.index,
+          range.end.index,
+          // non-inline mode only needs to rewrite the variable to `_ctx.x`
+          inline ? genCSSVarsValue(node, bindings, propsAlias) : `_ctx.${node.text()}`,
+        )
+      })
+
+      res = `${res}${spaces(2)}'${cssBindValue}': (${ms.toString()}),\n`
     }
   }
 
   return res
 }
 
-function genCSSVarsItem(
+function genCSSVarsValue(
   node: SgNode,
-  name: string,
-  value: string,
+  bindings: VineTemplateBindings,
+  propsAlias: string,
 ) {
   let res = ''
-  let varName = ''
-  const matchRes = node.find(ruleSetupVariableDeclaration)
-  if (!matchRes) {
-    return ''
-  }
-
-  switch (matchRes.kind()) {
-    case 'variable_declarator':
-      varName = matchRes.field('name')!.text()
-      break
-    case 'pair_pattern':
-      varName = matchRes.field('key')!.text()
-      break
-  }
-
-  if (name !== varName) {
-    return ''
-  }
-
-  // e.g. const foo = ref('foo')
-  if (node.find(ruleHasVueRefCallExpr)) {
-    if (matchRes) {
-      res = `${spaces(2)}'${value}': (${varName}.value),\n`
+  const nodeContent = node.text()
+  for (const bindingsKey in bindings) {
+    const bindingValue = bindings[bindingsKey]
+    if (nodeContent === bindingsKey) {
+      switch (bindingValue) {
+        case VineBindingTypes.PROPS:
+        case VineBindingTypes.PROPS_ALIASED:
+          res = `${propsAlias}.${node.text()}`
+          break
+        case VineBindingTypes.SETUP_CONST:
+        case VineBindingTypes.SETUP_REACTIVE_CONST:
+        case VineBindingTypes.LITERAL_CONST:
+          res = node.text()
+          break
+        case VineBindingTypes.SETUP_MAYBE_REF:
+        case VineBindingTypes.SETUP_LET:
+          res = `_unref(${node.text()})`
+          break
+        // The `vineProp` variable is inconsistent with vue here, and vue is `PROPS`
+        // Because vine compilation will use `toRefs` processing
+        case VineBindingTypes.SETUP_REF:
+          res = `${node.text()}.value`
+          break
+        default:
+          res = `_ctx.${node.text()}`
+      }
     }
-  }
-  // e.g. const foo = 'foo'
-  else if (matchRes) {
-    res = `${spaces(2)}'${value}': (${varName}),\n`
   }
   return res
 }
 
-function genCSSVarsItemProps(
-  propName: string,
-  name: string,
-  value: string,
+export function compileCSSVars(
+  vineFnCompCtx: VineFnCompCtx,
+  inline = false,
 ) {
-  return propName !== name ? '' : `${spaces(2)}'${value}': (props.${name}),\n`
+  const {
+    cssBindings,
+    propsAlias,
+    bindings,
+  } = vineFnCompCtx
+  if (!cssBindings)
+    return ''
+  const varList = genCSSVarsList(
+    cssBindings,
+    propsAlias,
+    bindings,
+    inline,
+  )
+  return `_${CSS_VARS_HELPER}(_ctx => ({
+  ${varList}
+}))`
 }

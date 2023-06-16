@@ -4,10 +4,11 @@ import MagicString from 'magic-string'
 import type { VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
 import { filterJoin, showIf, spaces } from './utils'
-import { CSS_VARS_HELPER, compileCSSVars } from './style/transform-css-vars'
+import { compileCSSVars } from './style/transform-css-vars'
 import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
 import { sortStyleImport } from './style/order'
 import { ruleImportStmt } from './ast-grep/rules-for-script'
+import { CSS_VARS_HELPER, UN_REF_HELPER } from './constants'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
@@ -128,6 +129,7 @@ export function transformFile(
     // add useCssVars
     if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
       vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
+      inline && vueImports.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
     }
 
     // 2. For every vine component function, we need to transform the function declaration
@@ -202,7 +204,7 @@ export function transformFile(
     //              })
     //              ```
     //              If there's no need for `default`, just generate `const props = __props`, same as SFC compilation.
-    let propsUseDefaultsStmt = 'const props = __props'
+    let propsUseDefaultsStmt = `const ${vineFnCompCtx.propsAlias} = __props`
     if (Object.values(vineFnCompCtx.props).some(meta => Boolean(meta.default))) {
       if (!isPrependedUseDefaults) {
         // Import helper function
@@ -313,7 +315,7 @@ ${showIf(
   `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
 )}
 
-${compileCSSVars(vineFnCompCtx)}
+${compileCSSVars(vineFnCompCtx, inline)}
 
 ${insideSetupStmtCode.join('\n')}
 
