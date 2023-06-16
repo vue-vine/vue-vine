@@ -22,12 +22,12 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on reactive variables', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = ref('red')
       const bgColor = reactive({ color: 'blue' })
       vineStyle(\`${style}\`)
@@ -58,12 +58,12 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on normal variables', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = 'red'
       const bgColor = { color: 'blue' }
       vineStyle(\`${style}\`)
@@ -94,11 +94,11 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be injected based on props', async () => {
     const style = `
     div {
-        color: v-bind(color);
+      color: v-bind(color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = vineProp.withDefault('red')
       vineStyle(\`${style}\`)
       return vine\`<div>{{color}}</div>\`
@@ -126,12 +126,12 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should be able to inject according to each subcomponent of vfc', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content1 = `
-    export function App(){
+    export function App() {
       const color = ref('red')
       const bgColor = reactive({ color: 'blue' })
       vineStyle(\`${style}\`)
@@ -139,7 +139,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     }
     `
     const content2 = `
-    export function App2(){
+    export function App2() {
       const color = ref('pink')
       const bgColor = reactive({ color: 'green' })
       vineStyle(\`${style}\`)
@@ -181,7 +181,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
 
   test('Should work with w/ complex expression', async () => {
     const style = `
-     p{
+     p {
        width: calc(v-bind(foo) - 3px);
        height: calc(v-bind('foo') - 3px);
        top: calc(v-bind(foo + 'px') - 3px);
@@ -197,7 +197,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
      }
     `
     const content = `
-    export function App(){
+    export function App() {
       let a = 100
       let b = 200
       let foo = 300
@@ -230,8 +230,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when props are passed as parameters', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -265,8 +265,8 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when props are passed as parameters & alias', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -300,12 +300,12 @@ describe('CSS vars injection & non inlineTemplate', () => {
   test('Should work when objects are destructured or aliased', async () => {
     const style = `
     div {
-        color: v-bind(color2);
-        background: v-bind(fff.color);
+      color: v-bind(color2);
+      background: v-bind(fff.color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const a = { color: { color: 'red' } }
       const { color: { color: color2 } } = a
       const { color: fff } = a
@@ -339,12 +339,12 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should be injected based on reactive variables', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = ref('red')
       const bgColor = reactive({ color: 'blue' })
       vineStyle(\`${style}\`)
@@ -380,7 +380,7 @@ describe('CSS vars injection & inlineTemplate', () => {
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = 'red'
       const bgColor = { color: 'blue' }
       vineStyle(\`${style}\`)
@@ -416,7 +416,7 @@ describe('CSS vars injection & inlineTemplate', () => {
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const color = vineProp.withDefault('red')
       const bgColor = vineProp<string>()
       vineStyle(\`${style}\`)
@@ -451,7 +451,7 @@ describe('CSS vars injection & inlineTemplate', () => {
     }
     `
     const content1 = `
-    export function App(){
+    export function App() {
       const color = ref('red')
       const bgColor = reactive({ color: 'blue' })
       vineStyle(\`${style}\`)
@@ -459,7 +459,7 @@ describe('CSS vars injection & inlineTemplate', () => {
     }
     `
     const content2 = `
-    export function App2(){
+    export function App2() {
       const color = ref('pink')
       const bgColor = reactive({ color: 'green' })
       vineStyle(\`${style}\`)
@@ -501,7 +501,7 @@ describe('CSS vars injection & inlineTemplate', () => {
 
   test('Should work with w/ complex expression', async () => {
     const style = `
-     p{
+     p {
        width: calc(v-bind(foo) - 3px);
        height: calc(v-bind('foo') - 3px);
        top: calc(v-bind(foo + 'px') - 3px);
@@ -517,7 +517,7 @@ describe('CSS vars injection & inlineTemplate', () => {
      }
     `
     const content = `
-    export function App(){
+    export function App() {
       let a = 100
       let b = 200
       let foo = 300
@@ -550,8 +550,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when props are passed as parameters', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -585,8 +585,8 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when props are passed as parameters & alias', async () => {
     const style = `
     div {
-        color: v-bind(color);
-        background: v-bind(bgColor.color);
+      color: v-bind(color);
+      background: v-bind(bgColor.color);
     }
     `
     const content = `
@@ -620,12 +620,12 @@ describe('CSS vars injection & inlineTemplate', () => {
   test('Should work when objects are destructured or aliased', async () => {
     const style = `
     div {
-        color: v-bind(color2);
-        background: v-bind(fff.color);
+      color: v-bind(color2);
+      background: v-bind(fff.color);
     }
     `
     const content = `
-    export function App(){
+    export function App() {
       const a = { color: { color: 'red' } }
       const { color: { color: color2 } } = a
       const { color: fff } = a

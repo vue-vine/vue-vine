@@ -55,3 +55,6 @@ export const STYLE_LANG_FILE_EXTENSION: Record<VineStyleLang, string> = {
   less: 'less',
   stylus: 'styl',
 }
+
+export const CSS_VARS_HELPER = 'useCssVars'
+export const UN_REF_HELPER = 'unref'

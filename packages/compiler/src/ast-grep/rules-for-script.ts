@@ -117,13 +117,6 @@ export const vineScriptRuleUtils = {
       matches: 'vineEmitsCall',
     },
   },
-  cssComplexExpIdentifier: {
-    any: [
-      {
-        kind: 'identifier',
-      },
-    ],
-  },
   vineTaggedTemplateString: {
     kind: 'call_expression',
     all: [
@@ -150,7 +143,10 @@ export const vineScriptRuleUtils = {
         kind: 'lexical_declaration',
         has: {
           stopBy: 'end',
-          kind: 'arrow_function',
+          any: [
+            { kind: 'function' },
+            { kind: 'arrow_function' },
+          ],
         },
       },
     ],
@@ -358,7 +354,6 @@ export const ruleIdInsideMacroMayReferenceSetupLocal = fastCreateMatchRuleByUtil
 export const ruleHasMacroCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasMacroCallExpr')
 export const ruleHasVueRefCallExpr = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'hasVueRefCallExpr')
 export const ruleTopLevelDeclarationNames = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'topLevelDeclarationNames')
-export const ruleCSSComplexExpIdentifier = fastCreateMatchRuleByUtils(vineScriptRuleUtils, 'cssComplexExpIdentifier')
 export const ruleVineTaggedTemplateString = directlyMatchUtil(vineScriptRuleUtils, 'vineTaggedTemplateString')
 export const ruleImportStmt = directlyMatchUtil(vineScriptRuleUtils, 'importStmt')
 export const ruleImportClause = directlyMatchUtil(vineScriptRuleUtils, 'importClause')

@@ -31,7 +31,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_unref(color)),
+    'bd4b0810': (_unref(color)),
   'cc02e9b0': (_unref(bgColor).color),
 
 }))
@@ -70,7 +70,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  '35afc47c': (_unref(color)),
+    '35afc47c': (_unref(color)),
   '8855e0a8': (_unref(bgColor).color),
 
 }))
@@ -143,7 +143,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (color),
+    'bd4b0810': (color),
   'cc02e9b0': (bgColor.color),
 
 }))
@@ -210,7 +210,7 @@ const props = _useDefaults(__props, {
 const { color,bgColor } = _toRefs(props)
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (color.value),
+    'bd4b0810': (color.value),
   '6fdc9173': (bgColor.value),
 
 }))
@@ -269,7 +269,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_unref(color)),
+    'bd4b0810': (_unref(color)),
   'cc02e9b0': (_unref(bgColor).color),
 
 }))
@@ -296,8 +296,8 @@ return (_ctx: any,_cache: any) => {
 exports[`CSS vars injection & inlineTemplate > Should be injected based on reactive variables 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -329,7 +329,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'ec15f98c': (_unref(color2)),
+    'ec15f98c': (_unref(color2)),
   'bf8265a0': (_unref(fff).color),
 
 }))
@@ -356,8 +356,8 @@ return (_ctx: any,_cache: any) => {
 exports[`CSS vars injection & inlineTemplate > Should work when objects are destructured or aliased 2`] = `
 "
 div {
-        color: var(--ec15f98c);
-        background: var(--bf8265a0);
+      color: var(--ec15f98c);
+      background: var(--bf8265a0);
 }
     "
 `;
@@ -391,7 +391,7 @@ const alias_props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (alias_props.color),
+    'bd4b0810': (alias_props.color),
   'cc02e9b0': (_unref(bgColor).color),
 
 }))
@@ -417,8 +417,8 @@ return (_ctx: any,_cache: any) => {
 exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters & alias 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -452,7 +452,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (props.color),
+    'bd4b0810': (props.color),
   'cc02e9b0': (_unref(bgColor).color),
 
 }))
@@ -478,8 +478,8 @@ return (_ctx: any,_cache: any) => {
 exports[`CSS vars injection & inlineTemplate > Should work when props are passed as parameters 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -511,7 +511,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  '33d8fa9b': (_unref(foo)),
+    '33d8fa9b': (_unref(foo)),
   '0763ccdc': (_unref(foo) + 'px'),
   '144bac14': ((_unref(a) + _unref(b)) / 2 + 'px'),
   '7ce50374': (((_unref(a) + _unref(b))) / (2 * _unref(a))),
@@ -540,7 +540,7 @@ return (_ctx: any,_cache: any) => {
 
 exports[`CSS vars injection & inlineTemplate > Should work with w/ complex expression 2`] = `
 "
-p{
+p {
        width: calc(var(--33d8fa9b) - 3px);
        height: calc(var(--33d8fa9b) - 3px);
        top: calc(var(--0763ccdc) - 3px);
@@ -588,7 +588,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
   'cc02e9b0': (_ctx.bgColor.color),
 
 }))
@@ -630,7 +630,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  '35afc47c': (_ctx.color),
+    '35afc47c': (_ctx.color),
   '8855e0a8': (_ctx.bgColor.color),
 
 }))
@@ -663,8 +663,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -672,8 +672,8 @@ div {
 exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
 "
 div {
-        color: var(--35afc47c);
-        background: var(--8855e0a8);
+      color: var(--35afc47c);
+      background: var(--8855e0a8);
 }
     "
 `;
@@ -706,7 +706,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
   'cc02e9b0': (_ctx.bgColor.color),
 
 }))
@@ -735,8 +735,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on normal variables 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -775,7 +775,7 @@ const props = _useDefaults(__props, {
 const { color } = _toRefs(props)
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
 
 }))
 
@@ -803,7 +803,7 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on props 2`] = `
 "
 div {
-        color: var(--bd4b0810);
+      color: var(--bd4b0810);
 }
     "
 `;
@@ -835,7 +835,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
   'cc02e9b0': (_ctx.bgColor.color),
 
 }))
@@ -865,8 +865,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should be injected based on reactive variables 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -898,7 +898,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'ec15f98c': (_ctx.color2),
+    'ec15f98c': (_ctx.color2),
   'bf8265a0': (_ctx.fff.color),
 
 }))
@@ -928,8 +928,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should work when objects are destructured or aliased 2`] = `
 "
 div {
-        color: var(--ec15f98c);
-        background: var(--bf8265a0);
+      color: var(--ec15f98c);
+      background: var(--bf8265a0);
 }
     "
 `;
@@ -963,7 +963,7 @@ const alias_props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
   'cc02e9b0': (_ctx.bgColor.color),
 
 }))
@@ -992,8 +992,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters & alias 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -1027,7 +1027,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  'bd4b0810': (_ctx.color),
+    'bd4b0810': (_ctx.color),
   'cc02e9b0': (_ctx.bgColor.color),
 
 }))
@@ -1056,8 +1056,8 @@ __vine.render = __sfc_render
 exports[`CSS vars injection & non inlineTemplate > Should work when props are passed as parameters 2`] = `
 "
 div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
+      color: var(--bd4b0810);
+      background: var(--cc02e9b0);
 }
     "
 `;
@@ -1089,7 +1089,7 @@ const props = __props
 
 
 _useCssVars(_ctx => ({
-  '33d8fa9b': (_ctx.foo),
+    '33d8fa9b': (_ctx.foo),
   '0763ccdc': (_ctx.foo + 'px'),
   '144bac14': ((_ctx.a + _ctx.b) / 2 + 'px'),
   '7ce50374': (((_ctx.a + _ctx.b)) / (2 * _ctx.a)),
@@ -1121,7 +1121,7 @@ __vine.render = __sfc_render
 
 exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex expression 2`] = `
 "
-p{
+p {
        width: calc(var(--33d8fa9b) - 3px);
        height: calc(var(--33d8fa9b) - 3px);
        top: calc(var(--0763ccdc) - 3px);

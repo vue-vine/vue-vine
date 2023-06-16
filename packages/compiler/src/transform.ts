@@ -4,10 +4,11 @@ import MagicString from 'magic-string'
 import type { VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
 import { filterJoin, showIf, spaces } from './utils'
-import { CSS_VARS_HELPER, UN_REF_HELPER, compileCSSVars } from './style/transform-css-vars'
+import { compileCSSVars } from './style/transform-css-vars'
 import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
 import { sortStyleImport } from './style/order'
 import { ruleImportStmt } from './ast-grep/rules-for-script'
+import { CSS_VARS_HELPER, UN_REF_HELPER } from './constants'
 
 type SetupCtxProperty = 'expose' | 'emits'
 const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
