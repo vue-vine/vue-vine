@@ -557,66 +557,6 @@ p {
     "
 `;
 
-exports[`CSS vars injection & inlineTemplate > bwsy 1`] = `
-"import {
-  unref as _unref,
-  toDisplayString as _toDisplayString,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars
-} from 'vue'
-
-import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
-
-
-export const App = (() => {
-
-/* No hoisted */
-
-  const __vine = _defineComponent({
-    name: 'App',
-    /* No props */
-    /* No emits */
-    setup(__props /* No setup ctx destructuring */) {
-
-const props = __props
-
-
-_useCssVars(_ctx => ({
-  'bd4b0810': (_unref(color)),
-  'cc02e9b0': (_unref(bgColor).color),
-
-}))
-
-const color = ref('red')
-const bgColor = reactive({ color: 'blue' })
-
-/* No expose */
-
-return (_ctx: any,_cache: any) => {
-  return (_openBlock(), _createElementBlock(\\"div\\", null, _toDisplayString(_unref(color)), 1 /* TEXT */))
-}
-
-    }, // End of setup function
-  }) // End of component object
-
-
-
-  __vine.__scopeId = 'data-v-6eee8880'
-  return __vine /* End of App */
-})()"
-`;
-
-exports[`CSS vars injection & inlineTemplate > bwsy 2`] = `
-"
-div {
-        color: var(--bd4b0810);
-        background: var(--cc02e9b0);
-}
-    "
-`;
-
 exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 1`] = `
 "import {
   toDisplayString as _toDisplayString,
@@ -624,7 +564,6 @@ exports[`CSS vars injection & non inlineTemplate > Should be able to inject acco
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
-  unref as _unref,
   createElementVNode as _createElementVNode,
   createVNode as _createVNode,
   Fragment as _Fragment
@@ -744,8 +683,7 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on n
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -808,7 +746,6 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on p
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
-  unref as _unref,
   toRefs as _toRefs
 } from 'vue'
 
@@ -874,8 +811,7 @@ exports[`CSS vars injection & non inlineTemplate > Should be injected based on r
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -937,8 +873,7 @@ exports[`CSS vars injection & non inlineTemplate > Should work when objects are 
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -1000,8 +935,7 @@ exports[`CSS vars injection & non inlineTemplate > Should work when props are pa
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -1064,8 +998,7 @@ exports[`CSS vars injection & non inlineTemplate > Should work when props are pa
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
@@ -1128,8 +1061,7 @@ exports[`CSS vars injection & non inlineTemplate > Should work with w/ complex e
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref
+  useCssVars as _useCssVars
 } from 'vue'
 
 import 'mockVCF?type=vine-style&scopeId=6eee8880&comp=App&lang=css&virtual.css';
