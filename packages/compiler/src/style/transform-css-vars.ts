@@ -20,8 +20,6 @@ function findIdentifierFromExp(cssContent: string) {
 
 function genCSSVarsList(
   cssBindings: Record<string, string | null> | null,
-  setupStmts: SgNode[],
-  props: Record<string, VinePropMeta>,
   propsAlias: string,
   bindings: VineTemplateBindings,
   inline = false,
@@ -97,8 +95,6 @@ export function compileCSSVars(
 ) {
   const {
     cssBindings,
-    setupStmts,
-    props,
     propsAlias,
     bindings,
   } = vineFnCompCtx
@@ -106,8 +102,6 @@ export function compileCSSVars(
     return ''
   const varList = genCSSVarsList(
     cssBindings,
-    setupStmts,
-    props,
     propsAlias,
     bindings,
     inline,
