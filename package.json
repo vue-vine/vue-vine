@@ -29,7 +29,6 @@
     "del": "^7.0.0",
     "eslint": "^8.42.0",
     "esno": "^0.16.3",
-    "iconv-lite": "^0.6.3",
     "lint-staged": "^13.2.2",
     "nx": "16.2.2",
     "nx-cloud": "latest",

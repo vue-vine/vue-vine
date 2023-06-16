@@ -1,6 +1,5 @@
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { deleteAsync } from 'del'
-import { decode } from './utils'
 
 const PKGS_NODE_MODULES = ['packages/**/node_modules']
 async function doCleanDeps() {
@@ -16,7 +15,7 @@ async function doCleanDeps() {
     log('info', 'Finished cleaning all deps.')
   }
   catch (e) {
-    log('error', decode(e.message))
+    log('error', e)
   }
 }
 

@@ -1,5 +1,5 @@
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
-import { decode, runCommand } from './utils'
+import { runCommand } from './utils'
 
 const TAZE_CMD = 'pnpm taze -r -w'
 async function doUpdateDeps() {
@@ -14,7 +14,7 @@ async function doUpdateDeps() {
     log('info', 'update dependencies completes.')
   }
   catch (e) {
-    log('error', decode(e))
+    log('error', e)
   }
 }
 
