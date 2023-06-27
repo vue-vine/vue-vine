@@ -346,6 +346,12 @@ __vine.render = __sfc_render
     Boolean(vineFileCtx.styleDefine[vineFnCompCtx.scopeId]),
     `__vine.__scopeId = 'data-v-${vineFnCompCtx.scopeId}'`,
   )}
+
+  ${showIf(
+        // handle web component styles
+        Boolean(vineFnCompCtx.isVineCE),
+        `__vine.styles = [__${vineFnCompCtx.fnName.toLowerCase()}_styles]`,
+  )}
   return __vine /* End of ${vineFnCompCtx.fnName} */
 })()`)
   }

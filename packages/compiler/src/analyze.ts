@@ -4,7 +4,7 @@ import hashId from 'hash-sum'
 import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
 import { VineBindingTypes } from './types'
 import { BOOL_KINDS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
-import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleTopLevelDeclarationNames, ruleValidVinePropDeclaration, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
+import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleTopLevelDeclarationNames, ruleValidVinePropDeclaration, ruleVineCECall, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
 import { vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isNotUselessPunc } from './utils'
@@ -687,6 +687,16 @@ function analyzeVineBindings(
   }
 }
 
+function analyzeVineCE(
+  analyzeCtx: AnalyzeCtx,
+  fnItselfSgNode: SgNode,
+) {
+  const [,, vineFnCompCtx] = analyzeCtx
+  if (fnItselfSgNode.find(ruleVineCECall)) {
+    vineFnCompCtx.isVineCE = true
+  }
+}
+
 function analyzeDifferentKindVineFunctionDecls(
   allCtx: AnalyzeCtx,
   declSgNode: SgNode,
@@ -726,6 +736,7 @@ function analyzeDifferentKindVineFunctionDecls(
     analyzeVineExpose,
     analyzeVineOptions,
     analyzeVineBindings,
+    analyzeVineCE,
     analyzeVineStyle,
   ].forEach(fn => fn(allCtx, fnItselfSgNode))
 }
@@ -758,6 +769,7 @@ function buildVineFnCompCtx(
     fnValueNode: vineFnCompDecl,
     template: vineTemolateSgNode,
     cssBindings: null,
+    isVineCE: false,
   }
 
   const analyzeCtx: AnalyzeCtx = [compilerHooks, vineFileCtx, vineFnCompCtx]

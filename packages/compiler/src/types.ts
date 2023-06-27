@@ -95,6 +95,8 @@ export interface VineFnCompCtx {
   template: SgNode
   scopeId: string
   cssBindings: Record<string, string | null> | null
+  // is web component
+  isVineCE: boolean
 }
 
 // Enums:
