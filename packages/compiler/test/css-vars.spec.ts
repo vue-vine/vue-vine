@@ -123,7 +123,7 @@ describe('CSS vars injection & non inlineTemplate', () => {
     expect(cssCompileRes).toMatchSnapshot()
   })
 
-  test('Should be able to inject according to each subcomponent of vfc', async () => {
+  test('Should be able to inject according to each subcomponent of vcf', async () => {
     const style = `
     div {
         color: v-bind(color);
@@ -443,7 +443,7 @@ describe('CSS vars injection & inlineTemplate', () => {
     expect(cssCompileRes).toMatchSnapshot()
   })
 
-  test('Should be able to inject according to each subcomponent of vfc', async () => {
+  test('Should be able to inject according to each subcomponent of vcf', async () => {
     const style = `
     div {
         color: v-bind(color);
