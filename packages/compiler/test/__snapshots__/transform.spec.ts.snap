@@ -193,3 +193,51 @@ return (_ctx: any,_cache: any) => {
   return __vine /* End of App */
 })()"
 `;
+
+exports[`transform web component style > use vineCE & transform style 1`] = `
+"import {
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent
+} from 'vue'
+
+import __foo_styles from'testVCFCEStyle?type=vine-style&scopeId=e3e7282c&comp=foo&lang=css&virtual.css';
+
+
+export const foo = (() => {
+
+const _withScopeId = n => (_pushScopeId(\\"data-v-e3e7282c\\"),n=n(),_popScopeId(),n)
+const _hoisted_1 = { class: \\"test\\" }
+
+  const __vine = _defineComponent({
+    name: 'foo',
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+
+const props = __props
+
+
+
+
+
+
+/* No expose */
+
+return (_ctx: any,_cache: any) => {
+  return (_openBlock(), _createElementBlock(\\"div\\", _hoisted_1, \\"vine\\"))
+}
+
+    }, // End of setup function
+  }) // End of component object
+
+
+
+  __vine.__scopeId = 'data-v-e3e7282c'
+
+  __vine.styles = [__foo_styles]
+  return __vine /* End of foo */
+})()"
+`;

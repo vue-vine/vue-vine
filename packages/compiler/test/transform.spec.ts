@@ -125,3 +125,23 @@ describe('transform playground', () => {
     expect(fileCtx.fileId).toBe(playgroundFileId)
   })
 })
+
+describe('transform web component style', () => {
+  test('use vineCE & transform style', () => {
+    const content = 'export function foo() {\n'
+      + '  vineStyle(`\n'
+      + '    .test {\n'
+      + '       color: red;\n'
+      + '    }\n'
+      + '  `)\n'
+      + '  vineCE()\n'
+      + '  return vine`\n'
+      + '    <div class="test">vine</div>\n'
+      + '  `\n'
+      + '}'
+    const code = getTransformedCode(runTransform(content, 'testVCFCEStyle'))
+    expect(code.includes('__vine.styles = [__foo_styles]')).toBeTruthy()
+    expect(code.includes('import __foo_styles from\'testVCFCEStyle?type=vine-style')).toBeTruthy()
+    expect(code).toMatchSnapshot()
+  })
+})

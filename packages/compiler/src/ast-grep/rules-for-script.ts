@@ -64,6 +64,7 @@ export const vineScriptRuleUtils = {
   vineExposeCall: macroCallPattern('vineExpose'),
   vineEmitsCall: macroCallPattern('vineEmits'),
   vineOptionsCall: macroCallPattern('vineOptions'),
+  vineCECall: macroCallPattern('vineCE'),
   validVineEmitsCall: validMacroCallPattern('vineEmitsCall'),
   validVineOptionsCall: validMacroCallPattern('vineOptionsCall'),
   idInsideMacroMayReferenceSetupLocal: {
@@ -233,6 +234,9 @@ export const vineScriptRuleUtils = {
         {
           regex: 'vineOptions',
         },
+        {
+          regex: 'vineCE',
+        },
       ],
     },
   },
@@ -298,6 +302,7 @@ export const vineScriptRuleUtils = {
   invalidOutsideVinePropCall: invalidMacroCallNotInsideVineFunctionComponent('vinePropCall'),
   invalidOutsideVineEmitsCall: invalidMacroCallNotInsideVineFunctionComponent('vineEmitsCall'),
   invalidOutsideVineOptionsCall: invalidMacroCallNotInsideVineFunctionComponent('vineOptionsCall'),
+  invalidOutsideVineCECall: invalidMacroCallNotInsideVineFunctionComponent('vineCECall'),
   invalidNoDeclVinePropCall: {
     matches: 'vinePropCall',
     not: {
@@ -364,6 +369,7 @@ export const ruleVineStyleCall = directlyMatchUtil(vineScriptRuleUtils, 'vineSty
 export const ruleVinePropCall = directlyMatchUtil(vineScriptRuleUtils, 'vinePropCall')
 export const ruleVineExposeCall = directlyMatchUtil(vineScriptRuleUtils, 'vineExposeCall')
 export const ruleVineOptionsCall = directlyMatchUtil(vineScriptRuleUtils, 'vineOptionsCall')
+export const ruleVineCECall = directlyMatchUtil(vineScriptRuleUtils, 'vineCECall')
 
 export const ruleHasTemplateStringInterpolation: NapiConfig = {
   rule: {
@@ -380,6 +386,7 @@ export const ruleInvalidOutsideMacroCalls: NapiConfig = {
       { matches: 'invalidOutsideVineExposeCall' },
       { matches: 'invalidOutsideVineEmitsCall' },
       { matches: 'invalidOutsideVineOptionsCall' },
+      { matches: 'invalidOutsideVineCECall' },
     ],
   },
 }
