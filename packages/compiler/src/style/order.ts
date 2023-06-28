@@ -12,7 +12,7 @@ function createStyleImportStmt(
   return `import ${showIf(
     // handle web component styles
     Boolean(vineFnCompCtx.isVineCE),
-    `__${vineFnCompCtx.fnName.toLowerCase()}_styles from`,
+    `__${vineFnCompCtx.fnName.toLowerCase()}_styles from `,
   )}'${
     vineFileCtx.fileId.replace(/\.vine\.ts$/, '')
   }?type=vine-style&scopeId=${
