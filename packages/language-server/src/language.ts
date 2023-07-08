@@ -1,8 +1,13 @@
 import type { Language, VirtualFile } from '@volar/language-core'
 import { FileCapabilities, FileKind, FileRangeCapabilities } from '@volar/language-core'
-import type * as ts from 'typescript/lib/tsserverlibrary'
+import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
+import * as CompilerDOM from '@vue/compiler-dom'
+import { resolveVueCompilerOptions } from '@vue/language-core'
+import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
+import * as muggle from 'muggle-string'
+import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
@@ -17,20 +22,23 @@ function virtualFileName(
   }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
-export const language: Language<VineFile> = {
-  createVirtualFile(fileName, snapshot) {
-    if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
-      return new VineFile(fileName, snapshot)
-    }
-  },
-  updateVirtualFile(vineFile, snapshot) {
-    vineFile.update(snapshot)
-  },
+export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary')) {
+  const language: Language<VineFile> = {
+    createVirtualFile(fileName, snapshot) {
+      if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
+        return new VineFile(fileName, snapshot, ts)
+      }
+    },
+    updateVirtualFile(vineFile, snapshot) {
+      vineFile.update(snapshot)
+    },
+  }
+  return language
 }
 
 export class VineFile implements VirtualFile {
   kind = FileKind.TextFile
-  capabilities = FileCapabilities.full
+  capabilities = {}
 
   fileName!: string
   mappings!: VirtualFile['mappings']
@@ -50,6 +58,7 @@ export class VineFile implements VirtualFile {
   constructor(
     public sourceFileName: string,
     public snapshot: ts.IScriptSnapshot,
+    public ts: typeof import('typescript/lib/tsserverlibrary'),
   ) {
     this.fileName = virtualFileName(sourceFileName, 'ts')
     this.onSnapshotUpdated()
@@ -68,7 +77,7 @@ export class VineFile implements VirtualFile {
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
-      data: FileRangeCapabilities.full,
+      data: {},
     }]
     this.textDocument = TextDocument.create(
       this.fileName,
@@ -87,6 +96,7 @@ export class VineFile implements VirtualFile {
     this.mustRunOnSnapshotUpdated()
     this.addEmbeddedStyleFiles()
     this.addEmbeddedTemplateFiles()
+    this.addEmbeddedTsFile()
   }
 
   createEmbeddedFile(
@@ -169,5 +179,63 @@ export class VineFile implements VirtualFile {
         ),
       )
     }
+  }
+
+  addEmbeddedTsFile() {
+
+    let lastCodeOffset = 0
+    const codes: muggle.Segment<FileRangeCapabilities>[] = []
+
+    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
+      const { template } = vineFnCompCtx
+      const range = template.range()
+      const offset = range.start.index + 1 // +1/-1 to skip the first/last quote
+      const text = template.text().slice(1, -1) // skip quotes
+
+      codes.push([
+        this.snapshot.getText(lastCodeOffset, range.start.index),
+        undefined,
+        lastCodeOffset,
+        FileRangeCapabilities.full,
+      ])
+      codes.push('(() => {\n')
+      const templateCode = generateTemplate(this.ts as any, {}, resolveVueCompilerOptions({}), text, 'html', {
+        styles: [],
+        templateAst: CompilerDOM.compile(text, { comments: true }).ast,
+      } as any, false, false)
+      const transformedTemplateCode = templateCode.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
+        typeof code === 'string' ? code
+          : [code[0], undefined, typeof code[2] === 'number' ? code[2] + offset : [code[2][0] + offset, code[2][1] + offset], code[3]]
+      );
+      codes.push(...transformedTemplateCode);
+      codes.push('})')
+
+      lastCodeOffset = range.end.index
+    }
+
+    codes.push([
+      this.snapshot.getText(lastCodeOffset, this.snapshot.getLength()),
+      undefined,
+      lastCodeOffset,
+      FileRangeCapabilities.full,
+    ])
+
+    const generated = muggle.toString(codes);
+
+    this.embeddedFiles.push(
+      {
+        fileName: this.fileName + '.ts',
+        kind: FileKind.TypeScriptHostFile,
+        snapshot: {
+          getText: (start, end) => generated.slice(start, end),
+          getLength: () => generated.length,
+          getChangeRange: () => undefined,
+        },
+        mappings: buildMappings(codes),
+        codegenStacks: [],
+        capabilities: FileCapabilities.full,
+        embeddedFiles: [],
+      }
+    )
   }
 }

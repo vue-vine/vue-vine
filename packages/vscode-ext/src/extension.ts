@@ -1,9 +1,8 @@
 import type { InitializationOptions } from '@volar/language-server'
-import { DiagnosticModel } from '@volar/language-server'
 import * as protocol from '@volar/language-server/protocol'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
-import type { ExportsInfoForLabs } from '@volar/vscode'
+import { ExportsInfoForLabs, getTsdk } from '@volar/vscode'
 import { supportLabsVersion } from '@volar/vscode'
 
 let client: lsp.BaseLanguageClient
@@ -25,7 +24,9 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   }
   const initializationOptions: InitializationOptions = {
-    diagnosticModel: DiagnosticModel.Pull,
+    typescript: {
+      tsdk: (await getTsdk(context)).tsdk,
+    },
   }
   const clientOptions: lsp.LanguageClientOptions = {
     documentSelector: [{ language: 'typescript' }],
