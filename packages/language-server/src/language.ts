@@ -1,5 +1,5 @@
 import type { Language, VirtualFile } from '@volar/language-core'
-import { FileCapabilities, FileKind, FileRangeCapabilities } from '@volar/language-core'
+import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabilities } from '@volar/language-core'
 import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
@@ -18,9 +18,8 @@ function virtualFileName(
   extension: VineVirtualFileExtension,
   extra?: string,
 ) {
-  return `${
-    sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
-  }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
+  return `${sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
+    }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
 export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary')) {
@@ -188,6 +187,7 @@ export class VineFile implements VirtualFile {
   addEmbeddedTsFile() {
     let lastCodeOffset = 0
     const codes: muggle.Segment<FileRangeCapabilities>[] = []
+    const mirrorBehaviorMappings: NonNullable<VirtualFile['mirrorBehaviorMappings']> = []
 
     for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
       const { template } = vineFnCompCtx
@@ -203,12 +203,7 @@ export class VineFile implements VirtualFile {
       ])
       codes.push('(() => {\n')
 
-      // Generate VLS context, that's variables need to expose to template
-      if (vineFnCompCtx.setupReturns) {
-        codes.push(`const __VLS_ctx = reactive(${vineFnCompCtx.setupReturns});\n`)
-      }
-
-      const templateCode = generateTemplate(
+      const generatedTemplate = generateTemplate(
         this.ts as any,
         {},
         resolveVueCompilerOptions({}),
@@ -227,7 +222,25 @@ export class VineFile implements VirtualFile {
         false,
         false,
       )
-      const transformedTemplateCode = templateCode.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
+
+      codes.push('const __VLS_ctx = reactive({')
+      for (const id of [
+        ...generatedTemplate.identifiers,
+        ...Object.keys(generatedTemplate.tagNames),
+      ]) {
+        const leftOffset = muggle.getLength(codes)
+        codes.push(`${id}: `)
+        const rightOffset = muggle.getLength(codes)
+        codes.push(`${id}, `)
+        mirrorBehaviorMappings.push({
+          sourceRange: [leftOffset, leftOffset + id.length],
+          generatedRange: [rightOffset, rightOffset + id.length],
+          data: [MirrorBehaviorCapabilities.full, MirrorBehaviorCapabilities.full],
+        })
+      }
+      codes.push('});\n')
+
+      const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
         typeof code === 'string'
           ? code
           : [code[0], undefined, typeof code[2] === 'number'
@@ -259,6 +272,7 @@ export class VineFile implements VirtualFile {
           getChangeRange: () => undefined,
         },
         mappings: buildMappings(codes),
+        mirrorBehaviorMappings,
         codegenStacks: [],
         capabilities: FileCapabilities.full,
         embeddedFiles: [],
