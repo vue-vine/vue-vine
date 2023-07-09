@@ -1,5 +1,5 @@
 import type { Pos, Range, SgNode } from '@ast-grep/napi'
-import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
+import type { RootNode, BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
 import type MagicString from 'magic-string'
 import type { VineDiagnostic } from './diagnostics'
 
@@ -93,6 +93,7 @@ export interface VineFnCompCtx {
   hoistSetupStmts: SgNode[]
   insideSetupStmts: SgNode[]
   template: SgNode
+  templateVueAst: RootNode
   scopeId: string
   cssBindings: Record<string, string | null> | null
   /** Store the return object raw code of `setup()` */

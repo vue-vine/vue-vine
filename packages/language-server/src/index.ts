@@ -3,8 +3,9 @@ import createHtmlService from 'volar-service-html'
 import createCssService from 'volar-service-css'
 import createTsService from 'volar-service-typescript'
 import type { Diagnostic, LanguageServerPlugin, Service } from '@volar/language-server/node'
-import { DiagnosticSeverity, createConnection, startLanguageServer } from '@volar/language-server/node'
+import { createConnection, startLanguageServer } from '@volar/language-server/node'
 import { VineFile, createLanguage } from './language'
+import { transformVineDiagnostic, transformVueDiagnostic } from './utils'
 
 const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlugin> => ({
   extraFileExtensions: [],
@@ -25,33 +26,20 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
         if (!(file instanceof VineFile))
           return
 
-        const errors: Diagnostic[] = []
+        const diagnostics: Diagnostic[] = []
         for (const err of file.vineCompileErrs) {
-          errors.push({
-            severity: DiagnosticSeverity.Error,
-            range: {
-              start: file.textDocument.positionAt(err.range?.start.index ?? 0),
-              end: file.textDocument.positionAt(err.range?.end.index ?? 0),
-            },
-            source: 'vue-vine',
-            message: err.msg,
-          })
+          diagnostics.push(transformVineDiagnostic(file, err, 'err'))
+        }
+        for (const warn of file.vineCompileWarns) {
+          diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
         }
         for (const err of file.templateErrs) {
-          if (!err.loc) {
-            continue
-          }
-          errors.push({
-            severity: DiagnosticSeverity.Error,
-            range: {
-              start: file.textDocument.positionAt(err.loc.start.offset),
-              end: file.textDocument.positionAt(err.loc.end.offset),
-            },
-            source: 'vue-vine',
-            message: err.message,
-          })
+          diagnostics.push(transformVueDiagnostic(file, err, 'err'))
         }
-        return errors
+        for (const warn of file.templateWarns) {
+          diagnostics.push(transformVueDiagnostic(file, warn, 'warn'))
+        }
+        return diagnostics
       },
     })
 

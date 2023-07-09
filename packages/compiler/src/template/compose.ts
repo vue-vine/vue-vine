@@ -3,9 +3,9 @@ import { compile } from '@vue/compiler-dom'
 import type { SgNode } from '@ast-grep/napi'
 import { html, ts } from '@ast-grep/napi'
 import { VineBindingTypes } from '../types'
-import type { VineFileCtx, VineFnCompCtx } from '../types'
+import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx } from '../types'
 import { ruleImportSpecifier, ruleImportStmt } from '../ast-grep/rules-for-script'
-import { dedupe } from '../utils'
+import { dedupe, transformVueDiagnosticForVine } from '../utils'
 import { findMatchedTagName, findTemplateAllIdentifiers } from './parse'
 
 export function compileVineTemplate(
@@ -83,7 +83,14 @@ function appendToStoreMap<K extends object, V>(
   )
 }
 
-export function createInlineTemplateComposer(): TemplateCompileComposer {
+export interface TemplateComposerParams {
+  vineFileCtx: VineFileCtx
+  compilerHooks: VineCompilerHooks
+}
+
+export function createInlineTemplateComposer(
+  { vineFileCtx, compilerHooks }: TemplateComposerParams,
+): TemplateCompileComposer {
   const templateCompileResults: WeakMap<VineFnCompCtx, string> = new WeakMap()
   const notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]> = new WeakMap()
 
@@ -104,10 +111,17 @@ export function createInlineTemplateComposer(): TemplateCompileComposer {
             ...allBindings.scriptBindings,
             ...allBindings.fileSharedCompBindings,
           },
+          onError: err => compilerHooks.onError(
+            transformVueDiagnosticForVine(vineFileCtx, err, 'error'),
+          ),
+          onWarn: warn => compilerHooks.onWarn(
+            transformVueDiagnosticForVine(vineFileCtx, warn, 'warning'),
+          ),
         },
       )
 
-      const { preamble } = compileResult
+      const { ast, preamble } = compileResult
+      vineFnCompCtx.templateVueAst = ast
       const preambleSgRoot = ts.parse(preamble).root()
       const allImportStmts = preambleSgRoot.findAll(ruleImportStmt)
       storeImportSpecifiers(generatedImportsMap, allImportStmts)
@@ -131,7 +145,9 @@ export function createInlineTemplateComposer(): TemplateCompileComposer {
   }
 }
 
-export function createSeparateTemplateComposer(): TemplateCompileComposer {
+export function createSeparateTemplateComposer(
+  { compilerHooks }: TemplateComposerParams,
+): TemplateCompileComposer {
   const templateCompileResults: WeakMap<VineFnCompCtx, string> = new WeakMap()
   const notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]> = new WeakMap()
 
@@ -162,9 +178,16 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
           inline: false,
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
+          onError: err => compilerHooks.onError(
+            transformVueDiagnosticForVine(vineFileCtx, err, 'error'),
+          ),
+          onWarn: warn => compilerHooks.onWarn(
+            transformVueDiagnosticForVine(vineFileCtx, warn, 'warning'),
+          ),
         },
       )
-      const { code } = compileResult
+      const { code, ast } = compileResult
+      vineFnCompCtx.templateVueAst = ast
       const codeSgRoot = ts.parse(code).root()
 
       // Find all import statements and store specifiers

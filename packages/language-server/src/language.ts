@@ -38,7 +38,9 @@ export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary
 
 export class VineFile implements VirtualFile {
   kind = FileKind.TextFile
-  capabilities = {}
+  capabilities = {
+    diagnostic: true,
+  }
 
   fileName!: string
   mappings!: VirtualFile['mappings']
@@ -48,6 +50,7 @@ export class VineFile implements VirtualFile {
 
   vineFileCtx!: VineFileCtx
   templateErrs: CompilerError[] = []
+  templateWarns: CompilerError[] = []
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
@@ -216,6 +219,7 @@ export class VineFile implements VirtualFile {
             {
               comments: true,
               onError: (err) => { this.templateErrs.push(err) },
+              onWarn: (warn) => { this.templateWarns.push(warn) },
             },
           ).ast,
         } as any,
@@ -264,7 +268,11 @@ export class VineFile implements VirtualFile {
 
     this.embeddedFiles.push(
       {
-        fileName: `${this.fileName}.vls.ts`,
+        fileName: virtualFileName(
+          this.sourceFileName,
+          'ts',
+          'vls',
+        ),
         kind: FileKind.TypeScriptHostFile,
         snapshot: {
           getText: (start, end) => generated.slice(start, end),

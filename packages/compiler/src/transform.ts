@@ -1,7 +1,7 @@
 import type { SgNode } from '@ast-grep/napi'
 import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
-import type { VineFileCtx } from './types'
+import type { VineCompilerHooks, VineFileCtx } from './types'
 import { VineBindingTypes } from './types'
 import { filterJoin, showIf, spaces } from './utils'
 import { compileCSSVars } from './style/transform-css-vars'
@@ -59,6 +59,7 @@ function mayTransformAwaitExprInsideStmt(targetNode: SgNode) {
 export function transformFile(
   vineFileCtx: VineFileCtx,
   inline = true,
+  compilerHooks: VineCompilerHooks,
 ) {
   // Processing for .vine.ts File is divided into two parts:
   // 1. Manage all hoisted static code, including:
@@ -98,8 +99,8 @@ export function transformFile(
     notImportPreambleStmtStore,
     runTemplateCompile,
   } = inline
-    ? createInlineTemplateComposer()
-    : createSeparateTemplateComposer()
+    ? createInlineTemplateComposer({ vineFileCtx, compilerHooks })
+    : createSeparateTemplateComposer({ vineFileCtx, compilerHooks })
 
   for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
     const templateSource = vineFnCompCtx.template.text().slice(1, -1) // skip quotes
