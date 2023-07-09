@@ -115,6 +115,7 @@ export function transformFile(
       templateSource,
       allBindings: bindingMetadata,
     })
+    vineFnCompCtx.setupReturns = setupFnReturns
 
     // Add `defineComponent` helper function import specifier
     let vueImports = generatedImportsMap.get('vue')

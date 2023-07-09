@@ -204,7 +204,7 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
       )
 
       // For separate mode, the setup function's return expression
-      // is combining all the bindings from user imports and all declarations.
+      // is combining all useful bindings from user imports and all declarations.
       let setupFnReturns = '{ '
       const templateUsedImportSymbol = Symbol('templateUsedImportSymbol')
       const allReturnBindings: Record<string, BindingTypes | symbol> = {

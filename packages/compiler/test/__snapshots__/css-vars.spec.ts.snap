@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 1`] = `
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vcf 1`] = `
 "import {
   unref as _unref,
   toDisplayString as _toDisplayString,
@@ -51,6 +51,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()
     
@@ -93,11 +95,13 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-488ebc72'
+
+  
   return __vine /* End of App2 */
 })()"
 `;
 
-exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vcf 2`] = `
 "
 div {
         color: var(--bd4b0810);
@@ -106,7 +110,7 @@ div {
     "
 `;
 
-exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
+exports[`CSS vars injection & inlineTemplate > Should be able to inject according to each subcomponent of vcf 3`] = `
 "
 div {
         color: var(--35afc47c);
@@ -162,6 +166,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -229,6 +235,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -289,6 +297,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -349,6 +359,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -410,6 +422,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -471,6 +485,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -534,6 +550,8 @@ return (_ctx: any,_cache: any) => {
 
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -557,7 +575,7 @@ p {
     "
 `;
 
-exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 1`] = `
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vcf 1`] = `
 "import {
   toDisplayString as _toDisplayString,
   openBlock as _openBlock,
@@ -610,6 +628,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()
     
@@ -655,11 +675,13 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-488ebc72'
+
+  
   return __vine /* End of App2 */
 })()"
 `;
 
-exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 2`] = `
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vcf 2`] = `
 "
 div {
         color: var(--bd4b0810);
@@ -668,7 +690,7 @@ div {
     "
 `;
 
-exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vfc 3`] = `
+exports[`CSS vars injection & non inlineTemplate > Should be able to inject according to each subcomponent of vcf 3`] = `
 "
 div {
         color: var(--35afc47c);
@@ -726,6 +748,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -793,6 +817,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -854,6 +880,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -916,6 +944,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -979,6 +1009,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -1042,6 +1074,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -1107,6 +1141,8 @@ __vine.render = __sfc_render
     
 
   __vine.__scopeId = 'data-v-6eee8880'
+
+  
   return __vine /* End of App */
 })()"
 `;

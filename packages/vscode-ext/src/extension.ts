@@ -2,8 +2,8 @@ import type { InitializationOptions } from '@volar/language-server'
 import * as protocol from '@volar/language-server/protocol'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
-import { ExportsInfoForLabs, getTsdk } from '@volar/vscode'
-import { supportLabsVersion } from '@volar/vscode'
+import type { ExportsInfoForLabs } from '@volar/vscode'
+import { getTsdk, supportLabsVersion } from '@volar/vscode'
 
 let client: lsp.BaseLanguageClient
 

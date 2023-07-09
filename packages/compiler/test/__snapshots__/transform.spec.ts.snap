@@ -47,6 +47,8 @@ return (_ctx: any,_cache: any) => {
 
 
   
+
+  
   return __vine /* End of Component */
 })()"
 `;
@@ -93,6 +95,8 @@ return (_ctx: any,_cache: any) => {
   }) // End of component object
 
 
+
+  
 
   
   return __vine /* End of App */
@@ -144,6 +148,8 @@ return (_ctx: any,_cache: any) => {
 
 
   
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -190,6 +196,8 @@ return (_ctx: any,_cache: any) => {
 
 
   
+
+  
   return __vine /* End of App */
 })()"
 `;
@@ -203,7 +211,7 @@ exports[`transform web component style > use vineCE & transform style 1`] = `
   defineComponent as _defineComponent
 } from 'vue'
 
-import __foo_styles from'testVCFCEStyle?type=vine-style&scopeId=e3e7282c&comp=foo&lang=css&virtual.css';
+import __foo_styles from 'testVCFCEStyle?type=vine-style&scopeId=e3e7282c&comp=foo&lang=css&virtual.css';
 
 
 export const foo = (() => {

@@ -95,7 +95,9 @@ export interface VineFnCompCtx {
   template: SgNode
   scopeId: string
   cssBindings: Record<string, string | null> | null
-  // is web component
+  /** Store the return object raw code of `setup()` */
+  setupReturns?: string
+  // is Web Component
   isVineCE: boolean
 }
 
