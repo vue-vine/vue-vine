@@ -113,6 +113,7 @@ export function transformFile(
       mergedImportsMap,
       bindingMetadata: vineCompFnCtx.bindings,
     })
+    vineFnCompCtx.setupReturns = setupFnReturns
 
     // Add `defineComponent` helper function import specifier
     let vueImportsMeta = mergedImportsMap.get('vue')

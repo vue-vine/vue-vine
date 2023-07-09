@@ -37,6 +37,20 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
             message: err.msg,
           })
         }
+        for (const err of file.templateErrs) {
+          if (!err.loc) {
+            continue
+          }
+          errors.push({
+            severity: DiagnosticSeverity.Error,
+            range: {
+              start: file.textDocument.positionAt(err.loc.start.offset),
+              end: file.textDocument.positionAt(err.loc.end.offset),
+            },
+            source: 'vue-vine',
+            message: err.message,
+          })
+        }
         return errors
       },
     })

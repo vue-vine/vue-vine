@@ -9,6 +9,7 @@ import { generate as generateTemplate } from '@vue/language-core/out/generators/
 import * as muggle from 'muggle-string'
 import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
+import type { CompilerError } from '@vue/compiler-dom'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
 
@@ -47,10 +48,13 @@ export class VineFile implements VirtualFile {
   textDocument!: TextDocument
 
   vineFileCtx!: VineFileCtx
+  templateErrs: CompilerError[] = []
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
-    onOptionsResolved: cb => cb({}),
+    onOptionsResolved: cb => cb({
+      inlineTemplate: false,
+    }),
     onError: err => this.vineCompileErrs.push(err),
     onWarn: warn => this.vineCompileWarns.push(warn),
   }
@@ -182,7 +186,6 @@ export class VineFile implements VirtualFile {
   }
 
   addEmbeddedTsFile() {
-
     let lastCodeOffset = 0
     const codes: muggle.Segment<FileRangeCapabilities>[] = []
 
@@ -199,15 +202,39 @@ export class VineFile implements VirtualFile {
         FileRangeCapabilities.full,
       ])
       codes.push('(() => {\n')
-      const templateCode = generateTemplate(this.ts as any, {}, resolveVueCompilerOptions({}), text, 'html', {
-        styles: [],
-        templateAst: CompilerDOM.compile(text, { comments: true }).ast,
-      } as any, false, false)
+
+      // Generate VLS context, that's variables need to expose to template
+      if (vineFnCompCtx.setupReturns) {
+        codes.push(`const __VLS_ctx = reactive(${vineFnCompCtx.setupReturns});\n`)
+      }
+
+      const templateCode = generateTemplate(
+        this.ts as any,
+        {},
+        resolveVueCompilerOptions({}),
+        text,
+        'html',
+        {
+          styles: [],
+          templateAst: CompilerDOM.compile(
+            text,
+            {
+              comments: true,
+              onError: (err) => { this.templateErrs.push(err) },
+            },
+          ).ast,
+        } as any,
+        false,
+        false,
+      )
       const transformedTemplateCode = templateCode.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
-        typeof code === 'string' ? code
-          : [code[0], undefined, typeof code[2] === 'number' ? code[2] + offset : [code[2][0] + offset, code[2][1] + offset], code[3]]
-      );
-      codes.push(...transformedTemplateCode);
+        typeof code === 'string'
+          ? code
+          : [code[0], undefined, typeof code[2] === 'number'
+              ? code[2] + offset
+              : [code[2][0] + offset, code[2][1] + offset], code[3]],
+      )
+      codes.push(...transformedTemplateCode)
       codes.push('})')
 
       lastCodeOffset = range.end.index
@@ -220,11 +247,11 @@ export class VineFile implements VirtualFile {
       FileRangeCapabilities.full,
     ])
 
-    const generated = muggle.toString(codes);
+    const generated = muggle.toString(codes)
 
     this.embeddedFiles.push(
       {
-        fileName: this.fileName + '.ts',
+        fileName: `${this.fileName}.vls.ts`,
         kind: FileKind.TypeScriptHostFile,
         snapshot: {
           getText: (start, end) => generated.slice(start, end),
@@ -235,7 +262,7 @@ export class VineFile implements VirtualFile {
         codegenStacks: [],
         capabilities: FileCapabilities.full,
         embeddedFiles: [],
-      }
+      },
     )
   }
 }
