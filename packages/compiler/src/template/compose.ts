@@ -112,10 +112,10 @@ export function createInlineTemplateComposer(
             ...allBindings.fileSharedCompBindings,
           },
           onError: err => compilerHooks.onError(
-            transformVueDiagnosticForVine(vineFileCtx, err, 'error'),
+            transformVueDiagnosticForVine(vineFileCtx, vineFnCompCtx, err, 'error'),
           ),
           onWarn: warn => compilerHooks.onWarn(
-            transformVueDiagnosticForVine(vineFileCtx, warn, 'warning'),
+            transformVueDiagnosticForVine(vineFileCtx, vineFnCompCtx, warn, 'warning'),
           ),
         },
       )
@@ -179,10 +179,10 @@ export function createSeparateTemplateComposer(
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
           onError: err => compilerHooks.onError(
-            transformVueDiagnosticForVine(vineFileCtx, err, 'error'),
+            transformVueDiagnosticForVine(vineFileCtx, vineFnCompCtx, err, 'error'),
           ),
           onWarn: warn => compilerHooks.onWarn(
-            transformVueDiagnosticForVine(vineFileCtx, warn, 'warning'),
+            transformVueDiagnosticForVine(vineFileCtx, vineFnCompCtx, warn, 'warning'),
           ),
         },
       )

@@ -3,13 +3,11 @@ import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabi
 import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
-import * as CompilerDOM from '@vue/compiler-dom'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
 import * as muggle from 'muggle-string'
 import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import type { CompilerError } from '@vue/compiler-dom'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
 
@@ -49,8 +47,6 @@ export class VineFile implements VirtualFile {
   textDocument!: TextDocument
 
   vineFileCtx!: VineFileCtx
-  templateErrs: CompilerError[] = []
-  templateWarns: CompilerError[] = []
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
@@ -214,14 +210,7 @@ export class VineFile implements VirtualFile {
         'html',
         {
           styles: [],
-          templateAst: CompilerDOM.compile(
-            text,
-            {
-              comments: true,
-              onError: (err) => { this.templateErrs.push(err) },
-              onWarn: (warn) => { this.templateWarns.push(warn) },
-            },
-          ).ast,
+          templateAst: vineFnCompCtx.templateVueAst,
         } as any,
         false,
         false,

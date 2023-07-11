@@ -93,7 +93,7 @@ export interface VineFnCompCtx {
   hoistSetupStmts: SgNode[]
   insideSetupStmts: SgNode[]
   template: SgNode
-  templateVueAst: RootNode
+  templateVueAst?: RootNode
   scopeId: string
   cssBindings: Record<string, string | null> | null
   /** Store the return object raw code of `setup()` */
