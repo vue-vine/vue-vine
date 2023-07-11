@@ -5,7 +5,7 @@ import createTsService from 'volar-service-typescript'
 import type { Diagnostic, LanguageServerPlugin, Service } from '@volar/language-server/node'
 import { createConnection, startLanguageServer } from '@volar/language-server/node'
 import { VineFile, createLanguage } from './language'
-import { transformVineDiagnostic, transformVueDiagnostic } from './utils'
+import { transformVineDiagnostic } from './utils'
 
 const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlugin> => ({
   extraFileExtensions: [],
@@ -23,22 +23,26 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
     config.services.vine ??= (context): ReturnType<Service> => ({
       provideDiagnostics(document) {
         const [file] = context!.documents.getVirtualFileByUri(document.uri)
+        console.log('file is vine file: ', file instanceof VineFile, ' -- uri: ', document.uri)
         if (!(file instanceof VineFile))
           return
 
         const diagnostics: Diagnostic[] = []
         for (const err of file.vineCompileErrs) {
           diagnostics.push(transformVineDiagnostic(file, err, 'err'))
+          console.log('vine compile err pushed')
         }
         for (const warn of file.vineCompileWarns) {
           diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
+          console.log('vine compile warn pushed')
         }
-        for (const err of file.templateErrs) {
-          diagnostics.push(transformVueDiagnostic(file, err, 'err'))
-        }
-        for (const warn of file.templateWarns) {
-          diagnostics.push(transformVueDiagnostic(file, warn, 'warn'))
-        }
+
+        console.log(
+          'vine diagnostics ranges: ',
+          diagnostics
+            .map(d => ({ ...d.range, msg: d.message })),
+        )
+
         return diagnostics
       },
     })
