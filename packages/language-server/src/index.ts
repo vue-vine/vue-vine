@@ -23,9 +23,9 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
     config.services.vine ??= (context): ReturnType<Service> => ({
       provideDiagnostics(document) {
         const [file] = context!.documents.getVirtualFileByUri(document.uri)
+        console.debug(`\n- File is VineFile: ${file instanceof VineFile}\n- document.uri: ${document.uri}\n`)
         if (!(file instanceof VineFile))
           return
-
         const diagnostics: Diagnostic[] = []
         for (const err of file.vineCompileErrs) {
           diagnostics.push(transformVineDiagnostic(file, err, 'err'))
@@ -33,7 +33,7 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
         for (const warn of file.vineCompileWarns) {
           diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
         }
-
+        console.debug(`\n- diagnostics: ${JSON.stringify(diagnostics, null, 2)}\n`)
         return diagnostics
       },
     })
