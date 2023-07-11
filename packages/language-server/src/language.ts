@@ -79,7 +79,9 @@ export class VineFile implements VirtualFile {
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
-      data: {},
+      data: {
+        diagnostic: true,
+      },
     }]
     this.textDocument = TextDocument.create(
       this.fileName,
