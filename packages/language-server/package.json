@@ -12,11 +12,11 @@
     "out/**/*.d.ts"
   ],
   "dependencies": {
-    "@volar/language-core": "~1.8.0",
-    "@volar/language-server": "~1.8.0",
-    "@volar/language-service": "~1.8.0",
-    "@volar/source-map": "~1.8.0",
-    "@volar/typescript": "~1.8.0",
+    "@volar/language-core": "~1.8.1",
+    "@volar/language-server": "~1.8.1",
+    "@volar/language-service": "~1.8.1",
+    "@volar/source-map": "~1.8.1",
+    "@volar/typescript": "~1.8.1",
     "@vue-vine/compiler": "workspace:*",
     "@vue/compiler-dom": "^3.3.4",
     "@vue/language-core": "^1.8.4",
