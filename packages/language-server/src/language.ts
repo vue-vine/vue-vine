@@ -1,10 +1,15 @@
 import type { Language, VirtualFile } from '@volar/language-core'
-import { FileCapabilities, FileKind, FileRangeCapabilities } from '@volar/language-core'
-import type * as ts from 'typescript/lib/tsserverlibrary'
+import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabilities } from '@volar/language-core'
+import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
+import { resolveVueCompilerOptions } from '@vue/language-core'
+import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
+import * as muggle from 'muggle-string'
+import * as CompilerDOM from '@vue/compiler-dom'
+import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { VINE_FILE_SUFFIX_REGEXP } from './constants'
+import { EMPTY_FUNCTION, VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
 
 function virtualFileName(
@@ -12,25 +17,30 @@ function virtualFileName(
   extension: VineVirtualFileExtension,
   extra?: string,
 ) {
-  return `${
-    sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
-  }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
+  return `${sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
+    }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
-export const language: Language<VineFile> = {
-  createVirtualFile(fileName, snapshot) {
-    if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
-      return new VineFile(fileName, snapshot)
-    }
-  },
-  updateVirtualFile(vineFile, snapshot) {
-    vineFile.update(snapshot)
-  },
+export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary')) {
+  const language: Language<VineFile> = {
+    createVirtualFile(fileName, snapshot) {
+      if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
+        return new VineFile(fileName, snapshot, ts)
+      }
+    },
+    updateVirtualFile(vineFile, snapshot) {
+      vineFile.update(snapshot)
+    },
+  }
+  return language
 }
 
 export class VineFile implements VirtualFile {
   kind = FileKind.TextFile
-  capabilities = FileCapabilities.full
+  mirrorBehaviorMappings: NonNullable<VirtualFile['mirrorBehaviorMappings']> = []
+  capabilities: FileCapabilities = {
+    diagnostic: true,
+  }
 
   fileName!: string
   mappings!: VirtualFile['mappings']
@@ -50,8 +60,8 @@ export class VineFile implements VirtualFile {
   constructor(
     public sourceFileName: string,
     public snapshot: ts.IScriptSnapshot,
+    public ts: typeof import('typescript/lib/tsserverlibrary'),
   ) {
-    this.fileName = virtualFileName(sourceFileName, 'ts')
     this.onSnapshotUpdated()
   }
 
@@ -64,11 +74,13 @@ export class VineFile implements VirtualFile {
     this.embeddedFiles = []
     this.vineCompileErrs = []
     this.vineCompileWarns = []
-
+    this.mirrorBehaviorMappings = []
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
-      data: FileRangeCapabilities.full,
+      data: {
+        diagnostic: true,
+      },
     }]
     this.textDocument = TextDocument.create(
       this.fileName,
@@ -85,8 +97,103 @@ export class VineFile implements VirtualFile {
 
   onSnapshotUpdated() {
     this.mustRunOnSnapshotUpdated()
+    this.updateVirtualTsFile()
+
     this.addEmbeddedStyleFiles()
     this.addEmbeddedTemplateFiles()
+  }
+
+  updateVirtualTsFile() {
+    let lastCodeOffset = 0
+    const codes: muggle.Segment<FileRangeCapabilities>[] = []
+
+    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
+      const { template } = vineFnCompCtx
+      const range = template.range()
+      const offset = range.start.index + 1 // +1/-1 to skip the first/last quote
+      const text = template.text().slice(1, -1) // skip quotes
+
+      codes.push([
+        this.snapshot.getText(lastCodeOffset, range.start.index),
+        undefined,
+        lastCodeOffset,
+        FileRangeCapabilities.full,
+      ])
+      codes.push('(() => {\n')
+
+      const templateCompilationResult = CompilerDOM.compile(
+        text,
+        {
+          comments: true,
+          onError: EMPTY_FUNCTION,
+          onWarn: EMPTY_FUNCTION,
+        },
+      )
+      const generatedTemplate = generateTemplate(
+        this.ts as any,
+        {},
+        resolveVueCompilerOptions({}),
+        text,
+        'html',
+        {
+          styles: [],
+          templateAst: templateCompilationResult.ast,
+        } as any,
+        false,
+        false,
+      )
+
+      codes.push('const __VLS_ctx = reactive({')
+      for (const id of [
+        ...generatedTemplate.identifiers,
+        ...Object.keys(generatedTemplate.tagNames),
+      ]) {
+        const leftOffset = muggle.getLength(codes)
+        codes.push(`${id}: `)
+        const rightOffset = muggle.getLength(codes)
+        codes.push(`${id}, `)
+        this.mirrorBehaviorMappings.push({
+          sourceRange: [leftOffset, leftOffset + id.length],
+          generatedRange: [rightOffset, rightOffset + id.length],
+          data: [
+            MirrorBehaviorCapabilities.full,
+            MirrorBehaviorCapabilities.full,
+          ],
+        })
+      }
+      codes.push('});\n')
+
+      const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
+        typeof code === 'string'
+          ? code
+          : [code[0], undefined, typeof code[2] === 'number'
+              ? code[2] + offset
+              : [code[2][0] + offset, code[2][1] + offset], code[3]],
+      )
+      codes.push(...transformedTemplateCode)
+      codes.push('})')
+
+      lastCodeOffset = range.end.index
+    }
+
+    codes.push([
+      this.snapshot.getText(lastCodeOffset, this.snapshot.getLength()),
+      undefined,
+      lastCodeOffset,
+      FileRangeCapabilities.full,
+    ])
+    const generated = muggle.toString(codes)
+
+    this.fileName = virtualFileName(this.sourceFileName, 'ts', 'vls')
+    this.kind = FileKind.TypeScriptHostFile
+    this.snapshot = {
+      getText: (start, end) => generated.slice(start, end),
+      getLength: () => generated.length,
+      getChangeRange: () => undefined,
+    }
+    this.mappings = buildMappings(codes)
+    this.capabilities = FileCapabilities.full
+    this.codegenStacks = []
   }
 
   createEmbeddedFile(
