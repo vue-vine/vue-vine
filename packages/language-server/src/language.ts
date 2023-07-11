@@ -6,6 +6,7 @@ import { compileVineTypeScriptFile } from '@vue-vine/compiler'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
 import * as muggle from 'muggle-string'
+import * as CompilerDOM from '@vue/compiler-dom'
 import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
@@ -50,9 +51,7 @@ export class VineFile implements VirtualFile {
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
-    onOptionsResolved: cb => cb({
-      inlineTemplate: false,
-    }),
+    onOptionsResolved: cb => cb({}),
     onError: err => this.vineCompileErrs.push(err),
     onWarn: warn => this.vineCompileWarns.push(warn),
   }
@@ -204,6 +203,14 @@ export class VineFile implements VirtualFile {
       ])
       codes.push('(() => {\n')
 
+      const templateCompilationResult = CompilerDOM.compile(
+        text,
+        {
+          comments: true,
+          onError: () => {},
+          onWarn: () => {},
+        },
+      )
       const generatedTemplate = generateTemplate(
         this.ts as any,
         {},
@@ -212,7 +219,7 @@ export class VineFile implements VirtualFile {
         'html',
         {
           styles: [],
-          templateAst: vineFnCompCtx.templateVueAst,
+          templateAst: templateCompilationResult.ast,
         } as any,
         false,
         false,
