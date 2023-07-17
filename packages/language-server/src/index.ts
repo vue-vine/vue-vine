@@ -23,18 +23,15 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
     config.services.vine ??= (context): ReturnType<Service> => ({
       provideDiagnostics(document) {
         const [file] = context!.documents.getVirtualFileByUri(document.uri)
-        console.log('file is vine file: ', file instanceof VineFile, ' -- uri: ', document.uri)
         if (!(file instanceof VineFile))
           return
 
         const diagnostics: Diagnostic[] = []
         for (const err of file.vineCompileErrs) {
           diagnostics.push(transformVineDiagnostic(file, err, 'err'))
-          console.log('vine compile err pushed')
         }
         for (const warn of file.vineCompileWarns) {
           diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
-          console.log('vine compile warn pushed')
         }
 
         console.log(

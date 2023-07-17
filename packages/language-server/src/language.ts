@@ -8,6 +8,7 @@ import { generate as generateTemplate } from '@vue/language-core/out/generators/
 import * as muggle from 'muggle-string'
 import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
+import { compile } from '@vue/compiler-dom'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
 
@@ -204,6 +205,10 @@ export class VineFile implements VirtualFile {
       ])
       codes.push('(() => {\n')
 
+      const { ast } = compile(text, {
+        onError: (err) => { console.log('[volar template compile error]', err) },
+        onWarn: (warn) => { console.log('[volar template compile warn]', warn) },
+      })
       const generatedTemplate = generateTemplate(
         this.ts as any,
         {},
@@ -212,7 +217,7 @@ export class VineFile implements VirtualFile {
         'html',
         {
           styles: [],
-          templateAst: vineFnCompCtx.templateVueAst,
+          templateAst: ast,
         } as any,
         false,
         false,
