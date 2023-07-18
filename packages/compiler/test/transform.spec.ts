@@ -141,7 +141,7 @@ describe('transform web component style', () => {
       + '}'
     const code = getTransformedCode(runTransform(content, 'testVCFCEStyle'))
     expect(code.includes('__vine.styles = [__foo_styles]')).toBeTruthy()
-    expect(code.includes('import __foo_styles from\'testVCFCEStyle?type=vine-style')).toBeTruthy()
+    expect(code.includes('import __foo_styles from \'testVCFCEStyle?type=vine-style')).toBeTruthy()
     expect(code).toMatchSnapshot()
   })
 })
