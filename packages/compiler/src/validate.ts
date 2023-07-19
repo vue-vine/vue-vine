@@ -510,8 +510,8 @@ function validateRootScopeStatementsNoVueApiCall(
       if (!lexDecl) {
         continue
       }
-      const declValue = lexDecl.child(1)!.field('value')!
-      if (declValue.kind() !== 'call_expression') {
+      const declValue = lexDecl.child(1)!.field('value')
+      if (declValue?.kind() !== 'call_expression') {
         continue
       }
       const noVueApiCallForLexDecl = validateNoVueApiCallForCallExpr(validateCtx, declValue)
@@ -523,8 +523,8 @@ function validateRootScopeStatementsNoVueApiCall(
       stmtNode.kind() === 'lexical_declaration'
       || stmtNode.kind() === 'variable_declaration'
     ) {
-      const declValue = stmtNode.child(1)!.field('value')!
-      if (declValue.kind() !== 'call_expression') {
+      const declValue = stmtNode.child(1)!.field('value')
+      if (declValue?.kind() !== 'call_expression') {
         continue
       }
       const noVueApiCallForLexDecl = validateNoVueApiCallForCallExpr(validateCtx, declValue)

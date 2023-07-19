@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import type { VineCompilerHooks, VineFileCtx } from '../index'
 import { compileVineTypeScriptFile, createCompilerCtx } from '../index'
+import type { VineCompilerHooks, VineFileCtx } from '../index'
 
+function getTransformedCode(fileCtx: VineFileCtx) {
+  return fileCtx.fileSourceCode.toString()
+}
 function createMockTransformCtx(option = {}) {
   const mockCompilerCtx = createCompilerCtx(option)
   const mockCompilerHook = {
@@ -16,17 +19,12 @@ function createMockTransformCtx(option = {}) {
     mockCompilerCtx,
   }
 }
-
-function runTransform(
+function runVineTsCompile(
   content: string,
   fileName: string,
 ) {
   const { mockCompilerHook } = createMockTransformCtx()
   return compileVineTypeScriptFile(content, fileName, mockCompilerHook)
-}
-
-function getTransformedCode(fileCtx: VineFileCtx) {
-  return fileCtx.fileSourceCode.toString()
 }
 
 describe('transform vcf containing await', () => {
@@ -39,7 +37,7 @@ describe('transform vcf containing await', () => {
       + '  `\n'
       + '}\n'
 
-    const code = getTransformedCode(runTransform(content, 'testVCFAwait'))
+    const code = getTransformedCode(runVineTsCompile(content, 'testVCFAwait'))
     const matchRes = code.match(/await/g)
     expect(matchRes).toBeTruthy()
     expect(matchRes!.length).toBe(1)
@@ -54,7 +52,7 @@ describe('transform vcf containing await', () => {
       + '    <div>test</div>\n'
       + '  `\n'
       + '}\n'
-    const code = getTransformedCode(runTransform(content, 'testVCFAwait'))
+    const code = getTransformedCode(runVineTsCompile(content, 'testVCFAwait'))
     const matchRes = code.match(/await/g)
     expect(matchRes).toBeTruthy()
     expect(matchRes!.length).toBe(1)
@@ -72,7 +70,7 @@ describe('transform vcf containing valid top level declaration', () => {
     + '    <div>{{foo}} {{bar()}}</div>\n'
     + '  `\n'
     + '}'
-    const code = getTransformedCode(runTransform(content, 'testVCFContainsTopLevelDecl'))
+    const code = getTransformedCode(runVineTsCompile(content, 'testVCFContainsTopLevelDecl'))
     expect(code).toMatchSnapshot()
   })
 })
@@ -89,7 +87,7 @@ function Component() {
     <div>{{ color }}</div>
   \`
 }`
-    const fileCtx = runTransform(content, 'testTransformPlayground')
+    const fileCtx = runVineTsCompile(content, 'testTransformPlayground')
     expect(
       fileCtx.vineFnComps.map(comp => ([
         comp.fnName,
@@ -119,7 +117,7 @@ describe('transform playground', () => {
 // Write a template here
     `
     const playgroundFileId = 'testTransformPlayground'
-    const fileCtx = runTransform(content, playgroundFileId)
+    const fileCtx = runVineTsCompile(content, playgroundFileId)
 
     // Put anything you want to check below ...
     expect(fileCtx.fileId).toBe(playgroundFileId)
@@ -139,7 +137,7 @@ describe('transform web component style', () => {
       + '    <div class="test">vine</div>\n'
       + '  `\n'
       + '}'
-    const code = getTransformedCode(runTransform(content, 'testVCFCEStyle'))
+    const code = getTransformedCode(runVineTsCompile(content, 'testVCFCEStyle'))
     expect(code.includes('__vine.styles = [__foo_styles]')).toBeTruthy()
     expect(code.includes('import __foo_styles from \'testVCFCEStyle?type=vine-style')).toBeTruthy()
     expect(code).toMatchSnapshot()

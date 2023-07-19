@@ -19,7 +19,7 @@ function validMacroCallPattern(macroCallRuleUtilName: string) {
     },
   } as const
 }
-function invalidMacroCallNotInsideVineFunctionComponent(
+function invalidMacroCallNotInsideVineComponentFunction(
   macroCallRuleUtilName: string,
 ) {
   return {
@@ -297,12 +297,12 @@ export const vineScriptRuleUtils = {
   },
 
   // Rules for find invalid.
-  invalidOutsideVineStyleCall: invalidMacroCallNotInsideVineFunctionComponent('vineStyleCall'),
-  invalidOutsideVineExposeCall: invalidMacroCallNotInsideVineFunctionComponent('vineExposeCall'),
-  invalidOutsideVinePropCall: invalidMacroCallNotInsideVineFunctionComponent('vinePropCall'),
-  invalidOutsideVineEmitsCall: invalidMacroCallNotInsideVineFunctionComponent('vineEmitsCall'),
-  invalidOutsideVineOptionsCall: invalidMacroCallNotInsideVineFunctionComponent('vineOptionsCall'),
-  invalidOutsideVineCECall: invalidMacroCallNotInsideVineFunctionComponent('vineCECall'),
+  invalidOutsideVineStyleCall: invalidMacroCallNotInsideVineComponentFunction('vineStyleCall'),
+  invalidOutsideVineExposeCall: invalidMacroCallNotInsideVineComponentFunction('vineExposeCall'),
+  invalidOutsideVinePropCall: invalidMacroCallNotInsideVineComponentFunction('vinePropCall'),
+  invalidOutsideVineEmitsCall: invalidMacroCallNotInsideVineComponentFunction('vineEmitsCall'),
+  invalidOutsideVineOptionsCall: invalidMacroCallNotInsideVineComponentFunction('vineOptionsCall'),
+  invalidOutsideVineCECall: invalidMacroCallNotInsideVineComponentFunction('vineCECall'),
   invalidNoDeclVinePropCall: {
     matches: 'vinePropCall',
     not: {
