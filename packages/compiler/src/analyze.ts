@@ -192,7 +192,8 @@ function analyzeVineFunctionEmits(
     // No vineEmits, skip
     return
   }
-  const emitTypeObjLiteralNode = vineEmitsSgNode.field('type_arguments')!.child(0)!
+  const vineEmitsTypeArgs = vineEmitsSgNode.field('type_arguments')
+  const emitTypeObjLiteralNode = vineEmitsTypeArgs!.child(0)!
   // Get all properties' name of the object type literal
   emitTypeObjLiteralNode
     .children()

@@ -70,7 +70,19 @@ function assertCallExprHasOnlyOneObjLitArg(
     )
     return false
   }
-  const exposeCallArg = exposeCallArgs[0]!
+  const exposeCallArg = exposeCallArgs[0]
+  if (!exposeCallArg) {
+    compilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: `Missing argument for \`${fnName}\``,
+          range: callExprSgNode.range(),
+        },
+      ),
+    )
+    return false
+  }
   if (exposeCallArg.kind() !== 'object') {
     compilerHooks.onError(
       vineErr(
@@ -163,6 +175,41 @@ function assertVineStyleArgStringAndLangType(
 
   return true
 }
+function assertVineEmitsMustHaveOneObjectLiteralTypeArg(
+  [compilerHooks, vineFileCtx]: ValidateCtx,
+  vineEmitsCallSgNode: SgNode | undefined,
+) {
+  if (!vineEmitsCallSgNode) {
+    throw new Error('Panic on asserting `vineEmits` must have type argument: `vineEmitsCallSgNode` is undefined.')
+  }
+  const vineEmitsCallTypeArgs = vineEmitsCallSgNode.field('type_arguments')
+  if (!vineEmitsCallTypeArgs) {
+    compilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: 'Vue Vine function component\'s vineEmits must have type definition!',
+          range: vineEmitsCallSgNode.range(),
+        },
+      ),
+    )
+    return false
+  }
+  const vineEmitsCallTypeArg = vineEmitsCallTypeArgs.child(0)!
+  if (vineEmitsCallTypeArg.kind() !== 'object_type') {
+    compilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: 'Vue Vine function component\'s vineEmits type must be object literal!',
+          range: vineEmitsCallTypeArg.range(),
+        },
+      ),
+    )
+    return false
+  }
+  return true
+}
 
 // ---- Validate inside vine function component ----
 
@@ -174,7 +221,7 @@ function validateVineTemplateStringOnlyOnce(ctxs: ValidateCtx, vineFnNode: SgNod
   return assertOnlyOnce(
     ctxs,
     vineTaggedTemplateStrings,
-    'Multiple vine tagged template strings are not allowed inside Vue Vine function component',
+    'vine tagged template string',
   )
 }
 
@@ -187,6 +234,7 @@ function validateNotPropMacroCallInsideComp(ctxs: ValidateCtx, vineFnNode: SgNod
   const vineStyleCalls = vineFnNode.findAll(ruleVineStyleCall)
   const vineExposeCalls = vineFnNode.findAll(ruleVineExposeCall)
   const vineOptionsCalls = vineFnNode.findAll(ruleVineOptionsCall)
+  const vineEmitsCalls = vineFnNode.findAll(ruleVineEmitsCall)
 
   const asserts: boolean[] = []
   if (vineStyleCalls.length > 0) {
@@ -212,6 +260,12 @@ function validateNotPropMacroCallInsideComp(ctxs: ValidateCtx, vineFnNode: SgNod
     asserts.push(
       assertOnlyOnce(ctxs, vineOptionsCalls, 'vineOptions'),
       assertCallExprHasOnlyOneObjLitArg(ctxs, vineOptionsCalls[0], 'vineOptions'),
+    )
+  }
+  if (vineEmitsCalls.length > 0) {
+    asserts.push(
+      assertOnlyOnce(ctxs, vineEmitsCalls, 'vineEmits'),
+      assertVineEmitsMustHaveOneObjectLiteralTypeArg(ctxs, vineEmitsCalls[0]),
     )
   }
 
@@ -370,49 +424,6 @@ function validateVineFunctionCompProps(
   return true
 }
 
-/** Check vine function component's vineEmits, must have type definition */
-function validateVineFunctionDefineEmits(
-  [compilerHooks, vineFileCtx]: ValidateCtx, vineFnNode: SgNode,
-) {
-  const tryFindVineEmits = vineFnNode.findAll(ruleVineEmitsCall)
-  if (tryFindVineEmits.length === 0) {
-    // No vineEmits, skip this check
-    return true
-  }
-  else if (tryFindVineEmits.length > 1) {
-    compilerHooks.onError(
-      vineErr(vineFileCtx, {
-        range: tryFindVineEmits[1]!.range(),
-        msg: 'Vue Vine function component can only have one vineEmits!',
-      }),
-    )
-    return false
-  }
-
-  const vineEmitsSgNode = tryFindVineEmits[0]!
-  const typeArgsSgNode = vineEmitsSgNode.field('type_arguments')
-  const maybeObjType = typeArgsSgNode?.child(0)
-  if (!typeArgsSgNode || !maybeObjType) {
-    compilerHooks.onError(
-      vineErr(vineFileCtx, {
-        range: vineEmitsSgNode.range(),
-        msg: 'Vue Vine function component\'s vineEmits must have type definition!',
-      }),
-    )
-    return false
-  }
-  if (maybeObjType.kind() !== 'object_type') {
-    compilerHooks.onError(
-      vineErr(vineFileCtx, {
-        range: maybeObjType.range(),
-        msg: 'Vue Vine function component\'s vineEmits type must be object literal!',
-      }),
-    )
-    return false
-  }
-  return true
-}
-
 // ---- Validate in root scope ----
 
 /** Check if there is any outside macro calls */
@@ -557,7 +568,6 @@ const validatesFromVineFn = [
   validateNotPropMacroCallInsideComp,
   validateVineTemplateStringNotContainsInterpolation,
   validateVineFunctionCompProps,
-  validateVineFunctionDefineEmits,
 ] as const
 
 export function validateVine(
@@ -577,13 +587,15 @@ export function validateVine(
   const { sgRoot } = vineFileCtx
   // Validate all restrictions for root
   if (hasValidateError(validatesFromRoot, sgRoot)) {
-    return
+    return false
   }
 
   for (const vineFn of allVineFnCompDecls) {
     // Validate all restrictions for vine function component
     if (hasValidateError(validatesFromVineFn, vineFn)) {
-      return
+      return false
     }
   }
+
+  return true
 }

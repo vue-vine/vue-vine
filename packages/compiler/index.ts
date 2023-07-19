@@ -77,11 +77,13 @@ export function compileVineTypeScriptFile(
   )
 
   // 1. Validate all vine restrictions
-  validateVine(compilerHooks, vineFileCtx, vineFnCompDecls)
+  const isValidatePass = validateVine(compilerHooks, vineFileCtx, vineFnCompDecls)
   compilerHooks.onValidateEnd?.()
 
-  if (vineFnCompDecls.length === 0) {
-    // No vine function component declarations found
+  if (
+    !isValidatePass // Vine validation failed
+    || vineFnCompDecls.length === 0 // No vine function component declarations found
+  ) {
     return vineFileCtx
   }
 

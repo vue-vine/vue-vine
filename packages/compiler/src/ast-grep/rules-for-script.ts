@@ -389,4 +389,5 @@ export const ruleInvalidOutsideMacroCalls: NapiConfig = {
       { matches: 'invalidOutsideVineCECall' },
     ],
   },
+  utils: vineScriptRuleUtils,
 }
