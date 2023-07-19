@@ -61,8 +61,8 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
-    "dev": "npm run build:tsc && (npm run watch:tsc & npm run watch:esbuild)",
-    "watch:tsc": "tsc -b ./tsconfig.json -w",
+    "dev": "npm run watch:tsc & npm run watch:esbuild",
+    "watch:tsc": "tsc -b ./tsconfig.json -w --preserveWatchOutput",
     "build:tsc": "tsc -b ./tsconfig.json",
     "watch:esbuild": "node ./scripts/esbuild.js --watch",
     "build:esbuild": "node ./scripts/esbuild.js --minify",

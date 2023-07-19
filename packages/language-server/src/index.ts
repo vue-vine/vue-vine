@@ -34,12 +34,6 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
           diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
         }
 
-        console.log(
-          'vine diagnostics ranges: ',
-          diagnostics
-            .map(d => ({ ...d.range, msg: d.message })),
-        )
-
         return diagnostics
       },
     })
