@@ -60,7 +60,7 @@ function App() {
       .toMatchInlineSnapshot('"Vine template string are not allowed to contain interpolation !"')
   })
 
-  test('validate vine macro usage', () => {
+  test('validate vine macro usage (except vineProp)', () => {
     const content = `
 function Box() {
   vineStyle(tailwind\`
@@ -125,15 +125,21 @@ function App() {
     return vine\`<span>x + y = {{ x + y }}</span>\`
   }
   function Edge(props: { zig: boolean, zag: number, (a: number, b: number): void; }) {
-    return vine\`<div>Edge</span>\`
+    return vine\`<div>Edge</div>\`
+  }
+  function Macro() {
+    const { a } = vineProp<string>()
+    let b = vineProp<number>()
+    vineProp.withDefault(1)
+    return vine\`<div>Macro</div>\`
   }
   function Box({ a, b }: SomeExternalType1) {
     return vine\`<div>Test Box</div>\`
   }
   function App(props: SomeExternalType2) {
     const noTypeProp = vineProp()
-    const invalidDefault = vineProp.default(true, 11)
-    const emptyValidator = vineProp.validator()
+    const invalidDefault = vineProp.withDefault()
+    const emptyValidator = vineProp.optional()
 
   return vine\`
     <div>
@@ -144,12 +150,29 @@ function App() {
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', mockCompilerHooks)
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(6)
-    expect(mockCompilerCtx.vineCompileErrors[0].msg).toMatchInlineSnapshot('"Vine component function\'s props type annotation must be an object literal, only contains properties signature, and all properties\' key must be string literal or identifier"')
-    expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"If you\'re defining a Vine component function\'s props with formal parameter, it must be one and only identifier"')
-    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"Vine component function\'s props type annotation must be an object literal"')
-    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"Vine component function\'s props type annotation must be an object literal"')
-    expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"`vineProp.default` macro call can only have one argument"')
-    expect(mockCompilerCtx.vineCompileErrors[5].msg).toMatchInlineSnapshot('"`vineProp.validator` macro call must have one argument"')
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(10)
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot(
+        '"Vine component function\'s props type annotation must be an object literal, only contains properties signature, '
+        + 'and all properties\' key must be string literal or identifier"',
+      )
+    expect(mockCompilerCtx.vineCompileErrors[1].msg)
+      .toMatchInlineSnapshot('"the declaration of `vineProp` macro call must be an identifier"')
+    expect(mockCompilerCtx.vineCompileErrors[2].msg)
+      .toMatchInlineSnapshot('"`vineProp` macro call must be inside a `const` declaration"')
+    expect(mockCompilerCtx.vineCompileErrors[3].msg)
+      .toMatchInlineSnapshot('"`vineProp` macro call must be inside a `const` variable declaration"')
+    expect(mockCompilerCtx.vineCompileErrors[4].msg)
+      .toMatchInlineSnapshot('"If you\'re defining a Vine component function\'s props with formal parameter, it must be one and only identifier"')
+    expect(mockCompilerCtx.vineCompileErrors[5].msg)
+      .toMatchInlineSnapshot('"Vine component function\'s props type annotation must be an object literal"')
+    expect(mockCompilerCtx.vineCompileErrors[6].msg)
+      .toMatchInlineSnapshot('"Vine component function\'s props type annotation must be an object literal"')
+    expect(mockCompilerCtx.vineCompileErrors[7].msg)
+      .toMatchInlineSnapshot('"`vineProp` macro call must have a type parameter to specify the prop\'s type"')
+    expect(mockCompilerCtx.vineCompileErrors[8].msg)
+      .toMatchInlineSnapshot('"`vineProp.withDefault` macro call must have at least 1 argument"')
+    expect(mockCompilerCtx.vineCompileErrors[9].msg)
+      .toMatchInlineSnapshot('"`vineProp.optional` macro call must have a type parameter to specify the prop\'s type"')
   })
 })

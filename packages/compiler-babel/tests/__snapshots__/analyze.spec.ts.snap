@@ -1,0 +1,234 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Test Vine compiler analyze > analyze vine component props by macro calls 1`] = `
+{
+  "disabled": {
+    "isBool": true,
+    "isFromMacroDefine": true,
+    "isRequired": false,
+    "validator": undefined,
+  },
+  "name": {
+    "isBool": false,
+    "isFromMacroDefine": true,
+    "isRequired": true,
+    "validator": undefined,
+  },
+  "title": {
+    "default": Node {
+      "end": 152,
+      "extra": {
+        "raw": "'# Title'",
+        "rawValue": "# Title",
+      },
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 46,
+          "index": 152,
+          "line": 5,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 37,
+          "index": 143,
+          "line": 5,
+        },
+      },
+      "start": 143,
+      "type": "StringLiteral",
+      "value": "# Title",
+    },
+    "isBool": false,
+    "isFromMacroDefine": true,
+    "isRequired": true,
+    "validator": Node {
+      "async": false,
+      "body": Node {
+        "arguments": [
+          Node {
+            "end": 189,
+            "extra": {
+              "raw": "'#'",
+              "rawValue": "#",
+            },
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 83,
+                "index": 189,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 80,
+                "index": 186,
+                "line": 5,
+              },
+            },
+            "start": 186,
+            "type": "StringLiteral",
+            "value": "#",
+          },
+        ],
+        "callee": Node {
+          "computed": false,
+          "end": 185,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 79,
+              "index": 185,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 65,
+              "index": 171,
+              "line": 5,
+            },
+          },
+          "object": Node {
+            "end": 174,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 68,
+                "index": 174,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": "val",
+              "start": Position {
+                "column": 65,
+                "index": 171,
+                "line": 5,
+              },
+            },
+            "name": "val",
+            "start": 171,
+            "type": "Identifier",
+          },
+          "property": Node {
+            "end": 185,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 79,
+                "index": 185,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": "startsWith",
+              "start": Position {
+                "column": 69,
+                "index": 175,
+                "line": 5,
+              },
+            },
+            "name": "startsWith",
+            "start": 175,
+            "type": "Identifier",
+          },
+          "start": 171,
+          "type": "MemberExpression",
+        },
+        "end": 190,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 84,
+            "index": 190,
+            "line": 5,
+          },
+          "filename": undefined,
+          "identifierName": undefined,
+          "start": Position {
+            "column": 65,
+            "index": 171,
+            "line": 5,
+          },
+        },
+        "start": 171,
+        "type": "CallExpression",
+      },
+      "end": 190,
+      "generator": false,
+      "id": null,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 84,
+          "index": 190,
+          "line": 5,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 48,
+          "index": 154,
+          "line": 5,
+        },
+      },
+      "params": [
+        Node {
+          "end": 166,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 60,
+              "index": 166,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": "val",
+            "start": Position {
+              "column": 49,
+              "index": 155,
+              "line": 5,
+            },
+          },
+          "name": "val",
+          "start": 155,
+          "type": "Identifier",
+          "typeAnnotation": Node {
+            "end": 166,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 60,
+                "index": 166,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 52,
+                "index": 158,
+                "line": 5,
+              },
+            },
+            "start": 158,
+            "type": "TSTypeAnnotation",
+            "typeAnnotation": Node {
+              "end": 166,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 60,
+                  "index": 166,
+                  "line": 5,
+                },
+                "filename": undefined,
+                "identifierName": undefined,
+                "start": Position {
+                  "column": 54,
+                  "index": 160,
+                  "line": 5,
+                },
+              },
+              "start": 160,
+              "type": "TSStringKeyword",
+            },
+          },
+        },
+      ],
+      "start": 154,
+      "type": "ArrowFunctionExpression",
+    },
+  },
+}
+`;

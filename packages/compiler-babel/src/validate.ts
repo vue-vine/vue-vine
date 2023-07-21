@@ -8,15 +8,19 @@ import {
   isTaggedTemplateExpression,
   isTemplateLiteral,
   isVariableDeclaration,
+  isVariableDeclarator,
   traverse,
 } from '@babel/types'
 import type {
   CallExpression,
   Identifier,
   Node,
+  VariableDeclaration,
+  VariableDeclarator,
 } from '@babel/types'
-import type { VineBabelRoot, VineCompilerHooks, VineFileCtx } from './types'
+import type { CountingMacros, VineBabelRoot, VineCompilerHooks, VineFileCtx } from './types'
 import {
+  getFunctionInfo,
   getFunctionParams,
   getVineMacroCalleeName,
   isDescendant,
@@ -28,7 +32,6 @@ import {
   isVueReactivityApiCallExpression,
 } from './babel-ast'
 import { vineErr } from './diagnostics'
-import type { CountingMacros } from './constants'
 import { SUPPORTED_CSS_LANGS } from './constants'
 import { colorful } from './utils/color-string'
 
@@ -467,7 +470,8 @@ function validateVineFunctionCompProps(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
   vineCompFn: Node,
 ) {
-  const vineCompFnParams = getFunctionParams(vineCompFn)
+  const { fnItselfNode } = getFunctionInfo(vineCompFn)
+  const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
   let vinePropMacroCallCount = 0
 
@@ -476,44 +480,93 @@ function validateVineFunctionCompProps(
     // if doesn't call in `vineProp.default` or `vineProp.validator`,
     // a type parameter must be provided
     let isVinePropCheckPass = true
-    traverse(vineCompFn, (node) => {
-      if (!isVineMacroOf('vineProp')(node)) {
-        return
-      }
-      vinePropMacroCallCount += 1
-      const macroCalleeName = getVineMacroCalleeName(node)
-      if (!macroCalleeName) {
-        return
-      }
-      else if (macroCalleeName === 'vineProp') {
-        const typeParamsLength = node.typeParameters?.params.length
-        if (typeParamsLength === 0) {
+    traverse(vineCompFn, {
+      enter(node, parent) {
+        if (!isVineMacroOf('vineProp')(node)) {
+          return
+        }
+        vinePropMacroCallCount += 1
+        const macroCalleeName = getVineMacroCalleeName(node)
+        if (!macroCalleeName) {
+          return
+        }
+        if (macroCalleeName !== 'vineProp.withDefault') {
+          const typeParamsLength = node.typeParameters?.params.length
+          if (typeParamsLength !== 1) {
+            vineCompilerHooks.onError(
+              vineErr(
+                vineFileCtx,
+                {
+                  msg: `\`${macroCalleeName}\` macro call ${
+                    (typeParamsLength && typeParamsLength > 1)
+                      ? 'can only'
+                      : 'must'
+                  } have a type parameter to specify the prop\'s type`,
+                  location: node.loc,
+                },
+              ),
+            )
+            isVinePropCheckPass = false
+          }
+        }
+        else if (!node.arguments.length) {
+          isVinePropCheckPass = false
+          // `vineProp.withDefault` macro call must have at least 1 argument
           vineCompilerHooks.onError(
             vineErr(
               vineFileCtx,
               {
-                msg: '`vineProp` macro call must have a type parameter to specify the prop\'s type',
+                msg: `\`${macroCalleeName}\` macro call must have at least 1 argument`,
                 location: node.loc,
               },
             ),
           )
-          isVinePropCheckPass = false
         }
-      }
-      else if (node.arguments.length !== 1) {
-        const argLen = node.arguments.length
-        vineCompilerHooks.onError(
-          vineErr(
-            vineFileCtx,
-            {
-              msg: `\`${macroCalleeName}\` macro call ${
-                argLen > 1 ? 'can only' : 'must'
-              } have one argument`,
-              location: node.loc,
-            },
-          ),
-        )
-      }
+
+        const parentVarDecl = parent.find(ancestor => isVariableDeclaration(ancestor.node))
+        const parentVarDeclarator = parent.find(ancestor => isVariableDeclarator(ancestor.node))
+        if (!parentVarDecl || !parentVarDeclarator) {
+          isVinePropCheckPass = false
+          vineCompilerHooks.onError(
+            vineErr(
+              vineFileCtx,
+              {
+                msg: '`vineProp` macro call must be inside a `const` variable declaration',
+                location: node.loc,
+              },
+            ),
+          )
+        }
+        else {
+          const isConst = (parentVarDecl.node as VariableDeclaration).kind === 'const'
+          if (!isConst) {
+            isVinePropCheckPass = false
+            vineCompilerHooks.onError(
+              vineErr(
+                vineFileCtx,
+                {
+                  msg: '`vineProp` macro call must be inside a `const` declaration',
+                  location: parentVarDecl.node.loc,
+                },
+              ),
+            )
+          }
+          const varDeclarator = parentVarDeclarator.node as VariableDeclarator
+          // the variable declarator must be an identifier, destructure pattern is not allowed
+          if (!isIdentifier(varDeclarator.id)) {
+            isVinePropCheckPass = false
+            vineCompilerHooks.onError(
+              vineErr(
+                vineFileCtx,
+                {
+                  msg: 'the declaration of `vineProp` macro call must be an identifier',
+                  location: varDeclarator.id.loc,
+                },
+              ),
+            )
+          }
+        }
+      },
     })
     return isVinePropCheckPass
   }

@@ -1,18 +1,13 @@
 export const VINE_MACROS = [
   'vineProp',
-  'vineProp.default',
-  'vineProp.validator',
+  'vineProp.optional',
+  'vineProp.withDefault',
   'vineEmits',
   'vineExpose',
   'vineOptions',
   'vineStyle',
   'vineStyle.scoped',
 ] as const
-export type VINE_MACRO_NAMES = typeof VINE_MACROS[number]
-export type CountingMacros = Exclude<
-  VINE_MACRO_NAMES,
-  'vineProp' | 'vineStyle.scoped' | 'vineProp.default' | 'vineProp.validator'
->
 export const VINE_TAG_TEMPLATE_CALLER = [
   'vine',
   'css',

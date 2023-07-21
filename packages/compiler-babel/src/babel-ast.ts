@@ -1,4 +1,4 @@
-import type { CallExpression, File, ImportDeclaration, Node, TSPropertySignature, TaggedTemplateExpression } from '@babel/types'
+import type { CallExpression, File, Identifier, ImportDeclaration, Node, TSPropertySignature, TaggedTemplateExpression, VariableDeclarator } from '@babel/types'
 import {
   isArrowFunctionExpression,
   isCallExpression,
@@ -17,11 +17,11 @@ import {
   isTSTypeAliasDeclaration,
   isTaggedTemplateExpression,
   isVariableDeclaration,
+  isVariableDeclarator,
   traverse,
 } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
-import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VineBabelRoot } from './types'
-import type { VINE_MACRO_NAMES } from './constants'
+import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VINE_MACRO_NAMES, VineBabelRoot } from './types'
 import { VINE_MACROS, VUE_REACTIVITY_APIS } from './constants'
 
 const vineRootScopeStatementTypeValidators = [
@@ -176,28 +176,24 @@ export function isTagTemplateStringContainsInterpolation(tagTmplNode: TaggedTemp
   return tagTmplNode.quasi.expressions.length > 0
 }
 
-export function getFunctionParams(
-  maybeFuncNode: Node,
-) {
-  if (isFunctionDeclaration(maybeFuncNode)) {
-    return maybeFuncNode.params
+export function getFunctionParams(fnItselfNode: BabelFunctionNodeTypes) {
+  const params: BabelFunctionParams = []
+  if (isFunctionDeclaration(fnItselfNode)) {
+    params.push(...fnItselfNode.params)
   }
-  if (isVariableDeclaration(maybeFuncNode)) {
-    let params: BabelFunctionParams = []
-    traverse(maybeFuncNode, (node) => {
-      if (
-        isArrowFunctionExpression(node)
-        || isFunctionExpression(node)
-      ) {
-        params = node.params
-      }
-    })
-    return params
+  else if (
+    isFunctionExpression(fnItselfNode)
+    || isArrowFunctionExpression(fnItselfNode)
+  ) {
+    params.push(...fnItselfNode.params)
   }
-  return []
+  return params
 }
 
-export function getFunctionInfo(node: Node) {
+export function getFunctionInfo(node: Node): {
+  fnItselfNode: BabelFunctionNodeTypes | undefined
+  fnName: string
+} {
   let fnItselfNode: BabelFunctionNodeTypes | undefined = isFunctionDeclaration(node)
     ? node
     : undefined
@@ -257,4 +253,25 @@ export function getTSTypeLiteralPropertySignatureName(tsTypeLit: TSPropertySigna
     : isStringLiteral(tsTypeLit.key)
       ? tsTypeLit.key.value
       : ''
+}
+
+export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes) {
+  const allVinePropMacroCalls: [CallExpression, Identifier][] = [] // [macro Call, defined prop name]
+  traverse(fnItselfNode.body, {
+    enter(node, parent) {
+      if (!isVineMacroOf('vineProp')(node)) {
+        return
+      }
+      const propVarDeclarator = parent.find(ancestor => (
+        isVariableDeclarator(ancestor.node)
+        && isIdentifier(ancestor.node.id)
+      ))
+      if (!propVarDeclarator) {
+        return
+      }
+      const propVarIdentifier = (propVarDeclarator.node as VariableDeclarator).id as Identifier
+      allVinePropMacroCalls.push([node, propVarIdentifier])
+    },
+  })
+  return allVinePropMacroCalls
 }

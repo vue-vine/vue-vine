@@ -12,16 +12,18 @@ import type {
   TSTypeAnnotation,
   TSTypeLiteral,
 } from '@babel/types'
+import { VineBindingTypes } from './types'
 import {
   type BabelFunctionNodeTypes,
-  VineBindingTypes,
+  type VINE_MACRO_NAMES,
   type VineCompFnCtx,
   type VineCompilerHooks,
   type VineFileCtx,
   type VinePropMeta,
   type VineUserImport,
 } from './types'
-import { getFunctionInfo, getFunctionParams, getImportStatments, getVineTagTemplateStringNode } from './babel-ast'
+
+import { getAllVinePropMacroCall, getFunctionInfo, getFunctionParams, getImportStatments, getVineMacroCalleeName, getVineTagTemplateStringNode } from './babel-ast'
 
 interface AnalyzeCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -34,37 +36,71 @@ type AnalyzeRunner = (
   fnItselfNode: BabelFunctionNodeTypes,
 ) => void
 
-const analyzeVinePropsByFormalParam: AnalyzeRunner = (
+const analyzeVineProps: AnalyzeRunner = (
   { vineCompFnCtx, vineFileCtx },
   fnItselfNode,
 ) => {
   const formalParams = getFunctionParams(fnItselfNode)
-  // The Vine validator has guranateed there's only one formal params,
-  // its type is `identifier`, and it must have an object literal type annotation.
-  // Save this parameter's name as `propsAlias`
-  const propsFormalParam = (formalParams[0] as Identifier)
-  const propsTypeAnnotation = ((propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral)
-  vineCompFnCtx.propsAlias = propsFormalParam.name;
-  // Analyze the object literal type annotation
-  // and save the props info into `vineCompFnCtx.props`
-  (propsTypeAnnotation.members as TSPropertySignature[]).forEach((member) => {
-    const propName = (member.key as Identifier).name
-    const propType = vineFileCtx.fileSourceCode.slice(
-      member.typeAnnotation!.typeAnnotation.start!,
-      member.typeAnnotation!.typeAnnotation.end!,
-    )
-    const propMeta: VinePropMeta = {
-      isFromMacroDefine: false,
-      isRequired: member.optional === undefined ? true : !member.optional,
-      isBool: propType === 'boolean',
-    }
-    vineCompFnCtx.props[propName] = propMeta
-    vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
-  })
+  if (formalParams.length === 1) {
+    // The Vine validator has guranateed there's only one formal params,
+    // its type is `identifier`, and it must have an object literal type annotation.
+    // Save this parameter's name as `propsAlias`
+    const propsFormalParam = (formalParams[0] as Identifier)
+    const propsTypeAnnotation = ((propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral)
+    vineCompFnCtx.propsAlias = propsFormalParam.name;
+    // Analyze the object literal type annotation
+    // and save the props info into `vineCompFnCtx.props`
+    (propsTypeAnnotation.members as TSPropertySignature[]).forEach((member) => {
+      const propName = (member.key as Identifier).name
+      const propType = vineFileCtx.fileSourceCode.slice(
+        member.typeAnnotation!.typeAnnotation.start!,
+        member.typeAnnotation!.typeAnnotation.end!,
+      )
+      const propMeta: VinePropMeta = {
+        isFromMacroDefine: false,
+        isRequired: member.optional === undefined ? true : !member.optional,
+        isBool: propType === 'boolean',
+      }
+      vineCompFnCtx.props[propName] = propMeta
+      vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
+    })
+  }
+  else if (formalParams.length === 0) {
+    // No formal parameters, analyze props by macro calls
+    const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
+    allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
+      const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
+      const propMeta: VinePropMeta = {
+        isFromMacroDefine: true,
+        isRequired: macroCalleeName !== 'vineProp.optional',
+        isBool: false,
+      }
+      const macroCallTypeParamNode = macroCall.typeParameters?.params[0]
+      if (macroCallTypeParamNode) {
+        const macroCallTypeParam = vineFileCtx.fileSourceCode.slice(
+          macroCallTypeParamNode.start!,
+          macroCallTypeParamNode.end!,
+        )
+        propMeta.isBool = macroCallTypeParam === 'boolean'
+      }
+      if (macroCalleeName === 'vineProp.withDefault') {
+        propMeta.default = macroCall.arguments[0]
+        propMeta.validator = macroCall.arguments[1]
+      }
+      else {
+        propMeta.validator = macroCall.arguments[0]
+      }
+
+      // Collect prop's information
+      const propName = propVarIdentifier.name
+      vineCompFnCtx.props[propName] = propMeta
+      vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+    })
+  }
 }
 
 const analyzeRunners: AnalyzeRunner[] = [
-  analyzeVinePropsByFormalParam,
+  analyzeVineProps,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
