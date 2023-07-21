@@ -3,7 +3,7 @@ import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
 
 const LINT_STAGED = 'pnpm lint-staged'
-const RUN_COMPILER_TEST = 'pnpm run test:compiler --run'
+const RUN_COMPILER_TEST = 'pnpm run test:compiler-babel --run'
 
 const msgPath = r('../.git/COMMIT_EDITMSG')
 const commitRE

@@ -1,0 +1,25 @@
+export function concating<T>(
+  condition: boolean,
+  arr: T[],
+) {
+  return condition ? arr : []
+}
+
+export function spaces(n: number) {
+  return ' '.repeat(n)
+}
+
+export function showIf(condition: boolean, s: string, not?: string) {
+  return condition ? s : (not ?? '')
+}
+
+export function filterJoin(
+  arr: string[],
+  join: string,
+) {
+  return arr.filter(Boolean).join(join)
+}
+
+export function dedupe<T extends string | number | boolean>(arr: T[]) {
+  return [...new Set(arr)]
+}
