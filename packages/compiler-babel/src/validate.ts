@@ -423,6 +423,10 @@ function validateMacrosUsage(
         assertCanOnlyHaveOneObjLiteralArg,
       ],
     },
+    vineCustomElement: {
+      count: 0,
+      asserts: [],
+    },
   }
 
   let isCountCorrect = true

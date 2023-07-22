@@ -1,5 +1,5 @@
 import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
-import type { ArrowFunctionExpression, File, FunctionDeclaration, FunctionExpression, Node, SourceLocation } from '@babel/types'
+import type { ArrowFunctionExpression, File, FunctionDeclaration, FunctionExpression, Node, SourceLocation, StringLiteral, TaggedTemplateExpression, TemplateLiteral } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
 import type MagicString from 'magic-string'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
@@ -16,6 +16,7 @@ export type CountingMacros = Exclude<
   | 'vineProp.optional'
   | 'vineProp.withDefault'
 >
+export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
 export type VineStyleLang = 'css' | 'postcss' | VineProcessorLang
@@ -46,7 +47,7 @@ export interface VineCompilerOptions {
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
-  range: Range
+  location: SourceLocation | null | undefined
   scoped: boolean
   fileCtx: VineFileCtx
 }

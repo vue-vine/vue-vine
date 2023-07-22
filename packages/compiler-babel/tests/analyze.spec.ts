@@ -185,4 +185,33 @@ function MyComp() {
       }
     `)
   })
+
+  test('analyze vine style macro call', () => {
+    const content = `
+function MyComp() {
+  const color = ref('red')
+  vineStyle.scoped(scss\`
+    .app {
+      color: v-bind(color)
+    }
+  \`)
+  return vine\`<div>Test vine style</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineStyle', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineStyle')
+    const vineFnComp = fileCtx?.vineFnComps[0]
+    const scopeId = vineFnComp?.scopeId
+    if (!scopeId) {
+      throw new Error('scopeId should not be empty')
+    }
+    expect(scopeId).toBe('77af4072')
+    expect(vineFnComp?.cssBindings).toEqual({
+      color: '7aa07bf2',
+    })
+    const styleDefine = fileCtx?.styleDefine[scopeId]
+    expect(styleDefine?.lang).toBe('scss')
+    expect(styleDefine?.scoped).toBe(true)
+  })
 })

@@ -60,6 +60,45 @@ function App() {
       .toMatchInlineSnapshot('"Vine template string are not allowed to contain interpolation!"')
   })
 
+  test('validate those macros can only be called once inside a Vine component function', () => {
+    const content = `
+function App() {
+  const name = ref('xxx')
+  const age = ref(18)
+  vineStyle('.app { color: red; }')
+  vineStyle('.other { color: blue; }')
+
+  vineOptions({ inheritAttrs: false })
+  vineOptions({ inheritAttrs: true })
+
+  vineExpose({ name })
+  vineExpose({ age })
+
+  vineEmits<{ click: (e: MouseEvent) => void }>()
+  vineEmits<{ mouseover: (e: MouseEvent) => void }>()
+
+  vineCustomElement('my-box')
+  vineCustomElement('my-app')
+
+  return vine\`
+    <div>Test call multiple times</div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVCFMacroCallMultipleTimes', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(5)
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot('"Multiple `vineStyle` calls are not allowed inside Vine component function"')
+    expect(mockCompilerCtx.vineCompileErrors[1].msg)
+      .toMatchInlineSnapshot('"Multiple `vineEmits` calls are not allowed inside Vine component function"')
+    expect(mockCompilerCtx.vineCompileErrors[2].msg)
+      .toMatchInlineSnapshot('"Multiple `vineExpose` calls are not allowed inside Vine component function"')
+    expect(mockCompilerCtx.vineCompileErrors[3].msg)
+      .toMatchInlineSnapshot('"Multiple `vineOptions` calls are not allowed inside Vine component function"')
+    expect(mockCompilerCtx.vineCompileErrors[4].msg)
+      .toMatchInlineSnapshot('"Multiple `vineCustomElement` calls are not allowed inside Vine component function"')
+  })
+
   test('validate vine macro usage (except vineProp)', () => {
     const content = `
 function Box() {
@@ -82,6 +121,7 @@ function App() {
   vineOptions(false)
   vineExpose(color)
   vineEmits()
+  const x = vineCustomElement()
 
   return vine\`
     <div class="box">Test App</div>
@@ -91,12 +131,13 @@ function App() {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', mockCompilerHooks)
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(5)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(6)
     expect(mockCompilerCtx.vineCompileErrors[0].msg).toMatchInlineSnapshot('"vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`"')
-    expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"`vineStyle` can only have one string argument\'"')
-    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"`vineEmits` must have one type parameter!"')
-    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"`vineExpose` must have one object literal argument"')
-    expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"`vineOptions` must have one object literal argument"')
+    expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"`vineCustomElement` macro call is not allowed to be inside a variable declaration"')
+    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"`vineStyle` can only have one string argument\'"')
+    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"`vineEmits` must have one type parameter!"')
+    expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"`vineExpose` must have one object literal argument"')
+    expect(mockCompilerCtx.vineCompileErrors[5].msg).toMatchInlineSnapshot('"`vineOptions` must have one object literal argument"')
   })
 
   test('validate vineStyle can not be inside a lexical declaration', () => {
