@@ -78,4 +78,26 @@ function MyComp() {
     expect(vineFnComp?.emitsAlias).toBe('myEmits')
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
   })
+
+  test('analyze `vineExpose` and `vineOptions` macro calls', () => {
+    const content = `
+function Comp() {
+  const count = ref(1)
+  vineExpose({ count })
+  vineOptions({
+    name: 'MyComp',
+    inheritAttrs: false,
+  })
+  return vine\`<div>Test expose and options</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineExposeAndOptions', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineExposeAndOptions')
+    expect(fileCtx?.vineFnComps.length).toBe(1)
+    const vineFnComp = fileCtx?.vineFnComps[0]
+    expect(vineFnComp?.expose).toMatchSnapshot()
+    expect(vineFnComp?.options).toMatchSnapshot()
+  })
 })

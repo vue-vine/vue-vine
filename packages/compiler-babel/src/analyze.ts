@@ -152,9 +152,56 @@ const analyzeVineEmits: AnalyzeRunner = (
   }
 }
 
+function storeTheOnlyMacroCallArg(
+  macroName: VINE_MACRO_NAMES,
+  callback: (analyzeCtx: AnalyzeCtx, macroCallArg: Node) => void,
+): AnalyzeRunner {
+  const findMacroCallNode: (fnItselfNode: BabelFunctionNodeTypes) => CallExpression | undefined = (
+    fnItselfNode,
+  ) => {
+    let vineExposeMacroCall: CallExpression | undefined
+    traverse(fnItselfNode, {
+      enter(descendant) {
+        if (isVineMacroOf(macroName)(descendant)) {
+          vineExposeMacroCall = descendant
+        }
+      },
+    })
+    return vineExposeMacroCall
+  }
+
+  return (analyzeCtx, fnItselfNode) => {
+    const macroCall = findMacroCallNode(fnItselfNode)
+    if (!macroCall) {
+      return
+    }
+    const macroCallArg = macroCall.arguments[0]
+    if (!macroCallArg) {
+      return
+    }
+    callback(analyzeCtx, macroCallArg)
+  }
+}
+
+const analyzeVineExpose = storeTheOnlyMacroCallArg(
+  'vineExpose',
+  ({ vineCompFnCtx }, macroCallArg) => {
+    vineCompFnCtx.expose = macroCallArg
+  },
+)
+
+const analyzeVineOptions = storeTheOnlyMacroCallArg(
+  'vineOptions',
+  ({ vineCompFnCtx }, macroCallArg) => {
+    vineCompFnCtx.options = macroCallArg
+  },
+)
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineEmits,
+  analyzeVineExpose,
+  analyzeVineOptions,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {

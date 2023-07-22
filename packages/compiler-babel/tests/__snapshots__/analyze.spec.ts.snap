@@ -1,5 +1,251 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\` macro calls 1`] = `
+Node {
+  "end": 64,
+  "loc": SourceLocation {
+    "end": Position {
+      "column": 22,
+      "index": 64,
+      "line": 4,
+    },
+    "filename": undefined,
+    "identifierName": undefined,
+    "start": Position {
+      "column": 13,
+      "index": 55,
+      "line": 4,
+    },
+  },
+  "properties": [
+    Node {
+      "computed": false,
+      "end": 62,
+      "extra": {
+        "shorthand": true,
+      },
+      "key": Node {
+        "end": 62,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 20,
+            "index": 62,
+            "line": 4,
+          },
+          "filename": undefined,
+          "identifierName": "count",
+          "start": Position {
+            "column": 15,
+            "index": 57,
+            "line": 4,
+          },
+        },
+        "name": "count",
+        "start": 57,
+        "type": "Identifier",
+      },
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 20,
+          "index": 62,
+          "line": 4,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 15,
+          "index": 57,
+          "line": 4,
+        },
+      },
+      "method": false,
+      "shorthand": true,
+      "start": 57,
+      "type": "ObjectProperty",
+      "value": Node {
+        "end": 62,
+        "extra": undefined,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 20,
+            "index": 62,
+            "line": 4,
+          },
+          "filename": undefined,
+          "identifierName": "count",
+          "start": Position {
+            "column": 15,
+            "index": 57,
+            "line": 4,
+          },
+        },
+        "name": "count",
+        "range": undefined,
+        "start": 57,
+        "type": "Identifier",
+      },
+    },
+  ],
+  "start": 55,
+  "type": "ObjectExpression",
+}
+`;
+
+exports[`Test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\` macro calls 2`] = `
+Node {
+  "end": 130,
+  "extra": {
+    "trailingComma": 125,
+  },
+  "loc": SourceLocation {
+    "end": Position {
+      "column": 3,
+      "index": 130,
+      "line": 8,
+    },
+    "filename": undefined,
+    "identifierName": undefined,
+    "start": Position {
+      "column": 14,
+      "index": 80,
+      "line": 5,
+    },
+  },
+  "properties": [
+    Node {
+      "computed": false,
+      "end": 100,
+      "key": Node {
+        "end": 90,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 8,
+            "index": 90,
+            "line": 6,
+          },
+          "filename": undefined,
+          "identifierName": "name",
+          "start": Position {
+            "column": 4,
+            "index": 86,
+            "line": 6,
+          },
+        },
+        "name": "name",
+        "start": 86,
+        "type": "Identifier",
+      },
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 18,
+          "index": 100,
+          "line": 6,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 4,
+          "index": 86,
+          "line": 6,
+        },
+      },
+      "method": false,
+      "shorthand": false,
+      "start": 86,
+      "type": "ObjectProperty",
+      "value": Node {
+        "end": 100,
+        "extra": {
+          "raw": "'MyComp'",
+          "rawValue": "MyComp",
+        },
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 18,
+            "index": 100,
+            "line": 6,
+          },
+          "filename": undefined,
+          "identifierName": undefined,
+          "start": Position {
+            "column": 10,
+            "index": 92,
+            "line": 6,
+          },
+        },
+        "start": 92,
+        "type": "StringLiteral",
+        "value": "MyComp",
+      },
+    },
+    Node {
+      "computed": false,
+      "end": 125,
+      "key": Node {
+        "end": 118,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 16,
+            "index": 118,
+            "line": 7,
+          },
+          "filename": undefined,
+          "identifierName": "inheritAttrs",
+          "start": Position {
+            "column": 4,
+            "index": 106,
+            "line": 7,
+          },
+        },
+        "name": "inheritAttrs",
+        "start": 106,
+        "type": "Identifier",
+      },
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 23,
+          "index": 125,
+          "line": 7,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 4,
+          "index": 106,
+          "line": 7,
+        },
+      },
+      "method": false,
+      "shorthand": false,
+      "start": 106,
+      "type": "ObjectProperty",
+      "value": Node {
+        "end": 125,
+        "loc": SourceLocation {
+          "end": Position {
+            "column": 23,
+            "index": 125,
+            "line": 7,
+          },
+          "filename": undefined,
+          "identifierName": undefined,
+          "start": Position {
+            "column": 18,
+            "index": 120,
+            "line": 7,
+          },
+        },
+        "start": 120,
+        "type": "BooleanLiteral",
+        "value": false,
+      },
+    },
+  ],
+  "start": 80,
+  "type": "ObjectExpression",
+}
+`;
+
 exports[`Test Vine compiler analyze > analyze vine component props by macro calls 1`] = `
 {
   "disabled": {
