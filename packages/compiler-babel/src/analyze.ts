@@ -5,12 +5,16 @@ import {
   isImportNamespaceSpecifier,
   isImportSpecifier,
   isStringLiteral,
+  isVariableDeclarator,
+  traverse,
 } from '@babel/types'
 import type {
+  CallExpression,
   Identifier, Node,
   TSPropertySignature,
   TSTypeAnnotation,
   TSTypeLiteral,
+  VariableDeclarator,
 } from '@babel/types'
 import { VineBindingTypes } from './types'
 import {
@@ -23,7 +27,16 @@ import {
   type VineUserImport,
 } from './types'
 
-import { getAllVinePropMacroCall, getFunctionInfo, getFunctionParams, getImportStatments, getVineMacroCalleeName, getVineTagTemplateStringNode } from './babel-ast'
+import {
+  getAllVinePropMacroCall,
+  getFunctionInfo,
+  getFunctionParams,
+  getImportStatments,
+  getTSTypeLiteralPropertySignatureName,
+  getVineMacroCalleeName,
+  getVineTagTemplateStringNode,
+  isVineMacroOf,
+} from './babel-ast'
 
 interface AnalyzeCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -99,8 +112,49 @@ const analyzeVineProps: AnalyzeRunner = (
   }
 }
 
+const analyzeVineEmits: AnalyzeRunner = (
+  analyzeCtx: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  const { vineCompFnCtx } = analyzeCtx
+  let vineEmitsMacroCall: CallExpression | undefined
+  let parentVarDecl: VariableDeclarator | undefined
+  traverse(fnItselfNode, {
+    enter(descendant, parent) {
+      if (isVineMacroOf('vineEmits')(descendant)) {
+        vineEmitsMacroCall = descendant
+        const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
+        parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+      }
+    },
+  })
+  if (!vineEmitsMacroCall) {
+    return
+  }
+  const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
+  if (!typeParam) {
+    return
+  }
+
+  // Save all the properties' name of
+  // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
+  // to a string array for `vineCompFn.emits`
+  const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
+  emitsTypeLiteralProps.forEach((prop) => {
+    const propName = getTSTypeLiteralPropertySignatureName(prop)
+    vineCompFnCtx.emits.push(propName)
+  })
+
+  // If `vineEmits` is inside a variable declaration,
+  // save the variable name to `vineCompFn.emitsAlias`
+  if (parentVarDecl) {
+    vineCompFnCtx.emitsAlias = (parentVarDecl.id as Identifier).name
+  }
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
+  analyzeVineEmits,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {

@@ -58,4 +58,24 @@ const MyComp = () => {
     const vineFnComp = fileCtx?.vineFnComps[0]
     expect(vineFnComp?.props).toMatchSnapshot()
   })
+
+  test('analyze vine emits definition', () => {
+    const content = `
+function MyComp() {
+  const myEmits = vineEmits<{
+    foo: (a: string) => void;
+    bar: (b: number) => void;
+  }>()
+  return vine\`<div>Test emits</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineEmits', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineEmits')
+    expect(fileCtx?.vineFnComps.length).toBe(1)
+    const vineFnComp = fileCtx?.vineFnComps[0]
+    expect(vineFnComp?.emitsAlias).toBe('myEmits')
+    expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
+  })
 })

@@ -2,12 +2,13 @@ import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
 import type { ArrowFunctionExpression, File, FunctionDeclaration, FunctionExpression, Node, SourceLocation } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
 import type MagicString from 'magic-string'
-import type { VINE_MACROS } from './constants'
+import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 
 // Types:
 export type Nil = null | undefined
 export type VineBabelRoot = ParseResult<File>
 export type VINE_MACRO_NAMES = typeof VINE_MACROS[number]
+export type BARE_CALL_MACRO_NAMES = typeof BARE_CALL_MACROS[number]
 export type CountingMacros = Exclude<
   VINE_MACRO_NAMES,
   | 'vineProp'

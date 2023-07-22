@@ -57,7 +57,7 @@ function App() {
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"Multiple vine tagged template are not allowed inside Vine component function"')
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
-      .toMatchInlineSnapshot('"Vine template string are not allowed to contain interpolation !"')
+      .toMatchInlineSnapshot('"Vine template string are not allowed to contain interpolation!"')
   })
 
   test('validate vine macro usage (except vineProp)', () => {
@@ -94,7 +94,7 @@ function App() {
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(5)
     expect(mockCompilerCtx.vineCompileErrors[0].msg).toMatchInlineSnapshot('"vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`"')
     expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"`vineStyle` can only have one string argument\'"')
-    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"`vineEmits` must have one "')
+    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"`vineEmits` must have one type parameter!"')
     expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"`vineExpose` must have one object literal argument"')
     expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"`vineOptions` must have one object literal argument"')
   })
@@ -116,7 +116,7 @@ function App() {
     compileVineTypeScriptFile(content, 'testVineStyleInsideLexicalDeclaration', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"`vineStyle` is not allowed to be inside lexical declaration!"')
+      .toMatchInlineSnapshot('"`vineStyle` macro call is not allowed to be inside a variable declaration"')
   })
 
   test('validate vine component function props', () => {
@@ -174,5 +174,20 @@ function App() {
       .toMatchInlineSnapshot('"`vineProp.withDefault` macro call must have at least 1 argument"')
     expect(mockCompilerCtx.vineCompileErrors[9].msg)
       .toMatchInlineSnapshot('"`vineProp.optional` macro call must have a type parameter to specify the prop\'s type"')
+  })
+
+  test('validate vineEmits usage', () => {
+    const content = `
+function TestComp() {
+  const { a } = vineEmits()
+  return vine\`<div>Test Comp</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVineEmitsUsage', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot('"`vineEmits` must have one type parameter!"')
+    expect(mockCompilerCtx.vineCompileErrors[1].msg)
+      .toMatchInlineSnapshot('"the declaration of `vineEmits` macro call must be an identifier"')
   })
 })

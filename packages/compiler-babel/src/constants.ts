@@ -1,12 +1,15 @@
+export const BARE_CALL_MACROS = [
+  'vineExpose',
+  'vineOptions',
+  'vineStyle',
+  'vineStyle.scoped',
+] as const
 export const VINE_MACROS = [
   'vineProp',
   'vineProp.optional',
   'vineProp.withDefault',
   'vineEmits',
-  'vineExpose',
-  'vineOptions',
-  'vineStyle',
-  'vineStyle.scoped',
+  ...BARE_CALL_MACROS,
 ] as const
 export const VINE_TAG_TEMPLATE_CALLER = [
   'vine',

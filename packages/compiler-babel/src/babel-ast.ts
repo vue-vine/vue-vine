@@ -106,14 +106,14 @@ export function isVineMacroCallExpression(node: Node): node is CallExpression {
     if (isIdentifier(callee)) {
       return (VINE_MACROS as any as string[]).includes(callee.name)
     }
-  }
-  if (isMemberExpression(node)) {
-    const obj = node.object
-    const prop = node.property
-    if (isIdentifier(obj) && isIdentifier(prop)) {
-      return (VINE_MACROS as any as string[]).includes(
-        `${obj.name}.${prop.name}`,
-      )
+    if (isMemberExpression(callee)) {
+      const obj = callee.object
+      const prop = callee.property
+      if (isIdentifier(obj) && isIdentifier(prop)) {
+        return (VINE_MACROS as any as string[]).includes(
+          `${obj.name}.${prop.name}`,
+        )
+      }
     }
   }
   return false
@@ -204,6 +204,10 @@ export function getFunctionInfo(node: Node): {
     let target = descendant
     if (isExportNamedDeclaration(descendant) && descendant.declaration) {
       target = descendant.declaration
+    }
+    if (isFunctionDeclaration(target)) {
+      fnItselfNode = target
+      fnName = target.id?.name ?? ''
     }
     else if (
       isVariableDeclaration(target)
