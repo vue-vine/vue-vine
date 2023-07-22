@@ -73,7 +73,7 @@ export function compileVineTypeScriptFile(
 
   if (
     !isValidatePass // Vine validation failed
-    || vineCompFnDecls.length === 0 // No vine component function declarations found
+    // || vineCompFnDecls.length === 0 // No vine component function declarations found
   ) {
     return vineFileCtx
   }

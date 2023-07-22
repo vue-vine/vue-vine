@@ -22,7 +22,7 @@ import {
 } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
 import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VINE_MACRO_NAMES, VineBabelRoot } from './types'
-import { VINE_MACROS, VUE_REACTIVITY_APIS } from './constants'
+import { TS_NODE_TYPES, VINE_MACROS, VUE_REACTIVITY_APIS } from './constants'
 
 const vineRootScopeStatementTypeValidators = [
   isImportDeclaration,
@@ -35,30 +35,34 @@ const vineRootScopeStatementTypeValidators = [
   isTSInterfaceDeclaration,
 ] as const
 
+export function isVineCompFnDecl(target: Node) {
+  let result = false
+  if (isExportNamedDeclaration(target) && target.declaration) {
+    target = target.declaration
+  }
+  if (
+    isFunctionDeclaration(target)
+    || isVariableDeclaration(target)
+  ) {
+    traverse(target, (node) => {
+      if (
+        isReturnStatement(node)
+        && node.argument
+        && isVineTaggedTemplateString(node.argument)
+      ) {
+        result = true
+      }
+    })
+  }
+  return result
+}
+
 export function findVineCompFnDecls(root: VineBabelRoot) {
   const vineFnComps: Node[] = []
   for (const stmt of root.program.body) {
-    // Since here we're just exploring root scope,
-    // So we just need several required types
     traverse(stmt, (rootStmtNode) => {
-      let target = rootStmtNode
-      if (isExportNamedDeclaration(target) && target.declaration) {
-        target = target.declaration
-      }
-      if (
-        isFunctionDeclaration(target)
-        || isVariableDeclaration(target)
-      ) {
-        traverse(target, (node) => {
-          if (
-            isReturnStatement(node)
-            && isTaggedTemplateExpression(node.argument)
-            && isIdentifier(node.argument.tag)
-            && node.argument.tag.name === 'vine'
-          ) {
-            vineFnComps.push(rootStmtNode)
-          }
-        })
+      if (isVineCompFnDecl(rootStmtNode)) {
+        vineFnComps.push(rootStmtNode)
       }
     })
   }
@@ -278,4 +282,97 @@ export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes) {
     },
   })
   return allVinePropMacroCalls
+}
+
+export function unwrapTSNode(node: Node): Node {
+  if ((TS_NODE_TYPES as any).includes(node.type)) {
+    return unwrapTSNode((node as any).expression)
+  }
+  else {
+    return node
+  }
+}
+
+export function isStaticNode(node: Node): boolean {
+  node = unwrapTSNode(node)
+
+  switch (node.type) {
+    case 'UnaryExpression': // void 0, !true
+      return isStaticNode(node.argument)
+
+    case 'LogicalExpression': // 1 > 2
+    case 'BinaryExpression': // 1 + 2
+      return isStaticNode(node.left) && isStaticNode(node.right)
+
+    case 'ConditionalExpression': {
+      // 1 ? 2 : 3
+      return (
+        isStaticNode(node.test)
+        && isStaticNode(node.consequent)
+        && isStaticNode(node.alternate)
+      )
+    }
+
+    case 'SequenceExpression': // (1, 2)
+    case 'TemplateLiteral': // `foo${1}`
+      return node.expressions.every(expr => isStaticNode(expr))
+
+    case 'ParenthesizedExpression': // (1)
+      return isStaticNode(node.expression)
+
+    case 'StringLiteral':
+    case 'NumericLiteral':
+    case 'BooleanLiteral':
+    case 'NullLiteral':
+    case 'BigIntLiteral':
+      return true
+  }
+  return false
+}
+
+export function isCallOf(
+  node: Node | null | undefined,
+  test: string | ((id: string) => boolean) | null | undefined,
+): node is CallExpression {
+  return !!(
+    node
+    && test
+    && node.type === 'CallExpression'
+    && node.callee.type === 'Identifier'
+    && (typeof test === 'string'
+      ? node.callee.name === test
+      : test(node.callee.name))
+  )
+}
+
+export function isLiteralNode(node: Node) {
+  return node.type.endsWith('Literal')
+}
+
+export function canNeverBeRef(node: Node, userReactiveImport?: string): boolean {
+  if (isCallOf(node, userReactiveImport)) {
+    return true
+  }
+  switch (node.type) {
+    case 'UnaryExpression':
+    case 'BinaryExpression':
+    case 'ArrayExpression':
+    case 'ObjectExpression':
+    case 'FunctionExpression':
+    case 'ArrowFunctionExpression':
+    case 'UpdateExpression':
+    case 'ClassExpression':
+    case 'TaggedTemplateExpression':
+      return true
+    case 'SequenceExpression':
+      return canNeverBeRef(
+        node.expressions[node.expressions.length - 1],
+        userReactiveImport,
+      )
+    default:
+      if (isLiteralNode(node)) {
+        return true
+      }
+      return false
+  }
 }

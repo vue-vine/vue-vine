@@ -1,22 +1,35 @@
 import hashId from 'hash-sum'
 import {
+  isArrayPattern,
+  isBlockStatement,
+  isClassDeclaration,
+  isDeclaration,
   isExportDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
   isImportDefaultSpecifier,
   isImportNamespaceSpecifier,
   isImportSpecifier,
+  isObjectPattern,
   isStringLiteral,
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
 import type {
+  ArrayPattern,
   CallExpression,
+  Declaration,
   Identifier, Node,
+  ObjectPattern,
+  Statement,
   TSPropertySignature,
   TSTypeAnnotation,
   TSTypeLiteral,
+  VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { VineBindingTypes } from './types'
+import type { BindingTypes } from '@vue/compiler-dom'
+import { VineBindingTypes } from './constants'
 import {
   type BabelFunctionNodeTypes,
   type VINE_MACRO_NAMES,
@@ -28,6 +41,7 @@ import {
 } from './types'
 
 import {
+  canNeverBeRef,
   getAllVinePropMacroCall,
   getFunctionInfo,
   getFunctionParams,
@@ -35,6 +49,9 @@ import {
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
   getVineTagTemplateStringNode,
+  isCallOf,
+  isStaticNode,
+  isVineMacroCallExpression,
   isVineMacroOf,
 } from './babel-ast'
 
@@ -197,11 +214,278 @@ const analyzeVineOptions = storeTheOnlyMacroCallArg(
   },
 )
 
+function registerBinding(
+  bindings: Record<string, BindingTypes>,
+  node: Identifier,
+  type: BindingTypes,
+) {
+  bindings[node.name] = type
+}
+
+function walkPattern(
+  node: Node,
+  bindings: Record<string, BindingTypes>,
+  isConst: boolean,
+) {
+  if (node.type === 'Identifier') {
+    const type = isConst
+      ? VineBindingTypes.SETUP_MAYBE_REF
+      : VineBindingTypes.SETUP_LET
+    registerBinding(bindings, node, type)
+  }
+  else if (node.type === 'RestElement') {
+    // argument can only be identifier when destructuring
+    const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
+    registerBinding(bindings, node.argument as Identifier, type)
+  }
+  else if (node.type === 'ObjectPattern') {
+    walkObjectPattern(node, bindings, isConst)
+  }
+  else if (node.type === 'ArrayPattern') {
+    walkArrayPattern(node, bindings, isConst)
+  }
+  else if (node.type === 'AssignmentPattern') {
+    if (node.left.type === 'Identifier') {
+      const type = isConst
+        ? VineBindingTypes.SETUP_MAYBE_REF
+        : VineBindingTypes.SETUP_LET
+      registerBinding(bindings, node.left, type)
+    }
+    else {
+      walkPattern(node.left, bindings, isConst)
+    }
+  }
+}
+
+function walkArrayPattern(
+  node: ArrayPattern,
+  bindings: Record<string, BindingTypes>,
+  isConst: boolean,
+) {
+  for (const e of node.elements) {
+    e && walkPattern(e, bindings, isConst)
+  }
+}
+
+function walkObjectPattern(
+  node: ObjectPattern,
+  bindings: Record<string, BindingTypes>,
+  isConst: boolean,
+) {
+  for (const p of node.properties) {
+    if (p.type === 'ObjectProperty') {
+      if (p.key.type === 'Identifier' && p.key === p.value) {
+        // shorthand: const { x } = ...
+        const type = isConst
+          ? VineBindingTypes.SETUP_MAYBE_REF
+          : VineBindingTypes.SETUP_LET
+        registerBinding(bindings, p.key, type)
+      }
+      else {
+        walkPattern(p.value, bindings, isConst)
+      }
+    }
+    else {
+      // ...rest
+      // argument can only be identifier when destructuring
+      const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
+      registerBinding(bindings, p.argument as Identifier, type)
+    }
+  }
+}
+
+function analyzeVariableDeclarationForBindings(
+  { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
+  stmt: VariableDeclaration,
+) {
+  const userImportAliases = { ...vineFileCtx.vueImportAliases }
+  const userReactiveBinding = userImportAliases.reactive
+  const allDeclarators = stmt.declarations
+  const isConst = stmt.kind === 'const'
+  const isAllLiteral = (
+    isConst
+    && allDeclarators.every(
+      decl => (
+        isIdentifier(decl.id)
+        && decl.init
+        && isStaticNode(decl.init)
+      ),
+    )
+  )
+
+  for (const varDecl of allDeclarators) {
+    if (isIdentifier(varDecl.id) && varDecl.init) {
+      let bindingType
+      if (
+        isAllLiteral || (isConst && isStaticNode(varDecl.init))
+      ) {
+        bindingType = VineBindingTypes.LITERAL_CONST
+      }
+      else if (isCallOf(varDecl.init, userReactiveBinding)) {
+        // treat reactive() calls as let since it's meant to be mutable
+        bindingType = isConst
+          ? VineBindingTypes.SETUP_REACTIVE_CONST
+          : VineBindingTypes.SETUP_LET
+      }
+      else if (
+        // if a declaration is a const literal, we can mark it so that
+        // the generated render fn code doesn't need to unref() it
+        isConst && canNeverBeRef(varDecl.init, userReactiveBinding)
+      ) {
+        bindingType = VineBindingTypes.SETUP_CONST
+      }
+      else if (isConst) {
+        if (
+          isCallOf(
+            varDecl.init,
+            m =>
+              m === userImportAliases.ref
+                || m === userImportAliases.computed
+                || m === userImportAliases.shallowRef
+                || m === userImportAliases.customRef
+                || m === userImportAliases.toRef,
+          )
+        ) {
+          bindingType = VineBindingTypes.SETUP_REF
+        }
+        else {
+          bindingType = VineBindingTypes.SETUP_MAYBE_REF
+        }
+      }
+      else {
+        bindingType = VineBindingTypes.SETUP_LET
+      }
+      registerBinding(vineCompFnCtx.bindings, varDecl.id, bindingType)
+    }
+    else if (isObjectPattern(varDecl.id)) {
+      walkObjectPattern(
+        varDecl.id,
+        vineCompFnCtx.bindings,
+        isConst,
+      )
+    }
+    else if (isArrayPattern(varDecl.id)) {
+      walkArrayPattern(
+        varDecl.id,
+        vineCompFnCtx.bindings,
+        isConst,
+      )
+    }
+  }
+
+  return isAllLiteral
+}
+
+function analyzeVineFnBodyStmtForBindings(
+  analyzeCtx: AnalyzeCtx,
+  stmt: Statement,
+) {
+  const { vineCompFnCtx } = analyzeCtx
+  let isAllLiteral = false
+  switch (stmt.type) {
+    case 'VariableDeclaration':
+      isAllLiteral = analyzeVariableDeclarationForBindings(analyzeCtx, stmt)
+      break
+    case 'TSEnumDeclaration':
+      isAllLiteral = stmt.members.every(
+        member => !member.initializer || isStaticNode(member.initializer),
+      )
+      vineCompFnCtx.bindings[stmt.id!.name] = isAllLiteral
+        ? VineBindingTypes.LITERAL_CONST
+        : VineBindingTypes.SETUP_CONST
+      break
+    case 'FunctionDeclaration':
+    case 'ClassDeclaration':
+      vineCompFnCtx.bindings[stmt.id!.name] = VineBindingTypes.SETUP_CONST
+      break
+    default:
+      break
+  }
+  return isAllLiteral
+}
+
+const analyzeVineBindings: AnalyzeRunner = (
+  analyzeCtx: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  const { vineFileCtx, vineCompFnCtx } = analyzeCtx
+  const notContainsMacroStatements: Statement[] = []
+  const fnBody = fnItselfNode.body
+  if (!isBlockStatement(fnBody)) {
+    return
+  }
+  for (const stmt of fnBody.body) {
+    let hasMacroCall = false
+    traverse(stmt, (node) => {
+      if (hasMacroCall) {
+        return
+      }
+      if (isVineMacroCallExpression(node)) {
+        hasMacroCall = true
+      }
+    })
+    if (!hasMacroCall) {
+      notContainsMacroStatements.push(stmt)
+    }
+  }
+  for (const stmt of notContainsMacroStatements) {
+    const isAllLiteral = analyzeVineFnBodyStmtForBindings(analyzeCtx, stmt)
+    ;(
+      isAllLiteral
+        ? vineCompFnCtx.hoistSetupStmts
+        : vineCompFnCtx.insideSetupStmts
+    ).push(stmt)
+  }
+
+  // Mark bindings for all user imports
+  for (const [importName, {
+    isType,
+    isNamespace,
+    isDefault,
+    source,
+  }] of Object.entries(vineFileCtx.userImports)) {
+    if (isType) {
+      continue
+    }
+    const isSetupConst = isNamespace
+      || (isDefault && source.endsWith('.vue'))
+      || source === 'vue'
+    vineCompFnCtx.bindings[importName]
+      = isSetupConst
+        ? VineBindingTypes.SETUP_CONST
+        : VineBindingTypes.SETUP_MAYBE_REF
+  }
+
+  // #32 Append all valid declarations in top level scope
+  // to current VCF's bindings, as LITERAL_CONST, telling the
+  // Vue template compiler to remain them as is.
+  const allTopLevelDeclStmts = vineFileCtx.root.program.body
+    .filter((stmt): stmt is Declaration => isDeclaration(stmt))
+  for (const declStmt of allTopLevelDeclStmts) {
+    if (declStmt.type === 'VariableDeclaration') {
+      for (const decl of declStmt.declarations) {
+        if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
+          vineCompFnCtx.bindings[decl.id.name] = VineBindingTypes.LITERAL_CONST
+        }
+      }
+    }
+    else if (
+      (
+        isFunctionDeclaration(declStmt)
+        || isClassDeclaration(declStmt)
+      ) && declStmt.id
+    ) {
+      vineCompFnCtx.bindings[declStmt.id.name] = VineBindingTypes.LITERAL_CONST
+    }
+  }
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineEmits,
   analyzeVineExpose,
   analyzeVineOptions,
+  analyzeVineBindings,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
@@ -213,14 +497,14 @@ function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
   analyzeRunners.forEach(exec => exec(analyzeCtx, fnItselfNode))
 }
 
-function analyzeFileImportStmts({ vineFileCtx }: AnalyzeCtx) {
+function analyzeFileImportStmts(vineFileCtx: VineFileCtx) {
   const { root } = vineFileCtx
   const fileImportStmts = getImportStatments(root)
   if (!fileImportStmts.length) {
     return
   }
   for (const importStmt of fileImportStmts) {
-    const source = importStmt.source.value.slice(1, -1) // remove quotes
+    const source = importStmt.source.value // remove quotes
     const isImportTypeStmt = importStmt.importKind === 'type'
     const allSpecifiers = importStmt.specifiers
     for (const spec of allSpecifiers) {
@@ -292,7 +576,6 @@ function buildVineCompFnCtx(
     emits: [],
     bindings: {},
     cssBindings: {},
-    setupStmts: [],
     hoistSetupStmts: [],
     insideSetupStmts: [],
   }
@@ -301,11 +584,6 @@ function buildVineCompFnCtx(
     vineFileCtx,
     vineCompFnCtx,
   }
-
-  // Analyze all import statements in this file
-  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
-  // in order to create binding records
-  analyzeFileImportStmts(analyzeCtx)
 
   // Divide the handling into two cases
   // by the kind of the function declaration
@@ -319,6 +597,11 @@ export function analyzeVine(
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
 ) {
+  // Analyze all import statements in this file
+  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
+  // in order to create binding records
+  analyzeFileImportStmts(vineFileCtx)
+
   // Analyze all Vine component function in this file
   vineCompFnDecls.forEach(
     (vineFnCompDecl) => {

@@ -3,6 +3,39 @@ import { compileVineTypeScriptFile } from '../index'
 import { createMockTransformCtx } from './shared-utils'
 
 describe('Test Vine compiler analyze', () => {
+  test('analyze imports', () => {
+    const content = `
+import { ref, reactive as VueReactive } from 'vue'
+import * as Something from 'lib-1'
+import type { SomeType } from 'types-2'
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeImports', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeImports')
+    expect(fileCtx?.userImports).toMatchInlineSnapshot(`
+      {
+        "SomeType": {
+          "isType": true,
+          "source": "types-2",
+        },
+        "Something": {
+          "isNamespace": true,
+          "isType": false,
+          "source": "lib-1",
+        },
+        "VueReactive": {
+          "isType": false,
+          "source": "vue",
+        },
+        "ref": {
+          "isType": false,
+          "source": "vue",
+        },
+      }
+    `)
+  })
+
   test('analyze vine component props by function\'s formal param', () => {
     const content = `
 function MyComp(p: {
@@ -99,5 +132,57 @@ function Comp() {
     const vineFnComp = fileCtx?.vineFnComps[0]
     expect(vineFnComp?.expose).toMatchSnapshot()
     expect(vineFnComp?.options).toMatchSnapshot()
+  })
+
+  test('analyze vine component function\'s Vue bindings type', () => {
+    const content = `
+import { ref, reactive } from 'vue'
+
+const MyOutsideVar = 1
+function MyOutSideFunc() {
+  console.log('outside func')
+}
+class MyOutsideClass {
+  constructor() {
+    console.log('outside class')
+  }
+}
+enum MyOutsideEnum {
+  A = 1,
+  B = 2,
+}
+
+function MyComp() {
+  const prop1 = vineProp.optional<string>()
+  const count = ref(1)
+  const state = reactive({
+    name: 'vine',
+    age: 1,
+  })
+
+  return vine\`
+    <div>
+      Test Vue bindings type
+    </div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineVueBindingsType', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineVueBindingsType')
+    const vineFnComp = fileCtx?.vineFnComps[0]
+    expect(vineFnComp?.bindings).toMatchInlineSnapshot(`
+      {
+        "MyComp": "literal-const",
+        "MyOutSideFunc": "literal-const",
+        "MyOutsideClass": "literal-const",
+        "MyOutsideVar": "literal-const",
+        "count": "setup-ref",
+        "prop1": "setup-ref",
+        "reactive": "setup-const",
+        "ref": "setup-const",
+        "state": "setup-reactive-const",
+      }
+    `)
   })
 })
