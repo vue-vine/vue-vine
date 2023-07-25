@@ -12,11 +12,11 @@ interface CSSVarsRange {
   end: number | null
 }
 const cssVarsPlugin: PluginCreator<CSSVarsPluginOptions> = (options) => {
-  const { vineFnComps } = options!.fileCtx
+  const { vineCompFns } = options!.fileCtx
   let cssBindings = {} as Record<string, string | null> | null
   // Obtain the cssvar information corresponding to
   // the component context according to scopeid
-  vineFnComps.some((fnComp) => {
+  vineCompFns.some((fnComp) => {
     if (fnComp.scopeId === options!.scopeId) {
       cssBindings = fnComp.cssBindings
       return true

@@ -73,8 +73,7 @@ export function parseCssVars(
     let match: RegExpExecArray | null = null
     // ignore v-bind() in comments /* ... */
     const content = style.replace(/\/\*([\s\S]*?)\*\//g, '')
-    // eslint-disable-next-line no-cond-assign
-    while ((match = vBindRE.exec(content))) {
+    for (match = vBindRE.exec(content); match; match = vBindRE.exec(content)) {
       const start = match.index + match[0].length
       const end = lexBinding(content, start)
       if (end !== null) {

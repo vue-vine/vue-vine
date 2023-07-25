@@ -8,7 +8,6 @@
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "cross-env NODE_ENV=development esno scripts/dev.js",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
-    "test:compiler-babel": "pnpm --filter @vue-vine/compiler-babel run test",
     "ext:dev": "cross-env NODE_ENV=development pnpm --filter vue-vine-extension run dev",
     "ext:build": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build:esbuild",
     "test:unit": "pnpm --filter @vue-vine/compiler run test",

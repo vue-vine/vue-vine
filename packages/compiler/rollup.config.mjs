@@ -37,8 +37,10 @@ export default defineConfig({
     outputFormat('cjs'),
   ],
   external: [
+    '@babel/types',
+    '@babel/parser',
+    'estree-walker',
     'magic-string',
-    '@ast-grep/napi',
     '@vue/compiler-dom',
     'merge-source-map',
     'postcss',

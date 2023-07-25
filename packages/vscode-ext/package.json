@@ -70,7 +70,6 @@
     "lint": "eslint src --ext ts"
   },
   "dependencies": {
-    "@vue-vine/compiler": "workspace:*",
     "@vue-vine/language-server": "workspace:*"
   },
   "devDependencies": {

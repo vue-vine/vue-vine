@@ -1,391 +1,365 @@
-import type { SgNode } from '@ast-grep/napi'
-import { ts } from '@ast-grep/napi'
-import MagicString from 'magic-string'
-import type { VineFileCtx } from './types'
-import { VineBindingTypes } from './types'
-import { filterJoin, showIf, spaces } from './utils'
-import { compileCSSVars } from './style/transform-css-vars'
-import { createInlineTemplateComposer, createSeparateTemplateComposer } from './template/compose'
+import {
+  isAssignmentExpression,
+  isAwaitExpression,
+  isBlockStatement,
+  isExpressionStatement,
+  isReturnStatement,
+  isVariableDeclaration,
+  traverse,
+} from '@babel/types'
+import type { AwaitExpression, Node } from '@babel/types'
+import { CSS_VARS_HELPER, DEFINE_COMPONENT_HELPER, TO_REFS_HELPER, UN_REF_HELPER, USE_DEFAULTS_HELPER } from './constants'
 import { sortStyleImport } from './style/order'
-import { ruleImportStmt } from './ast-grep/rules-for-script'
-import { CSS_VARS_HELPER, UN_REF_HELPER } from './constants'
+import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
+import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
+import type { VineCompilerHooks, VineFileCtx } from './types'
+import { filterJoin, showIf } from './utils'
+import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
+import { compileCSSVars } from './style/transform-css-var'
 
-type SetupCtxProperty = 'expose' | 'emits'
-const MAY_CONTAIN_AWAIT_STMT_KINDS: [kind: string, needResult: boolean][] = [
-  ['lexical_declaration', true],
-  ['assignment_expression', true],
-  ['expression_statement', false],
-]
-
-function mayTransformAwaitExprInsideStmt(targetNode: SgNode) {
-  const findMatchContain = MAY_CONTAIN_AWAIT_STMT_KINDS.find(([kind]) => kind === targetNode.kind())
-  if (!findMatchContain) {
-    return targetNode.text()
-  }
-  const reparsedAst = ts.parse(targetNode.text()).root()
-  const awaitExpr = reparsedAst.find({
-    rule: { pattern: 'await $EXPR' },
-  })
-  if (!awaitExpr) {
-    return targetNode.text()
-  }
-  // This is to maintain operatable position for replacement
-  const ms = new MagicString(targetNode.text())
-  const exprNode = awaitExpr.children()[1]
-  const exprSourceCode = exprNode.text()
-  const [, needResult] = findMatchContain
-  const transformedExpr
-    = needResult
-      ? `(
-  ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
-  __temp = await __temp,
-  __restore(),
-  __temp
-)`
-      : `;(
-  ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
-  await __temp,
-  __restore()
-)`
-  ms.update(
-    awaitExpr.range().start.index,
-    awaitExpr.range().end.index,
-    transformedExpr,
-  )
-
-  return ms.toString()
+function wrapWithAsyncContext(
+  isNeedResult: boolean,
+  exprSourceCode: string,
+) {
+  return isNeedResult
+    ? `;(
+    ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
+    await __temp,
+    __restore()
+  );`
+    : `;(
+    ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
+    __temp = await __temp,
+    __restore(),
+    __temp
+  );`
 }
 
+function mayContainAwaitExpr(targetNode: Node) {
+  let awaitExpr: AwaitExpression | undefined
+  let isMayCotainAwaitExpr = (
+    isVariableDeclaration(targetNode)
+    || isAssignmentExpression(targetNode)
+    || isExpressionStatement(targetNode)
+  )
+  if (!isMayCotainAwaitExpr) {
+    return false
+  }
+  traverse(targetNode, (descendant) => {
+    if (isAwaitExpression(descendant)) {
+      isMayCotainAwaitExpr = true
+      awaitExpr = descendant
+    }
+  })
+  return isMayCotainAwaitExpr && awaitExpr
+}
+
+function registerImport(
+  mergedImportsMap: MergedImportsMap,
+  importSource: string,
+  specifier: string,
+  alias: string,
+) {
+  const vueVineImports = mergedImportsMap.get(importSource)
+  if (!vueVineImports) {
+    mergedImportsMap.set(importSource, {
+      type: 'namedSpecifier',
+      specs: new Map([[specifier, alias]]),
+    })
+  }
+  else {
+    const vueImportsSpecs = (vueVineImports as NamedImportSpecifierMeta).specs
+    vueImportsSpecs.set(specifier, alias)
+  }
+}
+
+/**
+ * Processing `.vine.ts` file transforming.
+ *
+ * Since we need to support sourcemap, we can't replace or cut-out too much code.
+ * The process can be summarized in these steps:
+ *
+ * 1. Merge all imports, including user imports and other required imports by generated code.
+ *    We need to remove all imports from the original code, one by one, and then prepend the
+ *    merged imports to the code, based on our analysis result.
+ *
+ * 2. - Transform every Vine comonent function to be an IIFE.
+ *      it's for creating a independent scope, so we can put those statements can be hosted.
+ */
 export function transformFile(
   vineFileCtx: VineFileCtx,
+  compilerHooks: VineCompilerHooks,
   inline = true,
 ) {
-  // Processing for .vine.ts File is divided into two parts:
-  // 1. Manage all hoisted static code, including:
-  //   1.1 Imports
-  //   1.2 Hoist setup statements
-  //   (And all the top level statements will be remain as is)
-  // 2. Transform all vine component functions into an IIFE for creating Vue component objects
-
-  // Q: Why IIFE?:
-  // A: Because @vue/compiler-dom hoisting feature will generate variables like `__hoisted_1`,
-  //    But there may be multiple components in .vine.ts, so hoisting variable may be conflicted,
-  //    But we can wrap each component function with an IIFE, creating a lexical scope to isolate.
-
-  // The following is a description for details:
-
-  // 1. Traverse all `VineFnCompCtx`, use `bindings`
-  //    to compile template, and generate `preamble` and `code`.
-
-  //     1.1 In those generated `preamble`, there will be duplicated imports,
-  //        so we need to use ast-grep to parse it, and do deduplicate by
-  //        analyzing their `import_specifier`.
-  let isPrependedUseDefaults = false
+  const ms = vineFileCtx.fileSourceCode
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
   const styleImportStmts = sortStyleImport(vineFileCtx)
-  const generatedImportsMap: Map<string, Map<string, string>> = new Map()
-  const inFileCompSharedBindings = Object.fromEntries(
-    vineFileCtx.vineFnComps.map(vineFnCompCtx => ([
-      vineFnCompCtx.fnName,
-      VineBindingTypes.SETUP_CONST,
-    ])),
-  )
-
-  // Get template composer based on inline option
+  const mergedImportsMap: MergedImportsMap = new Map()
   const {
     templateCompileResults,
-    notImportPreambleStmtStore,
-    runTemplateCompile,
-  } = inline
+    generatedPreambleStmts,
+    compileSetupFnReturns,
+  } = inline // Get template composer based on inline option
     ? createInlineTemplateComposer()
-    : createSeparateTemplateComposer()
+    : createSeparatedTemplateComposer(compilerHooks)
 
-  for (const vineFnCompCtx of vineFileCtx.vineFnComps) {
-    const templateSource = vineFnCompCtx.template.text().slice(1, -1) // skip quotes
-    const bindingMetadata = {
-      scriptBindings: vineFnCompCtx.bindings,
-      fileSharedCompBindings: inFileCompSharedBindings,
-    }
-
-    const setupFnReturns = runTemplateCompile({
+  let isPrependedUseDefaults = false
+  for (const vineCompFnCtx of vineFileCtx.vineCompFns) {
+    const setupFnReturns = compileSetupFnReturns({
       vineFileCtx,
-      vineFnCompCtx,
-      generatedImportsMap,
-      templateSource,
-      allBindings: bindingMetadata,
+      vineCompFnCtx,
+      templateSource: vineCompFnCtx.templateSource,
+      mergedImportsMap,
+      bindingMetadata: vineCompFnCtx.bindings,
     })
 
     // Add `defineComponent` helper function import specifier
-    let vueImports = generatedImportsMap.get('vue')
-    if (!vueImports) {
-      const specs = new Map()
-      generatedImportsMap.set('vue', specs)
-      vueImports = specs
+    let vueImportsMeta = mergedImportsMap.get('vue')
+    if (!vueImportsMeta) {
+      vueImportsMeta = {
+        type: 'namedSpecifier',
+        specs: new Map(),
+      } as NamedImportSpecifierMeta
+      mergedImportsMap.set('vue', vueImportsMeta)
     }
-    if (!vueImports.has('defineComponent')) {
-      vueImports.set('defineComponent', '_defineComponent')
+    const vueImportsSpecs = (vueImportsMeta as NamedImportSpecifierMeta).specs
+    if (!vueImportsSpecs.has(DEFINE_COMPONENT_HELPER)) {
+      vueImportsSpecs.set(DEFINE_COMPONENT_HELPER, `_${DEFINE_COMPONENT_HELPER}`)
     }
     // add useCssVars
-    if (!vueImports.has(CSS_VARS_HELPER) && vineFnCompCtx.cssBindings) {
-      vueImports.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
-      inline && vueImports.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
+    if (!vueImportsSpecs.has(CSS_VARS_HELPER) && vineCompFnCtx.cssBindings) {
+      vueImportsSpecs.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
+      inline && vueImportsSpecs.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
     }
 
-    // 2. For every vine component function, we need to transform the function declaration
-    //    (no matter what kind of declaration it is) into an IIFE, return a real Vue component object.
-
-    //    So first we need to cut out the whole function declaration by magic-string,
-    //    and ready to generate the component object code.
-
-    //    2.1 Component has `options`? If so, we just spread it into component object.
-
-    //    2.2 For props, use previously collected meta information
-    //
-    //        2.2.1 Generate `props` field, contains every prop definition object. For example:
-    //        ```
-    //        props: {
-    //          foo: { required: true },
-    //                       ^ Based on `isRequired`
-    //          bar: { type: Boolean, validator: (value) => ... },
-    //                       ^ Based on `isBool`
-    //        }
-    //        ```
-    //        2.2.2 If any prop has default value, check 2.4.2 for more details.
-
-    //    2.3 Generate `emits: ['foo', 'bar', ...]`
-    //                         ^ Based on `vineFnCompCtx.emits`
-
-    //    2.4 Generate `setup` function, and put all `insideSetupStmts` into it.
-    //
-    //        Check if there's any `await` statement in `insideSetupStmts`,
-    //        if so, generate `async` keyword for `setup` function,
-    //        and generate `_withAsyncContext` helper to wrap those async calls.
-    const { insideSetupStmts } = vineFnCompCtx
-    const insideSetupStmtCode: string[] = []
-    for (const stmt of insideSetupStmts) {
-      const stmtSourceCode = mayTransformAwaitExprInsideStmt(stmt)
-      insideSetupStmtCode.push(stmtSourceCode)
-    }
-
-    //        2.4.1 Generate setup function's formal parameter list,
-    //              first one must be `__props`, and the other one is an object destructurt,
-    //              which may pick out `emit` and `expose` if corresponding macro is used.
-    const setupCtxDestructFormalParams: {
-      field: SetupCtxProperty
-      alias?: string
-    }[] = []
-    if (vineFnCompCtx.emits.length > 0) {
-      setupCtxDestructFormalParams.push({
-        field: 'emits',
-        alias: vineFnCompCtx.emitsAlias,
-      })
-    }
-    if (vineFnCompCtx.expose) {
-      setupCtxDestructFormalParams.push({
-        field: 'expose',
-      })
-    }
-
-    //        2.4.2 If there're any props have default value, it's required to generate `useDefaults`
-    //              inside `setup` function. `useDefaults` is an helper function which should be imported from 'vue-vine'.
-    //              ```
-    //              // This import statement should also be hoisted in 1.2
-    //              import { useDefaults } from 'vue-vine'
-    //
-    //              const props = useDefaults(__props, {
-    //                     ^ This is `propAlias`
-    //                foo: 'bar'
-    //                // Function are required for object, array, and function default values
-    //                zig:  () => { return 'zag' }
-    //                arr:  () => { return [1, 2] }
-    //                func: () => { return (...args) => { ... } }
-    //                                     ^ These return values are from `VinePropMeta.default.text()`
-    //              })
-    //              ```
-    //              If there's no need for `default`, just generate `const props = __props`, same as SFC compilation.
-    let propsUseDefaultsStmt = `const ${vineFnCompCtx.propsAlias} = __props`
-    if (Object.values(vineFnCompCtx.props).some(meta => Boolean(meta.default))) {
-      if (!isPrependedUseDefaults) {
-        // Import helper function
-        vineFileCtx.fileSourceCode.prepend('import { useDefaults as _useDefaults } from "vue-vine"\n')
-        isPrependedUseDefaults = true
+    const vineCompFnStart = vineCompFnCtx.fnDeclNode.start!
+    const vineCompFnEnd = vineCompFnCtx.fnDeclNode.end!
+    const vineCompFnBody = vineCompFnCtx.fnItselfNode!.body
+    if (isBlockStatement(vineCompFnBody)) {
+      let hasAwait = false
+      for (const vineFnBodyStmt of vineCompFnBody.body) {
+        const isContained = mayContainAwaitExpr(vineFnBodyStmt)
+        if (!isContained) {
+          continue
+        }
+        hasAwait = true
+        ms.update(
+          vineFnBodyStmt.start!,
+          vineFnBodyStmt.end!,
+          wrapWithAsyncContext(
+            isExpressionStatement(vineFnBodyStmt),
+            ms.original.slice(
+              vineFnBodyStmt.start!,
+              vineFnBodyStmt.end!,
+            ),
+          ),
+        )
       }
 
-      propsUseDefaultsStmt = `const ${vineFnCompCtx.propsAlias} = _useDefaults(__props, {\n${
-        Object.entries(vineFnCompCtx.props)
-          .filter(([_, propMeta]) => Boolean(propMeta.default))
-          .map(([propName, propMeta]) => {
-            return `${spaces(2)}${propName}: ${propMeta.default!.text()}`
-          }).join(',\n')
-      }\n})\n`
+      const firstStmt = vineCompFnBody.body[0]
+      const lastStmt = vineCompFnBody.body[vineCompFnBody.body.length - 1]
+
+      // Replace the original function delcaration start to its body's first statement's start,
+      // and the last statement's end to the function declaration end.
+      // Wrap all body statemnts into a `setup(...) { ... }`
+      ms.remove(vineCompFnStart, firstStmt.start!)
+      ms.remove(lastStmt.end!, vineCompFnEnd)
+
+      // Remove all statements that contain macro calls
+      vineCompFnBody.body.forEach((stmt) => {
+        if (
+          isStatementContainsVineMacroCall(stmt)
+          || isReturnStatement(stmt)
+        ) {
+          ms.remove(stmt.start!, stmt.end!)
+        }
+      })
+
+      // Build formal parameters of `setup` function
+      const setupCtxDestructFormalParams: {
+        field: string
+        alias?: string
+      }[] = []
+      if (vineCompFnCtx.emits.length > 0) {
+        setupCtxDestructFormalParams.push({
+          field: 'emits',
+          alias: vineCompFnCtx.emitsAlias,
+        })
+      }
+      if (vineCompFnCtx.expose) {
+        setupCtxDestructFormalParams.push({
+          field: 'expose',
+        })
+      }
+      let setupFormalParams = `__props${
+        setupCtxDestructFormalParams.length > 0
+          ? `, { ${
+            setupCtxDestructFormalParams.map(
+              ({ field, alias }) => `${field}${showIf(Boolean(alias), `: ${alias}`)}`,
+            ).join(', ')
+          } }`
+          : ' /* No setup ctx destructuring */'
+      }`
+      if (Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.isFromMacroDefine))) {
+        registerImport(
+          mergedImportsMap,
+          'vue',
+          TO_REFS_HELPER,
+          `_${TO_REFS_HELPER}`,
+        )
+        const propsFromMacro = Object.entries(vineCompFnCtx.props)
+          .filter(([_, meta]) => Boolean(meta.isFromMacroDefine))
+          .map(([propName, _]) => propName)
+        ms.prependLeft(
+          firstStmt.start!,
+          `const { ${propsFromMacro.join(', ')} } = _toRefs(__props);\n`,
+        )
+      }
+
+      // Insert `useCssVars` helper function call
+      if (Array.from(
+        Object.entries(vineCompFnCtx.cssBindings),
+      ).length > 0) {
+        ms.prependLeft(
+          firstStmt.start!,
+          `\n${compileCSSVars(vineCompFnCtx, inline)}\n`,
+        )
+      }
+
+      // Insert `useDefaults` helper function import specifier.
+      // And prepend `const __props = useDefaults(...)` before the first statement.
+      let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;`
+      if (
+        Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.default))
+        && !isPrependedUseDefaults
+      ) {
+        isPrependedUseDefaults = true
+        registerImport(
+          mergedImportsMap,
+          'vue-vine',
+          USE_DEFAULTS_HELPER,
+          `_${USE_DEFAULTS_HELPER}`,
+        )
+        propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _useDefaults(__props, {\n${
+          Object.entries(vineCompFnCtx.props)
+            .filter(([_, propMeta]) => Boolean(propMeta.default))
+            .map(([propName, propMeta]) => `  ${propName}: ${
+              ms.original.slice(
+                propMeta.default!.start!,
+                propMeta.default!.end!,
+              )
+            }`).join(',\n')
+        }\n})\n`
+      }
+      ms.prependLeft(
+        firstStmt.start!,
+        propsDeclarationStmt,
+      )
+
+      // Insert variables that required by async context generated code
+      if (hasAwait) {
+        ms.prependLeft(
+          firstStmt.start!,
+          'let __temp, __restore;\n',
+        )
+      }
+
+      // Insert setup function's return statement
+      ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
+
+      ms.prependLeft(firstStmt.start!, `setup(${setupFormalParams}) {\n`)
+      ms.appendRight(lastStmt.end!, '\n}')
+      ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
+        vineCompFnCtx.options
+          ? `...${ms.original.slice(
+            vineCompFnCtx.options.start!,
+            vineCompFnCtx.options.end!,
+          )},`
+          : `name: '${vineCompFnCtx.fnName}',`
+      }\n${
+        Object.keys(vineCompFnCtx.props).length > 0
+          ? `props: {\n${
+            Object.entries(vineCompFnCtx.props).map(([propName, propMeta]) => {
+              const metaFields = []
+              if (propMeta.isRequired) {
+                metaFields.push('required: true')
+              }
+              if (propMeta.isBool) {
+                metaFields.push('type: Boolean')
+              }
+              if (propMeta.validator) {
+                metaFields.push(`validator: ${
+                  ms.original.slice(
+                    propMeta.validator.start!,
+                    propMeta.validator.end!,
+                  )
+                }`)
+              }
+              return `${propName}: { ${
+                showIf(
+                  metaFields.filter(Boolean).length > 0,
+                  filterJoin(metaFields, ', '),
+                  '/* Simple prop */',
+                )
+              } },`
+            }).join('\n')
+          }\n},`
+          : '/* No props */'
+      }\n${
+        vineCompFnCtx.emits.length > 0
+          ? `emits: [${vineCompFnCtx.emits.map(emit => `'${emit}'`).join(', ')}],`
+          : '/* No emits */'
+      }\n`)
+      ms.appendRight(lastStmt.end!, '\n})')
+      ms.prependLeft(firstStmt.start!, `\n${
+        vineCompFnCtx.isExport ? 'export ' : ''
+      }const ${
+        vineCompFnCtx.fnName
+      } = (() => {\n${
+        // Prepend all generated preamble statements
+        generatedPreambleStmts
+          .get(vineCompFnCtx)
+          ?.join('\n') ?? ''
+      }\n`)
+      ms.appendRight(lastStmt.end!, `\n${
+        inline
+          ? ''
+          // Not-inline mode, we need manually add the
+          // render function to the component object.
+          : `${
+            templateCompileResults.get(vineCompFnCtx) ?? ''
+          }\n__vine.render = __sfc_render`
+      }\n${
+        showIf(
+          Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
+          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n`,
+        )}${showIf(
+          // handle Web Component styles
+          Boolean(vineCompFnCtx.isCustomElement),
+          `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
+        )}\nreturn __vine\n})();`,
+      )
     }
-    const propsFromMacro = Object.entries(vineFnCompCtx.props)
-      .filter(([_, propMeta]) => Boolean(propMeta.isFromMacroDefine))
-      .map(([propName]) => propName)
-    if (propsFromMacro.length > 0) {
-      vueImports.set('toRefs', '_toRefs')
-    }
-
-    //        2.4.3 Just put all `insideSetupStmts` into `setup` function's body.
-    //        2.4.4 Generate `expose` call based on the same logic as Vue SFC
-    //              by using the collected `expose` argument object's fields.
-    //        2.4.5 Use the generated inline template render function from 1. `code`,
-    //              and make a return statement for the setup function.
-    //    2.5 Prepend statements which're not import statements or belongs to `hoistSetupStmts`
-    //        to the component object IIFE.
-    const { fnDeclNode, fnName } = vineFnCompCtx
-    const {
-      start: vineFnDeclStart,
-      end: vineFnDeclEnd,
-    } = fnDeclNode.range()
-    vineFileCtx.fileSourceCode.remove(
-      vineFnDeclStart.index,
-      vineFnDeclEnd.index,
-    )
-
-    const isNeedAsync = vineFnCompCtx.isAsync || vineFnCompCtx.setupStmts.some(
-      stmt => Boolean(stmt.find(ts.kind('await_expression'))),
-    )
-    const hoisted = [
-      ...notImportPreambleStmtStore.get(vineFnCompCtx) ?? [],
-      ...vineFnCompCtx.hoistSetupStmts,
-    ]
-
-    // Do codegen for single component
-    vineFileCtx.fileSourceCode.appendRight(
-      vineFnDeclStart.index, `
-${showIf(vineFnCompCtx.isExport, 'export ')}const ${fnName} = (() => {
-
-${
-  hoisted.length > 0
-    ? hoisted
-      .map(
-        item => typeof item === 'string'
-          ? item
-          : item.text(),
-      ).join('\n')
-    : '/* No hoisted */'
-}
-
-  const __vine = _defineComponent({
-    ${
-      vineFnCompCtx.options
-        ? `...${vineFnCompCtx.options?.text().replace(/\n/g, '')},`
-        : `name: '${vineFnCompCtx.fnName}',`
-    }
-    ${showIf(
-      Object.entries(vineFnCompCtx.props).length > 0,
-      `props: {\n${
-        Object.entries(vineFnCompCtx.props).map(([propName, propMeta]) => {
-          const metaFields = [
-            showIf(Boolean(propMeta.isRequired), 'required: true'),
-            showIf(Boolean(propMeta.isBool), 'type: Boolean'),
-            showIf(Boolean(propMeta.validator), `validator: ${propMeta.validator?.text()}`),
-          ]
-          return `${spaces(6)}${propName}: { ${
-            showIf(
-              metaFields.filter(Boolean).length > 0,
-              filterJoin(metaFields, ', '),
-              '/* Simple prop */',
-            )
-          } },`
-        }).join('\n')
-      }\n${spaces(4)}},`,
-      '/* No props */',
-    )}
-    ${showIf(
-      vineFnCompCtx.emits.length > 0,
-      `emits: [\n${
-        vineFnCompCtx.emits.map(emitName => `${spaces(6)}'${emitName}'`).join(',\n')
-      }\n${spaces(4)}],`,
-      '/* No emits */',
-    )}
-    ${showIf(isNeedAsync, 'async ')}setup(__props${
-      setupCtxDestructFormalParams.length > 0
-        ? `, { ${setupCtxDestructFormalParams.map(({ field, alias }) => {
-          return `${field}${showIf(Boolean(alias), `: ${alias}`)}`
-          }).join(', ')} }`
-        : ' /* No setup ctx destructuring */'
-    }) {
-
-${propsUseDefaultsStmt}
-${showIf(
-  propsFromMacro.length > 0,
-  `const { ${propsFromMacro.join(',')} } = _toRefs(${vineFnCompCtx.propsAlias})`,
-)}
-
-${compileCSSVars(vineFnCompCtx, inline)}
-
-${insideSetupStmtCode.join('\n')}
-
-${
-  vineFnCompCtx.expose
-    ? `expose(${
-        vineFnCompCtx.expose.text()
-      })`
-    : '/* No expose */'
-}
-
-return ${setupFnReturns}
-
-    }, // End of setup function
-  }) // End of component object
-
-${showIf(
-    // Not-inline mode, append the standalone template render function
-    // after the component object, and mount the field `render` to it.
-    !inline,
-    `
-${templateCompileResults.get(vineFnCompCtx) ?? ''}
-__vine.render = __sfc_render
-    `,
-)}
-
-  ${showIf(
-    Boolean(vineFileCtx.styleDefine[vineFnCompCtx.scopeId]),
-    `__vine.__scopeId = 'data-v-${vineFnCompCtx.scopeId}'`,
-  )}
-
-  ${showIf(
-        // handle web component styles
-        Boolean(vineFnCompCtx.isVineCE),
-        `__vine.styles = [__${vineFnCompCtx.fnName.toLowerCase()}_styles]`,
-  )}
-  return __vine /* End of ${vineFnCompCtx.fnName} */
-})()`)
   }
 
-  // Merge deduplicated imports in all `preamble` into a single import statement,
-  // put it with other imports in this file together and make sure they're hoisted to the top.
-  const mergedImports = [...generatedImportsMap.entries()]
-    .map(([source, specPairsMap]) => {
-      return `import {\n${
-        [...specPairsMap.entries()]
-          .map(([spec, alias]) => {
-            return `${spaces(2)}${spec}${showIf(Boolean(alias), ` as ${alias}`)}`
-          })
-          .join(',\n')
-      }\n} from '${source}'`
-    })
-    .concat(
-      vineFileCtx.sgRoot.findAll(ruleImportStmt)
-        .map((importStmt) => {
-          // Remove all import statements from the source code
-          // because we'll merge them with other generated imports together.
-          vineFileCtx.fileSourceCode.remove(
-            importStmt.range().start.index,
-            importStmt.range().end.index,
-          )
-
-          return importStmt.text()
-        }),
-    )
-    .join('\n')
-
-  vineFileCtx.fileSourceCode.prepend(`${
-    mergedImports
-  }\n\n${
-    styleImportStmts
-  }\n\n`)
+  // Prepend all style import statements
+  ms.prepend(`\n${styleImportStmts.join('\n')}\n`)
+  // Prepend all imports
+  for (const [importSource, importMeta] of mergedImportsMap) {
+    if (importMeta.type === 'namedSpecifier') {
+      const { specs } = importMeta
+      const specifiers = [...specs.entries()]
+      const importStmt = `import { ${
+        specifiers.map(
+          ([specifier, alias]) => `${specifier}${showIf(Boolean(alias), ` as ${alias}`)}`,
+        ).join(', ')
+      } } from '${importSource}';\n`
+      ms.prepend(importStmt)
+    }
+    else if (importMeta.type === 'defaultSpecifier') {
+      const importStmt = `import ${importMeta.localName} from '${importSource}';\n`
+      ms.prepend(importStmt)
+    }
+  }
 }

@@ -1,4 +1,13 @@
-import type { CallExpression, File, Identifier, ImportDeclaration, Node, ReturnStatement, TSPropertySignature, TaggedTemplateExpression, VariableDeclarator } from '@babel/types'
+import type {
+  CallExpression,
+  File,
+  Identifier,
+  ImportDeclaration, Node,
+  ReturnStatement,
+  TSPropertySignature,
+  TaggedTemplateExpression,
+  VariableDeclarator,
+} from '@babel/types'
 import {
   isArrowFunctionExpression,
   isCallExpression,
@@ -22,8 +31,18 @@ import {
   traverse,
 } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
-import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VINE_MACRO_NAMES, VineBabelRoot } from '../types'
-import { TS_NODE_TYPES, VINE_MACROS, VUE_REACTIVITY_APIS } from '../constants'
+import type {
+  BabelFunctionNodeTypes,
+  BabelFunctionParams,
+  Nil,
+  VINE_MACRO_NAMES,
+  VineBabelRoot,
+} from '../types'
+import {
+  TS_NODE_TYPES,
+  VINE_MACROS,
+  VUE_REACTIVITY_APIS,
+} from '../constants'
 
 const vineRootScopeStatementTypeValidators = [
   isImportDeclaration,
@@ -302,7 +321,7 @@ export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes) {
 }
 
 export function unwrapTSNode(node: Node): Node {
-  if ((TS_NODE_TYPES as any).includes(node.type)) {
+  if (TS_NODE_TYPES.includes(node.type)) {
     return unwrapTSNode((node as any).expression)
   }
   else {

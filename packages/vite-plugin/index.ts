@@ -4,11 +4,11 @@ import {
   compileVineStyle,
   compileVineTypeScriptFile,
   createCompilerCtx,
-} from '@vue-vine/compiler-babel'
+} from '@vue-vine/compiler'
 import type {
   VineCompilerOptions,
   VineProcessorLang,
-} from '@vue-vine/compiler-babel'
+} from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
 import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'

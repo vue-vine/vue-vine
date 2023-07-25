@@ -248,6 +248,33 @@ function MyApp() {
     expect(MyBoxComp?.templateAst).toMatchSnapshot()
     expect(MyApp?.templateAst).toMatchSnapshot()
   })
+
+  test('analyze vineProp validator and vineOptions reference locally declared variables', () => {
+    const content = `
+import { ref } from 'vue'
+
+function MyComp() {
+  const prop1 = vineProp<string>(() => {
+    return val1.value > 0.5 ? 'A' : 'B'
+  })
+  vineOptions({
+    name: val2.value,
+  })
+
+  const val1 = ref(Math.random())
+  const val2 = ref('Test')
+  return vine\`
+    <div>Test reference locally declared variables</div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testReferenceLocallyDeclaredVariables', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot('"Cannot reference \\"val1\\" locally declared variables because it will be hoisted outside of the setup() function."')
+    expect(mockCompilerCtx.vineCompileErrors[1].msg)
+      .toMatchInlineSnapshot('"Cannot reference \\"val2\\" locally declared variables because it will be hoisted outside of the setup() function."')
+  })
 })
 
 describe('Test other helpers for compiler', () => {

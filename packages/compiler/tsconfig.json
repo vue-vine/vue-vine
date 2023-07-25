@@ -2,19 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "declaration": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "skipLibCheck": true
   },
   "include": [
     "src",
-    "test",
-    "index.ts",
-    "../vite-plugin/src/parse-query.ts", "../vite-plugin/src/parse-query.ts", "../compiler-babel/src/template/importUsageCheck.ts"],
+    "tests",
+    "index.ts"
+  ],
   "exclude": [
-    "dist"
+    "dist",
+    "node_modules"
   ]
 }
