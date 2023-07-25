@@ -18,7 +18,7 @@ import {
   findVineCompFnDecls,
   isDescendant,
   isVineMacroOf,
-} from '../src/babel-ast'
+} from '../src/babel-helpers/ast'
 
 describe('find Vine Function Component Declarations', () => {
   test('should be able to find out all Vine component function', () => {

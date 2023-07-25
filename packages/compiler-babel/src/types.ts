@@ -1,5 +1,19 @@
-import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
-import type { ArrowFunctionExpression, File, FunctionDeclaration, FunctionExpression, Node, SourceLocation, StringLiteral, TaggedTemplateExpression, TemplateLiteral } from '@babel/types'
+import type {
+  RootNode,
+  BindingTypes as VueBindingTypes,
+} from '@vue/compiler-dom'
+import type {
+  ArrowFunctionExpression,
+  File,
+  FunctionDeclaration,
+  FunctionExpression,
+  Node,
+  ReturnStatement,
+  SourceLocation,
+  StringLiteral,
+  TaggedTemplateExpression,
+  TemplateLiteral,
+} from '@babel/types'
 import type { ParseResult } from '@babel/parser'
 import type MagicString from 'magic-string'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
@@ -74,13 +88,14 @@ export interface VineUserImport {
   isType: boolean
   isNamespace?: boolean
   isDefault?: boolean
+  isUsedInTemplate?: boolean
 }
 
 export interface VineFileCtx {
   readonly fileId: string
   readonly root: ParseResult<File>
   fileSourceCode: MagicString
-  vineFnComps: VineCompFnCtx[]
+  vineCompFns: VineCompFnCtx[]
   userImports: Record<string, VineUserImport>
   vueImportAliases: Record<string, string>
   /** key: `scopeId` => value: `VineStyleMeta` */
@@ -98,7 +113,10 @@ export interface VineFileCtx {
 export interface VineCompFnCtx {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
-  templateNode?: Node
+  templateSource: string
+  templateReturn?: ReturnStatement
+  templateStringNode?: TaggedTemplateExpression
+  templateAst?: RootNode
   isExport: boolean
   isAsync: boolean
   /** is web component (customElement) */
@@ -115,7 +133,6 @@ export interface VineCompFnCtx {
   /** Store the `defineOptions`'s argument in source code */
   options?: Node
   hoistSetupStmts: Node[]
-  insideSetupStmts: Node[]
   cssBindings: Record<string, string | null>
 }
 

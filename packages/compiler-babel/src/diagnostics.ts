@@ -11,7 +11,7 @@ const WarningLabel = whiteFgYellowBg(' Warning ')
 
 export interface DiagnosticParams {
   msg: string
-  location: SourceLocation | null | undefined
+  location?: SourceLocation | null
 }
 export interface MakeDiagnosticParams extends DiagnosticParams {
   fileId: string

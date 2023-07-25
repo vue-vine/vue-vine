@@ -32,7 +32,7 @@ import {
   isVineMacroOf,
   isVineTaggedTemplateString,
   isVueReactivityApiCallExpression,
-} from './babel-ast'
+} from './babel-helpers/ast'
 import { vineErr } from './diagnostics'
 import { BARE_CALL_MACROS, SUPPORTED_CSS_LANGS } from './constants'
 import { colorful } from './utils/color-string'
@@ -52,6 +52,8 @@ function wrapVineValidatorWithLog(validators: VineValidator[]) {
   return process.env.VINE_DEV_VITEST === 'true'
     ? validators.map(validator => (...args: Parameters<VineValidator>) => {
       const isPass = validator(...args)
+      // Bypass this ESLint is for local development to find out which test case is failed,
+      // eslint-disable-next-line no-console
       console.log(`${
           colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
         } ${validator.name} => ${
@@ -66,6 +68,8 @@ function logMacroAssert(macroName: string, isPass: boolean) {
   if (process.env.VINE_DEV_VITEST !== 'true') {
     return
   }
+  // Bypass this ESLint is for local development to find out which assert is failed,
+  // eslint-disable-next-line no-console
   console.log(`${
     colorful(' VINE MACRO ASSERT ', ['bgMagenta', 'white'])
   } ${macroName} => ${
@@ -503,9 +507,9 @@ function validateMacrosUsage(
 
 function validateVineFunctionCompProps(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
-  vineCompFn: Node,
+  vineCompFnDecl: Node,
 ) {
-  const { fnItselfNode } = getFunctionInfo(vineCompFn)
+  const { fnItselfNode } = getFunctionInfo(vineCompFnDecl)
   const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
   let vinePropMacroCallCount = 0
@@ -515,7 +519,7 @@ function validateVineFunctionCompProps(
     // if doesn't call in `vineProp.default` or `vineProp.validator`,
     // a type parameter must be provided
     let isVinePropCheckPass = true
-    traverse(vineCompFn, {
+    traverse(vineCompFnDecl, {
       enter(node, parent) {
         if (!isVineMacroOf('vineProp')(node)) {
           return
@@ -613,7 +617,6 @@ function validateVineFunctionCompProps(
     // Check Vine component function's formal parameter first,
     // it can only have one parameter, and its type annotation must be object literal
     const theOnlyFormalParam = vineCompFnParams[0]
-    // console.log('theOnlyFormalParam', theOnlyFormalParam)
     let isCheckFormalParamsPropPass = true
     if (!isIdentifier(theOnlyFormalParam)) {
       vineCompilerHooks.onError(
@@ -709,7 +712,7 @@ function validateVineFunctionCompProps(
       vineFileCtx,
       {
         msg: 'Vine component function can only have one parameter',
-        location: vineCompFn.loc,
+        location: vineCompFnDecl.loc,
       },
     ),
   )

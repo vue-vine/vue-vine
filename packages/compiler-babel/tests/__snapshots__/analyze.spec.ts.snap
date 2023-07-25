@@ -478,3 +478,281 @@ exports[`Test Vine compiler analyze > analyze vine component props by macro call
   },
 }
 `;
+
+exports[`Test Vine compiler analyze > analyze vine template 1`] = `
+{
+  "cached": 0,
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "content": {
+                "constType": 0,
+                "content": "title",
+                "isStatic": false,
+                "loc": {
+                  "end": {
+                    "column": 19,
+                    "line": 3,
+                    "offset": 29,
+                  },
+                  "source": "title",
+                  "start": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 24,
+                  },
+                },
+                "type": 4,
+              },
+              "loc": {
+                "end": {
+                  "column": 22,
+                  "line": 3,
+                  "offset": 32,
+                },
+                "source": "{{ title }}",
+                "start": {
+                  "column": 11,
+                  "line": 3,
+                  "offset": 21,
+                },
+              },
+              "type": 5,
+            },
+          ],
+          "codegenNode": undefined,
+          "isSelfClosing": false,
+          "loc": {
+            "end": {
+              "column": 27,
+              "line": 3,
+              "offset": 37,
+            },
+            "source": "<h1>{{ title }}</h1>",
+            "start": {
+              "column": 7,
+              "line": 3,
+              "offset": 17,
+            },
+          },
+          "ns": 0,
+          "props": [],
+          "tag": "h1",
+          "tagType": 0,
+          "type": 1,
+        },
+        {
+          "children": [],
+          "codegenNode": undefined,
+          "isSelfClosing": true,
+          "loc": {
+            "end": {
+              "column": 15,
+              "line": 4,
+              "offset": 52,
+            },
+            "source": "<slot />",
+            "start": {
+              "column": 7,
+              "line": 4,
+              "offset": 44,
+            },
+          },
+          "ns": 0,
+          "props": [],
+          "tag": "slot",
+          "tagType": 2,
+          "type": 1,
+        },
+      ],
+      "codegenNode": undefined,
+      "isSelfClosing": false,
+      "loc": {
+        "end": {
+          "column": 11,
+          "line": 5,
+          "offset": 63,
+        },
+        "source": "<div>
+      <h1>{{ title }}</h1>
+      <slot />
+    </div>",
+        "start": {
+          "column": 5,
+          "line": 2,
+          "offset": 5,
+        },
+      },
+      "ns": 0,
+      "props": [],
+      "tag": "div",
+      "tagType": 0,
+      "type": 1,
+    },
+  ],
+  "codegenNode": undefined,
+  "components": [],
+  "directives": [],
+  "helpers": Set {},
+  "hoists": [],
+  "imports": [],
+  "loc": {
+    "end": {
+      "column": 3,
+      "line": 6,
+      "offset": 66,
+    },
+    "source": "
+    <div>
+      <h1>{{ title }}</h1>
+      <slot />
+    </div>
+  ",
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "temps": 0,
+  "type": 0,
+}
+`;
+
+exports[`Test Vine compiler analyze > analyze vine template 2`] = `
+{
+  "cached": 0,
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "content": "Test inner content",
+              "loc": {
+                "end": {
+                  "column": 30,
+                  "line": 3,
+                  "offset": 64,
+                },
+                "source": "Test inner content",
+                "start": {
+                  "column": 12,
+                  "line": 3,
+                  "offset": 46,
+                },
+              },
+              "type": 2,
+            },
+          ],
+          "codegenNode": undefined,
+          "isSelfClosing": false,
+          "loc": {
+            "end": {
+              "column": 36,
+              "line": 3,
+              "offset": 70,
+            },
+            "source": "<div>Test inner content</div>",
+            "start": {
+              "column": 7,
+              "line": 3,
+              "offset": 41,
+            },
+          },
+          "ns": 0,
+          "props": [],
+          "tag": "div",
+          "tagType": 0,
+          "type": 1,
+        },
+      ],
+      "codegenNode": undefined,
+      "isSelfClosing": false,
+      "loc": {
+        "end": {
+          "column": 13,
+          "line": 4,
+          "offset": 83,
+        },
+        "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+        "start": {
+          "column": 5,
+          "line": 2,
+          "offset": 5,
+        },
+      },
+      "ns": 0,
+      "props": [
+        {
+          "loc": {
+            "end": {
+              "column": 33,
+              "line": 2,
+              "offset": 33,
+            },
+            "source": "title=\\"Test template\\"",
+            "start": {
+              "column": 12,
+              "line": 2,
+              "offset": 12,
+            },
+          },
+          "name": "title",
+          "type": 6,
+          "value": {
+            "content": "Test template",
+            "loc": {
+              "end": {
+                "column": 33,
+                "line": 2,
+                "offset": 33,
+              },
+              "source": "\\"Test template\\"",
+              "start": {
+                "column": 18,
+                "line": 2,
+                "offset": 18,
+              },
+            },
+            "type": 2,
+          },
+        },
+      ],
+      "tag": "MyBox",
+      "tagType": 1,
+      "type": 1,
+    },
+  ],
+  "codegenNode": undefined,
+  "components": [],
+  "directives": [],
+  "helpers": Set {},
+  "hoists": [],
+  "imports": [],
+  "loc": {
+    "end": {
+      "column": 3,
+      "line": 5,
+      "offset": 86,
+    },
+    "source": "
+    <MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>
+  ",
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "temps": 0,
+  "type": 0,
+}
+`;

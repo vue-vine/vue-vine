@@ -1,7 +1,7 @@
 import MagicString from 'magic-string'
 import { parse as babelParse } from '@babel/parser'
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './src/types'
-import { findVineCompFnDecls } from './src/babel-ast'
+import { findVineCompFnDecls } from './src/babel-helpers/ast'
 import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
 import { transformFile } from './src/transform'
@@ -43,7 +43,7 @@ export function compileVineTypeScriptFile(
   fileId: string,
   compilerHooks: VineCompilerHooks,
 ) {
-  let compilerOptions: VineCompilerOptions | undefined
+  let compilerOptions: VineCompilerOptions = {}
   compilerHooks.onOptionsResolved((options) => {
     compilerOptions = options
   })
@@ -57,7 +57,7 @@ export function compileVineTypeScriptFile(
   const vineFileCtx: VineFileCtx = {
     fileId,
     fileSourceCode: new MagicString(code),
-    vineFnComps: [],
+    vineCompFns: [],
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
@@ -79,11 +79,15 @@ export function compileVineTypeScriptFile(
   }
 
   // 2. Analysis
-  analyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+  analyzeVine(compilerOptions, compilerHooks, vineFileCtx, vineCompFnDecls)
   compilerHooks.onAnalysisEnd?.()
 
   // 3. Codegen, or call it "transform"
-  transformFile(vineFileCtx, compilerOptions?.inlineTemplate ?? true)
+  transformFile(
+    vineFileCtx,
+    compilerHooks,
+    compilerOptions?.inlineTemplate ?? true,
+  )
 
   return vineFileCtx
 }

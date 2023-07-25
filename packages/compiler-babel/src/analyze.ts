@@ -1,4 +1,5 @@
 import hashId from 'hash-sum'
+import { parse } from '@vue/compiler-dom'
 import {
   isArrayPattern,
   isBlockStatement,
@@ -14,6 +15,7 @@ import {
   isStringLiteral,
   isTaggedTemplateExpression,
   isTemplateLiteral,
+  isVariableDeclaration,
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
@@ -30,13 +32,14 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { BindingTypes } from '@vue/compiler-dom'
+import { type BindingTypes } from '@vue/compiler-dom'
 import { VineBindingTypes } from './constants'
 import type {
   BabelFunctionNodeTypes,
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
+  VineCompilerOptions,
   VineFileCtx,
   VinePropMeta,
   VineStyleLang,
@@ -47,19 +50,21 @@ import type {
 
 import {
   canNeverBeRef,
+  findVineTagTemplateStringReturn,
   getAllVinePropMacroCall,
   getFunctionInfo,
   getFunctionParams,
   getImportStatments,
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
-  getVineTagTemplateStringNode,
   isCallOf,
   isStaticNode,
+  isVineCompFnDecl,
   isVineMacroCallExpression,
   isVineMacroOf,
-} from './babel-ast'
+} from './babel-helpers/ast'
 import { parseCssVars } from './style/analyze-css-vars'
+import { isImportUsed } from './template/importUsageCheck'
 
 interface AnalyzeCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -461,11 +466,9 @@ const analyzeVineBindings: AnalyzeRunner = (
   }
   for (const stmt of notContainsMacroStatements) {
     const isAllLiteral = analyzeVineFnBodyStmtForBindings(analyzeCtx, stmt)
-    ;(
-      isAllLiteral
-        ? vineCompFnCtx.hoistSetupStmts
-        : vineCompFnCtx.insideSetupStmts
-    ).push(stmt)
+    if (isAllLiteral) {
+      vineCompFnCtx.hoistSetupStmts.push(stmt)
+    }
   }
 
   // Mark bindings for all user imports
@@ -488,12 +491,16 @@ const analyzeVineBindings: AnalyzeRunner = (
   }
 
   // #32 Append all valid declarations in top level scope
-  // to current VCF's bindings, as LITERAL_CONST, telling the
-  // Vue template compiler to remain them as is.
+  // to current VCF's bindings, helping  Vue template compiler
+  // to know  how to resolve them.
   const allTopLevelDeclStmts = vineFileCtx.root.program.body
     .filter((stmt): stmt is Declaration => isDeclaration(stmt))
   for (const declStmt of allTopLevelDeclStmts) {
-    if (declStmt.type === 'VariableDeclaration') {
+    if (isVineCompFnDecl(declStmt)) {
+      const { fnName } = getFunctionInfo(declStmt)
+      vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
+    }
+    else if (isVariableDeclaration(declStmt)) {
       for (const decl of declStmt.declarations) {
         if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
           vineCompFnCtx.bindings[decl.id.name] = VineBindingTypes.LITERAL_CONST
@@ -588,7 +595,10 @@ function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
   analyzeRunners.forEach(exec => exec(analyzeCtx, fnItselfNode))
 }
 
-function analyzeFileImportStmts(vineFileCtx: VineFileCtx) {
+function analyzeFileImportStmts(
+  compilerOptions: VineCompilerOptions,
+  vineFileCtx: VineFileCtx,
+) {
   const { root } = vineFileCtx
   const fileImportStmts = getImportStatments(root)
   if (!fileImportStmts.length) {
@@ -631,6 +641,11 @@ function analyzeFileImportStmts(vineFileCtx: VineFileCtx) {
         importMeta.isDefault = true
         vineFileCtx.userImports[spec.local.name] = importMeta
       }
+
+      const isUsedInTemplate = vineFileCtx.vineCompFns.some(
+        vineCompFn => isImportUsed(vineCompFn, spec.local.name),
+      )
+      importMeta.isUsedInTemplate = isUsedInTemplate
     }
   }
   const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]
@@ -650,8 +665,14 @@ function buildVineCompFnCtx(
   //       - `const xxx = (...) => {...}`:
   //       the AST node is the the function expression
   const { fnName, fnItselfNode } = getFunctionInfo(fnDeclNode)
-  const templateNode = getVineTagTemplateStringNode(fnDeclNode)
+  const {
+    templateReturn,
+    templateStringNode,
+  } = findVineTagTemplateStringReturn(
+    fnDeclNode,
+  )
   const scopeId = hashId(`${vineFileCtx.fileId}:${fnName}`)
+  const templateSource = templateStringNode?.quasi.quasis[0].value.raw ?? ''
   const vineCompFnCtx: VineCompFnCtx = {
     isExport: isExportDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
@@ -660,7 +681,10 @@ function buildVineCompFnCtx(
     scopeId,
     fnDeclNode,
     fnItselfNode,
-    templateNode,
+    templateStringNode,
+    templateReturn,
+    templateSource,
+    templateAst: parse(templateSource),
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},
@@ -668,7 +692,6 @@ function buildVineCompFnCtx(
     bindings: {},
     cssBindings: {},
     hoistSetupStmts: [],
-    insideSetupStmts: [],
   }
   const analyzeCtx: AnalyzeCtx = {
     vineCompilerHooks,
@@ -684,19 +707,15 @@ function buildVineCompFnCtx(
 }
 
 export function analyzeVine(
+  compilerOptions: VineCompilerOptions,
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
 ) {
-  // Analyze all import statements in this file
-  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
-  // in order to create binding records
-  analyzeFileImportStmts(vineFileCtx)
-
   // Analyze all Vine component function in this file
   vineCompFnDecls.forEach(
     (vineFnCompDecl) => {
-      vineFileCtx.vineFnComps.push(
+      vineFileCtx.vineCompFns.push(
         buildVineCompFnCtx(
           vineCompilerHooks,
           vineFileCtx,
@@ -705,4 +724,9 @@ export function analyzeVine(
       )
     },
   )
+
+  // Analyze all import statements in this file
+  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
+  // in order to create binding records
+  analyzeFileImportStmts(compilerOptions, vineFileCtx)
 }

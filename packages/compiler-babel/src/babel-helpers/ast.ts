@@ -1,4 +1,4 @@
-import type { CallExpression, File, Identifier, ImportDeclaration, Node, TSPropertySignature, TaggedTemplateExpression, VariableDeclarator } from '@babel/types'
+import type { CallExpression, File, Identifier, ImportDeclaration, Node, ReturnStatement, TSPropertySignature, TaggedTemplateExpression, VariableDeclarator } from '@babel/types'
 import {
   isArrowFunctionExpression,
   isCallExpression,
@@ -21,8 +21,8 @@ import {
   traverse,
 } from '@babel/types'
 import type { ParseResult } from '@babel/parser'
-import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VINE_MACRO_NAMES, VineBabelRoot } from './types'
-import { TS_NODE_TYPES, VINE_MACROS, VUE_REACTIVITY_APIS } from './constants'
+import type { BabelFunctionNodeTypes, BabelFunctionParams, Nil, VINE_MACRO_NAMES, VineBabelRoot } from '../types'
+import { TS_NODE_TYPES, VINE_MACROS, VUE_REACTIVITY_APIS } from '../constants'
 
 const vineRootScopeStatementTypeValidators = [
   isImportDeclaration,
@@ -66,7 +66,6 @@ export function findVineCompFnDecls(root: VineBabelRoot) {
       }
     })
   }
-
   return vineFnComps
 }
 
@@ -96,7 +95,7 @@ export function isDescendant(node: Node, potentialDescendant: Node): boolean {
   return false
 }
 
-export function isVineTaggedTemplateString(node: Node): node is TaggedTemplateExpression {
+export function isVineTaggedTemplateString(node: Node | null | undefined): node is TaggedTemplateExpression {
   return (
     isTaggedTemplateExpression(node)
     && isIdentifier(node.tag)
@@ -164,6 +163,16 @@ export function isVineMacroOf(
   }
 }
 
+export function isStatementContainsVineMacroCall(node: Node) {
+  let result = false
+  traverse(node, (descendant) => {
+    if (isVineMacroCallExpression(descendant)) {
+      result = true
+    }
+  })
+  return result
+}
+
 export function isVueReactivityApiCallExpression(node: Node) {
   return (
     isCallExpression(node)
@@ -194,27 +203,26 @@ export function getFunctionParams(fnItselfNode: BabelFunctionNodeTypes) {
   return params
 }
 
-export function getFunctionInfo(node: Node): {
+export function getFunctionInfo(fnDecl: Node): {
   fnItselfNode: BabelFunctionNodeTypes | undefined
   fnName: string
 } {
-  let fnItselfNode: BabelFunctionNodeTypes | undefined = isFunctionDeclaration(node)
-    ? node
-    : undefined
-  let fnName = isFunctionDeclaration(node)
-    ? node.id?.name ?? ''
+  let fnName = isFunctionDeclaration(fnDecl)
+    ? fnDecl.id?.name ?? ''
     : ''
-  traverse(node, (descendant) => {
-    let target = descendant
-    if (isExportNamedDeclaration(descendant) && descendant.declaration) {
-      target = descendant.declaration
-    }
-    if (isFunctionDeclaration(target)) {
-      fnItselfNode = target
-      fnName = target.id?.name ?? ''
-    }
-    else if (
-      isVariableDeclaration(target)
+  let fnItselfNode: BabelFunctionNodeTypes | undefined = isFunctionDeclaration(fnDecl)
+    ? fnDecl
+    : undefined
+  let target = fnDecl
+  if (isExportNamedDeclaration(target) && target.declaration) {
+    target = target.declaration
+  }
+  if (isFunctionDeclaration(target)) {
+    fnItselfNode = target
+    fnName = target.id?.name ?? ''
+  }
+  else if (
+    isVariableDeclaration(target)
       && (
         (
           isFunctionExpression(target.declarations[0].init)
@@ -222,27 +230,32 @@ export function getFunctionInfo(node: Node): {
         )
         && isIdentifier(target.declarations[0].id)
       )
-    ) {
-      fnItselfNode = target.declarations[0].init
-      fnName = target.declarations[0].id.name
-    }
-  })
+  ) {
+    fnItselfNode = target.declarations[0].init
+    fnName = target.declarations[0].id.name
+  }
   return {
     fnItselfNode,
     fnName,
   }
 }
 
-export function getVineTagTemplateStringNode(
-  node: Node,
-): TaggedTemplateExpression | undefined {
-  let vineTagTmplNode: TaggedTemplateExpression | undefined
+export function findVineTagTemplateStringReturn(node: Node) {
+  let templateReturn: ReturnStatement | undefined
+  let templateStringNode: TaggedTemplateExpression | undefined
   traverse(node, (descendant) => {
-    if (isVineTaggedTemplateString(descendant)) {
-      vineTagTmplNode = descendant
+    if (isReturnStatement(descendant)) {
+      templateReturn = descendant
+
+      if (isVineTaggedTemplateString(descendant.argument)) {
+        templateStringNode = descendant.argument
+      }
     }
   })
-  return vineTagTmplNode
+  return {
+    templateReturn,
+    templateStringNode,
+  }
 }
 
 export function getImportStatments(root: ParseResult<File>) {

@@ -13,7 +13,7 @@
     "src",
     "test",
     "index.ts",
-    "../vite-plugin/src/parse-query.ts", "../vite-plugin/src/parse-query.ts"],
+    "../vite-plugin/src/parse-query.ts", "../vite-plugin/src/parse-query.ts", "../compiler-babel/src/template/importUsageCheck.ts"],
   "exclude": [
     "dist"
   ]
