@@ -39,7 +39,6 @@ import type {
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
-  VineCompilerOptions,
   VineFileCtx,
   VinePropMeta,
   VineStyleLang,
@@ -596,7 +595,6 @@ function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
 }
 
 function analyzeFileImportStmts(
-  compilerOptions: VineCompilerOptions,
   vineFileCtx: VineFileCtx,
 ) {
   const { root } = vineFileCtx
@@ -707,11 +705,15 @@ function buildVineCompFnCtx(
 }
 
 export function analyzeVine(
-  compilerOptions: VineCompilerOptions,
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
 ) {
+  // Analyze all import statements in this file
+  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
+  // in order to create binding records
+  analyzeFileImportStmts(vineFileCtx)
+
   // Analyze all Vine component function in this file
   vineCompFnDecls.forEach(
     (vineFnCompDecl) => {
@@ -724,9 +726,4 @@ export function analyzeVine(
       )
     },
   )
-
-  // Analyze all import statements in this file
-  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
-  // in order to create binding records
-  analyzeFileImportStmts(compilerOptions, vineFileCtx)
 }

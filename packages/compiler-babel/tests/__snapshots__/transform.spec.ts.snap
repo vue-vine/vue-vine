@@ -154,6 +154,10 @@ import \\"testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyP
 import \\"testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
 const MyProfile = (() => {
+  const _withScopeId = (n) => (
+    _pushScopeId(\\"data-v-25e4e706\\"), (n = n()), _popScopeId(), n
+  );
+  const _hoisted_1 = { class: \\"my-profile\\" };
   const __vine = _defineComponent({
     name: \\"MyProfile\\",
     props: {
@@ -226,6 +230,18 @@ const MyProfile = (() => {
 })();
 
 const MyApp = (() => {
+  const _withScopeId = (n) => (
+    _pushScopeId(\\"data-v-b909f216\\"), (n = n()), _popScopeId(), n
+  );
+  const _hoisted_1 = { class: \\"my-app\\" };
+  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
+    /*#__PURE__*/ _createElementVNode(
+      \\"h2\\",
+      null,
+      \\"Hello world\\",
+      -1 /* HOISTED */,
+    ),
+  );
   const __vine = _defineComponent({
     name: \\"MyApp\\",
     /* No props */

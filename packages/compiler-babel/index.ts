@@ -6,9 +6,9 @@ import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
 import { transformFile } from './src/transform'
 
-// export {
-//   compileVineStyle,
-// } from './src/style/compile'
+export {
+  compileVineStyle,
+} from './src/style/compile'
 
 // export {
 //   findTemplateAllScriptNode,
@@ -79,7 +79,7 @@ export function compileVineTypeScriptFile(
   }
 
   // 2. Analysis
-  analyzeVine(compilerOptions, compilerHooks, vineFileCtx, vineCompFnDecls)
+  analyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
   compilerHooks.onAnalysisEnd?.()
 
   // 3. Codegen, or call it "transform"

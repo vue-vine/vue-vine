@@ -3,6 +3,7 @@ import {
   isArrowFunctionExpression,
   isCallExpression,
   isClassDeclaration,
+  isExportDefaultDeclaration,
   isExportNamedDeclaration,
   isFunctionDeclaration,
   isFunctionExpression,
@@ -36,8 +37,12 @@ const vineRootScopeStatementTypeValidators = [
 ] as const
 
 export function isVineCompFnDecl(target: Node) {
-  let result = false
-  if (isExportNamedDeclaration(target) && target.declaration) {
+  let isFound = false
+  if (
+    (
+      isExportNamedDeclaration(target)
+      || isExportDefaultDeclaration(target)
+    ) && target.declaration) {
     target = target.declaration
   }
   if (
@@ -46,25 +51,24 @@ export function isVineCompFnDecl(target: Node) {
   ) {
     traverse(target, (node) => {
       if (
-        isReturnStatement(node)
+        !isFound
+        && isReturnStatement(node)
         && node.argument
         && isVineTaggedTemplateString(node.argument)
       ) {
-        result = true
+        isFound = true
       }
     })
   }
-  return result
+  return isFound
 }
 
 export function findVineCompFnDecls(root: VineBabelRoot) {
   const vineFnComps: Node[] = []
   for (const stmt of root.program.body) {
-    traverse(stmt, (rootStmtNode) => {
-      if (isVineCompFnDecl(rootStmtNode)) {
-        vineFnComps.push(rootStmtNode)
-      }
-    })
+    if (isVineCompFnDecl(stmt)) {
+      vineFnComps.push(stmt)
+    }
   }
   return vineFnComps
 }

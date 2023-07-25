@@ -1,9 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { parse as babelParse } from '@babel/parser'
 import {
-  type FunctionDeclaration,
-  type Identifier,
-  type VariableDeclaration,
   assignmentExpression,
   blockStatement,
   callExpression,
@@ -13,6 +10,12 @@ import {
   memberExpression,
   numericLiteral,
   program,
+} from '@babel/types'
+import type {
+  ExportDefaultDeclaration,
+  FunctionDeclaration,
+  Identifier,
+  VariableDeclaration,
 } from '@babel/types'
 import {
   findVineCompFnDecls,
@@ -49,7 +52,7 @@ export default function App() {
     const foundVCFs = findVineCompFnDecls(root)
     expect(foundVCFs).toHaveLength(2)
     expect(((foundVCFs[0] as VariableDeclaration).declarations[0]?.id as Identifier).name).toBe('Caculator')
-    expect((foundVCFs[1] as FunctionDeclaration).id?.name).toBe('App')
+    expect(((foundVCFs[1] as ExportDefaultDeclaration).declaration as FunctionDeclaration).id?.name).toBe('App')
   })
 })
 

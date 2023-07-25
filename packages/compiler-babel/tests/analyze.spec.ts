@@ -182,9 +182,11 @@ export function MyComp() {
         "MyOutSideFunc": "literal-const",
         "MyOutsideClass": "literal-const",
         "MyOutsideVar": "literal-const",
-        "count": "setup-maybe-ref",
+        "count": "setup-ref",
         "prop1": "setup-ref",
-        "state": "setup-maybe-ref",
+        "reactive": "setup-const",
+        "ref": "setup-const",
+        "state": "setup-reactive-const",
       }
     `)
   })

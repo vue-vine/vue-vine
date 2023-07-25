@@ -4,11 +4,11 @@ import {
   compileVineStyle,
   compileVineTypeScriptFile,
   createCompilerCtx,
-} from '@vue-vine/compiler'
+} from '@vue-vine/compiler-babel'
 import type {
   VineCompilerOptions,
   VineProcessorLang,
-} from '@vue-vine/compiler'
+} from '@vue-vine/compiler-babel'
 import type { VineQuery } from './src/parse-query'
 import { parseQuery } from './src/parse-query'
 import { handleHotUpdate } from './src/hot-update'
@@ -52,7 +52,6 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
-
     return vineFileCtx.fileSourceCode.toString()
   }
   const runCompileStyle = async (
@@ -70,7 +69,6 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         preprocessLang: query.lang as VineProcessorLang,
       },
     )
-
     return compiled
   }
 

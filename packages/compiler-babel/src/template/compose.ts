@@ -134,7 +134,7 @@ export function createSeparatedTemplateComposer(
         },
       )
 
-      const { preamble, code } = compileResult
+      const { code } = compileResult
       const generatedCodeAst = babelParse(code)
 
       // Find all import statements and store specifiers
@@ -147,15 +147,23 @@ export function createSeparatedTemplateComposer(
 
       let exportRenderFnNode: Node | undefined
       for (const codeStmt of generatedCodeAst.program.body) {
-        if (isExportRenderFnNode(codeStmt)) {
-          exportRenderFnNode = codeStmt
+        if (isImportDeclaration(codeStmt)) {
+          // Skip import statements
+          continue
         }
+        else if (isExportRenderFnNode(codeStmt)) {
+          exportRenderFnNode = codeStmt
+          continue
+        }
+        appendToMapArray(
+          generatedPreambleStmts,
+          vineFnCompCtx,
+          code.slice(
+            codeStmt.start!,
+            codeStmt.end!,
+          ),
+        )
       }
-      appendToMapArray(
-        generatedPreambleStmts,
-        vineFnCompCtx,
-        preamble,
-      )
 
       if (!exportRenderFnNode) {
         compilerHooks.onError(vineErr(vineFileCtx, {
@@ -206,6 +214,9 @@ export function createSeparatedTemplateComposer(
           setupFnReturns
         += `get ${key}() { return ${key} }, `
         + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
+        }
+        else if (bindingMetadata[key] === VineBindingTypes.PROPS) {
+          // Skip props bindings
         }
         else {
           setupFnReturns += `${key}, `
