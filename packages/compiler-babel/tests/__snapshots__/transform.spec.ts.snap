@@ -28,6 +28,15 @@ const MyProfile = (() => {
   );
   const _hoisted_1 = { class: \\"my-profile\\" };
   const __vine = _defineComponent({
+    name: \\"MyProfile\\",
+    props: {
+      name: { required: true },
+      age: { required: true },
+      bio: {
+        /* Simple prop */
+      },
+    },
+    /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = _useDefaults(__props, {
         age: 18,
@@ -95,6 +104,9 @@ const MyApp = (() => {
     ),
   );
   const __vine = _defineComponent({
+    name: \\"MyApp\\",
+    /* No props */
+    /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
 
@@ -143,6 +155,15 @@ import \\"testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyA
 
 const MyProfile = (() => {
   const __vine = _defineComponent({
+    name: \\"MyProfile\\",
+    props: {
+      name: { required: true },
+      age: { required: true },
+      bio: {
+        /* Simple prop */
+      },
+    },
+    /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = _useDefaults(__props, {
         age: 18,
@@ -206,6 +227,9 @@ const MyProfile = (() => {
 
 const MyApp = (() => {
   const __vine = _defineComponent({
+    name: \\"MyApp\\",
+    /* No props */
+    /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
 

@@ -30,7 +30,7 @@
     "vite": "^4.0.0"
   },
   "dependencies": {
-    "@vue-vine/compiler": "workspace:*"
+    "@vue-vine/compiler-babel": "workspace:*"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.1",

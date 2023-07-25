@@ -5,7 +5,7 @@ import { sortStyleImport } from './style/order'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
 import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
 import type { VineCompilerHooks, VineFileCtx } from './types'
-import { showIf } from './utils'
+import { filterJoin, showIf } from './utils'
 import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import { compileCSSVars } from './style/transform-css-var'
 
@@ -262,7 +262,47 @@ export function transformFile(
 
       ms.prependLeft(firstStmt.start!, `setup(${setupFormalParams}) {\n`)
       ms.appendRight(lastStmt.end!, '\n}')
-      ms.prependLeft(firstStmt.start!, 'const __vine = _defineComponent({\n')
+      ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
+        vineCompFnCtx.options
+          ? `...${ms.original.slice(
+            vineCompFnCtx.options.start!,
+            vineCompFnCtx.options.end!,
+          )},`
+          : `name: '${vineCompFnCtx.fnName}',`
+      }\n${
+        Object.keys(vineCompFnCtx.props).length > 0
+          ? `props: {\n${
+            Object.entries(vineCompFnCtx.props).map(([propName, propMeta]) => {
+              const metaFields = []
+              if (propMeta.isRequired) {
+                metaFields.push('required: true')
+              }
+              if (propMeta.isBool) {
+                metaFields.push('type: Boolean')
+              }
+              if (propMeta.validator) {
+                metaFields.push(`validator: ${
+                  ms.original.slice(
+                    propMeta.validator.start!,
+                    propMeta.validator.end!,
+                  )
+                }`)
+              }
+              return `${propName}: { ${
+                showIf(
+                  metaFields.filter(Boolean).length > 0,
+                  filterJoin(metaFields, ', '),
+                  '/* Simple prop */',
+                )
+              } },`
+            }).join('\n')
+          }\n},`
+          : '/* No props */'
+      }\n${
+        vineCompFnCtx.emits.length > 0
+          ? `emits: [${vineCompFnCtx.emits.map(emit => `'${emit}'`).join(', ')}],`
+          : '/* No emits */'
+      }\n`)
       ms.appendRight(lastStmt.end!, '\n})')
       ms.prependLeft(firstStmt.start!, `\n${
         vineCompFnCtx.isExport ? 'export ' : ''
