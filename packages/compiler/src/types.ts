@@ -61,7 +61,7 @@ export interface VineCompilerOptions {
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
-  location: SourceLocation | null | undefined
+  range: [number, number] | undefined
   scoped: boolean
   fileCtx: VineFileCtx
 }

@@ -314,28 +314,32 @@ function analyzeVineFnBodyStmtForBindings(
   return isAllLiteral
 }
 
-function getVineStyleSource(
-  vineStyleArg: VineStyleValidArg,
-) {
+function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
   let styleLang: VineStyleLang = 'css'
   let styleSource = ''
+  let range: [number, number] | undefined
   if (isTaggedTemplateExpression(vineStyleArg)) {
     const { tag } = vineStyleArg
     if (isIdentifier(tag)) {
       styleLang = tag.name as VineStyleLang
-      styleSource = vineStyleArg.quasi.quasis[0].value.raw
+      const styleSourceNode = vineStyleArg.quasi.quasis[0]
+      styleSource = styleSourceNode.value.raw
+      range = [styleSourceNode.start!, styleSourceNode.end!]
     }
   }
   else if (isStringLiteral(vineStyleArg)) {
     styleSource = vineStyleArg.value
+    range = [vineStyleArg.start!, vineStyleArg.end!]
   }
   else if (isTemplateLiteral(vineStyleArg)) {
-    styleSource = vineStyleArg.quasis[0].value.raw
+    const styleSourceNode = vineStyleArg.quasis[0]
+    styleSource = styleSourceNode.value.raw
+    range = [styleSourceNode.start!, styleSourceNode.end!]
   }
-
   return {
     styleSource,
     styleLang,
+    range,
   }
 }
 
@@ -541,13 +545,13 @@ const analyzeVineStyle: AnalyzeRunner = (
   if (!vineStyleArg) {
     return
   }
-  const { styleLang, styleSource } = getVineStyleSource(
+  const { styleLang, styleSource, range } = getVineStyleSource(
     vineStyleArg as VineStyleValidArg,
   )
   const styleMeta: VineStyleMeta = {
     lang: styleLang,
     source: styleSource,
-    location: vineStyleArg.loc,
+    range,
     scoped: macroCalleeName === 'vineStyle.scoped',
     fileCtx: vineFileCtx,
   }
