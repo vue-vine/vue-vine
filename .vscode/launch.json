@@ -16,12 +16,12 @@
       ],
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
-      ]
-      // ** This preLaunchTask is not executable in Windows VSCode **
-      // "preLaunchTask": {
-      //   "type": "npm",
-      //   "script": "ext:dev"
-      // }
+      ],
+      // ** This preLaunchTask may not execute correctly in Windows VSCode **
+      "preLaunchTask": {
+        "type": "npm",
+        "script": "ext:dev"
+      }
     },
     {
       "name": "Attach to Server",

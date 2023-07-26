@@ -5,7 +5,7 @@ import type { CompilerError } from '@vue/compiler-dom'
 import type { VineFile } from './language'
 
 export function transformVineDiagnostic(
-  file: VineFile,
+  _: VineFile,
   diag: VineDiagnostic,
   type: 'err' | 'warn',
 ): Diagnostic {
@@ -14,8 +14,14 @@ export function transformVineDiagnostic(
       ? DiagnosticSeverity.Error
       : DiagnosticSeverity.Warning,
     range: {
-      start: file.textDocument.positionAt(diag.range?.start.index ?? 0),
-      end: file.textDocument.positionAt(diag.range?.end.index ?? 0),
+      start: {
+        line: diag.location?.start.line ?? 0,
+        character: diag.location?.start.column ?? 0,
+      },
+      end: {
+        line: diag.location?.end.line ?? 0,
+        character: diag.location?.end.column ?? 0,
+      },
     },
     source: 'vue-vine',
     message: diag.msg,

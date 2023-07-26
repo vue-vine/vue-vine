@@ -8,7 +8,6 @@ import { generate as generateTemplate } from '@vue/language-core/out/generators/
 import * as muggle from 'muggle-string'
 import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { compile } from '@vue/compiler-dom'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
 
@@ -131,8 +130,8 @@ export class VineFile implements VirtualFile {
   addEmbeddedStyleFiles() {
     for (const [scopeId, styleDefine] of Object.entries(this.vineFileCtx.styleDefine)) {
       const { lang, source, range, fileCtx } = styleDefine
-      const { start, end } = range
-      const belongComp = fileCtx.vineFnComps.find(comp => comp.scopeId === scopeId)
+      const [start, end] = range!
+      const belongComp = fileCtx.vineCompFns.find(comp => comp.scopeId === scopeId)
       const virtualFileExt: VineVirtualFileExtension = (() => {
         switch (lang) {
           case 'css':
@@ -153,33 +152,28 @@ export class VineFile implements VirtualFile {
             virtualFileExt,
             belongComp?.fnName ?? scopeId,
           ),
-          [
-            // +1/-1 to skip the first/last quote
-            start.index + 1,
-            end.index - 1,
-          ],
+          // +1/-1 to skip the first/last quote
+          [start + 1, end - 1],
         ),
       )
     }
   }
 
   addEmbeddedTemplateFiles() {
-    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
-      const { template } = vineFnCompCtx
-      const range = template.range()
-
+    for (const vineFnCompCtx of this.vineFileCtx.vineCompFns) {
+      const { templateSource, templateStringNode } = vineFnCompCtx
       this.embeddedFiles.push(
         this.createEmbeddedFile(
-          template.text().slice(1, -1), // skip quotes
+          templateSource,
           virtualFileName(
             this.sourceFileName,
             'html',
             vineFnCompCtx.fnName ?? vineFnCompCtx.scopeId,
           ),
+          // +1/-1 to skip the first/last quote
           [
-            // +1/-1 to skip the first/last quote
-            range.start.index + 1,
-            range.end.index - 1,
+            templateStringNode!.quasi.quasis[0]!.start! + 1,
+            templateStringNode!.quasi.quasis[0]!.end! - 1,
           ],
         ),
       )
@@ -191,33 +185,28 @@ export class VineFile implements VirtualFile {
     const codes: muggle.Segment<FileRangeCapabilities>[] = []
     const mirrorBehaviorMappings: NonNullable<VirtualFile['mirrorBehaviorMappings']> = []
 
-    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
-      const { template } = vineFnCompCtx
-      const range = template.range()
-      const offset = range.start.index + 1 // +1/-1 to skip the first/last quote
-      const text = template.text().slice(1, -1) // skip quotes
+    for (const vineFnCompCtx of this.vineFileCtx.vineCompFns) {
+      const { templateStringNode, templateSource, templateAst } = vineFnCompCtx
+      const start = templateStringNode!.start!
+      const end = templateStringNode!.end!
+      const offset = start + 5 // 5 = 'vine`'.length
 
       codes.push([
-        this.snapshot.getText(lastCodeOffset, range.start.index),
+        this.snapshot.getText(lastCodeOffset, start),
         undefined,
         lastCodeOffset,
         FileRangeCapabilities.full,
       ])
       codes.push('(() => {\n')
-
-      const { ast } = compile(text, {
-        onError: (err) => { console.log('[volar template compile error]', err) },
-        onWarn: (warn) => { console.log('[volar template compile warn]', warn) },
-      })
       const generatedTemplate = generateTemplate(
         this.ts as any,
         {},
         resolveVueCompilerOptions({}),
-        text,
+        templateSource,
         'html',
         {
           styles: [],
-          templateAst: ast,
+          templateAst,
         } as any,
         false,
         false,
@@ -250,7 +239,7 @@ export class VineFile implements VirtualFile {
       codes.push(...transformedTemplateCode)
       codes.push('})')
 
-      lastCodeOffset = range.end.index
+      lastCodeOffset = end
     }
 
     codes.push([

@@ -39,6 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
     clientOptions,
   )
   await client.start()
+  // eslint-disable-next-line no-console
   console.log('Vine language server started')
 
   const disposable = vscode.commands.registerCommand(
