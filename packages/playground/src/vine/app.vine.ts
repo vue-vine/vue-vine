@@ -34,7 +34,7 @@ function BlogPost(props: {
     mockPostUpdate()
   }, { immediate: true })
 
-  return vine`
+  return vine`j
     <article>
       <PostHeader title="Vue Vine Playground" author="ShenQingchuan" />
       <div class="blog-post-abstract-title">

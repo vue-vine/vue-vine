@@ -17,7 +17,6 @@
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
       ],
-      // ** This preLaunchTask may not execute correctly in Windows VSCode **
       "preLaunchTask": {
         "type": "npm",
         "script": "ext:dev"

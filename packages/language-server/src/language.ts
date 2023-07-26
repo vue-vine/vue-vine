@@ -1,8 +1,10 @@
+import { posix as path } from 'node:path'
 import type { Language, VirtualFile } from '@volar/language-core'
 import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabilities } from '@volar/language-core'
 import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
+import type { VueCompilerOptions } from '@vue/language-core'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
 import * as muggle from 'muggle-string'
@@ -10,6 +12,7 @@ import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
+import { getTypesCode } from './globalTypes'
 
 function virtualFileName(
   sourceFileName: string,
@@ -29,6 +32,29 @@ export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary
     },
     updateVirtualFile(vineFile, snapshot) {
       vineFile.update(snapshot)
+    },
+    resolveHost(host) {
+      const sharedTypesSnapshot = ts.ScriptSnapshot.fromString(getTypesCode({
+        lib: 'vue',
+        strictTemplates: true,
+        target: ts.ScriptTarget.ESNext,
+      } as VueCompilerOptions))
+      const sharedTypesFileName = path.join(host.rootPath, '__VLS_types.d.ts')
+      return {
+        ...host,
+        getScriptFileNames() {
+          return [
+            sharedTypesFileName,
+            ...host.getScriptFileNames(),
+          ]
+        },
+        getScriptSnapshot(fileName) {
+          if (fileName === sharedTypesFileName) {
+            return sharedTypesSnapshot
+          }
+          return host.getScriptSnapshot(fileName)
+        },
+      }
     },
   }
   return language
