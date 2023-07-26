@@ -6,11 +6,24 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Vine extension",
+      "name": "Pure Run Vine extension",
       "type": "extensionHost",
       "request": "launch",
       "args": [
         "--disable-extensions",
+        "--inspector",
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext",
+        "--folder-uri=${workspaceRoot}/packages/playground"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
+      ]
+    },
+    {
+      "name": "Run Vine extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
         "--inspector",
         "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext",
         "--folder-uri=${workspaceRoot}/packages/playground"
