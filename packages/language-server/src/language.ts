@@ -4,7 +4,6 @@ import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabi
 import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
-import type { VueCompilerOptions } from '@vue/language-core'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
 import * as muggle from 'muggle-string'
@@ -34,11 +33,7 @@ export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary
       vineFile.update(snapshot)
     },
     resolveHost(host) {
-      const sharedTypesSnapshot = ts.ScriptSnapshot.fromString(getTypesCode({
-        lib: 'vue',
-        strictTemplates: true,
-        target: ts.ScriptTarget.ESNext,
-      } as VueCompilerOptions))
+      const sharedTypesSnapshot = ts.ScriptSnapshot.fromString(getTypesCode())
       const sharedTypesFileName = path.join(host.rootPath, '__VLS_types.d.ts')
       return {
         ...host,

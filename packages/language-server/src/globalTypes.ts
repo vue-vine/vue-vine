@@ -1,7 +1,4 @@
-import type { VueCompilerOptions } from '@vue/language-core'
-import { getSlotsPropertyName } from './utils'
-
-export function getTypesCode(vueCompilerOptions: VueCompilerOptions) {
+export function getTypesCode() {
   return `
 // @ts-nocheck
 
@@ -19,7 +16,7 @@ type __VLS_GlobalComponents =
   __VLS_PickNotAny<import('vue').GlobalComponents, {}>
   & __VLS_PickNotAny<import('@vue/runtime-core').GlobalComponents, {}>
   & __VLS_PickNotAny<import('@vue/runtime-dom').GlobalComponents, {}>
-  & Pick<typeof import('${vueCompilerOptions.lib}'),
+  & Pick<typeof import('vue'),
     'Transition'
     | 'TransitionGroup'
     | 'KeepAlive'
@@ -49,7 +46,7 @@ declare function __VLS_getVForSourceType<T>(source: T): [
 declare function __VLS_getSlotParams<T>(slot: T): Parameters<__VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>;
 declare function __VLS_getSlotParam<T>(slot: T): Parameters<__VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>[0];
 declare function __VLS_directiveFunction<T>(dir: T):
-  T extends import('${vueCompilerOptions.lib}').ObjectDirective<infer E, infer V> | import('${vueCompilerOptions.lib}').FunctionDirective<infer E, infer V> ? (value: V) => void
+  T extends import('vue').ObjectDirective<infer E, infer V> | import('vue').FunctionDirective<infer E, infer V> ? (value: V) => void
   : T;
 declare function __VLS_withScope<T, K>(ctx: T, scope: K): ctx is T & K;
 declare function __VLS_makeOptional<T>(t: T): { [K in keyof T]?: T[K] };
@@ -62,7 +59,7 @@ type __VLS_WithComponent<N0 extends string, LocalComponents, N1 extends string, 
   N1 extends keyof __VLS_GlobalComponents ? N1 extends N0 ? Pick<__VLS_GlobalComponents, N0> : { [K in N0]: __VLS_GlobalComponents[N1] } :
   N2 extends keyof __VLS_GlobalComponents ? N2 extends N0 ? Pick<__VLS_GlobalComponents, N0> : { [K in N0]: __VLS_GlobalComponents[N2] } :
   N3 extends keyof __VLS_GlobalComponents ? N3 extends N0 ? Pick<__VLS_GlobalComponents, N0> : { [K in N0]: __VLS_GlobalComponents[N3] } :
-  ${vueCompilerOptions.strictTemplates ? '{}' : '{ [K in N0]: unknown }'}
+  {};
 
 type __VLS_FillingEventArg_ParametersLength<E extends (...args: any) => any> = __VLS_IsAny<Parameters<E>> extends true ? -1 : Parameters<E>['length'];
 type __VLS_FillingEventArg<E> = E extends (...args: any) => any ? __VLS_FillingEventArg_ParametersLength<E> extends 0 ? ($event?: undefined) => ReturnType<E> : E : E;
@@ -88,14 +85,14 @@ type __VLS_EmitEvent<F, E> =
   : unknown | '[Type Warning] Volar could not infer $emit event more than 4 overloads without DefineComponent. see https://github.com/vuejs/language-tools/issues/60';
 declare function __VLS_asFunctionalComponent<T, K = T extends new (...args: any) => any ? InstanceType<T> : unknown>(t: T, instance?: K):
   T extends new (...args: any) => any
-  ? (props: (K extends { $props: infer Props } ? Props : any)${vueCompilerOptions.strictTemplates ? '' : ' & Record<string, unknown>'}, ctx?: {
+  ? (props: (K extends { $props: infer Props } ? Props : any), ctx?: {
     attrs?: any,
-    slots?: K extends { ${getSlotsPropertyName(vueCompilerOptions.target)}: infer Slots } ? Slots : any,
+    slots?: K extends { '$slots': infer Slots } ? Slots : any,
     emit?: K extends { $emit: infer Emit } ? Emit : any
   }) => JSX.Element & { __ctx?: typeof ctx & { props?: typeof props; expose?(exposed: K): void; } }
   : T extends () => any ? (props: {}, ctx?: any) => ReturnType<T>
   : T extends (...args: any) => any ? T
-  : (_: T extends import('${vueCompilerOptions.lib}').VNode | import('${vueCompilerOptions.lib}').VNode[] | string ? {}: T${vueCompilerOptions.strictTemplates ? '' : ' & Record<string, unknown>'}, ctx?: any) => { __ctx?: { attrs?: any, expose?: any, slots?: any, emit?: any, props?: T${vueCompilerOptions.strictTemplates ? '' : ' & Record<string, unknown>'} } }; // IntrinsicElement
+  : (_: T extends import('vue').VNode | import('vue').VNode[] | string ? {}: T, ctx?: any) => { __ctx?: { attrs?: any, expose?: any, slots?: any, emit?: any, props?: T } }; // IntrinsicElement
 declare function __VLS_functionalComponentArgsRest<T extends (...args: any) => any>(t: T): Parameters<T>['length'] extends 2 ? [any] : [];
 declare function __VLS_pickEvent<Emit, K, E>(emit: Emit, emitKey: K, event: E): __VLS_FillingEventArg<
   __VLS_PickNotAny<
