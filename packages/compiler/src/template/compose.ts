@@ -1,12 +1,12 @@
-import type { BindingTypes, CompilerOptions } from '@vue/compiler-dom'
 import { compile } from '@vue/compiler-dom'
-import type { SgNode } from '@ast-grep/napi'
-import { html, ts } from '@ast-grep/napi'
-import { VineBindingTypes } from '../types'
-import type { VineFileCtx, VineFnCompCtx } from '../types'
-import { ruleImportSpecifier, ruleImportStmt } from '../ast-grep/rules-for-script'
-import { dedupe } from '../utils'
-import { findMatchedTagName, findTemplateAllIdentifiers } from './parse'
+import type { BindingTypes, CompilerOptions } from '@vue/compiler-dom'
+import type { ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
+import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
+import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
+import { babelParse } from '../babel-helpers/parse'
+import { appendToMapArray } from '../utils'
+import { vineErr } from '../diagnostics'
+import { VineBindingTypes } from '../constants'
 
 export function compileVineTemplate(
   source: string,
@@ -22,208 +22,185 @@ export function compileVineTemplate(
   })
 }
 
+interface DefaultImportSpecifierMeta { type: 'defaultSpecifier'; localName: string }
+interface NamespaceImportSpecifierMeta { type: 'namespaceSpecifier'; localName: string }
+export interface NamedImportSpecifierMeta { type: 'namedSpecifier'; specs: Map<string, string> }
+export type MergedImportsMap = Map<
+  string,
+  | DefaultImportSpecifierMeta
+  | NamedImportSpecifierMeta
+  | NamespaceImportSpecifierMeta
+>
+
 export interface TemplateCompileComposer {
-  runTemplateCompile: (params: {
+  compileSetupFnReturns: (params: {
     vineFileCtx: VineFileCtx
-    vineFnCompCtx: VineFnCompCtx
-    generatedImportsMap: Map<string, Map<string, string>>
+    vineCompFnCtx: VineCompFnCtx
     templateSource: string
-    allBindings: {
-      scriptBindings: Record<string, BindingTypes>
-      fileSharedCompBindings: Record<string, BindingTypes>
-    }
-  }) => string // this returned string is corresponding setup function's return expression
-  templateCompileResults: WeakMap<VineFnCompCtx, string>
-  notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]>
+    mergedImportsMap: MergedImportsMap
+    bindingMetadata: Record<string, BindingTypes>
+  }) => string
+  templateCompileResults: WeakMap<VineCompFnCtx, string>
+  generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]>
 }
 
-function storeImportSpecifiers(
-  generatedImportsMap: Map<string, Map<string, string>>,
-  importStmts: SgNode[],
+function saveImportSpecifier(
+  mergedImportsMap: MergedImportsMap,
+  importStmts: ImportDeclaration[],
 ) {
   for (const importStmt of importStmts) {
-    const allImportSpecs = importStmt.findAll(ruleImportSpecifier)
-    const source = importStmt.field('source')!.text().slice(1, -1) // remove quotes
-    for (const importSpec of allImportSpecs) {
-      const importName = importSpec.field('name')!
-      const importAlias = importSpec.field('alias')
-      const specPairs = generatedImportsMap.get(source)
-      if (!specPairs) {
-        const newSpecPairs = new Map<string, string>()
-        newSpecPairs.set(
-          importName.text(),
-          importAlias?.text() ?? importName.text(),
+    const allImportSpecs = importStmt.specifiers
+    const source = importStmt.source.value
+    for (const spec of allImportSpecs) {
+      if (isImportSpecifier(spec)) {
+        const specName = (
+          isIdentifier(spec.imported)
+            ? spec.imported.name
+            : spec.imported.value
         )
-        generatedImportsMap.set(
+        const specAlias = (
+          isIdentifier(spec.local)
+            ? spec.local.name
+            : specName
+        )
+        const specMeta = mergedImportsMap.get(source)
+        if (!specMeta) {
+          mergedImportsMap.set(
+            source,
+            {
+              type: 'namedSpecifier',
+              specs: new Map([[specName, specAlias]]),
+            },
+          )
+        }
+        else {
+          (specMeta as NamedImportSpecifierMeta).specs.set(specName, specAlias)
+        }
+      }
+      else if (isImportDefaultSpecifier(spec)) {
+        mergedImportsMap.set(
           source,
-          newSpecPairs,
+          {
+            type: 'defaultSpecifier',
+            localName: spec.local.name,
+          },
         )
       }
       else {
-        specPairs.set(
-          importName.text(),
-          importAlias?.text() ?? importName.text(),
+        mergedImportsMap.set(
+          source,
+          {
+            type: 'namespaceSpecifier',
+            localName: spec.local.name,
+          },
         )
       }
     }
   }
 }
 
-function appendToStoreMap<K extends object, V>(
-  storeMap: WeakMap<K, V[]>,
-  key: K,
-  value: V,
-) {
-  storeMap.set(
-    key,
-    [
-      ...(storeMap.get(key) ?? []),
-      value,
-    ],
+function isExportRenderFnNode(node: Node): node is ExportNamedDeclaration {
+  if (!isExportNamedDeclaration(node)) {
+    return false
+  }
+  return (
+    isFunctionDeclaration(node.declaration)
+    && node.declaration.id?.name === 'render'
   )
 }
 
-export function createInlineTemplateComposer(): TemplateCompileComposer {
-  const templateCompileResults: WeakMap<VineFnCompCtx, string> = new WeakMap()
-  const notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]> = new WeakMap()
+export function createSeparatedTemplateComposer(
+  compilerHooks: VineCompilerHooks,
+): TemplateCompileComposer {
+  const templateCompileResults: WeakMap<VineCompFnCtx, string> = new WeakMap()
+  const generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]> = new WeakMap()
 
   return {
     templateCompileResults,
-    notImportPreambleStmtStore,
-    runTemplateCompile: ({
-      vineFnCompCtx,
-      generatedImportsMap,
-      templateSource,
-      allBindings,
-    }) => {
-      const compileResult = compileVineTemplate(
-        templateSource,
-        {
-          scopeId: `data-v-${vineFnCompCtx.scopeId}`,
-          bindingMetadata: {
-            ...allBindings.scriptBindings,
-            ...allBindings.fileSharedCompBindings,
-          },
-        },
-      )
-
-      const { preamble } = compileResult
-      const preambleSgRoot = ts.parse(preamble).root()
-      const allImportStmts = preambleSgRoot.findAll(ruleImportStmt)
-      storeImportSpecifiers(generatedImportsMap, allImportStmts)
-
-      const allOtherStmts = preambleSgRoot.children().filter(
-        child => child.kind() !== 'import_statement',
-      )
-      allOtherStmts.forEach(stmt => appendToStoreMap(
-        notImportPreambleStmtStore,
-        vineFnCompCtx,
-        stmt.text(),
-      ))
-
-      // For inline mode, we can directly store the generated code,
-      // it's an inline render function
-      templateCompileResults.set(vineFnCompCtx, compileResult.code)
-
-      // For inline mode, the setup function's return expression is the render function
-      return compileResult.code
-    },
-  }
-}
-
-export function createSeparateTemplateComposer(): TemplateCompileComposer {
-  const templateCompileResults: WeakMap<VineFnCompCtx, string> = new WeakMap()
-  const notImportPreambleStmtStore: WeakMap<VineFnCompCtx, string[]> = new WeakMap()
-
-  const isExportRenderFn = (stmt: SgNode) => {
-    if (stmt.kind() !== 'export_statement') {
-      return false
-    }
-    return stmt.field('declaration')?.field('name')?.text() === 'render'
-  }
-
-  return {
-    templateCompileResults,
-    notImportPreambleStmtStore,
-    runTemplateCompile: ({
+    generatedPreambleStmts,
+    compileSetupFnReturns: ({
       vineFileCtx,
-      vineFnCompCtx,
-      generatedImportsMap,
+      vineCompFnCtx: vineFnCompCtx,
       templateSource,
-      allBindings,
+      mergedImportsMap,
+      bindingMetadata,
     }) => {
-      const bindingMetadata = {
-        ...allBindings.scriptBindings,
-        ...allBindings.fileSharedCompBindings,
-      }
       const compileResult = compileVineTemplate(
         templateSource,
         {
-          inline: false,
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
+          inline: false,
         },
       )
+
       const { code } = compileResult
-      const codeSgRoot = ts.parse(code).root()
+      const generatedCodeAst = babelParse(code)
 
       // Find all import statements and store specifiers
-      const allImportStmts = codeSgRoot.findAll(ruleImportStmt)
-      storeImportSpecifiers(generatedImportsMap, allImportStmts)
-
-      // Find all other statements
-      let exportRenderFnNode: SgNode | undefined
-      const allOtherStmts = codeSgRoot.children().filter(
-        (child) => {
-          if (child.kind() === 'import_statement') {
-            return false
-          }
-          else if (isExportRenderFn(child)) {
-            exportRenderFnNode = child
-            return false
-          }
-          return true
-        },
+      saveImportSpecifier(
+        mergedImportsMap,
+        generatedCodeAst.program.body.filter(
+          (stmt): stmt is ImportDeclaration => isImportDeclaration(stmt),
+        ),
       )
-      allOtherStmts.forEach(stmt => appendToStoreMap(
-        notImportPreambleStmtStore,
-        vineFnCompCtx,
-        stmt.text(),
-      ))
+
+      let exportRenderFnNode: Node | undefined
+      for (const codeStmt of generatedCodeAst.program.body) {
+        if (isImportDeclaration(codeStmt)) {
+          // Skip import statements
+          continue
+        }
+        else if (isExportRenderFnNode(codeStmt)) {
+          exportRenderFnNode = codeStmt
+          continue
+        }
+        appendToMapArray(
+          generatedPreambleStmts,
+          vineFnCompCtx,
+          code.slice(
+            codeStmt.start!,
+            codeStmt.end!,
+          ),
+        )
+      }
 
       if (!exportRenderFnNode) {
-        throw new Error('[Vine Error] Cannot find export render function on template composing')
+        compilerHooks.onError(vineErr(vineFileCtx, {
+          msg: '[Vine Error] Cannot find export render function on template composing',
+        }))
+        return ''
       }
       templateCompileResults.set(
         vineFnCompCtx,
-        exportRenderFnNode.text()
-          .replace(
-            'export function render',
-            'function __sfc_render',
-          ),
+        code.slice(
+          exportRenderFnNode.start!,
+          exportRenderFnNode.end!,
+        ).replace(
+          'export function render',
+          'function __sfc_render',
+        ),
       )
 
       // For separate mode, the setup function's return expression
       // is combining all the bindings from user imports and all declarations.
-      let setupFnReturns = '{ '
-      const templateUsedImportSymbol = Symbol('templateUsedImportSymbol')
-      const allReturnBindings: Record<string, BindingTypes | symbol> = {
-        ...allBindings.scriptBindings,
+      // non-inline mode, or has manual render in normal <script>
+      // return bindings from script and script setup
+      const allBindings: Record<string, any> = {
+        ...bindingMetadata,
       }
-      const templateAst = html.parse(templateSource).root()
-
-      // Find out all the import specifiers which are used in the template.
-      const returnBindingSet = new Set<string>()
-      const allIdentifiers = dedupe(findTemplateAllIdentifiers(templateAst).map(idNode => idNode.text()))
-      for (const id of allIdentifiers) {
-        const importSpecifier = vineFileCtx.userImports[id]
-        if (importSpecifier && !importSpecifier.isType) {
-          allReturnBindings[id] = templateUsedImportSymbol
+      for (const key in vineFileCtx.userImports) {
+        if (
+          !vineFileCtx.userImports[key].isType
+          && vineFileCtx.userImports[key].isUsedInTemplate
+        ) {
+          allBindings[key] = true
         }
       }
-      for (const key of Object.keys(allReturnBindings)) {
+      let setupFnReturns = '{ '
+      for (const key in allBindings) {
         if (
-          allReturnBindings[key] === templateUsedImportSymbol
+          allBindings[key] === true
           && vineFileCtx.userImports[key].source !== 'vue'
           && !vineFileCtx.userImports[key].source.endsWith('.vue')
         ) {
@@ -235,40 +212,71 @@ export function createSeparateTemplateComposer(): TemplateCompileComposer {
           // local let binding, also add setter
           const setArg = key === 'v' ? '_v' : 'v'
           setupFnReturns
-            += `get ${key}() { return ${key} }, `
-            + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
+        += `get ${key}() { return ${key} }, `
+        + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
         }
         else if (bindingMetadata[key] === VineBindingTypes.PROPS) {
-          // skip props binding
+          // Skip props bindings
         }
         else {
           setupFnReturns += `${key}, `
         }
-        returnBindingSet.add(key)
       }
-
-      // Find out if there are any tagName is component name, which is defined in current file.
-      // If so, we need to add it to the return bindings.
-      const allUsedCompTagNames = dedupe(
-        findMatchedTagName(
-          templateAst,
-          [
-            ...Object.keys(allBindings.fileSharedCompBindings),
-            ...Object.keys(vineFileCtx.userImports).filter(
-              importId => !vineFileCtx.userImports[importId].isType,
-            ),
-          ],
-        ),
-      )
-      for (const tagName of allUsedCompTagNames) {
-        if (!returnBindingSet.has(tagName)) {
-          setupFnReturns += `${tagName}, `
-          returnBindingSet.add(tagName)
-        }
-      }
-
       setupFnReturns = `${setupFnReturns.replace(/, $/, '')} }`
       return setupFnReturns
+    },
+  }
+}
+
+export function createInlineTemplateComposer(): TemplateCompileComposer {
+  const templateCompileResults: WeakMap<VineCompFnCtx, string> = new WeakMap()
+  const generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]> = new WeakMap()
+
+  return {
+    templateCompileResults,
+    generatedPreambleStmts,
+    compileSetupFnReturns: ({
+      vineCompFnCtx: vineFnCompCtx,
+      templateSource,
+      mergedImportsMap,
+      bindingMetadata,
+    }) => {
+      const compileResult = compileVineTemplate(
+        templateSource,
+        {
+          scopeId: `data-v-${vineFnCompCtx.scopeId}`,
+          bindingMetadata,
+        },
+      )
+
+      const { preamble, code } = compileResult
+      const preambleAst = babelParse(preamble)
+      // Find all import statements and store specifiers
+      saveImportSpecifier(
+        mergedImportsMap,
+        preambleAst.program.body.filter(
+          (stmt): stmt is ImportDeclaration => isImportDeclaration(stmt),
+        ),
+      )
+
+      const preambleStmts = preambleAst.program.body.filter(
+        stmt => !isImportDeclaration(stmt),
+      )
+      preambleStmts.forEach(stmt => appendToMapArray(
+        generatedPreambleStmts,
+        vineFnCompCtx,
+        preamble.slice(
+          stmt.start!,
+          stmt.end!,
+        ),
+      ))
+
+      // For inline mode, we can directly store the generated code,
+      // it's an inline render function
+      templateCompileResults.set(vineFnCompCtx, code)
+
+      // For inline mode, the setup function's return expression is the render function
+      return code
     },
   }
 }

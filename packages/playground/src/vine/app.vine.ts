@@ -1,4 +1,3 @@
-// eslint-disable-next-line unused-imports/no-unused-imports
 import { PostHeader } from './post-header.vine'
 import { randomString } from '~/utils'
 

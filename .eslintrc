@@ -1,8 +1,9 @@
 {
   "extends": "@antfu",
   "rules": {
-    "no-console": "off",
+    // "no-console": "off",
+    // "no-useless-return": "off",
     "curly": "off",
-    "no-useless-return": "off"
+    "prefer-const": "off"
   }
 }

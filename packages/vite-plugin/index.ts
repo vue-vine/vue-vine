@@ -52,8 +52,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
-
-    return vineFileCtx.fileSourceCode.toString()
+    return {
+      code: vineFileCtx.fileSourceCode.toString(),
+      map: vineFileCtx.fileSourceCode.generateMap(),
+    }
   }
   const runCompileStyle = async (
     styleSource: string,
@@ -70,7 +72,6 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         preprocessLang: query.lang as VineProcessorLang,
       },
     )
-
     return compiled
   }
 
@@ -116,7 +117,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
 
       return {
-        code: runCompileScript(code, id),
+        ...runCompileScript(code, id),
       }
     },
     handleHotUpdate,

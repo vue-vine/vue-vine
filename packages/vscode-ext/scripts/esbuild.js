@@ -11,14 +11,6 @@ require('esbuild').build({
       ? ['@vue-vine/compiler'] // In production, we use the `@vue-vine/compiler` installed under `node_modules`
       : [],
   ],
-  loader: process.env.NODE_ENV === 'production'
-    // During development, we can use a local installed `.node` executable file
-    // to run `ast-grep/napi` module, but in production, no need for that because
-    // VSCode will automatically install `@vue-vine/compiler` as a dependency under its `node_modules`,
-    ? {}
-    : {
-        '.node': 'copy',
-      },
   format: 'cjs',
   platform: 'node',
   tsconfig: './tsconfig.json',

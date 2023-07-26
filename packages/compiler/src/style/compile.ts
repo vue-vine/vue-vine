@@ -69,8 +69,7 @@ export async function compileVineStyle(
     postcssPlugins.push(cssVarsPlugin({
       fileCtx: compilerCtx.fileCtxMap.get(vineFileId)!,
       scopeId,
-    }),
-    )
+    }))
   }
 
   const postCSSOptions: ProcessOptions = {

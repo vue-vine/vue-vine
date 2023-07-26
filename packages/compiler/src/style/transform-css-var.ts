@@ -1,15 +1,19 @@
-import type { SgNode } from '@ast-grep/napi'
-import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
-import type { VineFnCompCtx, VineTemplateBindings } from '../types'
-import { spaces } from '../utils'
-import { VineBindingTypes } from '../types'
-import { CSS_VARS_HELPER } from '../constants'
+import { traverse } from '@babel/types'
+import type { Identifier, Node } from '@babel/types'
+import type { VineCompFnCtx, VineTemplateBindings } from '../types'
+import { CSS_VARS_HELPER, VineBindingTypes } from '../constants'
+import { babelParse } from '../babel-helpers/parse'
 
-function findIdentifierFromExp(cssContent: string) {
-  return ts.parse(cssContent).root().findAll({
-    rule: { kind: 'identifier' },
+function findIdentifierFromExp(scriptContent: string): Identifier[] {
+  const identifiers: Identifier[] = []
+  const ast = babelParse(scriptContent)
+  traverse(ast, (node) => {
+    if (node.type === 'Identifier') {
+      identifiers.push(node)
+    }
   })
+  return identifiers
 }
 
 function genCSSVarsList(
@@ -20,28 +24,33 @@ function genCSSVarsList(
 ) {
   let res = ''
   if (cssBindings) {
-    for (const cssBindKey in cssBindings) {
+    for (const cssBindScriptContent in cssBindings) {
       // get hash
-      const cssBindValue = cssBindings[cssBindKey]
-
-      const ms = new MagicString(cssBindKey)
-      // get Identifier sgNode
+      const cssBindValue = cssBindings[cssBindScriptContent]
+      const ms = new MagicString(cssBindScriptContent)
+      // get Identifiers
       // e.g ["(a + b) / 2 + 'px'"] -> ["a", "b"]
-      const cssBindKeySgNodes = findIdentifierFromExp(cssBindKey)
+      const cssBindKeySgNodes = findIdentifierFromExp(cssBindScriptContent)
 
       cssBindKeySgNodes.forEach((node) => {
-        const range = node.range()
-        // overwrite
+        // overwrite binding script content
         // e.g (a + b) / 2 + 'px' -> (_ctx.a + _ctx.b) / 2
         ms.overwrite(
-          range.start.index,
-          range.end.index,
+          node.start!,
+          node.end!,
           // non-inline mode only needs to rewrite the variable to `_ctx.x`
-          inline ? genCSSVarsValue(node, bindings, propsAlias) : `_ctx.${node.text()}`,
+          inline
+            ? genCSSVarsValue(ms, node, bindings, propsAlias)
+            : `_ctx.${
+              cssBindScriptContent.slice(
+                node.start!,
+                node.end!,
+              )
+            }`,
         )
       })
 
-      res = `${res}${spaces(2)}'${cssBindValue}': (${ms.toString()}),\n`
+      res = `${res}  '${cssBindValue}': (${ms.toString()}),\n`
     }
   }
 
@@ -49,36 +58,40 @@ function genCSSVarsList(
 }
 
 function genCSSVarsValue(
-  node: SgNode,
+  ms: MagicString,
+  node: Node,
   bindings: VineTemplateBindings,
   propsAlias: string,
 ) {
   let res = ''
-  const nodeContent = node.text()
+  const nodeContent = ms.original.slice(
+    node.start!,
+    node.end!,
+  )
   for (const bindingsKey in bindings) {
     const bindingValue = bindings[bindingsKey]
     if (nodeContent === bindingsKey) {
       switch (bindingValue) {
         case VineBindingTypes.PROPS:
         case VineBindingTypes.PROPS_ALIASED:
-          res = `${propsAlias}.${node.text()}`
+          res = `${propsAlias}.${nodeContent}`
           break
         case VineBindingTypes.SETUP_CONST:
         case VineBindingTypes.SETUP_REACTIVE_CONST:
         case VineBindingTypes.LITERAL_CONST:
-          res = node.text()
+          res = nodeContent
           break
         case VineBindingTypes.SETUP_MAYBE_REF:
         case VineBindingTypes.SETUP_LET:
-          res = `_unref(${node.text()})`
+          res = `_unref(${nodeContent})`
           break
         // The `vineProp` variable is inconsistent with vue here, and vue is `PROPS`
         // Because vine compilation will use `toRefs` processing
         case VineBindingTypes.SETUP_REF:
-          res = `${node.text()}.value`
+          res = `${nodeContent}.value`
           break
         default:
-          res = `_ctx.${node.text()}`
+          res = `_ctx.${nodeContent}`
       }
     }
   }
@@ -86,14 +99,14 @@ function genCSSVarsValue(
 }
 
 export function compileCSSVars(
-  vineFnCompCtx: VineFnCompCtx,
+  vineCompFnCtx: VineCompFnCtx,
   inline = false,
 ) {
   const {
     cssBindings,
     propsAlias,
     bindings,
-  } = vineFnCompCtx
+  } = vineCompFnCtx
   if (!cssBindings)
     return ''
   const varList = genCSSVarsList(
@@ -102,7 +115,5 @@ export function compileCSSVars(
     bindings,
     inline,
   )
-  return `_${CSS_VARS_HELPER}(_ctx => ({
-  ${varList}
-}))`
+  return `_${CSS_VARS_HELPER}(_ctx => ({\n${varList}\n}))`
 }

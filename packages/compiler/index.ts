@@ -1,31 +1,22 @@
-import { ts } from '@ast-grep/napi'
 import MagicString from 'magic-string'
+import { parse as babelParse } from '@babel/parser'
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './src/types'
-import { ruleVineFunctionComponentDeclaration } from './src/ast-grep/rules-for-script'
+import { findVineCompFnDecls } from './src/babel-helpers/ast'
 import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
 import { transformFile } from './src/transform'
-
-const { parse } = ts
 
 export {
   compileVineStyle,
 } from './src/style/compile'
 
-export {
-  findTemplateAllScriptSgNode,
-} from './src/template/parse'
-
-export {
-  type VineDiagnostic,
-} from './src/diagnostics'
-
-export {
-  type VineFileCtx,
-  type VineFnCompCtx,
-  type VineCompilerOptions,
-  type VineProcessorLang,
-  type VineCompilerHooks,
+export type {
+  VineFileCtx,
+  VineCompFnCtx as VineFnCompCtx,
+  VineCompilerOptions,
+  VineProcessorLang,
+  VineCompilerHooks,
+  VineDiagnostic,
 } from './src/types'
 
 export function createCompilerCtx(
@@ -48,51 +39,51 @@ export function compileVineTypeScriptFile(
   fileId: string,
   compilerHooks: VineCompilerHooks,
 ) {
-  let compilerOptions: VineCompilerOptions | undefined
+  let compilerOptions: VineCompilerOptions = {}
   compilerHooks.onOptionsResolved((options) => {
     compilerOptions = options
   })
-  // Using ast-grep to validate vine declarations
-  const sgRoot = parse(
-    // https://github.com/vue-vine/vue-vine/pull/24
-    // ast-grep will exclude the escape characters in the first line,
-    // which leads to a mismatch between the original code index
-    // and the actual file index when the range method is used in the conversion stage,
-    // then the original code cannot be completely removed by MagicString
-    code.trim(),
-  ).root()
+  // Using babel to validate vine declarations
+  const root = babelParse(code, {
+    sourceType: 'module',
+    plugins: [
+      'typescript',
+    ],
+  })
   const vineFileCtx: VineFileCtx = {
     fileId,
-    fileSourceCode: new MagicString(sgRoot.text()),
-    vineFnComps: [],
+    fileSourceCode: new MagicString(code),
+    vineCompFns: [],
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
-    sgRoot,
+    root,
   }
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
-  const vineFnCompDecls = sgRoot.findAll(
-    ruleVineFunctionComponentDeclaration,
-  )
+  const vineCompFnDecls = findVineCompFnDecls(root)
 
   // 1. Validate all vine restrictions
-  const isValidatePass = validateVine(compilerHooks, vineFileCtx, vineFnCompDecls)
+  const isValidatePass = validateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
   compilerHooks.onValidateEnd?.()
 
   if (
     !isValidatePass // Vine validation failed
-    || vineFnCompDecls.length === 0 // No vine function component declarations found
+    // || vineCompFnDecls.length === 0 // No vine component function declarations found
   ) {
     return vineFileCtx
   }
 
   // 2. Analysis
-  analyzeVine([compilerHooks, vineFileCtx], vineFnCompDecls)
+  analyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
   compilerHooks.onAnalysisEnd?.()
 
   // 3. Codegen, or call it "transform"
-  transformFile(vineFileCtx, compilerOptions?.inlineTemplate ?? true)
+  transformFile(
+    vineFileCtx,
+    compilerHooks,
+    compilerOptions?.inlineTemplate ?? true,
+  )
 
   return vineFileCtx
 }

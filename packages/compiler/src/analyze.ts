@@ -1,529 +1,237 @@
-import type { NapiConfig, SgNode } from '@ast-grep/napi'
-import { ts } from '@ast-grep/napi'
 import hashId from 'hash-sum'
-import type { VineCompilerHooks, VineFileCtx, VineFnCompCtx, VinePropMeta, VineStyleLang, VineStyleMeta, VineUserImport } from './types'
-import { VineBindingTypes } from './types'
-import { BOOL_KINDS, TS_NODE_KINDS, VINE_PROP_OPTIONAL_CALL, VINE_PROP_WITH_DEFAULT_CALL, VINE_STYLE_SCOPED_CALL } from './constants'
-import { ruleHasMacroCallExpr, ruleIdInsideMacroMayReferenceSetupLocal, ruleImportClause, ruleImportNamespace, ruleImportSpecifier, ruleImportStmt, ruleTopLevelDeclarationNames, ruleValidVinePropDeclaration, ruleVineCECall, ruleVineEmitsCall, ruleVineEmitsDeclaration, ruleVineExposeCall, ruleVineFunctionComponentMatching, ruleVineOptionsCall, ruleVinePropValidatorFnBody, ruleVineStyleCall, ruleVineTaggedTemplateString } from './ast-grep/rules-for-script'
-import { vineWarn } from './diagnostics'
+import { parse, walkIdentifiers } from '@vue/compiler-dom'
+import {
+  isArrayPattern,
+  isBlockStatement,
+  isClassDeclaration,
+  isDeclaration,
+  isExportDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
+  isImportDefaultSpecifier,
+  isImportNamespaceSpecifier,
+  isImportSpecifier,
+  isObjectPattern,
+  isStringLiteral,
+  isTaggedTemplateExpression,
+  isTemplateLiteral,
+  isVariableDeclaration,
+  isVariableDeclarator,
+  traverse,
+} from '@babel/types'
+import type {
+  ArrayPattern,
+  ArrowFunctionExpression,
+  CallExpression,
+  Declaration,
+  FunctionExpression,
+  Identifier, Node,
+  ObjectPattern,
+  Statement,
+  TSPropertySignature,
+  TSTypeAnnotation,
+  TSTypeLiteral,
+  VariableDeclaration,
+  VariableDeclarator,
+} from '@babel/types'
+import { type BindingTypes } from '@vue/compiler-dom'
+import { VineBindingTypes } from './constants'
+import type {
+  BabelFunctionNodeTypes,
+  VINE_MACRO_NAMES,
+  VineCompFnCtx,
+  VineCompilerHooks,
+  VineFileCtx,
+  VinePropMeta,
+  VineStyleLang,
+  VineStyleMeta,
+  VineStyleValidArg,
+  VineUserImport,
+} from './types'
+
+import {
+  canNeverBeRef,
+  findVineTagTemplateStringReturn,
+  getAllVinePropMacroCall,
+  getFunctionInfo,
+  getFunctionParams,
+  getImportStatments,
+  getTSTypeLiteralPropertySignatureName,
+  getVineMacroCalleeName,
+  isCallOf,
+  isStaticNode,
+  isVineCompFnDecl,
+  isVineMacroCallExpression,
+  isVineMacroOf,
+} from './babel-helpers/ast'
 import { parseCssVars } from './style/analyze-css-vars'
-import { isNotUselessPunc } from './utils'
+import { isImportUsed } from './template/importUsageCheck'
+import { vineWarn } from './diagnostics'
 
-type AnalyzeCtx = [
-  compilerHooks: VineCompilerHooks,
-  vineFileCtx: VineFileCtx,
-  vineFnCompCtx: VineFnCompCtx,
-]
-type VineFnCompDeclKind = 'function_declaration' | 'lexical_declaration'
-const reservingKindsForSetup = [
-  'lexical_declaration',
-  'function_declaration',
-  'expression_statement',
-  'class_declaration',
-  'abstract_class_declaration',
-  'interface_declaration',
-]
+interface AnalyzeCtx {
+  vineCompilerHooks: VineCompilerHooks
+  vineFileCtx: VineFileCtx
+  vineCompFnCtx: VineCompFnCtx
+}
 
-function analyzeFileImportStmts(
+type AnalyzeRunner = (
   analyzeCtx: AnalyzeCtx,
-) {
-  const [,fileCtx] = analyzeCtx
-  const { sgRoot } = fileCtx
-  const fileImportStmts = sgRoot.findAll(ruleImportStmt)
-  if (!fileImportStmts.length) {
-    return
-  }
-  for (const importStmt of fileImportStmts) {
-    const source = importStmt
-      .field('source')!
-      .text()
-      .slice(1, -1) // remove quotes
-    const isImportTypeStmt = Boolean(importStmt.child(1)?.text() === 'type')
-    const allImportClauses = importStmt.findAll(ruleImportClause)
-    for (const importClause of allImportClauses) {
-      const importMeta: VineUserImport = {
-        source,
-        isType: isImportTypeStmt,
-      }
-      const allImportSpecs = importClause.findAll(ruleImportSpecifier)
-      // Named import: shape like `import { xxx } from '...'`
-      for (const importSpec of allImportSpecs) {
-        const importSpecFirstChild = importSpec.child(0)
-        const importName = importSpec.field('name')!.text()
-        const importAlias = importSpec.field('alias')?.text()
-        if (importSpecFirstChild?.text() === 'type' && importSpecFirstChild?.kind() !== 'identifier') {
-          // `import { type XXX }` from '...'
-          importMeta.isType = true
-          fileCtx.userImports[importName] = importMeta
-          continue
+  fnItselfNode: BabelFunctionNodeTypes,
+) => void
+
+function storeTheOnlyMacroCallArg(
+  macroName: VINE_MACRO_NAMES,
+  callback: (analyzeCtx: AnalyzeCtx, macroCallArg: Node) => void,
+): AnalyzeRunner {
+  const findMacroCallNode: (fnItselfNode: BabelFunctionNodeTypes) => CallExpression | undefined = (
+    fnItselfNode,
+  ) => {
+    let vineExposeMacroCall: CallExpression | undefined
+    traverse(fnItselfNode, {
+      enter(descendant) {
+        if (isVineMacroOf(macroName)(descendant)) {
+          vineExposeMacroCall = descendant
         }
-        if (importName === 'default') {
-          // `import { default (as xxx)? }` from '...'
-          importMeta.isDefault = true
-        }
-        if (source === 'vue') {
-          fileCtx.vueImportAliases[importName] = importAlias ?? importName
-        }
-        fileCtx.userImports[importAlias ?? importName] = importMeta
-      }
-
-      // Namespace import: shape like `import * as xxx from '...'`
-      const importNamespace = importClause.find(ruleImportNamespace)
-      if (importNamespace) {
-        const importName = importNamespace.find(ts.kind('identifier'))!.text()
-        importMeta.isNamespace = true
-        fileCtx.userImports[importName] = importMeta
-        continue
-      }
-
-      // Default import: shape like `import xxx from '...'`
-      const isImportDefault = importClause.child(0)!.kind() === 'identifier'
-      if (isImportDefault) {
-        const importNameNode = importClause.child(0)!
-        importMeta.isDefault = true
-        fileCtx.userImports[importNameNode.text()] = importMeta
-      }
-    }
-  }
-  const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]
-  fileCtx.importsLastLine = lastImportStmt.range().end
-}
-
-function setViteFnCompName(
-  vineFileCtx: VineFileCtx,
-  vineFnCompCtx: VineFnCompCtx,
-  name: string,
-) {
-  vineFnCompCtx.fnName = name
-  vineFnCompCtx.scopeId = hashId(
-    `${vineFileCtx.fileId}:${name}`,
-  )
-}
-
-function analyzeVinePropsByFormalParams(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
-) {
-  const vineFnParamsSgNode = vineFnCompSgNode.field('parameters')!
-  if (vineFnParamsSgNode.text() === '()') {
-    // No parameter, skip
-    return
-  }
-  const propsAsFirstParamSgNode = vineFnParamsSgNode.children().slice(1, -1)[0] // Skip first and last parenthesis
-
-  // Save this parameter's name as `propsAlias`
-  const paramPatternNode = propsAsFirstParamSgNode.field('pattern')!
-  if (paramPatternNode.kind() === 'identifier') {
-    vineFnCompCtx.propsAlias = paramPatternNode.text()
-  }
-
-  // Our validation has already guaranteed that the first parameter is an object type
-  const propsObjectTypeSgNode = propsAsFirstParamSgNode.field('type')!.child(1)! // Skip the ':' token
-  // Traverse all properties of the object type
-  propsObjectTypeSgNode
-    .children()
-    .filter(child => child.kind() === 'property_signature')
-    .forEach((propertySignature) => {
-      const propName = propertySignature.field('name')!.text()
-      const propMeta: VinePropMeta = {
-        isFromMacroDefine: false,
-        isRequired: true,
-        isBool: propertySignature.child(1)?.text() === '?' ?? false,
-      }
-
-      vineFnCompCtx.props[propName] = propMeta
-      vineFnCompCtx.bindings[propName] = VineBindingTypes.PROPS
+      },
     })
-}
-
-function analyzeVinePropsByMacroCall(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
-) {
-  const allVinePropDecls = vineFnCompSgNode.findAll(ruleValidVinePropDeclaration)
-  if (allVinePropDecls.length === 0) {
-    // No vineProp call, skip
-    return
+    return vineExposeMacroCall
   }
-  for (const vinePropLexicalDecl of allVinePropDecls) {
-    const vinePropDecl = vinePropLexicalDecl.children().find(
-      child => child.kind() === 'variable_declarator'
-        && child.field('value')!.field('function')!.text().includes('vineProp'),
-    )!
-    const propName = vinePropDecl.field('name')!.text()
-    const vinePropCallSgNode = vinePropDecl.field('value')!
-    const vinePropCalleeSgNode = vinePropCallSgNode.field('function')!
-    const isOptional = vinePropCalleeSgNode.text() === VINE_PROP_OPTIONAL_CALL
-    const isWithDefault = vinePropCalleeSgNode.text() === VINE_PROP_WITH_DEFAULT_CALL
-    const vinePropCallArgs = vinePropCallSgNode.field('arguments')!.children().slice(1, -1) // Skip parenthesis
 
-    // Our validation has guaranteed that `vineProp` must have a type argument
-    const isBool = isWithDefault
-      ? BOOL_KINDS.includes(vinePropCallArgs[0].kind())
-      : vinePropCallSgNode.field('type_arguments')?.child(1)!.text() === 'boolean' ?? false
-    const propMeta: VinePropMeta = {
-      isFromMacroDefine: true,
-      isRequired: !isOptional,
-      isBool,
+  return (analyzeCtx, fnItselfNode) => {
+    const macroCall = findMacroCallNode(fnItselfNode)
+    if (!macroCall) {
+      return
     }
-
-    if (isWithDefault) {
-      const [defaultValueNode, validatorFnNode] = vinePropCallArgs
-      propMeta.default = defaultValueNode
-      propMeta.validator = validatorFnNode
+    const macroCallArg = macroCall.arguments[0]
+    if (!macroCallArg) {
+      return
     }
-    else if (vinePropCallArgs[0]) {
-      propMeta.validator = vinePropCallArgs[0]
-    }
-
-    // Collect prop's information
-    vineFnCompCtx.props[propName] = propMeta
-    vineFnCompCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+    callback(analyzeCtx, macroCallArg)
   }
 }
 
-function analyzeVineFunctionEmits(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
+const analyzeVineExpose = storeTheOnlyMacroCallArg(
+  'vineExpose',
+  ({ vineCompFnCtx }, macroCallArg) => {
+    vineCompFnCtx.expose = macroCallArg
+  },
+)
+
+const analyzeVineOptions = storeTheOnlyMacroCallArg(
+  'vineOptions',
+  ({ vineCompFnCtx }, macroCallArg) => {
+    vineCompFnCtx.options = macroCallArg
+  },
+)
+
+function registerBinding(
+  bindings: Record<string, BindingTypes>,
+  node: Identifier,
+  type: BindingTypes,
 ) {
-  // Our validation has already guaranteed that vine function's inside `vineEmits` is valid
-  const vineEmitsSgNode = vineFnCompSgNode.find(ruleVineEmitsCall)
-  if (!vineEmitsSgNode) {
-    // No vineEmits, skip
-    return
-  }
-  const vineEmitsTypeArgs = vineEmitsSgNode.field('type_arguments')
-  const emitTypeObjLiteralNode = vineEmitsTypeArgs!.child(0)!
-  // Get all properties' name of the object type literal
-  emitTypeObjLiteralNode
-    .children()
-    .filter(child => child.kind() === 'property_signature')
-    .forEach((propertySignature) => {
-      const emitName = propertySignature.field('name')!.text()
-      vineFnCompCtx.emits.push(emitName)
-    })
-
-  // Find the user defined emits variable name
-  const vineEmitsDeclaration = vineFnCompSgNode.find(ruleVineEmitsDeclaration)
-  if (vineEmitsDeclaration) {
-    vineFnCompCtx.emitsAlias = vineEmitsDeclaration.field('name')!.text()
-  }
+  bindings[node.name] = type
 }
 
-function anaylyzeStoreTheOnlyOneArg(
-  vineFnCompSgNode: SgNode,
-  findCallRule: NapiConfig,
-) {
-  const exposeCallSgNode = vineFnCompSgNode.find(findCallRule)
-  if (!exposeCallSgNode) {
-    // No vineExpose call, skip
-    return
-  }
-  // Our validation has already guaranteed that the first argument is an object type.
-  const exposeCallArg = exposeCallSgNode
-    .field('arguments')!.children()
-    .filter(isNotUselessPunc)[0]!
-  // As compilation, we just need to store the argument source code
-  return exposeCallArg
-}
-
-function analyzeVineExpose(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
-) {
-  vineFnCompCtx.expose = anaylyzeStoreTheOnlyOneArg(vineFnCompSgNode, ruleVineExposeCall)
-}
-
-function analyzeVineOptions(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
-) {
-  vineFnCompCtx.options = anaylyzeStoreTheOnlyOneArg(vineFnCompSgNode, ruleVineOptionsCall)
-}
-
-function getStyleSource(
-  vineStyleCallArg: SgNode,
-): [sourceNode: SgNode, tag: VineStyleLang] {
-  if (vineStyleCallArg.kind() === 'string'
-    || vineStyleCallArg.kind() === 'template_string'
-  ) {
-    return [
-      vineStyleCallArg,
-      'css',
-    ]
-  }
-  // Our validation has already guaranteed that
-  // if it's not a string or template string, it must be an tagged template expression
-  const cssLangName = vineStyleCallArg.field('function')!.text()
-  const taggedTemplateString = vineStyleCallArg.field('arguments')!
-  return [
-    taggedTemplateString,
-    cssLangName as VineStyleLang,
-  ]
-}
-
-function analyzeVineStyle(
-  [,fileCtx, vineFnCompCtx]: AnalyzeCtx,
-  vineFnCompSgNode: SgNode,
-) {
-  const vineStyleCall = vineFnCompSgNode.find(ruleVineStyleCall)
-  if (!vineStyleCall) {
-    // No vineStyle call, skip
-    return
-  }
-  const vineStyleCallee = vineStyleCall.field('function')!
-  const vineStyleCallArg = vineStyleCall.field('arguments')!.children().slice(1, -1)[0]! // Skip the parentheses
-  const [sourceNode, lang] = getStyleSource(vineStyleCallArg)
-  const styleMeta: VineStyleMeta = {
-    lang,
-    source: sourceNode.text().slice(1, -1), // Remove the quotes,
-    range: sourceNode.range(),
-    scoped: false,
-    fileCtx,
-  }
-  if (vineStyleCallee.text() === VINE_STYLE_SCOPED_CALL) {
-    styleMeta.scoped = true
-  }
-
-  // Collect style meta
-  if (vineFnCompCtx.scopeId) {
-    fileCtx.styleDefine[vineFnCompCtx.scopeId] = styleMeta
-  }
-
-  // Collect css v-bind
-  const cssContent = sourceNode.text()
-  const cssvarsValueList = parseCssVars([cssContent])
-  if (cssvarsValueList.length > 0) {
-    !vineFnCompCtx.cssBindings && (vineFnCompCtx.cssBindings = {})
-    cssvarsValueList.forEach((value) => {
-      vineFnCompCtx.cssBindings![value] = hashId(vineFnCompCtx.fnName + value)
-    })
-  }
-}
-
-function isLiteralNode(node: SgNode | null) {
-  switch (node?.kind()) {
-    case 'number':
-    case 'string':
-    case 'true':
-    case 'false':
-    case 'array':
-    case 'object':
-      return true
-    default:
-      return false
-  }
-}
-
-function isStaticSgNode(node: SgNode): boolean {
-  switch (node.kind()) {
-    case 'unary_expression': // void 0, !true
-      return isStaticSgNode(node.field('argument')!)
-    case 'binary_expression':
-    case 'sequence_expression':
-      return isStaticSgNode(node.field('left')!) && isStaticSgNode(node.field('right')!)
-    case 'ternary_expression':
-      return (
-        isStaticSgNode(node.field('condition')!)
-        && isStaticSgNode(node.field('consequence')!)
-        && isStaticSgNode(node.field('alternative')!)
-      )
-    case 'template_string':
-      return node.children().every((templateSubstitution) => {
-        return isStaticSgNode(templateSubstitution.child(0)!)
-      })
-    case 'parenthesized_expression':
-    case 'non_null_expression':
-    case 'as_expression':
-      return isStaticSgNode(node.child(0)!)
-    case 'type_assertion':
-      return isStaticSgNode(node.child(1)!)
-
-    default:
-      if (isLiteralNode(node)) {
-        return true
-      }
-      return false
-  }
-}
-
-function unwrapTSNode(node: SgNode): SgNode {
-  if (TS_NODE_KINDS.includes(node.kind())) {
-    switch (node.kind()) {
-      case 'as_expression':
-      case 'non_null_expression':
-      case 'satisfies_expression':
-        return unwrapTSNode(node.child(0)!)
-      case 'type_assertion':
-        return unwrapTSNode(
-          node.child(node.children().length - 1)!,
-        )
-      default:
-        // Todo: handle TSInstantiationExpression
-        return node
-    }
-  }
-  else {
-    return node
-  }
-}
-
-function isCallOf(
-  node: SgNode | null,
-  test: string | ((id: string) => boolean) | null | undefined,
-) {
-  return Boolean(
-    node
-    && test
-    && node.kind() === 'call_expression'
-    && node.field('function')!.kind() === 'identifier'
-    && (
-      typeof test === 'string'
-        ? node.field('function')!.text() === test
-        : test(node.field('function')!.text())
-    ),
-  )
-}
-
-function canNeverBeRef(
-  node: SgNode | null,
-  userReactiveAlias?: string,
-): boolean {
-  if (isCallOf(node, userReactiveAlias)) {
-    return true
-  }
-  // TaggedTemplateExpression
-  if (
-    node?.kind() === 'call_expression'
-    && node.field('arguments')?.kind() === 'template_string'
-  ) {
-    return true
-  }
-  switch (node?.kind()) {
-    case 'unary_expression':
-    case 'binary_expression':
-    case 'array':
-    case 'object':
-    case 'arrow_function':
-    case 'update_expression':
-    case 'class':
-      return true
-    case 'sequence_expression':
-      return canNeverBeRef(node.field('right')!, userReactiveAlias)
-    default:
-      if (isLiteralNode(node)) {
-        return true
-      }
-      return false
-  }
-}
-
-function walkObjectPattern(
-  analyzeCtx: AnalyzeCtx,
-  node: SgNode,
+function walkPattern(
+  node: Node,
+  bindings: Record<string, BindingTypes>,
   isConst: boolean,
 ) {
-  const [,,vineFnCompCtx] = analyzeCtx
-  for (const childNode of node.children().filter(isNotUselessPunc)) {
-    if (childNode.kind() === 'shorthand_property_identifier_pattern') {
+  if (node.type === 'Identifier') {
+    const type = isConst
+      ? VineBindingTypes.SETUP_MAYBE_REF
+      : VineBindingTypes.SETUP_LET
+    registerBinding(bindings, node, type)
+  }
+  else if (node.type === 'RestElement') {
+    // argument can only be identifier when destructuring
+    const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
+    registerBinding(bindings, node.argument as Identifier, type)
+  }
+  else if (node.type === 'ObjectPattern') {
+    walkObjectPattern(node, bindings, isConst)
+  }
+  else if (node.type === 'ArrayPattern') {
+    walkArrayPattern(node, bindings, isConst)
+  }
+  else if (node.type === 'AssignmentPattern') {
+    if (node.left.type === 'Identifier') {
       const type = isConst
         ? VineBindingTypes.SETUP_MAYBE_REF
         : VineBindingTypes.SETUP_LET
-      vineFnCompCtx.bindings[childNode.text()] = type
+      registerBinding(bindings, node.left, type)
     }
-    if (childNode.kind() === 'pair_pattern') {
-      walkPattern(analyzeCtx, childNode.field('value')!, isConst)
-    }
-    else if (childNode.kind() === 'rest_pattern') {
-      const rest = childNode.child(1)!
-      if (rest.kind() === 'identifier') {
-        // ...rest
-        // argument can only be identifier when destructuring
-        const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
-        vineFnCompCtx.bindings[rest.text()] = type
-      }
+    else {
+      walkPattern(node.left, bindings, isConst)
     }
   }
 }
 
 function walkArrayPattern(
-  analyzeCtx: AnalyzeCtx,
-  node: SgNode,
+  node: ArrayPattern,
+  bindings: Record<string, BindingTypes>,
   isConst: boolean,
 ) {
-  for (const childNode of node.children().filter(isNotUselessPunc)) {
-    childNode && walkPattern(analyzeCtx, childNode, isConst)
+  for (const e of node.elements) {
+    e && walkPattern(e, bindings, isConst)
   }
 }
 
-function walkPattern(
-  analyzeCtx: AnalyzeCtx,
-  node: SgNode,
+function walkObjectPattern(
+  node: ObjectPattern,
+  bindings: Record<string, BindingTypes>,
   isConst: boolean,
-  isDefineCall = false,
 ) {
-  const [,,vineFnCompCtx] = analyzeCtx
-  if (node.kind() === 'identifier') {
-    const type = isDefineCall
-      ? VineBindingTypes.SETUP_CONST
-      : isConst
-        ? VineBindingTypes.SETUP_MAYBE_REF
-        : VineBindingTypes.SETUP_LET
-    vineFnCompCtx.bindings[node.text()] = type
-  }
-  else if (node.kind() === 'rest_pattern' && node.child(1)!.kind() === 'identifier') {
-    // argument can only be identifier when destructuring
-    const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
-    vineFnCompCtx.bindings[node.child(1)!.text()] = type
-  }
-  else if (node.kind() === 'object_pattern') {
-    walkObjectPattern(analyzeCtx, node, isConst)
-  }
-  else if (node.kind() === 'array_pattern') {
-    walkArrayPattern(analyzeCtx, node, isConst)
-  }
-  else if (node.kind() === 'assignment_pattern') {
-    const assignLeft = node.field('left')!
-    if (assignLeft.kind() === 'identifier') {
-      const type = isConst
-        ? VineBindingTypes.SETUP_MAYBE_REF
-        : VineBindingTypes.SETUP_LET
-      vineFnCompCtx.bindings[assignLeft.text()] = type
+  for (const p of node.properties) {
+    if (p.type === 'ObjectProperty') {
+      if (p.key.type === 'Identifier' && p.key === p.value) {
+        // shorthand: const { x } = ...
+        const type = isConst
+          ? VineBindingTypes.SETUP_MAYBE_REF
+          : VineBindingTypes.SETUP_LET
+        registerBinding(bindings, p.key, type)
+      }
+      else {
+        walkPattern(p.value, bindings, isConst)
+      }
     }
     else {
-      walkPattern(analyzeCtx, assignLeft, isConst)
+      // ...rest
+      // argument can only be identifier when destructuring
+      const type = isConst ? VineBindingTypes.SETUP_CONST : VineBindingTypes.SETUP_LET
+      registerBinding(bindings, p.argument as Identifier, type)
     }
   }
 }
 
-function analyzeLexicalDeclNode(
-  analyzeCtx: AnalyzeCtx,
-  lexicalDeclNode: SgNode,
+function analyzeVariableDeclarationForBindings(
+  { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
+  stmt: VariableDeclaration,
 ) {
-  const [,vineFileCtx, vineFnCompCtx] = analyzeCtx
-  const [kind] = lexicalDeclNode.children()
-  const allDeclarators = lexicalDeclNode
-    .children().slice(1)
-    .filter(isNotUselessPunc)
-
-  const userImportAliases = {
-    ...vineFileCtx.vueImportAliases,
-  }
-  const userReactiveAlias = userImportAliases.reactive
-  const isConst = kind.text() === 'const'
-  const isAllLiteral = isConst
+  const userImportAliases = { ...vineFileCtx.vueImportAliases }
+  const userReactiveBinding = userImportAliases.reactive
+  const allDeclarators = stmt.declarations
+  const isConst = stmt.kind === 'const'
+  const isAllLiteral = (
+    isConst
     && allDeclarators.every(
-      decl => decl.field('name')!.kind() === 'identifier' && isStaticSgNode(decl.field('value')!),
+      decl => (
+        isIdentifier(decl.id)
+        && decl.init
+        && isStaticNode(decl.init)
+      ),
     )
-  let bindingType
-  for (const varDeclarator of allDeclarators) {
-    const varNameNode = varDeclarator.field('name')!
-    const declValueNode = unwrapTSNode(varDeclarator.field('value')!)
-    if (varNameNode.kind() === 'identifier') {
-      if (isAllLiteral || (isConst && isStaticSgNode(declValueNode))) {
+  )
+
+  for (const varDecl of allDeclarators) {
+    if (isIdentifier(varDecl.id) && varDecl.init) {
+      let bindingType
+      if (
+        isAllLiteral || (isConst && isStaticNode(varDecl.init))
+      ) {
         bindingType = VineBindingTypes.LITERAL_CONST
       }
-      else if (isCallOf(declValueNode, userReactiveAlias)) {
+      else if (isCallOf(varDecl.init, userReactiveBinding)) {
         // treat reactive() calls as let since it's meant to be mutable
         bindingType = isConst
           ? VineBindingTypes.SETUP_REACTIVE_CONST
@@ -532,20 +240,20 @@ function analyzeLexicalDeclNode(
       else if (
         // if a declaration is a const literal, we can mark it so that
         // the generated render fn code doesn't need to unref() it
-        isConst && canNeverBeRef(declValueNode, userReactiveAlias)
+        isConst && canNeverBeRef(varDecl.init, userReactiveBinding)
       ) {
         bindingType = VineBindingTypes.SETUP_CONST
       }
       else if (isConst) {
         if (
           isCallOf(
-            declValueNode,
-            id =>
-              id === userImportAliases.ref
-              || id === userImportAliases.computed
-              || id === userImportAliases.shallowRef
-              || id === userImportAliases.customRef
-              || id === userImportAliases.toRef,
+            varDecl.init,
+            m =>
+              m === userImportAliases.ref
+                || m === userImportAliases.computed
+                || m === userImportAliases.shallowRef
+                || m === userImportAliases.customRef
+                || m === userImportAliases.toRef,
           )
         ) {
           bindingType = VineBindingTypes.SETUP_REF
@@ -557,42 +265,22 @@ function analyzeLexicalDeclNode(
       else {
         bindingType = VineBindingTypes.SETUP_LET
       }
-      vineFnCompCtx.bindings[varNameNode.text()] = bindingType
+      registerBinding(vineCompFnCtx.bindings, varDecl.id, bindingType)
     }
-    else {
-      // Maybe desctruing or array pattern
-      if (varNameNode.kind() === 'object_pattern') {
-        walkObjectPattern(analyzeCtx, varNameNode, isConst)
-      }
-      else if (varNameNode.kind() === 'array_pattern') {
-        walkArrayPattern(analyzeCtx, varNameNode, isConst)
-      }
+    else if (isObjectPattern(varDecl.id)) {
+      walkObjectPattern(
+        varDecl.id,
+        vineCompFnCtx.bindings,
+        isConst,
+      )
     }
-  }
-
-  return isAllLiteral
-}
-
-function analyzeEnumDeclNode(
-  [,,vineFnCompCtx]: AnalyzeCtx,
-  enumDeclNode: SgNode,
-) {
-  const isAllLiteral = enumDeclNode
-    .children()
-    .filter(isNotUselessPunc)
-    .every((c) => {
-      return c.kind() === 'property_identifier'
-        || (
-          c.kind() === 'enum_assignment'
-          && isStaticSgNode(c.field('value')!)
-        )
-    })
-
-  const enumNameNode = enumDeclNode.field('name')!
-  if (enumNameNode.kind() === 'identifier') {
-    vineFnCompCtx.bindings[enumNameNode.text()] = isAllLiteral
-      ? VineBindingTypes.LITERAL_CONST
-      : VineBindingTypes.SETUP_CONST
+    else if (isArrayPattern(varDecl.id)) {
+      walkArrayPattern(
+        varDecl.id,
+        vineCompFnCtx.bindings,
+        isConst,
+      )
+    }
   }
 
   return isAllLiteral
@@ -600,215 +288,462 @@ function analyzeEnumDeclNode(
 
 function analyzeVineFnBodyStmtForBindings(
   analyzeCtx: AnalyzeCtx,
-  stmtNode: SgNode,
+  stmt: Statement,
 ) {
-  const [,,vineFnCompCtx] = analyzeCtx
+  const { vineCompFnCtx } = analyzeCtx
   let isAllLiteral = false
-  switch (stmtNode.kind()) {
-    case 'lexical_declaration':
-      isAllLiteral = analyzeLexicalDeclNode(analyzeCtx, stmtNode)
+  switch (stmt.type) {
+    case 'VariableDeclaration':
+      isAllLiteral = analyzeVariableDeclarationForBindings(analyzeCtx, stmt)
       break
-    case 'enum_declaration':
-      isAllLiteral = analyzeEnumDeclNode(analyzeCtx, stmtNode)
+    case 'TSEnumDeclaration':
+      isAllLiteral = stmt.members.every(
+        member => !member.initializer || isStaticNode(member.initializer),
+      )
+      vineCompFnCtx.bindings[stmt.id!.name] = isAllLiteral
+        ? VineBindingTypes.LITERAL_CONST
+        : VineBindingTypes.SETUP_CONST
       break
-    case 'class_declaration':
-    case 'function_declaration': {
-      const nameField = stmtNode.field('name')!
-      if (nameField.kind() === 'identifier') {
-        vineFnCompCtx.bindings[nameField.text()] = VineBindingTypes.SETUP_CONST
-      }
+    case 'FunctionDeclaration':
+    case 'ClassDeclaration':
+      vineCompFnCtx.bindings[stmt.id!.name] = VineBindingTypes.SETUP_CONST
       break
-    }
     default:
       break
   }
-
-  // Collect function body statements
-  vineFnCompCtx.setupStmts.push(stmtNode)
   return isAllLiteral
 }
 
-function filterStatementWithoutMacroCall(
-  _: AnalyzeCtx,
-  stmts: SgNode[],
-) {
-  return stmts.filter((stmt) => {
-    if (!reservingKindsForSetup.includes(stmt.kind())) {
-      return false
+function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
+  let styleLang: VineStyleLang = 'css'
+  let styleSource = ''
+  let range: [number, number] | undefined
+  if (isTaggedTemplateExpression(vineStyleArg)) {
+    const { tag } = vineStyleArg
+    if (isIdentifier(tag)) {
+      styleLang = tag.name as VineStyleLang
+      const styleSourceNode = vineStyleArg.quasi.quasis[0]
+      styleSource = styleSourceNode.value.raw
+      range = [styleSourceNode.start!, styleSourceNode.end!]
     }
-    if (stmt.findAll(ruleHasMacroCallExpr).length > 0) {
-      return false
-    }
-    return true
-  })
+  }
+  else if (isStringLiteral(vineStyleArg)) {
+    styleSource = vineStyleArg.value
+    range = [vineStyleArg.start!, vineStyleArg.end!]
+  }
+  else if (isTemplateLiteral(vineStyleArg)) {
+    const styleSourceNode = vineStyleArg.quasis[0]
+    styleSource = styleSourceNode.value.raw
+    range = [styleSourceNode.start!, styleSourceNode.end!]
+  }
+  return {
+    styleSource,
+    styleLang,
+    range,
+  }
 }
 
-function analyzeVineBindings(
-  analyzeCtx: AnalyzeCtx,
-  fnItselfSgNode: SgNode,
-) {
-  const [,fileCtx, vineFnCompCtx] = analyzeCtx
-  const fnBodyStmtBlockNode = fnItselfSgNode.field('body')!
-  const noMacroCallStmts = filterStatementWithoutMacroCall(
-    analyzeCtx,
-    fnBodyStmtBlockNode.children(),
-  )
-  for (const stmt of noMacroCallStmts) {
-    const isAllLiteral = analyzeVineFnBodyStmtForBindings(analyzeCtx, stmt)
-    ;(
-      isAllLiteral
-        ? vineFnCompCtx.hoistSetupStmts
-        : vineFnCompCtx.insideSetupStmts
-    ).push(stmt)
+const analyzeVineProps: AnalyzeRunner = (
+  { vineCompFnCtx, vineFileCtx },
+  fnItselfNode,
+) => {
+  const formalParams = getFunctionParams(fnItselfNode)
+  if (formalParams.length === 1) {
+    // The Vine validator has guranateed there's only one formal params,
+    // its type is `identifier`, and it must have an object literal type annotation.
+    // Save this parameter's name as `propsAlias`
+    const propsFormalParam = (formalParams[0] as Identifier)
+    const propsTypeAnnotation = ((propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral)
+    vineCompFnCtx.propsAlias = propsFormalParam.name;
+    // Analyze the object literal type annotation
+    // and save the props info into `vineCompFnCtx.props`
+    (propsTypeAnnotation.members as TSPropertySignature[]).forEach((member) => {
+      const propName = (member.key as Identifier).name
+      const propType = vineFileCtx.fileSourceCode.slice(
+        member.typeAnnotation!.typeAnnotation.start!,
+        member.typeAnnotation!.typeAnnotation.end!,
+      )
+      const propMeta: VinePropMeta = {
+        isFromMacroDefine: false,
+        isRequired: member.optional === undefined ? true : !member.optional,
+        isBool: propType === 'boolean',
+      }
+      vineCompFnCtx.props[propName] = propMeta
+      vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
+    })
   }
+  else if (formalParams.length === 0) {
+    // No formal parameters, analyze props by macro calls
+    const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
+    allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
+      const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
+      const propMeta: VinePropMeta = {
+        isFromMacroDefine: true,
+        isRequired: macroCalleeName !== 'vineProp.optional',
+        isBool: false,
+      }
+      const macroCallTypeParamNode = macroCall.typeParameters?.params[0]
+      if (macroCallTypeParamNode) {
+        const macroCallTypeParam = vineFileCtx.fileSourceCode.slice(
+          macroCallTypeParamNode.start!,
+          macroCallTypeParamNode.end!,
+        )
+        propMeta.isBool = macroCallTypeParam === 'boolean'
+      }
+      if (macroCalleeName === 'vineProp.withDefault') {
+        propMeta.default = macroCall.arguments[0]
+        propMeta.validator = macroCall.arguments[1]
+      }
+      else {
+        propMeta.validator = macroCall.arguments[0]
+      }
+
+      // Collect prop's information
+      const propName = propVarIdentifier.name
+      vineCompFnCtx.props[propName] = propMeta
+      vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+    })
+  }
+}
+
+const analyzeVineEmits: AnalyzeRunner = (
+  analyzeCtx: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  const { vineCompFnCtx } = analyzeCtx
+  let vineEmitsMacroCall: CallExpression | undefined
+  let parentVarDecl: VariableDeclarator | undefined
+  traverse(fnItselfNode, {
+    enter(descendant, parent) {
+      if (isVineMacroOf('vineEmits')(descendant)) {
+        vineEmitsMacroCall = descendant
+        const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
+        parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+      }
+    },
+  })
+  if (!vineEmitsMacroCall) {
+    return
+  }
+  const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
+  if (!typeParam) {
+    return
+  }
+
+  // Save all the properties' name of
+  // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
+  // to a string array for `vineCompFn.emits`
+  const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
+  emitsTypeLiteralProps.forEach((prop) => {
+    const propName = getTSTypeLiteralPropertySignatureName(prop)
+    vineCompFnCtx.emits.push(propName)
+  })
+
+  // If `vineEmits` is inside a variable declaration,
+  // save the variable name to `vineCompFn.emitsAlias`
+  if (parentVarDecl) {
+    vineCompFnCtx.emitsAlias = (parentVarDecl.id as Identifier).name
+  }
+}
+
+const analyzeVineBindings: AnalyzeRunner = (
+  analyzeCtx: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  const { vineFileCtx, vineCompFnCtx } = analyzeCtx
+  const notContainsMacroStatements: Statement[] = []
+  const fnBody = fnItselfNode.body
+  if (!isBlockStatement(fnBody)) {
+    return
+  }
+  for (const stmt of fnBody.body) {
+    let hasMacroCall = false
+    traverse(stmt, (node) => {
+      if (hasMacroCall) {
+        return
+      }
+      if (isVineMacroCallExpression(node)) {
+        hasMacroCall = true
+      }
+    })
+    if (!hasMacroCall) {
+      notContainsMacroStatements.push(stmt)
+    }
+  }
+  for (const stmt of notContainsMacroStatements) {
+    const isAllLiteral = analyzeVineFnBodyStmtForBindings(analyzeCtx, stmt)
+    if (isAllLiteral) {
+      vineCompFnCtx.hoistSetupStmts.push(stmt)
+    }
+  }
+
+  // Mark bindings for all user imports
   for (const [importName, {
     isType,
     isNamespace,
     isDefault,
     source,
-  }] of Object.entries(fileCtx.userImports)) {
+  }] of Object.entries(vineFileCtx.userImports)) {
     if (isType) {
       continue
     }
     const isSetupConst = isNamespace
       || (isDefault && source.endsWith('.vue'))
       || source === 'vue'
-    vineFnCompCtx.bindings[importName]
+    vineCompFnCtx.bindings[importName]
       = isSetupConst
         ? VineBindingTypes.SETUP_CONST
         : VineBindingTypes.SETUP_MAYBE_REF
   }
 
   // #32 Append all valid declarations in top level scope
-  // to current VCF's bindings, as LITERAL_CONST, telling the
-  // Vue template compiler to remain them as is.
-  const allTopLevelDeclNames = fileCtx.sgRoot.findAll(ruleTopLevelDeclarationNames)
-  for (const declName of allTopLevelDeclNames) {
-    vineFnCompCtx.bindings[declName.text()] = VineBindingTypes.LITERAL_CONST
+  // to current VCF's bindings, helping  Vue template compiler
+  // to know  how to resolve them.
+  const allTopLevelDeclStmts = vineFileCtx.root.program.body
+    .filter((stmt): stmt is Declaration => isDeclaration(stmt))
+  for (const declStmt of allTopLevelDeclStmts) {
+    if (isVineCompFnDecl(declStmt)) {
+      const { fnName } = getFunctionInfo(declStmt)
+      vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
+    }
+    else if (isVariableDeclaration(declStmt)) {
+      for (const decl of declStmt.declarations) {
+        if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
+          vineCompFnCtx.bindings[decl.id.name] = VineBindingTypes.LITERAL_CONST
+        }
+      }
+    }
+    else if (
+      (
+        isFunctionDeclaration(declStmt)
+        || isClassDeclaration(declStmt)
+      ) && declStmt.id
+    ) {
+      vineCompFnCtx.bindings[declStmt.id.name] = VineBindingTypes.LITERAL_CONST
+    }
   }
 }
 
-function analyzeVineCE(
-  analyzeCtx: AnalyzeCtx,
-  fnItselfSgNode: SgNode,
-) {
-  const [,, vineFnCompCtx] = analyzeCtx
-  if (fnItselfSgNode.find(ruleVineCECall)) {
-    vineFnCompCtx.isVineCE = true
+const analyzeVineStyle: AnalyzeRunner = (
+  { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  let vineStyleMacroCall: CallExpression | undefined
+  traverse(fnItselfNode, (node) => {
+    if (isVineMacroOf('vineStyle')(node)) {
+      vineStyleMacroCall = node
+    }
+  })
+  // Our validation has guranteed that `vineStyle` macro call
+  // has only one argument, and it maybe a string literal, a template literal,
+  // or a tagged template expression.
+  if (!vineStyleMacroCall) {
+    return
   }
-}
-
-function analyzeDifferentKindVineFunctionDecls(
-  allCtx: AnalyzeCtx,
-  declSgNode: SgNode,
-  vineFnDeclKind: VineFnCompDeclKind,
-) {
-  const [, fileCtx, vineFnCompCtx] = allCtx
-
-  // 1. Set vineFnCompCtx.name and compute scopeId as well
-  setViteFnCompName(
-    fileCtx,
-    vineFnCompCtx,
-    vineFnDeclKind === 'function_declaration'
-      ? declSgNode.field('name')!.text()
-      : declSgNode.child(1)!.field('name')!.text(),
+  const macroCalleeName = getVineMacroCalleeName(vineStyleMacroCall)
+  const vineStyleArg = vineStyleMacroCall.arguments[0]
+  if (!vineStyleArg) {
+    return
+  }
+  const { styleLang, styleSource, range } = getVineStyleSource(
+    vineStyleArg as VineStyleValidArg,
   )
+  const styleMeta: VineStyleMeta = {
+    lang: styleLang,
+    source: styleSource,
+    range,
+    scoped: macroCalleeName === 'vineStyle.scoped',
+    fileCtx: vineFileCtx,
+  }
 
-  // 2. get the function AST node itself
-  // - 2.1 for normal function declaration `function xxx(...) {...}`:
-  //       the AST node is the `declSgNode` itself
-  // - 2.2 for variable function declaration
+  // Collect style meta
+  if (vineCompFnCtx.scopeId) {
+    vineFileCtx.styleDefine[vineCompFnCtx.scopeId] = styleMeta
+  }
+  // Collect css v-bind
+  const cssvarsValueList = parseCssVars([styleSource])
+  if (cssvarsValueList.length > 0) {
+    !vineCompFnCtx.cssBindings && (vineCompFnCtx.cssBindings = {})
+    cssvarsValueList.forEach((value) => {
+      vineCompFnCtx.cssBindings![value] = hashId(`${vineCompFnCtx.fnName}__${value}`)
+    })
+  }
+}
+
+const analyzeVineCustomElement: AnalyzeRunner = (
+  { vineCompFnCtx }: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  // Find if there's any `vineCustomElement` macro call exists
+  traverse(fnItselfNode, (node) => {
+    if (isVineMacroOf('vineCustomElement')(node)) {
+      vineCompFnCtx.isCustomElement = true
+    }
+  })
+}
+
+const analyzeRunners: AnalyzeRunner[] = [
+  analyzeVineProps,
+  analyzeVineEmits,
+  analyzeVineExpose,
+  analyzeVineOptions,
+  analyzeVineBindings,
+  analyzeVineStyle,
+  analyzeVineCustomElement,
+]
+
+function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
+  const { vineCompFnCtx } = analyzeCtx
+  const { fnItselfNode } = vineCompFnCtx
+  if (!fnItselfNode) {
+    return
+  }
+  analyzeRunners.forEach(exec => exec(analyzeCtx, fnItselfNode))
+}
+
+function analyzeFileImportStmts(
+  vineFileCtx: VineFileCtx,
+) {
+  const { root } = vineFileCtx
+  const fileImportStmts = getImportStatments(root)
+  if (!fileImportStmts.length) {
+    return
+  }
+  for (const importStmt of fileImportStmts) {
+    const source = importStmt.source.value // remove quotes
+    const isImportTypeStmt = importStmt.importKind === 'type'
+    const allSpecifiers = importStmt.specifiers
+    for (const spec of allSpecifiers) {
+      const importMeta: VineUserImport = {
+        source,
+        isType: isImportTypeStmt,
+      }
+      if (isImportSpecifier(spec)) {
+        const importedName = isStringLiteral(spec.imported)
+          ? spec.imported.value
+          : spec.imported.name
+        const localName = spec.local.name
+        if (spec.importKind === 'type') {
+          // `import { type XXX }` from '...'
+          importMeta.isType = true
+        }
+        else if (importedName === 'default') {
+          // `import { default as XXX }` from '...'
+          importMeta.isDefault = true
+        }
+        if (source === 'vue') {
+          vineFileCtx.vueImportAliases[importedName] = localName || importedName
+        }
+        vineFileCtx.userImports[localName] = importMeta
+      }
+      else if (isImportNamespaceSpecifier(spec)) {
+        // `import * as xxx from '...'`
+        importMeta.isNamespace = true
+        vineFileCtx.userImports[spec.local.name] = importMeta
+      }
+      else if (isImportDefaultSpecifier(spec)) {
+        // `import xxx from '...'`
+        importMeta.isDefault = true
+        vineFileCtx.userImports[spec.local.name] = importMeta
+      }
+
+      const isUsedInTemplate = vineFileCtx.vineCompFns.some(
+        vineCompFn => isImportUsed(vineCompFn, spec.local.name),
+      )
+      importMeta.isUsedInTemplate = isUsedInTemplate
+    }
+  }
+  const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]
+  vineFileCtx.importsLastLine = lastImportStmt.loc
+}
+
+function buildVineCompFnCtx(
+  vineCompilerHooks: VineCompilerHooks,
+  vineFileCtx: VineFileCtx,
+  fnDeclNode: Node,
+) {
+  // Get the function AST node itself
+  // - for normal function declaration `function xxx(...) {...}`:
+  //       the AST node is the declaration itself
+  // - for variable function declaration
   //       - `const xxx = function(...) {...}`
   //       - `const xxx = (...) => {...}`:
-  //       the AST node is the `varDeclSgNode`'s `value` field
-  const fnItselfSgNode = vineFnDeclKind === 'function_declaration'
-    ? declSgNode
-    : declSgNode.child(1)!.field('value')!
-
-  const isAsync = fnItselfSgNode.child(0)?.text() === 'async'
-  if (isAsync) {
-    vineFnCompCtx.isAsync = true
-  }
-
-  [
-    analyzeVinePropsByFormalParams,
-    analyzeVinePropsByMacroCall,
-    analyzeVineFunctionEmits,
-    analyzeVineExpose,
-    analyzeVineOptions,
-    analyzeVineBindings,
-    analyzeVineCE,
-    analyzeVineStyle,
-  ].forEach(fn => fn(allCtx, fnItselfSgNode))
-}
-
-function buildVineFnCompCtx(
-  [compilerHooks, vineFileCtx]: [VineCompilerHooks, VineFileCtx],
-  vineFnSgNode: SgNode,
-): VineFnCompCtx {
-  // Check if it's an export statement
-  const vineFnTopNodekind = vineFnSgNode.kind()
-  const isExport = vineFnTopNodekind === 'export_statement'
-  const vineFnCompDecl = vineFnSgNode.find(ruleVineFunctionComponentMatching)!
-
-  // Get vine template source
-  const vineTemolateSgNode = vineFnCompDecl.find(ruleVineTaggedTemplateString)!.field('arguments')!
-  const vineFnCompCtx: VineFnCompCtx = {
-    isExport,
-    isAsync: false,
-    fnName: '',
-    scopeId: '',
+  //       the AST node is the the function expression
+  const { fnName, fnItselfNode } = getFunctionInfo(fnDeclNode)
+  const {
+    templateReturn,
+    templateStringNode,
+  } = findVineTagTemplateStringReturn(
+    fnDeclNode,
+  )
+  const scopeId = hashId(`${vineFileCtx.fileId}:${fnName}`)
+  const templateSource = templateStringNode?.quasi.quasis[0].value.raw ?? ''
+  const vineCompFnCtx: VineCompFnCtx = {
+    isExport: isExportDeclaration(fnDeclNode),
+    isAsync: fnItselfNode?.async ?? false,
+    isCustomElement: false,
+    fnName,
+    scopeId,
+    fnDeclNode,
+    fnItselfNode,
+    templateStringNode,
+    templateReturn,
+    templateSource,
+    templateAst: parse(templateSource),
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},
     emits: [],
     bindings: {},
-    setupStmts: [],
+    cssBindings: {},
     hoistSetupStmts: [],
-    insideSetupStmts: [],
-    fnDeclNode: vineFnSgNode,
-    fnValueNode: vineFnCompDecl,
-    template: vineTemolateSgNode,
-    cssBindings: null,
-    isVineCE: false,
   }
-
-  const analyzeCtx: AnalyzeCtx = [compilerHooks, vineFileCtx, vineFnCompCtx]
-
-  // Analyze all import statements in this file
-  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
-  // in order to create binding records
-  analyzeFileImportStmts(analyzeCtx)
+  const analyzeCtx: AnalyzeCtx = {
+    vineCompilerHooks,
+    vineFileCtx,
+    vineCompFnCtx,
+  }
 
   // Divide the handling into two cases
   // by the kind of the function declaration
-  analyzeDifferentKindVineFunctionDecls(
-    analyzeCtx,
-    vineFnCompDecl,
-    vineFnCompDecl.kind() as VineFnCompDeclKind,
-  )
+  analyzeDifferentKindVineFunctionDecls(analyzeCtx)
 
-  return vineFnCompCtx
+  return vineCompFnCtx
 }
 
 export function analyzeVine(
-  extendsCtx: [VineCompilerHooks, VineFileCtx],
-  vineFnCompDecls: SgNode[],
+  vineCompilerHooks: VineCompilerHooks,
+  vineFileCtx: VineFileCtx,
+  vineCompFnDecls: Node[],
 ) {
-  const [compilerHooks, vineFileCtx] = extendsCtx
+  // Analyze all import statements in this file
+  // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
+  // in order to create binding records
+  analyzeFileImportStmts(vineFileCtx)
 
-  for (const vineFn of vineFnCompDecls) {
-    const vineFnCompCtx = buildVineFnCompCtx(extendsCtx, vineFn)
-    vineFileCtx.vineFnComps.push(vineFnCompCtx)
-  }
+  // Analyze all Vine component function in this file
+  vineCompFnDecls.forEach(
+    (vineFnCompDecl) => {
+      vineFileCtx.vineCompFns.push(
+        buildVineCompFnCtx(
+          vineCompilerHooks,
+          vineFileCtx,
+          vineFnCompDecl,
+        ),
+      )
+    },
+  )
 
-  const makeErrorOnRefHoistedIdentifiers = (vineFnComp: VineFnCompCtx, identifiers: SgNode[]) => {
+  // check if there are any reference
+  // to identifiers that will be hoisted.
+  const makeErrorOnRefHoistedIdentifiers = (vineFnComp: VineCompFnCtx, identifiers: Identifier[]) => {
     for (const id of identifiers) {
-      if (vineFnComp.bindings[id.text()] === VineBindingTypes.LITERAL_CONST) {
-        compilerHooks.onWarn(
+      const binding = vineFnComp.bindings[id.name]
+      if (binding && binding !== VineBindingTypes.LITERAL_CONST) {
+        vineCompilerHooks.onError(
           vineWarn(vineFileCtx, {
-            msg: `Cannot reference ${id.text()} in a vineProp validator function because it is declared outside the setup() function.`,
-            range: id.range(),
+            msg: `Cannot reference "${id.name}" locally declared variables because it will be hoisted outside of the setup() function.`,
+            location: id.loc,
           }),
         )
       }
@@ -816,17 +751,26 @@ export function analyzeVine(
   }
   // check if there are any reference
   // to identifiers that will be hoisted.
-  for (const vineFnComp of vineFileCtx.vineFnComps) {
-    // In the following 3 conditions:
+  for (const vineFnComp of vineFileCtx.vineCompFns) {
+    // In the following conditions:
     // - `vineProp`'s validator function
-    const allValidatorFnBody = vineFnComp.fnValueNode.findAll(ruleVinePropValidatorFnBody)
-    for (const body of allValidatorFnBody) {
-      const identifiers = body.findAll(ts.kind('identifier'))
+    const allValidatorFnBodys = Object.entries(vineFnComp.props)
+      .filter(([_, propMeta]) => Boolean(propMeta.validator))
+      .map(([_, propMeta]) => (
+        propMeta.validator as (FunctionExpression | ArrowFunctionExpression)
+      ).body)
+
+    for (const validatorFnBody of allValidatorFnBodys) {
+      const identifiers: Identifier[] = []
+      walkIdentifiers(validatorFnBody, id => identifiers.push(id))
       makeErrorOnRefHoistedIdentifiers(vineFnComp, identifiers)
     }
     // - `vineOptions`'s argument object
-    // - `vineExpose`'s argument object
-    const idInsideMayRefLocalMacro = vineFnComp.fnValueNode.findAll(ruleIdInsideMacroMayReferenceSetupLocal)
-    makeErrorOnRefHoistedIdentifiers(vineFnComp, idInsideMayRefLocalMacro)
+    const vineOptionsArg = vineFnComp.options
+    if (vineOptionsArg) {
+      const identifiers: Identifier[] = []
+      walkIdentifiers(vineOptionsArg, id => identifiers.push(id))
+      makeErrorOnRefHoistedIdentifiers(vineFnComp, identifiers)
+    }
   }
 }

@@ -1,33 +1,8 @@
-import { html } from '@ast-grep/napi'
-import { STYLE_LANG_FILE_EXTENSION } from '../constants'
-import type { VineFileCtx, VineFnCompCtx, VineStyleMeta } from '../types'
-import { showIf } from '../utils'
-import { findAllTagNameSgNodes } from '../template/parse'
-
-function createStyleImportStmt(
-  vineFileCtx: VineFileCtx,
-  vineFnCompCtx: VineFnCompCtx,
-  styleDefine: VineStyleMeta,
-) {
-  return `import ${showIf(
-    // handle web component styles
-    Boolean(vineFnCompCtx.isVineCE),
-    `__${vineFnCompCtx.fnName.toLowerCase()}_styles from `,
-  )}'${
-    vineFileCtx.fileId.replace(/\.vine\.ts$/, '')
-  }?type=vine-style&scopeId=${
-    vineFnCompCtx.scopeId
-  }&comp=${vineFnCompCtx.fnName}&lang=${
-    styleDefine.lang
-  }${
-    showIf(
-      Boolean(styleDefine.scoped),
-      '&scoped=true',
-    )
-  }&virtual.${
-    STYLE_LANG_FILE_EXTENSION[styleDefine.lang]
-  }';`
-}
+import type { ElementNode } from '@vue/compiler-dom'
+import { traverseTemplate } from '../template/traverse'
+import { isComponentNode, isTemplateElementNode } from '../template/type-predicate'
+import type { VineFileCtx } from '../types'
+import { createStyleImportStmt } from './create-import-statement'
 
 type ComponentRelationsMap = Record<string, Set<string>>
 
@@ -45,8 +20,8 @@ function topoSort(
 
     if (visited[node])
       return
-    visited[node] = true
 
+    visited[node] = true
     stack[node] = true
 
     for (const depNode of relationsMap[node]) {
@@ -61,7 +36,7 @@ function topoSort(
     sorted.push(node)
   }
 
-  for (const node in relationsMap) {
+  for (const node of Object.keys(relationsMap)) {
     dfs(node, {})
   }
 
@@ -81,34 +56,34 @@ function topoSort(
  * a import map for the current file's multiple components.
  */
 export function sortStyleImport(vineFileCtx: VineFileCtx) {
-  const {
-    vineFnComps: vineComps,
-    styleDefine,
-  } = vineFileCtx
-  const compRelationsMap: ComponentRelationsMap = {}
-  const thisFileAllComps = vineComps.map(comp => comp.fnName)
+  const { vineCompFns, styleDefine } = vineFileCtx
+  const relationsMap: ComponentRelationsMap = Object.fromEntries(
+    vineCompFns.map(
+      compFnCtx => [compFnCtx.fnName, new Set<string>()],
+    ),
+  )
 
-  for (const comp of vineComps) {
-    const templateSource = comp.template.text().slice(1, -1)
-    const templateAst = html.parse(templateSource).root()
-    const relations = findAllTagNameSgNodes(templateAst)
-      .filter((tagNode) => {
-        const tagName = tagNode.text()
-        return thisFileAllComps.includes(tagName)
-      })
-      .map(tagNode => tagNode.text())
-    if (!compRelationsMap[comp.fnName]) {
-      compRelationsMap[comp.fnName] = new Set()
+  for (const compFnCtx of vineCompFns) {
+    const templateAstRootNode = compFnCtx.templateAst
+    if (!templateAstRootNode) {
+      continue
     }
-    relations.forEach(
-      r => compRelationsMap[comp.fnName].add(r),
-    )
+    traverseTemplate(templateAstRootNode,
+      templateAstNode => (
+        isTemplateElementNode(templateAstNode)
+        && isComponentNode(templateAstNode)
+      ),
+      (templateAstNode) => {
+        relationsMap[compFnCtx.fnName].add(
+          (templateAstNode as ElementNode).tag,
+        )
+      })
   }
 
   const sortedStyleImportStmts = (
-    topoSort(compRelationsMap)?.map(
-      compName => vineComps.find(
-        comp => comp.fnName === compName,
+    topoSort(relationsMap)?.map(
+      compName => vineCompFns.find(
+        compFn => compFn.fnName === compName,
       )!,
     ) ?? []
   )
@@ -125,7 +100,6 @@ export function sortStyleImport(vineFileCtx: VineFileCtx) {
         styleMeta,
       ),
     )
-    .join('\n')
 
   return sortedStyleImportStmts
 }

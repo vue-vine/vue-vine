@@ -1,0 +1,9 @@
+node_modules
+.idea/
+.DS_Store
+*.local
+*.log
+dist
+.eslintcache
+tsconfig.tsbuildinfo
+coverage

@@ -7,10 +7,9 @@
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "cross-env NODE_ENV=development esno scripts/dev.js",
-    "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "ext:dev": "cross-env NODE_ENV=development pnpm --filter vue-vine-extension run dev",
     "ext:build": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build:esbuild",
-    "test:unit": "pnpm --filter @vue-vine/compiler run test",
+    "test": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
@@ -35,7 +34,8 @@
     "shelljs": "^0.8.5",
     "simple-git-hooks": "^2.8.1",
     "tslib": "^2.5.3",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "vitest": "^0.31.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm esno scripts/pre-commit.js"

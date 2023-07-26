@@ -64,7 +64,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
         n.spaces.before = n.spaces.after = ''
         onPluginWarn({
           msg: 'the >>> and /deep/ combinators have been deprecated. Use :deep() instead.',
-          range: null,
+          location: null,
         })
         return false
       }
@@ -99,7 +99,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
             // .foo ::v-deep .bar -> .foo[xxxxxxx] .bar
             onPluginWarn({
               msg: '::v-deep usage as a combinator has been deprecated. Use :deep(<inner-selector>) instead.',
-              range: null,
+              location: null,
             })
             const prev = selector.at(selector.index(n) - 1)
             if (prev && isSpaceCombinator(prev)) {

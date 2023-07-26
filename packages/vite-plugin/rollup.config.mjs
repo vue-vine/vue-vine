@@ -38,8 +38,10 @@ export default defineConfig({
   ],
   external: [
     'vite',
+    '@babel/types',
+    '@babel/parser',
+    'estree-walker',
     'magic-string',
-    '@ast-grep/napi',
     '@vue/compiler-dom',
     'merge-source-map',
     'postcss',
