@@ -22,8 +22,14 @@
   "contributes": {
     "commands": [
       {
-        "title": "Vue Vine: Hello world",
-        "command": "vue-vine-extension.helloWorld"
+        "command": "vue-vine-extension.helloWorld",
+        "title": "Hello world",
+        "category": "Vue Vine"
+      },
+      {
+        "command": "vue-vine-extension.action.writeVirtualFiles",
+        "title": "Write Virtual Files",
+        "category": "Vue Vine"
       }
     ],
     "languages": [

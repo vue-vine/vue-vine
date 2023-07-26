@@ -3,7 +3,7 @@ import * as protocol from '@volar/language-server/protocol'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
 import type { ExportsInfoForLabs } from '@volar/vscode'
-import { getTsdk, supportLabsVersion } from '@volar/vscode'
+import { activateWriteVirtualFiles, getTsdk, supportLabsVersion } from '@volar/vscode'
 
 let client: lsp.BaseLanguageClient
 
@@ -47,6 +47,8 @@ export async function activate(context: vscode.ExtensionContext) {
     () => vscode.window.showInformationMessage('Hello World from Vue Vine syntax highlight!'),
   )
   context.subscriptions.push(disposable)
+
+  activateWriteVirtualFiles('vue-vine-extension.action.writeVirtualFiles', client)
 
   return {
     volarLabs: {
