@@ -1,9 +1,9 @@
 {
   "name": "@vue-vine/e2e-test",
-  "version": "0.0.0",
+  "private": "true",
   "scripts": {
     "test": "vitest",
-    "dev": "vite --host"
+    "dev": "vite"
   },
   "dependencies": {
     "vue": "^3.3.4"

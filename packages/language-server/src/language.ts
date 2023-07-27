@@ -248,7 +248,7 @@ export class VineFile implements VirtualFile {
           data: [MirrorBehaviorCapabilities.full, MirrorBehaviorCapabilities.full],
         })
       }
-      codes.push('});\n')
+      codes.push('} as VueVineComponent);\n')
 
       const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
         typeof code === 'string'

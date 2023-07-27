@@ -20,7 +20,7 @@ export async function untilUpdated(
   poll: () => Promise<string | null>,
   expected: string,
 ): Promise<void> {
-  await e2eTestCtx.page?.waitForNavigation()
+  await e2eTestCtx.page?.waitForURL('**')
   const maxTries = process.env.CI ? 200 : 50
   for (let tries = 0; tries < maxTries; tries++) {
     const actual = (await poll()) ?? ''
