@@ -9,7 +9,7 @@ async function doUpdateDeps() {
   log('info', 'Updating deps...')
   try {
     // run command
-    await runCommand(TAZE_CMD)
+    await runCommand('TAZE', TAZE_CMD)
 
     log('info', 'update dependencies completes.')
   }

@@ -13,9 +13,9 @@ async function runExtScript(mode) {
   try {
     await runCommand(BUILD_COMPILER)
     await Promise.all([
-      runCommand(WATCH_EXT_TSC),
-      runCommand(WATCH_EXT_ESBUILD),
-      runCommand(WATCH_LANGUAGE_SERVER),
+      runCommand('WATCH_EXT_TSC', WATCH_EXT_TSC),
+      runCommand('WATCH_EXT_ESBUILD', WATCH_EXT_ESBUILD),
+      runCommand('WATCH_LANGUAGE_SERVER', WATCH_LANGUAGE_SERVER),
     ])
   }
   catch (e) {
