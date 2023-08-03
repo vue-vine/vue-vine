@@ -89,7 +89,7 @@ That opinionated behavior is by design from the beginning. Vue 3.3 add a self-im
 
 You **must** specify any boolean props with a literal `boolean` annotation, just like what we'll talk about later in the [`vineProp` section](/design/macros#vineprop).
 
-In a nutshell, if you don't provide a formal parameter for the VCF, and no `vineProp` macro call inside the VCF as well, the props will be `{}`.
+In a nutshell, if you don't provide a formal parameter for the VCF, and no `vineProp` macro call inside the VCF as well, component's `props` field will be `{}`.
 
 ## Caveats
 
@@ -97,11 +97,9 @@ In a nutshell, if you don't provide a formal parameter for the VCF, and no `vine
 
 Although we use TypeScript, we still have some restrictions inside `.vine.ts` files:
 
-- All macros are only allowed to show inside Vine component function.
+- All macros are only allowed to be called inside VCF.
 
 - In top-leve scope:
-
-  **We highly recommend you to only define simple constants and Vine component functions in top-level scope.**
 
   - Expression statement are not allowed, because it may cause side effects.
   - Any Vue reactivity API call is not allowed in declarations.
