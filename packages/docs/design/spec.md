@@ -6,8 +6,8 @@ outline: deep
 
 Before start using it, you're supposed to know the following conventions:
 
-- Vine was designed to only support Vue 3 and Vite. 
-- Vine only supports TypeScript, JavaScript users may not have a good experience.
+- Vine was designed to only support Vue 3 and Vite.
+- Vine only supports TypeScript, JavaScript users may not have full experience.
 - Vine targets to ESM only, `require` is not supported.
 
 ## File extension
@@ -42,7 +42,7 @@ function MyComponent() {
   return vine`
     <div>
       <button>Pick</button>
-      <div>{{ num.value }}</div>
+      <div>{{ num }}</div>
     </div>
   `
 }
@@ -96,7 +96,7 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
 - All macros are only allowed to show inside Vine component function.
 
 - In top-leve scope:
-  
+
   **We highly recommend you to only define simple constants and Vine component functions in top-level scope.**
 
   - Expression statement are not allowed, because it may cause side effects.
@@ -113,9 +113,9 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
   const foo = ref(0)
   const bar = computed(() => foo.value + 1)
 
-  // It's not allowed to call any function 
+  // It's not allowed to call any function
   // that contains reactivity API call as well.
-  // But compiler can't detect it, 
+  // But compiler can't detect it,
   // so it's your responsibility to avoid it.
   const baz = some_func_contains_reactivity_api_call()
   ```
@@ -127,11 +127,11 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
   const WIDTH = 100
 
   // Call a function that has no side effects.
-  // But compiler can't detect it, 
+  // But compiler can't detect it,
   // so it's your responsibility to guarantee it.
   const result = func_with_no_side_effects()
 
-  // Define a function that contains reactivity API call is allowed, 
+  // Define a function that contains reactivity API call is allowed,
   // because this is just how we build "Vue Composable".
   const valid_fn = () => {
     const count = ref(0)
