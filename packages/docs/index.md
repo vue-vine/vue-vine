@@ -1,11 +1,10 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
   name: "Vue Vine"
   text: "Another style to write Vue."
-  tagline: "Provides higher freedom for component writing."
+  tagline: "Provide greater flexibility for writing Vue components."
   image:
     src: /vine-logo.png
     alt: Vue Vine
@@ -22,7 +21,5 @@ features:
     details: Now you can write multiple components in one file, with all template features you love.
   - title: Simple and intuitive macro API
     details: More clean design of Vue's macro mechanism, less mental burden.
-  - title: More fun in Exploring
-    details: Discover you own patterns to manage your components.
 ---
 
