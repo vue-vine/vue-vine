@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
+import { colorful } from './utils/color-str'
 
 const LINT_STAGED = 'pnpm lint-staged'
 const RUN_COMPILER_TEST = 'pnpm run test --run'
@@ -11,15 +12,18 @@ const commitRE
 
 async function runPreCommit() {
   // set log prefix
-  setGlobalPrefix('[pre-commit]: ')
+  setGlobalPrefix(
+    `${colorful(' PRE-COMMIT ', ['black', 'bgBlue', 'bold'])
+     }  `,
+  )
 
   try {
     log('info', 'Start @vue-vine/compiler test ...')
-    await runCommand('RUN_COMPILER_TEST', RUN_COMPILER_TEST)
+    await runCommand(RUN_COMPILER_TEST)
 
     // watching...
     log('info', 'Start lint format ...')
-    await runCommand('LINT_STAGED', LINT_STAGED)
+    await runCommand(LINT_STAGED)
 
     const msg = readFileSync(msgPath, 'utf-8').trim()
     log('info', `Commit message: ${msg}`)
