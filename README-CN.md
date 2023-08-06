@@ -27,7 +27,10 @@ git clone https://github.com/vue-vine/vue-vine.git
 cd vue-vine
 pnpm install
 
-# 开启插件的构建监听
+# 构建所有相关的包
+pnpm run build
+
+# 开启 VSCode 插件的构建监听
 pnpm run ext:dev
 ```
 

@@ -27,6 +27,9 @@ git clone https://github.com/vue-vine/vue-vine.git
 cd vue-vine
 pnpm install
 
+# Build all the required packages
+pnpm run build
+
 # Start watching the VSCode extension's building
 pnpm run ext:dev
 ```

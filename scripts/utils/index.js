@@ -17,9 +17,7 @@ export async function runCommand(command, options = {}) {
         cwd: r('../'),
         shell: true,
       })
-      proc.stdout.on('data', (data) => {
-        console.log(String(data).trim())
-      })
+      proc.stdout.pipe(process.stdout)
       proc.on('close', resolve)
       proc.on('exit', resolve)
       proc.on('error', (err) => {
