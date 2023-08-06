@@ -14,23 +14,28 @@ Take a quick view:
 
 ![Quick view](./packages/docs/public/highlight-demo.png)
 
-## Get started
+## Try the demo
 
 **warning:** For now, `Vue Vine` is still under heavily development, please don't use it in production.
 
 You can try the demo by following steps:
+
+For development environment setup, first you need to get the VSCode extension bundle ouput.
 
 ```bash
 git clone https://github.com/vue-vine/vue-vine.git
 cd vue-vine
 pnpm install
 
-# Start watching the plugin's building
-pnpm run dev
+# Start watching the VSCode extension's building
+pnpm run ext:dev
+```
 
-# Start Playground's Vite dev server
+and then start the Playground's dev server.
+
+```bash
 pnpm run play
 ```
 
 1. You can see the demo in `http://localhost:3333/`.
-3. You can inspect the transforming process in `http://localhost:3333/__inspect/`
+2. You can inspect the transforming process in `http://localhost:3333/__inspect/`

@@ -59,7 +59,6 @@ export function App() {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
 
-  // eslint-disable-next-line no-console
   console.log('Click the link to explore source code ->')
 
   vineStyle(`

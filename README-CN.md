@@ -12,13 +12,15 @@
 
 下面是一个简单的示例预览：
 
-![Quick view](./packages/docs/public/highlight-demo.png)
+![示例预览](./packages/docs/public/highlight-demo.png)
 
-## 开始使用
+## 即刻尝鲜
 
 **注意:** 目前，Vue Vine 仍处于密集开发阶段，请不要将其用于生产环境。
 
-你可以按照下面的步骤操作，启动示例项目来预览
+你可以按照下面的步骤操作，启动示例项目来预览：
+
+首先，你需要获取 VSCode 插件的构建输出。
 
 ```bash
 git clone https://github.com/vue-vine/vue-vine.git
@@ -26,11 +28,14 @@ cd vue-vine
 pnpm install
 
 # 开启插件的构建监听
-pnpm run dev
+pnpm run ext:dev
+```
 
-# 开启 Playground 的 Vite 开发服务器
+然后，开启 Playground 的 Vite 开发服务器。
+
+```bash
 pnpm run play
 ```
 
 1. 接下来可以在 `http://localhost:3333/` 中看到示例。
-3. 你可以在 `http://localhost:3333/__inspect/` 中查看源代码在 Vite 处理管道的转换过程。
+2. 你可以在 `http://localhost:3333/__inspect/` 中查看源代码在 Vite 处理管道的转换过程。
