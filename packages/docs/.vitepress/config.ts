@@ -42,7 +42,7 @@ export default defineConfig({
 
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Guide', link: '/guide/get-started' },
+      { text: 'Guide', link: '/introduction/quick-start' },
     ],
 
     sidebar: [
