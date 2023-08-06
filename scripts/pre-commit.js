@@ -3,6 +3,7 @@ import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
 import { colorful } from './utils/color-str'
 
+const PNPM_INSTALL = 'pnpm install'
 const LINT_STAGED = 'pnpm lint-staged'
 const RUN_COMPILER_TEST = 'pnpm run test --run'
 
@@ -18,6 +19,9 @@ async function runPreCommit() {
   )
 
   try {
+    log('info', 'Start install dependencies ...')
+    await runCommand(PNPM_INSTALL)
+
     log('info', 'Start @vue-vine/compiler test ...')
     await runCommand(RUN_COMPILER_TEST)
 
