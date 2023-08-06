@@ -53,11 +53,13 @@ function App() {
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVCFHasOnlyOneVineTaggedTemplateString', mockCompilerHooks)
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(3)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"Multiple vine tagged template are not allowed inside Vine component function"')
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
       .toMatchInlineSnapshot('"Vine template string are not allowed to contain interpolation!"')
+    expect(mockCompilerCtx.vineCompileErrors[2].msg)
+      .toMatchInlineSnapshot('"[Vine template compile error] Element is missing end tag."')
   })
 
   test('validate those macros can only be called once inside a Vine component function', () => {

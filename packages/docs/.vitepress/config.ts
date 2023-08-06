@@ -47,17 +47,19 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'Design',
+        text: 'Introduction',
         items: [
-          { text: 'Why Vine', link: '/design/why' },
-          { text: 'Specification', link: '/design/spec' },
-          { text: 'Macros', link: '/design/macros' },
+          { text: 'Why Vine', link: '/introduction/why' },
+          { text: 'Quick Start', link: '/introduction/quick-start' },
         ],
       },
       {
-        text: 'Guide',
+        text: 'Specification',
         items: [
-          { text: 'Get Started', link: '/guide/get-started' },
+          { text: 'Basics', link: '/specification/basics' },
+          { text: 'Props', link: '/specification/props' },
+          { text: 'Macros', link: '/specification/macros' },
+          { text: 'Caveats', link: '/specification/caveats' },
         ],
       },
     ],

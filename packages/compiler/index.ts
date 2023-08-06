@@ -65,12 +65,8 @@ export function compileVineTypeScriptFile(
   const vineCompFnDecls = findVineCompFnDecls(root)
 
   // 1. Validate all vine restrictions
-  const isValidatePass = validateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+  validateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
   compilerHooks.onValidateEnd?.()
-
-  if (!isValidatePass) {
-    return vineFileCtx
-  }
 
   // 2. Analysis
   analyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)

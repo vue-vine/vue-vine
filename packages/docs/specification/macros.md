@@ -1,6 +1,6 @@
 # Macros
 
-Macros are some special functions that only be meaningful in compile time, they're hints for Vine compiler to transform corresponding component properties.
+Macros are some special functions that only have meaning in compile time, they're hints for Vine compiler to transform corresponding component properties.
 
 The type definition of these macros can be found in [our Github repo](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts).
 
@@ -8,7 +8,7 @@ The type definition of these macros can be found in [our Github repo](https://gi
 
 Define a component prop. it's inspired from [Vue Macros](https://vue-macros.sxzz.moe/macros/define-prop.html), but with some differences:
 
-- For props doesn't need a default value, you must pass a type argument to it.
+- You must give a type argument to specify the type of the prop, or you must provide a default value.
 - `vineProp`'s first parameter is the prop's validator, it's optional.
 
 ```vue-vine
@@ -16,15 +16,14 @@ const foo = vineProp<string>()
 const title = vineProp<string>(value => value.startsWith('#'))
 ```
 
-- For props with default value, you can use `vineProp.withDefault`, and the validator becomes the second parameter.
+- For props with default value, you can use `vineProp.withDefault`, and the validator is the second parameter.
 
   Because of the ability of TypeScript to infer the type of default value, you don't need to pass the type argument to it.
 
-  Except any `boolean` type default value. Vine indeed ignore the type of props in compile time, but there is a restriction from Vue's "Boolean Cast" mechanism, that said, in compile time, we must know whether a prop is a boolean or not, in order to determine how to handle a prop passing like this: `<MyComponent foo />`. In Web standard HTML, value of attribute `foo` is actually empty string.
-
-  So when you really need a boolean prop, you shouldn't pass a `boolean` variable as default value, only `true` or `false` literal works. Although TypeScript can infer, but Vine compiler doesn't embed a TypeScript compiler, so it's not possible to get that information.
+  Except any `boolean` type default value, if you really need a boolean prop, you shouldn't pass a variable but only a `true` or `false` literal. Although TypeScript can infer from variable, but Vine compiler doesn't embed a TypeScript compiler, so it's not possible to get that information.
 
 ```vue-vine
+// Correct examples
 const foo = vineProp.withDefault('bar')
 const bool = vineProp.withDefault(false)
 ```

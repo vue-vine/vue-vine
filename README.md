@@ -8,6 +8,8 @@ Another style of writing Vue components.
 
 There are many discussions in community that hopes for a solution that supports writing multiple Vue components in a single file. That's why `Vue Vine` was born.
 
+Check more details in our [documentation](https://vue-vine.netlify.app/). [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+
 `Vue Vine` was designed to provide more flexibility of managing Vue components. It is a parallel style to SFC.
 
 Take a quick view:

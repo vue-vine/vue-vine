@@ -357,8 +357,11 @@ const analyzeVineProps: AnalyzeRunner = (
     vineCompFnCtx.propsAlias = propsFormalParam.name;
     // Analyze the object literal type annotation
     // and save the props info into `vineCompFnCtx.props`
-    (propsTypeAnnotation.members as TSPropertySignature[]).forEach((member) => {
-      const propName = (member.key as Identifier).name
+    (propsTypeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
+      if (!isIdentifier(member.key)) {
+        return
+      }
+      const propName = member.key.name
       const propType = vineFileCtx.fileSourceCode.slice(
         member.typeAnnotation!.typeAnnotation.start!,
         member.typeAnnotation!.typeAnnotation.end!,

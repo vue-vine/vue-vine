@@ -11,15 +11,15 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/get-started
+      link: /introduction/quick-start
     - theme: alt
       text: Why Vine
-      link: /design/why
+      link: /introduction/why
 
 features:
   - title: Function component, but no JSX
     details: Now you can write multiple components in one file, with all template features you love.
   - title: Simple and intuitive macro API
-    details: More clean design of Vue's macro mechanism, less mental burden.
+    details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
 
