@@ -34,6 +34,8 @@ Define `emits` for the component, the usage is quite similar to the official ver
 
 This macro has zero parameter, and returns the emits function, you **must** define a variable to accept the return value.
 
+This type parameter's syntax is the same as Vue 3.3's more succinct one, check the [official documentaion](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits) for more details.
+
 ```vue-vine
 const myEmits = vineEmits<{
   update: [foo: string, bar: number]
