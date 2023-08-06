@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/language-server",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "author": "ShenQingchuan",
   "license": "MIT",
   "main": "out/index.js",
