@@ -101,8 +101,8 @@ const MyComp = () => {
     const content = `
 function MyComp() {
   const myEmits = vineEmits<{
-    foo: (a: string) => void;
-    bar: (b: number) => void;
+    foo: [a: string];
+    bar: [b: number];
   }>()
   return vine\`<div>Test emits</div>\`
 }`
