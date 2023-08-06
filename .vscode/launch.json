@@ -16,11 +16,17 @@
       ],
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/out/**/*.js"
-      ],
-      "preLaunchTask": {
-        "type": "npm",
-        "script": "ext:dev"
-      }
+      ]
+    },
+    {
+      "name": "Attach to Server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "restart": true,
+      "outFiles": [
+        "${workspaceRoot}/*/*/out/**/*.js"
+      ]
     }
   ]
 }

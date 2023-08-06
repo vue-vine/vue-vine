@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import Inspect from 'vite-plugin-inspect'
 import { VineVitePlugin } from 'vue-vine/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import UnoCSS from 'unocss/vite'
 
 export default defineConfig({
   resolve: {
@@ -16,6 +17,7 @@ export default defineConfig({
     vue(),
     VineVitePlugin(),
     Inspect(),
+    UnoCSS(),
     AutoImport({
       imports: [
         'vue',

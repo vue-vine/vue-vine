@@ -17,9 +17,9 @@ hero:
       link: /design/why
 
 features:
-  - title: Function style component
-    details: Now you can write multiple components in one file, it's not JSX! We're not going to losing any template features.
-  - title: Neat and intuitive macro API
-    details: More clean design of Vue's macro mechanism, less mental burden, easy to learn for beginners.
+  - title: Function component, but no JSX
+    details: Now you can write multiple components in one file, with all template features you love.
+  - title: Simple and intuitive macro API
+    details: More clean design of Vue's macro mechanism, less mental burden.
 ---
 

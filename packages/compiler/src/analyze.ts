@@ -1,5 +1,6 @@
 import hashId from 'hash-sum'
-import { parse, walkIdentifiers } from '@vue/compiler-dom'
+import type { BindingTypes } from '@vue/compiler-dom'
+import { walkIdentifiers } from '@vue/compiler-dom'
 import {
   isArrayPattern,
   isBlockStatement,
@@ -34,7 +35,6 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { type BindingTypes } from '@vue/compiler-dom'
 import { VineBindingTypes } from './constants'
 import type {
   BabelFunctionNodeTypes,
@@ -677,7 +677,8 @@ function buildVineCompFnCtx(
     fnDeclNode,
   )
   const scopeId = hashId(`${vineFileCtx.fileId}:${fnName}`)
-  const templateSource = templateStringNode?.quasi.quasis[0].value.raw ?? ''
+  const templateStringQuasiNode = templateStringNode?.quasi.quasis[0]
+  const templateSource = templateStringQuasiNode?.value.raw ?? ''
   const vineCompFnCtx: VineCompFnCtx = {
     isExport: isExportDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
@@ -689,7 +690,6 @@ function buildVineCompFnCtx(
     templateStringNode,
     templateReturn,
     templateSource,
-    templateAst: parse(templateSource),
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},

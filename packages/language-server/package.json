@@ -11,18 +11,29 @@
     "out/**/*.js",
     "out/**/*.d.ts"
   ],
+  "scripts": {
+    "watch": "tsc -w --preserveWatchOutput",
+    "build": "tsc"
+  },
   "dependencies": {
-    "@volar/language-core": "1.6.9",
-    "@volar/language-server": "1.6.9",
-    "@volar/language-service": "1.6.9",
+    "@volar/language-core": "~1.9.2",
+    "@volar/language-server": "~1.9.2",
+    "@volar/language-service": "~1.9.2",
+    "@volar/source-map": "~1.9.2",
+    "@volar/typescript": "~1.9.2",
     "@vue-vine/compiler": "workspace:*",
-    "volar-service-css": "0.0.4",
-    "volar-service-emmet": "0.0.4",
-    "volar-service-html": "0.0.4",
+    "@vue/compiler-dom": "^3.3.4",
+    "@vue/language-core": "^1.8.6",
+    "muggle-string": "^0.3.1",
+    "volar-service-css": "^0.0.10",
+    "volar-service-emmet": "^0.0.10",
+    "volar-service-html": "^0.0.10",
+    "volar-service-typescript": "^0.0.10",
     "vscode-html-languageservice": "^5.0.6",
     "vscode-languageserver-textdocument": "^1.0.8"
   },
   "devDependencies": {
+    "@types/node": "^20.4.8",
     "typescript": "^5.1.3"
   }
 }

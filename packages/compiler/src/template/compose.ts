@@ -1,11 +1,12 @@
-import { compile } from '@vue/compiler-dom'
-import type { BindingTypes, CompilerOptions } from '@vue/compiler-dom'
-import type { ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
+import { parse as VueCompilerDomParse, compile } from '@vue/compiler-dom'
+import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
+import lineColumn from 'line-column'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
 import { babelParse } from '../babel-helpers/parse'
 import { appendToMapArray } from '../utils'
-import { vineErr } from '../diagnostics'
+import { vineErr, vineWarn } from '../diagnostics'
 import { VineBindingTypes } from '../constants'
 
 export function compileVineTemplate(
@@ -109,6 +110,54 @@ function isExportRenderFnNode(node: Node): node is ExportNamedDeclaration {
   )
 }
 
+function getQuasisNode(
+  vineFnCompCtx: VineCompFnCtx,
+) {
+  return vineFnCompCtx.templateStringNode?.quasi.quasis[0]
+}
+
+function computeTemplateErrLocation(
+  vineFileCtx: VineFileCtx,
+  vineFnCompCtx: VineCompFnCtx,
+  errLocation: VueSourceLocation,
+) {
+  const quasisNode = getQuasisNode(vineFnCompCtx)
+  if (!quasisNode) {
+    return
+  }
+  const mapper = lineColumn(
+    vineFileCtx.fileSourceCode.original,
+    { origin: 1 }, // Babel line/column is 1-based
+  )
+  const templateStart = quasisNode.start!
+  const startOffset = templateStart + errLocation.start.offset
+  const endOffset = templateStart + errLocation.end.offset
+  const start = mapper.fromIndex(startOffset)
+  const end = mapper.fromIndex(endOffset)
+  if (!start || !end) {
+    return
+  }
+  const [startColumn, endColumn]
+    = (
+      start.line === end.line
+      && start.col === end.col
+    )
+      ? [1, Number.POSITIVE_INFINITY]
+      : [start.col, end.col]
+
+  const loc: BabelSourceLocation = {
+    start: {
+      line: start.line,
+      column: startColumn,
+    },
+    end: {
+      line: end.line,
+      column: endColumn,
+    },
+  }
+  return loc
+}
+
 export function createSeparatedTemplateComposer(
   compilerHooks: VineCompilerHooks,
 ): TemplateCompileComposer {
@@ -125,14 +174,47 @@ export function createSeparatedTemplateComposer(
       mergedImportsMap,
       bindingMetadata,
     }) => {
+      let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
         templateSource,
         {
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
           inline: false,
+          onError: (e) => {
+            if (hasTemplateCompileErr) {
+              return
+            }
+            hasTemplateCompileErr = true
+            compilerHooks.onError(
+              vineErr(
+                vineFileCtx,
+                {
+                  msg: `[Vine template compile error] ${e.message}`,
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                },
+              ),
+            )
+          },
+          onWarn: (e) => {
+            compilerHooks.onWarn(
+              vineWarn(
+                vineFileCtx,
+                {
+                  msg: `[Vine template compile warning] ${e.message}`,
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                },
+              ),
+            )
+          },
         },
       )
+      vineFnCompCtx.templateAst = hasTemplateCompileErr
+        ? undefined
+        : VueCompilerDomParse(templateSource)
+      if (hasTemplateCompileErr) {
+        return ''
+      }
 
       const { code } = compileResult
       const generatedCodeAst = babelParse(code)
@@ -186,9 +268,7 @@ export function createSeparatedTemplateComposer(
       // is combining all the bindings from user imports and all declarations.
       // non-inline mode, or has manual render in normal <script>
       // return bindings from script and script setup
-      const allBindings: Record<string, any> = {
-        ...bindingMetadata,
-      }
+      const allBindings: Record<string, any> = { ...bindingMetadata }
       for (const key in vineFileCtx.userImports) {
         if (
           !vineFileCtx.userImports[key].isType
@@ -228,7 +308,9 @@ export function createSeparatedTemplateComposer(
   }
 }
 
-export function createInlineTemplateComposer(): TemplateCompileComposer {
+export function createInlineTemplateComposer(
+  compilerHooks: VineCompilerHooks,
+): TemplateCompileComposer {
   const templateCompileResults: WeakMap<VineCompFnCtx, string> = new WeakMap()
   const generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]> = new WeakMap()
 
@@ -236,18 +318,52 @@ export function createInlineTemplateComposer(): TemplateCompileComposer {
     templateCompileResults,
     generatedPreambleStmts,
     compileSetupFnReturns: ({
+      vineFileCtx,
       vineCompFnCtx: vineFnCompCtx,
       templateSource,
       mergedImportsMap,
       bindingMetadata,
     }) => {
+      let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
         templateSource,
         {
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
+          onError: (e) => {
+            if (hasTemplateCompileErr) {
+              return
+            }
+            hasTemplateCompileErr = true
+            compilerHooks.onError(
+              vineErr(
+                vineFileCtx,
+                {
+                  msg: `[Vine template compile error] ${e.message}`,
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                },
+              ),
+            )
+          },
+          onWarn: (e) => {
+            compilerHooks.onWarn(
+              vineWarn(
+                vineFileCtx,
+                {
+                  msg: `[Vine template compile warning] ${e.message}`,
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                },
+              ),
+            )
+          },
         },
       )
+      vineFnCompCtx.templateAst = hasTemplateCompileErr
+        ? undefined
+        : VueCompilerDomParse(templateSource)
+      if (hasTemplateCompileErr) {
+        return ''
+      }
 
       const { preamble, code } = compileResult
       const preambleAst = babelParse(preamble)

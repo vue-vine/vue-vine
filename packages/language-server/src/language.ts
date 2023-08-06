@@ -1,36 +1,65 @@
+import { posix as path } from 'node:path'
 import type { Language, VirtualFile } from '@volar/language-core'
-import { FileCapabilities, FileKind, FileRangeCapabilities } from '@volar/language-core'
-import type * as ts from 'typescript/lib/tsserverlibrary'
+import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabilities } from '@volar/language-core'
+import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { compileVineTypeScriptFile } from '@vue-vine/compiler'
+import { resolveVueCompilerOptions } from '@vue/language-core'
+import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
+import * as muggle from 'muggle-string'
+import type * as ts from 'typescript/lib/tsserverlibrary'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { VINE_FILE_SUFFIX_REGEXP } from './constants'
 import type { VineVirtualFileExtension } from './types'
+import { getTypesCode } from './globalTypes'
 
 function virtualFileName(
   sourceFileName: string,
   extension: VineVirtualFileExtension,
   extra?: string,
 ) {
-  return `${
-    sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
-  }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
+  return `${sourceFileName.replace(VINE_FILE_SUFFIX_REGEXP, '')
+    }${extra ? `.${extra}` : ''}.vine-virtual.${extension}`
 }
 
-export const language: Language<VineFile> = {
-  createVirtualFile(fileName, snapshot) {
-    if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
-      return new VineFile(fileName, snapshot)
-    }
-  },
-  updateVirtualFile(vineFile, snapshot) {
-    vineFile.update(snapshot)
-  },
+export function createLanguage(ts: typeof import('typescript/lib/tsserverlibrary')) {
+  const language: Language<VineFile> = {
+    createVirtualFile(fileName, snapshot) {
+      if (VINE_FILE_SUFFIX_REGEXP.test(fileName)) {
+        return new VineFile(fileName, snapshot, ts)
+      }
+    },
+    updateVirtualFile(vineFile, snapshot) {
+      vineFile.update(snapshot)
+    },
+    resolveHost(host) {
+      const sharedTypesSnapshot = ts.ScriptSnapshot.fromString(getTypesCode())
+      const sharedTypesFileName = path.join(host.rootPath, '__VLS_types.d.ts')
+      return {
+        ...host,
+        getScriptFileNames() {
+          return [
+            sharedTypesFileName,
+            ...host.getScriptFileNames(),
+          ]
+        },
+        getScriptSnapshot(fileName) {
+          if (fileName === sharedTypesFileName) {
+            return sharedTypesSnapshot
+          }
+          return host.getScriptSnapshot(fileName)
+        },
+      }
+    },
+  }
+  return language
 }
 
 export class VineFile implements VirtualFile {
   kind = FileKind.TextFile
-  capabilities = FileCapabilities.full
+  capabilities = {
+    diagnostic: true,
+  }
 
   fileName!: string
   mappings!: VirtualFile['mappings']
@@ -42,7 +71,9 @@ export class VineFile implements VirtualFile {
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
-    onOptionsResolved: cb => cb({}),
+    onOptionsResolved: cb => cb({
+      inlineTemplate: true,
+    }),
     onError: err => this.vineCompileErrs.push(err),
     onWarn: warn => this.vineCompileWarns.push(warn),
   }
@@ -50,6 +81,7 @@ export class VineFile implements VirtualFile {
   constructor(
     public sourceFileName: string,
     public snapshot: ts.IScriptSnapshot,
+    public ts: typeof import('typescript/lib/tsserverlibrary'),
   ) {
     this.fileName = virtualFileName(sourceFileName, 'ts')
     this.onSnapshotUpdated()
@@ -68,7 +100,9 @@ export class VineFile implements VirtualFile {
     this.mappings = [{
       sourceRange: [0, this.snapshot.getLength()],
       generatedRange: [0, this.snapshot.getLength()],
-      data: FileRangeCapabilities.full,
+      data: {
+        diagnostic: true,
+      },
     }]
     this.textDocument = TextDocument.create(
       this.fileName,
@@ -87,6 +121,7 @@ export class VineFile implements VirtualFile {
     this.mustRunOnSnapshotUpdated()
     this.addEmbeddedStyleFiles()
     this.addEmbeddedTemplateFiles()
+    this.addEmbeddedTsFile()
   }
 
   createEmbeddedFile(
@@ -116,8 +151,8 @@ export class VineFile implements VirtualFile {
   addEmbeddedStyleFiles() {
     for (const [scopeId, styleDefine] of Object.entries(this.vineFileCtx.styleDefine)) {
       const { lang, source, range, fileCtx } = styleDefine
-      const { start, end } = range
-      const belongComp = fileCtx.vineFnComps.find(comp => comp.scopeId === scopeId)
+      const [start, end] = range!
+      const belongComp = fileCtx.vineCompFns.find(comp => comp.scopeId === scopeId)
       const virtualFileExt: VineVirtualFileExtension = (() => {
         switch (lang) {
           case 'css':
@@ -138,36 +173,135 @@ export class VineFile implements VirtualFile {
             virtualFileExt,
             belongComp?.fnName ?? scopeId,
           ),
-          [
-            // +1/-1 to skip the first/last quote
-            start.index + 1,
-            end.index - 1,
-          ],
+          // +1/-1 to skip the first/last quote
+          [start + 1, end - 1],
         ),
       )
     }
   }
 
   addEmbeddedTemplateFiles() {
-    for (const vineFnCompCtx of this.vineFileCtx.vineFnComps) {
-      const { template } = vineFnCompCtx
-      const range = template.range()
-
+    for (const vineFnCompCtx of this.vineFileCtx.vineCompFns) {
+      const { templateSource, templateStringNode } = vineFnCompCtx
       this.embeddedFiles.push(
         this.createEmbeddedFile(
-          template.text().slice(1, -1), // skip quotes
+          templateSource,
           virtualFileName(
             this.sourceFileName,
             'html',
             vineFnCompCtx.fnName ?? vineFnCompCtx.scopeId,
           ),
+          // +1/-1 to skip the first/last quote
           [
-            // +1/-1 to skip the first/last quote
-            range.start.index + 1,
-            range.end.index - 1,
+            templateStringNode!.quasi.quasis[0]!.start! + 1,
+            templateStringNode!.quasi.quasis[0]!.end! - 1,
           ],
         ),
       )
     }
+  }
+
+  addEmbeddedTsFile() {
+    let lastCodeOffset = 0
+    const codes: muggle.Segment<FileRangeCapabilities>[] = []
+    const mirrorBehaviorMappings: NonNullable<VirtualFile['mirrorBehaviorMappings']> = []
+
+    for (const vineFnCompCtx of this.vineFileCtx.vineCompFns) {
+      const { templateStringNode, templateSource, templateAst } = vineFnCompCtx
+      const start = templateStringNode!.start!
+      const end = templateStringNode!.end!
+      const offset = start + 5 // +5 to skip the vine` prefix
+
+      codes.push([
+        this.snapshot.getText(lastCodeOffset, start),
+        undefined,
+        lastCodeOffset,
+        FileRangeCapabilities.full,
+      ])
+      try {
+        if (!templateAst) {
+          codes.push('(() => {}) as VueVineComponent)')
+        }
+        else {
+          const generatedTemplate = generateTemplate(
+            this.ts as any,
+            {},
+            resolveVueCompilerOptions({}),
+            templateSource,
+            'html',
+            {
+              styles: [],
+              templateAst,
+            } as any,
+            false,
+            false,
+          )
+          codes.push('(() => {\n')
+          codes.push('const __VLS_ctx = reactive({')
+          for (const id of [
+            ...generatedTemplate.identifiers,
+            ...Object.keys(generatedTemplate.tagNames),
+          ]) {
+            const leftOffset = muggle.getLength(codes)
+            codes.push(`${id}: `)
+            const rightOffset = muggle.getLength(codes)
+            codes.push(`${id}, `)
+            mirrorBehaviorMappings.push({
+              sourceRange: [leftOffset, leftOffset + id.length],
+              generatedRange: [rightOffset, rightOffset + id.length],
+              data: [MirrorBehaviorCapabilities.full, MirrorBehaviorCapabilities.full],
+            })
+          }
+          codes.push('});\n')
+          const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
+            typeof code === 'string'
+              ? code
+              : [code[0], undefined, typeof code[2] === 'number'
+                  ? code[2] + offset
+                  : [code[2][0] + offset, code[2][1] + offset], code[3]],
+          )
+          codes.push(...transformedTemplateCode)
+          codes.push('} as VueVineComponent)')
+        }
+
+        lastCodeOffset = end
+      }
+      catch (err) {
+        console.error(
+          `Volar failed to generate template virtural code for ${vineFnCompCtx.fnName}\n  `,
+          err,
+        )
+      }
+    }
+
+    codes.push([
+      this.snapshot.getText(lastCodeOffset, this.snapshot.getLength()),
+      undefined,
+      lastCodeOffset,
+      FileRangeCapabilities.full,
+    ])
+
+    const generated = muggle.toString(codes)
+
+    this.embeddedFiles.push(
+      {
+        fileName: virtualFileName(
+          this.sourceFileName,
+          'ts',
+          'vls',
+        ),
+        kind: FileKind.TypeScriptHostFile,
+        snapshot: {
+          getText: (start, end) => generated.slice(start, end),
+          getLength: () => generated.length,
+          getChangeRange: () => undefined,
+        },
+        mappings: buildMappings(codes),
+        mirrorBehaviorMappings,
+        codegenStacks: [],
+        capabilities: FileCapabilities.full,
+        embeddedFiles: [],
+      },
+    )
   }
 }

@@ -8,7 +8,13 @@ import {
   traverse,
 } from '@babel/types'
 import type { AwaitExpression, Node } from '@babel/types'
-import { CSS_VARS_HELPER, DEFINE_COMPONENT_HELPER, TO_REFS_HELPER, UN_REF_HELPER, USE_DEFAULTS_HELPER } from './constants'
+import {
+  CSS_VARS_HELPER,
+  DEFINE_COMPONENT_HELPER,
+  TO_REFS_HELPER,
+  UN_REF_HELPER,
+  USE_DEFAULTS_HELPER,
+} from './constants'
 import { sortStyleImport } from './style/order'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
 import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
@@ -101,7 +107,7 @@ export function transformFile(
     generatedPreambleStmts,
     compileSetupFnReturns,
   } = inline // Get template composer based on inline option
-    ? createInlineTemplateComposer()
+    ? createInlineTemplateComposer(compilerHooks)
     : createSeparatedTemplateComposer(compilerHooks)
 
   let isPrependedUseDefaults = false

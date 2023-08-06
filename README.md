@@ -32,6 +32,5 @@ pnpm run dev
 pnpm run play
 ```
 
-1. You can see the demo in `http://localhost:3333/`. 
-2. You can add URL query `?sfc` to switch back to SFC style example.
+1. You can see the demo in `http://localhost:3333/`.
 3. You can inspect the transforming process in `http://localhost:3333/__inspect/`

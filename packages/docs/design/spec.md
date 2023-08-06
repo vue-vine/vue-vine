@@ -6,8 +6,8 @@ outline: deep
 
 Before start using it, you're supposed to know the following conventions:
 
-- Vine was designed to only support Vue 3 and Vite. 
-- Vine only supports TypeScript, JavaScript users may not have a good experience.
+- Vine was designed to only support Vue 3 and Vite.
+- Vine only supports TypeScript, JavaScript users may not have full experience.
 - Vine targets to ESM only, `require` is not supported.
 
 ## File extension
@@ -42,17 +42,19 @@ function MyComponent() {
   return vine`
     <div>
       <button>Pick</button>
-      <div>{{ num.value }}</div>
+      <div>{{ num }}</div>
     </div>
   `
 }
 ```
 
-All the statements would be extracted to the actual component object's `setup` function, except the return statement, and anyone has a **Macro** call, which will be explained below.
+All the statements would be extracted to the actual component object's `setup` function, except the return statement, the return value would be used as the component's template, and be compiled to render function by Vue.
 
 ### Macros
 
-In Vine, we just provide a small amount of macros, you can check more details in our separated [Macros](/design/macros.html) chapter.
+With Vue 3.2 wa released, we can use macros in `<script setup>` block, and [Vue Macros](https://https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
+
+In Vine, we just provide a small amount of macros for now, you can check more details in our separated [Macros](/design/macros.html) chapter. We keep the possibility to add more macros in the future, but every step would be discussed carefully.
 
 ### Props
 
@@ -67,37 +69,37 @@ import { SomeExternalType } from './path/to/somewhere'
 
 function MyComponent(props: {
   foo: SomeExternalType
-  bar: boolean
+  bar?: number
+  baz: boolean
 }) {
   // ...
 }
 ```
 
-When you annotate one prop's type, no matter where it's defined. Vine will transfer type checking to IDE side, and we'll drop all the types when generating the component object's props.
+<details>
+  <summary style="cursor: pointer;">
+When you annotate one prop's type, it's analyzed by the current TypeScript context in your IDE environment. Vine lets IDE to take over the type checking, and we'll eliminate all the types when generating the component object's <code>props</code>.
+  </summary>
 
-That opinionated behavior is by design at the beginning of my design. Vue 3.3 add a self-implemented type checking to do analysis, but it's no doubt that there will be many unexpected edge cases in the future.
+<i style="color: #6b6b6bc1;">
+That opinionated behavior is by design from the beginning. Vue 3.3 add a self-implemented computation under the hood to analyze type, but it's no doubt that there will be many unexpected edge cases in the future.
+</i>
+
+</details>
 
 You **must** specify any boolean props with a literal `boolean` annotation, just like what we'll talk about later in the [`vineProp` section](/design/macros#vineprop).
 
-In a nutshell, if you don't provide a formal parameter for the VCF, and no `vineProp` macro call inside the VCF as well, the props will be `{}`.
+In a nutshell, if you don't provide a formal parameter for the VCF, and no `vineProp` macro call inside the VCF as well, component's `props` field will be `{}`.
 
 ## Caveats
-
-### Conflicted with SFC
-
-Vine is not designed to work with SFC, it's a parallel style to SFC. You should not use SFC and Vine in the same project.
-
-That's because we define Vue component as function in Vine, it's not type compatible when using a VCF inside a SFC as a component.
 
 ### Restricted TypeScript use case
 
 Although we use TypeScript, we still have some restrictions inside `.vine.ts` files:
 
-- All macros are only allowed to show inside Vine component function.
+- All macros are only allowed to be called inside VCF.
 
 - In top-leve scope:
-  
-  **We highly recommend you to only define simple constants and Vine component functions in top-level scope.**
 
   - Expression statement are not allowed, because it may cause side effects.
   - Any Vue reactivity API call is not allowed in declarations.
@@ -113,9 +115,9 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
   const foo = ref(0)
   const bar = computed(() => foo.value + 1)
 
-  // It's not allowed to call any function 
+  // It's not allowed to call any function
   // that contains reactivity API call as well.
-  // But compiler can't detect it, 
+  // But compiler can't detect it,
   // so it's your responsibility to avoid it.
   const baz = some_func_contains_reactivity_api_call()
   ```
@@ -127,11 +129,11 @@ Although we use TypeScript, we still have some restrictions inside `.vine.ts` fi
   const WIDTH = 100
 
   // Call a function that has no side effects.
-  // But compiler can't detect it, 
+  // But compiler can't detect it,
   // so it's your responsibility to guarantee it.
   const result = func_with_no_side_effects()
 
-  // Define a function that contains reactivity API call is allowed, 
+  // Define a function that contains reactivity API call is allowed,
   // because this is just how we build "Vue Composable".
   const valid_fn = () => {
     const count = ref(0)

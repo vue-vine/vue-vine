@@ -1,22 +1,33 @@
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
-import { runCommand } from './utils'
+import { runCommand, spawnCommand } from './utils'
+import { colorful } from './utils/color-str'
 
-const PRE_BUILD_CMD = 'pnpm nx build vue-vine'
-const WATCH_CMD = 'pnpm nx watch --projects=@vue-vine/compiler-babel,@vue-vine/vite-plugin,vue-vine -- nx build vue-vine'
+const BUILD_COMPILER = 'pnpm --filter @vue-vine/compiler run build'
+const BUILD_VITE_PLUGIN = 'pnpm --filter @vue-vine/vite-plugin run build'
+const BUILD_VUE_VINE = 'pnpm --filter vue-vine run build'
+
+const DEV_COMPILER = ['pnpm', ['--filter', '@vue-vine/compiler', 'run', 'dev']]
+const DEV_VITE_PLUGIN = ['pnpm', ['--filter', '@vue-vine/vite-plugin', 'run', 'dev']]
+const DEV_VUE_VINE = ['pnpm', ['--filter', 'vue-vine', 'run', 'dev']]
 
 async function runDev() {
   // set log prefix
-  setGlobalPrefix('[vue-vine]: ')
+  setGlobalPrefix(`${colorful(' VUE VINE ', ['white', 'bgGreen', 'bold'])} `)
 
   try {
-    // run command
-    // build vue-vine
-    await runCommand(PRE_BUILD_CMD)
-    log('success', 'Build vue-vine done!')
+    // build all packages before dev
+    log('info', 'Start build ...')
+    await runCommand(BUILD_COMPILER, { title: 'BUILD COMPILER' })
+    await runCommand(BUILD_VITE_PLUGIN, { title: 'BUILD VITE PLUGIN' })
+    await runCommand(BUILD_VUE_VINE, { title: 'BUILD VINE MAIN ENTRY' })
 
-    // watching...
-    log('info', 'Start watching changes ...')
-    await runCommand(WATCH_CMD)
+    // run dev command
+    log('info', 'Start dev ...')
+    await Promise.all([
+      spawnCommand(...DEV_COMPILER, { title: 'DEV COMPILER' }),
+      spawnCommand(...DEV_VITE_PLUGIN, { title: 'DEV VITE PLUGIN' }),
+      spawnCommand(...DEV_VUE_VINE, { title: 'DEV VINE MAIN ENTRY' }),
+    ])
   }
   catch (e) {
     log('error', e)

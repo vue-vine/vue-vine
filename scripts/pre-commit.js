@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
+import { colorful } from './utils/color-str'
 
 const LINT_STAGED = 'pnpm lint-staged'
 const RUN_COMPILER_TEST = 'pnpm run test --run'
@@ -11,7 +12,10 @@ const commitRE
 
 async function runPreCommit() {
   // set log prefix
-  setGlobalPrefix('[pre-commit]: ')
+  setGlobalPrefix(
+    `${colorful(' PRE-COMMIT ', ['black', 'bgBlue', 'bold'])
+     }  `,
+  )
 
   try {
     log('info', 'Start @vue-vine/compiler test ...')
