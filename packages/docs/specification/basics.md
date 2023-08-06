@@ -6,6 +6,12 @@ outline: deep
 
 We'll talk about all the basic concepts of Vue Vine in this chapter.
 
+Before start using it, you're supposed to know the following conventions:
+
+- Vine was designed to only support Vue 3 and Vite.
+- Vine only supports TypeScript, JavaScript users may not have full experience.
+- Vine targets to ESM only, `require` is not supported.
+
 ## File extension
 
 Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
