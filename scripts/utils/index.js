@@ -7,7 +7,7 @@ export const r = (...args) => path.resolve(__dirname, '..', ...args)
 
 export async function runCommand(command, options = {}) {
   options.title && log('info', 'Executing ...', `${colorful(
-    options.title,
+    `  ${options.title}  `,
     ['black', 'bgBlue', 'bold'],
   )}  `)
 

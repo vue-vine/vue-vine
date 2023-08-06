@@ -2,11 +2,16 @@ import type { ParserOptions } from '@babel/parser'
 import { parse } from '@babel/parser'
 
 export function babelParse(code: string, options: ParserOptions = {}) {
-  return parse(code, {
+  const finalOptions: ParserOptions = {
     sourceType: 'module',
-    plugins: [
-      'typescript',
-    ],
+    plugins: ['typescript'],
+    errorRecovery: true,
     ...options,
-  })
+  }
+  try {
+    return parse(code, finalOptions)
+  }
+  catch (err) {
+    return parse('', finalOptions)
+  }
 }

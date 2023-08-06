@@ -107,7 +107,7 @@ export function transformFile(
     generatedPreambleStmts,
     compileSetupFnReturns,
   } = inline // Get template composer based on inline option
-    ? createInlineTemplateComposer()
+    ? createInlineTemplateComposer(compilerHooks)
     : createSeparatedTemplateComposer(compilerHooks)
 
   let isPrependedUseDefaults = false

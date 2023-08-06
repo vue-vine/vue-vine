@@ -28,10 +28,10 @@ const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlug
 
         const diagnostics: Diagnostic[] = []
         for (const err of file.vineCompileErrs) {
-          diagnostics.push(transformVineDiagnostic(file, err, 'err'))
+          diagnostics.push(transformVineDiagnostic(err, 'err'))
         }
         for (const warn of file.vineCompileWarns) {
-          diagnostics.push(transformVineDiagnostic(file, warn, 'warn'))
+          diagnostics.push(transformVineDiagnostic(warn, 'warn'))
         }
 
         return diagnostics

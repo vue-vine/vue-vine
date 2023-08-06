@@ -33,6 +33,7 @@
     "vscode-languageserver-textdocument": "^1.0.8"
   },
   "devDependencies": {
+    "@types/node": "^20.4.8",
     "typescript": "^5.1.3"
   }
 }

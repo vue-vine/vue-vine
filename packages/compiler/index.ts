@@ -1,10 +1,10 @@
 import MagicString from 'magic-string'
-import { parse as babelParse } from '@babel/parser'
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './src/types'
 import { findVineCompFnDecls } from './src/babel-helpers/ast'
 import { validateVine } from './src/validate'
 import { analyzeVine } from './src/analyze'
 import { transformFile } from './src/transform'
+import { babelParse } from './src/babel-helpers/parse'
 
 export {
   compileVineStyle,
@@ -45,6 +45,7 @@ export function compileVineTypeScriptFile(
   })
   // Using babel to validate vine declarations
   const root = babelParse(code, {
+    errorRecovery: true,
     sourceType: 'module',
     plugins: [
       'typescript',

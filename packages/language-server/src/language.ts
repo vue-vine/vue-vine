@@ -72,7 +72,7 @@ export class VineFile implements VirtualFile {
   vineCompileWarns: VineDiagnostic[] = []
   compilerHooks: VineCompilerHooks = {
     onOptionsResolved: cb => cb({
-      inlineTemplate: false,
+      inlineTemplate: true,
     }),
     onError: err => this.vineCompileErrs.push(err),
     onWarn: warn => this.vineCompileWarns.push(warn),
@@ -210,7 +210,7 @@ export class VineFile implements VirtualFile {
       const { templateStringNode, templateSource, templateAst } = vineFnCompCtx
       const start = templateStringNode!.start!
       const end = templateStringNode!.end!
-      const offset = start + 5 // 5 = 'vine`'.length
+      const offset = start + 5 // +5 to skip the vine` prefix
 
       codes.push([
         this.snapshot.getText(lastCodeOffset, start),
@@ -218,49 +218,60 @@ export class VineFile implements VirtualFile {
         lastCodeOffset,
         FileRangeCapabilities.full,
       ])
-      codes.push('(() => {\n')
-      const generatedTemplate = generateTemplate(
-        this.ts as any,
-        {},
-        resolveVueCompilerOptions({}),
-        templateSource,
-        'html',
-        {
-          styles: [],
-          templateAst,
-        } as any,
-        false,
-        false,
-      )
+      try {
+        if (!templateAst) {
+          codes.push('(() => {}) as VueVineComponent)')
+        }
+        else {
+          const generatedTemplate = generateTemplate(
+            this.ts as any,
+            {},
+            resolveVueCompilerOptions({}),
+            templateSource,
+            'html',
+            {
+              styles: [],
+              templateAst,
+            } as any,
+            false,
+            false,
+          )
+          codes.push('(() => {\n')
+          codes.push('const __VLS_ctx = reactive({')
+          for (const id of [
+            ...generatedTemplate.identifiers,
+            ...Object.keys(generatedTemplate.tagNames),
+          ]) {
+            const leftOffset = muggle.getLength(codes)
+            codes.push(`${id}: `)
+            const rightOffset = muggle.getLength(codes)
+            codes.push(`${id}, `)
+            mirrorBehaviorMappings.push({
+              sourceRange: [leftOffset, leftOffset + id.length],
+              generatedRange: [rightOffset, rightOffset + id.length],
+              data: [MirrorBehaviorCapabilities.full, MirrorBehaviorCapabilities.full],
+            })
+          }
+          codes.push('});\n')
+          const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
+            typeof code === 'string'
+              ? code
+              : [code[0], undefined, typeof code[2] === 'number'
+                  ? code[2] + offset
+                  : [code[2][0] + offset, code[2][1] + offset], code[3]],
+          )
+          codes.push(...transformedTemplateCode)
+          codes.push('} as VueVineComponent)')
+        }
 
-      codes.push('const __VLS_ctx = reactive({')
-      for (const id of [
-        ...generatedTemplate.identifiers,
-        ...Object.keys(generatedTemplate.tagNames),
-      ]) {
-        const leftOffset = muggle.getLength(codes)
-        codes.push(`${id}: `)
-        const rightOffset = muggle.getLength(codes)
-        codes.push(`${id}, `)
-        mirrorBehaviorMappings.push({
-          sourceRange: [leftOffset, leftOffset + id.length],
-          generatedRange: [rightOffset, rightOffset + id.length],
-          data: [MirrorBehaviorCapabilities.full, MirrorBehaviorCapabilities.full],
-        })
+        lastCodeOffset = end
       }
-      codes.push('});\n')
-
-      const transformedTemplateCode = generatedTemplate.codes.map<muggle.Segment<FileRangeCapabilities>>(code =>
-        typeof code === 'string'
-          ? code
-          : [code[0], undefined, typeof code[2] === 'number'
-              ? code[2] + offset
-              : [code[2][0] + offset, code[2][1] + offset], code[3]],
-      )
-      codes.push(...transformedTemplateCode)
-      codes.push('} as VueVineComponent)')
-
-      lastCodeOffset = end
+      catch (err) {
+        console.error(
+          `Volar failed to generate template virtural code for ${vineFnCompCtx.fnName}\n  `,
+          err,
+        )
+      }
     }
 
     codes.push([
