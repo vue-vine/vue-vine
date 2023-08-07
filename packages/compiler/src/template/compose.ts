@@ -17,7 +17,6 @@ export function compileVineTemplate(
     mode: 'module',
     hoistStatic: true,
     cacheHandlers: true,
-    isTS: true,
     inline: true,
     ...params,
   })

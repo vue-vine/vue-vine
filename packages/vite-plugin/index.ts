@@ -77,9 +77,33 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
 
   return {
     name: 'vue-vine-plugin',
-    // Must before Vue plugin
-    // to retain the original TypeScript code
-    enforce: 'pre',
+    config(config) {
+      // We need to exclude vine files from esbuild
+      // because we don't want them to be transpiled to JS that early.
+      if (!config.esbuild) {
+        config.esbuild = {}
+      }
+
+      if (!config.esbuild.include) {
+        config.esbuild.exclude = [
+          /\.vine\.ts$/,
+        ]
+      }
+      else if (
+        typeof config.esbuild.exclude === 'string'
+        || config.esbuild.exclude instanceof RegExp
+      ) {
+        // merge the original config value into an array
+        config.esbuild.exclude = [
+          config.esbuild.exclude,
+          /\.vine\.ts$/,
+        ] as any
+      }
+      else if (Array.isArray(config.esbuild.exclude)) {
+        (config.esbuild.exclude as Array<(string | RegExp)>)
+          .push(/\.vine\.ts$/)
+      }
+    },
     async resolveId(id) {
       const { query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE) {
@@ -116,9 +140,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         return
       }
 
-      return {
-        ...runCompileScript(code, id),
-      }
+      return runCompileScript(code, id)
     },
     handleHotUpdate,
   }

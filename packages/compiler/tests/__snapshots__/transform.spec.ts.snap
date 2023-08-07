@@ -52,7 +52,7 @@ const MyProfile = (() => {
         // ...
       };
 
-      return (_ctx: any, _cache: any) => {
+      return (_ctx, _cache) => {
         return (
           _openBlock(),
           _createElementBlock(\\"div\\", _hoisted_1, [
@@ -110,7 +110,7 @@ const MyApp = (() => {
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
 
-      return (_ctx: any, _cache: any) => {
+      return (_ctx, _cache) => {
         return (
           _openBlock(),
           _createElementBlock(\\"div\\", _hoisted_1, [
@@ -186,14 +186,7 @@ const MyProfile = (() => {
       return { name, age, bio, textColor, handleRefresh, MyProfile, MyApp };
     },
   });
-  function __sfc_render(
-    _ctx: any,
-    _cache: any,
-    $props: any,
-    $setup: any,
-    $data: any,
-    $options: any,
-  ) {
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return (
       _openBlock(),
       _createElementBlock(\\"div\\", _hoisted_1, [
@@ -252,14 +245,7 @@ const MyApp = (() => {
       return { MyProfile, MyApp };
     },
   });
-  function __sfc_render(
-    _ctx: any,
-    _cache: any,
-    $props: any,
-    $setup: any,
-    $data: any,
-    $options: any,
-  ) {
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return (
       _openBlock(),
       _createElementBlock(\\"div\\", _hoisted_1, [
