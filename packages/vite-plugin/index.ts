@@ -1,4 +1,4 @@
-import type { Plugin } from 'vite'
+import type { Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {
   compileVineStyle,
@@ -30,7 +30,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       )
     }
   }
-  const runCompileScript = (code: string, fileId: string) => {
+  const runCompileScript = (code: string, fileId: string): Partial<TransformResult> => {
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
@@ -54,7 +54,11 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     compilerCtx.vineCompileWarnings.length = 0
     return {
       code: vineFileCtx.fileSourceCode.toString(),
-      map: vineFileCtx.fileSourceCode.generateMap(),
+      map: vineFileCtx.fileSourceCode.generateMap({
+        includeContent: true,
+        hires: true,
+        source: fileId,
+      }),
     }
   }
   const runCompileStyle = async (
