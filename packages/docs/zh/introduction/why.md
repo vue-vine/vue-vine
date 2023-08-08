@@ -1,29 +1,29 @@
-# Why Vine
+# Why Vine {#why-vine}
 
-## Why another style
+## 为什么要造一种新的写法 {#why-another-style}
 
-I've seen lots of discussions about supporting **"Multiple components in one SFC file"**, but to be honest, SFC was designed for one component per file, and the related toolchain is also based on this logic and continuously iterated during the development of Vue. Therefore, it is obviously unreasonable to directly support multiple components in one file based on this concept.
+我看到了很多关于支持 **“一个单文件组件中多个组件”** 的讨论，但说实话，单文件组件最初设计的目标是每个文件只包含一个组件，并且相关的工具链也是基于这个逻辑进行不断迭代的。因此，基于这个概念直接支持一个文件中的多个组件显然是不合理的。
 
-Through several Twitter posts' investigation, I found that there is indeed an universal demand for writing multiple components in one file. So I started exploring whether there is another syntax or organizational approach that can best fit into Vue's existing compilation toolchain and utilize existing achievements, while creating more flexibility for users to write components.
+我通过自己发了几篇 Twitter 帖子做的调查，发现确实存在在一个文件中编写多个组件的普遍需求。因此，我开始探索是否有另一种语法或组织方法可以最好地适应 Vue 现有的编译工具链并利用现有的成果，同时为用户提供更多编写组件的灵活性。
 
-I believe that most programmers like me involved in web front-end development are not able to write UI views "from-top-to-bottom" but with a "from-bottom-to-top" approach. In other words, they start by writing long components, and cut out reusable components later.
+我相信，像我这样从事 Web 前端开发的大多数程序员都不会按照“从上到下”的方式编写 UI 视图，而是采用“从下到上”的方式。换句话说，他们首先编写长组件，然后再提取可复用的组件。
 
-Here's how I asked everyone: "What do you miss the most from React when writing Vue?"
+我问大家的问题是：“在编写 Vue 时，你最怀念 React 的哪些特性？”
 
-In the comparison of development experience between Vue and React, the most obvious difference is the the forms of component organization. Since JSX is just JavaScript function, so you can easily start writing a new component aside. Many people replied that JSX is actually what they like.
+在比较 Vue 和 React 的开发经验时，最明显的区别就是组件组织的形式。由于 JSX 只是 JavaScript 函数，因此你可以轻松地在一旁开始编写一个新的组件。很多人回复说他们实际上喜欢 JSX。
 
-Vue also has not-bad support for JSX, however, the issue with JSX is that it's too flexible, and it can't provide enough compile-time information for Vue to optimize. But function style is good, we do like it.
+Vue 也对 JSX 有不错的支持，但是 JSX 的问题在于它过于灵活，无法为 Vue 提供足够的编译时信息进行优化。但是函数式的写法很好，我们确实喜欢它。
 
-So... Why not try to use a function to create Vue component, but writing "script setup" logics and template inside?
+那么...为什么不尝试使用函数来创建 Vue 组件，同时在其中编写“script setup”逻辑和模板呢？
 
-That's how Vine was born.
+这就是 Vine 诞生的原因。
 
 ![Quick view](/highlight-demo.png)
 
-## Why it's achievable
+## 为什么可行 {#why-achievable}
 
-After diving into the result of Vue SFC compilation, you'll found that it's actually transformed to a component object. So, there isn't a big difference between compiling a single component and compiling multiple components, all I need to do is just to create multiple component objects.
+在深入研究 Vue 单文件组件编译结果后，你会发现它实际上被转换为一个组件对象。因此，编译单个组件和编译多个组件之间并没有太大的区别，我只需要创建多个组件对象即可。
 
-Templates are compiled based on some binding metadata from user scripts, which implemented the "Auto unwrap" in template. Some static parts can be automatically hoisted out for optimizing.
+模板是基于用户脚本中的一些绑定元数据进行编译的，这实现了模板中的“自动解包”功能。同时一些静态部分可以自动提升出来进行优化。
 
-All these processing are provided from the `@vue/compiler-dom` package.
+所有这些处理都是通过 `@vue/compiler-dom` 包提供的。

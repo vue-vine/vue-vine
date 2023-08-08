@@ -1,30 +1,30 @@
-# Get started
+# 现在开始 {#get-started}
 
-Welcome to join us to exploring another style of writing Vue! 
+欢迎加入用另一种方式编写 Vue 的探索旅程！
 
-Vine provides a Vite plugin and a VSCode extension to offer feature support.
+Vine 提供了一个 Vite 插件和一个 VSCode 扩展。
 
-::: warning Heads up!
+::: warning 注意！
 
-Vine is still in early development, please wait for the first stable release `v0.1`.
+Vine 目前还处于早期开发阶段，请等待第一个稳定版本 `v0.1.0`。
 
 ![npm](https://img.shields.io/npm/v/vue-vine)
 :::
 
-## Install Vite plugin
+## 安装 Vite 插件 {#install-vite-plugin}
   
 ```bash
 pnpm i -D vue-vine
 ```
 
-Use the plugin in `vite.config.ts`:
+在 `vite.config.ts` 中导入插件：
 
 ```ts
 import { VineVitePlugin } from 'vue-vine/vite'
 
 export default defineConfig({
   plugins: [
-    // ...Other plugins
+    // ...其他插件
     VineVitePlugin()
   ],
 })

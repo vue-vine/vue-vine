@@ -2,23 +2,23 @@
 outline: deep
 ---
 
-# Specification
+# 规范 {#specification}
 
-We'll talk about all the basic concepts of Vue Vine in this chapter.
+本章将介绍 Vue Vine 的所有基本概念。
 
-Before start using it, you're supposed to know the following conventions:
+在开始使用之前，您应该了解以下约定：
 
-- Vine was designed to only support Vue 3 and Vite.
-- Vine only supports TypeScript, JavaScript users may not have full experience.
-- Vine targets to ESM only, `require` is not supported.
+- Vine 只支持 Vue 3 和 Vite。
+- Vine 仅支持 TypeScript，JavaScript 用户可能无法完全体验。
+- Vine 目标为 ESM（ES 模块），不支持 `require`。
 
-## File extension
+## 文件扩展名 {#file-extension}
 
-Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
+Vine 使用 `.vine.ts` 作为文件扩展名，因此您知道您实际上是在编写 TypeScript，TypeScript 中的任何有效语法在 Vine 中也是有效的。
 
-## Vine component function
+## Vine 组件函数 {#vine-component-function}
 
-Vine component function is a function that returns a template string tagged by `vine`, which declares the component's template.
+Vine 组件函数是一个返回由 `vine` 标记的模板字符串的函数，用于声明组件的模板。
 
 ```vue-vine
 function MyComponent() {
@@ -26,31 +26,31 @@ function MyComponent() {
 }
 ```
 
-We'll call it **"VCF"** in the rest of our documentation.
+在接下来的文档中，我们将称之为 **"VCF"**。
 
-Vine compiler will transform this kind of function into a Vue component object in underhood.
+Vine 编译器将在内部将这种函数转换为 Vue 组件对象。
 
-In addition, the tagged template string expression will not return anything.
+此外，标记模板字符串表达式不会返回任何内容。
 
-It's indeed a valid function in TypeScript context, **but calling it will not make any sense, so don't do that.**
+在 TypeScript 上下文中，这确实是一个有效的函数，**但调用它没有任何意义，所以不要这样做。**
 
-### template
+### template {#template}
 
-Using expression interpolation in template is forbidden, because the whole tagged template string is a raw Vue template. Vine compiler will transfer it to `@vue/compiler-dom` to compile it to render function in the end.
+禁止在模板中使用表达式插值，因为整个标记模板字符串是一个原始的 Vue 模板。Vine 编译器将其传递给 `@vue/compiler-dom` 进行编译，最终编译为渲染函数。
 
 ```vue-vine
 function MyComponent() {
   const name = 'World'
 
-  return vine`<div>Hello ${name}</div>` // This will report an error
+  return vine`<div>Hello ${name}</div>` // 这将报错
 }
 ```
 
-### setup
+### setup {#setup}
 
-You can treat the VCF as a Vue component's `setup` function, the function body is for you to define your component's logic.
+您可以将 VCF 视为 Vue 组件的 `setup` 函数，函数体用于定义组件的逻辑。
 
-Here's an example:
+以下是一个示例：
 
 ```vue-vine
 function MyComponent(props: {
@@ -70,8 +70,8 @@ function MyComponent(props: {
 }
 ```
 
-## Macros
+## 宏 {#macros}
 
-With Vue 3.2 wa released, we can use macros in `<script setup>` block, and [Vue Macros](https://https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
+随着 Vue 3.2 的发布，我们可以在 `<script setup>` 块中使用宏，而 [Vue Macros](https://https://vue-macros.sxzz.moe/) 将这个想法推向了极致，在 Vue 3.3 中，Vue 添加了更多内置宏。
 
-In Vine, we just provide a small amount of macros for now, you can check more details in our separated [Macros](./macros.html) chapter. We keep the possibility to add more macros in the future, but every step we take will be cautious.
+在 Vine 中，我们目前只提供了一小部分宏，您可以在我们单独的 [宏](./macros.html) 章节中查看更多详细信息。我们保留了将来添加更多宏的可能性，但我们将谨慎地迈出每一步。
