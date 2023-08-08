@@ -8,6 +8,7 @@
     "strict": true,
     "declaration": true,
     "declarationDir": "dist",
+    "emitDeclarationOnly": true,
     "skipLibCheck": true
   },
   "include": [

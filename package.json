@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
-    "dev": "cross-env NODE_ENV=development pnpm concurrently -p \"  {name}  \" -n \"COMPILER,VITE,MAIN\" -c \"bgGreen.bold,bgBlue.bold,bgMagenta.bold\" \"npm:dev:compiler\" \"npm:dev:vite\" \"npm:dev:main\"",
+    "dev": "esno scripts/run-dev.js",
     "build": "pnpm build:compiler && pnpm build:vite && pnpm build:main",
     "dev:compiler": "cross-env NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
     "dev:vite": "cross-env NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
@@ -38,8 +38,11 @@
     "eslint": "^8.42.0",
     "esno": "^0.16.3",
     "lint-staged": "^13.2.2",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.27.2",
     "shelljs": "^0.8.5",
     "simple-git-hooks": "^2.8.1",
+    "tree-kill": "^1.2.2",
     "tslib": "^2.5.3",
     "typescript": "^5.1.3",
     "vitest": "^0.31.4"
