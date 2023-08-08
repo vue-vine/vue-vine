@@ -13,6 +13,7 @@ export function parseQuery(id: string) {
   const rawQuery = Object.fromEntries(new URLSearchParams(queryRawStr)) as VineQueryRaw
   const query: VineQuery = {
     type: rawQuery.type == null ? QUERY_TYPE_SCRIPT : rawQuery.type,
+    vineType: rawQuery.vineType,
     lang: rawQuery.lang,
     scopeId: rawQuery.scopeId,
     scoped: rawQuery.scoped === 'true',

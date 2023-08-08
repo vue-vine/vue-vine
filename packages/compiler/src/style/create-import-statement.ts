@@ -12,8 +12,8 @@ export function createStyleImportStmt(
     Boolean(vineCompFnCtx.isCustomElement),
     `__${vineCompFnCtx.fnName.toLowerCase()}_styles from `,
   )}'${
-    vineFileCtx.fileId.replace(/\.vine\.ts$/, '')
-  }?type=vine-style&scopeId=${
+    vineFileCtx.fileId//.replace(/\.vine\.ts$/, '')
+  }?vineType=vine-style&type=style&scopeId=${
     vineCompFnCtx.scopeId
   }&comp=${vineCompFnCtx.fnName}&lang=${
     styleDefine.lang

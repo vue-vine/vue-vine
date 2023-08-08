@@ -14,14 +14,15 @@ export function handleHotUpdate(
           return
         const { query } = parseQuery(im.id)
         // filter css modules
-        if (query.type === QUERY_TYPE_STYLE) {
+        if (query.vineType === QUERY_TYPE_STYLE) {
           affectedModules.add(im)
         }
       })
     }
   })
 
+  console.log(affectedModules)
   return affectedModules.size > 0
-    ? [...modules, ...affectedModules]
+    ? [...affectedModules]
     : [...modules]
 }

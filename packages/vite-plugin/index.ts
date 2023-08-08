@@ -110,41 +110,50 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     },
     async resolveId(id) {
       const { query } = parseQuery(id)
-      if (query.type === QUERY_TYPE_STYLE) {
+      if (query.vineType === QUERY_TYPE_STYLE) {
         // serve vine style requests as virtual modules
         return id
       }
     },
-    load(id) {
+    async load(id) {
       const { fileId, query } = parseQuery(id)
-      if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
-        const fullFileId = `${fileId}.vine.ts`
+      if (query.vineType === QUERY_TYPE_STYLE && query.scopeId) {
+        const fullFileId = `${fileId}`
         const styleSource = compilerCtx.fileCtxMap
           .get(fullFileId)!
           .styleDefine[query.scopeId]
           .source
-        return {
-          code: styleSource,
-        }
-      }
-    },
-    async transform(code, id) {
-      const { fileId, query } = parseQuery(id)
-      if (query.type === QUERY_TYPE_STYLE) {
+
         const compiledStyle = await runCompileStyle(
-          code,
-          query,
-          `${fileId /* This is virtual file id */}.vine.ts`,
+            styleSource,
+            query,
+            `${fileId /* This is virtual file id */}`,
+        )
+        return compiledStyle
+      }
+
+      /*if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
+        const compiledStyle = await runCompileStyle(
+            code,
+            query,
+            `${fileId /!* This is virtual file id *!/}.vine.ts`,
         )
         return {
           code: compiledStyle,
         }
+      }*/
+    },
+    async transform(code, id) {
+      const { fileId, query } = parseQuery(id)
+      if (query.vineType === QUERY_TYPE_STYLE) {
+       return ;
       }
       else if (!fileId.endsWith('.vine.ts')) {
         return
       }
 
-      return runCompileScript(code, id)
+      const res = runCompileScript(code, id)
+      return res
     },
     handleHotUpdate,
   }
