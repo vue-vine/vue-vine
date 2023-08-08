@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { beforeAll } from 'vitest'
 import { chromium } from 'playwright-chromium'
-import type { Browser, Page } from 'playwright-chromium'
+import type { Browser, BrowserContext, Page } from 'playwright-chromium'
 import type { InlineConfig, ViteDevServer } from 'vite'
 import type { File } from 'vitest'
 import {
@@ -16,13 +16,15 @@ let server: ViteDevServer
  */
 export const e2eTestCtx: {
   viteServer: ViteDevServer | undefined
-  page: Page | undefined
   browser: Browser | undefined
+  browserCtx: BrowserContext | undefined
+  page: Page | undefined
   viteTestUrl: string
 } = {
   viteServer: undefined,
-  page: undefined,
   browser: undefined,
+  browserCtx: undefined,
+  page: undefined,
   viteTestUrl: 'http://localhost:5173',
 }
 
@@ -34,7 +36,8 @@ beforeAll(async (s) => {
   }
 
   e2eTestCtx.browser = await chromium.launch()
-  e2eTestCtx.page = await e2eTestCtx.browser.newPage()
+  e2eTestCtx.browserCtx = await e2eTestCtx.browser.newContext()
+  e2eTestCtx.page = await e2eTestCtx.browserCtx.newPage()
 
   try {
     await startDefaultServe()

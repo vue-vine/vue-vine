@@ -1,8 +1,10 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import { expect } from 'vitest'
-import type { ElementHandle } from 'playwright-chromium'
+import type { Page } from 'playwright-chromium'
 import { e2eTestCtx } from './vitest-setup'
+
+type Nil = null | undefined
 
 const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
 
@@ -17,13 +19,17 @@ export function editFile(
 }
 
 export async function untilUpdated(
-  poll: () => Promise<string | null>,
+  poll: (page: Page | undefined) => Promise<string | Nil>,
   expected: string,
 ): Promise<void> {
-  await e2eTestCtx.page?.waitForURL('**')
+  await e2eTestCtx.page?.waitForNavigation()
+  // After navigation, page context need to be reload from browser context
+  const currentPages = await e2eTestCtx.browserCtx?.pages()
+  const page = currentPages?.[0]
+  e2eTestCtx.page = page
   const maxTries = process.env.CI ? 200 : 50
   for (let tries = 0; tries < maxTries; tries++) {
-    const actual = (await poll()) ?? ''
+    const actual = (await poll(page)) ?? ''
     if (actual.includes(expected) || tries === maxTries - 1) {
       expect(actual).toMatch(expected)
       break
@@ -34,16 +40,10 @@ export async function untilUpdated(
   }
 }
 
-export async function getColor(el: string | ElementHandle): Promise<string | null> {
-  const res = await toEl(el)
-  const cursorStyle = res && (await res.evaluate(el => getComputedStyle(el as Element).color))
-  return cursorStyle
-}
-
-async function toEl(el: string | ElementHandle): Promise<ElementHandle | null> {
-  if (typeof el === 'string') {
-    const res = await e2eTestCtx.page?.$(el)
-    return res ?? null
-  }
-  return el
+export async function getColor(
+  selector: string,
+  page?: Page,
+) {
+  const pageCtx = page ?? e2eTestCtx.page
+  return await pageCtx?.$eval(selector, el => getComputedStyle(el).color)
 }
