@@ -94,6 +94,7 @@ export interface VineUserImport {
 export interface VineFileCtx {
   readonly fileId: string
   readonly root: ParseResult<File>
+  readonly originCode: string
   fileSourceCode: MagicString
   vineCompFns: VineCompFnCtx[]
   userImports: Record<string, VineUserImport>

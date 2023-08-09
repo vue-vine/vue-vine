@@ -1,29 +1,98 @@
 import type { HmrContext, ModuleNode } from 'vite'
-import { parseQuery } from './parse-query'
+import type {
+  VineCompilerCtx,
+  VineCompilerHooks,
+  VineFileCtx,
+} from '@vue-vine/compiler'
+import {
+  creatVineFileCtx,
+  doAnalyzeVine,
+  doValidateVine,
+  findVineCompFnDecls,
+} from '@vue-vine/compiler'
 import { QUERY_TYPE_STYLE } from './constants'
+import { parseQuery } from './parse-query'
 
-export function handleHotUpdate(
-  ctx: HmrContext,
-): ModuleNode[] {
-  const affectedModules = new Set<ModuleNode>()
-  ctx.modules.forEach((m) => {
-    const importedModules = m.importedModules
-    if (importedModules.size > 0) {
-      [...importedModules].forEach((im) => {
-        if (!im.id)
-          return
-        const { query } = parseQuery(im.id)
-        // filter css modules
-        if (query.type === QUERY_TYPE_STYLE) {
-          affectedModules.add(im)
-        }
-      })
+function reAnalyzeVine(
+  code: string,
+  fileId: string,
+  compilerHooks: VineCompilerHooks) {
+  const vineFileCtx: VineFileCtx = creatVineFileCtx(code, fileId)
+  compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
+
+  const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
+
+  // 1. Validate all vine restrictions
+  doValidateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+
+  // 2. Analysis
+  doAnalyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+  return vineFileCtx
+}
+
+function isStyleChanged(
+  oldVFCtx: VineFileCtx,
+  newVFCtx: VineFileCtx,
+  scopeId: string) {
+  const oldStyleDefine = oldVFCtx.styleDefine[scopeId]
+  const newStyleDefine = newVFCtx.styleDefine[scopeId]
+  const keys = Object.keys(oldStyleDefine)
+  for (let i = 0; i < keys.length; i++) {
+    // Compare only lang, source and scoped fields
+    if (keys[i] === 'range' || keys[i] === 'fileCtx') {
+      continue
     }
-  })
+    if (newStyleDefine[keys[i]] !== oldStyleDefine[keys[i]]) {
+      return true
+    }
+  }
+  return false
+}
 
-  console.log(affectedModules)
-  debugger
-  return affectedModules.size > 0
-    ? [...affectedModules]
-    : [...ctx.modules]
+export async function vineHMR(
+  ctx: HmrContext,
+  compilerCtx: VineCompilerCtx,
+  compilerHooks: VineCompilerHooks,
+): Promise<ModuleNode[]> {
+  const { modules, file, read } = ctx
+  const fileContent = await read()
+  const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)!
+  const orgFileContent = orgVineFileCtx.originCode
+
+  // file changed !
+  if (fileContent !== orgFileContent) {
+    // analyze code again
+    const vineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, file, compilerHooks)
+
+    const affectedModules = new Set<ModuleNode>()
+
+    // patch VineFileCtx
+    modules.forEach((m) => {
+      const importedModules = m.importedModules
+      if (importedModules.size > 0) {
+        [...importedModules].forEach((im) => {
+          if (!im.id)
+            return
+          const { query } = parseQuery(im.id)
+          // filter css modules
+          if (query.type === QUERY_TYPE_STYLE) {
+            // Compare the old and new styles to determine
+            // which style's virtual module needs to be updated
+            if (isStyleChanged(orgVineFileCtx, vineFileCtx, query.scopeId)) {
+              affectedModules.add(im)
+            }
+          }
+        })
+      }
+    })
+    // TODO: 如果是 render 部分变化则执行 render
+    // TODO: 如果是 script部分变化则更新整个 module
+    // TODO: 如果是 css vars v-bind 部分变化则更新整个module(需要重新编译脚本)
+
+    // update vineFileCtx
+    compilerCtx.fileCtxMap.set(file, vineFileCtx)
+    return affectedModules.size > 0
+      ? [...affectedModules]
+      : [...modules]
+  }
 }

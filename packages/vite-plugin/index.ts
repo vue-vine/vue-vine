@@ -1,4 +1,4 @@
-import type { Plugin, TransformResult } from 'vite'
+import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {
   compileVineStyle,
@@ -6,12 +6,13 @@ import {
   createCompilerCtx,
 } from '@vue-vine/compiler'
 import type {
+  VineCompilerHooks,
   VineCompilerOptions,
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
 import { parseQuery } from './src/parse-query'
-import { handleHotUpdate } from './src/hot-update'
+import { vineHMR } from './src/hot-update'
 import { QUERY_TYPE_STYLE } from './src/constants'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
@@ -30,18 +31,20 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       )
     }
   }
+  const compilerHooks: VineCompilerHooks = {
+    onOptionsResolved: cb => cb(compilerCtx.options),
+    onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
+    onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
+    onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
+    onValidateEnd: panicOnCompilerError,
+    onAnalysisEnd: panicOnCompilerError,
+  }
+
   const runCompileScript = (code: string, fileId: string): Partial<TransformResult> => {
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
-      {
-        onOptionsResolved: cb => cb(compilerCtx.options),
-        onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
-        onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
-        onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
-        onValidateEnd: panicOnCompilerError,
-        onAnalysisEnd: panicOnCompilerError,
-      },
+      compilerHooks,
     )
 
     // Print all warnings
@@ -124,11 +127,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
           .styleDefine[query.scopeId]
           .source
         const compiledStyle = await runCompileStyle(
-            styleSource,
-            query,
+          styleSource,
+          query,
             `${fileId /* This is virtual file id */}.vine.ts`,
         )
-        console.log(compiledStyle)
         return compiledStyle
       }
     },
@@ -140,7 +142,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
 
       return runCompileScript(code, id)
     },
-    handleHotUpdate,
+    async handleHotUpdate(ctx: HmrContext) {
+      const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
+      return affectedModules
+    },
   }
 }
 
