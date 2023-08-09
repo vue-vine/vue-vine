@@ -339,15 +339,32 @@ export function transformFile(
       }\n${
         showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
-          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n`,
+          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n __vine.__hmrId = '${vineCompFnCtx.scopeId}';\n`,
         )}${showIf(
           // handle Web Component styles
           Boolean(vineCompFnCtx.isCustomElement),
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
         )}\nreturn __vine\n})();`,
       )
+      ms.appendRight(ms.length(), `
+      typeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});
+      `,
+      )
     }
   }
+
+  ms.appendRight(ms.length(), `
+      import.meta.hot.accept((mod) => {
+        debugger
+        if (!mod){return;}
+        const { App: updated, _rerender_only } = mod;
+        if (_rerender_only) {
+          __VUE_HMR_RUNTIME__.rerender(updated.__hmrId, updated.render);
+        } else {
+          __VUE_HMR_RUNTIME__.reload(updated.__hmrId, updated);
+        }
+      });`,
+  )
 
   // Prepend all style import statements
   ms.prepend(`\n${styleImportStmts.join('\n')}\n`)
