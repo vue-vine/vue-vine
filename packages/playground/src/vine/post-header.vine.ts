@@ -3,11 +3,15 @@ export function PostHeader() {
   const author = vineProp.withDefault('Anonymous')
 
   const isDark = useDark()
-  const metaBgColor = ref('')
-  watchEffect(() => {
-    metaBgColor.value = isDark.value
-      ? '#333'
-      : '#ddd'
+  const defaultMetaBgColor = computed(() => isDark.value ? '#333' : '#ddd')
+  const metaBgColor = ref(defaultMetaBgColor.value)
+  const toggleMetaBgColor = () => {
+    metaBgColor.value = metaBgColor.value === defaultMetaBgColor.value
+      ? '#59e'
+      : defaultMetaBgColor.value
+  }
+  watch(isDark, () => {
+    metaBgColor.value = defaultMetaBgColor.value
   })
 
   vineStyle.scoped(`
@@ -29,6 +33,7 @@ export function PostHeader() {
     }
     .blog-meta-line.change-bg {
       cursor: pointer;
+      user-select: none;
     }
     .blog-meta-span {
       margin: 0 8px;
@@ -53,9 +58,9 @@ export function PostHeader() {
             <strong>Published: </strong>{{ new Date().toLocaleDateString() }}
           </span>
         </div>
-        <div class="blog-meta-line change-bg" @click="metaBgColor = '#59e'">
+        <div class="blog-meta-line change-bg" @click="toggleMetaBgColor()">
           <span class="blog-meta-span">
-            Click here to change this card's background color!
+            Click this line to toggle this card's background color change!
           </span>
         </div>
       </div>

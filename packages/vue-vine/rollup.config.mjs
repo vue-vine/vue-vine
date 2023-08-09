@@ -1,8 +1,11 @@
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'rollup'
-import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
+import esbuild from 'rollup-plugin-esbuild'
+import { runTscOnFinished } from '../../scripts/rollup/plugins.mjs'
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const isDev = process.env.NODE_ENV === 'development'
 function outputFormat(format, dir) {
   return {
@@ -21,16 +24,19 @@ const sharedOptions = {
 }
 
 const bundleForVite = {
-  input: [
-    './src/vite/index.ts',
-  ],
+  input: resolve(__dirname, 'src/vite/index.ts'),
   output: [
-    outputFormat('es', './dist/vite'),
-    outputFormat('cjs', './dist/vite'),
+    outputFormat('es', resolve(__dirname, 'dist/vite')),
+    outputFormat('cjs', resolve(__dirname, 'dist/vite')),
   ],
   ...sharedOptions,
   plugins: [
-    typescript(),
+    esbuild({
+      tsconfig: resolve(__dirname, 'tsconfig.json'),
+      sourceMap: isDev,
+      minify: !isDev,
+      target: 'es2015',
+    }),
     copy({
       targets: [
         {
@@ -43,16 +49,20 @@ const bundleForVite = {
   ],
 }
 const bundleForIndex = {
-  input: [
-    './src/index.ts',
-  ],
+  input: resolve(__dirname, 'src/index.ts'),
   output: [
-    outputFormat('es', './dist'),
-    outputFormat('cjs', './dist'),
+    outputFormat('es', resolve(__dirname, 'dist')),
+    outputFormat('cjs', resolve(__dirname, 'dist')),
   ],
   ...sharedOptions,
   plugins: [
-    typescript(),
+    esbuild({
+      tsconfig: resolve(__dirname, 'tsconfig.json'),
+      sourceMap: isDev,
+      minify: !isDev,
+      target: 'es2015',
+    }),
+    runTscOnFinished(__dirname),
   ],
 }
 

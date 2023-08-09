@@ -22,6 +22,9 @@ async function runPreCommit() {
     log('info', 'Start install dependencies ...')
     await runCommand(PNPM_INSTALL)
 
+    log('info', 'Start run build ...')
+    await runCommand('pnpm run build')
+
     log('info', 'Start @vue-vine/compiler test ...')
     await runCommand(RUN_COMPILER_TEST)
 

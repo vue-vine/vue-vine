@@ -17,6 +17,7 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
   ],
+  lang: 'en-US',
   themeConfig: {
     search: {
       provider: 'local',
@@ -45,28 +46,58 @@ export default defineConfig({
       { text: 'Guide', link: '/introduction/quick-start' },
     ],
 
-    sidebar: [
-      {
-        text: 'Introduction',
-        items: [
-          { text: 'Why Vine', link: '/introduction/why' },
-          { text: 'Quick Start', link: '/introduction/quick-start' },
-        ],
-      },
-      {
-        text: 'Specification',
-        items: [
-          { text: 'Basics', link: '/specification/basics' },
-          { text: 'Props', link: '/specification/props' },
-          { text: 'Macros', link: '/specification/macros' },
-          { text: 'Caveats', link: '/specification/caveats' },
-        ],
-      },
-    ],
+    sidebar: {
+      '/zh': [
+        {
+          text: '介绍',
+          items: [
+            { text: 'Why Vine', link: '/zh/introduction/why' },
+            { text: '快速开始', link: '/zh/introduction/quick-start' },
+          ],
+        },
+        {
+          text: '定义说明',
+          items: [
+            { text: '基础', link: '/zh/specification/basics' },
+            { text: 'Props', link: '/zh/specification/props' },
+            { text: '宏', link: '/zh/specification/macros' },
+            { text: '注意事项', link: '/zh/specification/caveats' },
+          ],
+        },
+      ],
+      '/': [
+        {
+          text: 'Introduction',
+          items: [
+            { text: 'Why Vine', link: '/introduction/why' },
+            { text: 'Quick Start', link: '/introduction/quick-start' },
+          ],
+        },
+        {
+          text: 'Specification',
+          items: [
+            { text: 'Basics', link: '/specification/basics' },
+            { text: 'Props', link: '/specification/props' },
+            { text: 'Macros', link: '/specification/macros' },
+            { text: 'Caveats', link: '/specification/caveats' },
+          ],
+        },
+      ],
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vue-vine/vue-vine' },
     ],
+  },
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en-US',
+    },
+    zh: {
+      label: '简体中文',
+      lang: 'zh-CN',
+    },
   },
   markdown: {
     theme: {

@@ -36,7 +36,11 @@ pnpm run build
 pnpm run ext:dev
 ```
 
-and then start the Playground's dev server.
+After building the VSCode extension, you can open the 'Debug' tab in VSCode, and start the **'Run Vine Extension'** debug session.
+
+<img width="385" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/374b77a4-9d49-4eb6-a84b-f7ab64b99bdf">
+
+Then start the Playground's dev server in another terminal session.
 
 ```bash
 pnpm run play

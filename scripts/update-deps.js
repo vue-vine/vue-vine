@@ -6,8 +6,7 @@ const TAZE_CMD = 'pnpm taze -r -w'
 async function doUpdateDeps() {
   // set log prefix
   setGlobalPrefix(
-    `${colorful(' PRE-COMMIT ', ['black', 'bgBlue', 'bold'])
-     }  `,
+    `${colorful(' UPDATE-DEPS ', ['black', 'bgBlue', 'bold'])}  `,
   )
 
   log('info', 'Updating deps...')

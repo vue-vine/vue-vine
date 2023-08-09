@@ -145,13 +145,17 @@ function computeTemplateErrLocation(
       : [start.col, end.col]
 
   const loc: BabelSourceLocation = {
+    identifierName: errLocation.source,
+    filename: vineFileCtx.fileId,
     start: {
       line: start.line,
       column: startColumn,
+      index: startOffset,
     },
     end: {
       line: end.line,
       column: endColumn,
+      index: endOffset,
     },
   }
   return loc

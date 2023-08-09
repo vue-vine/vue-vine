@@ -13,7 +13,7 @@ export function App() {
   `)
 
   return vine`
-    <span class="name">{{name}}</span>
+    <div class="name">{{name}}</div>
     <button class="test-btn" @click="inc">Increase count</button>
     <p class="text-for-replace">text111</p>
     <div class="counter">Count: {{count}}</div>

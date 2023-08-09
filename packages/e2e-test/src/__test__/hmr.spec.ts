@@ -9,7 +9,11 @@ afterEach(() => {
     code => code
       .replace('color: blue', 'color: black')
       .replace('text222', 'text111')
-      .replace('ref(\'vue\')', 'ref(\'vine\')'),
+      .replace('ref(\'vue\')', 'ref(\'vine\')')
+      .replace(
+        '<span class="name">{{name}}</span>',
+        '<div class="name">{{name}}</div>',
+      ),
   )
 })
 describe('hmr', () => {
