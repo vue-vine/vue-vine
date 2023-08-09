@@ -36,7 +36,11 @@ pnpm run build
 pnpm run ext:dev
 ```
 
-然后，开启 Playground 的 Vite 开发服务器。
+在构建完 VSCode 插件后，你可以在 VSCode 的 'Debug' 选项卡中找到 'Rune Vine Extension' 的配置项，然后点击运行。
+
+<img width="356" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/e12e2de6-666f-45d5-8607-c59168684bc1">
+
+然后，在另一个终端会话中开启 Playground 的 Vite 开发服务器。
 
 ```bash
 pnpm run play
