@@ -40,7 +40,7 @@ export function createCompilerCtx(
   }
 }
 
-export function creatVineFileCtx(
+export function createVineFileCtx(
   code: string,
   fileId: string,
 ) {
@@ -92,7 +92,7 @@ export function compileVineTypeScriptFile(
     compilerOptions = options
   })
   // Using babel to validate vine declarations
-  const vineFileCtx: VineFileCtx = creatVineFileCtx(code, fileId)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)

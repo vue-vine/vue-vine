@@ -5,7 +5,7 @@ import type {
   VineFileCtx,
 } from '@vue-vine/compiler'
 import {
-  creatVineFileCtx,
+  createVineFileCtx,
   doAnalyzeVine,
   doValidateVine,
   findVineCompFnDecls,
@@ -17,7 +17,7 @@ function reAnalyzeVine(
   code: string,
   fileId: string,
   compilerHooks: VineCompilerHooks) {
-  const vineFileCtx: VineFileCtx = creatVineFileCtx(code, fileId)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
@@ -38,11 +38,12 @@ function isStyleChanged(
   const newStyleDefine = newVFCtx.styleDefine[scopeId]
   const keys = Object.keys(oldStyleDefine)
   for (let i = 0; i < keys.length; i++) {
+    const key = keys[i] as keyof typeof oldStyleDefine
     // Compare only lang, source and scoped fields
-    if (keys[i] === 'range' || keys[i] === 'fileCtx') {
+    if (key === 'range' || key === 'fileCtx') {
       continue
     }
-    if (newStyleDefine[keys[i]] !== oldStyleDefine[keys[i]]) {
+    if (newStyleDefine[key] !== oldStyleDefine[key]) {
       return true
     }
   }
@@ -53,7 +54,7 @@ export async function vineHMR(
   ctx: HmrContext,
   compilerCtx: VineCompilerCtx,
   compilerHooks: VineCompilerHooks,
-): Promise<ModuleNode[]> {
+) {
   const { modules, file, read } = ctx
   const fileContent = await read()
   const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)!
