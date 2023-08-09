@@ -354,14 +354,18 @@ export function transformFile(
   }
 
   ms.appendRight(ms.length(), `
+      export const _rerender_only = ${vineFileCtx.renderOnly}
+      export const _rerender_vfc_fn_name = ${vineFileCtx.hmrPatchModule ? `"${vineFileCtx.hmrPatchModule!.hrmCompFnsName}"` : '""'}
       import.meta.hot.accept((mod) => {
         debugger
         if (!mod){return;}
-        const { App: updated, _rerender_only } = mod;
+        const { _rerender_only, _rerender_vfc_fn_name } = mod;
+        if (!_rerender_vfc_fn_name){return;}
+        const component = mod[_rerender_vfc_fn_name];
         if (_rerender_only) {
-          __VUE_HMR_RUNTIME__.rerender(updated.__hmrId, updated.render);
+          __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
         } else {
-          __VUE_HMR_RUNTIME__.reload(updated.__hmrId, updated);
+          __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
         }
       });`,
   )

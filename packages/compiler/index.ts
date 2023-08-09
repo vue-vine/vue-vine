@@ -33,6 +33,7 @@ export function createCompilerCtx(
     fileCtxMap: new Map(),
     vineCompileErrors: [],
     vineCompileWarnings: [],
+    isHMRing: false,
     options: {
       inlineTemplate: true, // default inline template
       // Maybe some default options ...
@@ -44,6 +45,7 @@ export function createCompilerCtx(
 export function createVineFileCtx(
   code: string,
   fileId: string,
+  fileCtxMapCache?: VineFileCtx,
 ) {
   const root = babelParse(code, {
     errorRecovery: true,
@@ -55,8 +57,8 @@ export function createVineFileCtx(
   const vineFileCtx: VineFileCtx = {
     originCode: code,
     fileId,
-    renderOnly: false,
-    hmrPatchModule: null,
+    renderOnly: fileCtxMapCache ? fileCtxMapCache.renderOnly : false,
+    hmrPatchModule: fileCtxMapCache ? fileCtxMapCache.hmrPatchModule : null,
     fileSourceCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},
@@ -89,13 +91,14 @@ export function compileVineTypeScriptFile(
   code: string,
   fileId: string,
   compilerHooks: VineCompilerHooks,
+  fileCtxMap: VineFileCtx | undefined = undefined,
 ) {
   let compilerOptions: VineCompilerOptions = {}
   compilerHooks.onOptionsResolved((options) => {
     compilerOptions = options
   })
   // Using babel to validate vine declarations
-  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, fileCtxMap)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)

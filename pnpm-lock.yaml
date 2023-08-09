@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -2135,7 +2135,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.9(@types/node@18.17.3)
+      vite: 4.4.9(@types/node@20.4.8)(less@4.2.0)(sass@1.64.2)
       vue: 3.3.4
     dev: true
 

@@ -44,7 +44,7 @@ export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
 export declare interface HMRPatchModule {
   type: 'module' | 'style' | 'template' | 'script'
-  hrmCompFns: Record<string, string> | null
+  hrmCompFnsName: string | null
 }
 
 export interface VineCompilerHooks {
@@ -82,6 +82,7 @@ export interface VinePropMeta {
 }
 
 export interface VineCompilerCtx {
+  isHMRing: boolean
   fileCtxMap: Map<string, VineFileCtx>
   vineCompileErrors: VineDiagnostic[]
   vineCompileWarnings: VineDiagnostic[]

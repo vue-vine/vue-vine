@@ -1,10 +1,10 @@
 import type { HmrContext, ModuleNode } from 'vite'
 import type {
+  HMRPatchModule,
   VineCompilerCtx,
   VineCompilerHooks,
   VineFileCtx,
   VineFnCompCtx,
-  HMRPatchModule,
 } from '@vue-vine/compiler'
 import {
   createVineFileCtx,
@@ -16,15 +16,17 @@ import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
 
 // 1.如果是 style 部分变化则执行更新 style
-// TODO: 2.如果是 tempalte 部分变化则执行 render
-// TODO: 3.其他情况则更新整个module
-// TODO: 4.如果是 css vars 更新整个module(需要重新编译脚本)
+// 2.如果是 tempalte 部分变化则执行 render
+// 3.其他情况则更新整个module
+// TODO: 4. 更换 originCode 实现方式
+// TODO: 5.如果是 css vars 更新整个module(需要重新编译脚本)
+// TODO: 6. 更新 unit test
 
 function reAnalyzeVine(
   code: string,
   fileId: string,
   compilerHooks: VineCompilerHooks) {
-  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, undefined)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
@@ -43,14 +45,13 @@ function patchModule(
 ) {
   const patchRes: HMRPatchModule = {
     type: 'module',
-    hrmCompFns: null,
+    hrmCompFnsName: null,
   }
   const setPatchRes = (
     nCompFns: VineFnCompCtx,
     type: 'module' | 'style' | 'template' | 'script') => {
     patchRes.type = type
-    !patchRes.hrmCompFns && (patchRes.hrmCompFns = {})
-    patchRes.hrmCompFns[nCompFns.scopeId] = nCompFns.fnName
+    patchRes.hrmCompFnsName = nCompFns.fnName
   }
   const nVineCompFns = newVFCtx.vineCompFns
   const oVineCompFns = oldVFCtx.vineCompFns
@@ -104,7 +105,7 @@ function patchModule(
   // 如果script数量等于  VineCompFns 数量，则直接返回全量更新
   if (oVineCompFns.length !== nVineCompFns.length) {
     patchRes.type = 'module'
-    patchRes.hrmCompFns = null
+    patchRes.hrmCompFnsName = null
     newVFCtx.renderOnly = false
     return patchRes
   }
@@ -119,7 +120,9 @@ export async function vineHMR(
 ) {
   const { modules, file, read } = ctx
   const fileContent = await read()
-  const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)!
+  const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)
+  if (!orgVineFileCtx)
+    return
   const orgFileContent = orgVineFileCtx.originCode
 
   // file changed !
@@ -154,8 +157,7 @@ export async function vineHMR(
           if (query.type === QUERY_TYPE_STYLE
             && patchRes
             && patchRes.type === 'style'
-            && patchRes.hrmCompFns
-            && patchRes.hrmCompFns[query.scopeId]) {
+            && patchRes.hrmCompFnsName) {
             affectedModules.add(im)
           }
         })
@@ -165,6 +167,7 @@ export async function vineHMR(
     // update vineFileCtx
     patchRes && (vineFileCtx.hmrPatchModule = patchRes)
     compilerCtx.fileCtxMap.set(file, vineFileCtx)
+    compilerCtx.isHMRing = true
 
     return affectedModules.size > 0
       ? [...affectedModules]

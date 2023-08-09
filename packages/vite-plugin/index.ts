@@ -2,12 +2,12 @@ import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {
   compileVineStyle,
-  compileVineTypeScriptFile,
-  createCompilerCtx,
+  compileVineTypeScriptFile, createCompilerCtx,
 } from '@vue-vine/compiler'
 import type {
   VineCompilerHooks,
   VineCompilerOptions,
+  VineFileCtx,
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { VineQuery } from './src/parse-query'
@@ -41,10 +41,15 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   }
 
   const runCompileScript = (code: string, fileId: string): Partial<TransformResult> => {
+    let fileCtxMap: undefined | VineFileCtx
+    if (compilerCtx.isHMRing) {
+      fileCtxMap = compilerCtx.fileCtxMap.get(fileId)
+    }
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
       compilerHooks,
+      fileCtxMap,
     )
 
     // Print all warnings
