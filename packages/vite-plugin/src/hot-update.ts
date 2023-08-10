@@ -19,9 +19,9 @@ import { areStrArraysEqual } from './utils'
 // 1. Only update style if just style changed
 // 2. Only re-render current component if just template changed
 // 3. Any other condition will re-render the whole module
-
-// 如果是 css vars 更新整个module(需要重新编译脚本)
-// TODO: 编译 hmr 只在 dev 编译，且要把所有的组件函数导出
+// 4. If v-bind changes will re-render the whole module
+//
+// TODO: 编译 hmr 只在 dev 编译
 // TODO: 更新 unit test
 function reAnalyzeVine(
   code: string,
@@ -90,11 +90,11 @@ function patchModule(
       // script and template equal, then compare style
       const oCssBindingsVariables = Object.keys(oCompFns.cssBindings)
       const nCssBindingsVariables = Object.keys(nCompFns.cssBindings)
-      // 变化前后都没有 v-bind()
+      // No v-bind() before and after the change
       if (oCssBindingsVariables.length === 0 && nCssBindingsVariables.length === 0) {
         patchRes.type = 'style'
         patchRes.scopeId = nCompFns.scopeId
-      // 变化前后的  v-bind() 变量相等
+      // The variables of v-bind() before and after the change are equal
       }
       else if (areStrArraysEqual(oCssBindingsVariables, nCssBindingsVariables)) {
         patchRes.type = 'style'
@@ -103,7 +103,6 @@ function patchModule(
       else {
         patchRes.type = 'module'
       }
-      // 否則的話，如果 style 不相等
       patchRes.hmrCompFnsName = nCompFns.fnName
       patchRes.scopeId = nCompFns.scopeId
       newVFCtx.renderOnly = false

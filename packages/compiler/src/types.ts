@@ -97,6 +97,7 @@ export interface VineUserImport {
 export interface VineFileCtx {
   readonly fileId: string
   readonly root: ParseResult<File>
+  readonly originCode: string
   /**
    * Hot update only executes the
    * markup of the render function
