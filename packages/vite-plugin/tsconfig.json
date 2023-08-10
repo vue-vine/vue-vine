@@ -9,14 +9,17 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "declarationDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "customConditions": ["dev"]
   },
   "include": [
     "src",
     "test",
-    "index.ts"
+    "index.ts",
+    "../../types/shims.d.ts"
   ],
   "exclude": [
+    "node_modules",
     "dist"
   ]
 }

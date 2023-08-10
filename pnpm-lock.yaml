@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -169,6 +169,9 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
+      playwright-chromium:
+        specifier: ^1.36.2
+        version: 1.36.2
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
@@ -2135,7 +2138,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.9(@types/node@20.4.8)(less@4.2.0)(sass@1.64.2)
+      vite: 4.4.9(@types/node@18.17.3)
       vue: 3.3.4
     dev: true
 
@@ -6199,6 +6202,21 @@ packages:
       jsonc-parser: 3.2.0
       mlly: 1.4.0
       pathe: 1.1.1
+    dev: true
+
+  /playwright-chromium@1.36.2:
+    resolution: {integrity: sha512-ONY6+ON1A+qYUBiymWn3MHnBjdPO6lYIi2SiQbUo1OA0cSZaxx9vM2mRYY3p7JLC6AhAbPEimZdXetQx48AHkA==}
+    engines: {node: '>=16'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      playwright-core: 1.36.2
+    dev: true
+
+  /playwright-core@1.36.2:
+    resolution: {integrity: sha512-sQYZt31dwkqxOrP7xy2ggDfEzUxM1lodjhsQ3NMMv5uGTRDsLxU0e4xf4wwMkF2gplIxf17QMBCodSFgm6bFVQ==}
+    engines: {node: '>=16'}
+    hasBin: true
     dev: true
 
   /pluralize@8.0.0:

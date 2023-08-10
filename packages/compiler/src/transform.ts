@@ -318,9 +318,9 @@ export function transformFile(
           : '/* No emits */'
       }\n`)
       ms.appendRight(lastStmt.end!, '\n})')
-      ms.prependLeft(firstStmt.start!, `\n${
-        vineCompFnCtx.isExport ? 'export ' : ''
-      }const ${
+      // Defaultly set `export` for all component functions
+      // because it's required by HMR context.
+      ms.prependLeft(firstStmt.start!, `\nexport const ${
         vineCompFnCtx.fnName
       } = (() => {\n${
         // Prepend all generated preamble statements
@@ -355,7 +355,7 @@ export function transformFile(
 
   ms.appendRight(ms.length(), `
       export const _rerender_only = ${vineFileCtx.renderOnly}
-      export const _rerender_vfc_fn_name = ${vineFileCtx.hmrPatchModule ? `"${vineFileCtx.hmrPatchModule!.hrmCompFnsName}"` : '""'}
+      export const _rerender_vfc_fn_name = ${vineFileCtx.hmrPatchModule ? `"${vineFileCtx.hmrPatchModule!.hmrCompFnsName}"` : '""'}
       import.meta.hot.accept((mod) => {
         debugger
         if (!mod){return;}
