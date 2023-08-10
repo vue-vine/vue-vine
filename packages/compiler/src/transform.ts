@@ -352,22 +352,28 @@ export function transformFile(
       )
     }
   }
+
   // HMR
-  ms.appendRight(ms.length(), `
-  export const _rerender_only = ${vineFileCtx.renderOnly}
-  export const _rerender_vfc_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
-  import.meta.hot.accept((mod) => {
-    if (!mod){return;}
-    const { _rerender_only, _rerender_vfc_fn_name } = mod;
-    if (!_rerender_vfc_fn_name){return;}
-    const component = mod[_rerender_vfc_fn_name];
-    if (_rerender_only) {
-      __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-    } else {
-      __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  compilerHooks.onOptionsResolved((compilerOptions) => {
+    const isDev = compilerOptions.mode !== 'production'
+    if (isDev) {
+      ms.appendRight(
+        ms.length(),
+        `export const _rerender_only = ${vineFileCtx.renderOnly}
+export const _rerender_vcf_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
+import.meta.hot.accept((mod) => {
+  if (!mod){return;}
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name){return;}
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});`)
     }
-  });`,
-  )
+  })
 
   // Prepend all style import statements
   ms.prepend(`\n${styleImportStmts.join('\n')}\n`)

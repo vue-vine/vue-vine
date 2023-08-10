@@ -54,6 +54,7 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
+  mode?: string // 'development' | 'production'
   inlineTemplate?: boolean
   preprocessOptions?: Record<string, any>
   postcssOptions?: any

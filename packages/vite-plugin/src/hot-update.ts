@@ -21,9 +21,6 @@ import { areStrArraysEqual } from './utils'
 // 3. Any other condition will re-render the whole module
 // 4. If v-bind changes will re-render the whole module
 
-// TODO: HMR Compilation only runs in dev mode
-// TODO: E2E test
-
 function reAnalyzeVine(
   code: string,
   fileId: string,

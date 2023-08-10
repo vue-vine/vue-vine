@@ -18,6 +18,7 @@ import { QUERY_TYPE_STYLE } from './src/constants'
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx({
     ...options,
+    mode: options.mode ?? (process.env.NODE_ENV || 'development'),
     inlineTemplate: options.inlineTemplate ?? process.env.NODE_ENV === 'production',
   })
   const panicOnCompilerError = () => {
