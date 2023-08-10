@@ -1,6 +1,6 @@
 # Get started
 
-Welcome to join us to exploring another style of writing Vue! 
+Welcome to join us to exploring another style of writing Vue!
 
 Vine provides a Vite plugin and a VSCode extension to offer feature support.
 
@@ -12,7 +12,7 @@ Vine is still in early development, please wait for the first stable release `v0
 :::
 
 ## Install Vite plugin
-  
+
 ```bash
 pnpm i -D vue-vine
 ```
@@ -28,4 +28,16 @@ export default defineConfig({
     VineVitePlugin()
   ],
 })
+```
+
+## Use macro types
+
+Vine provides a typescript declaration file to help you write macros with intellisense.
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vue-vine/macro"]
+  }
+}
 ```

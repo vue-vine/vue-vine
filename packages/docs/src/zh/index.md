@@ -23,3 +23,6 @@ features:
     details: 继承了 Vue 的宏机制，简洁易用，更少的心智负担。
 ---
 
+<Recommend />
+
+<Sponsors />

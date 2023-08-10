@@ -12,7 +12,7 @@ Vine 目前还处于早期开发阶段，请等待第一个稳定版本 `v0.1.0`
 :::
 
 ## 安装 Vite 插件 {#install-vite-plugin}
-  
+
 ```bash
 pnpm i -D vue-vine
 ```
@@ -28,4 +28,16 @@ export default defineConfig({
     VineVitePlugin()
   ],
 })
+```
+
+## 使用 macro 类型 {#use-macro-types}
+
+Vine 提供了一个 typescript 声明文件，以帮助你使用宏时获得智能提示。
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vue-vine/macro"]
+  }
+}
 ```
