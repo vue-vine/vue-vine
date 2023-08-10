@@ -14,7 +14,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    vue(),
     VineVitePlugin(),
     Inspect(),
     UnoCSS(),

@@ -12,13 +12,12 @@
       "import": "./dist/index.mjs"
     },
     "./vite": {
-      "dev": "./dist/vite/index.ts",
+      "dev": "./src/vite/index.ts",
       "types": "./dist/vite/index.d.ts",
       "require": "./dist/vite/index.js",
       "import": "./dist/vite/index.mjs"
     },
     "./macros": {
-      "dev": "./types/macros.d.ts",
       "types": "./types/macros.d.ts"
     }
   },

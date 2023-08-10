@@ -7,11 +7,13 @@
   "author": "ShenQingchuan",
   "license": "MIT",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "preview": "vitepress preview src"
   },
   "devDependencies": {
+    "@iconify-json/logos": "^1.1.34",
+    "unocss": "^0.54.2",
     "vitepress": "^1.0.0-rc.4",
     "vue": "^3.3.4"
   }

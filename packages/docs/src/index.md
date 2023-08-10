@@ -23,3 +23,6 @@ features:
     details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
 
+<Recommend />
+
+<Sponsors />
