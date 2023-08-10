@@ -1,10 +1,9 @@
 import type { HmrContext, ModuleNode } from 'vite'
 import type {
-  HMRPatchModule,
+  HMRCompFnsName,
   VineCompilerCtx,
   VineCompilerHooks,
   VineFileCtx,
-  VineFnCompCtx,
 } from '@vue-vine/compiler'
 import {
   createVineFileCtx,
@@ -16,11 +15,11 @@ import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
 
 // 1.如果是 style 部分变化则执行更新 style
-// 2.如果是 tempalte 部分变化则执行 render
+// 2.如果是 template 部分变化则执行 render
 // 3.其他情况则更新整个module
-// TODO: 4. 更换 originCode 实现方式
-// TODO: 5.如果是 css vars 更新整个module(需要重新编译脚本)
-// TODO: 6. 更新 unit test
+// TODO: 如果是 css vars 更新整个module(需要重新编译脚本)
+// TODO: 编译 hmr 只在 dev 编译，且要把所有的组件函数导出
+// TODO: 更新 unit test
 
 function reAnalyzeVine(
   code: string,
@@ -39,32 +38,29 @@ function reAnalyzeVine(
   return vineFileCtx
 }
 
+interface PatchModuleRes {
+  hmrCompFnsName: HMRCompFnsName
+  type: null | 'style'
+}
 function patchModule(
   oldVFCtx: VineFileCtx,
   newVFCtx: VineFileCtx,
 ) {
-  const patchRes: HMRPatchModule = {
-    type: 'module',
-    hrmCompFnsName: null,
-  }
-  const setPatchRes = (
-    nCompFns: VineFnCompCtx,
-    type: 'module' | 'style' | 'template' | 'script') => {
-    patchRes.type = type
-    patchRes.hrmCompFnsName = nCompFns.fnName
+  let patchRes: PatchModuleRes = {
+    hmrCompFnsName: null,
+    type: null,
   }
   const nVineCompFns = newVFCtx.vineCompFns
   const oVineCompFns = oldVFCtx.vineCompFns
   if (oVineCompFns.length !== nVineCompFns.length) {
-    patchRes.type = 'module'
     newVFCtx.renderOnly = false
     return patchRes
   }
 
   const nStyleDefine = newVFCtx.styleDefine
   const oStyleDefine = oldVFCtx.styleDefine
-  const nOriginCode = newVFCtx.originCode
-  const oOriginCode = oldVFCtx.originCode
+  const nOriginCode = newVFCtx.fileSourceCode.original
+  const oOriginCode = oldVFCtx.fileSourceCode.original
   for (let i = 0; i < nVineCompFns.length; i++) {
     const nCompFns = nVineCompFns[i]
     const oCompFns = oVineCompFns[i]
@@ -84,28 +80,27 @@ function patchModule(
     // 在没有 style 和 template 干扰情况下对比剩余字符，不相等
     // 4. 不相等，这说明 script 发生变化
     if (nCompFnCodePure !== oCompFnCodePure) {
-      patchRes.type = 'script'
-      setPatchRes(nCompFns, 'script')
+      patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = false
     }
     else if (nCompFnsTemplate !== oCompFnsTemplate) {
       // 否則的話，如果 template 不相等
-      patchRes.type = 'template'
-      setPatchRes(nCompFns, 'template')
+      patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = true
     }
     else if (nCompFnsStyle !== oCompFnsStyle) {
+      console.log(nCompFnsStyle)
+      console.log(oCompFnsStyle)
       // 否則的話，如果 style 不相等
+      patchRes.hmrCompFnsName = nCompFns.fnName
       patchRes.type = 'style'
-      setPatchRes(nCompFns, 'style')
       newVFCtx.renderOnly = false
     }
   }
 
   // 如果script数量等于  VineCompFns 数量，则直接返回全量更新
   if (oVineCompFns.length !== nVineCompFns.length) {
-    patchRes.type = 'module'
-    patchRes.hrmCompFnsName = null
+    patchRes.hmrCompFnsName = null
     newVFCtx.renderOnly = false
     return patchRes
   }
@@ -123,14 +118,14 @@ export async function vineHMR(
   const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)
   if (!orgVineFileCtx)
     return
-  const orgFileContent = orgVineFileCtx.originCode
+  const orgFileContent = orgVineFileCtx.fileSourceCode.original
 
   // file changed !
   if (fileContent !== orgFileContent) {
     // analyze code again
     const vineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, file, compilerHooks)
 
-    let patchRes: null | HMRPatchModule = null
+    let patchRes: PatchModuleRes | null = null
     // patch VineFileCtx
     modules.forEach((m) => {
       const importedModules = m.importedModules
@@ -157,7 +152,7 @@ export async function vineHMR(
           if (query.type === QUERY_TYPE_STYLE
             && patchRes
             && patchRes.type === 'style'
-            && patchRes.hrmCompFnsName) {
+            && patchRes.hmrCompFnsName) {
             affectedModules.add(im)
           }
         })
@@ -165,7 +160,7 @@ export async function vineHMR(
     })
 
     // update vineFileCtx
-    patchRes && (vineFileCtx.hmrPatchModule = patchRes)
+    patchRes && (vineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName)
     compilerCtx.fileCtxMap.set(file, vineFileCtx)
     compilerCtx.isHMRing = true
 
