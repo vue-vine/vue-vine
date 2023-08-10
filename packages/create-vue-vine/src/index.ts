@@ -41,7 +41,10 @@ Clerc.create(name, version, description)
     const projectPath = join(cwd, ctx.parameters.projectName)
     const s = spinner()
     s.start(`Creating project ${ctx.parameters.projectName}`)
-    await createProject(projectPath, ctx.parameters.projectName)
+    await createProject({
+      projectPath,
+      projectName: ctx.parameters.projectName,
+    })
     s.stop('Project created!')
     outro('You\'re all set!')
   })

@@ -1,6 +1,11 @@
 import { setTimeout } from 'node:timers/promises'
 
-export async function createProject(projectPath: string, projectName: string) {
+interface ProjectOptions {
+  projectPath: string
+  projectName: string
+}
+
+export async function createProject(optinos: ProjectOptions) {
   // TODO
   await setTimeout(3000)
 }
