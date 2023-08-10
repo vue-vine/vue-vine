@@ -93,14 +93,14 @@ export function compileVineTypeScriptFile(
   code: string,
   fileId: string,
   compilerHooks: VineCompilerHooks,
-  fileCtxMap: VineFileCtx | undefined = undefined,
+  fileCtxCache?: VineFileCtx,
 ) {
   let compilerOptions: VineCompilerOptions = {}
   compilerHooks.onOptionsResolved((options) => {
     compilerOptions = options
   })
   // Using babel to validate vine declarations
-  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, fileCtxMap)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, fileCtxCache)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
