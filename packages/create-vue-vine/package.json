@@ -25,6 +25,12 @@
     "build": "pkgroll"
   },
   "dependencies": {
-    "clerc": "^0.42.1"
+    "@clack/prompts": "^0.7.0",
+    "clerc": "^0.42.1",
+    "gradient-string": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/gradient-string": "^1.1.2",
+    "@types/node": "^20.4.9"
   }
 }
