@@ -1,4 +1,5 @@
 import MagicString from 'magic-string'
+import type { Node } from '@babel/types'
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './src/types'
 import { findVineCompFnDecls } from './src/babel-helpers/ast'
 import { validateVine } from './src/validate'
@@ -10,6 +11,10 @@ export {
   compileVineStyle,
 } from './src/style/compile'
 
+export {
+  findVineCompFnDecls,
+} from './src/babel-helpers/ast'
+
 export type {
   VineFileCtx,
   VineCompFnCtx as VineFnCompCtx,
@@ -17,6 +22,8 @@ export type {
   VineProcessorLang,
   VineCompilerHooks,
   VineDiagnostic,
+  VineCompilerCtx,
+  HMRCompFnsName,
 } from './src/types'
 
 export function createCompilerCtx(
@@ -26,6 +33,7 @@ export function createCompilerCtx(
     fileCtxMap: new Map(),
     vineCompileErrors: [],
     vineCompileWarnings: [],
+    isRunningHMR: false,
     options: {
       inlineTemplate: true, // default inline template
       // Maybe some default options ...
@@ -34,16 +42,11 @@ export function createCompilerCtx(
   }
 }
 
-export function compileVineTypeScriptFile(
+export function createVineFileCtx(
   code: string,
   fileId: string,
-  compilerHooks: VineCompilerHooks,
+  fileCtxCache?: VineFileCtx,
 ) {
-  let compilerOptions: VineCompilerOptions = {}
-  compilerHooks.onOptionsResolved((options) => {
-    compilerOptions = options
-  })
-  // Using babel to validate vine declarations
   const root = babelParse(code, {
     errorRecovery: true,
     sourceType: 'module',
@@ -52,25 +55,61 @@ export function compileVineTypeScriptFile(
     ],
   })
   const vineFileCtx: VineFileCtx = {
+    root,
     fileId,
+    renderOnly: fileCtxCache ? fileCtxCache.renderOnly : false,
+    hmrCompFnsName: fileCtxCache ? fileCtxCache.hmrCompFnsName : null,
     fileSourceCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
-    root,
+    get originCode() {
+      return this.fileSourceCode.original
+    },
   }
+  return vineFileCtx
+}
+
+export function doValidateVine(
+  vineCompilerHooks: VineCompilerHooks,
+  vineFileCtx: VineFileCtx,
+  vineCompFnDecls: Node[],
+) {
+  validateVine(vineCompilerHooks, vineFileCtx, vineCompFnDecls)
+  vineCompilerHooks.onValidateEnd?.()
+}
+
+export function doAnalyzeVine(
+  vineCompilerHooks: VineCompilerHooks,
+  vineFileCtx: VineFileCtx,
+  vineCompFnDecls: Node[],
+) {
+  analyzeVine(vineCompilerHooks, vineFileCtx, vineCompFnDecls)
+  vineCompilerHooks.onAnalysisEnd?.()
+}
+
+export function compileVineTypeScriptFile(
+  code: string,
+  fileId: string,
+  compilerHooks: VineCompilerHooks,
+  fileCtxCache?: VineFileCtx,
+) {
+  let compilerOptions: VineCompilerOptions = {}
+  compilerHooks.onOptionsResolved((options) => {
+    compilerOptions = options
+  })
+  // Using babel to validate vine declarations
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, fileCtxCache)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
-  const vineCompFnDecls = findVineCompFnDecls(root)
+  const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
 
   // 1. Validate all vine restrictions
-  validateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
-  compilerHooks.onValidateEnd?.()
+  doValidateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
 
   // 2. Analysis
-  analyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
-  compilerHooks.onAnalysisEnd?.()
+  doAnalyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
 
   // 3. Codegen, or call it "transform"
   transformFile(

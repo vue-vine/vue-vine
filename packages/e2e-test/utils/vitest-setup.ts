@@ -1,7 +1,5 @@
 import { fileURLToPath } from 'node:url'
 import { beforeAll } from 'vitest'
-import { chromium } from 'playwright-chromium'
-import type { Browser, BrowserContext, Page } from 'playwright-chromium'
 import type { InlineConfig, ViteDevServer } from 'vite'
 import type { File } from 'vitest'
 import {
@@ -10,21 +8,17 @@ import {
   mergeConfig,
 } from 'vite'
 
-let server: ViteDevServer
+interface E2EContext {
+  viteServer: ViteDevServer | undefined
+  viteTestUrl: string
+}
+
 /**
  * Vite Dev Server when testing serve
  */
-export const e2eTestCtx: {
-  viteServer: ViteDevServer | undefined
-  browser: Browser | undefined
-  browserCtx: BrowserContext | undefined
-  page: Page | undefined
-  viteTestUrl: string
-} = {
+let server: ViteDevServer
+export const e2eTestCtx: E2EContext = {
   viteServer: undefined,
-  browser: undefined,
-  browserCtx: undefined,
-  page: undefined,
   viteTestUrl: 'http://localhost:5173',
 }
 
@@ -34,25 +28,7 @@ beforeAll(async (s) => {
   if (!suite.filepath.includes('e2e-test')) {
     return
   }
-
-  e2eTestCtx.browser = await chromium.launch()
-  e2eTestCtx.browserCtx = await e2eTestCtx.browser.newContext()
-  e2eTestCtx.page = await e2eTestCtx.browserCtx.newPage()
-
-  try {
-    await startDefaultServe()
-  }
-  catch (e) {
-    await e2eTestCtx.page.close()
-    throw e
-  }
-
-  return async () => {
-    await e2eTestCtx.page?.close()
-    if (e2eTestCtx.browser) {
-      await e2eTestCtx.browser.close()
-    }
-  }
+  await startDefaultServe()
 })
 
 async function startDefaultServe() {
@@ -96,7 +72,6 @@ async function startDefaultServe() {
   // use resolved port/base from server
   const devBase = server.config.base
   e2eTestCtx.viteTestUrl = `http://localhost:${server.config.server.port}${
-     devBase === '/' ? '' : devBase
-   }`
-  await e2eTestCtx.page?.goto(e2eTestCtx.viteTestUrl)
+    devBase === '/' ? '' : devBase
+  }`
 }

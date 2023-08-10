@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@8.6.12",
   "scripts": {
-    "dev": "vite --port 3333 --open",
+    "dev": "vite --port 3333",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",

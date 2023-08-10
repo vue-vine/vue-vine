@@ -22,7 +22,7 @@ import {
 import \\"testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css\\";
 import \\"testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
-const MyProfile = (() => {
+export const MyProfile = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-3921d7bd\\"), (n = n()), _popScopeId(), n
   );
@@ -86,11 +86,12 @@ const MyProfile = (() => {
   });
 
   __vine.__scopeId = \\"data-v-3921d7bd\\";
+  __vine.__hmrId = \\"3921d7bd\\";
 
   return __vine;
 })();
 
-const MyApp = (() => {
+export const MyApp = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-9c121b96\\"), (n = n()), _popScopeId(), n
   );
@@ -126,9 +127,32 @@ const MyApp = (() => {
   });
 
   __vine.__scopeId = \\"data-v-9c121b96\\";
+  __vine.__hmrId = \\"9c121b96\\";
 
   return __vine;
 })();
+typeof __VUE_HMR_RUNTIME__ !== \\"undefined\\" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+
+typeof __VUE_HMR_RUNTIME__ !== \\"undefined\\" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+export const _rerender_only = false;
+export const _rerender_vcf_fn_name = \\"\\";
+import.meta.hot.accept((mod) => {
+  if (!mod) {
+    return;
+  }
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name) {
+    return;
+  }
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});
 "
 `;
 
@@ -153,7 +177,7 @@ import {
 import \\"testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css\\";
 import \\"testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
-const MyProfile = (() => {
+export const MyProfile = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-25e4e706\\"), (n = n()), _popScopeId(), n
   );
@@ -218,11 +242,12 @@ const MyProfile = (() => {
   }
   __vine.render = __sfc_render;
   __vine.__scopeId = \\"data-v-25e4e706\\";
+  __vine.__hmrId = \\"25e4e706\\";
 
   return __vine;
 })();
 
-const MyApp = (() => {
+export const MyApp = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-b909f216\\"), (n = n()), _popScopeId(), n
   );
@@ -259,8 +284,31 @@ const MyApp = (() => {
   }
   __vine.render = __sfc_render;
   __vine.__scopeId = \\"data-v-b909f216\\";
+  __vine.__hmrId = \\"b909f216\\";
 
   return __vine;
 })();
+typeof __VUE_HMR_RUNTIME__ !== \\"undefined\\" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+
+typeof __VUE_HMR_RUNTIME__ !== \\"undefined\\" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+export const _rerender_only = false;
+export const _rerender_vcf_fn_name = \\"\\";
+import.meta.hot.accept((mod) => {
+  if (!mod) {
+    return;
+  }
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name) {
+    return;
+  }
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});
 "
 `;

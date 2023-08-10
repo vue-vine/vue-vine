@@ -318,9 +318,9 @@ export function transformFile(
           : '/* No emits */'
       }\n`)
       ms.appendRight(lastStmt.end!, '\n})')
-      ms.prependLeft(firstStmt.start!, `\n${
-        vineCompFnCtx.isExport ? 'export ' : ''
-      }const ${
+      // Defaultly set `export` for all component functions
+      // because it's required by HMR context.
+      ms.prependLeft(firstStmt.start!, `\nexport const ${
         vineCompFnCtx.fnName
       } = (() => {\n${
         // Prepend all generated preamble statements
@@ -339,15 +339,41 @@ export function transformFile(
       }\n${
         showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
-          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n`,
+          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n __vine.__hmrId = '${vineCompFnCtx.scopeId}';\n`,
         )}${showIf(
           // handle Web Component styles
           Boolean(vineCompFnCtx.isCustomElement),
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
         )}\nreturn __vine\n})();`,
       )
+      // Record CompFn to HMR
+      ms.appendRight(ms.length(), `
+      typeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
+      )
     }
   }
+
+  // HMR
+  compilerHooks.onOptionsResolved((compilerOptions) => {
+    const isDev = compilerOptions.mode !== 'production'
+    if (isDev) {
+      ms.appendRight(
+        ms.length(),
+        `export const _rerender_only = ${vineFileCtx.renderOnly}
+export const _rerender_vcf_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
+import.meta.hot.accept((mod) => {
+  if (!mod){return;}
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name){return;}
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});`)
+    }
+  })
 
   // Prepend all style import statements
   ms.prepend(`\n${styleImportStmts.join('\n')}\n`)

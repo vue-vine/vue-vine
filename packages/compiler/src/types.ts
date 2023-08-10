@@ -42,6 +42,8 @@ export type BabelFunctionNodeTypes =
   | ArrowFunctionExpression
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
+export declare type HMRCompFnsName = string | null
+
 export interface VineCompilerHooks {
   onOptionsResolved: (cb: (options: VineCompilerOptions) => void) => void
   onError: (err: VineDiagnostic) => void
@@ -52,6 +54,7 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
+  mode?: string // 'development' | 'production'
   inlineTemplate?: boolean
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
@@ -77,6 +80,7 @@ export interface VinePropMeta {
 }
 
 export interface VineCompilerCtx {
+  isRunningHMR: boolean
   fileCtxMap: Map<string, VineFileCtx>
   vineCompileErrors: VineDiagnostic[]
   vineCompileWarnings: VineDiagnostic[]
@@ -94,6 +98,17 @@ export interface VineUserImport {
 export interface VineFileCtx {
   readonly fileId: string
   readonly root: ParseResult<File>
+  readonly originCode: string
+  /**
+   * Hot update only executes the
+   * markup of the render function
+   */
+  renderOnly: boolean
+  /**
+   * The analysis result of the hot update module,
+   * including the function name and scopeId of the component that needs to be updated
+   */
+  hmrCompFnsName: HMRCompFnsName
   fileSourceCode: MagicString
   vineCompFns: VineCompFnCtx[]
   userImports: Record<string, VineUserImport>
