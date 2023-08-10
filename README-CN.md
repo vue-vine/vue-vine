@@ -14,7 +14,7 @@
 
 下面是一个简单的示例预览：
 
-![示例预览](./packages/docs/public/highlight-demo.png)
+![示例预览](./packages/docs/src/public/highlight-demo.png)
 
 ## 即刻尝鲜
 

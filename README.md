@@ -14,7 +14,7 @@ Check more details in our [documentation](https://vue-vine.netlify.app/). [![Net
 
 Take a quick view:
 
-![Quick view](./packages/docs/public/highlight-demo.png)
+![Quick view](./packages/docs/src/public/highlight-demo.png)
 
 ## Try the demo
 
