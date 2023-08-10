@@ -1,10 +1,9 @@
 import type { HmrContext, ModuleNode } from 'vite'
 import type {
-  HMRPatchModule,
+  HMRCompFnsName,
   VineCompilerCtx,
   VineCompilerHooks,
   VineFileCtx,
-  VineFnCompCtx,
 } from '@vue-vine/compiler'
 import {
   createVineFileCtx,
@@ -14,16 +13,16 @@ import {
 } from '@vue-vine/compiler'
 import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
+import { areStrArraysEqual } from './utils'
 
 // HMR Strategy:
 // 1. Only update style if just style changed
 // 2. Only re-render current component if just template changed
 // 3. Any other condition will re-render the whole module
-
-// TODO: 4. 更换 originCode 实现方式
-// TODO: 5. 如果是 css vars 更新整个 module (需要重新编译脚本)
-// TODO: 6. 更新 unit test
-
+// 4. If v-bind changes will re-render the whole module
+//
+// TODO: 编译 hmr 只在 dev 编译
+// TODO: 更新 unit test
 function reAnalyzeVine(
   code: string,
   fileId: string,
@@ -36,24 +35,22 @@ function reAnalyzeVine(
   return vineFileCtx
 }
 
+interface PatchModuleRes {
+  hmrCompFnsName: HMRCompFnsName
+  type: null | 'style' | 'module'
+  scopeId?: string
+}
 function patchModule(
   oldVFCtx: VineFileCtx,
   newVFCtx: VineFileCtx,
 ) {
-  const patchRes: HMRPatchModule = {
-    type: 'module',
+  let patchRes: PatchModuleRes = {
     hmrCompFnsName: null,
-  }
-  const setPatchRes = (
-    nCompFns: VineFnCompCtx,
-    type: 'module' | 'style' | 'template' | 'script') => {
-    patchRes.type = type
-    patchRes.hmrCompFnsName = nCompFns.fnName
+    type: null,
   }
   const nVineCompFns = newVFCtx.vineCompFns
   const oVineCompFns = oldVFCtx.vineCompFns
   if (oVineCompFns.length !== nVineCompFns.length) {
-    patchRes.type = 'module'
     newVFCtx.renderOnly = false
     return patchRes
   }
@@ -81,20 +78,33 @@ function patchModule(
     // Compare with the remaining characters without style and template interference
     // 4. If not equal, it means that the script has changed
     if (nCompFnCodePure !== oCompFnCodePure) {
-      patchRes.type = 'script'
-      setPatchRes(nCompFns, 'script')
+      patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = false
     }
     else if (nCompFnsTemplate !== oCompFnsTemplate) {
       // script equal, then compare template
-      patchRes.type = 'template'
-      setPatchRes(nCompFns, 'template')
+      patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = true
     }
     else if (nCompFnsStyle !== oCompFnsStyle) {
       // script and template equal, then compare style
-      patchRes.type = 'style'
-      setPatchRes(nCompFns, 'style')
+      const oCssBindingsVariables = Object.keys(oCompFns.cssBindings)
+      const nCssBindingsVariables = Object.keys(nCompFns.cssBindings)
+      // No v-bind() before and after the change
+      if (oCssBindingsVariables.length === 0 && nCssBindingsVariables.length === 0) {
+        patchRes.type = 'style'
+        patchRes.scopeId = nCompFns.scopeId
+      // The variables of v-bind() before and after the change are equal
+      }
+      else if (areStrArraysEqual(oCssBindingsVariables, nCssBindingsVariables)) {
+        patchRes.type = 'style'
+        patchRes.scopeId = nCompFns.scopeId
+      }
+      else {
+        patchRes.type = 'module'
+      }
+      patchRes.hmrCompFnsName = nCompFns.fnName
+      patchRes.scopeId = nCompFns.scopeId
       newVFCtx.renderOnly = false
     }
   }
@@ -102,7 +112,6 @@ function patchModule(
   // If the number of components is different,
   // it means that the module has breaking change
   if (oVineCompFns.length !== nVineCompFns.length) {
-    patchRes.type = 'module'
     patchRes.hmrCompFnsName = null
     newVFCtx.renderOnly = false
     return patchRes
@@ -128,7 +137,8 @@ export async function vineHMR(
     // analyze code again
     const vineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, file, compilerHooks)
 
-    let patchRes: null | HMRPatchModule = null
+    let patchRes: PatchModuleRes | null = null
+    const affectedModules = new Set<ModuleNode>()
     // patch VineFileCtx
     modules.forEach((m) => {
       const importedModules = m.importedModules
@@ -144,7 +154,6 @@ export async function vineHMR(
       }
     })
 
-    const affectedModules = new Set<ModuleNode>()
     modules.forEach((m) => {
       const importedModules = m.importedModules
       if (importedModules.size > 0) {
@@ -154,7 +163,8 @@ export async function vineHMR(
           const { query } = parseQuery(im.id)
           if (query.type === QUERY_TYPE_STYLE
             && patchRes
-            && patchRes.type === 'style'
+            && patchRes.type
+            && patchRes.scopeId === query.scopeId
             && patchRes.hmrCompFnsName) {
             affectedModules.add(im)
           }
@@ -163,12 +173,26 @@ export async function vineHMR(
     })
 
     // update vineFileCtx
-    patchRes && (vineFileCtx.hmrPatchModule = patchRes)
+    patchRes && (vineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName)
     compilerCtx.fileCtxMap.set(file, vineFileCtx)
     compilerCtx.isRunningHMR = true
 
-    return affectedModules.size > 0
-      ? [...affectedModules]
-      : [...modules]
+    const getFinalModules = () => {
+      if (!patchRes)
+        return [...modules]
+      const { type } = patchRes
+
+      if (affectedModules.size > 0) {
+        if (type === 'style') {
+          return [...affectedModules]
+        }
+        else if (type === 'module') {
+          return [...modules, ...affectedModules]
+        }
+      }
+
+      return [...modules]
+    }
+    return getFinalModules()
   }
 }

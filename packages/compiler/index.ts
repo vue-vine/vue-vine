@@ -23,7 +23,7 @@ export type {
   VineCompilerHooks,
   VineDiagnostic,
   VineCompilerCtx,
-  HMRPatchModule,
+  HMRCompFnsName,
 } from './src/types'
 
 export function createCompilerCtx(
@@ -58,7 +58,7 @@ export function createVineFileCtx(
     root,
     fileId,
     renderOnly: fileCtxCache ? fileCtxCache.renderOnly : false,
-    hmrPatchModule: fileCtxCache ? fileCtxCache.hmrPatchModule : null,
+    hmrCompFnsName: fileCtxCache ? fileCtxCache.hmrCompFnsName : null,
     fileSourceCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},

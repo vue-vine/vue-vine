@@ -346,28 +346,27 @@ export function transformFile(
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
         )}\nreturn __vine\n})();`,
       )
+      // Record CompFn to HMR
       ms.appendRight(ms.length(), `
-      typeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});
-      `,
+      typeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
       )
     }
   }
-
+  // HMR
   ms.appendRight(ms.length(), `
-      export const _rerender_only = ${vineFileCtx.renderOnly}
-      export const _rerender_vfc_fn_name = ${vineFileCtx.hmrPatchModule ? `"${vineFileCtx.hmrPatchModule!.hmrCompFnsName}"` : '""'}
-      import.meta.hot.accept((mod) => {
-        debugger
-        if (!mod){return;}
-        const { _rerender_only, _rerender_vfc_fn_name } = mod;
-        if (!_rerender_vfc_fn_name){return;}
-        const component = mod[_rerender_vfc_fn_name];
-        if (_rerender_only) {
-          __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-        } else {
-          __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-        }
-      });`,
+  export const _rerender_only = ${vineFileCtx.renderOnly}
+  export const _rerender_vfc_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
+  import.meta.hot.accept((mod) => {
+    if (!mod){return;}
+    const { _rerender_only, _rerender_vfc_fn_name } = mod;
+    if (!_rerender_vfc_fn_name){return;}
+    const component = mod[_rerender_vfc_fn_name];
+    if (_rerender_only) {
+      __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+    } else {
+      __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+    }
+  });`,
   )
 
   // Prepend all style import statements
