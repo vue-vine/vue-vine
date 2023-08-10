@@ -79,7 +79,7 @@ export interface VinePropMeta {
 }
 
 export interface VineCompilerCtx {
-  isHMRing: boolean
+  isRunningHMR: boolean
   fileCtxMap: Map<string, VineFileCtx>
   vineCompileErrors: VineDiagnostic[]
   vineCompileWarnings: VineDiagnostic[]

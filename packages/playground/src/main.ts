@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { App as VineApp } from './vine/test.vine'
+import { App as VineApp } from './vine/app.vine'
 
 // UnoCSS
 import 'virtual:uno.css'

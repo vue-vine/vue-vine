@@ -33,7 +33,7 @@ export function createCompilerCtx(
     fileCtxMap: new Map(),
     vineCompileErrors: [],
     vineCompileWarnings: [],
-    isHMRing: false,
+    isRunningHMR: false,
     options: {
       inlineTemplate: true, // default inline template
       // Maybe some default options ...
@@ -45,7 +45,7 @@ export function createCompilerCtx(
 export function createVineFileCtx(
   code: string,
   fileId: string,
-  fileCtxMapCache?: VineFileCtx,
+  fileCtxCache?: VineFileCtx,
 ) {
   const root = babelParse(code, {
     errorRecovery: true,
@@ -55,15 +55,18 @@ export function createVineFileCtx(
     ],
   })
   const vineFileCtx: VineFileCtx = {
+    root,
     fileId,
-    renderOnly: fileCtxMapCache ? fileCtxMapCache.renderOnly : false,
-    hmrCompFnsName: fileCtxMapCache ? fileCtxMapCache.hmrCompFnsName : null,
+    renderOnly: fileCtxCache ? fileCtxCache.renderOnly : false,
+    hmrCompFnsName: fileCtxCache ? fileCtxCache.hmrCompFnsName : null,
     fileSourceCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
-    root,
+    get originCode() {
+      return this.fileSourceCode.original
+    },
   }
   return vineFileCtx
 }
