@@ -5,7 +5,7 @@ interface ProjectOptions {
   projectName: string
 }
 
-export async function createProject(optinos: ProjectOptions) {
+export async function createProject(options: ProjectOptions) {
   // TODO
   await setTimeout(3000)
 }
