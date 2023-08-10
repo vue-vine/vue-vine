@@ -2,5 +2,5 @@
   NODE_VERSION = "18"
 
 [build]
-  publish = "packages/docs/.vitepress/dist"
+  publish = "packages/docs/src/.vitepress/dist"
   command = "pnpm run docs:build"
