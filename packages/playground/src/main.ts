@@ -8,5 +8,3 @@ import './styles/main.css'
 
 const app = createApp(VineApp)
 app.mount('#app')
-
-// const css = '#.class { color: blue}#'

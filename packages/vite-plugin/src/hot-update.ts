@@ -20,9 +20,10 @@ import { areStrArraysEqual } from './utils'
 // 2. Only re-render current component if just template changed
 // 3. Any other condition will re-render the whole module
 // 4. If v-bind changes will re-render the whole module
-//
-// TODO: 编译 hmr 只在 dev 编译
-// TODO: 更新 unit test
+
+// TODO: HMR Compilation only runs in dev mode
+// TODO: E2E test
+
 function reAnalyzeVine(
   code: string,
   fileId: string,
@@ -162,8 +163,7 @@ export async function vineHMR(
             return
           const { query } = parseQuery(im.id)
           if (query.type === QUERY_TYPE_STYLE
-            && patchRes
-            && patchRes.type
+            && patchRes?.type
             && patchRes.scopeId === query.scopeId
             && patchRes.hmrCompFnsName) {
             affectedModules.add(im)
