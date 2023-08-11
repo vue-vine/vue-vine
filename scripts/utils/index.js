@@ -1,6 +1,7 @@
 import * as path from 'node:path'
-import { exec } from 'node:child_process'
+import { exec, spawn } from 'node:child_process'
 import { log } from '@baiwusanyu/utils-log'
+import treeKill from 'tree-kill'
 import { colorful } from './color-str'
 
 export const r = (...args) => path.resolve(__dirname, '..', ...args)
@@ -39,6 +40,37 @@ export async function runCommand(command, options = {}) {
         ['white', 'bgRed', 'bold'],
       )}  `)
       reject(err)
+    }
+  })
+}
+
+export function cliExec(cmd) {
+  const child = spawn(cmd, {
+    stdio: 'inherit',
+    shell: true,
+    cwd: process.cwd(),
+  })
+
+  process.stdin.setRawMode(true)
+  process.stdin.resume()
+  process.stdin.setEncoding('utf8')
+
+  function exitAll(pid) {
+    treeKill(pid, 'SIGINT', (err) => {
+      if (err) {
+        console.error('Failed to kill child process:', err)
+      }
+      process.exit(0)
+    })
+  }
+
+  process.stdin.on('data', (key) => {
+    if (key === 'q') {
+      exitAll(child.pid)
+    }
+    // Ctrl-C
+    if (key === '\u0003') {
+      exitAll(child.pid)
     }
   })
 }

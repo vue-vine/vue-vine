@@ -1,26 +1,20 @@
-import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
-import { runCommand, spawnCommand } from './utils'
+import { setGlobalPrefix } from '@baiwusanyu/utils-log'
+import { cliExec } from './utils'
 
 async function runExtScript(mode) {
-  const BUILD_COMPILER = 'pnpm --filter @vue-vine/compiler run build'
-  const WATCH_EXT_TSC = ['pnpm', ['--filter', 'vue-vine-extension', 'run', `${mode}:tsc`]]
-  const WATCH_EXT_ESBUILD = ['pnpm', ['--filter', 'vue-vine-extension', 'run', `${mode}:esbuild`]]
-  const WATCH_LANGUAGE_SERVER = ['pnpm', ['--filter', '@vue-vine/language-server', 'run', `${mode}`]]
+  const command = 'cross-env NODE_ENV=development pnpm concurrently '
+    + '-p "  {name}  " '
+    + '-n "COMPILER,EXT:ESBUILD,EXT:TSC,LSP" '
+    + '-c "bgGreen.bold,bgBlue.bold,bgMagenta.bold,bgYellow.bold" '
+    + '"rollup -w -c ./packages/compiler/rollup.config.mjs" '
+    + `"sleep 6 && pnpm --filter vue-vine-extension run ${mode}:tsc" `
+    + `"sleep 6 && pnpm --filter vue-vine-extension run ${mode}:esbuild" `
+    + `"sleep 12 && pnpm --filter @vue-vine/language-server run ${mode}" `
 
   // set log prefix
   setGlobalPrefix('[vue-vine]: ')
 
-  try {
-    await runCommand(BUILD_COMPILER, { title: 'BUILD_COMPILER' })
-    await Promise.all([
-      spawnCommand(...WATCH_EXT_TSC, { title: 'WATCH_EXT_TSC' }),
-      spawnCommand(...WATCH_EXT_ESBUILD, { title: 'WATCH_EXT_ESBUILD' }),
-      spawnCommand(...WATCH_LANGUAGE_SERVER, { title: 'WATCH_LANGUAGE_SERVER' }),
-    ])
-  }
-  catch (e) {
-    log('error', e)
-  }
+  cliExec(command)
 }
 
 runExtScript(
