@@ -156,6 +156,138 @@ import.meta.hot.accept((mod) => {
 "
 `;
 
+exports[`Test transform > not output HMR content in non-dev mode 1`] = `
+"import { useDefaults as _useDefaults } from \\"vue-vine\\";
+import {
+  toDisplayString as _toDisplayString,
+  createElementVNode as _createElementVNode,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toRefs as _toRefs,
+  createVNode as _createVNode,
+} from \\"vue\\";
+
+import \\"testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css\\";
+import \\"testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&virtual.css\\";
+
+export const MyProfile = (() => {
+  const _withScopeId = (n) => (
+    _pushScopeId(\\"data-v-3b48c990\\"), (n = n()), _popScopeId(), n
+  );
+  const _hoisted_1 = { class: \\"my-profile\\" };
+  const __vine = _defineComponent({
+    name: \\"MyProfile\\",
+    props: {
+      name: { required: true },
+      age: { required: true },
+      bio: {
+        /* Simple prop */
+      },
+    },
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+      const props = _useDefaults(__props, {
+        age: 18,
+      });
+
+      _useCssVars((_ctx) => ({
+        \\"601ae0ef\\": _unref(textColor),
+      }));
+      const { name, age, bio } = _toRefs(__props);
+
+      const textColor = ref(\\"#1c1c1c\\");
+      const handleRefresh = () => {
+        // ...
+      };
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(\\"div\\", _hoisted_1, [
+            _createElementVNode(\\"div\\", null, [
+              _createTextVNode(_toDisplayString(name.value), 1 /* TEXT */),
+              _createElementVNode(
+                \\"span\\",
+                null,
+                \\" - \\" + _toDisplayString(age.value),
+                1 /* TEXT */,
+              ),
+            ]),
+            _withDirectives(
+              _createElementVNode(
+                \\"p\\",
+                null,
+                _toDisplayString(bio.value),
+                513 /* TEXT, NEED_PATCH */,
+              ),
+              [[_vShow, bio.value]],
+            ),
+            _createElementVNode(
+              \\"button\\",
+              { onClick: handleRefresh },
+              \\"Refresh\\",
+            ),
+          ])
+        );
+      };
+    },
+  });
+
+  __vine.__scopeId = \\"data-v-3b48c990\\";
+
+  return __vine;
+})();
+
+export const MyApp = (() => {
+  const _withScopeId = (n) => (
+    _pushScopeId(\\"data-v-c5a474f0\\"), (n = n()), _popScopeId(), n
+  );
+  const _hoisted_1 = { class: \\"my-app\\" };
+  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
+    /*#__PURE__*/ _createElementVNode(
+      \\"h2\\",
+      null,
+      \\"Hello world\\",
+      -1 /* HOISTED */,
+    ),
+  );
+  const __vine = _defineComponent({
+    name: \\"MyApp\\",
+    /* No props */
+    /* No emits */
+    setup(__props /* No setup ctx destructuring */) {
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(\\"div\\", _hoisted_1, [
+            _hoisted_2,
+            _createVNode(MyProfile, {
+              name: \\"Tomy\\",
+              age: 24,
+            }),
+          ])
+        );
+      };
+    },
+  });
+
+  __vine.__scopeId = \\"data-v-c5a474f0\\";
+
+  return __vine;
+})();
+"
+`;
+
 exports[`Test transform > separated mode output result 1`] = `
 "import { useDefaults as _useDefaults } from \\"vue-vine\\";
 import {

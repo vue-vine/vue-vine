@@ -72,4 +72,21 @@ describe('Test transform', () => {
     )
     expect(formated).toMatchSnapshot()
   })
+
+  test('not output HMR content in non-dev mode', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      mode: 'production',
+    })
+    compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testNoHMRContentOnProduction')
+    const transformed = fileCtx?.fileSourceCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+    expect(formated.includes('__hmrId')).toBe(false)
+    expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(false)
+  })
 })

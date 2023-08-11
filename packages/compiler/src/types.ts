@@ -45,7 +45,7 @@ export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 export declare type HMRCompFnsName = string | null
 
 export interface VineCompilerHooks {
-  onOptionsResolved: (cb: (options: VineCompilerOptions) => void) => void
+  onOptionsResolved: <T>(cb: (options: VineCompilerOptions) => T) => T
   onError: (err: VineDiagnostic) => void
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
