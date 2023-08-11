@@ -33,7 +33,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     }
   }
   const compilerHooks: VineCompilerHooks = {
-    onOptionsResolved: cb => cb(compilerCtx.options),
+    getCompilerCtx: () => compilerCtx,
     onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
     onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
     onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),

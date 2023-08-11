@@ -97,9 +97,7 @@ export function transformFile(
   compilerHooks: VineCompilerHooks,
   inline = true,
 ) {
-  const isDev = compilerHooks.onOptionsResolved(
-    compilerOptions => compilerOptions.mode !== 'production',
-  )
+  const isDev = compilerHooks.getCompilerCtx().options.mode !== 'production'
   const ms = vineFileCtx.fileSourceCode
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
