@@ -4,7 +4,6 @@ const timeout = process.env.CI ? 50000 : 30000
 export default defineConfig({
   test: {
     include: ['./src/**/*.spec.[tj]s'],
-    setupFiles: ['./utils/vitest-setup.ts'],
     testTimeout: timeout,
     hookTimeout: timeout,
     reporters: 'dot',
