@@ -21,7 +21,7 @@ export interface E2EPlaywrightContext {
   browserCtx: BrowserContext | undefined
   page: Page | undefined
   viteServer: ViteDevServer | undefined
-  viteTestUrl?: string
+  viteTestUrl: string
 }
 
 const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
@@ -79,12 +79,13 @@ export async function createBrowserContext() {
     browserCtx: undefined,
     page: undefined,
     viteServer: undefined,
+    viteTestUrl: '',
   }
   e2eBrowserCtx.browser = await chromium.launch()
   e2eBrowserCtx.browserCtx = await e2eBrowserCtx.browser.newContext()
   e2eBrowserCtx.page = await e2eBrowserCtx.browserCtx.newPage()
   await startDefaultServe(e2eBrowserCtx)
-  await e2eBrowserCtx.page?.goto(e2eBrowserCtx.viteTestUrl!)
+  await e2eBrowserCtx.page?.goto(e2eBrowserCtx.viteTestUrl)
   return e2eBrowserCtx
 }
 
