@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: pnpm
 
       - name: Setup
         run: pnpm i -g @antfu/ni
@@ -51,6 +52,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: pnpm
 
       - name: Setup
         run: pnpm i -g @antfu/ni
