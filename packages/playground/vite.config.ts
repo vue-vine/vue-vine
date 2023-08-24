@@ -1,7 +1,6 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
-import vue from '@vitejs/plugin-vue'
 import { VineVitePlugin } from 'vue-vine/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import UnoCSS from 'unocss/vite'
