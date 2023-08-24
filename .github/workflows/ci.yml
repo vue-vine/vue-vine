@@ -22,9 +22,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: pnpm
 
       - name: Setup
-        run: npm i -g @antfu/ni pnpm
+        run: npm i -g @antfu/ni
 
       - name: Install
         run: nci
@@ -51,9 +52,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: pnpm
 
       - name: Setup
-        run: npm i -g @antfu/ni pnpm
+        run: npm i -g @antfu/ni
 
       - name: Install
         run: nci
