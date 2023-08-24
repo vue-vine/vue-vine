@@ -13,3 +13,7 @@ export function areStrArraysEqual(arr1: string[], arr2: string[]) {
   }
   return true
 }
+
+export function normalizeLineEndings(str: string) {
+  return str.replace(/\r\n/g, '\n')
+}

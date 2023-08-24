@@ -13,7 +13,7 @@ import {
 } from '@vue-vine/compiler'
 import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
-import { areStrArraysEqual } from './utils'
+import { areStrArraysEqual, normalizeLineEndings } from './utils'
 
 // HMR Strategy:
 // 1. Only update style if just style changed
@@ -24,7 +24,8 @@ import { areStrArraysEqual } from './utils'
 function reAnalyzeVine(
   code: string,
   fileId: string,
-  compilerHooks: VineCompilerHooks) {
+  compilerHooks: VineCompilerHooks,
+) {
   const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, undefined)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
@@ -55,15 +56,15 @@ function patchModule(
 
   const nStyleDefine = newVFCtx.styleDefine
   const oStyleDefine = oldVFCtx.styleDefine
-  const nOriginCode = newVFCtx.originCode
-  const oOriginCode = oldVFCtx.originCode
+  const nOriginCode = normalizeLineEndings(newVFCtx.originCode)
+  const oOriginCode = normalizeLineEndings(oldVFCtx.originCode)
   for (let i = 0; i < nVineCompFns.length; i++) {
     const nCompFns = nVineCompFns[i]
     const oCompFns = oVineCompFns[i]
-    const nCompFnsTemplate = nCompFns.templateSource
-    const oCompFnsTemplate = oCompFns.templateSource
-    const nCompFnsStyle = nStyleDefine[nCompFns.scopeId].source
-    const oCompFnsStyle = oStyleDefine[oCompFns.scopeId].source
+    const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
+    const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
+    const nCompFnsStyle = normalizeLineEndings(nStyleDefine[nCompFns.scopeId].source)
+    const oCompFnsStyle = normalizeLineEndings(oStyleDefine[oCompFns.scopeId].source)
     // 1. Get component function AST Node range for its code content
     const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode!.start), Number((nCompFns!.fnItselfNode!.end)))
     const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode!.start), Number((oCompFns!.fnItselfNode!.end)))
