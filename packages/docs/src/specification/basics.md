@@ -72,6 +72,6 @@ function MyComponent(props: {
 
 ## Macros
 
-With Vue 3.2 wa released, we can use macros in `<script setup>` block, and [Vue Macros](https://https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
+With Vue 3.2 wa released, we can use macros in `<script setup>` block, and [Vue Macros](https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
 
 In Vine, we just provide a small amount of macros for now, you can check more details in our separated [Macros](./macros.html) chapter. We keep the possibility to add more macros in the future, but every step we take will be cautious.
