@@ -60,6 +60,9 @@ jobs:
       - name: Install
         run: nci
 
+      - name: Playwright install
+        run: npx playwright install
+
       - name: Build
         run: nr build
 
