@@ -1,7 +1,6 @@
-import { basename } from 'node:path'
-import { cancel as _cancel, text as _text, isCancel } from '@clack/prompts'
+import { cancel as _cancel, confirm as _confirm, text as _text, isCancel } from '@clack/prompts'
 
-export function cancel(...args: Parameters<typeof _cancel>) {
+export function cancel(...args: Parameters<typeof _cancel>): never {
   _cancel(...args)
   process.exit(0)
 }
@@ -18,7 +17,4 @@ function wrapClack<T extends (...args: any[]) => any>(fn: T) {
 }
 
 export const text = wrapClack(_text)
-
-export function validateProjectName(path: string) {
-  return basename(path) === path
-}
+export const confirm = wrapClack(_confirm)
