@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/playground",
   "private": true,
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@8.7.0",
   "scripts": {
     "dev": "vite --port 3333",
     "build": "vite build",
@@ -11,20 +11,20 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
-    "sass": "^1.64.2",
+    "sass": "^1.66.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.19",
-    "@types/node": "^20.4.8",
-    "eslint": "^8.46.0",
+    "@iconify-json/carbon": "^1.1.20",
+    "@types/node": "^20.5.7",
+    "eslint": "^8.48.0",
     "less": "^4.2.0",
-    "typescript": "^5.1.6",
-    "unocss": "^0.54.2",
+    "typescript": "^5.2.2",
+    "unocss": "^0.55.3",
     "unplugin-auto-import": "^0.16.6",
     "vite": "^4.4.9",
-    "vite-plugin-inspect": "^0.7.35",
+    "vite-plugin-inspect": "^0.7.38",
     "vue-vine": "workspace:*"
   }
 }

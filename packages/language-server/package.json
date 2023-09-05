@@ -29,11 +29,11 @@
     "volar-service-emmet": "^0.0.10",
     "volar-service-html": "^0.0.10",
     "volar-service-typescript": "^0.0.10",
-    "vscode-html-languageservice": "^5.0.6",
+    "vscode-html-languageservice": "^5.0.7",
     "vscode-languageserver-textdocument": "^1.0.8"
   },
   "devDependencies": {
-    "@types/node": "^20.4.8",
-    "typescript": "^5.1.6"
+    "@types/node": "^20.5.7",
+    "typescript": "^5.2.2"
   }
 }
