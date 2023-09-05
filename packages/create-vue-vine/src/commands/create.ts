@@ -6,7 +6,7 @@ import gradient from 'gradient-string'
 import { bold, green } from 'yoctocolors'
 import { createProject } from '../create'
 import { cancel, confirm, exists, getTemplateDirectory, text, validateProjectName } from '../utils'
-import { getPmCommand } from '../utils/command'
+import { getPmCommand, runPmCommand } from '../utils/pm'
 
 const defaultProjectName = 'vue-vine-project'
 const VUE_VINE = gradient.atlas('Vue Vine - Another style of writing Vue components')
@@ -79,6 +79,12 @@ export const createCommand = defineCommand({
       message: 'Install dependencies?',
       initialValue: true,
     })
+  }
+
+  if (ctx.flags.install) {
+    s.start('Installing dependencies')
+    await runPmCommand('install', projectPath)
+    s.stop('Dependencies installed!')
   }
   const cdProjectPath = relative(cwd, projectPath)
   const helpText = [

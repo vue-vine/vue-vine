@@ -27,6 +27,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "clerc": "^0.42.2",
+    "execa": "^8.0.1",
     "gradient-string": "^2.0.2",
     "pkg-dir": "^7.0.0",
     "yoctocolors": "^1.0.0"
