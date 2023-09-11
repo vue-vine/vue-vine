@@ -47,13 +47,7 @@ export function createVineFileCtx(
   fileId: string,
   fileCtxCache?: VineFileCtx,
 ) {
-  const root = babelParse(code, {
-    errorRecovery: true,
-    sourceType: 'module',
-    plugins: [
-      'typescript',
-    ],
-  })
+  const root = babelParse(code)
   const vineFileCtx: VineFileCtx = {
     root,
     fileId,
