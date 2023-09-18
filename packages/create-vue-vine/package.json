@@ -34,6 +34,13 @@
   },
   "devDependencies": {
     "@types/gradient-string": "^1.1.2",
-    "@types/node": "^20.4.9"
+    "@types/node": "^20.4.9",
+    "eslint": "^8.48.0",
+    "unocss": "^0.55.3",
+    "unplugin-auto-import": "^0.16.6",
+    "vite": "^4.4.9",
+    "vite-plugin-inspect": "^0.7.38",
+    "vue": "^3.3.4",
+    "vue-vine": "workspace:*"
   }
 }

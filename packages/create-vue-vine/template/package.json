@@ -15,10 +15,8 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.20",
     "@types/node": "^20.5.7",
     "eslint": "^8.48.0",
-    "less": "^4.2.0",
     "typescript": "^5.2.2",
     "unocss": "^0.55.3",
     "unplugin-auto-import": "^0.16.6",
