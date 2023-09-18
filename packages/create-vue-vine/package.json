@@ -1,0 +1,46 @@
+{
+  "name": "create-vue-vine",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Official CLI for creating Vue Vine project.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "keywords": [
+    "Vue",
+    "Vine"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "module": "./dist/index.js",
+  "bin": "./bin/create-vue-vine.js",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "dev": "pkgroll -w",
+    "build": "pkgroll"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "clerc": "^0.42.2",
+    "execa": "^8.0.1",
+    "gradient-string": "^2.0.2",
+    "pkg-dir": "^7.0.0",
+    "yoctocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/gradient-string": "^1.1.2",
+    "@types/node": "^20.4.9",
+    "eslint": "^8.48.0",
+    "unocss": "^0.55.3",
+    "unplugin-auto-import": "^0.16.6",
+    "vite": "^4.4.9",
+    "vite-plugin-inspect": "^0.7.38",
+    "vue": "^3.3.4",
+    "vue-vine": "workspace:*"
+  }
+}
