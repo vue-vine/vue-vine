@@ -1,6 +1,6 @@
 {
   "name": "vue-vine",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -39,5 +39,9 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.2.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
