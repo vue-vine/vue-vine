@@ -1,5 +1,5 @@
 import { rmSync } from 'node:fs'
-import { execSync } from 'node:child_process'
+import { exec } from 'node:child_process'
 
 export function cleanDist(distPath) {
   return {
@@ -14,7 +14,7 @@ export function runTscOnFinished(cwd) {
   return {
     name: 'runTscOnFinished',
     buildEnd() {
-      execSync('tsc', { stdio: 'inherit', cwd })
+      exec('tsc', { stdio: 'inherit', cwd, shell: true })
     },
   }
 }

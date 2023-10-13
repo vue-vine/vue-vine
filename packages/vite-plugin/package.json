@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/vite-plugin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -41,5 +41,9 @@
     "vite": "^4.4.9",
     "vitest": "^0.31.4",
     "vue": "^3.3.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
