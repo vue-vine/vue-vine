@@ -38,6 +38,9 @@ importers:
       pkgroll:
         specifier: ^1.11.0
         version: 1.11.0(typescript@5.2.2)
+      playwright-chromium:
+        specifier: ^1.37.1
+        version: 1.37.1
       rimraf:
         specifier: ^5.0.1
         version: 5.0.1
@@ -171,7 +174,7 @@ importers:
         version: 0.55.7(postcss@8.4.29)(rollup@3.28.1)(vite@4.4.9)
       unplugin-auto-import:
         specifier: ^0.16.6
-        version: 0.16.6(rollup@3.28.1)
+        version: 0.16.6(@vueuse/core@9.13.0)(rollup@3.28.1)
       vite:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@20.4.9)
@@ -227,9 +230,6 @@ importers:
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0
-      playwright-chromium:
-        specifier: ^1.37.1
-        version: 1.37.1
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -7779,32 +7779,8 @@ packages:
         optional: true
     dependencies:
       '@antfu/utils': 0.7.5
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.1)
-      '@vueuse/core': 9.13.0(vue@3.3.4)
-      fast-glob: 3.3.1
-      local-pkg: 0.4.3
-      magic-string: 0.30.3
-      minimatch: 9.0.3
-      unimport: 3.1.0(rollup@3.28.1)
-      unplugin: 1.4.0
-    transitivePeerDependencies:
-      - rollup
-    dev: true
-
-  /unplugin-auto-import@0.16.6(rollup@3.28.1):
-    resolution: {integrity: sha512-M+YIITkx3C/Hg38hp8HmswP5mShUUyJOzpifv7RTlAbeFlO2Tyw0pwrogSSxnipHDPTtI8VHFBpkYkNKzYSuyA==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@nuxt/kit': ^3.2.2
-      '@vueuse/core': '*'
-    peerDependenciesMeta:
-      '@nuxt/kit':
-        optional: true
-      '@vueuse/core':
-        optional: true
-    dependencies:
-      '@antfu/utils': 0.7.5
       '@rollup/pluginutils': 5.0.4(rollup@3.28.1)
+      '@vueuse/core': 9.13.0(vue@3.3.4)
       fast-glob: 3.3.1
       local-pkg: 0.4.3
       magic-string: 0.30.3

@@ -16,6 +16,26 @@
 
 ![示例预览](./packages/docs/src/public/highlight-demo.png)
 
+## 安装
+
+```bash
+# 如果你还没有安装 `@antfu/ni`，我强烈建议你安装它。
+ni -D vue-vine
+```
+
+在 `vite.config.ts` 中使用插件：
+
+```ts
+import { VineVitePlugin } from 'vue-vine/vite'
+
+export default defineConfig({
+  plugins: [
+    // ...其他插件
+    VineVitePlugin()
+  ],
+})
+```
+
 ## 即刻尝鲜
 
 **注意:** 目前，Vue Vine 仍处于密集开发阶段，请不要将其用于生产环境。
