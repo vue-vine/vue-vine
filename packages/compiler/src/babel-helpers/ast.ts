@@ -40,6 +40,7 @@ import type {
   VineBabelRoot,
 } from '../types'
 import {
+  EXPECTED_ERROR,
   TS_NODE_TYPES,
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
@@ -75,12 +76,12 @@ export function isVineCompFnDecl(target: Node) {
           && node.argument
           && isVineTaggedTemplateString(node.argument)
         ) {
-          throw new Error('expected error')
+          throw new Error(EXPECTED_ERROR)
         }
       })
     }
     catch (error: any) {
-      if (error.message === 'expected error') {
+      if (error.message === EXPECTED_ERROR) {
         return true
       }
       throw error
