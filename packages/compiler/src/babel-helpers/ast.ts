@@ -57,7 +57,6 @@ const vineRootScopeStatementTypeValidators = [
 ] as const
 
 export function isVineCompFnDecl(target: Node) {
-  let isFound = false
   if (
     (
       isExportNamedDeclaration(target)
@@ -72,24 +71,22 @@ export function isVineCompFnDecl(target: Node) {
     try {
       traverse(target, (node) => {
         if (
-          !isFound
-          && isReturnStatement(node)
+          isReturnStatement(node)
           && node.argument
           && isVineTaggedTemplateString(node.argument)
         ) {
-          isFound = true
           throw new Error('expected error')
         }
       })
     }
     catch (error: any) {
       if (error.message === 'expected error') {
-        return isFound
+        return true
       }
       throw error
     }
   }
-  return isFound
+  return false
 }
 
 export function findVineCompFnDecls(root: VineBabelRoot) {
