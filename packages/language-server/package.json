@@ -16,11 +16,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@volar/language-core": "~1.9.2",
-    "@volar/language-server": "~1.9.2",
-    "@volar/language-service": "~1.9.2",
-    "@volar/source-map": "~1.9.2",
-    "@volar/typescript": "~1.9.2",
+    "@volar/language-core": "~1.10.4",
+    "@volar/language-server": "~1.10.4",
+    "@volar/language-service": "~1.10.4",
+    "@volar/source-map": "~1.10.4",
+    "@volar/typescript": "~1.10.4",
     "@vue-vine/compiler": "workspace:*",
     "@vue/compiler-dom": "^3.3.4",
     "@vue/language-core": "^1.8.8",
