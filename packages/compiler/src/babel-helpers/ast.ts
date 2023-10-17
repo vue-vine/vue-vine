@@ -40,6 +40,7 @@ import type {
   VineBabelRoot,
 } from '../types'
 import {
+  EXPECTED_ERROR,
   TS_NODE_TYPES,
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
@@ -57,7 +58,6 @@ const vineRootScopeStatementTypeValidators = [
 ] as const
 
 export function isVineCompFnDecl(target: Node) {
-  let isFound = false
   if (
     (
       isExportNamedDeclaration(target)
@@ -69,18 +69,25 @@ export function isVineCompFnDecl(target: Node) {
     isFunctionDeclaration(target)
     || isVariableDeclaration(target)
   ) {
-    traverse(target, (node) => {
-      if (
-        !isFound
-        && isReturnStatement(node)
-        && node.argument
-        && isVineTaggedTemplateString(node.argument)
-      ) {
-        isFound = true
+    try {
+      traverse(target, (node) => {
+        if (
+          isReturnStatement(node)
+          && node.argument
+          && isVineTaggedTemplateString(node.argument)
+        ) {
+          throw new Error(EXPECTED_ERROR)
+        }
+      })
+    }
+    catch (error: any) {
+      if (error.message === EXPECTED_ERROR) {
+        return true
       }
-    })
+      throw error
+    }
   }
-  return isFound
+  return false
 }
 
 export function findVineCompFnDecls(root: VineBabelRoot) {

@@ -108,3 +108,5 @@ export const VineBindingTypes = {
    */
   LITERAL_CONST: 'literal-const' as VueBindingTypes.LITERAL_CONST,
 } as const
+
+export const EXPECTED_ERROR = 'expected_error'
