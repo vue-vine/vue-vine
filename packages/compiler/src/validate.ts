@@ -766,7 +766,9 @@ export function validateVine(
   // without quiting this function too early
   let hasErrInVineCompFns = false
   for (const vineCompFnDecl of vineCompFnDecls) {
-    hasErrInVineCompFns = findValidateError(validatesFromVineFn, vineCompFnDecl)
+    const hasErr = findValidateError(validatesFromVineFn, vineCompFnDecl)
+    if (hasErr)
+      hasErrInVineCompFns = hasErr
   }
 
   return !hasErrInVineCompFns
