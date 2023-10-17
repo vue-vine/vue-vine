@@ -282,7 +282,7 @@ export function findVineTagTemplateStringReturn(node: Node) {
   }
 }
 
-export function getImportStatments(root: ParseResult<File>) {
+export function getImportStatements(root: ParseResult<File>) {
   const importStmts: ImportDeclaration[] = []
   for (const stmt of root.program.body) {
     if (isImportDeclaration(stmt)) {

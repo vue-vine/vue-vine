@@ -55,7 +55,7 @@ import {
   getAllVinePropMacroCall,
   getFunctionInfo,
   getFunctionParams,
-  getImportStatments,
+  getImportStatements,
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
   isCallOf,
@@ -608,7 +608,7 @@ function analyzeFileImportStmts(
   vineFileCtx: VineFileCtx,
 ) {
   const { root } = vineFileCtx
-  const fileImportStmts = getImportStatments(root)
+  const fileImportStmts = getImportStatements(root)
   if (!fileImportStmts.length) {
     return
   }
