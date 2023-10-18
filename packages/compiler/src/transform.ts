@@ -11,6 +11,7 @@ import type { AwaitExpression, Node } from '@babel/types'
 import {
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
+  EXPECTED_ERROR,
   TO_REFS_HELPER,
   UN_REF_HELPER,
   USE_DEFAULTS_HELPER,
@@ -43,21 +44,27 @@ function wrapWithAsyncContext(
 
 function mayContainAwaitExpr(targetNode: Node) {
   let awaitExpr: AwaitExpression | undefined
-  let isMayCotainAwaitExpr = (
+  if (!(
     isVariableDeclaration(targetNode)
     || isAssignmentExpression(targetNode)
     || isExpressionStatement(targetNode)
-  )
-  if (!isMayCotainAwaitExpr) {
+  )) {
     return false
   }
-  traverse(targetNode, (descendant) => {
-    if (isAwaitExpression(descendant)) {
-      isMayCotainAwaitExpr = true
-      awaitExpr = descendant
+  try {
+    traverse(targetNode, (descendant) => {
+      if (isAwaitExpression(descendant)) {
+        awaitExpr = descendant
+        throw new Error(EXPECTED_ERROR)
+      }
+    })
+  }
+  catch (error) {
+    if (error === EXPECTED_ERROR) {
+      return awaitExpr
     }
-  })
-  return isMayCotainAwaitExpr && awaitExpr
+    throw error
+  }
 }
 
 function registerImport(
@@ -89,7 +96,7 @@ function registerImport(
  *    We need to remove all imports from the original code, one by one, and then prepend the
  *    merged imports to the code, based on our analysis result.
  *
- * 2. - Transform every Vine comonent function to be an IIFE.
+ * 2. - Transform every Vine component function to be an IIFE.
  *      it's for creating a independent scope, so we can put those statements can be hosted.
  */
 export function transformFile(
@@ -169,7 +176,7 @@ export function transformFile(
 
       // Replace the original function delcaration start to its body's first statement's start,
       // and the last statement's end to the function declaration end.
-      // Wrap all body statemnts into a `setup(...) { ... }`
+      // Wrap all body statements into a `setup(...) { ... }`
       ms.remove(vineCompFnStart, firstStmt.start!)
       ms.remove(lastStmt.end!, vineCompFnEnd)
 
