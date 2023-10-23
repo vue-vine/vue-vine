@@ -1,3 +1,4 @@
+import process from 'node:process'
 import path from 'node:path'
 import process from 'node:process'
 import fs from 'node:fs'

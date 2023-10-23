@@ -20,6 +20,7 @@
     "test": "pnpm test:compiler --run && pnpm test:e2e --run",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
+    "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test",
     "lint": "eslint . --cache",
     "lint:fix": "pnpm lint --fix",
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
@@ -31,7 +32,7 @@
     "update:deps": "esno scripts/update-deps.js"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.6",
+    "@antfu/eslint-config": "^0.41.0",
     "@baiwusanyu/utils-log": "^1.0.15",
     "@changesets/cli": "^2.26.2",
     "concurrently": "^8.2.1",
@@ -40,8 +41,6 @@
     "eslint": "^8.48.0",
     "esno": "^0.16.3",
     "lint-staged": "^13.3.0",
-    "pkgroll": "^1.11.0",
-    "playwright-chromium": "^1.37.1",
     "rimraf": "^5.0.1",
     "rollup": "^3.28.1",
     "shelljs": "^0.8.5",
