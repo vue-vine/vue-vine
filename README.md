@@ -38,7 +38,7 @@ export default defineConfig({
 
 ## Try the demo
 
-**warning:** For now, `Vue Vine` is still under heavily development, please don't use it in production.
+**warning:** For now, `Vue Vine` is still under heavy development, please don't use it in production.
 
 You can try the demo by following steps:
 
