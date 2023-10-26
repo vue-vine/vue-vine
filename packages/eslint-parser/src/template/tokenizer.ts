@@ -109,9 +109,9 @@ export type TokenizerState =
     | 'NAMED_CHARACTER_REFERENCE'
     | 'AMBIGUOUS_AMPERSAND'
     | 'NUMERIC_CHARACTER_REFERENCE'
-    | 'HEXADEMICAL_CHARACTER_REFERENCE_START'
+    | 'HEXADECIMAL_CHARACTER_REFERENCE_START'
     | 'DECIMAL_CHARACTER_REFERENCE_START'
-    | 'HEXADEMICAL_CHARACTER_REFERENCE'
+    | 'HEXADECIMAL_CHARACTER_REFERENCE'
     | 'DECIMAL_CHARACTER_REFERENCE'
     | 'NUMERIC_CHARACTER_REFERENCE_END'
     | 'CHARACTER_REFERENCE_END'
@@ -1690,7 +1690,7 @@ export class Tokenizer {
 
     if (cp === LATIN_SMALL_X || cp === LATIN_CAPITAL_X) {
       this.buffer.push(cp)
-      return 'HEXADEMICAL_CHARACTER_REFERENCE_START'
+      return 'HEXADECIMAL_CHARACTER_REFERENCE_START'
     }
     return this.reconsumeAs('DECIMAL_CHARACTER_REFERENCE_START')
   }
@@ -1700,11 +1700,11 @@ export class Tokenizer {
    * @param cp The current code point.
    * @returns The next state.
    */
-  protected HEXADEMICAL_CHARACTER_REFERENCE_START(
+  protected HEXADECIMAL_CHARACTER_REFERENCE_START(
     cp: number,
   ): TokenizerState {
     if (isHexDigit(cp)) {
-      return this.reconsumeAs('HEXADEMICAL_CHARACTER_REFERENCE')
+      return this.reconsumeAs('HEXADECIMAL_CHARACTER_REFERENCE')
     }
 
     this.reportParseError(
@@ -1734,7 +1734,7 @@ export class Tokenizer {
    * @param cp The current code point.
    * @returns The next state.
    */
-  protected HEXADEMICAL_CHARACTER_REFERENCE(cp: number): TokenizerState {
+  protected HEXADECIMAL_CHARACTER_REFERENCE(cp: number): TokenizerState {
     while (true) {
       if (isDigit(cp)) {
         this.crCode = 16 * this.crCode + (cp - 0x30)
