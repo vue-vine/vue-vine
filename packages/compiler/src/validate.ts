@@ -1,3 +1,4 @@
+import process from 'node:process'
 import {
   isIdentifier,
   isObjectExpression,
@@ -152,7 +153,8 @@ function validateNoInvalidTypesRootScopeStmt(
   return true
 }
 
-/** Check vine tagged template string usage,
+/**
+ * Check vine tagged template string usage,
  * it can only be called once inside a vine component function,
  * and it can't contain any interpolation
  */

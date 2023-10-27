@@ -1,3 +1,4 @@
+import process from 'node:process'
 import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {

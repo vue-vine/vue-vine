@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { defineConfig } from 'vitest/config'
 
 const timeout = process.env.CI ? 50000 : 30000

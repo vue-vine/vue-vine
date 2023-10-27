@@ -1,3 +1,5 @@
+const process = require('node:process')
+
 require('esbuild').build({
   entryPoints: {
     client: './src/extension.ts',

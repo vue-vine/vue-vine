@@ -1,4 +1,5 @@
 import { join, resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'rollup'
 import copy from 'rollup-plugin-copy'
