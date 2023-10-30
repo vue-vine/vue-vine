@@ -12,7 +12,7 @@ Before starting to use it, you're supposed to know the following conventions:
 - Vine only supports TypeScript, JavaScript users may not have full experience.
 - Vine is designed for ESM only; 'require' is not supported.
 
-## File Extension
+## File extension
 
 Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
 
