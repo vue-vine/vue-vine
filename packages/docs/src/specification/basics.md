@@ -10,7 +10,7 @@ Before starting to use it, you're supposed to know the following conventions:
 
 - Vine was designed to only support Vue 3 and Vite.
 - Vine only supports TypeScript, JavaScript users may not have full experience.
-- Vine is designed for ESM only; 'require' is not supported.
+- Vine is designed for ESM only; `require` is not supported.
 
 ## File extension
 
