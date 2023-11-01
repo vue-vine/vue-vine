@@ -6,11 +6,11 @@ outline: deep
 
 We'll talk about all the basic concepts of Vue Vine in this chapter.
 
-Before start using it, you're supposed to know the following conventions:
+Before starting to use it, you're supposed to know the following conventions:
 
 - Vine was designed to only support Vue 3 and Vite.
 - Vine only supports TypeScript, JavaScript users may not have full experience.
-- Vine targets to ESM only, `require` is not supported.
+- Vine is designed for ESM only; `require` is not supported.
 
 ## File extension
 
@@ -72,6 +72,6 @@ function MyComponent(props: {
 
 ## Macros
 
-With Vue 3.2 wa released, we can use macros in `<script setup>` block, and [Vue Macros](https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
+With Vue 3.2 was released, we can use macros in `<script setup>` block, and [Vue Macros](https://vue-macros.sxzz.moe/) pushed the idea to the extreme, in Vue 3.3, Vue added more built-in macros.
 
 In Vine, we just provide a small amount of macros for now, you can check more details in our separated [Macros](./macros.html) chapter. We keep the possibility to add more macros in the future, but every step we take will be cautious.
