@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Vine ESLint parser test > parse result 1`] = `
+exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
 {
   "body": [
     {
@@ -25,7 +25,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                   },
                   "name": "r1",
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     28,
                     30,
@@ -64,7 +63,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                             "name": "Math",
                             "optional": false,
-                            "parent": [Circular],
                             "range": [
                               37,
                               41,
@@ -73,7 +71,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             "typeAnnotation": undefined,
                           },
                           "optional": false,
-                          "parent": [Circular],
                           "property": {
                             "decorators": [],
                             "loc": {
@@ -88,7 +85,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                             "name": "random",
                             "optional": false,
-                            "parent": [Circular],
                             "range": [
                               42,
                               48,
@@ -113,7 +109,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                           },
                         },
                         "optional": false,
-                        "parent": [Circular],
                         "range": [
                           37,
                           50,
@@ -132,7 +127,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                         },
                       },
                       "operator": "*",
-                      "parent": [Circular],
                       "range": [
                         37,
                         55,
@@ -148,7 +142,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             "line": 2,
                           },
                         },
-                        "parent": [Circular],
                         "range": [
                           53,
                           55,
@@ -174,7 +167,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                     "name": "ref",
                     "optional": false,
-                    "parent": [Circular],
                     "range": [
                       33,
                       36,
@@ -193,7 +185,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                   },
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     33,
                     56,
@@ -211,7 +202,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     "line": 2,
                   },
                 },
-                "parent": [Circular],
                 "range": [
                   28,
                   56,
@@ -231,7 +221,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                 "line": 2,
               },
             },
-            "parent": [Circular],
             "range": [
               22,
               56,
@@ -256,7 +245,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                   },
                   "name": "r2",
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     65,
                     67,
@@ -295,7 +283,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                             "name": "Math",
                             "optional": false,
-                            "parent": [Circular],
                             "range": [
                               74,
                               78,
@@ -304,7 +291,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             "typeAnnotation": undefined,
                           },
                           "optional": false,
-                          "parent": [Circular],
                           "property": {
                             "decorators": [],
                             "loc": {
@@ -319,7 +305,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                             "name": "random",
                             "optional": false,
-                            "parent": [Circular],
                             "range": [
                               79,
                               85,
@@ -344,7 +329,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                           },
                         },
                         "optional": false,
-                        "parent": [Circular],
                         "range": [
                           74,
                           87,
@@ -363,7 +347,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                         },
                       },
                       "operator": "*",
-                      "parent": [Circular],
                       "range": [
                         74,
                         93,
@@ -379,7 +362,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             "line": 3,
                           },
                         },
-                        "parent": [Circular],
                         "range": [
                           90,
                           93,
@@ -405,7 +387,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                     "name": "ref",
                     "optional": false,
-                    "parent": [Circular],
                     "range": [
                       70,
                       73,
@@ -424,7 +405,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                   },
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     70,
                     94,
@@ -442,7 +422,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     "line": 3,
                   },
                 },
-                "parent": [Circular],
                 "range": [
                   65,
                   94,
@@ -462,7 +441,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                 "line": 3,
               },
             },
-            "parent": [Circular],
             "range": [
               59,
               94,
@@ -487,7 +465,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                   },
                   "name": "rArr",
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     103,
                     107,
@@ -508,7 +485,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                           "line": 4,
                         },
                       },
-                      "parent": [Circular],
                       "properties": [
                         {
                           "computed": false,
@@ -526,7 +502,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                             "name": "length",
                             "optional": false,
-                            "parent": [Circular],
                             "range": [
                               123,
                               129,
@@ -547,7 +522,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                           },
                           "method": false,
                           "optional": false,
-                          "parent": [Circular],
                           "range": [
                             123,
                             133,
@@ -565,7 +539,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                                 "line": 4,
                               },
                             },
-                            "parent": [Circular],
                             "range": [
                               131,
                               133,
@@ -613,7 +586,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               },
                               "name": "Math",
                               "optional": false,
-                              "parent": [Circular],
                               "range": [
                                 143,
                                 147,
@@ -622,7 +594,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               "typeAnnotation": undefined,
                             },
                             "optional": false,
-                            "parent": [Circular],
                             "property": {
                               "decorators": [],
                               "loc": {
@@ -637,7 +608,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               },
                               "name": "random",
                               "optional": false,
-                              "parent": [Circular],
                               "range": [
                                 148,
                                 154,
@@ -662,7 +632,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                           },
                           "optional": false,
-                          "parent": [Circular],
                           "range": [
                             143,
                             156,
@@ -681,7 +650,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                           },
                         },
                         "operator": "*",
-                        "parent": [Circular],
                         "range": [
                           143,
                           162,
@@ -697,7 +665,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               "line": 4,
                             },
                           },
-                          "parent": [Circular],
                           "range": [
                             159,
                             162,
@@ -722,7 +689,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                         },
                       },
                       "params": [],
-                      "parent": [Circular],
                       "range": [
                         137,
                         162,
@@ -758,7 +724,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                       },
                       "name": "Array",
                       "optional": false,
-                      "parent": [Circular],
                       "range": [
                         110,
                         115,
@@ -767,7 +732,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                       "typeAnnotation": undefined,
                     },
                     "optional": false,
-                    "parent": [Circular],
                     "property": {
                       "decorators": [],
                       "loc": {
@@ -782,7 +746,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                       },
                       "name": "from",
                       "optional": false,
-                      "parent": [Circular],
                       "range": [
                         116,
                         120,
@@ -807,7 +770,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                   },
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     110,
                     163,
@@ -825,7 +787,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     "line": 4,
                   },
                 },
-                "parent": [Circular],
                 "range": [
                   103,
                   163,
@@ -845,7 +806,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                 "line": 4,
               },
             },
-            "parent": [Circular],
             "range": [
               97,
               163,
@@ -870,7 +830,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                   },
                   "name": "f1",
                   "optional": false,
-                  "parent": [Circular],
                   "range": [
                     172,
                     174,
@@ -897,7 +856,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                                   "line": 6,
                                 },
                               },
-                              "parent": [Circular],
                               "range": [
                                 201,
                                 212,
@@ -933,7 +891,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               },
                               "name": "console",
                               "optional": false,
-                              "parent": [Circular],
                               "range": [
                                 189,
                                 196,
@@ -942,7 +899,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               "typeAnnotation": undefined,
                             },
                             "optional": false,
-                            "parent": [Circular],
                             "property": {
                               "decorators": [],
                               "loc": {
@@ -957,7 +913,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                               },
                               "name": "log",
                               "optional": false,
-                              "parent": [Circular],
                               "range": [
                                 197,
                                 200,
@@ -982,7 +937,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             },
                           },
                           "optional": false,
-                          "parent": [Circular],
                           "range": [
                             189,
                             213,
@@ -1000,7 +954,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                             "line": 6,
                           },
                         },
-                        "parent": [Circular],
                         "range": [
                           189,
                           213,
@@ -1018,7 +971,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                         "line": 5,
                       },
                     },
-                    "parent": [Circular],
                     "range": [
                       183,
                       217,
@@ -1039,7 +991,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     },
                   },
                   "params": [],
-                  "parent": [Circular],
                   "range": [
                     177,
                     217,
@@ -1058,7 +1009,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                     "line": 5,
                   },
                 },
-                "parent": [Circular],
                 "range": [
                   172,
                   217,
@@ -1078,7 +1028,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                 "line": 5,
               },
             },
-            "parent": [Circular],
             "range": [
               166,
               217,
@@ -1086,7 +1035,105 @@ exports[`Vine ESLint parser test > parse result 1`] = `
             "type": "VariableDeclaration",
           },
           {
-            "argument": null,
+            "argument": {
+              "loc": {
+                "end": {
+                  "column": 3,
+                  "line": 18,
+                },
+                "start": {
+                  "column": 9,
+                  "line": 9,
+                },
+              },
+              "quasi": {
+                "expressions": [],
+                "loc": {
+                  "end": {
+                    "column": 3,
+                    "line": 18,
+                  },
+                  "start": {
+                    "column": 13,
+                    "line": 9,
+                  },
+                },
+                "quasis": [
+                  {
+                    "loc": {
+                      "end": {
+                        "column": 3,
+                        "line": 18,
+                      },
+                      "start": {
+                        "column": 13,
+                        "line": 9,
+                      },
+                    },
+                    "range": [
+                      232,
+                      547,
+                    ],
+                    "tail": true,
+                    "type": "TemplateElement",
+                    "value": {
+                      "cooked": "
+    <div class=\\"my-comp\\" :class=\\"r1 > 5 ? 'bg-red' : 'bg-blue'\\">
+      <p v-if=\\"r2 > 50\\">r2 is greater than 50</p>
+      <p v-else>r2 is less than 50</p>
+      <ul class=\\"num-list\\">
+        <li v-for=\\"r of rArr\\" :key=\\"r\\">{{ r }}</li>
+      </ul>
+      <button @click=\\"f1\\">Log something ...</button>
+    </div>
+  ",
+                      "raw": "
+    <div class=\\"my-comp\\" :class=\\"r1 > 5 ? 'bg-red' : 'bg-blue'\\">
+      <p v-if=\\"r2 > 50\\">r2 is greater than 50</p>
+      <p v-else>r2 is less than 50</p>
+      <ul class=\\"num-list\\">
+        <li v-for=\\"r of rArr\\" :key=\\"r\\">{{ r }}</li>
+      </ul>
+      <button @click=\\"f1\\">Log something ...</button>
+    </div>
+  ",
+                    },
+                  },
+                ],
+                "range": [
+                  232,
+                  547,
+                ],
+                "type": "TemplateLiteral",
+              },
+              "range": [
+                228,
+                547,
+              ],
+              "tag": {
+                "decorators": [],
+                "loc": {
+                  "end": {
+                    "column": 13,
+                    "line": 9,
+                  },
+                  "start": {
+                    "column": 9,
+                    "line": 9,
+                  },
+                },
+                "name": "vine",
+                "optional": false,
+                "range": [
+                  228,
+                  232,
+                ],
+                "type": "Identifier",
+                "typeAnnotation": undefined,
+              },
+              "type": "TaggedTemplateExpression",
+              "typeArguments": undefined,
+            },
             "loc": {
               "end": {
                 "column": 3,
@@ -1097,10 +1144,9 @@ exports[`Vine ESLint parser test > parse result 1`] = `
                 "line": 9,
               },
             },
-            "parent": [Circular],
             "range": [
-              223,
-              549,
+              221,
+              547,
             ],
             "type": "ReturnStatement",
           },
@@ -1115,10 +1161,9 @@ exports[`Vine ESLint parser test > parse result 1`] = `
             "line": 1,
           },
         },
-        "parent": [Circular],
         "range": [
           18,
-          551,
+          549,
         ],
         "type": "BlockStatement",
       },
@@ -1139,7 +1184,6 @@ exports[`Vine ESLint parser test > parse result 1`] = `
         },
         "name": "MyComp",
         "optional": false,
-        "parent": [Circular],
         "range": [
           9,
           15,
@@ -1158,17 +1202,16 @@ exports[`Vine ESLint parser test > parse result 1`] = `
         },
       },
       "params": [],
-      "parent": [Circular],
       "range": [
         0,
-        551,
+        549,
       ],
       "returnType": undefined,
       "type": "FunctionDeclaration",
       "typeParameters": undefined,
     },
   ],
-  "comments": [],
+  "comments": undefined,
   "loc": {
     "end": {
       "column": 1,
@@ -1179,1292 +1222,946 @@ exports[`Vine ESLint parser test > parse result 1`] = `
       "line": 1,
     },
   },
-  "parent": undefined,
   "range": [
     0,
-    551,
+    549,
   ],
   "sourceType": "module",
-  "tokens": [
-    {
-      "loc": {
-        "end": {
-          "column": 8,
-          "line": 1,
-        },
-        "start": {
-          "column": 0,
-          "line": 1,
-        },
-      },
-      "range": [
-        0,
-        8,
-      ],
-      "type": "Keyword",
-      "value": "function",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 1,
-        },
-        "start": {
-          "column": 9,
-          "line": 1,
-        },
-      },
-      "range": [
-        9,
-        15,
-      ],
-      "type": "Identifier",
-      "value": "MyComp",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 1,
-        },
-        "start": {
-          "column": 15,
-          "line": 1,
-        },
-      },
-      "range": [
-        15,
-        16,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 17,
-          "line": 1,
-        },
-        "start": {
-          "column": 16,
-          "line": 1,
-        },
-      },
-      "range": [
-        16,
-        17,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 19,
-          "line": 1,
-        },
-        "start": {
-          "column": 18,
-          "line": 1,
-        },
-      },
-      "range": [
-        18,
-        19,
-      ],
-      "type": "Punctuator",
-      "value": "{",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 2,
-        },
-        "start": {
-          "column": 2,
-          "line": 2,
-        },
-      },
-      "range": [
-        22,
-        27,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 2,
-        },
-        "start": {
-          "column": 8,
-          "line": 2,
-        },
-      },
-      "range": [
-        28,
-        30,
-      ],
-      "type": "Identifier",
-      "value": "r1",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 2,
-        },
-        "start": {
-          "column": 11,
-          "line": 2,
-        },
-      },
-      "range": [
-        31,
-        32,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 2,
-        },
-        "start": {
-          "column": 13,
-          "line": 2,
-        },
-      },
-      "range": [
-        33,
-        36,
-      ],
-      "type": "Identifier",
-      "value": "ref",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 17,
-          "line": 2,
-        },
-        "start": {
-          "column": 16,
-          "line": 2,
-        },
-      },
-      "range": [
-        36,
-        37,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 2,
-        },
-        "start": {
-          "column": 17,
-          "line": 2,
-        },
-      },
-      "range": [
-        37,
-        41,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 22,
-          "line": 2,
-        },
-        "start": {
-          "column": 21,
-          "line": 2,
-        },
-      },
-      "range": [
-        41,
-        42,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 2,
-        },
-        "start": {
-          "column": 22,
-          "line": 2,
-        },
-      },
-      "range": [
-        42,
-        48,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 2,
-        },
-        "start": {
-          "column": 28,
-          "line": 2,
-        },
-      },
-      "range": [
-        48,
-        49,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 30,
-          "line": 2,
-        },
-        "start": {
-          "column": 29,
-          "line": 2,
-        },
-      },
-      "range": [
-        49,
-        50,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 32,
-          "line": 2,
-        },
-        "start": {
-          "column": 31,
-          "line": 2,
-        },
-      },
-      "range": [
-        51,
-        52,
-      ],
-      "type": "Punctuator",
-      "value": "*",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 35,
-          "line": 2,
-        },
-        "start": {
-          "column": 33,
-          "line": 2,
-        },
-      },
-      "range": [
-        53,
-        55,
-      ],
-      "type": "Numeric",
-      "value": "10",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 36,
-          "line": 2,
-        },
-        "start": {
-          "column": 35,
-          "line": 2,
-        },
-      },
-      "range": [
-        55,
-        56,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 3,
-        },
-        "start": {
-          "column": 2,
-          "line": 3,
-        },
-      },
-      "range": [
-        59,
-        64,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 3,
-        },
-        "start": {
-          "column": 8,
-          "line": 3,
-        },
-      },
-      "range": [
-        65,
-        67,
-      ],
-      "type": "Identifier",
-      "value": "r2",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 3,
-        },
-        "start": {
-          "column": 11,
-          "line": 3,
-        },
-      },
-      "range": [
-        68,
-        69,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 3,
-        },
-        "start": {
-          "column": 13,
-          "line": 3,
-        },
-      },
-      "range": [
-        70,
-        73,
-      ],
-      "type": "Identifier",
-      "value": "ref",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 17,
-          "line": 3,
-        },
-        "start": {
-          "column": 16,
-          "line": 3,
-        },
-      },
-      "range": [
-        73,
-        74,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 3,
-        },
-        "start": {
-          "column": 17,
-          "line": 3,
-        },
-      },
-      "range": [
-        74,
-        78,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 22,
-          "line": 3,
-        },
-        "start": {
-          "column": 21,
-          "line": 3,
-        },
-      },
-      "range": [
-        78,
-        79,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 3,
-        },
-        "start": {
-          "column": 22,
-          "line": 3,
-        },
-      },
-      "range": [
-        79,
-        85,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 3,
-        },
-        "start": {
-          "column": 28,
-          "line": 3,
-        },
-      },
-      "range": [
-        85,
-        86,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 30,
-          "line": 3,
-        },
-        "start": {
-          "column": 29,
-          "line": 3,
-        },
-      },
-      "range": [
-        86,
-        87,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 32,
-          "line": 3,
-        },
-        "start": {
-          "column": 31,
-          "line": 3,
-        },
-      },
-      "range": [
-        88,
-        89,
-      ],
-      "type": "Punctuator",
-      "value": "*",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 36,
-          "line": 3,
-        },
-        "start": {
-          "column": 33,
-          "line": 3,
-        },
-      },
-      "range": [
-        90,
-        93,
-      ],
-      "type": "Numeric",
-      "value": "100",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 37,
-          "line": 3,
-        },
-        "start": {
-          "column": 36,
-          "line": 3,
-        },
-      },
-      "range": [
-        93,
-        94,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 4,
-        },
-        "start": {
-          "column": 2,
-          "line": 4,
-        },
-      },
-      "range": [
-        97,
-        102,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 4,
-        },
-        "start": {
-          "column": 8,
-          "line": 4,
-        },
-      },
-      "range": [
-        103,
-        107,
-      ],
-      "type": "Identifier",
-      "value": "rArr",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 14,
-          "line": 4,
-        },
-        "start": {
-          "column": 13,
-          "line": 4,
-        },
-      },
-      "range": [
-        108,
-        109,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 20,
-          "line": 4,
-        },
-        "start": {
-          "column": 15,
-          "line": 4,
-        },
-      },
-      "range": [
-        110,
-        115,
-      ],
-      "type": "Identifier",
-      "value": "Array",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 4,
-        },
-        "start": {
-          "column": 20,
-          "line": 4,
-        },
-      },
-      "range": [
-        115,
-        116,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 25,
-          "line": 4,
-        },
-        "start": {
-          "column": 21,
-          "line": 4,
-        },
-      },
-      "range": [
-        116,
-        120,
-      ],
-      "type": "Identifier",
-      "value": "from",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 4,
-        },
-        "start": {
-          "column": 25,
-          "line": 4,
-        },
-      },
-      "range": [
-        120,
-        121,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 4,
-        },
-        "start": {
-          "column": 26,
-          "line": 4,
-        },
-      },
-      "range": [
-        121,
-        122,
-      ],
-      "type": "Punctuator",
-      "value": "{",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 34,
-          "line": 4,
-        },
-        "start": {
-          "column": 28,
-          "line": 4,
-        },
-      },
-      "range": [
-        123,
-        129,
-      ],
-      "type": "Identifier",
-      "value": "length",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 35,
-          "line": 4,
-        },
-        "start": {
-          "column": 34,
-          "line": 4,
-        },
-      },
-      "range": [
-        129,
-        130,
-      ],
-      "type": "Punctuator",
-      "value": ":",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 38,
-          "line": 4,
-        },
-        "start": {
-          "column": 36,
-          "line": 4,
-        },
-      },
-      "range": [
-        131,
-        133,
-      ],
-      "type": "Numeric",
-      "value": "10",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 40,
-          "line": 4,
-        },
-        "start": {
-          "column": 39,
-          "line": 4,
-        },
-      },
-      "range": [
-        134,
-        135,
-      ],
-      "type": "Punctuator",
-      "value": "}",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 41,
-          "line": 4,
-        },
-        "start": {
-          "column": 40,
-          "line": 4,
-        },
-      },
-      "range": [
-        135,
-        136,
-      ],
-      "type": "Punctuator",
-      "value": ",",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 43,
-          "line": 4,
-        },
-        "start": {
-          "column": 42,
-          "line": 4,
-        },
-      },
-      "range": [
-        137,
-        138,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 44,
-          "line": 4,
-        },
-        "start": {
-          "column": 43,
-          "line": 4,
-        },
-      },
-      "range": [
-        138,
-        139,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 47,
-          "line": 4,
-        },
-        "start": {
-          "column": 45,
-          "line": 4,
-        },
-      },
-      "range": [
-        140,
-        142,
-      ],
-      "type": "Punctuator",
-      "value": "=>",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 52,
-          "line": 4,
-        },
-        "start": {
-          "column": 48,
-          "line": 4,
-        },
-      },
-      "range": [
-        143,
-        147,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 53,
-          "line": 4,
-        },
-        "start": {
-          "column": 52,
-          "line": 4,
-        },
-      },
-      "range": [
-        147,
-        148,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 59,
-          "line": 4,
-        },
-        "start": {
-          "column": 53,
-          "line": 4,
-        },
-      },
-      "range": [
-        148,
-        154,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 60,
-          "line": 4,
-        },
-        "start": {
-          "column": 59,
-          "line": 4,
-        },
-      },
-      "range": [
-        154,
-        155,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 61,
-          "line": 4,
-        },
-        "start": {
-          "column": 60,
-          "line": 4,
-        },
-      },
-      "range": [
-        155,
-        156,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 63,
-          "line": 4,
-        },
-        "start": {
-          "column": 62,
-          "line": 4,
-        },
-      },
-      "range": [
-        157,
-        158,
-      ],
-      "type": "Punctuator",
-      "value": "*",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 67,
-          "line": 4,
-        },
-        "start": {
-          "column": 64,
-          "line": 4,
-        },
-      },
-      "range": [
-        159,
-        162,
-      ],
-      "type": "Numeric",
-      "value": "100",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 68,
-          "line": 4,
-        },
-        "start": {
-          "column": 67,
-          "line": 4,
-        },
-      },
-      "range": [
-        162,
-        163,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 5,
-        },
-        "start": {
-          "column": 2,
-          "line": 5,
-        },
-      },
-      "range": [
-        166,
-        171,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 5,
-        },
-        "start": {
-          "column": 8,
-          "line": 5,
-        },
-      },
-      "range": [
-        172,
-        174,
-      ],
-      "type": "Identifier",
-      "value": "f1",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 5,
-        },
-        "start": {
-          "column": 11,
-          "line": 5,
-        },
-      },
-      "range": [
-        175,
-        176,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 14,
-          "line": 5,
-        },
-        "start": {
-          "column": 13,
-          "line": 5,
-        },
-      },
-      "range": [
-        177,
-        178,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 5,
-        },
-        "start": {
-          "column": 14,
-          "line": 5,
-        },
-      },
-      "range": [
-        178,
-        179,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 18,
-          "line": 5,
-        },
-        "start": {
-          "column": 16,
-          "line": 5,
-        },
-      },
-      "range": [
-        180,
-        182,
-      ],
-      "type": "Punctuator",
-      "value": "=>",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 20,
-          "line": 5,
-        },
-        "start": {
-          "column": 19,
-          "line": 5,
-        },
-      },
-      "range": [
-        183,
-        184,
-      ],
-      "type": "Punctuator",
-      "value": "{",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 11,
-          "line": 6,
-        },
-        "start": {
-          "column": 4,
-          "line": 6,
-        },
-      },
-      "range": [
-        189,
-        196,
-      ],
-      "type": "Identifier",
-      "value": "console",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 6,
-        },
-        "start": {
-          "column": 11,
-          "line": 6,
-        },
-      },
-      "range": [
-        196,
-        197,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 6,
-        },
-        "start": {
-          "column": 12,
-          "line": 6,
-        },
-      },
-      "range": [
-        197,
-        200,
-      ],
-      "type": "Identifier",
-      "value": "log",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 6,
-        },
-        "start": {
-          "column": 15,
-          "line": 6,
-        },
-      },
-      "range": [
-        200,
-        201,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 6,
-        },
-        "start": {
-          "column": 16,
-          "line": 6,
-        },
-      },
-      "range": [
-        201,
-        212,
-      ],
-      "type": "String",
-      "value": "'f1: hello'",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 6,
-        },
-        "start": {
-          "column": 27,
-          "line": 6,
-        },
-      },
-      "range": [
-        212,
-        213,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 3,
-          "line": 7,
-        },
-        "start": {
-          "column": 2,
-          "line": 7,
-        },
-      },
-      "range": [
-        216,
-        217,
-      ],
-      "type": "Punctuator",
-      "value": "}",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 8,
-          "line": 9,
-        },
-        "start": {
-          "column": 2,
-          "line": 9,
-        },
-      },
-      "range": [
-        223,
-        229,
-      ],
-      "type": "Keyword",
-      "value": "return",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 1,
-          "line": 19,
-        },
-        "start": {
-          "column": 0,
-          "line": 19,
-        },
-      },
-      "range": [
-        550,
-        551,
-      ],
-      "type": "Punctuator",
-      "value": "}",
-    },
-  ],
+  "tokens": undefined,
   "type": "Program",
 }
+`;
+
+exports[`Vine ESLint parser test > [DEV ONLY] Playground 2`] = `
+[
+  {
+    "loc": {
+      "end": {
+        "column": 4,
+        "line": 10,
+      },
+      "start": {
+        "column": 14,
+        "line": 9,
+      },
+    },
+    "range": [
+      233,
+      238,
+    ],
+    "type": "Text",
+    "value": "
+    ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 14,
+              "line": 2,
+            },
+            "start": {
+              "column": 9,
+              "line": 2,
+            },
+          },
+          "name": "class",
+          "parent": [Circular],
+          "range": [
+            10,
+            15,
+          ],
+          "rawName": "class",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 24,
+            "line": 2,
+          },
+          "start": {
+            "column": 9,
+            "line": 2,
+          },
+        },
+        "parent": {},
+        "range": [
+          10,
+          25,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 24,
+              "line": 2,
+            },
+            "start": {
+              "column": 15,
+              "line": 2,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            16,
+            25,
+          ],
+          "type": "VLiteral",
+          "value": "my-comp",
+        },
+      },
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 31,
+              "line": 2,
+            },
+            "start": {
+              "column": 25,
+              "line": 2,
+            },
+          },
+          "name": ":class",
+          "parent": [Circular],
+          "range": [
+            26,
+            32,
+          ],
+          "rawName": ":class",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 63,
+            "line": 2,
+          },
+          "start": {
+            "column": 25,
+            "line": 2,
+          },
+        },
+        "parent": {},
+        "range": [
+          26,
+          64,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 63,
+              "line": 2,
+            },
+            "start": {
+              "column": 32,
+              "line": 2,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            33,
+            64,
+          ],
+          "type": "VLiteral",
+          "value": "r1 > 5 ? 'bg-red' : 'bg-blue'",
+        },
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 64,
+        "line": 10,
+      },
+      "start": {
+        "column": 4,
+        "line": 10,
+      },
+    },
+    "name": "div",
+    "range": [
+      238,
+      298,
+    ],
+    "rawName": "div",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 6,
+        "line": 11,
+      },
+      "start": {
+        "column": 64,
+        "line": 10,
+      },
+    },
+    "range": [
+      298,
+      305,
+    ],
+    "type": "Text",
+    "value": "
+      ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 13,
+              "line": 3,
+            },
+            "start": {
+              "column": 9,
+              "line": 3,
+            },
+          },
+          "name": "v-if",
+          "parent": [Circular],
+          "range": [
+            75,
+            79,
+          ],
+          "rawName": "v-if",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 23,
+            "line": 3,
+          },
+          "start": {
+            "column": 9,
+            "line": 3,
+          },
+        },
+        "parent": {},
+        "range": [
+          75,
+          89,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 23,
+              "line": 3,
+            },
+            "start": {
+              "column": 14,
+              "line": 3,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            80,
+            89,
+          ],
+          "type": "VLiteral",
+          "value": "r2 > 50",
+        },
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 24,
+        "line": 11,
+      },
+      "start": {
+        "column": 6,
+        "line": 11,
+      },
+    },
+    "name": "p",
+    "range": [
+      305,
+      323,
+    ],
+    "rawName": "p",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 45,
+        "line": 11,
+      },
+      "start": {
+        "column": 24,
+        "line": 11,
+      },
+    },
+    "range": [
+      323,
+      344,
+    ],
+    "type": "Text",
+    "value": "r2 is greater than 50",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 49,
+        "line": 11,
+      },
+      "start": {
+        "column": 45,
+        "line": 11,
+      },
+    },
+    "name": "p",
+    "range": [
+      344,
+      348,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 6,
+        "line": 12,
+      },
+      "start": {
+        "column": 49,
+        "line": 11,
+      },
+    },
+    "range": [
+      348,
+      355,
+    ],
+    "type": "Text",
+    "value": "
+      ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 15,
+              "line": 4,
+            },
+            "start": {
+              "column": 9,
+              "line": 4,
+            },
+          },
+          "name": "v-else",
+          "parent": [Circular],
+          "range": [
+            125,
+            131,
+          ],
+          "rawName": "v-else",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 15,
+            "line": 4,
+          },
+          "start": {
+            "column": 9,
+            "line": 4,
+          },
+        },
+        "parent": {},
+        "range": [
+          125,
+          131,
+        ],
+        "type": "VAttribute",
+        "value": null,
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 16,
+        "line": 12,
+      },
+      "start": {
+        "column": 6,
+        "line": 12,
+      },
+    },
+    "name": "p",
+    "range": [
+      355,
+      365,
+    ],
+    "rawName": "p",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 34,
+        "line": 12,
+      },
+      "start": {
+        "column": 16,
+        "line": 12,
+      },
+    },
+    "range": [
+      365,
+      383,
+    ],
+    "type": "Text",
+    "value": "r2 is less than 50",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 38,
+        "line": 12,
+      },
+      "start": {
+        "column": 34,
+        "line": 12,
+      },
+    },
+    "name": "p",
+    "range": [
+      383,
+      387,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 6,
+        "line": 13,
+      },
+      "start": {
+        "column": 38,
+        "line": 12,
+      },
+    },
+    "range": [
+      387,
+      394,
+    ],
+    "type": "Text",
+    "value": "
+      ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 15,
+              "line": 5,
+            },
+            "start": {
+              "column": 10,
+              "line": 5,
+            },
+          },
+          "name": "class",
+          "parent": [Circular],
+          "range": [
+            165,
+            170,
+          ],
+          "rawName": "class",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 26,
+            "line": 5,
+          },
+          "start": {
+            "column": 10,
+            "line": 5,
+          },
+        },
+        "parent": {},
+        "range": [
+          165,
+          181,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 26,
+              "line": 5,
+            },
+            "start": {
+              "column": 16,
+              "line": 5,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            171,
+            181,
+          ],
+          "type": "VLiteral",
+          "value": "num-list",
+        },
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 27,
+        "line": 13,
+      },
+      "start": {
+        "column": 6,
+        "line": 13,
+      },
+    },
+    "name": "ul",
+    "range": [
+      394,
+      415,
+    ],
+    "rawName": "ul",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 8,
+        "line": 14,
+      },
+      "start": {
+        "column": 27,
+        "line": 13,
+      },
+    },
+    "range": [
+      415,
+      424,
+    ],
+    "type": "Text",
+    "value": "
+        ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 17,
+              "line": 6,
+            },
+            "start": {
+              "column": 12,
+              "line": 6,
+            },
+          },
+          "name": "v-for",
+          "parent": [Circular],
+          "range": [
+            195,
+            200,
+          ],
+          "rawName": "v-for",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 29,
+            "line": 6,
+          },
+          "start": {
+            "column": 12,
+            "line": 6,
+          },
+        },
+        "parent": {},
+        "range": [
+          195,
+          212,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 29,
+              "line": 6,
+            },
+            "start": {
+              "column": 18,
+              "line": 6,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            201,
+            212,
+          ],
+          "type": "VLiteral",
+          "value": "r of rArr",
+        },
+      },
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 34,
+              "line": 6,
+            },
+            "start": {
+              "column": 30,
+              "line": 6,
+            },
+          },
+          "name": ":key",
+          "parent": [Circular],
+          "range": [
+            213,
+            217,
+          ],
+          "rawName": ":key",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 38,
+            "line": 6,
+          },
+          "start": {
+            "column": 30,
+            "line": 6,
+          },
+        },
+        "parent": {},
+        "range": [
+          213,
+          221,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 38,
+              "line": 6,
+            },
+            "start": {
+              "column": 35,
+              "line": 6,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            218,
+            221,
+          ],
+          "type": "VLiteral",
+          "value": "r",
+        },
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 39,
+        "line": 14,
+      },
+      "start": {
+        "column": 8,
+        "line": 14,
+      },
+    },
+    "name": "li",
+    "range": [
+      424,
+      455,
+    ],
+    "rawName": "li",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 46,
+        "line": 14,
+      },
+      "start": {
+        "column": 39,
+        "line": 14,
+      },
+    },
+    "range": [
+      455,
+      462,
+    ],
+    "type": "Text",
+    "value": "{{ r }}",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 51,
+        "line": 14,
+      },
+      "start": {
+        "column": 46,
+        "line": 14,
+      },
+    },
+    "name": "li",
+    "range": [
+      462,
+      467,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 6,
+        "line": 15,
+      },
+      "start": {
+        "column": 51,
+        "line": 14,
+      },
+    },
+    "range": [
+      467,
+      474,
+    ],
+    "type": "Text",
+    "value": "
+      ",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 11,
+        "line": 15,
+      },
+      "start": {
+        "column": 6,
+        "line": 15,
+      },
+    },
+    "name": "ul",
+    "range": [
+      474,
+      479,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 6,
+        "line": 16,
+      },
+      "start": {
+        "column": 11,
+        "line": 15,
+      },
+    },
+    "range": [
+      479,
+      486,
+    ],
+    "type": "Text",
+    "value": "
+      ",
+  },
+  {
+    "attributes": [
+      {
+        "directive": false,
+        "key": {
+          "loc": {
+            "end": {
+              "column": 20,
+              "line": 8,
+            },
+            "start": {
+              "column": 14,
+              "line": 8,
+            },
+          },
+          "name": "@click",
+          "parent": [Circular],
+          "range": [
+            261,
+            267,
+          ],
+          "rawName": "@click",
+          "type": "VIdentifier",
+        },
+        "loc": {
+          "end": {
+            "column": 25,
+            "line": 8,
+          },
+          "start": {
+            "column": 14,
+            "line": 8,
+          },
+        },
+        "parent": {},
+        "range": [
+          261,
+          272,
+        ],
+        "type": "VAttribute",
+        "value": {
+          "loc": {
+            "end": {
+              "column": 25,
+              "line": 8,
+            },
+            "start": {
+              "column": 21,
+              "line": 8,
+            },
+          },
+          "parent": [Circular],
+          "range": [
+            268,
+            272,
+          ],
+          "type": "VLiteral",
+          "value": "f1",
+        },
+      },
+    ],
+    "loc": {
+      "end": {
+        "column": 26,
+        "line": 16,
+      },
+      "start": {
+        "column": 6,
+        "line": 16,
+      },
+    },
+    "name": "button",
+    "range": [
+      486,
+      506,
+    ],
+    "rawName": "button",
+    "selfClosing": false,
+    "type": "StartTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 43,
+        "line": 16,
+      },
+      "start": {
+        "column": 26,
+        "line": 16,
+      },
+    },
+    "range": [
+      506,
+      523,
+    ],
+    "type": "Text",
+    "value": "Log something ...",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 52,
+        "line": 16,
+      },
+      "start": {
+        "column": 43,
+        "line": 16,
+      },
+    },
+    "name": "button",
+    "range": [
+      523,
+      532,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 4,
+        "line": 17,
+      },
+      "start": {
+        "column": 52,
+        "line": 16,
+      },
+    },
+    "range": [
+      532,
+      537,
+    ],
+    "type": "Text",
+    "value": "
+    ",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 10,
+        "line": 17,
+      },
+      "start": {
+        "column": 4,
+        "line": 17,
+      },
+    },
+    "name": "div",
+    "range": [
+      537,
+      543,
+    ],
+    "type": "EndTag",
+  },
+  {
+    "loc": {
+      "end": {
+        "column": 2,
+        "line": 18,
+      },
+      "start": {
+        "column": 10,
+        "line": 17,
+      },
+    },
+    "range": [
+      543,
+      546,
+    ],
+    "type": "Text",
+    "value": "
+  ",
+  },
+]
 `;

@@ -9,6 +9,7 @@ import type {
 } from '../ast'
 import { ParseError } from '../ast'
 import { debug } from '../common/debug'
+import type { VineESLintParserOptions } from '../types'
 import type { TokenType, Tokenizer, TokenizerState } from './tokenizer'
 
 const DUMMY_PARENT: any = Object.freeze({})
@@ -69,6 +70,7 @@ export interface Mustache extends HasLocation {
  */
 export class IntermediateTokenizer {
   private tokenizer: Tokenizer
+  private baseParserOptions: VineESLintParserOptions
   private currentToken: IntermediateToken | null
   private attribute: VAttribute | null
   private attributeNames: Set<string>
@@ -129,8 +131,9 @@ export class IntermediateTokenizer {
    * Initialize this intermediate tokenizer.
    * @param tokenizer The tokenizer.
    */
-  public constructor(tokenizer: Tokenizer) {
+  public constructor(tokenizer: Tokenizer, parserOptions: VineESLintParserOptions) {
     this.tokenizer = tokenizer
+    this.baseParserOptions = parserOptions
     this.currentToken = null
     this.attribute = null
     this.attributeNames = new Set<string>()

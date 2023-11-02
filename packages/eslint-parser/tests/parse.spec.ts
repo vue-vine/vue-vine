@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { parse } from '../index'
+import { typescriptBasicESLintParse } from '../src/parse'
+import { handleVineTemplateNode, processVineTemplateNode } from '../src/template/process-vine-template-node'
 
-const sampleSourceCode = `
+describe('Vine ESLint parser test', () => {
+  test('[DEV ONLY] Playground', () => {
+    const sampleSourceCode = `
 function MyComp() {
   const r1 = ref(Math.random() * 10)
   const r2 = ref(Math.random() * 100)
@@ -9,7 +12,7 @@ function MyComp() {
   const f1 = () => {
     console.log('f1: hello')
   }
-  
+
   return vine\`
     <div class="my-comp" :class="r1 > 5 ? 'bg-red' : 'bg-blue'">
       <p v-if="r2 > 50">r2 is greater than 50</p>
@@ -20,16 +23,30 @@ function MyComp() {
       <button @click="f1">Log something ...</button>
     </div>
   \`
-}
-`.trim()
+}`.trim()
 
-describe('Vine ESLint parser test', () => {
-  test('parse result', () => {
-    const ast = parse(sampleSourceCode, {
+    const { ast } = typescriptBasicESLintParse(sampleSourceCode, {
       ecmaVersion: 'latest',
       sourceType: 'module',
     })
-
     expect(ast).toMatchSnapshot()
+
+    const procResult = processVineTemplateNode(
+      ast,
+      {},
+      handleVineTemplateNode,
+    )
+    if (procResult) {
+      const {
+        templateStartLine,
+        templateStartColumn,
+        templateStartOffset,
+        templateEndOffset,
+        inTemplateTokenList,
+      } = procResult
+      expect([templateStartOffset, templateEndOffset]).toEqual([233, 546])
+      expect([templateStartLine, templateStartColumn]).toEqual([9, 14])
+      expect(inTemplateTokenList).toMatchSnapshot()
+    }
   })
 })
