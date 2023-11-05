@@ -1,4 +1,5 @@
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
+import type { TSESTree } from '@typescript-eslint/types'
 import type { ParseForESLintResult, VineESLintParserOptions } from './types'
 import { handleVineTemplateNode, processVineTemplateNode } from './template/process-vine-template-node'
 
@@ -12,6 +13,8 @@ export function typescriptBasicESLintParse(
       ...parserOptions,
       range: true,
       loc: true,
+      tokens: true,
+      comment: true,
     },
   )
 }
@@ -31,12 +34,17 @@ export function runParse(
     handleVineTemplateNode,
   )
   if (procResult) {
-    // Todo ...
-    // const {
+    const {
     //   templateStartOffset,
     //   templateEndOffset,
-    //   inTemplateTokenList,
-    // } = procResult
+      templateBasicTokenList,
+    } = procResult
+
+    ast.tokens?.push(...(templateBasicTokenList as TSESTree.Token[]))
+    // After appending Vine template tokens, sort tokens by Token.range[0].
+    ast.tokens?.sort((a, b) => a.range[0] - b.range[0])
+
+    // Todo ...
   }
 
   return {

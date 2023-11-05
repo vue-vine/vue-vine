@@ -1,6 +1,7 @@
 import { simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
 import type { TSESTree } from '@typescript-eslint/typescript-estree'
 import type { ParseForESLintResult, VineESLintParserOptions } from '../types'
+import type { Token } from '../ast'
 import { Tokenizer } from './tokenizer'
 import type { IntermediateToken } from './intermediate-tokenizer'
 import { IntermediateTokenizer } from './intermediate-tokenizer'
@@ -74,14 +75,17 @@ export function handleVineTemplateNode(
 
   const baseTokenizer = new Tokenizer(templateRawContent)
   const intermediateTokenizer = new IntermediateTokenizer(baseTokenizer, parserOptions)
-  const inTemplateTokenList: IntermediateToken[] = []
-  let token: IntermediateToken | null = null
+  const templateIntermediateTokenList: IntermediateToken[] = []
+
   while (true) {
-    token = intermediateTokenizer.nextToken()
+    const token = intermediateTokenizer.nextToken()
     if (token == null) {
       break
     }
+    templateIntermediateTokenList.push(token)
+  }
 
+  const templateBasicTokenList: Token[] = intermediateTokenizer.tokens.map((token) => {
     // Because the output token position is based on the start of the template,
     // but the final expected token requires accurate offset to the source code!
     token.range[0] += templateStartOffset
@@ -106,14 +110,14 @@ export function handleVineTemplateNode(
         : token.loc.end.column
     )
 
-    inTemplateTokenList.push(token)
-  }
+    return token
+  })
 
   return {
     templateStartLine,
     templateStartColumn,
     templateStartOffset,
     templateEndOffset,
-    inTemplateTokenList,
+    templateBasicTokenList,
   }
 }

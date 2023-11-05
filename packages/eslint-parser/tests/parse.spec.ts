@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import type { TSESTree } from '@typescript-eslint/types'
 import { typescriptBasicESLintParse } from '../src/parse'
 import { handleVineTemplateNode, processVineTemplateNode } from '../src/template/process-vine-template-node'
 
@@ -29,7 +30,6 @@ function MyComp() {
       ecmaVersion: 'latest',
       sourceType: 'module',
     })
-    expect(ast).toMatchSnapshot()
 
     const procResult = processVineTemplateNode(
       ast,
@@ -42,11 +42,15 @@ function MyComp() {
         templateStartColumn,
         templateStartOffset,
         templateEndOffset,
-        inTemplateTokenList,
+        templateBasicTokenList,
       } = procResult
       expect([templateStartOffset, templateEndOffset]).toEqual([233, 546])
       expect([templateStartLine, templateStartColumn]).toEqual([9, 14])
-      expect(inTemplateTokenList).toMatchSnapshot()
+
+      ast.tokens?.push(...(templateBasicTokenList as TSESTree.Token[]))
+      // After appending Vine template tokens, sort tokens by Token.range[0].
+      ast.tokens?.sort((a, b) => a.range[0] - b.range[0])
+      expect(ast.tokens).toMatchSnapshot()
     }
   })
 })
