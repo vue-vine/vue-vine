@@ -1,3 +1,4 @@
+import type { TSESTree } from '@typescript-eslint/types'
 import type { ParseError } from './errors'
 import type { HasLocation } from './locations'
 import type { Token } from './tokens'
@@ -919,8 +920,8 @@ export interface VElement extends HasLocation, HasParent {
 /**
  * Root nodes.
  */
-export interface VTemplateRoot extends HasLocation, HasParent {
+export interface VTemplateRoot extends HasLocation {
   type: 'VTemplateRoot'
-  parent: null
+  parent: TSESTree.Node | null
   children: (VElement | VText | VExpressionContainer)[]
 }

@@ -7,3 +7,12 @@ export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
 export interface VineESLintParserOptions extends ParserOptions {
   // ...To be continued
 }
+
+export interface VineTemplatePositionInfo {
+  templateStartLine: number
+  templateStartColumn: number
+  templateStartOffset: number
+  templateEndOffset: number
+  templateEndLine: number
+  templateEndColumn: number
+}

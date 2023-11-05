@@ -38,14 +38,19 @@ function MyComp() {
     )
     if (procResult) {
       const {
-        templateStartLine,
-        templateStartColumn,
-        templateStartOffset,
-        templateEndOffset,
+        templatePositionInfo,
         templateBasicTokenList,
       } = procResult
-      expect([templateStartOffset, templateEndOffset]).toEqual([233, 546])
-      expect([templateStartLine, templateStartColumn]).toEqual([9, 14])
+      expect(templatePositionInfo).toMatchInlineSnapshot(`
+        {
+          "templateEndColumn": 2,
+          "templateEndLine": 18,
+          "templateEndOffset": 546,
+          "templateStartColumn": 14,
+          "templateStartLine": 9,
+          "templateStartOffset": 233,
+        }
+      `)
 
       ast.tokens?.push(...(templateBasicTokenList as TSESTree.Token[]))
       // After appending Vine template tokens, sort tokens by Token.range[0].

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
+exports[`Vine ESLint parser test > [DEV ONLY] Playground 2`] = `
 [
   {
     "loc": {
@@ -1266,11 +1266,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 4,
-        "line": 10,
+        "line": 18,
       },
       "start": {
         "column": 14,
-        "line": 9,
+        "line": 17,
       },
     },
     "range": [
@@ -1289,7 +1289,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 4,
-        "line": 10,
+        "line": 18,
       },
     },
     "range": [
@@ -1411,7 +1411,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 64,
-        "line": 10,
+        "line": 18,
       },
       "start": {
         "column": 63,
@@ -1429,11 +1429,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 6,
-        "line": 11,
+        "line": 19,
       },
       "start": {
         "column": 64,
-        "line": 10,
+        "line": 18,
       },
     },
     "range": [
@@ -1452,7 +1452,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 6,
-        "line": 11,
+        "line": 19,
       },
     },
     "range": [
@@ -1520,7 +1520,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 24,
-        "line": 11,
+        "line": 19,
       },
       "start": {
         "column": 23,
@@ -1542,7 +1542,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 24,
-        "line": 11,
+        "line": 19,
       },
     },
     "range": [
@@ -1682,7 +1682,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 45,
-        "line": 11,
+        "line": 19,
       },
       "start": {
         "column": 43,
@@ -1704,7 +1704,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 45,
-        "line": 11,
+        "line": 19,
       },
     },
     "range": [
@@ -1718,7 +1718,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 49,
-        "line": 11,
+        "line": 19,
       },
       "start": {
         "column": 48,
@@ -1736,11 +1736,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 6,
-        "line": 12,
+        "line": 20,
       },
       "start": {
         "column": 49,
-        "line": 11,
+        "line": 19,
       },
     },
     "range": [
@@ -1759,7 +1759,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 6,
-        "line": 12,
+        "line": 20,
       },
     },
     "range": [
@@ -1791,7 +1791,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 16,
-        "line": 12,
+        "line": 20,
       },
       "start": {
         "column": 15,
@@ -1813,7 +1813,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 16,
-        "line": 12,
+        "line": 20,
       },
     },
     "range": [
@@ -1953,7 +1953,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 34,
-        "line": 12,
+        "line": 20,
       },
       "start": {
         "column": 32,
@@ -1975,7 +1975,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 34,
-        "line": 12,
+        "line": 20,
       },
     },
     "range": [
@@ -1989,7 +1989,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 38,
-        "line": 12,
+        "line": 20,
       },
       "start": {
         "column": 37,
@@ -2007,11 +2007,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 6,
-        "line": 13,
+        "line": 21,
       },
       "start": {
         "column": 38,
-        "line": 12,
+        "line": 20,
       },
     },
     "range": [
@@ -2030,7 +2030,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 6,
-        "line": 13,
+        "line": 21,
       },
     },
     "range": [
@@ -2098,7 +2098,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 27,
-        "line": 13,
+        "line": 21,
       },
       "start": {
         "column": 26,
@@ -2116,11 +2116,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 8,
-        "line": 14,
+        "line": 22,
       },
       "start": {
         "column": 27,
-        "line": 13,
+        "line": 21,
       },
     },
     "range": [
@@ -2139,7 +2139,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 8,
-        "line": 14,
+        "line": 22,
       },
     },
     "range": [
@@ -2261,7 +2261,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 39,
-        "line": 14,
+        "line": 22,
       },
       "start": {
         "column": 38,
@@ -2283,7 +2283,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 39,
-        "line": 14,
+        "line": 22,
       },
     },
     "range": [
@@ -2351,7 +2351,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 46,
-        "line": 14,
+        "line": 22,
       },
       "start": {
         "column": 44,
@@ -2373,7 +2373,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 46,
-        "line": 14,
+        "line": 22,
       },
     },
     "range": [
@@ -2387,7 +2387,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 51,
-        "line": 14,
+        "line": 22,
       },
       "start": {
         "column": 50,
@@ -2405,11 +2405,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 6,
-        "line": 15,
+        "line": 23,
       },
       "start": {
         "column": 51,
-        "line": 14,
+        "line": 22,
       },
     },
     "range": [
@@ -2428,7 +2428,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 6,
-        "line": 15,
+        "line": 23,
       },
     },
     "range": [
@@ -2442,7 +2442,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 11,
-        "line": 15,
+        "line": 23,
       },
       "start": {
         "column": 10,
@@ -2460,11 +2460,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 6,
-        "line": 16,
+        "line": 24,
       },
       "start": {
         "column": 11,
-        "line": 15,
+        "line": 23,
       },
     },
     "range": [
@@ -2483,7 +2483,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 6,
-        "line": 16,
+        "line": 24,
       },
     },
     "range": [
@@ -2551,7 +2551,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 26,
-        "line": 16,
+        "line": 24,
       },
       "start": {
         "column": 25,
@@ -2573,7 +2573,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 26,
-        "line": 16,
+        "line": 24,
       },
     },
     "range": [
@@ -2641,7 +2641,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 43,
-        "line": 16,
+        "line": 24,
       },
       "start": {
         "column": 40,
@@ -2663,7 +2663,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 43,
-        "line": 16,
+        "line": 24,
       },
     },
     "range": [
@@ -2677,7 +2677,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 52,
-        "line": 16,
+        "line": 24,
       },
       "start": {
         "column": 51,
@@ -2695,11 +2695,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 4,
-        "line": 17,
+        "line": 25,
       },
       "start": {
         "column": 52,
-        "line": 16,
+        "line": 24,
       },
     },
     "range": [
@@ -2718,7 +2718,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
       },
       "start": {
         "column": 4,
-        "line": 17,
+        "line": 25,
       },
     },
     "range": [
@@ -2732,7 +2732,7 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 10,
-        "line": 17,
+        "line": 25,
       },
       "start": {
         "column": 9,
@@ -2750,11 +2750,11 @@ exports[`Vine ESLint parser test > [DEV ONLY] Playground 1`] = `
     "loc": {
       "end": {
         "column": 2,
-        "line": 18,
+        "line": 26,
       },
       "start": {
         "column": 10,
-        "line": 17,
+        "line": 25,
       },
     },
     "range": [
