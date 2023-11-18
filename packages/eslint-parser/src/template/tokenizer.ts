@@ -1787,7 +1787,7 @@ export class Tokenizer {
 
   /**
    * https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
-   * @param cp The current code point.
+   * @param _cp The current code point.
    * @returns The next state.
    */
   protected NUMERIC_CHARACTER_REFERENCE_END(_cp: number): TokenizerState {

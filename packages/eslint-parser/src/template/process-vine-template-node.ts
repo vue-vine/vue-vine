@@ -1,15 +1,15 @@
 import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
-import type { ParseForESLintResult, VineESLintParserOptions } from '../types'
+import type { ParseForESLintResult, VineTemplatePositionInfo } from '../types'
 import type { Token } from '../ast'
-import { Tokenizer } from './tokenizer'
 import type { IntermediateToken } from './intermediate-tokenizer'
-import { IntermediateTokenizer } from './intermediate-tokenizer'
 
-function modifyTokenPositionByTemplateOffset<T extends Token | IntermediateToken>(
+export function modifyTokenPositionByTemplateOffset<T extends Token | IntermediateToken>(
   token: T,
-  templateStartLine: number,
-  templateStartColumn: number,
-  templateStartOffset: number,
+  {
+    templateStartOffset,
+    templateStartLine,
+    templateStartColumn,
+  }: VineTemplatePositionInfo,
 ) {
   // Because the output token position is based on the start of the template,
   // but the final expected token requires accurate offset to the source code!
@@ -34,18 +34,10 @@ function modifyTokenPositionByTemplateOffset<T extends Token | IntermediateToken
       ? templateStartColumn + token.loc.end.column
       : token.loc.end.column
   )
-
-  return token
 }
 
-export function processVineTemplateNode<T>(
+export function extractVineTemplateNode(
   ast: ParseForESLintResult['ast'],
-  parserOptions: VineESLintParserOptions,
-  handler: (
-    templateNode: TSESTree.TaggedTemplateExpression,
-    parentOfTemplate: TSESTree.Node | null,
-    parserOptions: VineESLintParserOptions,
-  ) => T,
 ) {
   // Find all tagged template expressions which are tagged with `vine`.
   let templateNode: TSESTree.TaggedTemplateExpression | null = null
@@ -91,17 +83,14 @@ export function processVineTemplateNode<T>(
     return
   }
 
-  return handler(
-    templateNode,
+  return {
     parentOfTemplate,
-    parserOptions,
-  )
+    templateNode,
+  }
 }
 
-export function handleVineTemplateNode(
+export function prepareTemplate(
   templateNode: TSESTree.TaggedTemplateExpression,
-  parentOfTemplate: TSESTree.Node | null,
-  parserOptions: VineESLintParserOptions,
 ) {
   const { quasi: { quasis } } = templateNode
 
@@ -115,44 +104,6 @@ export function handleVineTemplateNode(
   const templateEndColumn = templateRawNode.loc.end.column - 1 // -1 to move over the last quote.
   const templateRawContent = templateRawNode.value.raw
 
-  const baseTokenizer = new Tokenizer(templateRawContent)
-  const intermediateTokenizer = new IntermediateTokenizer(baseTokenizer, parserOptions)
-  const templateIntermediateTokenList: IntermediateToken[] = []
-
-  while (true) {
-    const token = intermediateTokenizer.nextToken()
-    if (token == null) {
-      break
-    }
-    templateIntermediateTokenList.push(
-      modifyTokenPositionByTemplateOffset(
-        token,
-        templateStartLine,
-        templateStartColumn,
-        templateStartOffset,
-      ),
-    )
-  }
-
-  // After got all intermediate tokens, we need to modify basic token's position
-  // for putting them back to the general AST's token list.
-  const templateBasicTokenList: Token[] = intermediateTokenizer.tokens.map((token) => {
-    return modifyTokenPositionByTemplateOffset(
-      token,
-      templateStartLine,
-      templateStartColumn,
-      templateStartOffset,
-    )
-  })
-  const templateBasicCommentList = intermediateTokenizer.comments.map((comment) => {
-    return modifyTokenPositionByTemplateOffset(
-      comment,
-      templateStartLine,
-      templateStartColumn,
-      templateStartOffset,
-    )
-  })
-
   return {
     templatePositionInfo: {
       templateStartLine,
@@ -162,9 +113,6 @@ export function handleVineTemplateNode(
       templateEndLine,
       templateEndColumn,
     },
-    templateBasicTokenList,
-    templateBasicCommentList,
-    templateIntermediateTokenList,
-    parentOfTemplate,
+    templateRawContent,
   }
 }
