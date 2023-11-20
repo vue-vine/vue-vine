@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
 import type { VineESLintParserOptions } from '../src/types'
-import { getTemplateRootAST, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
+import { finalProcessForTSFileAST, getTemplateRootData, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
 
 describe('Vine ESLint parser test', () => {
-  test('[DEV ONLY] Playground', () => {
+  test('parse template root', () => {
     const sampleSourceCode = `
 function MyComp() {
   const r1 = ref(Math.random() * 10)
@@ -18,7 +18,7 @@ function MyComp() {
       <p v-if="r2 > 50">r2 is greater than 50</p>
       <p v-else>r2 is less than 50</p>
       <ul class="num-list">
-        <li v-for="r of rArr" :key="r">{{ r }}</li>
+        <li v-for="r in rArr" :key="r">{{ r }}</li>
       </ul>
       <button @click="f1">Log something ...</button>
     </div>
@@ -46,10 +46,35 @@ function MyComp() {
         }
     `)
 
-    const templateRootAST = getTemplateRootAST(
+    const rootData = getTemplateRootData(
       prepareResult,
       parserOptions,
     )
-    expect(templateRootAST).toMatchSnapshot()
+    if (rootData) {
+      const [templateRootAST, templateMeta] = rootData
+      expect(templateRootAST).toMatchSnapshot()
+      expect(templateMeta).toMatchSnapshot()
+
+      finalProcessForTSFileAST(
+        prepareResult.bindVineTemplateESTree,
+        templateRootAST,
+        templateMeta,
+        ast,
+      )
+      expect(ast).toMatchSnapshot()
+      expect(
+        sampleSourceCode.slice(
+          ...prepareResult.parentOfTemplate.range,
+        )
+          .split('\n')
+          .slice(1, -1)
+          .join('\n')
+          .trim(),
+      ).toEqual(
+        sampleSourceCode.slice(
+          ...templateRootAST.range,
+        ).trim(),
+      )
+    }
   })
 })

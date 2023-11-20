@@ -178,6 +178,7 @@ export class VineTemplateParser {
       comment,
       this.templatePos,
     ))
+    fixVineOffset(this.vTemplateRoot, this.templatePos)
   }
 
   /**
