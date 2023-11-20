@@ -15,17 +15,17 @@ function Counter(props: {
 
   return vine`
     <div class="counter">
+      <button @click="count += step"> +{{ step }} </button>
       <p>Count: {{ count }}</p>
-      <button @click="count += step">+</button>
-      <button @click="count -= step">-</button>
+      <button @click="count -= step"> -{{ step }} </button>
     </div>
   `
 }
 
 export function App() {
   return vine`
-    <div>
-      <Counter step="1" />
+    <div class="container">
+      <h1>Vue Vine</h1>
       <Counter step="2" />
     </div>
   `
