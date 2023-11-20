@@ -1,4 +1,9 @@
 {
   "extends": "@antfu",
-  "parser": "@vue-vine/eslint-parser"
+  "overrides": [
+    {
+      "files": ["*.vine.ts"],
+      "parser": "@vue-vine/eslint-parser"
+    }
+  ]
 }
