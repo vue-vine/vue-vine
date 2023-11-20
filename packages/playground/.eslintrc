@@ -1,0 +1,4 @@
+{
+  "extends": "@antfu",
+  "parser": "@vue-vine/eslint-parser"
+}

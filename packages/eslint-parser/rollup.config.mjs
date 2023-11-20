@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'rollup'
 import commonjs from '@rollup/plugin-commonjs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
+import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
 import { cleanDist, runTscOnFinished } from '../../scripts/rollup/plugins.mjs'
 
@@ -23,23 +24,25 @@ export default defineConfig({
   input: [
     resolve(__dirname, './index.ts'),
   ],
-  output: [
-    outputFormat('es'),
-    outputFormat('cjs'),
-  ],
+  output: outputFormat('cjs'),
   external: [
     '@babel/types',
     '@babel/parser',
-    'estree-walker',
-    'magic-string',
+    'eslint-scope',
+    'espree',
+    'line-column',
+    'semver',
+    '@typescript-eslint/parser',
+    '@typescript-eslint/typescript-estree',
   ],
   plugins: [
     esbuild({
       tsconfig: resolve(__dirname, 'tsconfig.json'),
-      sourceMap: isDev,
-      minify: !isDev,
+      sourceMap: false,
+      minify: false,
       target: 'es2015',
     }),
+    json(),
     commonjs(),
     nodeResolve(),
     cleanDist(resolve(__dirname, 'dist')),

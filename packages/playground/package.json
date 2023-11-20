@@ -16,8 +16,10 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^0.41.4",
     "@iconify-json/carbon": "^1.1.20",
     "@types/node": "^20.5.7",
+    "@vue-vine/eslint-parser": "workspace:*",
     "eslint": "^8.48.0",
     "less": "^4.2.0",
     "typescript": "^5.2.2",

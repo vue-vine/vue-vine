@@ -25,17 +25,17 @@ export type ParserObject<R1 = ESLintExtendedProgram, R2 = ESLintProgram> =
     | BasicParserObject<R2>
 
 export function isParserObject<R1, R2>(
-  value: ParserObject<R1, R2> | object | undefined | null,
+  value: ParserObject<R1, R2> | unknown | undefined | null,
 ): value is ParserObject<R1, R2> {
   return isEnhancedParserObject(value) || isBasicParserObject(value)
 }
 export function isEnhancedParserObject<R>(
-  value: EnhancedParserObject<R> | object | undefined | null,
+  value: EnhancedParserObject<R> | unknown | undefined | null,
 ): value is EnhancedParserObject<R> {
   return Boolean(value && typeof (value as any).parseForESLint === 'function')
 }
 export function isBasicParserObject<R>(
-  value: BasicParserObject<R> | object | undefined | null,
+  value: BasicParserObject<R> | unknown | undefined | null,
 ): value is BasicParserObject<R> {
   return Boolean(value && typeof (value as any).parse === 'function')
 }

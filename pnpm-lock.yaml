@@ -273,6 +273,9 @@ importers:
       '@rollup/plugin-commonjs':
         specifier: ^25.0.4
         version: 25.0.4(rollup@3.28.1)
+      '@rollup/plugin-json':
+        specifier: ^6.0.1
+        version: 6.0.1(rollup@3.28.1)
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.1
         version: 15.2.1(rollup@3.28.1)
@@ -383,12 +386,18 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vue@3.3.4)
     devDependencies:
+      '@antfu/eslint-config':
+        specifier: ^0.41.4
+        version: 0.41.4(eslint@8.48.0)(typescript@5.2.2)
       '@iconify-json/carbon':
         specifier: ^1.1.20
         version: 1.1.21
       '@types/node':
         specifier: ^20.5.7
         version: 20.5.9
+      '@vue-vine/eslint-parser':
+        specifier: workspace:*
+        version: link:../eslint-parser
       eslint:
         specifier: ^8.48.0
         version: 8.48.0
@@ -1854,6 +1863,19 @@ packages:
       rollup: 3.28.1
     dev: true
 
+  /@rollup/plugin-json@6.0.1(rollup@3.28.1):
+    resolution: {integrity: sha512-RgVfl5hWMkxN1h/uZj8FVESvPuBJ/uf6ly6GTj0GONnkfoBN5KC0MSz+PN2OLDgYXMhtG0mWpTrkiOjoxAIevw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.4(rollup@3.28.1)
+      rollup: 3.28.1
+    dev: true
+
   /@rollup/plugin-node-resolve@15.2.1(rollup@3.28.1):
     resolution: {integrity: sha512-nsbUg588+GDSu8/NS8T4UAshO6xeaOfINNuXeVHcKV02LJtoRaM1SiOacClw4kws1SFiNhdLGxlbMY9ga/zs/w==}
     engines: {node: '>=14.0.0'}
@@ -2386,7 +2408,7 @@ packages:
       '@unocss/core': 0.55.7
       '@unocss/reset': 0.55.7
       '@unocss/vite': 0.55.7(rollup@3.28.1)(vite@4.4.9)
-      vite: 4.4.9(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.5.9)(less@4.2.0)(sass@1.66.1)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2564,7 +2586,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.3.1
       magic-string: 0.30.3
-      vite: 4.4.9(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.5.9)(less@4.2.0)(sass@1.66.1)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -7762,7 +7784,7 @@ packages:
   /unimport@3.1.0(rollup@3.28.1):
     resolution: {integrity: sha512-ybK3NVWh30MdiqSyqakrrQOeiXyu5507tDA0tUf7VJHrsq4DM6S43gR7oAsZaFojM32hzX982Lqw02D3yf2aiA==}
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.28.1)
+      '@rollup/pluginutils': 5.0.4(rollup@3.28.1)
       escape-string-regexp: 5.0.0
       fast-glob: 3.3.1
       local-pkg: 0.4.3
@@ -7830,7 +7852,7 @@ packages:
       '@unocss/transformer-directives': 0.55.7
       '@unocss/transformer-variant-group': 0.55.7
       '@unocss/vite': 0.55.7(rollup@3.28.1)(vite@4.4.9)
-      vite: 4.4.9(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.5.9)(less@4.2.0)(sass@1.66.1)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -7991,7 +8013,7 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       sirv: 2.0.3
-      vite: 4.4.9(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.5.9)(less@4.2.0)(sass@1.66.1)
     transitivePeerDependencies:
       - rollup
       - supports-color
