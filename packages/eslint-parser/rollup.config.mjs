@@ -10,7 +10,7 @@ import { cleanDist, runTscOnFinished } from '../../scripts/rollup/plugins.mjs'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV !== 'production'
 function outputFormat(format) {
   return {
     format,
@@ -38,7 +38,7 @@ export default defineConfig({
   plugins: [
     esbuild({
       tsconfig: resolve(__dirname, 'tsconfig.json'),
-      sourceMap: false,
+      sourceMap: isDev,
       minify: false,
       target: 'es2015',
     }),

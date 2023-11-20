@@ -1819,7 +1819,7 @@ export class Tokenizer {
 
   /**
    * https://html.spec.whatwg.org/multipage/parsing.html#flush-code-points-consumed-as-a-character-reference
-   * @param cp The current code point.
+   * @param _cp The current code point.
    * @returns The next state.
    */
   protected CHARACTER_REFERENCE_END(_cp: number): TokenizerState {

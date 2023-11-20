@@ -4,7 +4,7 @@ import type { ParseForESLintResult, VineESLintParserOptions, VineTemplateMeta } 
 import { extractVineTemplateNode, prepareTemplate } from './template/process-vine-template-node'
 import { Tokenizer } from './template/tokenizer'
 import { VineTemplateParser } from './template/parser'
-import type { VTemplateRoot } from './ast'
+import { KEYS, type VTemplateRoot } from './ast'
 
 type TemplateRootASTPreparation = ReturnType<typeof prepareTemplate> & {
   templateNode: TSESTree.TaggedTemplateExpression
@@ -93,7 +93,7 @@ export function runParse(
   code: string,
   parserOptions: VineESLintParserOptions,
 ): ParseForESLintResult {
-  const { ast, services, scopeManager, visitorKeys } = typescriptBasicESLintParse(
+  const { ast, services, scopeManager, visitorKeys: tsESLintVisitorKeys } = typescriptBasicESLintParse(
     code,
     parserOptions,
   )
@@ -113,6 +113,11 @@ export function runParse(
       templateMeta,
       ast,
     )
+  }
+
+  const visitorKeys = {
+    ...tsESLintVisitorKeys,
+    ...KEYS,
   }
 
   return {

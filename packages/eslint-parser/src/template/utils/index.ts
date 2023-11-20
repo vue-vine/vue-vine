@@ -66,15 +66,15 @@ function getStandardDirectiveKind(
 /**
  * Parse the given attribute value as an expression.
  * @param code Whole source code text.
- * @param htmlParserOptions The parser options to parse expressions.
+ * @param parserOptions The parser options to parse expressions.
  * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
  * @param node The attribute node to replace. This function modifies this node directly.
- * @param tagName The name of this tag.
+ * @param element The element which is currently parsing attrs.
  * @param directiveKey The key of this directive.
  */
 function parseAttributeValue(
   code: string,
-  htmlParserOptions: VineESLintParserOptions,
+  parserOptions: VineESLintParserOptions,
   globalLocationCalculator: LocationCalculatorForHtml,
   node: VLiteral,
   element: VElement,
@@ -116,33 +116,33 @@ function parseAttributeValue(
     result = parseVForExpression(
       node.value,
       locationCalculator,
-      htmlParserOptions,
+      parserOptions,
     )
   }
   else if (directiveKind === 'on' && directiveKey.argument != null) {
     result = parseVOnExpression(
       node.value,
       locationCalculator,
-      htmlParserOptions,
+      parserOptions,
     )
   }
   else if (directiveKind === 'slot') {
     result = parseSlotScopeExpression(
       node.value,
       locationCalculator,
-      htmlParserOptions,
+      parserOptions,
     )
   }
   else if (directiveKind === 'bind') {
     result = parseExpression(
       node.value,
       locationCalculator,
-      htmlParserOptions,
+      parserOptions,
       { allowFilters: true },
     )
   }
   else {
-    result = parseExpression(node.value, locationCalculator, htmlParserOptions)
+    result = parseExpression(node.value, locationCalculator, parserOptions)
   }
 
   // Add the tokens of quotes.
@@ -499,7 +499,6 @@ function createDirectiveKey(
  * @param templateMeta template tokens, comments and errors.
  * @param locationCalculator The location calculator to adjust the locations of nodes.
  * @param parserOptions The parser options to parse expressions.
- * @param scriptVineESLintParserOptions The parser options to parse expressions.
  */
 export function convertToDirective(
   node: VAttribute,
@@ -605,6 +604,7 @@ export function convertToDirective(
  * Parse the content of the given mustache.
  * @param parserOptions The parser options to parse expressions.
  * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
+ * @param templateMeta Template tokens, comments and errors
  * @param node The expression container node. This function modifies the `expression` and `references` properties of this node.
  * @param mustache The information of mustache to parse.
  */

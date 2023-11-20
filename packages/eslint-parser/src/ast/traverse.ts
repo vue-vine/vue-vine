@@ -6,7 +6,7 @@ import type { Node } from './nodes'
 // Helpers
 // ------------------------------------------------------------------------------
 
-export const KEYS = Evk.unionWith({
+const VineVisitorKeys = {
   VAttribute: ['key', 'value'],
   VDirectiveKey: ['name', 'argument', 'modifiers'],
   VTemplateRoot: ['children'],
@@ -22,7 +22,9 @@ export const KEYS = Evk.unionWith({
   VSlotScopeExpression: ['params'],
   VStartTag: ['attributes'],
   VText: [],
-})
+}
+
+export const KEYS = Evk.unionWith(VineVisitorKeys)
 
 /**
  * Check that the given key should be traversed or not.

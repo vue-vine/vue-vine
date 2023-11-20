@@ -233,6 +233,7 @@ export class VineTemplateParser {
 
   /**
    * Report an invalid character error.
+   * @param token Error located token
    * @param code The error code.
    */
   private reportParseError(token: HasLocation, code: ErrorCode): void {

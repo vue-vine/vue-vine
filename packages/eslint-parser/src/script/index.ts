@@ -148,7 +148,6 @@ function throwEmptyError(
 
 /**
  * Throw syntax error for unexpected token.
- * @param locationCalculator The location calculator to get line/column.
  * @param name The token name.
  * @param token The token object to get that location.
  */
@@ -166,6 +165,8 @@ function throwUnexpectedTokenError(name: string, token: HasLocation): never {
 
 /**
  * Throw syntax error of outside of code.
+ * @param err Error object
+ * @param code Error code
  * @param locationCalculator The location calculator to get line/column.
  */
 function throwErrorAsAdjustingOutsideOfCode(
@@ -336,9 +337,9 @@ function parseExpressionBody(
 
   try {
     const result = parseScriptFragment(
-            `0(${code})`,
-            locationCalculator.getSubCalculatorShift(-2),
-            parserOptions,
+      `0(${code})`,
+      locationCalculator.getSubCalculatorShift(-2),
+      parserOptions,
     )
     const { ast } = result
     const tokens = ast.tokens || []
@@ -460,11 +461,11 @@ function parseFilter(
     // Parse the arguments.
     if (argsCode != null) {
       const result = parseScriptFragment(
-                `0${argsCode}`,
-                locationCalculator
-                  .getSubCalculatorAfter(paren)
-                  .getSubCalculatorShift(-1),
-                parserOptions,
+        `0${argsCode}`,
+        locationCalculator
+          .getSubCalculatorAfter(paren)
+          .getSubCalculatorShift(-1),
+        parserOptions,
       )
       const { ast } = result
       const statement = ast.body[0] as ESLintExpressionStatement
@@ -933,9 +934,9 @@ function parseVForIteratorForEcmaVersion5(
   parserOptions: VineESLintParserOptions,
 ) {
   const result = parseScriptFragment(
-        `0(${code})`,
-        locationCalculator.getSubCalculatorShift(-2),
-        parserOptions,
+    `0(${code})`,
+    locationCalculator.getSubCalculatorShift(-2),
+    parserOptions,
   )
   const { ast } = result
   const tokens = ast.tokens || []
