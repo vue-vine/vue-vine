@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { typescriptBasicESLintParse } from '../src/parse'
-import { extractVineTemplateNode, prepareTemplate } from '../src/template/process-vine-template-node'
+import type { VineESLintParserOptions } from '../src/types'
+import { getTemplateRootAST, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
 
 describe('Vine ESLint parser test', () => {
   test('[DEV ONLY] Playground', () => {
@@ -29,14 +29,13 @@ function MyComp() {
       ecmaVersion: 'latest',
       sourceType: 'module',
     })
+    const parserOptions: VineESLintParserOptions = {}
 
-    const extractResult = extractVineTemplateNode(ast)
-    if (extractResult) {
-      const { templateNode } = extractResult
-      const {
-        templatePositionInfo,
-      } = prepareTemplate(templateNode)
-      expect(templatePositionInfo).toMatchInlineSnapshot(`
+    const prepareResult = prepareForTemplateRootAST(ast)
+    if (!prepareResult) {
+      return
+    }
+    expect(prepareResult.templatePositionInfo).toMatchInlineSnapshot(`
         {
           "templateEndColumn": 2,
           "templateEndLine": 18,
@@ -45,7 +44,12 @@ function MyComp() {
           "templateStartLine": 9,
           "templateStartOffset": 233,
         }
-      `)
-    }
+    `)
+
+    const templateRootAST = getTemplateRootAST(
+      prepareResult,
+      parserOptions,
+    )
+    expect(templateRootAST).toMatchSnapshot()
   })
 })

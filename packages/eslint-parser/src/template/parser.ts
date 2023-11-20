@@ -1,17 +1,18 @@
 import assert from 'node:assert'
 import type { TSESTree } from '@typescript-eslint/types'
-import { last } from 'lodash-es'
-import { NS } from '../ast'
-import type { Namespace, VAttribute, VElement, VTemplateRoot } from '../ast'
+import { findLastIndex, last } from 'lodash-es'
+import { NS, ParseError } from '../ast'
+import type { ErrorCode, HasLocation, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
 import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
 import { debug } from '../common/debug'
 import { LocationCalculatorForHtml } from '../common/location-calculator'
-import type { IntermediateToken, StartTag } from './intermediate-tokenizer'
+import type { EndTag, IntermediateToken, Mustache, StartTag, Text } from './intermediate-tokenizer'
 import { IntermediateTokenizer } from './intermediate-tokenizer'
-import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
-import { modifyTokenPositionByTemplateOffset } from './process-vine-template-node'
+import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
+import { fixVineOffset } from './process-vine-template-node'
 import type { Tokenizer } from './tokenizer'
-import { convertToDirective } from './utils'
+import { convertToDirective, processMustache, resolveReferences } from './utils'
+import { MATHML_ATTRIBUTE_NAME_MAP, SVG_ATTRIBUTE_NAME_MAP } from './utils/attribute-names'
 
 const DIRECTIVE_NAME = /^(?:v-|[.:@#]).*[^.:@#]$/u
 const DT_DD = /^d[dt]$/u
@@ -28,6 +29,22 @@ function propagateEndLocation(node: VTemplateRoot | VElement): void {
     node.range[1] = lastChild.range[1]
     node.loc.end = lastChild.loc.end
   }
+}
+
+/**
+ * Adjust attribute names by the current namespace.
+ * @param name The lowercase attribute name to adjust.
+ * @param namespace The current namespace.
+ * @returns The adjusted attribute name.
+ */
+function adjustAttributeName(name: string, namespace: Namespace): string {
+  if (namespace === NS.SVG) {
+    return SVG_ATTRIBUTE_NAME_MAP.get(name) || name
+  }
+  if (namespace === NS.MathML) {
+    return MATHML_ATTRIBUTE_NAME_MAP.get(name) || name
+  }
+  return name
 }
 
 /**
@@ -107,15 +124,14 @@ export class VineTemplateParser {
   private vTemplateMeta: VineTemplateMeta
 
   private templatePos: VineTemplatePositionInfo
-  private postProcess: ((
-    htmlParserOptions: VineESLintParserOptions,
-    scriptParserOptions: VineESLintParserOptions
+  private postProcessForScript: ((
+    parserOptions: VineESLintParserOptions
   ) => void)[] = []
 
   constructor(
     parserOptions: VineESLintParserOptions,
     tokenizer: Tokenizer,
-    parentOfTemplate: TSESTree.Node | null,
+    parentOfTemplate: TSESTree.Node,
     templatePos: VineTemplatePositionInfo,
   ) {
     this.baseParserOptions = parserOptions
@@ -153,11 +169,15 @@ export class VineTemplateParser {
     }
   }
 
-  private correctTokenPos(token: IntermediateToken) {
-    modifyTokenPositionByTemplateOffset(
+  private correctMetaTokenPos() {
+    this.vTemplateMeta.tokens.forEach(token => fixVineOffset(
       token,
       this.templatePos,
-    )
+    ))
+    this.vTemplateMeta.comments.forEach(comment => fixVineOffset(
+      comment,
+      this.templatePos,
+    ))
   }
 
   /**
@@ -186,6 +206,13 @@ export class VineTemplateParser {
   }
 
   /**
+   * The syntax errors which are found in this parsing.
+   */
+  private get errors(): ParseError[] {
+    return this.tokenizer.errors
+  }
+
+  /**
    * The current flag of expression enabled.
    */
   private get expressionEnabled(): boolean {
@@ -201,6 +228,22 @@ export class VineTemplateParser {
    */
   private get isInVPreElement(): boolean {
     return this.vPreElement != null
+  }
+
+  /**
+   * Report an invalid character error.
+   * @param code The error code.
+   */
+  private reportParseError(token: HasLocation, code: ErrorCode): void {
+    const error = ParseError.fromCode(
+      code,
+      token.range[0],
+      token.loc.start.line,
+      token.loc.start.column,
+    )
+    this.errors.push(error)
+
+    debug('[html] syntax error:', error.message)
   }
 
   /**
@@ -274,39 +317,45 @@ export class VineTemplateParser {
   }
 
   /**
+   * Pop elements from the current element stack.
+   * @param index The index of the element you want to pop.
+   */
+  private popElementStackUntil(index: number): void {
+    while (this.elementStack.length > index) {
+      this.popElementStack()
+    }
+  }
+
+  /**
    * Adjust and validate the given attribute node.
    * @param node The attribute node to handle.
    * @param namespace The current namespace.
    */
   private processAttribute(node: VAttribute, namespace: Namespace): void {
     if (this.needConvertToDirective(node)) {
-      this.postProcess.push(
-        (
-          htmlParserOptions,
-          scriptParserOptions,
-        ) => {
+      this.postProcessForScript.push(
+        (parserOptions) => {
           convertToDirective(
             node,
             this.text,
             this.vTemplateMeta,
             this.locationCalculator,
-            htmlParserOptions,
-            scriptParserOptions,
+            parserOptions,
           )
         },
       )
     }
 
-    // node.key.name = adjustAttributeName(node.key.name, namespace)
-    // const key = this.getTagName(node.key)
-    // const value = node.value && node.value.value
+    node.key.name = adjustAttributeName(node.key.name, namespace)
+    const key = node.key.rawName
+    const value = node.value && node.value.value
 
-    // if (key === 'xmlns' && value !== namespace) {
-    //   this.reportParseError(node, 'x-invalid-namespace')
-    // }
-    // else if (key === 'xmlns:xlink' && value !== NS.XLink) {
-    //   this.reportParseError(node, 'x-invalid-namespace')
-    // }
+    if (key === 'xmlns' && value !== namespace) {
+      this.reportParseError(node, 'x-invalid-namespace')
+    }
+    else if (key === 'xmlns:xlink' && value !== NS.XLink) {
+      this.reportParseError(node, 'x-invalid-namespace')
+    }
   }
 
   /**
@@ -401,5 +450,165 @@ export class VineTemplateParser {
       attribute.parent = element.startTag
       this.processAttribute(attribute, namespace)
     }
+
+    // Resolve references.
+    this.postProcessForScript.push(() => {
+      for (const attribute of element.startTag.attributes) {
+        if (attribute.directive) {
+          if (
+            attribute.key.argument != null
+                  && attribute.key.argument.type === 'VExpressionContainer'
+          ) {
+            resolveReferences(attribute.key.argument)
+          }
+          if (attribute.value != null) {
+            resolveReferences(attribute.value)
+          }
+        }
+      }
+    })
+
+    // Check whether the self-closing is valid.
+    const isVoid
+      = namespace === NS.HTML
+      && HTML_VOID_ELEMENT_TAGS.has(element.rawName)
+    if (token.selfClosing && !isVoid && namespace === NS.HTML) {
+      this.reportParseError(
+        token,
+        'non-void-html-element-start-tag-with-trailing-solidus',
+      )
+    }
+
+    // Vue.js supports self-closing elements even if it's not one of void elements.
+    if (token.selfClosing || isVoid) {
+      this.expressionEnabled = !this.isInVPreElement
+      return
+    }
+
+    // Push to stack.
+    this.elementStack.push(element)
+    if (hasVPre) {
+      assert(this.vPreElement === null)
+      this.vPreElement = element
+    }
+    this.namespace = namespace
+
+    // Update the content type of this element.
+    if (namespace === NS.HTML) {
+      const elementName = element.rawName
+      if (HTML_RCDATA_TAGS.has(elementName)) {
+        this.tokenizer.state = 'RCDATA'
+      }
+      if (HTML_RAWTEXT_TAGS.has(elementName)) {
+        this.tokenizer.state = 'RAWTEXT'
+      }
+    }
+  }
+
+  /**
+   * Handle the end tag token.
+   * @param token The token to handle.
+   */
+  protected EndTag(token: EndTag): void {
+    debug('[html] EndTag %j', token)
+
+    const i = findLastIndex(
+      this.elementStack,
+      el => el.name.toLowerCase() === token.name,
+    )
+    if (i === -1) {
+      this.reportParseError(token, 'x-invalid-end-tag')
+      return
+    }
+
+    const element = this.elementStack[i]
+    element.endTag = {
+      type: 'VEndTag',
+      range: token.range,
+      loc: token.loc,
+      parent: element,
+    }
+
+    this.popElementStackUntil(i)
+  }
+
+  /**
+   * Handle the text token.
+   * @param token The token to handle.
+   */
+  protected Text(token: Text): void {
+    debug('[html] Text %j', token)
+    const parent = this.currentNode
+    parent.children.push({
+      type: 'VText',
+      range: token.range,
+      loc: token.loc,
+      parent,
+      value: token.value,
+    })
+  }
+
+  /**
+   * Handle the text token.
+   * @param token The token to handle.
+   */
+  protected Mustache(token: Mustache): void {
+    debug('[html] Mustache %j', token)
+
+    const parent = this.currentNode
+    const container: VExpressionContainer = {
+      type: 'VExpressionContainer',
+      range: token.range,
+      loc: token.loc,
+      parent,
+      expression: null,
+      references: [],
+    }
+    // Set relationship.
+    parent.children.push(container)
+
+    this.postProcessForScript.push((parserOptions) => {
+      processMustache(
+        parserOptions,
+        this.locationCalculator,
+        this.vTemplateMeta,
+        container,
+        token,
+      )
+      // Resolve references.
+      resolveReferences(container)
+    })
+  }
+
+  /**
+   * Parse the HTML which was given in this constructor.
+   * @returns The result of parsing.
+   */
+  public parse(): [VTemplateRoot, VineTemplateMeta] {
+    let token: IntermediateToken | null = null
+
+    do {
+      token = this.tokenizer.nextToken()
+      if (token == null) {
+        break
+      }
+      (this as any)[token.type](token)
+    } while (token != null)
+
+    this.popElementStackUntil(0)
+    propagateEndLocation(this.vTemplateRoot)
+
+    const templateRoot = this.vTemplateRoot
+    const templateMeta = this.vTemplateMeta
+
+    for (const proc of this.postProcessForScript) {
+      proc(this.baseParserOptions)
+    }
+    this.postProcessForScript = []
+
+    // Finally, fix all token positions with vine`...` offset among this file
+    this.correctMetaTokenPos()
+
+    return [templateRoot, templateMeta]
   }
 }

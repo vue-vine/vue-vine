@@ -1,3 +1,4 @@
+import type { ScopeManager } from 'eslint-scope'
 import type { TSESTree } from '@typescript-eslint/types'
 import type { ParseError } from './errors'
 import type { HasLocation } from './locations'
@@ -36,6 +37,7 @@ export type Node =
 export type ESLintNode =
     | ESLintIdentifier
     | ESLintLiteral
+    | ESLintProgram
     | ESLintSwitchCase
     | ESLintCatchClause
     | ESLintVariableDeclarator
@@ -56,6 +58,26 @@ export type ESLintNode =
     | ESLintModuleSpecifier
     | ESLintImportExpression
     | ESLintLegacyRestProperty
+
+/**
+ * The parsing result of ESLint custom parsers.
+ */
+export interface ESLintExtendedProgram {
+  ast: ESLintProgram
+  services?: Record<string, unknown>
+  visitorKeys?: { [type: string]: string[] }
+  scopeManager?: ScopeManager
+}
+
+export interface ESLintProgram extends HasLocation, HasParent {
+  type: 'Program'
+  sourceType: 'script' | 'module'
+  body: (ESLintStatement | ESLintModuleDeclaration)[]
+  templateBody?: VElement & HasConcreteInfo
+  tokens?: Token[]
+  comments?: Token[]
+  errors?: ParseError[]
+}
 
 export type ESLintStatement =
     | ESLintExpressionStatement
@@ -922,6 +944,6 @@ export interface VElement extends HasLocation, HasParent {
  */
 export interface VTemplateRoot extends HasLocation {
   type: 'VTemplateRoot'
-  parent: TSESTree.Node | null
+  parent: TSESTree.Node
   children: (VElement | VText | VExpressionContainer)[]
 }

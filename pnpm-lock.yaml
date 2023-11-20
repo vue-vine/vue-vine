@@ -254,12 +254,21 @@ importers:
       debug:
         specifier: ^4.3.4
         version: 4.3.4(supports-color@8.1.1)
+      eslint-scope:
+        specifier: ^7.2.2
+        version: 7.2.2
+      espree:
+        specifier: ^9.6.1
+        version: 9.6.1
       line-column:
         specifier: ^1.0.2
         version: 1.0.2
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      semver:
+        specifier: ^7.5.4
+        version: 7.5.4
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^25.0.4
@@ -279,6 +288,9 @@ importers:
       '@types/node':
         specifier: ^20.8.10
         version: 20.8.10
+      '@types/semver':
+        specifier: ^7.5.5
+        version: 7.5.5
       '@typescript-eslint/types':
         specifier: ^6.9.1
         version: 6.9.1
@@ -2052,6 +2064,10 @@ packages:
 
   /@types/semver@7.5.0:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
+    dev: true
+
+  /@types/semver@7.5.5:
+    resolution: {integrity: sha512-+d+WYC1BxJ6yVOgUgzK8gWvp5qF8ssV5r4nsDcZWKRWcDQLQ619tvWAxJQYGgBrO1MnLJC7a5GtiYsAoQ47dJg==}
     dev: true
 
   /@types/text-table@0.2.2:

@@ -1,9 +1,8 @@
 import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
 import type { ParseForESLintResult, VineTemplatePositionInfo } from '../types'
 import type { Token } from '../ast'
-import type { IntermediateToken } from './intermediate-tokenizer'
 
-export function modifyTokenPositionByTemplateOffset<T extends Token | IntermediateToken>(
+export function fixVineOffset<T extends Token>(
   token: T,
   {
     templateStartOffset,
@@ -40,8 +39,8 @@ export function extractVineTemplateNode(
   ast: ParseForESLintResult['ast'],
 ) {
   // Find all tagged template expressions which are tagged with `vine`.
-  let templateNode: TSESTree.TaggedTemplateExpression | null = null
-  let parentOfTemplate: TSESTree.Node | null = null
+  let templateNode: TSESTree.TaggedTemplateExpression | undefined
+  let parentOfTemplate: TSESTree.Node | undefined
 
   try {
     traverse(ast, {
@@ -51,13 +50,16 @@ export function extractVineTemplateNode(
           && node.tag.type === 'Identifier'
           && node.tag.name === 'vine'
         ) {
-          // Todo: Create our custom AST node from this Vue template string.
           templateNode = node
+
+          // FIXME: Not only `ReturnStatement`:
+          // - The tagged template expression can also be a bare return value in an arrow function.
 
           // Delete it from the AST, because we're going to replace it with
           // our custom AST node.
           if (parent?.type === TSESTree.AST_NODE_TYPES.ReturnStatement) {
             parent.argument = null
+            parentOfTemplate = parent
           }
           // Also, we need to remove those tokens inside
           // this tagged template expression's range.

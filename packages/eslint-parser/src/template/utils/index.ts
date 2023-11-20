@@ -2,14 +2,24 @@ import { debug } from '../../common/debug'
 import type { VineESLintParserOptions, VineTemplateMeta } from '../../types'
 import type { LocationCalculatorForHtml } from '../../common/location-calculator'
 import { ParseError } from '../../ast'
-import type { Token, VAttribute, VDirective, VDirectiveKey, VIdentifier } from '../../ast'
+import type { ESLintExpression, Reference, Token, VAttribute, VDirective, VDirectiveKey, VElement, VExpressionContainer, VFilterSequenceExpression, VForExpression, VIdentifier, VLiteral, VNode, VOnExpression, VSlotScopeExpression } from '../../ast'
 import { insertError } from '../../common/error-utils'
 import { createSimpleToken, insertComments, replaceTokens } from '../../common/token-utils'
-import { parseAttributeValue, parseExpression } from '../../script'
+import type { ExpressionParseResult } from '../../script'
+import { parseExpression, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
 
 const shorthandSign = /^[.:@#]/u
 const shorthandNameMap = { ':': 'bind', '.': 'bind', '@': 'on', '#': 'slot' }
 const invalidDynamicArgumentNextChar = /^[\s\r\n=/>]$/u
+
+/**
+ * Information of a mustache.
+ */
+export interface Mustache {
+  value: string
+  startToken: Token
+  endToken: Token
+}
 
 /**
  * Check whether a given identifier node is `prop` or not.
@@ -25,6 +35,139 @@ function isPropModifier(node: VIdentifier): boolean {
  */
 function isNotEmptyModifier(node: VIdentifier): boolean {
   return node.name !== ''
+}
+
+function getStandardDirectiveKind(
+  element: VElement,
+  directiveKey: VDirectiveKey,
+) {
+  const directiveName = directiveKey.name.name
+
+  if (directiveName === 'for') {
+    return 'for'
+  }
+  else if (directiveName === 'on') {
+    return 'on'
+  }
+  else if (
+    directiveName === 'slot'
+      || directiveName === 'slot-scope'
+      || (directiveName === 'scope'
+          && element.rawName === 'template')
+  ) {
+    return 'slot'
+  }
+  else if (directiveName === 'bind') {
+    return 'bind'
+  }
+  return null
+}
+
+/**
+ * Parse the given attribute value as an expression.
+ * @param code Whole source code text.
+ * @param htmlParserOptions The parser options to parse expressions.
+ * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
+ * @param node The attribute node to replace. This function modifies this node directly.
+ * @param tagName The name of this tag.
+ * @param directiveKey The key of this directive.
+ */
+function parseAttributeValue(
+  code: string,
+  htmlParserOptions: VineESLintParserOptions,
+  globalLocationCalculator: LocationCalculatorForHtml,
+  node: VLiteral,
+  element: VElement,
+  directiveKey: VDirectiveKey,
+): ExpressionParseResult<
+  | ESLintExpression
+  | VFilterSequenceExpression
+  | VForExpression
+  | VOnExpression
+  | VSlotScopeExpression
+> {
+  const firstChar = code[node.range[0]]
+  const quoted = firstChar === '"' || firstChar === '\''
+  const locationCalculator = globalLocationCalculator.getSubCalculatorAfter(
+    node.range[0] + (quoted ? 1 : 0),
+  )
+  const directiveKind = getStandardDirectiveKind(
+    element,
+    directiveKey,
+  )
+
+  let result: ExpressionParseResult<
+      | ESLintExpression
+      | VFilterSequenceExpression
+      | VForExpression
+      | VOnExpression
+      | VSlotScopeExpression
+  >
+  if (quoted && node.value === '') {
+    result = {
+      expression: null,
+      tokens: [],
+      comments: [],
+      variables: [],
+      references: [],
+    }
+  }
+  else if (directiveKind === 'for') {
+    result = parseVForExpression(
+      node.value,
+      locationCalculator,
+      htmlParserOptions,
+    )
+  }
+  else if (directiveKind === 'on' && directiveKey.argument != null) {
+    result = parseVOnExpression(
+      node.value,
+      locationCalculator,
+      htmlParserOptions,
+    )
+  }
+  else if (directiveKind === 'slot') {
+    result = parseSlotScopeExpression(
+      node.value,
+      locationCalculator,
+      htmlParserOptions,
+    )
+  }
+  else if (directiveKind === 'bind') {
+    result = parseExpression(
+      node.value,
+      locationCalculator,
+      htmlParserOptions,
+      { allowFilters: true },
+    )
+  }
+  else {
+    result = parseExpression(node.value, locationCalculator, htmlParserOptions)
+  }
+
+  // Add the tokens of quotes.
+  if (quoted) {
+    result.tokens.unshift(
+      createSimpleToken(
+        'Punctuator',
+        node.range[0],
+        node.range[0] + 1,
+        firstChar,
+        globalLocationCalculator,
+      ),
+    )
+    result.tokens.push(
+      createSimpleToken(
+        'Punctuator',
+        node.range[1] - 1,
+        node.range[1],
+        firstChar,
+        globalLocationCalculator,
+      ),
+    )
+  }
+
+  return result
 }
 
 /**
@@ -355,16 +498,15 @@ function createDirectiveKey(
  * @param code Whole source code text.
  * @param templateMeta template tokens, comments and errors.
  * @param locationCalculator The location calculator to adjust the locations of nodes.
- * @param htmlParserOptions The parser options to parse expressions.
- * @param scriptParserOptions The parser options to parse expressions.
+ * @param parserOptions The parser options to parse expressions.
+ * @param scriptVineESLintParserOptions The parser options to parse expressions.
  */
 export function convertToDirective(
   node: VAttribute,
   code: string,
   templateMeta: VineTemplateMeta,
   locationCalculator: LocationCalculatorForHtml,
-  htmlParserOptions: VineESLintParserOptions,
-  scriptParserOptions: VineESLintParserOptions,
+  parserOptions: VineESLintParserOptions,
 ): void {
   debug(
     '[template] convert to directive: %s="%s" %j',
@@ -378,7 +520,7 @@ export function convertToDirective(
   directive.key = createDirectiveKey(
     node.key,
     templateMeta,
-    htmlParserOptions,
+    parserOptions,
     locationCalculator,
   )
 
@@ -413,8 +555,7 @@ export function convertToDirective(
   try {
     const ret = parseAttributeValue(
       code,
-      htmlParserOptions,
-      scriptParserOptions,
+      parserOptions,
       locationCalculator,
       node.value,
       node.parent.parent,
@@ -456,6 +597,100 @@ export function convertToDirective(
     }
     else {
       throw err
+    }
+  }
+}
+
+/**
+ * Parse the content of the given mustache.
+ * @param parserOptions The parser options to parse expressions.
+ * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
+ * @param node The expression container node. This function modifies the `expression` and `references` properties of this node.
+ * @param mustache The information of mustache to parse.
+ */
+export function processMustache(
+  parserOptions: VineESLintParserOptions,
+  globalLocationCalculator: LocationCalculatorForHtml,
+  templateMeta: VineTemplateMeta,
+  node: VExpressionContainer,
+  mustache: Mustache,
+): void {
+  const range: [number, number] = [
+    mustache.startToken.range[1],
+    mustache.endToken.range[0],
+  ]
+  debug('[template] convert mustache {{%s}} %j', mustache.value, range)
+
+  try {
+    const locationCalculator
+          = globalLocationCalculator.getSubCalculatorAfter(range[0])
+    const ret = parseExpression(
+      mustache.value,
+      locationCalculator,
+      parserOptions,
+      { allowEmpty: true, allowFilters: true },
+    )
+
+    node.expression = ret.expression || null
+    node.references = ret.references
+    if (ret.expression != null) {
+      ret.expression.parent = node
+    }
+
+    replaceTokens(templateMeta, { range }, ret.tokens)
+    insertComments(templateMeta, ret.comments)
+  }
+  catch (err) {
+    debug('[template] Parse error: %s', err)
+
+    if (ParseError.isParseError(err)) {
+      insertError(templateMeta, err)
+    }
+    else {
+      throw err
+    }
+  }
+}
+
+/**
+ * Resolve the variable of the given reference.
+ * @param referene The reference to resolve.
+ * @param element The belonging element of the reference.
+ */
+function resolveReference(referene: Reference, element: VElement): void {
+  let node: VNode | null = element
+
+  // Find the variable of this reference.
+  while (node != null && node.type === 'VElement') {
+    for (const variable of node.variables) {
+      if (variable.id.name === referene.id.name) {
+        referene.variable = variable
+        variable.references.push(referene)
+        return
+      }
+    }
+
+    node = node.parent
+  }
+}
+
+/**
+ * Resolve all references of the given expression container.
+ * @param container The expression container to resolve references.
+ */
+export function resolveReferences(container: VExpressionContainer): void {
+  let element: VNode | null = container.parent
+
+  // Get the belonging element.
+  // This loop's target is to find the nearest VElement node.
+  while (element != null && element.type !== 'VElement') {
+    element = element.parent as (VNode | null)
+  }
+
+  // Resolve.
+  if (element != null) {
+    for (const reference of container.references) {
+      resolveReference(reference, element)
     }
   }
 }

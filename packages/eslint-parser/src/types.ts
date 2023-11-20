@@ -6,7 +6,10 @@ export type VineESLintAST = TSESTree.Program
 export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
 
 export interface VineESLintParserOptions extends ParserOptions {
-  // ...To be continued
+  // ...To be extended
+  ecmaFeatures?: ParserOptions['ecmaFeatures'] & {
+    [key: string]: any
+  }
 }
 
 export interface VineTemplatePositionInfo {

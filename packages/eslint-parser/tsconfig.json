@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -9,7 +10,10 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "declarationDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "*": ["typings/*"]
+    }
   },
   "include": [
     "src",
