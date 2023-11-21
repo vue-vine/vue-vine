@@ -1,10 +1,11 @@
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import type { TSESTree } from '@typescript-eslint/types'
 import type { ParseForESLintResult, VineESLintParserOptions, VineTemplateMeta } from './types'
-import { extractVineTemplateNode, prepareTemplate } from './template/process-vine-template-node'
+import { extractForVineTemplate, prepareTemplate } from './template/utils/process-vine-template-node'
 import { Tokenizer } from './template/tokenizer'
 import { VineTemplateParser } from './template/parser'
 import { KEYS, type VTemplateRoot } from './ast'
+import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
 
 type TemplateRootASTPreparation = ReturnType<typeof prepareTemplate> & {
   templateNode: TSESTree.TaggedTemplateExpression
@@ -30,30 +31,25 @@ export function typescriptBasicESLintParse(
 
 export function prepareForTemplateRootAST(
   tsFileAST: ParseForESLintResult['ast'],
-): TemplateRootASTPreparation | null {
-  const extractResult = extractVineTemplateNode(tsFileAST)
-  if (!extractResult) {
-    return null
+): TemplateRootASTPreparation[] {
+  const extractResults = extractForVineTemplate(tsFileAST)
+  if (!extractResults.length) {
+    return []
   }
 
-  const { templateNode, parentOfTemplate, bindVineTemplateESTree } = extractResult
-  if (
-    !templateNode
-    || !parentOfTemplate
-    || !bindVineTemplateESTree
-  ) {
-    return null
-  }
+  return extractResults.map((extractResult) => {
+    const { templateNode, parentOfTemplate, bindVineTemplateESTree } = extractResult
 
-  return {
-    templateNode,
-    parentOfTemplate,
-    bindVineTemplateESTree,
-    ...prepareTemplate(templateNode),
-  }
+    return {
+      templateNode,
+      parentOfTemplate,
+      bindVineTemplateESTree,
+      ...prepareTemplate(templateNode),
+    }
+  })
 }
 
-export function getTemplateRootData(
+export function getTemplateRootDataList(
   prepareResult: TemplateRootASTPreparation | null,
   parserOptions: VineESLintParserOptions,
 ) {
@@ -69,6 +65,7 @@ export function getTemplateRootData(
     parentOfTemplate,
     templatePositionInfo,
   )
+
   return templateParser.parse()
 }
 
@@ -98,13 +95,16 @@ export function runParse(
     parserOptions,
   )
 
-  const prepareResult = prepareForTemplateRootAST(ast)
-  const rootData = getTemplateRootData(
-    prepareResult,
-    parserOptions,
-  )
-  if (prepareResult && rootData) {
+  const prepareResults = prepareForTemplateRootAST(ast)
+  for (const prepareResult of prepareResults) {
     const { bindVineTemplateESTree } = prepareResult
+    const rootData = getTemplateRootDataList(
+      prepareResult,
+      parserOptions,
+    )
+    if (!rootData) {
+      continue
+    }
     const [templateRootAST, templateMeta] = rootData
 
     finalProcessForTSFileAST(
@@ -113,8 +113,15 @@ export function runParse(
       templateMeta,
       ast,
     )
+
+    analyzeUsedInTemplateVariables(
+      scopeManager,
+      templateRootAST,
+    )
   }
 
+  // Supplement Vue Vine template's visitor keys to
+  // the visitor keys of TypeScript ESLint parser.
   const visitorKeys = {
     ...tsESLintVisitorKeys,
     ...KEYS,

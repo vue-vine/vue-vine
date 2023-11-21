@@ -6,7 +6,7 @@ import type { ParserObject } from './common/parser-object'
 export type VineESLintAST = TSESTree.Program
 export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
 
-export interface VineESLintParserOptions extends ParserOptions {
+export type VineESLintParserOptions = ParserOptions & {
   // ...To be extended
   parser?:
   | boolean

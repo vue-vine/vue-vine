@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { last } from 'lodash-es'
+import last from 'lodash/last'
 import type {
   ErrorCode,
   HasLocation,
@@ -421,7 +421,7 @@ export class IntermediateTokenizer {
 
       if (
         this.currentToken == null
-                || this.currentToken.type !== 'StartTag'
+        || this.currentToken.type !== 'StartTag'
       ) {
         throw new Error('unreachable')
       }

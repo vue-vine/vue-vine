@@ -1,4 +1,4 @@
-import { sortedIndexBy } from 'lodash-es'
+import sortedIndexBy from 'lodash/sortedIndexBy'
 import type { ParseError } from '../ast'
 import type { VineTemplateMeta } from '../types'
 

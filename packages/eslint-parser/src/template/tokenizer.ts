@@ -312,7 +312,7 @@ export class Tokenizer {
 
     if (
       isSurrogate(this.text.charCodeAt(this.offset))
-            && !isSurrogatePair(this.text.charCodeAt(this.offset + 1))
+      && !isSurrogatePair(this.text.charCodeAt(this.offset + 1))
     ) {
       this.reportParseError('surrogate-in-input-stream')
     }
@@ -561,7 +561,7 @@ export class Tokenizer {
       const msg2 = token ? `"${token.type}" type` : 'no token'
 
       throw new Error(
-                `Tokenizer: Invalid state. Expected ${msg1}, but got ${msg2}.`,
+        `Tokenizer: Invalid state. Expected ${msg1}, but got ${msg2}.`,
       )
     }
 

@@ -1,4 +1,4 @@
-import sortedLastIndex from 'lodash-es/sortedLastIndex'
+import sortedLastIndex from 'lodash/sortedLastIndex'
 import type { Location } from '../ast'
 import type { LocationCalculator } from './location-calculator'
 

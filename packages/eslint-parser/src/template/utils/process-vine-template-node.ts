@@ -1,15 +1,21 @@
 import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
-import type { ParseForESLintResult, VineTemplatePositionInfo } from '../types'
-import type { Token, VTemplateRoot } from '../ast'
+import type { ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
+import type { HasLocation, VTemplateRoot } from '../../ast'
 
-export function fixVineOffset<T extends Token | VTemplateRoot>(
+export function fixVineOffset<T extends HasLocation & { type: string }>(
   token: T,
   {
     templateStartOffset,
     templateStartLine,
     templateStartColumn,
   }: VineTemplatePositionInfo,
+  cache: WeakSet<T>,
 ) {
+  if (cache.has(token)) {
+    return
+  }
+  cache.add(token)
+
   // The start position of `VTemplateRoot` is correctly set on construction.
   if (token.type !== 'VTemplateRoot') {
     // Because the output token position is based on the start of the template,
@@ -28,10 +34,10 @@ export function fixVineOffset<T extends Token | VTemplateRoot>(
         ? templateStartColumn + token.loc.start.column
         : token.loc.start.column
     )
+    token.loc.end.line += templateStartLine - 1
   }
 
   token.range[1] += templateStartOffset
-  token.loc.end.line += templateStartLine - 1
   token.loc.end.column = (
     token.loc.end.line === templateStartLine
       ? templateStartColumn + token.loc.end.column
@@ -39,23 +45,35 @@ export function fixVineOffset<T extends Token | VTemplateRoot>(
   )
 }
 
-export function extractVineTemplateNode(
+export type ExtractVineTemplateResult = Array<{
+  templateNode: TSESTree.TaggedTemplateExpression
+  parentOfTemplate: TSESTree.Node
+  bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void
+}>
+
+export function extractForVineTemplate(
   ast: ParseForESLintResult['ast'],
 ) {
-  // Find all tagged template expressions which are tagged with `vine`.
-  let templateNode: TSESTree.TaggedTemplateExpression | undefined
-  let parentOfTemplate: TSESTree.Node | undefined
-  let bindVineTemplateESTree: ((vineESTree: VTemplateRoot) => void) | undefined
+  const extractVineTemplateResult: ExtractVineTemplateResult = []
+  const extractedTemplateNodes: WeakSet<TSESTree.TaggedTemplateExpression> = new WeakSet()
 
   try {
     traverse(ast, {
       enter(node, parent) {
+        // Find all tagged template expressions which are tagged with `vine`.
         if (
           node.type === 'TaggedTemplateExpression'
           && node.tag.type === 'Identifier'
           && node.tag.name === 'vine'
         ) {
-          templateNode = node
+          const templateNode = node
+          if (extractedTemplateNodes.has(templateNode)) {
+            return
+          }
+          extractedTemplateNodes.add(templateNode)
+
+          let parentOfTemplate: TSESTree.Node | undefined
+          let bindVineTemplateESTree: ((vineESTree: VTemplateRoot) => void) | undefined
 
           // Delete it from the AST, because we're going to replace it with
           // our custom AST node.
@@ -64,6 +82,7 @@ export function extractVineTemplateNode(
             parentOfTemplate = parent
             bindVineTemplateESTree = (vineESTree) => {
               parent.argument = vineESTree as any as TSESTree.Expression
+              vineESTree.parent = parent
             }
           }
           // Not only `ReturnStatement`:
@@ -74,6 +93,7 @@ export function extractVineTemplateNode(
             parentOfTemplate = parent
             bindVineTemplateESTree = (vineESTree) => {
               parent.body = vineESTree as any as TSESTree.Expression
+              vineESTree.parent = parent
             }
           }
 
@@ -86,7 +106,13 @@ export function extractVineTemplateNode(
             ),
           )
 
-          throw new Error('BREAK_TRAVERSE')
+          if (parentOfTemplate && bindVineTemplateESTree) {
+            extractVineTemplateResult.push({
+              templateNode,
+              parentOfTemplate,
+              bindVineTemplateESTree,
+            })
+          }
         }
       },
     }, true)
@@ -97,15 +123,7 @@ export function extractVineTemplateNode(
     }
   }
 
-  if (!templateNode) {
-    return
-  }
-
-  return {
-    templateNode,
-    parentOfTemplate,
-    bindVineTemplateESTree,
-  }
+  return extractVineTemplateResult
 }
 
 export function prepareTemplate(

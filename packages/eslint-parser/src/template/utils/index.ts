@@ -526,8 +526,8 @@ export function convertToDirective(
   const { argument } = directive.key
   if (
     argument
-        && argument.type === 'VIdentifier'
-        && argument.name.startsWith('[')
+    && argument.type === 'VIdentifier'
+    && argument.name.startsWith('[')
   ) {
     const nextChar = code[argument.range[1]]
     if (nextChar == null || invalidDynamicArgumentNextChar.test(nextChar)) {

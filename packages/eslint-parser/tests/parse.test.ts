@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import type { VineESLintParserOptions } from '../src/types'
-import { finalProcessForTSFileAST, getTemplateRootData, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
+import { finalProcessForTSFileAST, getTemplateRootDataList, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
 
 describe('Vine ESLint parser test', () => {
   test('parse template root', () => {
@@ -31,11 +31,12 @@ function MyComp() {
     })
     const parserOptions: VineESLintParserOptions = {}
 
-    const prepareResult = prepareForTemplateRootAST(ast)
-    if (!prepareResult) {
+    const prepareResults = prepareForTemplateRootAST(ast)
+    if (!prepareResults.length) {
       return
     }
-    expect(prepareResult.templatePositionInfo).toMatchInlineSnapshot(`
+    const myCompPrepareResult = prepareResults[0]
+    expect(myCompPrepareResult.templatePositionInfo).toMatchInlineSnapshot(`
         {
           "templateEndColumn": 2,
           "templateEndLine": 18,
@@ -46,8 +47,8 @@ function MyComp() {
         }
     `)
 
-    const rootData = getTemplateRootData(
-      prepareResult,
+    const rootData = getTemplateRootDataList(
+      myCompPrepareResult,
       parserOptions,
     )
     if (rootData) {
@@ -56,7 +57,7 @@ function MyComp() {
       expect(templateMeta).toMatchSnapshot()
 
       finalProcessForTSFileAST(
-        prepareResult.bindVineTemplateESTree,
+        myCompPrepareResult.bindVineTemplateESTree,
         templateRootAST,
         templateMeta,
         ast,
@@ -64,7 +65,7 @@ function MyComp() {
       expect(ast).toMatchSnapshot()
       expect(
         sampleSourceCode.slice(
-          ...prepareResult.parentOfTemplate.range,
+          ...myCompPrepareResult.parentOfTemplate.range,
         )
           .split('\n')
           .slice(1, -1)

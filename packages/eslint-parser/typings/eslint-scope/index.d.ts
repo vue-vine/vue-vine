@@ -8,7 +8,7 @@ export interface AnalysisOptions {
     nodejsScope?: boolean
     impliedStrict?: boolean
     fallback?: string | Function
-    sourceType?: "script" | "module"
+    sourceType?: "script" | "module" | "commonjs"
     ecmaVersion?: number
     childVisitorKeys?: VisitorKeys
 }

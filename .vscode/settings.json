@@ -1,4 +1,5 @@
 {
   "prettier.enable": false,
-  "cSpell.enabled": false
+  "cSpell.enabled": false,
+  "testing.automaticallyOpenPeekView": "never"
 }

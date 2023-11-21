@@ -1,4 +1,5 @@
-import { sortedIndexBy, sortedLastIndexBy } from 'lodash-es'
+import sortedIndexBy from 'lodash/sortedIndexBy'
+import sortedLastIndexBy from 'lodash/sortedLastIndexBy'
 import type { Token } from '../ast'
 import type { VineTemplateMeta } from '../types'
 import type { LinesAndColumns } from './lines-and-columns'

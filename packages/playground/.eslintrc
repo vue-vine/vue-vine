@@ -5,5 +5,8 @@
       "files": ["*.vine.ts"],
       "parser": "@vue-vine/eslint-parser"
     }
-  ]
+  ],
+  "rules": {
+    "no-console": "off"
+  }
 }
