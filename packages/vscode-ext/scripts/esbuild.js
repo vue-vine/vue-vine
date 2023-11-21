@@ -31,7 +31,9 @@ const buildBaseOptions = {
             .replace('\\umd\\', '\\esm\\')
 
           if (pathEsm.includes('vscode-uri')) {
-            pathEsm = pathEsm.replace('/esm/index.js', '/esm/index.mjs')
+            pathEsm = pathEsm
+              .replace('/esm/index.js', '/esm/index.mjs')
+              .replace('\\esm\\index.js', '\\esm\\index.mjs')
           }
 
           return { path: pathEsm }
