@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { execa } from 'execa'
 
 const userAgent = process.env.npm_config_user_agent ?? ''

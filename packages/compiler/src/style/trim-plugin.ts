@@ -1,6 +1,6 @@
 import type { PluginCreator } from 'postcss'
 
-const trimPlugin: PluginCreator<{}> = () => {
+const trimPlugin: PluginCreator<object> = () => {
   return {
     postcssPlugin: 'vine-style-trim',
     Once(root) {

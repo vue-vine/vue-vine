@@ -1,12 +1,14 @@
+import process from 'node:process'
 import { readFileSync } from 'node:fs'
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
 import { colorful } from './utils/color-str'
 
 const PNPM_INSTALL = 'pnpm install'
-const LINT_STAGED = 'pnpm lint-staged'
-const RUN_COMPILER_TEST = 'pnpm run test --run'
+const RUN_LINT = 'pnpm run lint'
 const RUN_BUILD = 'pnpm run build'
+const LINT_STAGED = 'pnpm lint-staged'
+const RUN_TEST = 'pnpm run test --run'
 
 const msgPath = r('../.git/COMMIT_EDITMSG')
 const commitRE
@@ -27,9 +29,11 @@ async function runPreCommit() {
     await runCommand(RUN_BUILD)
 
     log('info', 'Start @vue-vine/compiler test ...')
-    await runCommand(RUN_COMPILER_TEST)
+    await runCommand(RUN_TEST)
 
-    // watching...
+    log('info', 'Start lint ...')
+    await runCommand(RUN_LINT)
+
     log('info', 'Start lint format ...')
     await runCommand(LINT_STAGED)
 

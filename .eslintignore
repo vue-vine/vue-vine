@@ -11,4 +11,4 @@ scripts/*.sh
 # because we didn't implement `.vine.ts`
 # template ESTree support yet
 packages/create-vue-vine/**/*.vine.ts
-packages/playground/**/*.vine.ts
+

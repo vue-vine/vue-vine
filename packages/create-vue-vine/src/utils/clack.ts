@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { cancel as _cancel, confirm as _confirm, text as _text, isCancel } from '@clack/prompts'
 
 export function cancel(...args: Parameters<typeof _cancel>): never {

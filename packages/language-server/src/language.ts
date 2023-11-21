@@ -3,7 +3,7 @@ import type { Language, VirtualFile } from '@volar/language-core'
 import { FileCapabilities, FileKind, FileRangeCapabilities, MirrorBehaviorCapabilities } from '@volar/language-core'
 import { buildMappings } from '@volar/source-map'
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
-import { compileVineTypeScriptFile } from '@vue-vine/compiler'
+import { compileVineTypeScriptFile, createCompilerCtx } from '@vue-vine/compiler'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/out/generators/template'
 import * as muggle from 'muggle-string'
@@ -70,13 +70,7 @@ export class VineFile implements VirtualFile {
   vineFileCtx!: VineFileCtx
   vineCompileErrs: VineDiagnostic[] = []
   vineCompileWarns: VineDiagnostic[] = []
-  compilerHooks: VineCompilerHooks = {
-    onOptionsResolved: cb => cb({
-      inlineTemplate: true,
-    }),
-    onError: err => this.vineCompileErrs.push(err),
-    onWarn: warn => this.vineCompileWarns.push(warn),
-  }
+  compilerHooks: VineCompilerHooks
 
   constructor(
     public sourceFileName: string,
@@ -84,6 +78,14 @@ export class VineFile implements VirtualFile {
     public ts: typeof import('typescript/lib/tsserverlibrary'),
   ) {
     this.fileName = virtualFileName(sourceFileName, 'ts')
+
+    const compilerCtx = createCompilerCtx()
+    this.compilerHooks = {
+      onError: err => this.vineCompileErrs.push(err),
+      onWarn: warn => this.vineCompileWarns.push(warn),
+      getCompilerCtx: () => compilerCtx,
+    }
+
     this.onSnapshotUpdated()
   }
 

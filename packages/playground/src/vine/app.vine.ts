@@ -2,7 +2,7 @@ import { PostHeader } from './post-header.vine'
 import { randomString } from '~/utils'
 
 function BlogPost(props: {
-  id: string
+id: string
 }) {
   vineStyle.scoped(scss`
     .loading-view {
@@ -77,12 +77,9 @@ export function App() {
   return vine`
     <div class="flex flex-row items-center justify-center mb-4">
       <div
-        class="mr-2 text-8 cursor-pointer"
         :class="[
-          isDark ? 'i-carbon:moon' : 'i-carbon:sun'
-        ]"
-        @click="toggleDark()"
-      />
+          isDark ? 'i-carbon:moon' : 'i-carbon:sun',
+          'mr-2 te,xt-8 cursor-pointer']" @click="toggleDark()" />
       <button class="random-pick-post-btn" @click="randomPick">
         Random pick a post
       </button>

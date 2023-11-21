@@ -8,14 +8,14 @@
     ".": {
       "dev": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
       "types": "./dist/vite/index.d.ts",
-      "require": "./dist/vite/index.js",
-      "import": "./dist/vite/index.mjs"
+      "import": "./dist/vite/index.mjs",
+      "require": "./dist/vite/index.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"

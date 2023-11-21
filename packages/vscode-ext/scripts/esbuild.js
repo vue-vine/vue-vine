@@ -1,6 +1,7 @@
 const process = require('node:process')
 
-require('esbuild').build({
+/** @type {import('esbuild').BuildOptions} */
+const buildBaseOptions = {
   entryPoints: {
     client: './src/extension.ts',
     server: './node_modules/@vue-vine/language-server/bin/vine-language-server.js',
@@ -17,8 +18,6 @@ require('esbuild').build({
   platform: 'node',
   tsconfig: './tsconfig.json',
   define: { 'process.env.NODE_ENV': '"production"' },
-  minify: process.argv.includes('--minify'),
-  watch: process.argv.includes('--watch'),
   metafile: process.argv.includes('--metafile'),
   plugins: [
     {
@@ -27,10 +26,50 @@ require('esbuild').build({
         build.onResolve({ filter: /^(vscode-.*|estree-walker|jsonc-parser)/ }, (args) => {
           const pathUmdMay = require.resolve(args.path, { paths: [args.resolveDir] })
           // Call twice the replace is to solve the problem of the path in Windows
-          const pathEsm = pathUmdMay.replace('/umd/', '/esm/').replace('\\umd\\', '\\esm\\')
+          let pathEsm = pathUmdMay
+            .replace('/umd/', '/esm/')
+            .replace('\\umd\\', '\\esm\\')
+
+          if (pathEsm.includes('vscode-uri')) {
+            pathEsm = pathEsm.replace('/esm/index.js', '/esm/index.mjs')
+          }
+
           return { path: pathEsm }
         })
       },
     },
   ],
-}).catch(() => process.exit(1))
+}
+
+function commonExitHandler() {
+  process.exit(1)
+}
+
+async function main() {
+  if (process.env.NODE_ENV === 'production') {
+    require('esbuild').build({
+      ...buildBaseOptions,
+      // Production config
+      ...{
+      // minify: process.argv.includes('--minify'),
+      },
+    }).catch(commonExitHandler)
+  }
+  else {
+    try {
+      const ctx = await require('esbuild').context({
+        ...buildBaseOptions,
+        // Development config
+        ...{
+        // ... To be supplemented
+        },
+      })
+      await ctx.watch()
+    }
+    catch {
+      commonExitHandler()
+    }
+  }
+}
+
+main()

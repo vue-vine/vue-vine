@@ -1,10 +1,11 @@
-import * as path from 'node:path'
+import process from 'node:process'
+import { resolve } from 'node:path'
 import { exec, spawn } from 'node:child_process'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
 import { colorful } from './color-str'
 
-export const r = (...args) => path.resolve(__dirname, '..', ...args)
+export const r = (...args) => resolve(__dirname, '..', ...args)
 
 export async function runCommand(command, options = {}) {
   options.title && log('info', 'Executing ...', `${colorful(
@@ -17,6 +18,7 @@ export async function runCommand(command, options = {}) {
       const proc = exec(command, {
         cwd: r('../'),
         shell: true,
+        stdio: 'inherit',
       })
       proc.stdout.on('data', (data) => {
         console.log(String(data).trim())

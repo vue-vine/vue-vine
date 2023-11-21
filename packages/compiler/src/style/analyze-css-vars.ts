@@ -2,8 +2,8 @@
  * Implementation from vue
  * https://github.com/vuejs/core/blob/main/packages/compiler-sfc/src/style/cssVars.ts
  */
-const enum LexerState {
-  inParens,
+enum LexerState {
+  inParens = 1,
   inSingleQuoteString,
   inDoubleQuoteString,
 }

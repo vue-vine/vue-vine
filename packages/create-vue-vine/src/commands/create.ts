@@ -1,5 +1,6 @@
 import { join, relative } from 'node:path'
 import { rm } from 'node:fs/promises'
+import process from 'node:process'
 import { intro, log, outro, spinner } from '@clack/prompts'
 import { Root, defineCommand } from 'clerc'
 import gradient from 'gradient-string'

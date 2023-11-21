@@ -20,5 +20,8 @@
     {
       "path": "../language-server/tsconfig.json"
     }
+  ],
+  "include": [
+    "src"
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "extends": "@antfu",
+  "overrides": [
+    {
+      "files": ["*.vine.ts"],
+      "parser": "@vue-vine/eslint-parser"
+    }
+  ],
+  "rules": {
+    "no-console": "off"
+  }
+}
