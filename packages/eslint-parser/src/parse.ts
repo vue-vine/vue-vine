@@ -13,6 +13,13 @@ type TemplateRootASTPreparation = ReturnType<typeof prepareTemplate> & {
   bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void
 }
 
+const forceEnableLocationOptions = {
+  range: true,
+  loc: true,
+  tokens: true,
+  comment: true,
+}
+
 export function typescriptBasicESLintParse(
   code: string,
   parserOptions: VineESLintParserOptions,
@@ -21,10 +28,7 @@ export function typescriptBasicESLintParse(
     code,
     {
       ...parserOptions,
-      range: true,
-      loc: true,
-      tokens: true,
-      comment: true,
+      ...forceEnableLocationOptions,
     },
   )
 }
@@ -100,7 +104,10 @@ export function runParse(
     const { bindVineTemplateESTree } = prepareResult
     const rootData = getTemplateRootDataList(
       prepareResult,
-      parserOptions,
+      {
+        ...parserOptions,
+        ...forceEnableLocationOptions,
+      },
     )
     if (!rootData) {
       continue

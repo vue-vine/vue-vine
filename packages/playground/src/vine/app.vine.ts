@@ -76,7 +76,10 @@ export function App() {
 
   return vine`
     <div class="flex flex-row items-center justify-center mb-4">
-      <div :class="\`mr-2 text-8 cursor-pointer \${isDark ? 'i-carbon:moon' : 'i-carbon:sun'}\`" @click="toggleDark()" />
+      <div
+        :class="[
+          isDark ? 'i-carbon:moon' : 'i-carbon:sun',
+          'mr-2 te,xt-8 cursor-pointer']" @click="toggleDark()" />
       <button class="random-pick-post-btn" @click="randomPick">
         Random pick a post
       </button>

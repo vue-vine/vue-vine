@@ -27,7 +27,7 @@ export type {
 } from './src/types'
 
 export function createCompilerCtx(
-  options: VineCompilerOptions,
+  options: VineCompilerOptions = {},
 ): VineCompilerCtx {
   return {
     fileCtxMap: new Map(),

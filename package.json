@@ -8,16 +8,19 @@
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "esno scripts/run-dev.js",
-    "build": "pnpm build:compiler && pnpm build:vite && pnpm build:main",
+    "build": "pnpm build:compiler && pnpm build:vite && pnpm build:main && pnpm build:eslint-parser",
     "dev:compiler": "cross-env NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
     "dev:vite": "cross-env NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
     "dev:main": "cross-env NODE_ENV=development pnpm --filter vue-vine run dev",
     "build:compiler": "cross-env NODE_ENV=production pnpm --filter @vue-vine/compiler run build",
     "build:vite": "cross-env NODE_ENV=production pnpm --filter @vue-vine/vite-plugin run build",
+    "build:lsp": "cross-env NODE_ENV=production pnpm --filter @vue-vine/language-server run build",
     "build:eslint-parser": "cross-env NODE_ENV=production pnpm --filter @vue-vine/eslint-parser run build",
     "build:main": "cross-env NODE_ENV=production pnpm --filter vue-vine run build",
-    "ext:dev": "cross-env NODE_ENV=development esno scripts/ext-dev.js dev",
-    "ext:build": "cross-env NODE_ENV=production esno scripts/ext-dev.js build",
+    "ext:dev": "cross-env NODE_ENV=development esno scripts/ext-dev.js",
+    "ext:tsc": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build:tsc",
+    "ext:esbuild": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build:esbuild",
+    "ext:build": "cross-env NODE_ENV=production pnpm build:compiler && pnpm ext:tsc && pnpm ext:esbuild && pnpm build:lsp",
     "test": "esno scripts/run-test.js",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
@@ -51,6 +54,11 @@
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vitest": "^0.31.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "vscode-uri": "^3.0.8"
+    }
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm esno scripts/pre-commit.js"

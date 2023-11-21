@@ -69,8 +69,8 @@
     "vscode:prepublish": "pnpm run compile",
     "watch:tsc": "tsc -w --preserveWatchOutput",
     "build:tsc": "tsc",
-    "watch:esbuild": "node ./scripts/esbuild.js --watch",
-    "build:esbuild": "node ./scripts/esbuild.js --minify",
+    "watch:esbuild": "cross-env NODE_ENV=development node ./scripts/esbuild.js --watch",
+    "build:esbuild": "cross-env NODE_ENV=production node ./scripts/esbuild.js --minify",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts"
   },
@@ -86,14 +86,15 @@
     "@types/vscode": "^1.81.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
-    "@volar/language-server": "~1.10.4",
-    "@volar/vscode": "~1.10.4",
+    "@volar/language-server": "~1.11.1",
+    "@volar/vscode": "~1.11.1",
     "@vscode/test-electron": "^2.3.4",
-    "esbuild": "^0.15.18",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.19.7",
     "eslint": "^8.48.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
     "typescript": "^5.2.2",
-    "vscode-languageclient": "^8.1.0"
+    "vscode-languageclient": "^9.0.1"
   }
 }

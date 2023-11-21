@@ -18,6 +18,7 @@ export async function runCommand(command, options = {}) {
       const proc = exec(command, {
         cwd: r('../'),
         shell: true,
+        stdio: 'inherit',
       })
       proc.stdout.on('data', (data) => {
         console.log(String(data).trim())

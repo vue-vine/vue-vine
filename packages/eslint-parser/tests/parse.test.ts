@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import type { VineESLintParserOptions } from '../src/types'
-import { finalProcessForTSFileAST, getTemplateRootDataList, prepareForTemplateRootAST, typescriptBasicESLintParse } from '../src/parse'
+import { runParse } from '../src/parse'
 
 describe('Vine ESLint parser test', () => {
   test('parse template root', () => {
@@ -25,57 +25,11 @@ function MyComp() {
   \`
 }`.trim()
 
-    const { ast } = typescriptBasicESLintParse(sampleSourceCode, {
+    const parserOptions: VineESLintParserOptions = {
       ecmaVersion: 'latest',
       sourceType: 'module',
-    })
-    const parserOptions: VineESLintParserOptions = {}
-
-    const prepareResults = prepareForTemplateRootAST(ast)
-    if (!prepareResults.length) {
-      return
     }
-    const myCompPrepareResult = prepareResults[0]
-    expect(myCompPrepareResult.templatePositionInfo).toMatchInlineSnapshot(`
-        {
-          "templateEndColumn": 2,
-          "templateEndLine": 18,
-          "templateEndOffset": 546,
-          "templateStartColumn": 14,
-          "templateStartLine": 9,
-          "templateStartOffset": 233,
-        }
-    `)
-
-    const rootData = getTemplateRootDataList(
-      myCompPrepareResult,
-      parserOptions,
-    )
-    if (rootData) {
-      const [templateRootAST, templateMeta] = rootData
-      expect(templateRootAST).toMatchSnapshot()
-      expect(templateMeta).toMatchSnapshot()
-
-      finalProcessForTSFileAST(
-        myCompPrepareResult.bindVineTemplateESTree,
-        templateRootAST,
-        templateMeta,
-        ast,
-      )
-      expect(ast).toMatchSnapshot()
-      expect(
-        sampleSourceCode.slice(
-          ...myCompPrepareResult.parentOfTemplate.range,
-        )
-          .split('\n')
-          .slice(1, -1)
-          .join('\n')
-          .trim(),
-      ).toEqual(
-        sampleSourceCode.slice(
-          ...templateRootAST.range,
-        ).trim(),
-      )
-    }
+    const { ast } = runParse(sampleSourceCode, parserOptions)
+    expect(ast).toMatchSnapshot()
   })
 })
