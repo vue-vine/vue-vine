@@ -1,5 +1,5 @@
 import { parse as VueCompilerDomParse, compile } from '@vue/compiler-dom'
-import type { BindingTypes, CompilerOptions, ElementNode, ElementTypes, NodeTypes, RootNode, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import lineColumn from 'line-column'
@@ -364,7 +364,6 @@ export function createInlineTemplateComposer(
 
       const { preamble, code, ast } = compileResult
       vineCompFnCtx.templateAst = ast
-
 
       if (hasTemplateCompileErr) {
         return ''
