@@ -1,5 +1,5 @@
 import { parse as VueCompilerDomParse, compile } from '@vue/compiler-dom'
-import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { BindingTypes, CompilerOptions, ElementNode, ElementTypes, NodeTypes, RootNode, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import lineColumn from 'line-column'
@@ -322,7 +322,7 @@ export function createInlineTemplateComposer(
     generatedPreambleStmts,
     compileSetupFnReturns: ({
       vineFileCtx,
-      vineCompFnCtx: vineFnCompCtx,
+      vineCompFnCtx,
       templateSource,
       mergedImportsMap,
       bindingMetadata,
@@ -331,7 +331,7 @@ export function createInlineTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
-          scopeId: `data-v-${vineFnCompCtx.scopeId}`,
+          scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           bindingMetadata,
           onError: (e) => {
             if (hasTemplateCompileErr) {
@@ -343,7 +343,7 @@ export function createInlineTemplateComposer(
                 vineFileCtx,
                 {
                   msg: `[Vine template compile error] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
                 },
               ),
             )
@@ -354,21 +354,22 @@ export function createInlineTemplateComposer(
                 vineFileCtx,
                 {
                   msg: `[Vine template compile warning] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
                 },
               ),
             )
           },
         },
       )
-      vineFnCompCtx.templateAst = hasTemplateCompileErr
-        ? undefined
-        : VueCompilerDomParse(templateSource)
+
+      const { preamble, code, ast } = compileResult
+      vineCompFnCtx.templateAst = ast
+
+
       if (hasTemplateCompileErr) {
         return ''
       }
 
-      const { preamble, code } = compileResult
       const preambleAst = babelParse(preamble)
       // Find all import statements and store specifiers
       saveImportSpecifier(
@@ -383,7 +384,7 @@ export function createInlineTemplateComposer(
       )
       preambleStmts.forEach(stmt => appendToMapArray(
         generatedPreambleStmts,
-        vineFnCompCtx,
+        vineCompFnCtx,
         preamble.slice(
           stmt.start!,
           stmt.end!,
@@ -392,7 +393,7 @@ export function createInlineTemplateComposer(
 
       // For inline mode, we can directly store the generated code,
       // it's an inline render function
-      templateCompileResults.set(vineFnCompCtx, code)
+      templateCompileResults.set(vineCompFnCtx, code)
 
       // For inline mode, the setup function's return expression is the render function
       return code

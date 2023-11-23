@@ -490,7 +490,7 @@ exports[`Test Vine compiler analyze > analyze vine template 1`] = `
             {
               "content": {
                 "constType": 0,
-                "content": "title",
+                "content": "__props.title",
                 "isStatic": false,
                 "loc": {
                   "end": {
@@ -523,7 +523,65 @@ exports[`Test Vine compiler analyze > analyze vine template 1`] = `
               "type": 5,
             },
           ],
-          "codegenNode": undefined,
+          "codegenNode": {
+            "children": {
+              "content": {
+                "constType": 0,
+                "content": "__props.title",
+                "isStatic": false,
+                "loc": {
+                  "end": {
+                    "column": 19,
+                    "line": 3,
+                    "offset": 29,
+                  },
+                  "source": "title",
+                  "start": {
+                    "column": 14,
+                    "line": 3,
+                    "offset": 24,
+                  },
+                },
+                "type": 4,
+              },
+              "loc": {
+                "end": {
+                  "column": 22,
+                  "line": 3,
+                  "offset": 32,
+                },
+                "source": "{{ title }}",
+                "start": {
+                  "column": 11,
+                  "line": 3,
+                  "offset": 21,
+                },
+              },
+              "type": 5,
+            },
+            "directives": undefined,
+            "disableTracking": false,
+            "dynamicProps": undefined,
+            "isBlock": false,
+            "isComponent": false,
+            "loc": {
+              "end": {
+                "column": 27,
+                "line": 3,
+                "offset": 37,
+              },
+              "source": "<h1>{{ title }}</h1>",
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 17,
+              },
+            },
+            "patchFlag": "1 /* TEXT */",
+            "props": undefined,
+            "tag": "\\"h1\\"",
+            "type": 13,
+          },
           "isSelfClosing": false,
           "loc": {
             "end": {
@@ -546,7 +604,27 @@ exports[`Test Vine compiler analyze > analyze vine template 1`] = `
         },
         {
           "children": [],
-          "codegenNode": undefined,
+          "codegenNode": {
+            "arguments": [
+              "_ctx.$slots",
+              "\\"default\\"",
+            ],
+            "callee": Symbol(renderSlot),
+            "loc": {
+              "end": {
+                "column": 15,
+                "line": 4,
+                "offset": 52,
+              },
+              "source": "<slot />",
+              "start": {
+                "column": 7,
+                "line": 4,
+                "offset": 44,
+              },
+            },
+            "type": 14,
+          },
           "isSelfClosing": true,
           "loc": {
             "end": {
@@ -568,7 +646,195 @@ exports[`Test Vine compiler analyze > analyze vine template 1`] = `
           "type": 1,
         },
       ],
-      "codegenNode": undefined,
+      "codegenNode": {
+        "children": [
+          {
+            "children": [
+              {
+                "content": {
+                  "constType": 0,
+                  "content": "__props.title",
+                  "isStatic": false,
+                  "loc": {
+                    "end": {
+                      "column": 19,
+                      "line": 3,
+                      "offset": 29,
+                    },
+                    "source": "title",
+                    "start": {
+                      "column": 14,
+                      "line": 3,
+                      "offset": 24,
+                    },
+                  },
+                  "type": 4,
+                },
+                "loc": {
+                  "end": {
+                    "column": 22,
+                    "line": 3,
+                    "offset": 32,
+                  },
+                  "source": "{{ title }}",
+                  "start": {
+                    "column": 11,
+                    "line": 3,
+                    "offset": 21,
+                  },
+                },
+                "type": 5,
+              },
+            ],
+            "codegenNode": {
+              "children": {
+                "content": {
+                  "constType": 0,
+                  "content": "__props.title",
+                  "isStatic": false,
+                  "loc": {
+                    "end": {
+                      "column": 19,
+                      "line": 3,
+                      "offset": 29,
+                    },
+                    "source": "title",
+                    "start": {
+                      "column": 14,
+                      "line": 3,
+                      "offset": 24,
+                    },
+                  },
+                  "type": 4,
+                },
+                "loc": {
+                  "end": {
+                    "column": 22,
+                    "line": 3,
+                    "offset": 32,
+                  },
+                  "source": "{{ title }}",
+                  "start": {
+                    "column": 11,
+                    "line": 3,
+                    "offset": 21,
+                  },
+                },
+                "type": 5,
+              },
+              "directives": undefined,
+              "disableTracking": false,
+              "dynamicProps": undefined,
+              "isBlock": false,
+              "isComponent": false,
+              "loc": {
+                "end": {
+                  "column": 27,
+                  "line": 3,
+                  "offset": 37,
+                },
+                "source": "<h1>{{ title }}</h1>",
+                "start": {
+                  "column": 7,
+                  "line": 3,
+                  "offset": 17,
+                },
+              },
+              "patchFlag": "1 /* TEXT */",
+              "props": undefined,
+              "tag": "\\"h1\\"",
+              "type": 13,
+            },
+            "isSelfClosing": false,
+            "loc": {
+              "end": {
+                "column": 27,
+                "line": 3,
+                "offset": 37,
+              },
+              "source": "<h1>{{ title }}</h1>",
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 17,
+              },
+            },
+            "ns": 0,
+            "props": [],
+            "tag": "h1",
+            "tagType": 0,
+            "type": 1,
+          },
+          {
+            "children": [],
+            "codegenNode": {
+              "arguments": [
+                "_ctx.$slots",
+                "\\"default\\"",
+              ],
+              "callee": Symbol(renderSlot),
+              "loc": {
+                "end": {
+                  "column": 15,
+                  "line": 4,
+                  "offset": 52,
+                },
+                "source": "<slot />",
+                "start": {
+                  "column": 7,
+                  "line": 4,
+                  "offset": 44,
+                },
+              },
+              "type": 14,
+            },
+            "isSelfClosing": true,
+            "loc": {
+              "end": {
+                "column": 15,
+                "line": 4,
+                "offset": 52,
+              },
+              "source": "<slot />",
+              "start": {
+                "column": 7,
+                "line": 4,
+                "offset": 44,
+              },
+            },
+            "ns": 0,
+            "props": [],
+            "tag": "slot",
+            "tagType": 2,
+            "type": 1,
+          },
+        ],
+        "directives": undefined,
+        "disableTracking": false,
+        "dynamicProps": undefined,
+        "isBlock": true,
+        "isComponent": false,
+        "loc": {
+          "end": {
+            "column": 11,
+            "line": 5,
+            "offset": 63,
+          },
+          "source": "<div>
+      <h1>{{ title }}</h1>
+      <slot />
+    </div>",
+          "start": {
+            "column": 5,
+            "line": 2,
+            "offset": 5,
+          },
+        },
+        "patchFlag": undefined,
+        "props": undefined,
+        "tag": "\\"div\\"",
+        "type": 13,
+      },
       "isSelfClosing": false,
       "loc": {
         "end": {
@@ -593,10 +859,205 @@ exports[`Test Vine compiler analyze > analyze vine template 1`] = `
       "type": 1,
     },
   ],
-  "codegenNode": undefined,
+  "codegenNode": {
+    "children": [
+      {
+        "children": [
+          {
+            "content": {
+              "constType": 0,
+              "content": "__props.title",
+              "isStatic": false,
+              "loc": {
+                "end": {
+                  "column": 19,
+                  "line": 3,
+                  "offset": 29,
+                },
+                "source": "title",
+                "start": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 24,
+                },
+              },
+              "type": 4,
+            },
+            "loc": {
+              "end": {
+                "column": 22,
+                "line": 3,
+                "offset": 32,
+              },
+              "source": "{{ title }}",
+              "start": {
+                "column": 11,
+                "line": 3,
+                "offset": 21,
+              },
+            },
+            "type": 5,
+          },
+        ],
+        "codegenNode": {
+          "children": {
+            "content": {
+              "constType": 0,
+              "content": "__props.title",
+              "isStatic": false,
+              "loc": {
+                "end": {
+                  "column": 19,
+                  "line": 3,
+                  "offset": 29,
+                },
+                "source": "title",
+                "start": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 24,
+                },
+              },
+              "type": 4,
+            },
+            "loc": {
+              "end": {
+                "column": 22,
+                "line": 3,
+                "offset": 32,
+              },
+              "source": "{{ title }}",
+              "start": {
+                "column": 11,
+                "line": 3,
+                "offset": 21,
+              },
+            },
+            "type": 5,
+          },
+          "directives": undefined,
+          "disableTracking": false,
+          "dynamicProps": undefined,
+          "isBlock": false,
+          "isComponent": false,
+          "loc": {
+            "end": {
+              "column": 27,
+              "line": 3,
+              "offset": 37,
+            },
+            "source": "<h1>{{ title }}</h1>",
+            "start": {
+              "column": 7,
+              "line": 3,
+              "offset": 17,
+            },
+          },
+          "patchFlag": "1 /* TEXT */",
+          "props": undefined,
+          "tag": "\\"h1\\"",
+          "type": 13,
+        },
+        "isSelfClosing": false,
+        "loc": {
+          "end": {
+            "column": 27,
+            "line": 3,
+            "offset": 37,
+          },
+          "source": "<h1>{{ title }}</h1>",
+          "start": {
+            "column": 7,
+            "line": 3,
+            "offset": 17,
+          },
+        },
+        "ns": 0,
+        "props": [],
+        "tag": "h1",
+        "tagType": 0,
+        "type": 1,
+      },
+      {
+        "children": [],
+        "codegenNode": {
+          "arguments": [
+            "_ctx.$slots",
+            "\\"default\\"",
+          ],
+          "callee": Symbol(renderSlot),
+          "loc": {
+            "end": {
+              "column": 15,
+              "line": 4,
+              "offset": 52,
+            },
+            "source": "<slot />",
+            "start": {
+              "column": 7,
+              "line": 4,
+              "offset": 44,
+            },
+          },
+          "type": 14,
+        },
+        "isSelfClosing": true,
+        "loc": {
+          "end": {
+            "column": 15,
+            "line": 4,
+            "offset": 52,
+          },
+          "source": "<slot />",
+          "start": {
+            "column": 7,
+            "line": 4,
+            "offset": 44,
+          },
+        },
+        "ns": 0,
+        "props": [],
+        "tag": "slot",
+        "tagType": 2,
+        "type": 1,
+      },
+    ],
+    "directives": undefined,
+    "disableTracking": false,
+    "dynamicProps": undefined,
+    "isBlock": true,
+    "isComponent": false,
+    "loc": {
+      "end": {
+        "column": 11,
+        "line": 5,
+        "offset": 63,
+      },
+      "source": "<div>
+      <h1>{{ title }}</h1>
+      <slot />
+    </div>",
+      "start": {
+        "column": 5,
+        "line": 2,
+        "offset": 5,
+      },
+    },
+    "patchFlag": undefined,
+    "props": undefined,
+    "tag": "\\"div\\"",
+    "type": 13,
+  },
   "components": [],
   "directives": [],
-  "helpers": Set {},
+  "filters": [],
+  "helpers": Set {
+    Symbol(toDisplayString),
+    Symbol(createElementVNode),
+    Symbol(renderSlot),
+    Symbol(openBlock),
+    Symbol(createElementBlock),
+  },
   "hoists": [],
   "imports": [],
   "loc": {
@@ -648,7 +1109,66 @@ exports[`Test Vine compiler analyze > analyze vine template 2`] = `
               "type": 2,
             },
           ],
-          "codegenNode": undefined,
+          "codegenNode": {
+            "constType": 2,
+            "content": "_hoisted_1",
+            "hoisted": {
+              "children": {
+                "content": "Test inner content",
+                "loc": {
+                  "end": {
+                    "column": 30,
+                    "line": 3,
+                    "offset": 64,
+                  },
+                  "source": "Test inner content",
+                  "start": {
+                    "column": 12,
+                    "line": 3,
+                    "offset": 46,
+                  },
+                },
+                "type": 2,
+              },
+              "directives": undefined,
+              "disableTracking": false,
+              "dynamicProps": undefined,
+              "isBlock": false,
+              "isComponent": false,
+              "loc": {
+                "end": {
+                  "column": 36,
+                  "line": 3,
+                  "offset": 70,
+                },
+                "source": "<div>Test inner content</div>",
+                "start": {
+                  "column": 7,
+                  "line": 3,
+                  "offset": 41,
+                },
+              },
+              "patchFlag": "-1 /* HOISTED */",
+              "props": undefined,
+              "tag": "\\"div\\"",
+              "type": 13,
+            },
+            "isStatic": false,
+            "loc": {
+              "end": {
+                "column": 36,
+                "line": 3,
+                "offset": 70,
+              },
+              "source": "<div>Test inner content</div>",
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 41,
+              },
+            },
+            "type": 4,
+          },
           "isSelfClosing": false,
           "loc": {
             "end": {
@@ -670,7 +1190,335 @@ exports[`Test Vine compiler analyze > analyze vine template 2`] = `
           "type": 1,
         },
       ],
-      "codegenNode": undefined,
+      "codegenNode": {
+        "children": {
+          "loc": {
+            "end": {
+              "column": 13,
+              "line": 4,
+              "offset": 83,
+            },
+            "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+            "start": {
+              "column": 5,
+              "line": 2,
+              "offset": 5,
+            },
+          },
+          "properties": [
+            {
+              "key": {
+                "constType": 3,
+                "content": "default",
+                "isStatic": true,
+                "loc": {
+                  "end": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                  "source": "",
+                  "start": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                },
+                "type": 4,
+              },
+              "loc": {
+                "end": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+                "source": "",
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
+              "type": 16,
+              "value": {
+                "isSlot": true,
+                "loc": {
+                  "end": {
+                    "column": 36,
+                    "line": 3,
+                    "offset": 70,
+                  },
+                  "source": "<div>Test inner content</div>",
+                  "start": {
+                    "column": 7,
+                    "line": 3,
+                    "offset": 41,
+                  },
+                },
+                "newline": false,
+                "params": undefined,
+                "returns": [
+                  {
+                    "children": [
+                      {
+                        "content": "Test inner content",
+                        "loc": {
+                          "end": {
+                            "column": 30,
+                            "line": 3,
+                            "offset": 64,
+                          },
+                          "source": "Test inner content",
+                          "start": {
+                            "column": 12,
+                            "line": 3,
+                            "offset": 46,
+                          },
+                        },
+                        "type": 2,
+                      },
+                    ],
+                    "codegenNode": {
+                      "constType": 2,
+                      "content": "_hoisted_1",
+                      "hoisted": {
+                        "children": {
+                          "content": "Test inner content",
+                          "loc": {
+                            "end": {
+                              "column": 30,
+                              "line": 3,
+                              "offset": 64,
+                            },
+                            "source": "Test inner content",
+                            "start": {
+                              "column": 12,
+                              "line": 3,
+                              "offset": 46,
+                            },
+                          },
+                          "type": 2,
+                        },
+                        "directives": undefined,
+                        "disableTracking": false,
+                        "dynamicProps": undefined,
+                        "isBlock": false,
+                        "isComponent": false,
+                        "loc": {
+                          "end": {
+                            "column": 36,
+                            "line": 3,
+                            "offset": 70,
+                          },
+                          "source": "<div>Test inner content</div>",
+                          "start": {
+                            "column": 7,
+                            "line": 3,
+                            "offset": 41,
+                          },
+                        },
+                        "patchFlag": "-1 /* HOISTED */",
+                        "props": undefined,
+                        "tag": "\\"div\\"",
+                        "type": 13,
+                      },
+                      "isStatic": false,
+                      "loc": {
+                        "end": {
+                          "column": 36,
+                          "line": 3,
+                          "offset": 70,
+                        },
+                        "source": "<div>Test inner content</div>",
+                        "start": {
+                          "column": 7,
+                          "line": 3,
+                          "offset": 41,
+                        },
+                      },
+                      "type": 4,
+                    },
+                    "isSelfClosing": false,
+                    "loc": {
+                      "end": {
+                        "column": 36,
+                        "line": 3,
+                        "offset": 70,
+                      },
+                      "source": "<div>Test inner content</div>",
+                      "start": {
+                        "column": 7,
+                        "line": 3,
+                        "offset": 41,
+                      },
+                    },
+                    "ns": 0,
+                    "props": [],
+                    "tag": "div",
+                    "tagType": 0,
+                    "type": 1,
+                  },
+                ],
+                "type": 18,
+              },
+            },
+            {
+              "key": {
+                "constType": 3,
+                "content": "_",
+                "isStatic": true,
+                "loc": {
+                  "end": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                  "source": "",
+                  "start": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                },
+                "type": 4,
+              },
+              "loc": {
+                "end": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+                "source": "",
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
+              "type": 16,
+              "value": {
+                "constType": 0,
+                "content": "1 /* STABLE */",
+                "isStatic": false,
+                "loc": {
+                  "end": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                  "source": "",
+                  "start": {
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
+                  },
+                },
+                "type": 4,
+              },
+            },
+          ],
+          "type": 15,
+        },
+        "directives": undefined,
+        "disableTracking": false,
+        "dynamicProps": undefined,
+        "isBlock": true,
+        "isComponent": true,
+        "loc": {
+          "end": {
+            "column": 13,
+            "line": 4,
+            "offset": 83,
+          },
+          "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+          "start": {
+            "column": 5,
+            "line": 2,
+            "offset": 5,
+          },
+        },
+        "patchFlag": undefined,
+        "props": {
+          "loc": {
+            "end": {
+              "column": 13,
+              "line": 4,
+              "offset": 83,
+            },
+            "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+            "start": {
+              "column": 5,
+              "line": 2,
+              "offset": 5,
+            },
+          },
+          "properties": [
+            {
+              "key": {
+                "constType": 3,
+                "content": "title",
+                "isStatic": true,
+                "loc": {
+                  "end": {
+                    "column": 17,
+                    "line": 2,
+                    "offset": 17,
+                  },
+                  "source": "title",
+                  "start": {
+                    "column": 12,
+                    "line": 2,
+                    "offset": 12,
+                  },
+                },
+                "type": 4,
+              },
+              "loc": {
+                "end": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+                "source": "",
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
+              "type": 16,
+              "value": {
+                "constType": 3,
+                "content": "Test template",
+                "isStatic": true,
+                "loc": {
+                  "end": {
+                    "column": 33,
+                    "line": 2,
+                    "offset": 33,
+                  },
+                  "source": "\\"Test template\\"",
+                  "start": {
+                    "column": 18,
+                    "line": 2,
+                    "offset": 18,
+                  },
+                },
+                "type": 4,
+              },
+            },
+          ],
+          "type": 15,
+        },
+        "tag": "MyBox",
+        "type": 13,
+      },
       "isSelfClosing": false,
       "loc": {
         "end": {
@@ -729,11 +1577,389 @@ exports[`Test Vine compiler analyze > analyze vine template 2`] = `
       "type": 1,
     },
   ],
-  "codegenNode": undefined,
+  "codegenNode": {
+    "children": {
+      "loc": {
+        "end": {
+          "column": 13,
+          "line": 4,
+          "offset": 83,
+        },
+        "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+        "start": {
+          "column": 5,
+          "line": 2,
+          "offset": 5,
+        },
+      },
+      "properties": [
+        {
+          "key": {
+            "constType": 3,
+            "content": "default",
+            "isStatic": true,
+            "loc": {
+              "end": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+              "source": "",
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+            },
+            "type": 4,
+          },
+          "loc": {
+            "end": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+            "source": "",
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": 16,
+          "value": {
+            "isSlot": true,
+            "loc": {
+              "end": {
+                "column": 36,
+                "line": 3,
+                "offset": 70,
+              },
+              "source": "<div>Test inner content</div>",
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 41,
+              },
+            },
+            "newline": false,
+            "params": undefined,
+            "returns": [
+              {
+                "children": [
+                  {
+                    "content": "Test inner content",
+                    "loc": {
+                      "end": {
+                        "column": 30,
+                        "line": 3,
+                        "offset": 64,
+                      },
+                      "source": "Test inner content",
+                      "start": {
+                        "column": 12,
+                        "line": 3,
+                        "offset": 46,
+                      },
+                    },
+                    "type": 2,
+                  },
+                ],
+                "codegenNode": {
+                  "constType": 2,
+                  "content": "_hoisted_1",
+                  "hoisted": {
+                    "children": {
+                      "content": "Test inner content",
+                      "loc": {
+                        "end": {
+                          "column": 30,
+                          "line": 3,
+                          "offset": 64,
+                        },
+                        "source": "Test inner content",
+                        "start": {
+                          "column": 12,
+                          "line": 3,
+                          "offset": 46,
+                        },
+                      },
+                      "type": 2,
+                    },
+                    "directives": undefined,
+                    "disableTracking": false,
+                    "dynamicProps": undefined,
+                    "isBlock": false,
+                    "isComponent": false,
+                    "loc": {
+                      "end": {
+                        "column": 36,
+                        "line": 3,
+                        "offset": 70,
+                      },
+                      "source": "<div>Test inner content</div>",
+                      "start": {
+                        "column": 7,
+                        "line": 3,
+                        "offset": 41,
+                      },
+                    },
+                    "patchFlag": "-1 /* HOISTED */",
+                    "props": undefined,
+                    "tag": "\\"div\\"",
+                    "type": 13,
+                  },
+                  "isStatic": false,
+                  "loc": {
+                    "end": {
+                      "column": 36,
+                      "line": 3,
+                      "offset": 70,
+                    },
+                    "source": "<div>Test inner content</div>",
+                    "start": {
+                      "column": 7,
+                      "line": 3,
+                      "offset": 41,
+                    },
+                  },
+                  "type": 4,
+                },
+                "isSelfClosing": false,
+                "loc": {
+                  "end": {
+                    "column": 36,
+                    "line": 3,
+                    "offset": 70,
+                  },
+                  "source": "<div>Test inner content</div>",
+                  "start": {
+                    "column": 7,
+                    "line": 3,
+                    "offset": 41,
+                  },
+                },
+                "ns": 0,
+                "props": [],
+                "tag": "div",
+                "tagType": 0,
+                "type": 1,
+              },
+            ],
+            "type": 18,
+          },
+        },
+        {
+          "key": {
+            "constType": 3,
+            "content": "_",
+            "isStatic": true,
+            "loc": {
+              "end": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+              "source": "",
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+            },
+            "type": 4,
+          },
+          "loc": {
+            "end": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+            "source": "",
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": 16,
+          "value": {
+            "constType": 0,
+            "content": "1 /* STABLE */",
+            "isStatic": false,
+            "loc": {
+              "end": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+              "source": "",
+              "start": {
+                "column": 1,
+                "line": 1,
+                "offset": 0,
+              },
+            },
+            "type": 4,
+          },
+        },
+      ],
+      "type": 15,
+    },
+    "directives": undefined,
+    "disableTracking": false,
+    "dynamicProps": undefined,
+    "isBlock": true,
+    "isComponent": true,
+    "loc": {
+      "end": {
+        "column": 13,
+        "line": 4,
+        "offset": 83,
+      },
+      "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+      "start": {
+        "column": 5,
+        "line": 2,
+        "offset": 5,
+      },
+    },
+    "patchFlag": undefined,
+    "props": {
+      "loc": {
+        "end": {
+          "column": 13,
+          "line": 4,
+          "offset": 83,
+        },
+        "source": "<MyBox title=\\"Test template\\">
+      <div>Test inner content</div>
+    </MyBox>",
+        "start": {
+          "column": 5,
+          "line": 2,
+          "offset": 5,
+        },
+      },
+      "properties": [
+        {
+          "key": {
+            "constType": 3,
+            "content": "title",
+            "isStatic": true,
+            "loc": {
+              "end": {
+                "column": 17,
+                "line": 2,
+                "offset": 17,
+              },
+              "source": "title",
+              "start": {
+                "column": 12,
+                "line": 2,
+                "offset": 12,
+              },
+            },
+            "type": 4,
+          },
+          "loc": {
+            "end": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+            "source": "",
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": 16,
+          "value": {
+            "constType": 3,
+            "content": "Test template",
+            "isStatic": true,
+            "loc": {
+              "end": {
+                "column": 33,
+                "line": 2,
+                "offset": 33,
+              },
+              "source": "\\"Test template\\"",
+              "start": {
+                "column": 18,
+                "line": 2,
+                "offset": 18,
+              },
+            },
+            "type": 4,
+          },
+        },
+      ],
+      "type": 15,
+    },
+    "tag": "MyBox",
+    "type": 13,
+  },
   "components": [],
   "directives": [],
-  "helpers": Set {},
-  "hoists": [],
+  "filters": [],
+  "helpers": Set {
+    Symbol(createElementVNode),
+    Symbol(withCtx),
+    Symbol(openBlock),
+    Symbol(createBlock),
+    Symbol(pushScopeId),
+    Symbol(popScopeId),
+  },
+  "hoists": [
+    {
+      "children": {
+        "content": "Test inner content",
+        "loc": {
+          "end": {
+            "column": 30,
+            "line": 3,
+            "offset": 64,
+          },
+          "source": "Test inner content",
+          "start": {
+            "column": 12,
+            "line": 3,
+            "offset": 46,
+          },
+        },
+        "type": 2,
+      },
+      "directives": undefined,
+      "disableTracking": false,
+      "dynamicProps": undefined,
+      "isBlock": false,
+      "isComponent": false,
+      "loc": {
+        "end": {
+          "column": 36,
+          "line": 3,
+          "offset": 70,
+        },
+        "source": "<div>Test inner content</div>",
+        "start": {
+          "column": 7,
+          "line": 3,
+          "offset": 41,
+        },
+      },
+      "patchFlag": "-1 /* HOISTED */",
+      "props": undefined,
+      "tag": "\\"div\\"",
+      "type": 13,
+    },
+  ],
   "imports": [],
   "loc": {
     "end": {

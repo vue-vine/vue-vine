@@ -233,4 +233,28 @@ function TestComp() {
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
       .toMatchInlineSnapshot('"the declaration of `vineEmits` macro call must be an identifier"')
   })
+
+  test('validate template invalid top level tags', () => {
+    const content = `
+function TestComp() {
+  return vine\`
+    <template>
+      <div>Testing...</div>
+    </template>
+    <style scoped lang="scss">
+      .testing {
+        color: red;
+      }
+    </style>
+    <script setup lang="ts">
+      console.log('Hello world')
+    </script>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testTemplateTopLevelTags', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot('"[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates."')
+  })
 })
