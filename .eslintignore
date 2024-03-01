@@ -7,8 +7,4 @@ packages/docs/.vitepress/cache
 scripts/*.sh
 *.vls.vine-virtual.ts
 
-# Ignore playground and template files
-# because we didn't implement `.vine.ts`
-# template ESTree support yet
-packages/create-vue-vine/**/*.vine.ts
-
+packages/e2e-test/**/*.vine.ts

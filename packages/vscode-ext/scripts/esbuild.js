@@ -10,9 +10,6 @@ const buildBaseOptions = {
   outdir: './dist',
   external: [
     'vscode',
-    ...process.env.NODE_ENV === 'production'
-      ? ['@vue-vine/compiler'] // In production, we use the `@vue-vine/compiler` installed under `node_modules`
-      : [],
   ],
   format: 'cjs',
   platform: 'node',
