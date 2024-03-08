@@ -42,7 +42,6 @@ export default defineConfig({
     esbuild({
       tsconfig: resolve(__dirname, 'tsconfig.json'),
       sourceMap: isDev,
-      minify: !isDev,
       target: 'es2015',
     }),
     commonjs(),
