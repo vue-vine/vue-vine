@@ -8,6 +8,7 @@ import {
 } from '@volar/language-core'
 import type * as ts from 'typescript'
 import { createVineFileCtx } from './vine-ctx'
+import { turnBackToCRLF } from 'src/utils'
 
 export interface VueVineCode extends VirtualCode {}
 
@@ -57,12 +58,18 @@ function createVueVineCode(
   const vineFileCtx = createVineFileCtx(sourceFileName, content)
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {
-    for (const { lang, source, range, compCtx } of Object.values(
+    for (const { lang, source: bableParsedSource, range, compCtx } of Object.values(
       vineFileCtx.styleDefine,
     )) {
       if (!range) {
         return
       }
+
+      // String content parsed by @babel/parser would always be LF,
+      // But for Volar location mapping we need to turn it back to CRLF.
+      const source = vineFileCtx.isCRLF
+        ? turnBackToCRLF(bableParsedSource)
+        : bableParsedSource
 
       yield {
         id: `${compCtx.fnName}_style_${lang}`,
@@ -91,19 +98,23 @@ function createVueVineCode(
       templateSource,
       templateStringNode,
     } of vineFileCtx.vineCompFns) {
+      const source = vineFileCtx.isCRLF
+        ? turnBackToCRLF(templateSource)
+        : templateSource
+
       yield {
         id: `${fnName}_template`,
         languageId: 'html',
         snapshot: {
-          getText: (start, end) => templateSource.slice(start, end),
-          getLength: () => templateSource.length,
+          getText: (start, end) => source.slice(start, end),
+          getLength: () => source.length,
           getChangeRange: () => undefined,
         },
         mappings: [
           {
             sourceOffsets: [templateStringNode!.quasi.quasis[0].start!],
             generatedOffsets: [0],
-            lengths: [templateSource.length],
+            lengths: [source.length],
             data: FULL_FEATURES,
           },
         ],

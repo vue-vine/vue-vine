@@ -44,3 +44,7 @@ export function transformVineDiagnostic(
     message: diag.msg,
   }
 }
+
+export function turnBackToCRLF(code: string) {
+  return code.replace(/\r?\n/g, '\r\n')
+}

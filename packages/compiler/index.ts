@@ -53,6 +53,7 @@ export function createVineFileCtx(
     fileId,
     renderOnly: fileCtxCache ? fileCtxCache.renderOnly : false,
     hmrCompFnsName: fileCtxCache ? fileCtxCache.hmrCompFnsName : null,
+    isCRLF: code.includes('\r\n'),
     fileSourceCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},
