@@ -1,39 +1,53 @@
 {
   "name": "@vue-vine/language-server",
   "version": "0.0.0",
-  "author": "ShenQingchuan",
+  "author": "Ray <i@mk1.io> (@so1ve)",
   "license": "MIT",
-  "main": "out/index.js",
+  "homepage": "https://github.com/vue-vine/vue-vine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vue-vine/vue-vine/issues"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
   "bin": {
     "vine-language-server": "./bin/vine-language-server.js"
   },
   "files": [
-    "out/**/*.js",
-    "out/**/*.d.ts"
+    "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "watch": "tsc -w --preserveWatchOutput",
-    "build": "tsc"
+    "build": "tsup src/index.ts",
+    "prepublishOnly": "nr build"
   },
   "dependencies": {
-    "@volar/language-core": "~1.11.1",
-    "@volar/language-server": "~1.11.1",
-    "@volar/language-service": "~1.11.1",
-    "@volar/source-map": "~1.11.1",
-    "@volar/typescript": "~1.11.1",
-    "@vue-vine/compiler": "workspace:*",
-    "@vue/compiler-dom": "^3.3.4",
-    "@vue/language-core": "^1.8.8",
-    "muggle-string": "^0.3.1",
-    "volar-service-css": "^0.0.17",
-    "volar-service-emmet": "^0.0.17",
-    "volar-service-html": "^0.0.17",
-    "volar-service-typescript": "^0.0.17",
-    "vscode-html-languageservice": "^5.0.7",
-    "vscode-languageserver-textdocument": "^1.0.8"
+    "@volar/language-core": "~2.1.2",
+    "@volar/language-server": "~2.1.2",
+    "@volar/language-service": "~2.1.2",
+    "@vue-vine/compiler": "^0.0.1",
+    "@vue/language-core": "^2.0.6",
+    "@vue/language-service": "^2.0.6",
+    "volar-service-css": "0.0.31",
+    "volar-service-emmet": "0.0.31",
+    "volar-service-html": "0.0.31",
+    "volar-service-typescript": "0.0.31-patch.1"
   },
   "devDependencies": {
-    "@types/node": "^20.5.7",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.11.25",
+    "tsup": "^8.0.2"
   }
 }

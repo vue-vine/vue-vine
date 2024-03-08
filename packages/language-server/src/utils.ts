@@ -7,6 +7,9 @@ export function transformVineDiagnostic(
   type: 'err' | 'warn',
 ): Diagnostic {
   let startLine = diag.location?.start.line
+
+  // Babel location is 1 based
+  // while VSCode Diagnostic is 0 based
   if (startLine !== undefined) {
     startLine -= 1
   }
@@ -40,8 +43,4 @@ export function transformVineDiagnostic(
     source: 'vue-vine',
     message: diag.msg,
   }
-}
-
-export function getSlotsPropertyName(vueVersion: number) {
-  return vueVersion < 3 ? '$scopedSlots' : '$slots'
 }

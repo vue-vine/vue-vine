@@ -1,9 +1,8 @@
 import type { InitializationOptions } from '@volar/language-server'
-import * as protocol from '@volar/language-server/protocol'
+import * as serverProtocol from '@volar/language-server/protocol'
+import { createLabsInfo, getTsdk } from '@volar/vscode'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
-import type { ExportsInfoForLabs } from '@volar/vscode'
-import { activateWriteVirtualFiles, getTsdk, supportLabsVersion } from '@volar/vscode'
 
 let client: lsp.BaseLanguageClient
 
@@ -24,6 +23,7 @@ export async function activate(context: vscode.ExtensionContext) {
     },
   }
   const initializationOptions: InitializationOptions = {
+    // @ts-expect-error Volar 2.0 types are currently still not satisfied with the new initialization options
     typescript: {
       tsdk: (await getTsdk(context)).tsdk,
     },
@@ -42,24 +42,17 @@ export async function activate(context: vscode.ExtensionContext) {
   // eslint-disable-next-line no-console
   console.log('Vine language server started')
 
+  const labsInfo = createLabsInfo(serverProtocol)
+  labsInfo.addLanguageClient(client)
+
   const disposable = vscode.commands.registerCommand(
     'vue-vine-extension.helloWorld',
-    () => vscode.window.showInformationMessage('Hello World from Vue Vine syntax highlight!'),
+    () => vscode.window.showInformationMessage('[Vue Vine language service] Hello World!'),
   )
   context.subscriptions.push(disposable)
 
-  activateWriteVirtualFiles('vue-vine-extension.action.writeVirtualFiles', client)
-
-  return {
-    volarLabs: {
-      version: supportLabsVersion,
-      languageClients: [client],
-      languageServerProtocol: protocol,
-    },
-  } satisfies ExportsInfoForLabs
+  return labsInfo.extensionExports
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {
-  return client?.stop()
-}
+export const deactivate = (): Thenable<any> | undefined => client?.stop()

@@ -67,6 +67,7 @@ export interface VineStyleMeta {
   range: [number, number] | undefined
   scoped: boolean
   fileCtx: VineFileCtx
+  compCtx: VineCompFnCtx
 }
 
 export interface VinePropMeta {

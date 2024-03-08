@@ -557,6 +557,7 @@ const analyzeVineStyle: AnalyzeRunner = (
     range,
     scoped: macroCalleeName === 'vineStyle.scoped',
     fileCtx: vineFileCtx,
+    compCtx: vineCompFnCtx,
   }
 
   // Collect style meta

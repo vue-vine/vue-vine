@@ -4,7 +4,7 @@ const process = require('node:process')
 const buildBaseOptions = {
   entryPoints: {
     client: './src/extension.ts',
-    server: './node_modules/@vue-vine/language-server/bin/vine-language-server.js',
+    server: './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
   },
   bundle: true,
   outdir: './dist',

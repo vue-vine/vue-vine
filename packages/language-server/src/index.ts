@@ -1,48 +1,48 @@
-import createEmmetService from 'volar-service-emmet'
-import createHtmlService from 'volar-service-html'
-import createCssService from 'volar-service-css'
-import createTsService from 'volar-service-typescript'
-import type { Diagnostic, LanguageServerPlugin, Service } from '@volar/language-server/node'
-import { createConnection, startLanguageServer } from '@volar/language-server/node'
-import { VineFile, createLanguage } from './language'
-import { transformVineDiagnostic } from './utils'
+import {
+  createConnection,
+  createServer,
+  createTypeScriptProjectProviderFactory,
+  loadTsdkByPath,
+} from '@volar/language-server/node'
+import { create as createCssService } from 'volar-service-css'
+import { create as createEmmetService } from 'volar-service-emmet'
+import { create as createHtmlService } from 'volar-service-html'
+import { create as createTypeScriptService } from 'volar-service-typescript'
 
-const plugin: LanguageServerPlugin = (_, modules): ReturnType<LanguageServerPlugin> => ({
-  extraFileExtensions: [],
-  resolveConfig(config) {
-    // languages
-    config.languages ??= {}
-    config.languages.typescript ??= createLanguage(modules.typescript!)
+import { createVueVineLanguagePlugin } from './language-service'
 
-    // services
-    config.services ??= {}
-    config.services.html ??= createHtmlService()
-    config.services.css ??= createCssService()
-    config.services.emmet ??= createEmmetService()
-    config.services.typescript ??= createTsService()
-    config.services.vine ??= (context): ReturnType<Service> => ({
-      provideDiagnostics(document) {
-        const [file] = context!.documents.getVirtualFileByUri(document.uri)
-        if (!(file instanceof VineFile))
-          return
+const connection = createConnection()
+const server = createServer(connection)
 
-        const diagnostics: Diagnostic[] = []
-        for (const err of file.vineCompileErrs) {
-          diagnostics.push(transformVineDiagnostic(err, 'err'))
-        }
-        for (const warn of file.vineCompileWarns) {
-          diagnostics.push(transformVineDiagnostic(warn, 'warn'))
-        }
+connection.listen()
 
-        return diagnostics
+connection.onInitialize((params) => {
+  const tsdk = loadTsdkByPath(
+    params.initializationOptions.typescript.tsdk,
+    params.locale,
+  )
+
+  return server.initialize(
+    params,
+    createTypeScriptProjectProviderFactory(
+      tsdk.typescript,
+      tsdk.diagnosticMessages,
+    ),
+    {
+      getLanguagePlugins() {
+        return [createVueVineLanguagePlugin(tsdk.typescript)]
       },
-    })
-
-    return config
-  },
+      getServicePlugins() {
+        return [
+          createHtmlService(),
+          createCssService(),
+          createEmmetService(),
+          createTypeScriptService(tsdk.typescript),
+        ]
+      },
+    },
+  )
 })
 
-startLanguageServer(
-  createConnection(),
-  plugin,
-)
+connection.onInitialized(server.initialized)
+connection.onShutdown(server.shutdown)
