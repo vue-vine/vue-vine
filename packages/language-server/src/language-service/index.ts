@@ -92,7 +92,7 @@ function createVueVineCode(
     }
   }
 
-  function* createTemplateEmbeddedCodes(): Generator<VirtualCode> {
+  function* createTemplateHTMLEmbeddedCodes(): Generator<VirtualCode> {
     for (const {
       fnName,
       templateSource,
@@ -143,7 +143,7 @@ function createVueVineCode(
       },
     ],
     embeddedCodes: [
-      ...createTemplateEmbeddedCodes(),
+      ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
     ],
   }
