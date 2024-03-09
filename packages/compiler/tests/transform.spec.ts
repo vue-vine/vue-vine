@@ -4,6 +4,10 @@ import { compileVineTypeScriptFile } from '../index'
 import { createMockTransformCtx } from './shared-utils'
 
 const testContent = `
+import someDefaultExport from 'some-module-1'
+import { someNamedExport } from 'some-module-2'
+import * as someNamespaceExport from 'some-module-3'
+
 function MyProfile() {
   const name = vineProp<string>()
   const age = vineProp.withDefault<number>(18)

@@ -22,6 +22,10 @@ import {
 import \\"testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css\\";
 import \\"testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
+import someDefaultExport from \\"some-module-1\\";
+import { someNamedExport } from \\"some-module-2\\";
+import * as someNamespaceExport from \\"some-module-3\\";
+
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-3921d7bd\\"), (n = n()), _popScopeId(), n
@@ -178,6 +182,10 @@ import {
 import \\"testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css\\";
 import \\"testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
+import someDefaultExport from \\"some-module-1\\";
+import { someNamedExport } from \\"some-module-2\\";
+import * as someNamespaceExport from \\"some-module-3\\";
+
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-3b48c990\\"), (n = n()), _popScopeId(), n
@@ -309,6 +317,10 @@ import {
 import \\"testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css\\";
 import \\"testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css\\";
 
+import someDefaultExport from \\"some-module-1\\";
+import { someNamedExport } from \\"some-module-2\\";
+import * as someNamespaceExport from \\"some-module-3\\";
+
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
     _pushScopeId(\\"data-v-25e4e706\\"), (n = n()), _popScopeId(), n
@@ -339,7 +351,18 @@ export const MyProfile = (() => {
         // ...
       };
 
-      return { name, age, bio, textColor, handleRefresh, MyProfile, MyApp };
+      return {
+        name,
+        age,
+        bio,
+        textColor,
+        handleRefresh,
+        someDefaultExport,
+        someNamedExport,
+        someNamespaceExport,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -399,7 +422,13 @@ export const MyApp = (() => {
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
 
-      return { MyProfile, MyApp };
+      return {
+        someDefaultExport,
+        someNamedExport,
+        someNamespaceExport,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {

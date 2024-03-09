@@ -403,5 +403,9 @@ if (_rerender_only) {
       const importStmt = `import ${importMeta.localName} from '${importSource}';\n`
       ms.prepend(importStmt)
     }
+    else if (importMeta.type === 'namespaceSpecifier') {
+      const importStmt = `import * as ${importMeta.localName} from '${importSource}';\n`
+      ms.prepend(importStmt)
+    }
   }
 }

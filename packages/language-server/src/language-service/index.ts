@@ -7,8 +7,8 @@ import {
   forEachEmbeddedCode,
 } from '@volar/language-core'
 import type * as ts from 'typescript'
-import { createVineFileCtx } from './vine-ctx'
 import { turnBackToCRLF } from 'src/utils'
+import { createVineFileCtx } from './vine-ctx'
 
 export interface VueVineCode extends VirtualCode {}
 
