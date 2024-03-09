@@ -22,7 +22,7 @@
     }
   },
   "bin": {
-    "vine-language-server": "./bin/vine-language-server.js"
+    "vue-vine-language-server": "./bin/vue-vine-language-server.js"
   },
   "files": [
     "dist"
