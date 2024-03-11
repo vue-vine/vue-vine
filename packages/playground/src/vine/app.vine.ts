@@ -1,52 +1,51 @@
-import { PostHeader } from './post-header.vine'
-import { randomString } from '~/utils'
+import { Header } from './header.vine'
+import { generateRandomString } from '~/utils'
 
-function BlogPost(props: {
+function StateContainer(props: {
 id: string
 }) {
   vineStyle.scoped(scss`
     .loading-view {
       margin: 1rem 0;
     }
-    .blog-post-meta {
+    .state-container-meta {
       margin-top: 16px;
       font-style: italic;
     }
-    .blog-post-meta-title {
+    .state-container-title {
       margin: 0.5rem 0;
       font-weight: bold;
       opacity: 0.8;
     }
   `)
 
-  const blogMeta = ref('')
+  const randomStr = ref('')
   const loading = ref(true)
-  const mockPostUpdate = () => {
+  const mockUpdate = () => {
     loading.value = true
     setTimeout(() => {
       loading.value = false
-      blogMeta.value = `Post #${props.id} - ${randomString(30)}`
+      randomStr.value = generateRandomString(30)
     }, 2000)
   }
 
   // Mock result of a network request
   watch(() => props.id, () => {
-    mockPostUpdate()
+    mockUpdate()
   }, { immediate: true })
 
   return vine`
-    div.some-css-class
-    <article>
-      <PostHeader title="Vue Vine Playground" author="ShenQingchuan" />
-      <div class="blog-post-meta-title text-lime-800/50 dark:text-#999">
-        Blog post meta:
+    <article class="state-container">
+      <Header title="Vue Vine Playground" author="ShenQingchuan" />
+      <div class="state-container-title text-lime-800/50 dark:text-#999">
+        Random string:
       </div>
       <div v-if="loading" class="loading-view">
         <div class="icon-loading" />
         <span>Loading...</span>
       </div>
-      <p v-else class="blog-post-meta">
-        {{ blogMeta }}
+      <p v-else class="state-container-meta">
+        {{ randomStr }}
       </p>
     </article>
   `
@@ -56,14 +55,14 @@ export function App() {
   const id = ref('1')
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
-  const randomPick = () => {
+  const randomState = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
 
-  console.log('Click the link to explore source code ->')
+  console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 
   vineStyle(`
-    .random-pick-post-btn {
+    .random-state-change-btn {
       font-size: 1rem;
       background: #334155c6;
       border-radius: 0.25rem;
@@ -76,15 +75,15 @@ export function App() {
   `)
 
   return vine`
-    <div class="flex flex-row items-center justify-center mb-4">
+    <StateContainer :id="id" />
+    <div class="flex flex-row items-center justify-center my-4">
       <div
         :class="[
           isDark ? 'i-carbon:moon' : 'i-carbon:sun',
-          'mr-2 te,xt-8 cursor-pointer']" @click="toggleDark()" />
-      <button class="random-pick-post-btn" @click="randomPick">
-        Random pick a post
+          'mr-2 text-6 cursor-pointer']" @click="toggleDark()" />
+      <button class="random-state-change-btn" @click="randomState">
+        Click to change random string
       </button>
     </div>
-    <BlogPost :id="id" />
   `
 }

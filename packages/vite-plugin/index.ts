@@ -63,8 +63,8 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     }
     compilerCtx.vineCompileWarnings.length = 0
     return {
-      code: vineFileCtx.fileSourceCode.toString(),
-      map: vineFileCtx.fileSourceCode.generateMap({
+      code: vineFileCtx.fileMagicCode.toString(),
+      map: vineFileCtx.fileMagicCode.generateMap({
         includeContent: true,
         hires: true,
         source: fileId,

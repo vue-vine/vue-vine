@@ -54,7 +54,7 @@ describe('Test transform', () => {
     compileVineTypeScriptFile(testContent, 'testTransformInlineResult', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformInlineResult')
-    const transformed = fileCtx?.fileSourceCode.toString() ?? ''
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
     const formated = await format(
       transformed,
       { parser: 'babel-ts' },
@@ -69,7 +69,7 @@ describe('Test transform', () => {
     compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
-    const transformed = fileCtx?.fileSourceCode.toString() ?? ''
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
     const formated = await format(
       transformed,
       { parser: 'babel-ts' },
@@ -84,7 +84,7 @@ describe('Test transform', () => {
     compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testNoHMRContentOnProduction')
-    const transformed = fileCtx?.fileSourceCode.toString() ?? ''
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
     const formated = await format(
       transformed,
       { parser: 'babel-ts' },

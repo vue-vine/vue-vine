@@ -125,7 +125,7 @@ function computeTemplateErrLocation(
     return
   }
   const mapper = lineColumn(
-    vineFileCtx.fileSourceCode.original,
+    vineFileCtx.fileMagicCode.original,
     { origin: 1 }, // Babel line/column is 1-based
   )
   const templateStart = quasisNode.start!

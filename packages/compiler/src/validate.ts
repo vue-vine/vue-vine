@@ -20,6 +20,7 @@ import type {
   Node,
   TSMethodSignature,
   TSPropertySignature,
+  TSTypeAnnotation,
   TSTypeLiteral,
   TraversalAncestors,
   VariableDeclaration,
@@ -412,7 +413,7 @@ function assertVineEmitsUsage(
   return isVineEmitsUsageCorrect
 }
 
-function validateSlotMethodSignature(
+function assertSlotMethodSignature(
   validatorCtx: VineValidatorCtx,
   methodSignature: TSMethodSignature,
 ) {
@@ -433,19 +434,30 @@ function validateSlotMethodSignature(
     return false
   }
   const theSignatureOnlyParam = params[0]
-  if (!isIdentifier(theSignatureOnlyParam)) {
+  let isNameNotProps = false
+  if (
+    !isIdentifier(theSignatureOnlyParam)
+    // eslint-disable-next-line no-cond-assign
+    || (isNameNotProps = theSignatureOnlyParam.name !== 'props')
+  ) {
     vineCompilerHooks.onError(
       vineErr(
         vineFileCtx,
         {
-          msg: errMsg,
+          msg: `${errMsg}${
+            isNameNotProps
+              ? `, and its parameter name must be \`props\`, but got \`${
+                (theSignatureOnlyParam as Identifier).name
+                }\``
+              : ''
+          }`,
           location: theSignatureOnlyParam.loc,
         },
       ),
     )
     return false
   }
-  const paramTypeAnnotation = theSignatureOnlyParam.typeAnnotation
+  const paramTypeAnnotation = (theSignatureOnlyParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation
   if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
     vineCompilerHooks.onError(
       vineErr(
@@ -461,7 +473,7 @@ function validateSlotMethodSignature(
   return true
 }
 
-function validateSlotPropertySignature(
+function assertSlotPropertySignature(
   validatorCtx: VineValidatorCtx,
   propertySignature: TSPropertySignature,
 ) {
@@ -499,7 +511,7 @@ function validateSlotPropertySignature(
     return false
   }
 
-  const paramTypeAnnotation = firstParam.typeAnnotation
+  const paramTypeAnnotation = (firstParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation
   if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
     vineCompilerHooks.onError(
       vineErr(
@@ -569,13 +581,13 @@ function assertVineSlotsUsage(
       .forEach((signature) => {
         if (
           isTSMethodSignature(signature)
-          && !validateSlotMethodSignature(validatorCtx, signature)
+          && !assertSlotMethodSignature(validatorCtx, signature)
         ) {
           isVineSlotsUsageCorrect = false
         }
         else if (
           isTSPropertySignature(signature)
-          && !validateSlotPropertySignature(validatorCtx, signature)
+          && !assertSlotPropertySignature(validatorCtx, signature)
         ) {
           isVineSlotsUsageCorrect = false
         }

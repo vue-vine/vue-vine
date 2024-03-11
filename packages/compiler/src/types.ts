@@ -11,6 +11,7 @@ import type {
   ReturnStatement,
   SourceLocation,
   StringLiteral,
+  TSTypeLiteral,
   TaggedTemplateExpression,
   TemplateLiteral,
 } from '@babel/types'
@@ -111,7 +112,7 @@ export interface VineFileCtx {
    * including the function name and scopeId of the component that needs to be updated
    */
   hmrCompFnsName: HMRCompFnsName
-  fileSourceCode: MagicString
+  fileMagicCode: MagicString
   vineCompFns: VineCompFnCtx[]
   userImports: Record<string, VineUserImport>
   vueImportAliases: Record<string, string>
@@ -149,6 +150,10 @@ export interface VineCompFnCtx {
   expose?: Node
   /** Store the `defineOptions`'s argument in source code */
   options?: Node
+  /** Store every slot's props definition */
+  slots: Record<string, {
+    props: TSTypeLiteral
+  }>
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
 }

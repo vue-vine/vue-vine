@@ -14,11 +14,12 @@ import {
   isImportSpecifier,
   isObjectPattern,
   isStringLiteral,
+  isTSMethodSignature,
+  isTSPropertySignature,
   isTaggedTemplateExpression,
   isTemplateLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
-  traverse,
 } from '@babel/types'
 import type {
   ArrayPattern,
@@ -29,6 +30,7 @@ import type {
   Identifier, Node,
   ObjectPattern,
   Statement,
+  TSFunctionType,
   TSPropertySignature,
   TSTypeAnnotation,
   TSTypeLiteral,
@@ -38,6 +40,7 @@ import type {
 import { VineBindingTypes } from './constants'
 import type {
   BabelFunctionNodeTypes,
+  Nil,
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
@@ -67,6 +70,7 @@ import {
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/importUsageCheck'
 import { vineWarn } from './diagnostics'
+import { _breakableTraverse, exitTraverse } from './utils'
 
 interface AnalyzeCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -87,10 +91,11 @@ function storeTheOnlyMacroCallArg(
     fnItselfNode,
   ) => {
     let vineExposeMacroCall: CallExpression | undefined
-    traverse(fnItselfNode, {
+    _breakableTraverse(fnItselfNode, {
       enter(descendant) {
         if (isVineMacroOf(macroName)(descendant)) {
           vineExposeMacroCall = descendant
+          throw exitTraverse
         }
       },
     })
@@ -362,7 +367,7 @@ const analyzeVineProps: AnalyzeRunner = (
         return
       }
       const propName = member.key.name
-      const propType = vineFileCtx.fileSourceCode.slice(
+      const propType = vineFileCtx.fileMagicCode.slice(
         member.typeAnnotation!.typeAnnotation.start!,
         member.typeAnnotation!.typeAnnotation.end!,
       )
@@ -387,7 +392,7 @@ const analyzeVineProps: AnalyzeRunner = (
       }
       const macroCallTypeParamNode = macroCall.typeParameters?.params[0]
       if (macroCallTypeParamNode) {
-        const macroCallTypeParam = vineFileCtx.fileSourceCode.slice(
+        const macroCallTypeParam = vineFileCtx.fileMagicCode.slice(
           macroCallTypeParamNode.start!,
           macroCallTypeParamNode.end!,
         )
@@ -416,12 +421,13 @@ const analyzeVineEmits: AnalyzeRunner = (
   const { vineCompFnCtx } = analyzeCtx
   let vineEmitsMacroCall: CallExpression | undefined
   let parentVarDecl: VariableDeclarator | undefined
-  traverse(fnItselfNode, {
+  _breakableTraverse(fnItselfNode, {
     enter(descendant, parent) {
       if (isVineMacroOf('vineEmits')(descendant)) {
         vineEmitsMacroCall = descendant
         const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
         parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+        throw exitTraverse
       }
     },
   })
@@ -461,12 +467,10 @@ const analyzeVineBindings: AnalyzeRunner = (
   }
   for (const stmt of fnBody.body) {
     let hasMacroCall = false
-    traverse(stmt, (node) => {
-      if (hasMacroCall) {
-        return
-      }
+    _breakableTraverse(stmt, (node) => {
       if (isVineMacroCallExpression(node)) {
         hasMacroCall = true
+        throw exitTraverse
       }
     })
     if (!hasMacroCall) {
@@ -532,9 +536,10 @@ const analyzeVineStyle: AnalyzeRunner = (
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
   let vineStyleMacroCall: CallExpression | undefined
-  traverse(fnItselfNode, (node) => {
+  _breakableTraverse(fnItselfNode, (node) => {
     if (isVineMacroOf('vineStyle')(node)) {
       vineStyleMacroCall = node
+      throw exitTraverse
     }
   })
   // Our validation has guranteed that `vineStyle` macro call
@@ -579,17 +584,68 @@ const analyzeVineCustomElement: AnalyzeRunner = (
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
   // Find if there's any `vineCustomElement` macro call exists
-  traverse(fnItselfNode, (node) => {
+  _breakableTraverse(fnItselfNode, (node) => {
     if (isVineMacroOf('vineCustomElement')(node)) {
       vineCompFnCtx.isCustomElement = true
+      throw exitTraverse
     }
   })
+}
+
+const analyzeVineSlots: AnalyzeRunner = (
+  { vineCompFnCtx },
+  fnItselfNode,
+) => {
+  // Find if there's any `vineSlots` macro call exists
+  let vineSlotsMacroCall: CallExpression | undefined
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isVineMacroOf('vineSlots')(node)) {
+      vineSlotsMacroCall = node
+      throw exitTraverse
+    }
+  })
+
+  if (!vineSlotsMacroCall) {
+    return
+  }
+
+  // Traverse vineSlots type parameter and save all the property sigantures' name and its type annotation
+  const typeParam = vineSlotsMacroCall.typeParameters?.params[0]
+  if (!typeParam) {
+    return
+  }
+
+  const slotsTypeLiteralProps = (typeParam as TSTypeLiteral).members
+  for (const prop of slotsTypeLiteralProps) {
+    if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
+      const fnFirstParamType
+        = (((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
+          ?.parameters?.[0]?.typeAnnotation as TSTypeAnnotation)
+          ?.typeAnnotation as TSTypeLiteral)
+
+      if (fnFirstParamType) {
+        vineCompFnCtx.slots[prop.key.name] = {
+          props: fnFirstParamType,
+        }
+      }
+    }
+    else if (isTSMethodSignature(prop) && isIdentifier(prop.key)) {
+      const fnFirstParamType
+        = ((prop.parameters[0]!.typeAnnotation as TSTypeAnnotation)
+          .typeAnnotation as TSTypeLiteral)
+
+      vineCompFnCtx.slots[prop.key.name] = {
+        props: fnFirstParamType,
+      }
+    }
+  }
 }
 
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineEmits,
   analyzeVineExpose,
+  analyzeVineSlots,
   analyzeVineOptions,
   analyzeVineBindings,
   analyzeVineStyle,
@@ -698,6 +754,7 @@ function buildVineCompFnCtx(
     emitsAlias: 'emits',
     props: {},
     emits: [],
+    slots: {},
     bindings: {},
     cssBindings: {},
     hoistSetupStmts: [],

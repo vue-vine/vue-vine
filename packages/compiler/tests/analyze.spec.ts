@@ -117,6 +117,34 @@ function MyComp() {
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
   })
 
+  test('analyze vine slots definition', () => {
+    const content = `
+function MyComp() {
+  const myEmits = vineSlots<{
+    default(props: { id: string; msg: string; }): any;
+    header: (props: { align: 'left' | 'right' }) => any;
+  }>()
+  return vine\`<div>Test slots</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineSlots', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineSlots')
+    expect(fileCtx?.vineCompFns.length).toBe(1)
+    const vineFnComp = fileCtx?.vineCompFns[0]
+    const slots = vineFnComp?.slots
+    expect(slots).toMatchSnapshot()
+
+    const defaultSlot = slots!.default!
+    expect(
+      fileCtx?.originCode.slice(
+        defaultSlot.props.start!,
+        defaultSlot.props.end!,
+      ),
+    ).toMatchInlineSnapshot('"{ id: string; msg: string; }"')
+  })
+
   test('analyze `vineExpose` and `vineOptions` macro calls', () => {
     const content = `
 function Comp() {

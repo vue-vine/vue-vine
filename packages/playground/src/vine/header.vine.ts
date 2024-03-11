@@ -1,4 +1,4 @@
-export function PostHeader() {
+export function Header() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
 
@@ -15,12 +15,12 @@ export function PostHeader() {
   })
 
   vineStyle.scoped(`
-    .blog-title {
+    .playground-title {
       font-size: 20px;
       font-weight: 700;
       margin-bottom: 6px;
     }
-    .blog-meta {
+    .playground-meta {
       display: flex;
       flex-direction: column;
       margin: 8px 0;
@@ -28,14 +28,14 @@ export function PostHeader() {
       background-color: v-bind(metaBgColor);
       border-radius: 6px;
     }
-    .blog-meta-line {
+    .playground-meta-line {
       padding: 6px 0;
     }
-    .blog-meta-line.change-bg {
+    .playground-meta-line.change-bg {
       cursor: pointer;
       user-select: none;
     }
-    .blog-meta-span {
+    .playground-meta-span {
       margin: 0 8px;
     }
   `)
@@ -46,21 +46,21 @@ export function PostHeader() {
 
   return vine`
     <header>
-      <div class="blog-title">
+      <div class="playground-title">
         {{ title }}
       </div>
-      <div class="blog-meta">
-        <div class="blog-meta-line">
-          <span class="blog-meta-span">
+      <div class="playground-meta">
+        <div class="playground-meta-line">
+          <span class="playground-meta-span">
             <strong>Author: </strong>{{ author }}
           </span>
-          <span class="blog-meta-span">
-            <strong>Published: </strong>{{ new Date().toLocaleDateString() }}
+          <span class="playground-meta-span">
+            <strong>Today: </strong>{{ new Date().toLocaleDateString() }}
           </span>
         </div>
-        <div class="blog-meta-line change-bg" @click="toggleMetaBgColor()">
-          <span class="blog-meta-span">
-            Click this line to toggle this card's background color change!
+        <div class="playground-meta-line change-bg" @click="toggleMetaBgColor()">
+          <span class="playground-meta-span">
+            Click this line to toggle this card's background color!
           </span>
         </div>
       </div>

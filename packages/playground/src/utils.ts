@@ -1,4 +1,4 @@
-export function randomString(len: number) {
+export function generateRandomString(len: number) {
   let s = ''
   const randomchar = function () {
     const n = Math.floor(Math.random() * 62)

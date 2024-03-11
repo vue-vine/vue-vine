@@ -56,6 +56,8 @@ export const MyProfile = (() => {
         // ...
       };
 
+      /* No expose */
+
       return (_ctx, _cache) => {
         return (
           _openBlock(),
@@ -114,6 +116,7 @@ export const MyApp = (() => {
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
+      /* No expose */
 
       return (_ctx, _cache) => {
         return (
@@ -216,6 +219,8 @@ export const MyProfile = (() => {
         // ...
       };
 
+      /* No expose */
+
       return (_ctx, _cache) => {
         return (
           _openBlock(),
@@ -273,6 +278,7 @@ export const MyApp = (() => {
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
+      /* No expose */
 
       return (_ctx, _cache) => {
         return (
@@ -351,6 +357,8 @@ export const MyProfile = (() => {
         // ...
       };
 
+      /* No expose */
+
       return {
         name,
         age,
@@ -421,6 +429,7 @@ export const MyApp = (() => {
     /* No emits */
     setup(__props /* No setup ctx destructuring */) {
       const props = __props;
+      /* No expose */
 
       return {
         someDefaultExport,

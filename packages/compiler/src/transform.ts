@@ -105,7 +105,7 @@ export function transformFile(
   inline = true,
 ) {
   const isDev = compilerHooks.getCompilerCtx().options.mode !== 'production'
-  const ms = vineFileCtx.fileSourceCode
+  const ms = vineFileCtx.fileMagicCode
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
   const styleImportStmts = sortStyleImport(vineFileCtx)
@@ -204,6 +204,7 @@ export function transformFile(
       if (vineCompFnCtx.expose) {
         setupCtxDestructFormalParams.push({
           field: 'expose',
+          alias: '__expose',
         })
       }
       let setupFormalParams = `__props${
@@ -278,6 +279,21 @@ export function transformFile(
           'let __temp, __restore;\n',
         )
       }
+
+      // vineExpose
+      ms.appendRight(
+        lastStmt.end!,
+        `${
+          vineCompFnCtx.expose
+            ? `\n__expose(${
+              ms.original.slice(
+                vineCompFnCtx.expose.start!,
+                vineCompFnCtx.expose.end!,
+              )
+            })`
+            : '/* No expose */'
+        }\n`,
+      )
 
       // Insert setup function's return statement
       ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)

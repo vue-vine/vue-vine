@@ -479,6 +479,379 @@ exports[`Test Vine compiler analyze > analyze vine component props by macro call
 }
 `;
 
+exports[`Test Vine compiler analyze > analyze vine slots definition 1`] = `
+{
+  "default": {
+    "props": Node {
+      "end": 98,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 47,
+          "index": 98,
+          "line": 4,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 19,
+          "index": 70,
+          "line": 4,
+        },
+      },
+      "members": [
+        Node {
+          "computed": false,
+          "end": 83,
+          "key": Node {
+            "end": 74,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 23,
+                "index": 74,
+                "line": 4,
+              },
+              "filename": undefined,
+              "identifierName": "id",
+              "start": Position {
+                "column": 21,
+                "index": 72,
+                "line": 4,
+              },
+            },
+            "name": "id",
+            "start": 72,
+            "type": "Identifier",
+          },
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 32,
+              "index": 83,
+              "line": 4,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 21,
+              "index": 72,
+              "line": 4,
+            },
+          },
+          "start": 72,
+          "type": "TSPropertySignature",
+          "typeAnnotation": Node {
+            "end": 82,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 31,
+                "index": 82,
+                "line": 4,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 23,
+                "index": 74,
+                "line": 4,
+              },
+            },
+            "start": 74,
+            "type": "TSTypeAnnotation",
+            "typeAnnotation": Node {
+              "end": 82,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 31,
+                  "index": 82,
+                  "line": 4,
+                },
+                "filename": undefined,
+                "identifierName": undefined,
+                "start": Position {
+                  "column": 25,
+                  "index": 76,
+                  "line": 4,
+                },
+              },
+              "start": 76,
+              "type": "TSStringKeyword",
+            },
+          },
+        },
+        Node {
+          "computed": false,
+          "end": 96,
+          "key": Node {
+            "end": 87,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 36,
+                "index": 87,
+                "line": 4,
+              },
+              "filename": undefined,
+              "identifierName": "msg",
+              "start": Position {
+                "column": 33,
+                "index": 84,
+                "line": 4,
+              },
+            },
+            "name": "msg",
+            "start": 84,
+            "type": "Identifier",
+          },
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 45,
+              "index": 96,
+              "line": 4,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 33,
+              "index": 84,
+              "line": 4,
+            },
+          },
+          "start": 84,
+          "type": "TSPropertySignature",
+          "typeAnnotation": Node {
+            "end": 95,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 44,
+                "index": 95,
+                "line": 4,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 36,
+                "index": 87,
+                "line": 4,
+              },
+            },
+            "start": 87,
+            "type": "TSTypeAnnotation",
+            "typeAnnotation": Node {
+              "end": 95,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 44,
+                  "index": 95,
+                  "line": 4,
+                },
+                "filename": undefined,
+                "identifierName": undefined,
+                "start": Position {
+                  "column": 38,
+                  "index": 89,
+                  "line": 4,
+                },
+              },
+              "start": 89,
+              "type": "TSStringKeyword",
+            },
+          },
+        },
+      ],
+      "start": 70,
+      "type": "TSTypeLiteral",
+    },
+  },
+  "header": {
+    "props": Node {
+      "end": 153,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 47,
+          "index": 153,
+          "line": 5,
+        },
+        "filename": undefined,
+        "identifierName": undefined,
+        "start": Position {
+          "column": 20,
+          "index": 126,
+          "line": 5,
+        },
+      },
+      "members": [
+        Node {
+          "computed": false,
+          "end": 151,
+          "key": Node {
+            "end": 133,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 27,
+                "index": 133,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": "align",
+              "start": Position {
+                "column": 22,
+                "index": 128,
+                "line": 5,
+              },
+            },
+            "name": "align",
+            "start": 128,
+            "type": "Identifier",
+          },
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 45,
+              "index": 151,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 22,
+              "index": 128,
+              "line": 5,
+            },
+          },
+          "start": 128,
+          "type": "TSPropertySignature",
+          "typeAnnotation": Node {
+            "end": 151,
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 45,
+                "index": 151,
+                "line": 5,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 27,
+                "index": 133,
+                "line": 5,
+              },
+            },
+            "start": 133,
+            "type": "TSTypeAnnotation",
+            "typeAnnotation": Node {
+              "end": 151,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 45,
+                  "index": 151,
+                  "line": 5,
+                },
+                "filename": undefined,
+                "identifierName": undefined,
+                "start": Position {
+                  "column": 29,
+                  "index": 135,
+                  "line": 5,
+                },
+              },
+              "start": 135,
+              "type": "TSUnionType",
+              "types": [
+                Node {
+                  "end": 141,
+                  "literal": Node {
+                    "end": 141,
+                    "extra": {
+                      "raw": "'left'",
+                      "rawValue": "left",
+                    },
+                    "loc": SourceLocation {
+                      "end": Position {
+                        "column": 35,
+                        "index": 141,
+                        "line": 5,
+                      },
+                      "filename": undefined,
+                      "identifierName": undefined,
+                      "start": Position {
+                        "column": 29,
+                        "index": 135,
+                        "line": 5,
+                      },
+                    },
+                    "start": 135,
+                    "type": "StringLiteral",
+                    "value": "left",
+                  },
+                  "loc": SourceLocation {
+                    "end": Position {
+                      "column": 35,
+                      "index": 141,
+                      "line": 5,
+                    },
+                    "filename": undefined,
+                    "identifierName": undefined,
+                    "start": Position {
+                      "column": 29,
+                      "index": 135,
+                      "line": 5,
+                    },
+                  },
+                  "start": 135,
+                  "type": "TSLiteralType",
+                },
+                Node {
+                  "end": 151,
+                  "literal": Node {
+                    "end": 151,
+                    "extra": {
+                      "raw": "'right'",
+                      "rawValue": "right",
+                    },
+                    "loc": SourceLocation {
+                      "end": Position {
+                        "column": 45,
+                        "index": 151,
+                        "line": 5,
+                      },
+                      "filename": undefined,
+                      "identifierName": undefined,
+                      "start": Position {
+                        "column": 38,
+                        "index": 144,
+                        "line": 5,
+                      },
+                    },
+                    "start": 144,
+                    "type": "StringLiteral",
+                    "value": "right",
+                  },
+                  "loc": SourceLocation {
+                    "end": Position {
+                      "column": 45,
+                      "index": 151,
+                      "line": 5,
+                    },
+                    "filename": undefined,
+                    "identifierName": undefined,
+                    "start": Position {
+                      "column": 38,
+                      "index": 144,
+                      "line": 5,
+                    },
+                  },
+                  "start": 144,
+                  "type": "TSLiteralType",
+                },
+              ],
+            },
+          },
+        },
+      ],
+      "start": 126,
+      "type": "TSTypeLiteral",
+    },
+  },
+}
+`;
+
 exports[`Test Vine compiler analyze > analyze vine template 1`] = `
 {
   "cached": 0,

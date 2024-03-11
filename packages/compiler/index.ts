@@ -54,13 +54,13 @@ export function createVineFileCtx(
     renderOnly: fileCtxCache ? fileCtxCache.renderOnly : false,
     hmrCompFnsName: fileCtxCache ? fileCtxCache.hmrCompFnsName : null,
     isCRLF: code.includes('\r\n'),
-    fileSourceCode: new MagicString(code),
+    fileMagicCode: new MagicString(code),
     vineCompFns: [],
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
     get originCode() {
-      return this.fileSourceCode.original
+      return this.fileMagicCode.original
     },
   }
   return vineFileCtx

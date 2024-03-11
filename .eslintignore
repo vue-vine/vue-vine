@@ -5,6 +5,6 @@ pnpm-lock.yaml
 .eslintrc
 packages/docs/.vitepress/cache
 scripts/*.sh
-*.vls.vine-virtual.ts
 
 packages/e2e-test/**/*.vine.ts
+packages/playground/**/*.vine.ts

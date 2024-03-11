@@ -1,3 +1,4 @@
+import { traverse } from '@babel/types'
 import type { VineStyleLang } from '../types'
 import { makeMap } from './makeMap'
 
@@ -67,3 +68,22 @@ export const capitalize = cacheStringFunction(
 export const isBuiltInDirective = /* #__PURE__ */ makeMap(
   'bind,cloak,else-if,else,for,html,if,model,on,once,pre,show,slot,text,memo',
 )
+
+export class ExitTraverseError extends Error {
+  constructor() {
+    super('ExitTraverse')
+  }
+}
+export const exitTraverse = new ExitTraverseError()
+export const _breakableTraverse: typeof traverse = (node, handlers) => {
+  try {
+    return traverse(node, handlers)
+  }
+  catch (e) {
+    if (e instanceof ExitTraverseError) {
+      return
+    }
+    // else:
+    throw e
+  }
+}

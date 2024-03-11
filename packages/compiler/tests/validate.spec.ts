@@ -148,7 +148,7 @@ function App() {
     expect(mockCompilerCtx.vineCompileErrors[0].msg).toMatchInlineSnapshot('"vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`"')
     expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"Every property of Vue Vine component function\'s `vineSlots` type must be function signature"')
     expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"Function signature of `vineSlots` can only have one parameter named `props`, and its type annotation must be object literal"')
-    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"Function signature of `vineSlots` definition can only have one parameter named `props`, and its type annotation must be object literal"')
+    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"Function signature of `vineSlots` definition can only have one parameter named `props`, and its parameter name must be `props`, but got `yyy`"')
     expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"Properties of `vineSlots` can only have function type annotation"')
     expect(mockCompilerCtx.vineCompileErrors[5].msg).toMatchInlineSnapshot('"`vineCustomElement` macro call is not allowed to be inside a variable declaration"')
     expect(mockCompilerCtx.vineCompileErrors[6].msg).toMatchInlineSnapshot('"`vineStyle` can only have one string argument\'"')
