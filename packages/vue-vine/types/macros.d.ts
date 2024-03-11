@@ -9,8 +9,8 @@ declare type VineStyle = { [__VUE_VINE_STYLE__]: true }
 type IsEmptyObj<T> = keyof T extends never ? true : false;
 
 type VineEmitsDefineSource = Record<string, any[]>
-type VineEmitsDefineResult<D extends VineEmitsDefineSource> = IsEmptyObj<D> extends true 
-  ? never : 
+type VineEmitsDefineResult<D extends VineEmitsDefineSource> = IsEmptyObj<D> extends true
+  ? never :
   {
     [K in keyof D]: (evt: K, ...args: D[K]) => void
   }[keyof D]
@@ -35,10 +35,11 @@ interface VineOptionsDef {
 declare global {
   const vineProp: VinePropMacro;
   const vineEmits: <D extends Record<string, any[]> = {}>() => VineEmitsDefineResult<D>
+  const vineSlots: <D extends Record<string, (props: any) => any>>() => D
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void
   const vineStyle: VineStyleMacro
-  
+
   const vine: (template: TemplateStringsArray) => VueVineComponent
 
   // CSS lang types helpers

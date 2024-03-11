@@ -35,6 +35,7 @@ id: string
   }, { immediate: true })
 
   return vine`
+    div.some-css-class
     <article>
       <PostHeader title="Vue Vine Playground" author="ShenQingchuan" />
       <div class="blog-post-meta-title text-lime-800/50 dark:text-#999">

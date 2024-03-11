@@ -17,6 +17,7 @@ export const VINE_MACROS = [
   'vineProp.optional',
   'vineProp.withDefault',
   'vineEmits',
+  'vineSlots',
   ...BARE_CALL_MACROS,
 ] as const
 export const VINE_TAG_TEMPLATE_CALLER = [

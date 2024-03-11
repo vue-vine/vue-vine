@@ -3,6 +3,8 @@ import {
   isIdentifier,
   isObjectExpression,
   isStringLiteral,
+  isTSFunctionType,
+  isTSMethodSignature,
   isTSPropertySignature,
   isTSTypeAnnotation,
   isTSTypeLiteral,
@@ -16,6 +18,8 @@ import type {
   CallExpression,
   Identifier,
   Node,
+  TSMethodSignature,
+  TSPropertySignature,
   TSTypeLiteral,
   TraversalAncestors,
   VariableDeclaration,
@@ -271,7 +275,7 @@ function assertVineStyleUsage(
   return true
 }
 
-function assertCanOnlyHaveOneObjLiteralArg(
+function assertMacroCanOnlyHaveOneObjLiteralArg(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
   macroCallNode: CallExpression,
 ) {
@@ -311,32 +315,67 @@ function assertCanOnlyHaveOneObjLiteralArg(
   return true
 }
 
-function assertVineEmitsUsage(
+function assertMacroCanOnlyHaveOneTypeParam(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
   macroCallNode: CallExpression,
-  parent?: TraversalAncestors,
 ) {
   const macroCallee = macroCallNode.callee as Identifier
   const typeParams = macroCallNode.typeParameters?.params
   const typeParamsLength = typeParams?.length
   const errMsg = `\`${macroCallee.name}\` ${
     (typeParamsLength && typeParamsLength > 1) ? 'can only' : 'must'
-  } have one type parameter!`
-
-  let isVineEmitsTypeParamCorrect = true
+  } have 1 type parameter`
   if (typeParamsLength !== 1) {
     vineCompilerHooks.onError(
       vineErr(
         vineFileCtx,
         {
           msg: errMsg,
-          location: macroCallee.loc,
+          location: macroCallNode.callee.loc,
         },
       ),
     )
-    isVineEmitsTypeParamCorrect = false
+    return false
+  }
+  return true
+}
+
+function assetMacroVariableDeclarationMustBeIdentifier(
+  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  parent?: TraversalAncestors,
+) {
+  const varDeclaratorThatMayBeInside = parent?.find(ancestor => isVariableDeclarator(ancestor.node))
+  if (varDeclaratorThatMayBeInside) {
+    const varDeclThatMayBeInsideNode = varDeclaratorThatMayBeInside.node as VariableDeclarator
+    if (!isIdentifier(varDeclThatMayBeInsideNode.id)) {
+      vineCompilerHooks.onError(
+        vineErr(
+          vineFileCtx,
+          {
+            msg: 'the declaration of macro call must be an identifier',
+            location: varDeclThatMayBeInsideNode.id.loc,
+          },
+        ),
+      )
+      return false
+    }
+  }
+  return true
+}
+
+function assertVineEmitsUsage(
+  validatorCtx: VineValidatorCtx,
+  macroCallNode: CallExpression,
+  parent?: TraversalAncestors,
+) {
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  let isVineEmitsUsageCorrect = true
+
+  if (!assertMacroCanOnlyHaveOneTypeParam(validatorCtx, macroCallNode)) {
+    isVineEmitsUsageCorrect = false
   }
   else {
+    const typeParams = macroCallNode.typeParameters?.params
     const theOnlyTypeParam = typeParams?.[0]
     if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
@@ -348,11 +387,11 @@ function assertVineEmitsUsage(
           },
         ),
       )
-      isVineEmitsTypeParamCorrect = false
+      isVineEmitsUsageCorrect = false
     }
     const properties = (theOnlyTypeParam as TSTypeLiteral)?.members
     if (!properties.every(prop => isTSPropertySignature(prop))) {
-      isVineEmitsTypeParamCorrect = false
+      isVineEmitsUsageCorrect = false
       vineCompilerHooks.onError(
         vineErr(
           vineFileCtx,
@@ -366,25 +405,188 @@ function assertVineEmitsUsage(
     }
   }
 
-  const varDeclaratorThatMayBeInside = parent?.find(ancestor => isVariableDeclarator(ancestor.node))
-  if (varDeclaratorThatMayBeInside) {
-    // the declaration of `vineEmits` macro call must be an identifier
-    const varDeclThatMayBeInsideNode = varDeclaratorThatMayBeInside.node as VariableDeclarator
-    if (!isIdentifier(varDeclThatMayBeInsideNode.id)) {
+  if (assetMacroVariableDeclarationMustBeIdentifier(validatorCtx, parent)) {
+    isVineEmitsUsageCorrect = false
+  }
+
+  return isVineEmitsUsageCorrect
+}
+
+function validateSlotMethodSignature(
+  validatorCtx: VineValidatorCtx,
+  methodSignature: TSMethodSignature,
+) {
+  // Every method's signature must have only one parameter named `props` with a TSTypeLiteral type annotation
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  const params = methodSignature.parameters
+  const errMsg = 'Function signature of `vineSlots` definition can only have one parameter named `props`'
+  if (params.length !== 1) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: errMsg,
+          location: methodSignature.loc,
+        },
+      ),
+    )
+    return false
+  }
+  const theSignatureOnlyParam = params[0]
+  if (!isIdentifier(theSignatureOnlyParam)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: errMsg,
+          location: theSignatureOnlyParam.loc,
+        },
+      ),
+    )
+    return false
+  }
+  const paramTypeAnnotation = theSignatureOnlyParam.typeAnnotation
+  if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: `${errMsg}, and its type annotation must be object literal`,
+          location: theSignatureOnlyParam.loc,
+        },
+      ),
+    )
+    return false
+  }
+  return true
+}
+
+function validateSlotPropertySignature(
+  validatorCtx: VineValidatorCtx,
+  propertySignature: TSPropertySignature,
+) {
+  // Every property's signature must have a TSTypeFunction type annotation
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  const typeAnnotation = propertySignature.typeAnnotation?.typeAnnotation
+  if (!typeAnnotation || !isTSFunctionType(typeAnnotation)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: 'Properties of `vineSlots` can only have function type annotation',
+          location: propertySignature.loc,
+        },
+      ),
+    )
+    return false
+  }
+
+  // The function type annotation must have only one parameter named `props` with a TSTypeLiteral type annotation
+  const params = typeAnnotation.parameters
+  const errMsg = 'Function signature of `vineSlots` can only have one parameter named `props`'
+  const firstParam = params[0]
+
+  if (params.length !== 1 || !isIdentifier(firstParam)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: errMsg,
+          location: typeAnnotation.loc,
+        },
+      ),
+    )
+    return false
+  }
+
+  const paramTypeAnnotation = firstParam.typeAnnotation
+  if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: `${errMsg}, and its type annotation must be object literal`,
+          location: firstParam.loc,
+        },
+      ),
+    )
+    return false
+  }
+
+  return true
+}
+
+function assertVineSlotsUsage(
+  validatorCtx: VineValidatorCtx,
+  macroCallNode: CallExpression,
+  parent?: TraversalAncestors,
+) {
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  let isVineSlotsUsageCorrect = true
+
+  if (!assertMacroCanOnlyHaveOneTypeParam(validatorCtx, macroCallNode)) {
+    isVineSlotsUsageCorrect = false
+  }
+  else {
+    const typeParams = macroCallNode.typeParameters?.params
+    const theOnlyTypeParam = typeParams?.[0]
+    if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
         vineErr(
           vineFileCtx,
           {
-            msg: 'the declaration of `vineEmits` macro call must be an identifier',
-            location: varDeclThatMayBeInsideNode.id.loc,
+            msg: 'Vue Vine component function\'s vineSlots type must be object literal!',
+            location: theOnlyTypeParam?.loc,
           },
         ),
       )
-      isVineEmitsTypeParamCorrect = false
+      isVineSlotsUsageCorrect = false
     }
+    const slotSignatures = (theOnlyTypeParam as TSTypeLiteral)?.members ?? []
+    if (!slotSignatures.every((prop) => {
+      if (isTSMethodSignature(prop))
+        return true
+
+      if (isTSPropertySignature(prop) && isTSFunctionType(prop.typeAnnotation?.typeAnnotation)) {
+        return true
+      }
+
+      return false
+    })) {
+      isVineSlotsUsageCorrect = false
+      vineCompilerHooks.onError(
+        vineErr(
+          vineFileCtx,
+          {
+            msg: 'Every property of Vue Vine component function\'s `vineSlots` type must be function signature',
+            location: theOnlyTypeParam?.loc,
+          },
+        ),
+      )
+    }
+
+    (slotSignatures as (TSMethodSignature | TSPropertySignature)[])
+      .forEach((signature) => {
+        if (
+          isTSMethodSignature(signature)
+          && !validateSlotMethodSignature(validatorCtx, signature)
+        ) {
+          isVineSlotsUsageCorrect = false
+        }
+        else if (
+          isTSPropertySignature(signature)
+          && !validateSlotPropertySignature(validatorCtx, signature)
+        ) {
+          isVineSlotsUsageCorrect = false
+        }
+      })
   }
 
-  return isVineEmitsTypeParamCorrect
+  if (assetMacroVariableDeclarationMustBeIdentifier(validatorCtx, parent)) {
+    isVineSlotsUsageCorrect = false
+  }
+
+  return isVineSlotsUsageCorrect
 }
 
 function validateMacrosUsage(
@@ -417,16 +619,22 @@ function validateMacrosUsage(
         assertVineEmitsUsage,
       ],
     },
+    vineSlots: {
+      count: 0,
+      asserts: [
+        assertVineSlotsUsage,
+      ],
+    },
     vineExpose: {
       count: 0,
       asserts: [
-        assertCanOnlyHaveOneObjLiteralArg,
+        assertMacroCanOnlyHaveOneObjLiteralArg,
       ],
     },
     vineOptions: {
       count: 0,
       asserts: [
-        assertCanOnlyHaveOneObjLiteralArg,
+        assertMacroCanOnlyHaveOneObjLiteralArg,
       ],
     },
     vineCustomElement: {
