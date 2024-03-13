@@ -78,8 +78,8 @@ importers:
         specifier: ^7.22.11
         version: 7.22.15
       '@vue/compiler-dom':
-        specifier: ^3.3.4
-        version: 3.3.4
+        specifier: ^3.4.21
+        version: 3.4.21
       estree-walker:
         specifier: ^2.0.2
         version: 2.0.2
@@ -747,7 +747,6 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.22.15
-    dev: false
 
   /@babel/runtime@7.22.6:
     resolution: {integrity: sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==}
@@ -3162,7 +3161,6 @@ packages:
       entities: 4.5.0
       estree-walker: 2.0.2
       source-map-js: 1.0.2
-    dev: false
 
   /@vue/compiler-dom@3.3.4:
     resolution: {integrity: sha512-wyM+OjOVpuUukIq6p5+nwHYtj9cFroz9cwkfmP9O1nzH68BenTTv0u7/ndggT8cIQlnBeOo6sUT/gvHcIkLA5w==}
@@ -3175,7 +3173,6 @@ packages:
     dependencies:
       '@vue/compiler-core': 3.4.21
       '@vue/shared': 3.4.21
-    dev: false
 
   /@vue/compiler-sfc@3.3.4:
     resolution: {integrity: sha512-6y/d8uw+5TkCuzBkgLS0v3lSM3hJDntFEiUORM11pQ/hKvkhSKZrXW6i69UyXlJQisJxuUEJKAWEqWbWsLeNKQ==}
@@ -3210,9 +3207,9 @@ packages:
     dependencies:
       '@volar/language-core': 1.10.4
       '@volar/source-map': 1.10.4
-      '@vue/compiler-dom': 3.3.4
+      '@vue/compiler-dom': 3.4.21
       '@vue/reactivity': 3.3.4
-      '@vue/shared': 3.3.4
+      '@vue/shared': 3.4.21
       minimatch: 9.0.3
       muggle-string: 0.3.1
       typescript: 5.2.2
@@ -3303,7 +3300,6 @@ packages:
 
   /@vue/shared@3.4.21:
     resolution: {integrity: sha512-PuJe7vDIi6VYSinuEbUIQgMIRZGgM8e4R+G+/dQTk0X1NEdvgvvgv7m+rfmDH1gZzyA1OjjoWskvHlfRNfQf3g==}
-    dev: false
 
   /@vue/test-utils@2.4.1(vue@3.3.4):
     resolution: {integrity: sha512-VO8nragneNzUZUah6kOjiFmD/gwRjUauG9DROh6oaOeFwX1cZRUNHhdeogE8635cISigXFTtGLUQWx5KCb0xeg==}
