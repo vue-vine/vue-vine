@@ -1,26 +1,26 @@
 {
   "compilerOptions": {
+    "target": "es2016",
+    "jsx": "preserve",
+    "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
     "module": "ESNext",
-    "target": "es2016",
-    "lib": ["DOM", "ESNext"],
-    "strict": true,
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "paths": {
+      "~/*": ["src/*"]
+    },
     "resolveJsonModule": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
     "types": [
       "vite/client",
       "vue-vine/macros"
     ],
-    "paths": {
-      "~/*": ["src/*"]
-    }
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "exclude": ["dist", "node_modules", "expectations/**/*.js"]
 }

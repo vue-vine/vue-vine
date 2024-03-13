@@ -68,16 +68,14 @@ export function sortStyleImport(vineFileCtx: VineFileCtx) {
     if (!templateAstRootNode) {
       continue
     }
-    traverseTemplate(templateAstRootNode,
-      templateAstNode => (
-        isTemplateElementNode(templateAstNode)
-        && isComponentNode(templateAstNode)
-      ),
-      (templateAstNode) => {
-        relationsMap[compFnCtx.fnName].add(
-          (templateAstNode as ElementNode).tag,
-        )
-      })
+    traverseTemplate(templateAstRootNode, templateAstNode => (
+      isTemplateElementNode(templateAstNode)
+      && isComponentNode(templateAstNode)
+    ), (templateAstNode) => {
+      relationsMap[compFnCtx.fnName].add(
+        (templateAstNode as ElementNode).tag,
+      )
+    })
   }
 
   const sortedStyleImportStmts = (

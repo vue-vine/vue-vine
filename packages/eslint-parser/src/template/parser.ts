@@ -23,7 +23,7 @@ const DUMMY_PARENT: any = Object.freeze({})
  * Set the location of the last child node to the end location of the given node.
  * @param node The node to commit the end location.
  */
-function propagateEndLocation(node: VTemplateRoot | VElement): void {
+function propagateEndLocation(node: VElement): void {
   const lastChild
       = (node.type === 'VElement' ? node.endTag : null) || last(node.children)
   if (lastChild != null) {
@@ -59,10 +59,10 @@ function isMathMLIntegrationPoint(element: VElement): boolean {
     const name = element.rawName
     return (
       name === 'mi'
-          || name === 'mo'
-          || name === 'mn'
-          || name === 'ms'
-          || name === 'mtext'
+      || name === 'mo'
+      || name === 'mn'
+      || name === 'ms'
+      || name === 'mtext'
     )
   }
   return false
@@ -78,14 +78,14 @@ function isHTMLIntegrationPoint(element: VElement): boolean {
   if (element.namespace === NS.MathML) {
     return (
       element.rawName === 'annotation-xml'
-          && element.startTag.attributes.some(
-            a =>
-              a.directive === false
-                  && a.key.name === 'encoding'
-                  && a.value != null
-                  && (a.value.value === 'text/html'
-                      || a.value.value === 'application/xhtml+xml'),
-          )
+      && element.startTag.attributes.some(
+        a =>
+          a.directive === false
+          && a.key.name === 'encoding'
+          && a.value != null
+          && (a.value.value === 'text/html'
+          || a.value.value === 'application/xhtml+xml'),
+      )
     )
   }
   if (element.namespace === NS.SVG) {
@@ -170,6 +170,10 @@ export class VineTemplateParser {
       comments: this.tokenizer.comments,
       errors: this.tokenizer.errors,
     }
+
+    // In vue-eslint-parser, if parser goes into `<template>` tag,
+    // `this.expressionEnabled` is set to true.
+    this.expressionEnabled = true
   }
 
   private correctMetaTokenPos() {
@@ -299,16 +303,16 @@ export class VineTemplateParser {
       if (element.type === 'VElement') {
         if (
           element.namespace === NS.MathML
-                  && element.rawName === 'annotation-xml'
-                  && name === 'svg'
+          && element.rawName === 'annotation-xml'
+          && name === 'svg'
         ) {
           return NS.SVG
         }
         if (
           isHTMLIntegrationPoint(element)
           || (isMathMLIntegrationPoint(element)
-              && name !== 'mglyph'
-              && name !== 'malignmark')
+          && name !== 'mglyph'
+          && name !== 'malignmark')
         ) {
           ns = NS.HTML
         }
@@ -398,9 +402,10 @@ export class VineTemplateParser {
       this.expressionEnabled = true
     }
 
-    // Update expression flag.
+    // If element stack is empty, it means we're back to the template root.
+    // So, we should enable expression as we do in parser constructor.
     if (this.elementStack.length === 0) {
-      this.expressionEnabled = false
+      this.expressionEnabled = true
     }
   }
 
@@ -477,7 +482,7 @@ export class VineTemplateParser {
         if (attribute.directive) {
           if (
             attribute.key.argument != null
-                  && attribute.key.argument.type === 'VExpressionContainer'
+            && attribute.key.argument.type === 'VExpressionContainer'
           ) {
             resolveReferences(attribute.key.argument)
           }
@@ -617,7 +622,6 @@ export class VineTemplateParser {
     } while (token != null)
 
     this.popElementStackUntil(0)
-    propagateEndLocation(this.vTemplateRoot)
 
     const templateRoot = this.vTemplateRoot
     const templateMeta = this.vTemplateMeta

@@ -254,13 +254,13 @@ export function getFunctionInfo(fnDecl: Node): {
   }
   else if (
     isVariableDeclaration(target)
-      && (
-        (
-          isFunctionExpression(target.declarations[0].init)
-          || isArrowFunctionExpression(target.declarations[0].init)
-        )
-        && isIdentifier(target.declarations[0].id)
+    && (
+      (
+        isFunctionExpression(target.declarations[0].init)
+        || isArrowFunctionExpression(target.declarations[0].init)
       )
+      && isIdentifier(target.declarations[0].id)
+    )
   ) {
     fnItselfNode = target.declarations[0].init
     fnName = target.declarations[0].id.name

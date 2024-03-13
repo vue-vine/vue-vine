@@ -3,12 +3,12 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "declarationDir": "dist",
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
   "include": [

@@ -1,7 +1,0 @@
-{
-  "extends": "@antfu",
-  "rules": {
-    "curly": "off",
-    "prefer-const": "off"
-  }
-}

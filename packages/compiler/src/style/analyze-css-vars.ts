@@ -65,7 +65,7 @@ const vBindRE = /v-bind\s*\(/g
 export function parseCssVars(
   styles: string[],
   hook?: {
-    getIndex(start: number, end: number): void
+    getIndex: (start: number, end: number) => void
   },
 ): string[] {
   const vars: string[] = []

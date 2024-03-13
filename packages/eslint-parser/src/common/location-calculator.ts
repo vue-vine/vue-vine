@@ -10,14 +10,14 @@ export interface LocationCalculator {
    * Gets the fix location offset of the given offset with using the base offset of this calculator.
    * @param offset The offset to modify.
    */
-  getFixOffset(offset: number, kind: 'start' | 'end'): number
+  getFixOffset: (offset: number, kind: 'start' | 'end') => number
 
   /**
    * Calculate the location of the given index.
    * @param index The index to calculate their location.
    * @returns The location of the index.
    */
-  getLocFromIndex(index: number): Location
+  getLocFromIndex: (index: number) => Location
 }
 
 /**

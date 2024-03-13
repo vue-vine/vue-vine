@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../index'
 import { sortStyleImport } from '../src/style/order'
 import { createMockTransformCtx } from './shared-utils'
 
-describe('Test Vine compiler analyze', () => {
-  test('analyze imports', () => {
+describe('test Vine compiler analyze', () => {
+  it('analyze imports', () => {
     const content = `
 import { ref, reactive as VueReactive } from 'vue'
 import * as Something from 'lib-1'
@@ -41,7 +41,7 @@ import type { SomeType } from 'types-2'
     `)
   })
 
-  test('analyze vine component props by function\'s formal param', () => {
+  it('analyze vine component props by function\'s formal param', () => {
     const content = `
 function MyComp(p: {
   name: string;
@@ -79,7 +79,7 @@ function MyComp(p: {
     `)
   })
 
-  test('analyze vine component props by macro calls', () => {
+  it('analyze vine component props by macro calls', () => {
     const content = `
 const MyComp = () => {
   const name = vineProp<string>()
@@ -97,7 +97,7 @@ const MyComp = () => {
     expect(vineFnComp?.props).toMatchSnapshot()
   })
 
-  test('analyze vine emits definition', () => {
+  it('analyze vine emits definition', () => {
     const content = `
 function MyComp() {
   const myEmits = vineEmits<{
@@ -117,7 +117,7 @@ function MyComp() {
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
   })
 
-  test('analyze vine slots definition', () => {
+  it('analyze vine slots definition', () => {
     const content = `
 function MyComp() {
   const myEmits = vineSlots<{
@@ -145,7 +145,7 @@ function MyComp() {
     ).toMatchInlineSnapshot('"{ id: string; msg: string; }"')
   })
 
-  test('analyze `vineExpose` and `vineOptions` macro calls', () => {
+  it('analyze `vineExpose` and `vineOptions` macro calls', () => {
     const content = `
 function Comp() {
   const count = ref(1)
@@ -167,7 +167,7 @@ function Comp() {
     expect(vineFnComp?.options).toMatchSnapshot()
   })
 
-  test('analyze vine component function\'s Vue bindings type', () => {
+  it('analyze vine component function\'s Vue bindings type', () => {
     const content = `
 import { ref, reactive } from 'vue'
 
@@ -219,7 +219,7 @@ export function MyComp() {
     `)
   })
 
-  test('analyze vine style macro call', () => {
+  it('analyze vine style macro call', () => {
     const content = `
 function MyComp() {
   const color = ref('red')
@@ -248,7 +248,7 @@ function MyComp() {
     expect(styleDefine?.scoped).toBe(true)
   })
 
-  test('analyze vine template', () => {
+  it('analyze vine template', () => {
     const content = `
 function MyBox(props: {
   title: string;
@@ -277,7 +277,7 @@ function MyApp() {
     expect(MyApp?.templateAst).toMatchSnapshot()
   })
 
-  test('analyze vineProp validator and vineOptions reference locally declared variables', () => {
+  it('analyze vineProp validator and vineOptions reference locally declared variables', () => {
     const content = `
 import { ref } from 'vue'
 
@@ -305,8 +305,8 @@ function MyComp() {
   })
 })
 
-describe('Test other helpers for compiler', () => {
-  test('sort style import', () => {
+describe('test other helpers for compiler', () => {
+  it('sort style import', () => {
     const content = `
 function MyApp() {
   vineStyle(\`

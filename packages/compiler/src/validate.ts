@@ -398,7 +398,7 @@ function assertVineEmitsUsage(
           vineFileCtx,
           {
             msg: 'Vue Vine component function\'s vineEmits type must be object literal! '
-              + 'And all properties\' key must be string literal or identifier',
+            + 'And all properties\' key must be string literal or identifier',
             location: theOnlyTypeParam?.loc,
           },
         ),
@@ -887,7 +887,7 @@ function validateVineFunctionCompProps(
             vineFileCtx,
             {
               msg: 'Vine component function\'s props type annotation must be an object literal, '
-                + 'only contains properties signature, and all properties\' key must be string literal or identifier',
+              + 'only contains properties signature, and all properties\' key must be string literal or identifier',
               location: propsTypeAnnotation.loc,
             },
           ),

@@ -2,7 +2,7 @@ import { Header } from './header.vine'
 import { generateRandomString } from '~/utils'
 
 function StateContainer(props: {
-id: string
+  id: string
 }) {
   vineStyle.scoped(scss`
     .loading-view {

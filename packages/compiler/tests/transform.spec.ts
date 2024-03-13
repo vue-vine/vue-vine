@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { format } from 'prettier'
 import { compileVineTypeScriptFile } from '../index'
 import { createMockTransformCtx } from './shared-utils'
@@ -48,8 +48,8 @@ function MyApp() {
   \`
 }`
 
-describe('Test transform', () => {
-  test('inline mode output result', async () => {
+describe('test transform', () => {
+  it('inline mode output result', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(testContent, 'testTransformInlineResult', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
@@ -62,7 +62,7 @@ describe('Test transform', () => {
     expect(formated).toMatchSnapshot()
   })
 
-  test('separated mode output result', async () => {
+  it('separated mode output result', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       inlineTemplate: false,
     })
@@ -77,7 +77,7 @@ describe('Test transform', () => {
     expect(formated).toMatchSnapshot()
   })
 
-  test('not output HMR content in non-dev mode', async () => {
+  it('not output HMR content in non-dev mode', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       mode: 'production',
     })

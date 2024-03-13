@@ -260,7 +260,7 @@ export class IntermediateTokenizer {
       // Concatenate this token to the current text token.
       if (
         this.currentToken.type === 'Text'
-                && this.currentToken.range[1] === token.range[0]
+        && this.currentToken.range[1] === token.range[0]
       ) {
         this.currentToken.value += token.value
         this.currentToken.range[1] = token.range[1]
@@ -295,7 +295,7 @@ export class IntermediateTokenizer {
 
       if (
         this.currentToken == null
-                || this.currentToken.type !== 'StartTag'
+        || this.currentToken.type !== 'StartTag'
       ) {
         throw new Error('unreachable')
       }
@@ -362,8 +362,8 @@ export class IntermediateTokenizer {
 
     if (
       this.currentToken == null
-            || this.currentToken.type === 'Text'
-            || this.currentToken.type === 'Mustache'
+      || this.currentToken.type === 'Text'
+      || this.currentToken.type === 'Mustache'
     ) {
       throw new Error('unreachable')
     }

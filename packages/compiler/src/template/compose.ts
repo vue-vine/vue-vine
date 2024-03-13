@@ -22,9 +22,9 @@ export function compileVineTemplate(
   })
 }
 
-interface DefaultImportSpecifierMeta { type: 'defaultSpecifier'; localName: string }
-interface NamespaceImportSpecifierMeta { type: 'namespaceSpecifier'; localName: string }
-export interface NamedImportSpecifierMeta { type: 'namedSpecifier'; specs: Map<string, string> }
+interface DefaultImportSpecifierMeta { type: 'defaultSpecifier', localName: string }
+interface NamespaceImportSpecifierMeta { type: 'namespaceSpecifier', localName: string }
+export interface NamedImportSpecifierMeta { type: 'namedSpecifier', specs: Map<string, string> }
 export type MergedImportsMap = Map<
   string,
   | DefaultImportSpecifierMeta

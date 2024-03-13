@@ -3,7 +3,8 @@ import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {
   compileVineStyle,
-  compileVineTypeScriptFile, createCompilerCtx,
+  compileVineTypeScriptFile,
+  createCompilerCtx,
 } from '@vue-vine/compiler'
 import type {
   VineCompilerHooks,

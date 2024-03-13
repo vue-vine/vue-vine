@@ -256,11 +256,11 @@ function splitFilters(exp: string): string[] {
     }
     else if (
       c === 0x7C // pipe
-            && exp.charCodeAt(i + 1) !== 0x7C
-            && exp.charCodeAt(i - 1) !== 0x7C
-            && !curly
-            && !square
-            && !paren
+      && exp.charCodeAt(i + 1) !== 0x7C
+      && exp.charCodeAt(i - 1) !== 0x7C
+      && !curly
+      && !square
+      && !paren
     ) {
       result.push(exp.slice(lastFilterIndex, i))
       lastFilterIndex = i + 1
@@ -474,7 +474,7 @@ function parseFilter(
 
       if (
         callExpression.type !== 'CallExpression'
-                || callExpression.callee.type !== 'Literal'
+        || callExpression.callee.type !== 'Literal'
       ) {
         // Report the next token of `)`.
         let nestCount = 1
@@ -529,7 +529,7 @@ export interface ExpressionParseResult<T extends Node> {
 
 function loadParser(parser: string) {
   if (parser !== 'espree') {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line ts/no-require-imports
     return require(parser)
   }
   return getEspreeFromUser()
@@ -711,8 +711,8 @@ export function parseVForExpression(
     const references = scope.references
     const variables = scope.variables
     const statement = ast.body[0] as
-            | ESLintForInStatement
-            | ESLintForOfStatement
+      | ESLintForInStatement
+      | ESLintForOfStatement
     const varDecl = statement.left as ESLintVariableDeclaration
     const id = varDecl.declarations[0].id as ESLintArrayPattern
     const left = id.elements

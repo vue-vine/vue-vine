@@ -6,7 +6,8 @@ import { expect } from 'vitest'
 import {
   type Browser,
   type BrowserContext,
-  type Page, chromium,
+  type Page,
+  chromium,
 } from 'playwright-chromium'
 import type { InlineConfig, ViteDevServer } from 'vite'
 import {

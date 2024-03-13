@@ -32,8 +32,8 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
     if (
       processedRules.has(rule)
       || (rule.parent
-        && rule.parent.type === 'atrule'
-        && /-?keyframes$/.test((rule.parent as AtRule).name))
+      && rule.parent.type === 'atrule'
+      && /-?keyframes$/.test((rule.parent as AtRule).name))
     ) {
       return
     }

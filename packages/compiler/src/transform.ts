@@ -370,8 +370,7 @@ export function transformFile(
           // handle Web Component styles
           Boolean(vineCompFnCtx.isCustomElement),
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
-        )}\nreturn __vine\n})();`,
-      )
+        )}\nreturn __vine\n})();`)
       // Record component function to HMR
       if (isDev) {
         ms.appendRight(
@@ -398,7 +397,8 @@ if (_rerender_only) {
 } else {
   __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
 }
-});`)
+});`,
+    )
   }
 
   // Prepend all style import statements

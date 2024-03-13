@@ -243,7 +243,7 @@ export function analyzeVariablesAndExternalReferences(
   parserResult: ParserResult,
   kind: Variable['kind'],
   parserOptions: VineESLintParserOptions,
-): { variables: Variable[]; references: Reference[] } {
+): { variables: Variable[], references: Reference[] } {
   const scope = analyze(parserResult, parserOptions)
   return {
     variables: getForScope(scope)
@@ -392,7 +392,7 @@ export function analyzeUsedInTemplateVariables(
   function processVElement(node: VElement) {
     if (
       (node.rawName === node.name && NATIVE_TAGS.has(node.rawName))
-          || BUILTIN_COMPONENTS.has(node.rawName)
+      || BUILTIN_COMPONENTS.has(node.rawName)
     ) {
       return
     }

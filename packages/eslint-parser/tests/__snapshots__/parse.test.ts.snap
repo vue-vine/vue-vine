@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Vine ESLint parser test > parse template root 1`] = `
+exports[`vine ESLint parser test > test variable reference 1`] = `
 {
   "body": [
     {
@@ -23,7 +23,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                       "line": 2,
                     },
                   },
-                  "name": "r1",
+                  "name": "v1",
                   "optional": false,
                   "parent": [Circular],
                   "range": [
@@ -34,157 +34,9 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                   "typeAnnotation": undefined,
                 },
                 "init": {
-                  "arguments": [
-                    {
-                      "left": {
-                        "arguments": [],
-                        "callee": {
-                          "computed": false,
-                          "loc": {
-                            "end": {
-                              "column": 28,
-                              "line": 2,
-                            },
-                            "start": {
-                              "column": 17,
-                              "line": 2,
-                            },
-                          },
-                          "object": {
-                            "decorators": [],
-                            "loc": {
-                              "end": {
-                                "column": 21,
-                                "line": 2,
-                              },
-                              "start": {
-                                "column": 17,
-                                "line": 2,
-                              },
-                            },
-                            "name": "Math",
-                            "optional": false,
-                            "parent": [Circular],
-                            "range": [
-                              37,
-                              41,
-                            ],
-                            "type": "Identifier",
-                            "typeAnnotation": undefined,
-                          },
-                          "optional": false,
-                          "parent": [Circular],
-                          "property": {
-                            "decorators": [],
-                            "loc": {
-                              "end": {
-                                "column": 28,
-                                "line": 2,
-                              },
-                              "start": {
-                                "column": 22,
-                                "line": 2,
-                              },
-                            },
-                            "name": "random",
-                            "optional": false,
-                            "parent": [Circular],
-                            "range": [
-                              42,
-                              48,
-                            ],
-                            "type": "Identifier",
-                            "typeAnnotation": undefined,
-                          },
-                          "range": [
-                            37,
-                            48,
-                          ],
-                          "type": "MemberExpression",
-                        },
-                        "loc": {
-                          "end": {
-                            "column": 30,
-                            "line": 2,
-                          },
-                          "start": {
-                            "column": 17,
-                            "line": 2,
-                          },
-                        },
-                        "optional": false,
-                        "parent": [Circular],
-                        "range": [
-                          37,
-                          50,
-                        ],
-                        "type": "CallExpression",
-                        "typeArguments": undefined,
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 35,
-                          "line": 2,
-                        },
-                        "start": {
-                          "column": 17,
-                          "line": 2,
-                        },
-                      },
-                      "operator": "*",
-                      "parent": [Circular],
-                      "range": [
-                        37,
-                        55,
-                      ],
-                      "right": {
-                        "loc": {
-                          "end": {
-                            "column": 35,
-                            "line": 2,
-                          },
-                          "start": {
-                            "column": 33,
-                            "line": 2,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          53,
-                          55,
-                        ],
-                        "raw": "10",
-                        "type": "Literal",
-                        "value": 10,
-                      },
-                      "type": "BinaryExpression",
-                    },
-                  ],
-                  "callee": {
-                    "decorators": [],
-                    "loc": {
-                      "end": {
-                        "column": 16,
-                        "line": 2,
-                      },
-                      "start": {
-                        "column": 13,
-                        "line": 2,
-                      },
-                    },
-                    "name": "ref",
-                    "optional": false,
-                    "parent": [Circular],
-                    "range": [
-                      33,
-                      36,
-                    ],
-                    "type": "Identifier",
-                    "typeAnnotation": undefined,
-                  },
                   "loc": {
                     "end": {
-                      "column": 36,
+                      "column": 15,
                       "line": 2,
                     },
                     "start": {
@@ -192,18 +44,18 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                       "line": 2,
                     },
                   },
-                  "optional": false,
                   "parent": [Circular],
                   "range": [
                     33,
-                    56,
+                    35,
                   ],
-                  "type": "CallExpression",
-                  "typeArguments": undefined,
+                  "raw": "10",
+                  "type": "Literal",
+                  "value": 10,
                 },
                 "loc": {
                   "end": {
-                    "column": 36,
+                    "column": 15,
                     "line": 2,
                   },
                   "start": {
@@ -214,7 +66,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                 "parent": [Circular],
                 "range": [
                   28,
-                  56,
+                  35,
                 ],
                 "type": "VariableDeclarator",
               },
@@ -223,7 +75,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
             "kind": "const",
             "loc": {
               "end": {
-                "column": 36,
+                "column": 15,
                 "line": 2,
               },
               "start": {
@@ -234,7 +86,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
             "parent": [Circular],
             "range": [
               22,
-              56,
+              35,
             ],
             "type": "VariableDeclaration",
           },
@@ -246,7 +98,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                   "decorators": [],
                   "loc": {
                     "end": {
-                      "column": 10,
+                      "column": 11,
                       "line": 3,
                     },
                     "start": {
@@ -254,626 +106,12 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                       "line": 3,
                     },
                   },
-                  "name": "r2",
+                  "name": "fn1",
                   "optional": false,
                   "parent": [Circular],
                   "range": [
-                    65,
-                    67,
-                  ],
-                  "type": "Identifier",
-                  "typeAnnotation": undefined,
-                },
-                "init": {
-                  "arguments": [
-                    {
-                      "left": {
-                        "arguments": [],
-                        "callee": {
-                          "computed": false,
-                          "loc": {
-                            "end": {
-                              "column": 28,
-                              "line": 3,
-                            },
-                            "start": {
-                              "column": 17,
-                              "line": 3,
-                            },
-                          },
-                          "object": {
-                            "decorators": [],
-                            "loc": {
-                              "end": {
-                                "column": 21,
-                                "line": 3,
-                              },
-                              "start": {
-                                "column": 17,
-                                "line": 3,
-                              },
-                            },
-                            "name": "Math",
-                            "optional": false,
-                            "parent": [Circular],
-                            "range": [
-                              74,
-                              78,
-                            ],
-                            "type": "Identifier",
-                            "typeAnnotation": undefined,
-                          },
-                          "optional": false,
-                          "parent": [Circular],
-                          "property": {
-                            "decorators": [],
-                            "loc": {
-                              "end": {
-                                "column": 28,
-                                "line": 3,
-                              },
-                              "start": {
-                                "column": 22,
-                                "line": 3,
-                              },
-                            },
-                            "name": "random",
-                            "optional": false,
-                            "parent": [Circular],
-                            "range": [
-                              79,
-                              85,
-                            ],
-                            "type": "Identifier",
-                            "typeAnnotation": undefined,
-                          },
-                          "range": [
-                            74,
-                            85,
-                          ],
-                          "type": "MemberExpression",
-                        },
-                        "loc": {
-                          "end": {
-                            "column": 30,
-                            "line": 3,
-                          },
-                          "start": {
-                            "column": 17,
-                            "line": 3,
-                          },
-                        },
-                        "optional": false,
-                        "parent": [Circular],
-                        "range": [
-                          74,
-                          87,
-                        ],
-                        "type": "CallExpression",
-                        "typeArguments": undefined,
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 36,
-                          "line": 3,
-                        },
-                        "start": {
-                          "column": 17,
-                          "line": 3,
-                        },
-                      },
-                      "operator": "*",
-                      "parent": [Circular],
-                      "range": [
-                        74,
-                        93,
-                      ],
-                      "right": {
-                        "loc": {
-                          "end": {
-                            "column": 36,
-                            "line": 3,
-                          },
-                          "start": {
-                            "column": 33,
-                            "line": 3,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          90,
-                          93,
-                        ],
-                        "raw": "100",
-                        "type": "Literal",
-                        "value": 100,
-                      },
-                      "type": "BinaryExpression",
-                    },
-                  ],
-                  "callee": {
-                    "decorators": [],
-                    "loc": {
-                      "end": {
-                        "column": 16,
-                        "line": 3,
-                      },
-                      "start": {
-                        "column": 13,
-                        "line": 3,
-                      },
-                    },
-                    "name": "ref",
-                    "optional": false,
-                    "parent": [Circular],
-                    "range": [
-                      70,
-                      73,
-                    ],
-                    "type": "Identifier",
-                    "typeAnnotation": undefined,
-                  },
-                  "loc": {
-                    "end": {
-                      "column": 37,
-                      "line": 3,
-                    },
-                    "start": {
-                      "column": 13,
-                      "line": 3,
-                    },
-                  },
-                  "optional": false,
-                  "parent": [Circular],
-                  "range": [
-                    70,
-                    94,
-                  ],
-                  "type": "CallExpression",
-                  "typeArguments": undefined,
-                },
-                "loc": {
-                  "end": {
-                    "column": 37,
-                    "line": 3,
-                  },
-                  "start": {
-                    "column": 8,
-                    "line": 3,
-                  },
-                },
-                "parent": [Circular],
-                "range": [
-                  65,
-                  94,
-                ],
-                "type": "VariableDeclarator",
-              },
-            ],
-            "declare": false,
-            "kind": "const",
-            "loc": {
-              "end": {
-                "column": 37,
-                "line": 3,
-              },
-              "start": {
-                "column": 2,
-                "line": 3,
-              },
-            },
-            "parent": [Circular],
-            "range": [
-              59,
-              94,
-            ],
-            "type": "VariableDeclaration",
-          },
-          {
-            "declarations": [
-              {
-                "definite": false,
-                "id": {
-                  "decorators": [],
-                  "loc": {
-                    "end": {
-                      "column": 12,
-                      "line": 4,
-                    },
-                    "start": {
-                      "column": 8,
-                      "line": 4,
-                    },
-                  },
-                  "name": "rArr",
-                  "optional": false,
-                  "parent": [Circular],
-                  "range": [
-                    103,
-                    107,
-                  ],
-                  "type": "Identifier",
-                  "typeAnnotation": undefined,
-                },
-                "init": {
-                  "arguments": [
-                    {
-                      "loc": {
-                        "end": {
-                          "column": 40,
-                          "line": 4,
-                        },
-                        "start": {
-                          "column": 26,
-                          "line": 4,
-                        },
-                      },
-                      "parent": [Circular],
-                      "properties": [
-                        {
-                          "computed": false,
-                          "key": {
-                            "decorators": [],
-                            "loc": {
-                              "end": {
-                                "column": 34,
-                                "line": 4,
-                              },
-                              "start": {
-                                "column": 28,
-                                "line": 4,
-                              },
-                            },
-                            "name": "length",
-                            "optional": false,
-                            "parent": [Circular],
-                            "range": [
-                              123,
-                              129,
-                            ],
-                            "type": "Identifier",
-                            "typeAnnotation": undefined,
-                          },
-                          "kind": "init",
-                          "loc": {
-                            "end": {
-                              "column": 38,
-                              "line": 4,
-                            },
-                            "start": {
-                              "column": 28,
-                              "line": 4,
-                            },
-                          },
-                          "method": false,
-                          "optional": false,
-                          "parent": [Circular],
-                          "range": [
-                            123,
-                            133,
-                          ],
-                          "shorthand": false,
-                          "type": "Property",
-                          "value": {
-                            "loc": {
-                              "end": {
-                                "column": 38,
-                                "line": 4,
-                              },
-                              "start": {
-                                "column": 36,
-                                "line": 4,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              131,
-                              133,
-                            ],
-                            "raw": "10",
-                            "type": "Literal",
-                            "value": 10,
-                          },
-                        },
-                      ],
-                      "range": [
-                        121,
-                        135,
-                      ],
-                      "type": "ObjectExpression",
-                    },
-                    {
-                      "async": false,
-                      "body": {
-                        "left": {
-                          "arguments": [],
-                          "callee": {
-                            "computed": false,
-                            "loc": {
-                              "end": {
-                                "column": 59,
-                                "line": 4,
-                              },
-                              "start": {
-                                "column": 48,
-                                "line": 4,
-                              },
-                            },
-                            "object": {
-                              "decorators": [],
-                              "loc": {
-                                "end": {
-                                  "column": 52,
-                                  "line": 4,
-                                },
-                                "start": {
-                                  "column": 48,
-                                  "line": 4,
-                                },
-                              },
-                              "name": "Math",
-                              "optional": false,
-                              "parent": [Circular],
-                              "range": [
-                                143,
-                                147,
-                              ],
-                              "type": "Identifier",
-                              "typeAnnotation": undefined,
-                            },
-                            "optional": false,
-                            "parent": [Circular],
-                            "property": {
-                              "decorators": [],
-                              "loc": {
-                                "end": {
-                                  "column": 59,
-                                  "line": 4,
-                                },
-                                "start": {
-                                  "column": 53,
-                                  "line": 4,
-                                },
-                              },
-                              "name": "random",
-                              "optional": false,
-                              "parent": [Circular],
-                              "range": [
-                                148,
-                                154,
-                              ],
-                              "type": "Identifier",
-                              "typeAnnotation": undefined,
-                            },
-                            "range": [
-                              143,
-                              154,
-                            ],
-                            "type": "MemberExpression",
-                          },
-                          "loc": {
-                            "end": {
-                              "column": 61,
-                              "line": 4,
-                            },
-                            "start": {
-                              "column": 48,
-                              "line": 4,
-                            },
-                          },
-                          "optional": false,
-                          "parent": [Circular],
-                          "range": [
-                            143,
-                            156,
-                          ],
-                          "type": "CallExpression",
-                          "typeArguments": undefined,
-                        },
-                        "loc": {
-                          "end": {
-                            "column": 67,
-                            "line": 4,
-                          },
-                          "start": {
-                            "column": 48,
-                            "line": 4,
-                          },
-                        },
-                        "operator": "*",
-                        "parent": [Circular],
-                        "range": [
-                          143,
-                          162,
-                        ],
-                        "right": {
-                          "loc": {
-                            "end": {
-                              "column": 67,
-                              "line": 4,
-                            },
-                            "start": {
-                              "column": 64,
-                              "line": 4,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            159,
-                            162,
-                          ],
-                          "raw": "100",
-                          "type": "Literal",
-                          "value": 100,
-                        },
-                        "type": "BinaryExpression",
-                      },
-                      "expression": true,
-                      "generator": false,
-                      "id": null,
-                      "loc": {
-                        "end": {
-                          "column": 67,
-                          "line": 4,
-                        },
-                        "start": {
-                          "column": 42,
-                          "line": 4,
-                        },
-                      },
-                      "params": [],
-                      "parent": [Circular],
-                      "range": [
-                        137,
-                        162,
-                      ],
-                      "returnType": undefined,
-                      "type": "ArrowFunctionExpression",
-                      "typeParameters": undefined,
-                    },
-                  ],
-                  "callee": {
-                    "computed": false,
-                    "loc": {
-                      "end": {
-                        "column": 25,
-                        "line": 4,
-                      },
-                      "start": {
-                        "column": 15,
-                        "line": 4,
-                      },
-                    },
-                    "object": {
-                      "decorators": [],
-                      "loc": {
-                        "end": {
-                          "column": 20,
-                          "line": 4,
-                        },
-                        "start": {
-                          "column": 15,
-                          "line": 4,
-                        },
-                      },
-                      "name": "Array",
-                      "optional": false,
-                      "parent": [Circular],
-                      "range": [
-                        110,
-                        115,
-                      ],
-                      "type": "Identifier",
-                      "typeAnnotation": undefined,
-                    },
-                    "optional": false,
-                    "parent": [Circular],
-                    "property": {
-                      "decorators": [],
-                      "loc": {
-                        "end": {
-                          "column": 25,
-                          "line": 4,
-                        },
-                        "start": {
-                          "column": 21,
-                          "line": 4,
-                        },
-                      },
-                      "name": "from",
-                      "optional": false,
-                      "parent": [Circular],
-                      "range": [
-                        116,
-                        120,
-                      ],
-                      "type": "Identifier",
-                      "typeAnnotation": undefined,
-                    },
-                    "range": [
-                      110,
-                      120,
-                    ],
-                    "type": "MemberExpression",
-                  },
-                  "loc": {
-                    "end": {
-                      "column": 68,
-                      "line": 4,
-                    },
-                    "start": {
-                      "column": 15,
-                      "line": 4,
-                    },
-                  },
-                  "optional": false,
-                  "parent": [Circular],
-                  "range": [
-                    110,
-                    163,
-                  ],
-                  "type": "CallExpression",
-                  "typeArguments": undefined,
-                },
-                "loc": {
-                  "end": {
-                    "column": 68,
-                    "line": 4,
-                  },
-                  "start": {
-                    "column": 8,
-                    "line": 4,
-                  },
-                },
-                "parent": [Circular],
-                "range": [
-                  103,
-                  163,
-                ],
-                "type": "VariableDeclarator",
-              },
-            ],
-            "declare": false,
-            "kind": "const",
-            "loc": {
-              "end": {
-                "column": 68,
-                "line": 4,
-              },
-              "start": {
-                "column": 2,
-                "line": 4,
-              },
-            },
-            "parent": [Circular],
-            "range": [
-              97,
-              163,
-            ],
-            "type": "VariableDeclaration",
-          },
-          {
-            "declarations": [
-              {
-                "definite": false,
-                "id": {
-                  "decorators": [],
-                  "loc": {
-                    "end": {
-                      "column": 10,
-                      "line": 5,
-                    },
-                    "start": {
-                      "column": 8,
-                      "line": 5,
-                    },
-                  },
-                  "name": "f1",
-                  "optional": false,
-                  "parent": [Circular],
-                  "range": [
-                    172,
-                    174,
+                    44,
+                    47,
                   ],
                   "type": "Identifier",
                   "typeAnnotation": undefined,
@@ -881,147 +119,21 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                 "init": {
                   "async": false,
                   "body": {
-                    "body": [
-                      {
-                        "directive": undefined,
-                        "expression": {
-                          "arguments": [
-                            {
-                              "loc": {
-                                "end": {
-                                  "column": 27,
-                                  "line": 6,
-                                },
-                                "start": {
-                                  "column": 16,
-                                  "line": 6,
-                                },
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                201,
-                                212,
-                              ],
-                              "raw": "'f1: hello'",
-                              "type": "Literal",
-                              "value": "f1: hello",
-                            },
-                          ],
-                          "callee": {
-                            "computed": false,
-                            "loc": {
-                              "end": {
-                                "column": 15,
-                                "line": 6,
-                              },
-                              "start": {
-                                "column": 4,
-                                "line": 6,
-                              },
-                            },
-                            "object": {
-                              "decorators": [],
-                              "loc": {
-                                "end": {
-                                  "column": 11,
-                                  "line": 6,
-                                },
-                                "start": {
-                                  "column": 4,
-                                  "line": 6,
-                                },
-                              },
-                              "name": "console",
-                              "optional": false,
-                              "parent": [Circular],
-                              "range": [
-                                189,
-                                196,
-                              ],
-                              "type": "Identifier",
-                              "typeAnnotation": undefined,
-                            },
-                            "optional": false,
-                            "parent": [Circular],
-                            "property": {
-                              "decorators": [],
-                              "loc": {
-                                "end": {
-                                  "column": 15,
-                                  "line": 6,
-                                },
-                                "start": {
-                                  "column": 12,
-                                  "line": 6,
-                                },
-                              },
-                              "name": "log",
-                              "optional": false,
-                              "parent": [Circular],
-                              "range": [
-                                197,
-                                200,
-                              ],
-                              "type": "Identifier",
-                              "typeAnnotation": undefined,
-                            },
-                            "range": [
-                              189,
-                              200,
-                            ],
-                            "type": "MemberExpression",
-                          },
-                          "loc": {
-                            "end": {
-                              "column": 28,
-                              "line": 6,
-                            },
-                            "start": {
-                              "column": 4,
-                              "line": 6,
-                            },
-                          },
-                          "optional": false,
-                          "parent": [Circular],
-                          "range": [
-                            189,
-                            213,
-                          ],
-                          "type": "CallExpression",
-                          "typeArguments": undefined,
-                        },
-                        "loc": {
-                          "end": {
-                            "column": 28,
-                            "line": 6,
-                          },
-                          "start": {
-                            "column": 4,
-                            "line": 6,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          189,
-                          213,
-                        ],
-                        "type": "ExpressionStatement",
-                      },
-                    ],
+                    "body": [],
                     "loc": {
                       "end": {
-                        "column": 3,
-                        "line": 7,
+                        "column": 22,
+                        "line": 3,
                       },
                       "start": {
-                        "column": 19,
-                        "line": 5,
+                        "column": 20,
+                        "line": 3,
                       },
                     },
                     "parent": [Circular],
                     "range": [
-                      183,
-                      217,
+                      56,
+                      58,
                     ],
                     "type": "BlockStatement",
                   },
@@ -1030,19 +142,19 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                   "id": null,
                   "loc": {
                     "end": {
-                      "column": 3,
-                      "line": 7,
+                      "column": 22,
+                      "line": 3,
                     },
                     "start": {
-                      "column": 13,
-                      "line": 5,
+                      "column": 14,
+                      "line": 3,
                     },
                   },
                   "params": [],
                   "parent": [Circular],
                   "range": [
-                    177,
-                    217,
+                    50,
+                    58,
                   ],
                   "returnType": undefined,
                   "type": "ArrowFunctionExpression",
@@ -1050,18 +162,18 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                 },
                 "loc": {
                   "end": {
-                    "column": 3,
-                    "line": 7,
+                    "column": 22,
+                    "line": 3,
                   },
                   "start": {
                     "column": 8,
-                    "line": 5,
+                    "line": 3,
                   },
                 },
                 "parent": [Circular],
                 "range": [
-                  172,
-                  217,
+                  44,
+                  58,
                 ],
                 "type": "VariableDeclarator",
               },
@@ -1070,18 +182,18 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
             "kind": "const",
             "loc": {
               "end": {
-                "column": 3,
-                "line": 7,
+                "column": 22,
+                "line": 3,
               },
               "start": {
                 "column": 2,
-                "line": 5,
+                "line": 3,
               },
             },
             "parent": [Circular],
             "range": [
-              166,
-              217,
+              38,
+              58,
             ],
             "type": "VariableDeclaration",
           },
@@ -1092,17 +204,166 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                   "loc": {
                     "end": {
                       "column": 4,
-                      "line": 18,
+                      "line": 10,
                     },
                     "start": {
                       "column": 14,
-                      "line": 17,
+                      "line": 9,
                     },
                   },
                   "parent": [Circular],
                   "range": [
-                    233,
-                    238,
+                    74,
+                    79,
+                  ],
+                  "type": "VText",
+                  "value": "
+    ",
+                },
+                {
+                  "children": [
+                    {
+                      "expression": Node {
+                        "end": 15,
+                        "loc": SourceLocation {
+                          "end": {
+                            "column": 14,
+                            "line": 6,
+                          },
+                          "start": {
+                            "column": 12,
+                            "line": 6,
+                          },
+                        },
+                        "name": "v1",
+                        "parent": [Circular],
+                        "range": [
+                          87,
+                          89,
+                        ],
+                        "start": 13,
+                        "type": "Identifier",
+                      },
+                      "loc": {
+                        "end": {
+                          "column": 17,
+                          "line": 10,
+                        },
+                        "start": {
+                          "column": 9,
+                          "line": 10,
+                        },
+                      },
+                      "parent": [Circular],
+                      "range": [
+                        84,
+                        92,
+                      ],
+                      "references": [
+                        {
+                          "id": Node {
+                            "end": 15,
+                            "loc": SourceLocation {
+                              "end": {
+                                "column": 14,
+                                "line": 6,
+                              },
+                              "start": {
+                                "column": 12,
+                                "line": 6,
+                              },
+                            },
+                            "name": "v1",
+                            "parent": [Circular],
+                            "range": [
+                              87,
+                              89,
+                            ],
+                            "start": 13,
+                            "type": "Identifier",
+                          },
+                          "isTypeReference": undefined,
+                          "isValueReference": undefined,
+                          "mode": "r",
+                        },
+                      ],
+                      "type": "VExpressionContainer",
+                    },
+                  ],
+                  "endTag": {
+                    "loc": {
+                      "end": {
+                        "column": 23,
+                        "line": 14,
+                      },
+                      "start": {
+                        "column": 17,
+                        "line": 10,
+                      },
+                    },
+                    "parent": [Circular],
+                    "range": [
+                      92,
+                      98,
+                    ],
+                    "type": "VEndTag",
+                  },
+                  "loc": {
+                    "end": {
+                      "column": 23,
+                      "line": 14,
+                    },
+                    "start": {
+                      "column": 4,
+                      "line": 14,
+                    },
+                  },
+                  "name": "div",
+                  "namespace": "http://www.w3.org/1999/xhtml",
+                  "parent": [Circular],
+                  "range": [
+                    79,
+                    98,
+                  ],
+                  "rawName": "div",
+                  "startTag": {
+                    "attributes": [],
+                    "loc": {
+                      "end": {
+                        "column": 9,
+                        "line": 10,
+                      },
+                      "start": {
+                        "column": 4,
+                        "line": 14,
+                      },
+                    },
+                    "parent": [Circular],
+                    "range": [
+                      79,
+                      84,
+                    ],
+                    "selfClosing": false,
+                    "type": "VStartTag",
+                  },
+                  "type": "VElement",
+                  "variables": [],
+                },
+                {
+                  "loc": {
+                    "end": {
+                      "column": 4,
+                      "line": 11,
+                    },
+                    "start": {
+                      "column": 23,
+                      "line": 10,
+                    },
+                  },
+                  "parent": [Circular],
+                  "range": [
+                    98,
+                    103,
                   ],
                   "type": "VText",
                   "value": "
@@ -1113,1917 +374,221 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                     {
                       "loc": {
                         "end": {
-                          "column": 6,
-                          "line": 19,
+                          "column": 27,
+                          "line": 11,
                         },
                         "start": {
-                          "column": 64,
-                          "line": 18,
+                          "column": 25,
+                          "line": 11,
                         },
                       },
                       "parent": [Circular],
                       "range": [
-                        298,
-                        305,
+                        124,
+                        126,
                       ],
                       "type": "VText",
-                      "value": "
-      ",
-                    },
-                    {
-                      "children": [
-                        {
-                          "loc": {
-                            "end": {
-                              "column": 45,
-                              "line": 19,
-                            },
-                            "start": {
-                              "column": 24,
-                              "line": 19,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            323,
-                            344,
-                          ],
-                          "type": "VText",
-                          "value": "r2 is greater than 50",
-                        },
-                      ],
-                      "endTag": {
-                        "loc": {
-                          "end": {
-                            "column": 49,
-                            "line": 27,
-                          },
-                          "start": {
-                            "column": 45,
-                            "line": 19,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          344,
-                          348,
-                        ],
-                        "type": "VEndTag",
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 49,
-                          "line": 27,
-                        },
-                        "start": {
-                          "column": 6,
-                          "line": 27,
-                        },
-                      },
-                      "name": "p",
-                      "namespace": "http://www.w3.org/1999/xhtml",
-                      "parent": [Circular],
-                      "range": [
-                        305,
-                        348,
-                      ],
-                      "rawName": "p",
-                      "startTag": {
-                        "attributes": [
-                          {
-                            "directive": true,
-                            "key": {
-                              "argument": null,
-                              "loc": {
-                                "end": {
-                                  "column": 13,
-                                  "line": 11,
-                                },
-                                "start": {
-                                  "column": 9,
-                                  "line": 19,
-                                },
-                              },
-                              "modifiers": [],
-                              "name": {
-                                "loc": {
-                                  "end": {
-                                    "column": 13,
-                                    "line": 19,
-                                  },
-                                  "start": {
-                                    "column": 9,
-                                    "line": 19,
-                                  },
-                                },
-                                "name": "if",
-                                "parent": [Circular],
-                                "range": [
-                                  541,
-                                  545,
-                                ],
-                                "rawName": "if",
-                                "type": "VIdentifier",
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                308,
-                                312,
-                              ],
-                              "type": "VDirectiveKey",
-                            },
-                            "loc": {
-                              "end": {
-                                "column": 23,
-                                "line": 19,
-                              },
-                              "start": {
-                                "column": 9,
-                                "line": 19,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              308,
-                              322,
-                            ],
-                            "type": "VAttribute",
-                            "value": {
-                              "expression": Node {
-                                "end": 88,
-                                "left": Node {
-                                  "end": 83,
-                                  "loc": SourceLocation {
-                                    "end": {
-                                      "column": 17,
-                                      "line": 11,
-                                    },
-                                    "start": {
-                                      "column": 15,
-                                      "line": 11,
-                                    },
-                                  },
-                                  "name": "r2",
-                                  "parent": [Circular],
-                                  "range": [
-                                    314,
-                                    316,
-                                  ],
-                                  "start": 81,
-                                  "type": "Identifier",
-                                },
-                                "loc": SourceLocation {
-                                  "end": {
-                                    "column": 22,
-                                    "line": 11,
-                                  },
-                                  "start": {
-                                    "column": 15,
-                                    "line": 11,
-                                  },
-                                },
-                                "operator": ">",
-                                "parent": [Circular],
-                                "range": [
-                                  314,
-                                  321,
-                                ],
-                                "right": Node {
-                                  "end": 88,
-                                  "loc": SourceLocation {
-                                    "end": {
-                                      "column": 22,
-                                      "line": 11,
-                                    },
-                                    "start": {
-                                      "column": 20,
-                                      "line": 11,
-                                    },
-                                  },
-                                  "parent": [Circular],
-                                  "range": [
-                                    319,
-                                    321,
-                                  ],
-                                  "raw": "50",
-                                  "start": 86,
-                                  "type": "Literal",
-                                  "value": 50,
-                                },
-                                "start": 81,
-                                "type": "BinaryExpression",
-                              },
-                              "loc": {
-                                "end": {
-                                  "column": 23,
-                                  "line": 19,
-                                },
-                                "start": {
-                                  "column": 14,
-                                  "line": 11,
-                                },
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                313,
-                                322,
-                              ],
-                              "references": [
-                                {
-                                  "id": Node {
-                                    "end": 83,
-                                    "loc": SourceLocation {
-                                      "end": {
-                                        "column": 17,
-                                        "line": 11,
-                                      },
-                                      "start": {
-                                        "column": 15,
-                                        "line": 11,
-                                      },
-                                    },
-                                    "name": "r2",
-                                    "parent": Node {
-                                      "end": 88,
-                                      "left": [Circular],
-                                      "loc": SourceLocation {
-                                        "end": {
-                                          "column": 22,
-                                          "line": 11,
-                                        },
-                                        "start": {
-                                          "column": 15,
-                                          "line": 11,
-                                        },
-                                      },
-                                      "operator": ">",
-                                      "parent": [Circular],
-                                      "range": [
-                                        314,
-                                        321,
-                                      ],
-                                      "right": Node {
-                                        "end": 88,
-                                        "loc": SourceLocation {
-                                          "end": {
-                                            "column": 22,
-                                            "line": 11,
-                                          },
-                                          "start": {
-                                            "column": 20,
-                                            "line": 11,
-                                          },
-                                        },
-                                        "parent": [Circular],
-                                        "range": [
-                                          319,
-                                          321,
-                                        ],
-                                        "raw": "50",
-                                        "start": 86,
-                                        "type": "Literal",
-                                        "value": 50,
-                                      },
-                                      "start": 81,
-                                      "type": "BinaryExpression",
-                                    },
-                                    "range": [
-                                      314,
-                                      316,
-                                    ],
-                                    "start": 81,
-                                    "type": "Identifier",
-                                  },
-                                  "isTypeReference": undefined,
-                                  "isValueReference": undefined,
-                                  "mode": "r",
-                                },
-                              ],
-                              "type": "VExpressionContainer",
-                            },
-                          },
-                        ],
-                        "loc": {
-                          "end": {
-                            "column": 24,
-                            "line": 19,
-                          },
-                          "start": {
-                            "column": 6,
-                            "line": 27,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          305,
-                          323,
-                        ],
-                        "selfClosing": false,
-                        "type": "VStartTag",
-                      },
-                      "type": "VElement",
-                      "variables": [],
-                    },
-                    {
-                      "loc": {
-                        "end": {
-                          "column": 6,
-                          "line": 20,
-                        },
-                        "start": {
-                          "column": 49,
-                          "line": 19,
-                        },
-                      },
-                      "parent": [Circular],
-                      "range": [
-                        348,
-                        355,
-                      ],
-                      "type": "VText",
-                      "value": "
-      ",
-                    },
-                    {
-                      "children": [
-                        {
-                          "loc": {
-                            "end": {
-                              "column": 34,
-                              "line": 20,
-                            },
-                            "start": {
-                              "column": 16,
-                              "line": 20,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            365,
-                            383,
-                          ],
-                          "type": "VText",
-                          "value": "r2 is less than 50",
-                        },
-                      ],
-                      "endTag": {
-                        "loc": {
-                          "end": {
-                            "column": 38,
-                            "line": 28,
-                          },
-                          "start": {
-                            "column": 34,
-                            "line": 20,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          383,
-                          387,
-                        ],
-                        "type": "VEndTag",
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 38,
-                          "line": 28,
-                        },
-                        "start": {
-                          "column": 6,
-                          "line": 28,
-                        },
-                      },
-                      "name": "p",
-                      "namespace": "http://www.w3.org/1999/xhtml",
-                      "parent": [Circular],
-                      "range": [
-                        355,
-                        387,
-                      ],
-                      "rawName": "p",
-                      "startTag": {
-                        "attributes": [
-                          {
-                            "directive": true,
-                            "key": {
-                              "argument": null,
-                              "loc": {
-                                "end": {
-                                  "column": 15,
-                                  "line": 20,
-                                },
-                                "start": {
-                                  "column": 9,
-                                  "line": 20,
-                                },
-                              },
-                              "modifiers": [],
-                              "name": {
-                                "loc": {
-                                  "end": {
-                                    "column": 15,
-                                    "line": 20,
-                                  },
-                                  "start": {
-                                    "column": 9,
-                                    "line": 20,
-                                  },
-                                },
-                                "name": "else",
-                                "parent": [Circular],
-                                "range": [
-                                  591,
-                                  597,
-                                ],
-                                "rawName": "else",
-                                "type": "VIdentifier",
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                358,
-                                364,
-                              ],
-                              "type": "VDirectiveKey",
-                            },
-                            "loc": {
-                              "end": {
-                                "column": 15,
-                                "line": 20,
-                              },
-                              "start": {
-                                "column": 9,
-                                "line": 20,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              358,
-                              364,
-                            ],
-                            "type": "VAttribute",
-                            "value": null,
-                          },
-                        ],
-                        "loc": {
-                          "end": {
-                            "column": 16,
-                            "line": 20,
-                          },
-                          "start": {
-                            "column": 6,
-                            "line": 28,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          355,
-                          365,
-                        ],
-                        "selfClosing": false,
-                        "type": "VStartTag",
-                      },
-                      "type": "VElement",
-                      "variables": [],
-                    },
-                    {
-                      "loc": {
-                        "end": {
-                          "column": 6,
-                          "line": 21,
-                        },
-                        "start": {
-                          "column": 38,
-                          "line": 20,
-                        },
-                      },
-                      "parent": [Circular],
-                      "range": [
-                        387,
-                        394,
-                      ],
-                      "type": "VText",
-                      "value": "
-      ",
-                    },
-                    {
-                      "children": [
-                        {
-                          "loc": {
-                            "end": {
-                              "column": 8,
-                              "line": 22,
-                            },
-                            "start": {
-                              "column": 27,
-                              "line": 21,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            415,
-                            424,
-                          ],
-                          "type": "VText",
-                          "value": "
-        ",
-                        },
-                        {
-                          "children": [
-                            {
-                              "expression": Node {
-                                "end": 226,
-                                "loc": SourceLocation {
-                                  "end": {
-                                    "column": 43,
-                                    "line": 14,
-                                  },
-                                  "start": {
-                                    "column": 42,
-                                    "line": 14,
-                                  },
-                                },
-                                "name": "r",
-                                "parent": [Circular],
-                                "range": [
-                                  458,
-                                  459,
-                                ],
-                                "start": 225,
-                                "type": "Identifier",
-                              },
-                              "loc": {
-                                "end": {
-                                  "column": 46,
-                                  "line": 22,
-                                },
-                                "start": {
-                                  "column": 39,
-                                  "line": 22,
-                                },
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                455,
-                                462,
-                              ],
-                              "references": [
-                                {
-                                  "id": Node {
-                                    "end": 226,
-                                    "loc": SourceLocation {
-                                      "end": {
-                                        "column": 43,
-                                        "line": 14,
-                                      },
-                                      "start": {
-                                        "column": 42,
-                                        "line": 14,
-                                      },
-                                    },
-                                    "name": "r",
-                                    "parent": [Circular],
-                                    "range": [
-                                      458,
-                                      459,
-                                    ],
-                                    "start": 225,
-                                    "type": "Identifier",
-                                  },
-                                  "isTypeReference": undefined,
-                                  "isValueReference": undefined,
-                                  "mode": "r",
-                                },
-                              ],
-                              "type": "VExpressionContainer",
-                            },
-                          ],
-                          "endTag": {
-                            "loc": {
-                              "end": {
-                                "column": 51,
-                                "line": 30,
-                              },
-                              "start": {
-                                "column": 46,
-                                "line": 22,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              462,
-                              467,
-                            ],
-                            "type": "VEndTag",
-                          },
-                          "loc": {
-                            "end": {
-                              "column": 51,
-                              "line": 30,
-                            },
-                            "start": {
-                              "column": 8,
-                              "line": 30,
-                            },
-                          },
-                          "name": "li",
-                          "namespace": "http://www.w3.org/1999/xhtml",
-                          "parent": [Circular],
-                          "range": [
-                            424,
-                            467,
-                          ],
-                          "rawName": "li",
-                          "startTag": {
-                            "attributes": [
-                              {
-                                "directive": true,
-                                "key": {
-                                  "argument": null,
-                                  "loc": {
-                                    "end": {
-                                      "column": 17,
-                                      "line": 14,
-                                    },
-                                    "start": {
-                                      "column": 12,
-                                      "line": 22,
-                                    },
-                                  },
-                                  "modifiers": [],
-                                  "name": {
-                                    "loc": {
-                                      "end": {
-                                        "column": 17,
-                                        "line": 22,
-                                      },
-                                      "start": {
-                                        "column": 12,
-                                        "line": 22,
-                                      },
-                                    },
-                                    "name": "for",
-                                    "parent": [Circular],
-                                    "range": [
-                                      661,
-                                      666,
-                                    ],
-                                    "rawName": "for",
-                                    "type": "VIdentifier",
-                                  },
-                                  "parent": [Circular],
-                                  "range": [
-                                    428,
-                                    433,
-                                  ],
-                                  "type": "VDirectiveKey",
-                                },
-                                "loc": {
-                                  "end": {
-                                    "column": 29,
-                                    "line": 22,
-                                  },
-                                  "start": {
-                                    "column": 12,
-                                    "line": 22,
-                                  },
-                                },
-                                "parent": [Circular],
-                                "range": [
-                                  428,
-                                  445,
-                                ],
-                                "type": "VAttribute",
-                                "value": {
-                                  "expression": {
-                                    "left": [
-                                      Node {
-                                        "end": 203,
-                                        "loc": SourceLocation {
-                                          "end": {
-                                            "column": 20,
-                                            "line": 14,
-                                          },
-                                          "start": {
-                                            "column": 19,
-                                            "line": 14,
-                                          },
-                                        },
-                                        "name": "r",
-                                        "parent": [Circular],
-                                        "range": [
-                                          435,
-                                          436,
-                                        ],
-                                        "start": 202,
-                                        "type": "Identifier",
-                                      },
-                                    ],
-                                    "loc": {
-                                      "end": {
-                                        "column": 28,
-                                        "line": 22,
-                                      },
-                                      "start": {
-                                        "column": 19,
-                                        "line": 22,
-                                      },
-                                    },
-                                    "parent": [Circular],
-                                    "range": [
-                                      435,
-                                      444,
-                                    ],
-                                    "right": Node {
-                                      "end": 211,
-                                      "loc": SourceLocation {
-                                        "end": {
-                                          "column": 28,
-                                          "line": 14,
-                                        },
-                                        "start": {
-                                          "column": 24,
-                                          "line": 14,
-                                        },
-                                      },
-                                      "name": "rArr",
-                                      "parent": [Circular],
-                                      "range": [
-                                        440,
-                                        444,
-                                      ],
-                                      "start": 207,
-                                      "type": "Identifier",
-                                    },
-                                    "type": "VForExpression",
-                                  },
-                                  "loc": {
-                                    "end": {
-                                      "column": 29,
-                                      "line": 22,
-                                    },
-                                    "start": {
-                                      "column": 18,
-                                      "line": 14,
-                                    },
-                                  },
-                                  "parent": [Circular],
-                                  "range": [
-                                    434,
-                                    445,
-                                  ],
-                                  "references": [
-                                    {
-                                      "id": Node {
-                                        "end": 211,
-                                        "loc": SourceLocation {
-                                          "end": {
-                                            "column": 28,
-                                            "line": 14,
-                                          },
-                                          "start": {
-                                            "column": 24,
-                                            "line": 14,
-                                          },
-                                        },
-                                        "name": "rArr",
-                                        "parent": {
-                                          "left": [
-                                            Node {
-                                              "end": 203,
-                                              "loc": SourceLocation {
-                                                "end": {
-                                                  "column": 20,
-                                                  "line": 14,
-                                                },
-                                                "start": {
-                                                  "column": 19,
-                                                  "line": 14,
-                                                },
-                                              },
-                                              "name": "r",
-                                              "parent": [Circular],
-                                              "range": [
-                                                435,
-                                                436,
-                                              ],
-                                              "start": 202,
-                                              "type": "Identifier",
-                                            },
-                                          ],
-                                          "loc": {
-                                            "end": {
-                                              "column": 28,
-                                              "line": 22,
-                                            },
-                                            "start": {
-                                              "column": 19,
-                                              "line": 22,
-                                            },
-                                          },
-                                          "parent": [Circular],
-                                          "range": [
-                                            435,
-                                            444,
-                                          ],
-                                          "right": [Circular],
-                                          "type": "VForExpression",
-                                        },
-                                        "range": [
-                                          440,
-                                          444,
-                                        ],
-                                        "start": 207,
-                                        "type": "Identifier",
-                                      },
-                                      "isTypeReference": undefined,
-                                      "isValueReference": undefined,
-                                      "mode": "r",
-                                    },
-                                  ],
-                                  "type": "VExpressionContainer",
-                                },
-                              },
-                              {
-                                "directive": true,
-                                "key": {
-                                  "argument": {
-                                    "loc": {
-                                      "end": {
-                                        "column": 34,
-                                        "line": 22,
-                                      },
-                                      "start": {
-                                        "column": 31,
-                                        "line": 22,
-                                      },
-                                    },
-                                    "name": "key",
-                                    "parent": [Circular],
-                                    "range": [
-                                      680,
-                                      683,
-                                    ],
-                                    "rawName": "key",
-                                    "type": "VIdentifier",
-                                  },
-                                  "loc": {
-                                    "end": {
-                                      "column": 34,
-                                      "line": 14,
-                                    },
-                                    "start": {
-                                      "column": 30,
-                                      "line": 22,
-                                    },
-                                  },
-                                  "modifiers": [],
-                                  "name": {
-                                    "loc": {
-                                      "end": {
-                                        "column": 31,
-                                        "line": 22,
-                                      },
-                                      "start": {
-                                        "column": 30,
-                                        "line": 22,
-                                      },
-                                    },
-                                    "name": "bind",
-                                    "parent": [Circular],
-                                    "range": [
-                                      679,
-                                      680,
-                                    ],
-                                    "rawName": ":",
-                                    "type": "VIdentifier",
-                                  },
-                                  "parent": [Circular],
-                                  "range": [
-                                    446,
-                                    450,
-                                  ],
-                                  "type": "VDirectiveKey",
-                                },
-                                "loc": {
-                                  "end": {
-                                    "column": 38,
-                                    "line": 22,
-                                  },
-                                  "start": {
-                                    "column": 30,
-                                    "line": 22,
-                                  },
-                                },
-                                "parent": [Circular],
-                                "range": [
-                                  446,
-                                  454,
-                                ],
-                                "type": "VAttribute",
-                                "value": {
-                                  "expression": Node {
-                                    "end": 220,
-                                    "loc": SourceLocation {
-                                      "end": {
-                                        "column": 37,
-                                        "line": 14,
-                                      },
-                                      "start": {
-                                        "column": 36,
-                                        "line": 14,
-                                      },
-                                    },
-                                    "name": "r",
-                                    "parent": [Circular],
-                                    "range": [
-                                      452,
-                                      453,
-                                    ],
-                                    "start": 219,
-                                    "type": "Identifier",
-                                  },
-                                  "loc": {
-                                    "end": {
-                                      "column": 38,
-                                      "line": 22,
-                                    },
-                                    "start": {
-                                      "column": 35,
-                                      "line": 14,
-                                    },
-                                  },
-                                  "parent": [Circular],
-                                  "range": [
-                                    451,
-                                    454,
-                                  ],
-                                  "references": [
-                                    {
-                                      "id": Node {
-                                        "end": 220,
-                                        "loc": SourceLocation {
-                                          "end": {
-                                            "column": 37,
-                                            "line": 14,
-                                          },
-                                          "start": {
-                                            "column": 36,
-                                            "line": 14,
-                                          },
-                                        },
-                                        "name": "r",
-                                        "parent": [Circular],
-                                        "range": [
-                                          452,
-                                          453,
-                                        ],
-                                        "start": 219,
-                                        "type": "Identifier",
-                                      },
-                                      "isTypeReference": undefined,
-                                      "isValueReference": undefined,
-                                      "mode": "r",
-                                    },
-                                  ],
-                                  "type": "VExpressionContainer",
-                                },
-                              },
-                            ],
-                            "loc": {
-                              "end": {
-                                "column": 39,
-                                "line": 22,
-                              },
-                              "start": {
-                                "column": 8,
-                                "line": 30,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              424,
-                              455,
-                            ],
-                            "selfClosing": false,
-                            "type": "VStartTag",
-                          },
-                          "type": "VElement",
-                          "variables": [
-                            {
-                              "id": Node {
-                                "end": 203,
-                                "loc": SourceLocation {
-                                  "end": {
-                                    "column": 20,
-                                    "line": 14,
-                                  },
-                                  "start": {
-                                    "column": 19,
-                                    "line": 14,
-                                  },
-                                },
-                                "name": "r",
-                                "parent": {
-                                  "left": [
-                                    [Circular],
-                                  ],
-                                  "loc": {
-                                    "end": {
-                                      "column": 28,
-                                      "line": 22,
-                                    },
-                                    "start": {
-                                      "column": 19,
-                                      "line": 22,
-                                    },
-                                  },
-                                  "parent": {
-                                    "expression": [Circular],
-                                    "loc": {
-                                      "end": {
-                                        "column": 29,
-                                        "line": 22,
-                                      },
-                                      "start": {
-                                        "column": 18,
-                                        "line": 14,
-                                      },
-                                    },
-                                    "parent": {
-                                      "directive": true,
-                                      "key": {
-                                        "argument": null,
-                                        "loc": {
-                                          "end": {
-                                            "column": 17,
-                                            "line": 14,
-                                          },
-                                          "start": {
-                                            "column": 12,
-                                            "line": 22,
-                                          },
-                                        },
-                                        "modifiers": [],
-                                        "name": {
-                                          "loc": {
-                                            "end": {
-                                              "column": 17,
-                                              "line": 22,
-                                            },
-                                            "start": {
-                                              "column": 12,
-                                              "line": 22,
-                                            },
-                                          },
-                                          "name": "for",
-                                          "parent": [Circular],
-                                          "range": [
-                                            661,
-                                            666,
-                                          ],
-                                          "rawName": "for",
-                                          "type": "VIdentifier",
-                                        },
-                                        "parent": [Circular],
-                                        "range": [
-                                          428,
-                                          433,
-                                        ],
-                                        "type": "VDirectiveKey",
-                                      },
-                                      "loc": {
-                                        "end": {
-                                          "column": 29,
-                                          "line": 22,
-                                        },
-                                        "start": {
-                                          "column": 12,
-                                          "line": 22,
-                                        },
-                                      },
-                                      "parent": {
-                                        "attributes": [
-                                          [Circular],
-                                          {
-                                            "directive": true,
-                                            "key": {
-                                              "argument": {
-                                                "loc": {
-                                                  "end": {
-                                                    "column": 34,
-                                                    "line": 22,
-                                                  },
-                                                  "start": {
-                                                    "column": 31,
-                                                    "line": 22,
-                                                  },
-                                                },
-                                                "name": "key",
-                                                "parent": [Circular],
-                                                "range": [
-                                                  680,
-                                                  683,
-                                                ],
-                                                "rawName": "key",
-                                                "type": "VIdentifier",
-                                              },
-                                              "loc": {
-                                                "end": {
-                                                  "column": 34,
-                                                  "line": 14,
-                                                },
-                                                "start": {
-                                                  "column": 30,
-                                                  "line": 22,
-                                                },
-                                              },
-                                              "modifiers": [],
-                                              "name": {
-                                                "loc": {
-                                                  "end": {
-                                                    "column": 31,
-                                                    "line": 22,
-                                                  },
-                                                  "start": {
-                                                    "column": 30,
-                                                    "line": 22,
-                                                  },
-                                                },
-                                                "name": "bind",
-                                                "parent": [Circular],
-                                                "range": [
-                                                  679,
-                                                  680,
-                                                ],
-                                                "rawName": ":",
-                                                "type": "VIdentifier",
-                                              },
-                                              "parent": [Circular],
-                                              "range": [
-                                                446,
-                                                450,
-                                              ],
-                                              "type": "VDirectiveKey",
-                                            },
-                                            "loc": {
-                                              "end": {
-                                                "column": 38,
-                                                "line": 22,
-                                              },
-                                              "start": {
-                                                "column": 30,
-                                                "line": 22,
-                                              },
-                                            },
-                                            "parent": [Circular],
-                                            "range": [
-                                              446,
-                                              454,
-                                            ],
-                                            "type": "VAttribute",
-                                            "value": {
-                                              "expression": Node {
-                                                "end": 220,
-                                                "loc": SourceLocation {
-                                                  "end": {
-                                                    "column": 37,
-                                                    "line": 14,
-                                                  },
-                                                  "start": {
-                                                    "column": 36,
-                                                    "line": 14,
-                                                  },
-                                                },
-                                                "name": "r",
-                                                "parent": [Circular],
-                                                "range": [
-                                                  452,
-                                                  453,
-                                                ],
-                                                "start": 219,
-                                                "type": "Identifier",
-                                              },
-                                              "loc": {
-                                                "end": {
-                                                  "column": 38,
-                                                  "line": 22,
-                                                },
-                                                "start": {
-                                                  "column": 35,
-                                                  "line": 14,
-                                                },
-                                              },
-                                              "parent": [Circular],
-                                              "range": [
-                                                451,
-                                                454,
-                                              ],
-                                              "references": [
-                                                {
-                                                  "id": Node {
-                                                    "end": 220,
-                                                    "loc": SourceLocation {
-                                                      "end": {
-                                                        "column": 37,
-                                                        "line": 14,
-                                                      },
-                                                      "start": {
-                                                        "column": 36,
-                                                        "line": 14,
-                                                      },
-                                                    },
-                                                    "name": "r",
-                                                    "parent": [Circular],
-                                                    "range": [
-                                                      452,
-                                                      453,
-                                                    ],
-                                                    "start": 219,
-                                                    "type": "Identifier",
-                                                  },
-                                                  "isTypeReference": undefined,
-                                                  "isValueReference": undefined,
-                                                  "mode": "r",
-                                                },
-                                              ],
-                                              "type": "VExpressionContainer",
-                                            },
-                                          },
-                                        ],
-                                        "loc": {
-                                          "end": {
-                                            "column": 39,
-                                            "line": 22,
-                                          },
-                                          "start": {
-                                            "column": 8,
-                                            "line": 30,
-                                          },
-                                        },
-                                        "parent": [Circular],
-                                        "range": [
-                                          424,
-                                          455,
-                                        ],
-                                        "selfClosing": false,
-                                        "type": "VStartTag",
-                                      },
-                                      "range": [
-                                        428,
-                                        445,
-                                      ],
-                                      "type": "VAttribute",
-                                      "value": [Circular],
-                                    },
-                                    "range": [
-                                      434,
-                                      445,
-                                    ],
-                                    "references": [
-                                      {
-                                        "id": Node {
-                                          "end": 211,
-                                          "loc": SourceLocation {
-                                            "end": {
-                                              "column": 28,
-                                              "line": 14,
-                                            },
-                                            "start": {
-                                              "column": 24,
-                                              "line": 14,
-                                            },
-                                          },
-                                          "name": "rArr",
-                                          "parent": [Circular],
-                                          "range": [
-                                            440,
-                                            444,
-                                          ],
-                                          "start": 207,
-                                          "type": "Identifier",
-                                        },
-                                        "isTypeReference": undefined,
-                                        "isValueReference": undefined,
-                                        "mode": "r",
-                                      },
-                                    ],
-                                    "type": "VExpressionContainer",
-                                  },
-                                  "range": [
-                                    435,
-                                    444,
-                                  ],
-                                  "right": Node {
-                                    "end": 211,
-                                    "loc": SourceLocation {
-                                      "end": {
-                                        "column": 28,
-                                        "line": 14,
-                                      },
-                                      "start": {
-                                        "column": 24,
-                                        "line": 14,
-                                      },
-                                    },
-                                    "name": "rArr",
-                                    "parent": [Circular],
-                                    "range": [
-                                      440,
-                                      444,
-                                    ],
-                                    "start": 207,
-                                    "type": "Identifier",
-                                  },
-                                  "type": "VForExpression",
-                                },
-                                "range": [
-                                  435,
-                                  436,
-                                ],
-                                "start": 202,
-                                "type": "Identifier",
-                              },
-                              "kind": "v-for",
-                            },
-                          ],
-                        },
-                        {
-                          "loc": {
-                            "end": {
-                              "column": 6,
-                              "line": 23,
-                            },
-                            "start": {
-                              "column": 51,
-                              "line": 22,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            467,
-                            474,
-                          ],
-                          "type": "VText",
-                          "value": "
-      ",
-                        },
-                      ],
-                      "endTag": {
-                        "loc": {
-                          "end": {
-                            "column": 11,
-                            "line": 31,
-                          },
-                          "start": {
-                            "column": 6,
-                            "line": 23,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          474,
-                          479,
-                        ],
-                        "type": "VEndTag",
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 11,
-                          "line": 31,
-                        },
-                        "start": {
-                          "column": 6,
-                          "line": 29,
-                        },
-                      },
-                      "name": "ul",
-                      "namespace": "http://www.w3.org/1999/xhtml",
-                      "parent": [Circular],
-                      "range": [
-                        394,
-                        479,
-                      ],
-                      "rawName": "ul",
-                      "startTag": {
-                        "attributes": [
-                          {
-                            "directive": false,
-                            "key": {
-                              "loc": {
-                                "end": {
-                                  "column": 15,
-                                  "line": 21,
-                                },
-                                "start": {
-                                  "column": 10,
-                                  "line": 29,
-                                },
-                              },
-                              "name": "class",
-                              "parent": [Circular],
-                              "range": [
-                                398,
-                                403,
-                              ],
-                              "rawName": "class",
-                              "type": "VIdentifier",
-                            },
-                            "loc": {
-                              "end": {
-                                "column": 26,
-                                "line": 29,
-                              },
-                              "start": {
-                                "column": 10,
-                                "line": 29,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              398,
-                              414,
-                            ],
-                            "type": "VAttribute",
-                            "value": {
-                              "loc": {
-                                "end": {
-                                  "column": 26,
-                                  "line": 29,
-                                },
-                                "start": {
-                                  "column": 16,
-                                  "line": 21,
-                                },
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                404,
-                                414,
-                              ],
-                              "type": "VLiteral",
-                              "value": "num-list",
-                            },
-                          },
-                        ],
-                        "loc": {
-                          "end": {
-                            "column": 27,
-                            "line": 21,
-                          },
-                          "start": {
-                            "column": 6,
-                            "line": 29,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          394,
-                          415,
-                        ],
-                        "selfClosing": false,
-                        "type": "VStartTag",
-                      },
-                      "type": "VElement",
-                      "variables": [],
-                    },
-                    {
-                      "loc": {
-                        "end": {
-                          "column": 6,
-                          "line": 24,
-                        },
-                        "start": {
-                          "column": 11,
-                          "line": 23,
-                        },
-                      },
-                      "parent": [Circular],
-                      "range": [
-                        479,
-                        486,
-                      ],
-                      "type": "VText",
-                      "value": "
-      ",
-                    },
-                    {
-                      "children": [
-                        {
-                          "loc": {
-                            "end": {
-                              "column": 43,
-                              "line": 24,
-                            },
-                            "start": {
-                              "column": 26,
-                              "line": 24,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            506,
-                            523,
-                          ],
-                          "type": "VText",
-                          "value": "Log something ...",
-                        },
-                      ],
-                      "endTag": {
-                        "loc": {
-                          "end": {
-                            "column": 52,
-                            "line": 32,
-                          },
-                          "start": {
-                            "column": 43,
-                            "line": 24,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          523,
-                          532,
-                        ],
-                        "type": "VEndTag",
-                      },
-                      "loc": {
-                        "end": {
-                          "column": 52,
-                          "line": 32,
-                        },
-                        "start": {
-                          "column": 6,
-                          "line": 32,
-                        },
-                      },
-                      "name": "button",
-                      "namespace": "http://www.w3.org/1999/xhtml",
-                      "parent": [Circular],
-                      "range": [
-                        486,
-                        532,
-                      ],
-                      "rawName": "button",
-                      "startTag": {
-                        "attributes": [
-                          {
-                            "directive": true,
-                            "key": {
-                              "argument": {
-                                "loc": {
-                                  "end": {
-                                    "column": 20,
-                                    "line": 24,
-                                  },
-                                  "start": {
-                                    "column": 15,
-                                    "line": 24,
-                                  },
-                                },
-                                "name": "click",
-                                "parent": [Circular],
-                                "range": [
-                                  728,
-                                  733,
-                                ],
-                                "rawName": "click",
-                                "type": "VIdentifier",
-                              },
-                              "loc": {
-                                "end": {
-                                  "column": 20,
-                                  "line": 16,
-                                },
-                                "start": {
-                                  "column": 14,
-                                  "line": 24,
-                                },
-                              },
-                              "modifiers": [],
-                              "name": {
-                                "loc": {
-                                  "end": {
-                                    "column": 15,
-                                    "line": 24,
-                                  },
-                                  "start": {
-                                    "column": 14,
-                                    "line": 24,
-                                  },
-                                },
-                                "name": "on",
-                                "parent": [Circular],
-                                "range": [
-                                  727,
-                                  728,
-                                ],
-                                "rawName": "@",
-                                "type": "VIdentifier",
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                494,
-                                500,
-                              ],
-                              "type": "VDirectiveKey",
-                            },
-                            "loc": {
-                              "end": {
-                                "column": 25,
-                                "line": 24,
-                              },
-                              "start": {
-                                "column": 14,
-                                "line": 24,
-                              },
-                            },
-                            "parent": [Circular],
-                            "range": [
-                              494,
-                              505,
-                            ],
-                            "type": "VAttribute",
-                            "value": {
-                              "expression": Node {
-                                "end": 271,
-                                "loc": SourceLocation {
-                                  "end": {
-                                    "column": 24,
-                                    "line": 16,
-                                  },
-                                  "start": {
-                                    "column": 22,
-                                    "line": 16,
-                                  },
-                                },
-                                "name": "f1",
-                                "parent": [Circular],
-                                "range": [
-                                  502,
-                                  504,
-                                ],
-                                "start": 269,
-                                "type": "Identifier",
-                              },
-                              "loc": {
-                                "end": {
-                                  "column": 25,
-                                  "line": 24,
-                                },
-                                "start": {
-                                  "column": 21,
-                                  "line": 16,
-                                },
-                              },
-                              "parent": [Circular],
-                              "range": [
-                                501,
-                                505,
-                              ],
-                              "references": [
-                                {
-                                  "id": Node {
-                                    "end": 271,
-                                    "loc": SourceLocation {
-                                      "end": {
-                                        "column": 24,
-                                        "line": 16,
-                                      },
-                                      "start": {
-                                        "column": 22,
-                                        "line": 16,
-                                      },
-                                    },
-                                    "name": "f1",
-                                    "parent": [Circular],
-                                    "range": [
-                                      502,
-                                      504,
-                                    ],
-                                    "start": 269,
-                                    "type": "Identifier",
-                                  },
-                                  "isTypeReference": undefined,
-                                  "isValueReference": undefined,
-                                  "mode": "r",
-                                },
-                              ],
-                              "type": "VExpressionContainer",
-                            },
-                          },
-                        ],
-                        "loc": {
-                          "end": {
-                            "column": 26,
-                            "line": 24,
-                          },
-                          "start": {
-                            "column": 6,
-                            "line": 32,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          486,
-                          506,
-                        ],
-                        "selfClosing": false,
-                        "type": "VStartTag",
-                      },
-                      "type": "VElement",
-                      "variables": [],
-                    },
-                    {
-                      "loc": {
-                        "end": {
-                          "column": 4,
-                          "line": 25,
-                        },
-                        "start": {
-                          "column": 52,
-                          "line": 24,
-                        },
-                      },
-                      "parent": [Circular],
-                      "range": [
-                        532,
-                        537,
-                      ],
-                      "type": "VText",
-                      "value": "
-    ",
+                      "value": "Hi",
                     },
                   ],
                   "endTag": {
                     "loc": {
                       "end": {
-                        "column": 10,
-                        "line": 33,
+                        "column": 36,
+                        "line": 15,
                       },
                       "start": {
-                        "column": 4,
-                        "line": 25,
+                        "column": 27,
+                        "line": 11,
                       },
                     },
                     "parent": [Circular],
                     "range": [
-                      537,
-                      543,
+                      126,
+                      135,
                     ],
                     "type": "VEndTag",
                   },
                   "loc": {
                     "end": {
-                      "column": 10,
-                      "line": 33,
+                      "column": 36,
+                      "line": 15,
                     },
                     "start": {
                       "column": 4,
-                      "line": 26,
+                      "line": 15,
                     },
                   },
-                  "name": "div",
+                  "name": "button",
                   "namespace": "http://www.w3.org/1999/xhtml",
                   "parent": [Circular],
                   "range": [
-                    238,
-                    543,
+                    103,
+                    135,
                   ],
-                  "rawName": "div",
+                  "rawName": "button",
                   "startTag": {
                     "attributes": [
                       {
-                        "directive": false,
+                        "directive": true,
                         "key": {
+                          "argument": {
+                            "loc": {
+                              "end": {
+                                "column": 18,
+                                "line": 11,
+                              },
+                              "start": {
+                                "column": 13,
+                                "line": 11,
+                              },
+                            },
+                            "name": "click",
+                            "parent": [Circular],
+                            "range": [
+                              186,
+                              191,
+                            ],
+                            "rawName": "click",
+                            "type": "VIdentifier",
+                          },
                           "loc": {
                             "end": {
-                              "column": 14,
-                              "line": 18,
+                              "column": 18,
+                              "line": 7,
                             },
                             "start": {
-                              "column": 9,
-                              "line": 26,
+                              "column": 12,
+                              "line": 11,
                             },
                           },
-                          "name": "class",
+                          "modifiers": [],
+                          "name": {
+                            "loc": {
+                              "end": {
+                                "column": 13,
+                                "line": 11,
+                              },
+                              "start": {
+                                "column": 12,
+                                "line": 11,
+                              },
+                            },
+                            "name": "on",
+                            "parent": [Circular],
+                            "range": [
+                              185,
+                              186,
+                            ],
+                            "rawName": "@",
+                            "type": "VIdentifier",
+                          },
                           "parent": [Circular],
                           "range": [
-                            243,
-                            248,
+                            111,
+                            117,
                           ],
-                          "rawName": "class",
-                          "type": "VIdentifier",
+                          "type": "VDirectiveKey",
                         },
                         "loc": {
                           "end": {
                             "column": 24,
-                            "line": 26,
+                            "line": 11,
                           },
                           "start": {
-                            "column": 9,
-                            "line": 26,
+                            "column": 12,
+                            "line": 11,
                           },
                         },
                         "parent": [Circular],
                         "range": [
-                          243,
-                          258,
+                          111,
+                          123,
                         ],
                         "type": "VAttribute",
                         "value": {
+                          "expression": Node {
+                            "end": 48,
+                            "loc": SourceLocation {
+                              "end": {
+                                "column": 23,
+                                "line": 7,
+                              },
+                              "start": {
+                                "column": 20,
+                                "line": 7,
+                              },
+                            },
+                            "name": "fn1",
+                            "parent": [Circular],
+                            "range": [
+                              119,
+                              122,
+                            ],
+                            "start": 45,
+                            "type": "Identifier",
+                          },
                           "loc": {
                             "end": {
                               "column": 24,
-                              "line": 26,
+                              "line": 11,
                             },
                             "start": {
-                              "column": 15,
-                              "line": 18,
+                              "column": 19,
+                              "line": 7,
                             },
                           },
                           "parent": [Circular],
                           "range": [
-                            249,
-                            258,
+                            118,
+                            123,
                           ],
-                          "type": "VLiteral",
-                          "value": "my-comp",
-                        },
-                      },
-                      {
-                        "directive": false,
-                        "key": {
-                          "loc": {
-                            "end": {
-                              "column": 31,
-                              "line": 18,
+                          "references": [
+                            {
+                              "id": Node {
+                                "end": 48,
+                                "loc": SourceLocation {
+                                  "end": {
+                                    "column": 23,
+                                    "line": 7,
+                                  },
+                                  "start": {
+                                    "column": 20,
+                                    "line": 7,
+                                  },
+                                },
+                                "name": "fn1",
+                                "parent": [Circular],
+                                "range": [
+                                  119,
+                                  122,
+                                ],
+                                "start": 45,
+                                "type": "Identifier",
+                              },
+                              "isTypeReference": undefined,
+                              "isValueReference": undefined,
+                              "mode": "r",
                             },
-                            "start": {
-                              "column": 25,
-                              "line": 26,
-                            },
-                          },
-                          "name": ":class",
-                          "parent": [Circular],
-                          "range": [
-                            259,
-                            265,
                           ],
-                          "rawName": ":class",
-                          "type": "VIdentifier",
-                        },
-                        "loc": {
-                          "end": {
-                            "column": 63,
-                            "line": 26,
-                          },
-                          "start": {
-                            "column": 25,
-                            "line": 26,
-                          },
-                        },
-                        "parent": [Circular],
-                        "range": [
-                          259,
-                          297,
-                        ],
-                        "type": "VAttribute",
-                        "value": {
-                          "loc": {
-                            "end": {
-                              "column": 63,
-                              "line": 26,
-                            },
-                            "start": {
-                              "column": 32,
-                              "line": 18,
-                            },
-                          },
-                          "parent": [Circular],
-                          "range": [
-                            266,
-                            297,
-                          ],
-                          "type": "VLiteral",
-                          "value": "r1 > 5 ? 'bg-red' : 'bg-blue'",
+                          "type": "VExpressionContainer",
                         },
                       },
                     ],
                     "loc": {
                       "end": {
-                        "column": 64,
-                        "line": 18,
+                        "column": 25,
+                        "line": 11,
                       },
                       "start": {
                         "column": 4,
-                        "line": 26,
+                        "line": 15,
                       },
                     },
                     "parent": [Circular],
                     "range": [
-                      238,
-                      298,
+                      103,
+                      124,
                     ],
                     "selfClosing": false,
                     "type": "VStartTag",
@@ -3035,17 +600,17 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
                   "loc": {
                     "end": {
                       "column": 2,
-                      "line": 26,
+                      "line": 12,
                     },
                     "start": {
-                      "column": 10,
-                      "line": 25,
+                      "column": 36,
+                      "line": 11,
                     },
                   },
                   "parent": [Circular],
                   "range": [
-                    543,
-                    546,
+                    135,
+                    138,
                   ],
                   "type": "VText",
                   "value": "
@@ -3055,34 +620,34 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
               "loc": {
                 "end": {
                   "column": 2,
-                  "line": 26,
+                  "line": 8,
                 },
                 "start": {
                   "column": 14,
-                  "line": 9,
+                  "line": 5,
                 },
               },
               "parent": [Circular],
               "range": [
-                233,
-                546,
+                74,
+                138,
               ],
               "type": "VTemplateRoot",
             },
             "loc": {
               "end": {
                 "column": 3,
-                "line": 18,
+                "line": 8,
               },
               "start": {
                 "column": 2,
-                "line": 9,
+                "line": 5,
               },
             },
             "parent": [Circular],
             "range": [
-              221,
-              547,
+              62,
+              139,
             ],
             "type": "ReturnStatement",
           },
@@ -3090,7 +655,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
         "loc": {
           "end": {
             "column": 1,
-            "line": 19,
+            "line": 9,
           },
           "start": {
             "column": 18,
@@ -3100,7 +665,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
         "parent": [Circular],
         "range": [
           18,
-          549,
+          141,
         ],
         "type": "BlockStatement",
       },
@@ -3132,7 +697,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 1,
-          "line": 19,
+          "line": 9,
         },
         "start": {
           "column": 0,
@@ -3143,7 +708,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "parent": [Circular],
       "range": [
         0,
-        549,
+        141,
       ],
       "returnType": undefined,
       "type": "FunctionDeclaration",
@@ -3154,7 +719,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
   "loc": {
     "end": {
       "column": 1,
-      "line": 19,
+      "line": 9,
     },
     "start": {
       "column": 0,
@@ -3164,7 +729,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
   "parent": undefined,
   "range": [
     0,
-    549,
+    141,
   ],
   "sourceType": "module",
   "tokens": [
@@ -3292,7 +857,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
         30,
       ],
       "type": "Identifier",
-      "value": "r1",
+      "value": "v1",
     },
     {
       "loc": {
@@ -3315,7 +880,7 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 16,
+          "column": 15,
           "line": 2,
         },
         "start": {
@@ -3325,92 +890,56 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       },
       "range": [
         33,
-        36,
+        35,
+      ],
+      "type": "Numeric",
+      "value": "10",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 7,
+          "line": 3,
+        },
+        "start": {
+          "column": 2,
+          "line": 3,
+        },
+      },
+      "range": [
+        38,
+        43,
+      ],
+      "type": "Keyword",
+      "value": "const",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 11,
+          "line": 3,
+        },
+        "start": {
+          "column": 8,
+          "line": 3,
+        },
+      },
+      "range": [
+        44,
+        47,
       ],
       "type": "Identifier",
-      "value": "ref",
+      "value": "fn1",
     },
     {
       "loc": {
         "end": {
-          "column": 17,
-          "line": 2,
+          "column": 13,
+          "line": 3,
         },
         "start": {
-          "column": 16,
-          "line": 2,
-        },
-      },
-      "range": [
-        36,
-        37,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 2,
-        },
-        "start": {
-          "column": 17,
-          "line": 2,
-        },
-      },
-      "range": [
-        37,
-        41,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 22,
-          "line": 2,
-        },
-        "start": {
-          "column": 21,
-          "line": 2,
-        },
-      },
-      "range": [
-        41,
-        42,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 2,
-        },
-        "start": {
-          "column": 22,
-          "line": 2,
-        },
-      },
-      "range": [
-        42,
-        48,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 2,
-        },
-        "start": {
-          "column": 28,
-          "line": 2,
+          "column": 12,
+          "line": 3,
         },
       },
       "range": [
@@ -3418,35 +947,35 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
         49,
       ],
       "type": "Punctuator",
-      "value": "(",
+      "value": "=",
     },
     {
       "loc": {
         "end": {
-          "column": 30,
-          "line": 2,
+          "column": 15,
+          "line": 3,
         },
         "start": {
-          "column": 29,
-          "line": 2,
+          "column": 14,
+          "line": 3,
         },
       },
       "range": [
-        49,
         50,
+        51,
       ],
       "type": "Punctuator",
-      "value": ")",
+      "value": "(",
     },
     {
       "loc": {
         "end": {
-          "column": 32,
-          "line": 2,
+          "column": 16,
+          "line": 3,
         },
         "start": {
-          "column": 31,
-          "line": 2,
+          "column": 15,
+          "line": 3,
         },
       },
       "range": [
@@ -3454,976 +983,76 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
         52,
       ],
       "type": "Punctuator",
-      "value": "*",
+      "value": ")",
     },
     {
       "loc": {
         "end": {
-          "column": 35,
-          "line": 2,
+          "column": 19,
+          "line": 3,
         },
         "start": {
-          "column": 33,
-          "line": 2,
+          "column": 17,
+          "line": 3,
         },
       },
       "range": [
         53,
         55,
       ],
-      "type": "Numeric",
-      "value": "10",
+      "type": "Punctuator",
+      "value": "=>",
     },
     {
       "loc": {
         "end": {
-          "column": 36,
-          "line": 2,
+          "column": 21,
+          "line": 3,
         },
         "start": {
-          "column": 35,
-          "line": 2,
+          "column": 20,
+          "line": 3,
         },
       },
       "range": [
-        55,
         56,
+        57,
       ],
       "type": "Punctuator",
-      "value": ")",
+      "value": "{",
     },
     {
       "loc": {
         "end": {
-          "column": 7,
+          "column": 22,
           "line": 3,
+        },
+        "start": {
+          "column": 21,
+          "line": 3,
+        },
+      },
+      "range": [
+        57,
+        58,
+      ],
+      "type": "Punctuator",
+      "value": "}",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 8,
+          "line": 5,
         },
         "start": {
           "column": 2,
-          "line": 3,
+          "line": 5,
         },
       },
       "range": [
-        59,
-        64,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 3,
-        },
-        "start": {
-          "column": 8,
-          "line": 3,
-        },
-      },
-      "range": [
-        65,
-        67,
-      ],
-      "type": "Identifier",
-      "value": "r2",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 3,
-        },
-        "start": {
-          "column": 11,
-          "line": 3,
-        },
-      },
-      "range": [
+        62,
         68,
-        69,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 3,
-        },
-        "start": {
-          "column": 13,
-          "line": 3,
-        },
-      },
-      "range": [
-        70,
-        73,
-      ],
-      "type": "Identifier",
-      "value": "ref",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 17,
-          "line": 3,
-        },
-        "start": {
-          "column": 16,
-          "line": 3,
-        },
-      },
-      "range": [
-        73,
-        74,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 3,
-        },
-        "start": {
-          "column": 17,
-          "line": 3,
-        },
-      },
-      "range": [
-        74,
-        78,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 22,
-          "line": 3,
-        },
-        "start": {
-          "column": 21,
-          "line": 3,
-        },
-      },
-      "range": [
-        78,
-        79,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 3,
-        },
-        "start": {
-          "column": 22,
-          "line": 3,
-        },
-      },
-      "range": [
-        79,
-        85,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 3,
-        },
-        "start": {
-          "column": 28,
-          "line": 3,
-        },
-      },
-      "range": [
-        85,
-        86,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 30,
-          "line": 3,
-        },
-        "start": {
-          "column": 29,
-          "line": 3,
-        },
-      },
-      "range": [
-        86,
-        87,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 32,
-          "line": 3,
-        },
-        "start": {
-          "column": 31,
-          "line": 3,
-        },
-      },
-      "range": [
-        88,
-        89,
-      ],
-      "type": "Punctuator",
-      "value": "*",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 36,
-          "line": 3,
-        },
-        "start": {
-          "column": 33,
-          "line": 3,
-        },
-      },
-      "range": [
-        90,
-        93,
-      ],
-      "type": "Numeric",
-      "value": "100",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 37,
-          "line": 3,
-        },
-        "start": {
-          "column": 36,
-          "line": 3,
-        },
-      },
-      "range": [
-        93,
-        94,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 4,
-        },
-        "start": {
-          "column": 2,
-          "line": 4,
-        },
-      },
-      "range": [
-        97,
-        102,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 4,
-        },
-        "start": {
-          "column": 8,
-          "line": 4,
-        },
-      },
-      "range": [
-        103,
-        107,
-      ],
-      "type": "Identifier",
-      "value": "rArr",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 14,
-          "line": 4,
-        },
-        "start": {
-          "column": 13,
-          "line": 4,
-        },
-      },
-      "range": [
-        108,
-        109,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 20,
-          "line": 4,
-        },
-        "start": {
-          "column": 15,
-          "line": 4,
-        },
-      },
-      "range": [
-        110,
-        115,
-      ],
-      "type": "Identifier",
-      "value": "Array",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 4,
-        },
-        "start": {
-          "column": 20,
-          "line": 4,
-        },
-      },
-      "range": [
-        115,
-        116,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 25,
-          "line": 4,
-        },
-        "start": {
-          "column": 21,
-          "line": 4,
-        },
-      },
-      "range": [
-        116,
-        120,
-      ],
-      "type": "Identifier",
-      "value": "from",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 4,
-        },
-        "start": {
-          "column": 25,
-          "line": 4,
-        },
-      },
-      "range": [
-        120,
-        121,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 4,
-        },
-        "start": {
-          "column": 26,
-          "line": 4,
-        },
-      },
-      "range": [
-        121,
-        122,
-      ],
-      "type": "Punctuator",
-      "value": "{",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 34,
-          "line": 4,
-        },
-        "start": {
-          "column": 28,
-          "line": 4,
-        },
-      },
-      "range": [
-        123,
-        129,
-      ],
-      "type": "Identifier",
-      "value": "length",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 35,
-          "line": 4,
-        },
-        "start": {
-          "column": 34,
-          "line": 4,
-        },
-      },
-      "range": [
-        129,
-        130,
-      ],
-      "type": "Punctuator",
-      "value": ":",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 38,
-          "line": 4,
-        },
-        "start": {
-          "column": 36,
-          "line": 4,
-        },
-      },
-      "range": [
-        131,
-        133,
-      ],
-      "type": "Numeric",
-      "value": "10",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 40,
-          "line": 4,
-        },
-        "start": {
-          "column": 39,
-          "line": 4,
-        },
-      },
-      "range": [
-        134,
-        135,
-      ],
-      "type": "Punctuator",
-      "value": "}",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 41,
-          "line": 4,
-        },
-        "start": {
-          "column": 40,
-          "line": 4,
-        },
-      },
-      "range": [
-        135,
-        136,
-      ],
-      "type": "Punctuator",
-      "value": ",",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 43,
-          "line": 4,
-        },
-        "start": {
-          "column": 42,
-          "line": 4,
-        },
-      },
-      "range": [
-        137,
-        138,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 44,
-          "line": 4,
-        },
-        "start": {
-          "column": 43,
-          "line": 4,
-        },
-      },
-      "range": [
-        138,
-        139,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 47,
-          "line": 4,
-        },
-        "start": {
-          "column": 45,
-          "line": 4,
-        },
-      },
-      "range": [
-        140,
-        142,
-      ],
-      "type": "Punctuator",
-      "value": "=>",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 52,
-          "line": 4,
-        },
-        "start": {
-          "column": 48,
-          "line": 4,
-        },
-      },
-      "range": [
-        143,
-        147,
-      ],
-      "type": "Identifier",
-      "value": "Math",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 53,
-          "line": 4,
-        },
-        "start": {
-          "column": 52,
-          "line": 4,
-        },
-      },
-      "range": [
-        147,
-        148,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 59,
-          "line": 4,
-        },
-        "start": {
-          "column": 53,
-          "line": 4,
-        },
-      },
-      "range": [
-        148,
-        154,
-      ],
-      "type": "Identifier",
-      "value": "random",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 60,
-          "line": 4,
-        },
-        "start": {
-          "column": 59,
-          "line": 4,
-        },
-      },
-      "range": [
-        154,
-        155,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 61,
-          "line": 4,
-        },
-        "start": {
-          "column": 60,
-          "line": 4,
-        },
-      },
-      "range": [
-        155,
-        156,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 63,
-          "line": 4,
-        },
-        "start": {
-          "column": 62,
-          "line": 4,
-        },
-      },
-      "range": [
-        157,
-        158,
-      ],
-      "type": "Punctuator",
-      "value": "*",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 67,
-          "line": 4,
-        },
-        "start": {
-          "column": 64,
-          "line": 4,
-        },
-      },
-      "range": [
-        159,
-        162,
-      ],
-      "type": "Numeric",
-      "value": "100",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 68,
-          "line": 4,
-        },
-        "start": {
-          "column": 67,
-          "line": 4,
-        },
-      },
-      "range": [
-        162,
-        163,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 7,
-          "line": 5,
-        },
-        "start": {
-          "column": 2,
-          "line": 5,
-        },
-      },
-      "range": [
-        166,
-        171,
-      ],
-      "type": "Keyword",
-      "value": "const",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 5,
-        },
-        "start": {
-          "column": 8,
-          "line": 5,
-        },
-      },
-      "range": [
-        172,
-        174,
-      ],
-      "type": "Identifier",
-      "value": "f1",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 5,
-        },
-        "start": {
-          "column": 11,
-          "line": 5,
-        },
-      },
-      "range": [
-        175,
-        176,
-      ],
-      "type": "Punctuator",
-      "value": "=",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 14,
-          "line": 5,
-        },
-        "start": {
-          "column": 13,
-          "line": 5,
-        },
-      },
-      "range": [
-        177,
-        178,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 5,
-        },
-        "start": {
-          "column": 14,
-          "line": 5,
-        },
-      },
-      "range": [
-        178,
-        179,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 18,
-          "line": 5,
-        },
-        "start": {
-          "column": 16,
-          "line": 5,
-        },
-      },
-      "range": [
-        180,
-        182,
-      ],
-      "type": "Punctuator",
-      "value": "=>",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 20,
-          "line": 5,
-        },
-        "start": {
-          "column": 19,
-          "line": 5,
-        },
-      },
-      "range": [
-        183,
-        184,
-      ],
-      "type": "Punctuator",
-      "value": "{",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 11,
-          "line": 6,
-        },
-        "start": {
-          "column": 4,
-          "line": 6,
-        },
-      },
-      "range": [
-        189,
-        196,
-      ],
-      "type": "Identifier",
-      "value": "console",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 12,
-          "line": 6,
-        },
-        "start": {
-          "column": 11,
-          "line": 6,
-        },
-      },
-      "range": [
-        196,
-        197,
-      ],
-      "type": "Punctuator",
-      "value": ".",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 6,
-        },
-        "start": {
-          "column": 12,
-          "line": 6,
-        },
-      },
-      "range": [
-        197,
-        200,
-      ],
-      "type": "Identifier",
-      "value": "log",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 6,
-        },
-        "start": {
-          "column": 15,
-          "line": 6,
-        },
-      },
-      "range": [
-        200,
-        201,
-      ],
-      "type": "Punctuator",
-      "value": "(",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 6,
-        },
-        "start": {
-          "column": 16,
-          "line": 6,
-        },
-      },
-      "range": [
-        201,
-        212,
-      ],
-      "type": "String",
-      "value": "'f1: hello'",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 28,
-          "line": 6,
-        },
-        "start": {
-          "column": 27,
-          "line": 6,
-        },
-      },
-      "range": [
-        212,
-        213,
-      ],
-      "type": "Punctuator",
-      "value": ")",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 3,
-          "line": 7,
-        },
-        "start": {
-          "column": 2,
-          "line": 7,
-        },
-      },
-      "range": [
-        216,
-        217,
-      ],
-      "type": "Punctuator",
-      "value": "}",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 8,
-          "line": 9,
-        },
-        "start": {
-          "column": 2,
-          "line": 9,
-        },
-      },
-      "range": [
-        221,
-        227,
       ],
       "type": "Keyword",
       "value": "return",
@@ -4432,16 +1061,16 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 4,
-          "line": 18,
+          "line": 10,
         },
         "start": {
           "column": 14,
-          "line": 17,
+          "line": 9,
         },
       },
       "range": [
-        233,
-        238,
+        74,
+        79,
       ],
       "type": "HTMLWhitespace",
       "value": "
@@ -4451,16 +1080,16 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 8,
-          "line": 10,
+          "line": 6,
         },
         "start": {
           "column": 4,
-          "line": 26,
+          "line": 14,
         },
       },
       "range": [
-        238,
-        242,
+        79,
+        83,
       ],
       "type": "HTMLTagOpen",
       "value": "div",
@@ -4468,1153 +1097,73 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 14,
-          "line": 18,
-        },
-        "start": {
           "column": 9,
-          "line": 26,
-        },
-      },
-      "range": [
-        243,
-        248,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "class",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
           "line": 10,
         },
         "start": {
-          "column": 14,
-          "line": 10,
-        },
-      },
-      "range": [
-        248,
-        249,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 24,
-          "line": 26,
-        },
-        "start": {
-          "column": 15,
-          "line": 18,
-        },
-      },
-      "range": [
-        249,
-        258,
-      ],
-      "type": "HTMLLiteral",
-      "value": "my-comp",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 31,
-          "line": 18,
-        },
-        "start": {
-          "column": 25,
-          "line": 26,
-        },
-      },
-      "range": [
-        259,
-        265,
-      ],
-      "type": "HTMLIdentifier",
-      "value": ":class",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 32,
-          "line": 10,
-        },
-        "start": {
-          "column": 31,
-          "line": 10,
-        },
-      },
-      "range": [
-        265,
-        266,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 63,
-          "line": 26,
-        },
-        "start": {
-          "column": 32,
-          "line": 18,
-        },
-      },
-      "range": [
-        266,
-        297,
-      ],
-      "type": "HTMLLiteral",
-      "value": "r1 > 5 ? 'bg-red' : 'bg-blue'",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 64,
-          "line": 18,
-        },
-        "start": {
-          "column": 63,
-          "line": 10,
-        },
-      },
-      "range": [
-        297,
-        298,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 6,
-          "line": 19,
-        },
-        "start": {
-          "column": 64,
-          "line": 18,
-        },
-      },
-      "range": [
-        298,
-        305,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-      ",
-    },
-    {
-      "loc": {
-        "end": {
           "column": 8,
-          "line": 11,
-        },
-        "start": {
-          "column": 6,
-          "line": 27,
+          "line": 6,
         },
       },
       "range": [
-        305,
-        307,
-      ],
-      "type": "HTMLTagOpen",
-      "value": "p",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 14,
-          "line": 11,
-        },
-        "start": {
-          "column": 13,
-          "line": 11,
-        },
-      },
-      "range": [
-        312,
-        313,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 11,
-        },
-        "start": {
-          "column": 14,
-          "line": 11,
-        },
-      },
-      "range": [
-        313,
-        314,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    Token {
-      "end": 83,
-      "loc": SourceLocation {
-        "end": {
-          "column": 17,
-          "line": 11,
-        },
-        "start": {
-          "column": 15,
-          "line": 11,
-        },
-      },
-      "range": [
-        314,
-        316,
-      ],
-      "start": 81,
-      "type": "Identifier",
-      "value": "r2",
-    },
-    Token {
-      "end": 85,
-      "loc": SourceLocation {
-        "end": {
-          "column": 19,
-          "line": 11,
-        },
-        "start": {
-          "column": 18,
-          "line": 11,
-        },
-      },
-      "range": [
-        317,
-        318,
-      ],
-      "start": 84,
-      "type": "Punctuator",
-      "value": ">",
-    },
-    Token {
-      "end": 88,
-      "loc": SourceLocation {
-        "end": {
-          "column": 22,
-          "line": 11,
-        },
-        "start": {
-          "column": 20,
-          "line": 11,
-        },
-      },
-      "range": [
-        319,
-        321,
-      ],
-      "start": 86,
-      "type": "Numeric",
-      "value": "50",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 23,
-          "line": 11,
-        },
-        "start": {
-          "column": 22,
-          "line": 11,
-        },
-      },
-      "range": [
-        321,
-        322,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 24,
-          "line": 19,
-        },
-        "start": {
-          "column": 23,
-          "line": 11,
-        },
-      },
-      "range": [
-        322,
-        323,
+        83,
+        84,
       ],
       "type": "HTMLTagClose",
       "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 11,
-        },
-        "start": {
-          "column": 24,
-          "line": 19,
-        },
-      },
-      "range": [
-        323,
-        325,
-      ],
-      "type": "HTMLText",
-      "value": "r2",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 11,
-        },
-        "start": {
-          "column": 26,
-          "line": 11,
-        },
-      },
-      "range": [
-        325,
-        326,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 11,
-        },
-        "start": {
-          "column": 27,
-          "line": 11,
-        },
-      },
-      "range": [
-        326,
-        328,
-      ],
-      "type": "HTMLText",
-      "value": "is",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 30,
-          "line": 11,
-        },
-        "start": {
-          "column": 29,
-          "line": 11,
-        },
-      },
-      "range": [
-        328,
-        329,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 37,
-          "line": 11,
-        },
-        "start": {
-          "column": 30,
-          "line": 11,
-        },
-      },
-      "range": [
-        329,
-        336,
-      ],
-      "type": "HTMLText",
-      "value": "greater",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 38,
-          "line": 11,
-        },
-        "start": {
-          "column": 37,
-          "line": 11,
-        },
-      },
-      "range": [
-        336,
-        337,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 42,
-          "line": 11,
-        },
-        "start": {
-          "column": 38,
-          "line": 11,
-        },
-      },
-      "range": [
-        337,
-        341,
-      ],
-      "type": "HTMLText",
-      "value": "than",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 43,
-          "line": 11,
-        },
-        "start": {
-          "column": 42,
-          "line": 11,
-        },
-      },
-      "range": [
-        341,
-        342,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 45,
-          "line": 19,
-        },
-        "start": {
-          "column": 43,
-          "line": 11,
-        },
-      },
-      "range": [
-        342,
-        344,
-      ],
-      "type": "HTMLText",
-      "value": "50",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 48,
-          "line": 11,
-        },
-        "start": {
-          "column": 45,
-          "line": 19,
-        },
-      },
-      "range": [
-        344,
-        347,
-      ],
-      "type": "HTMLEndTagOpen",
-      "value": "p",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 49,
-          "line": 27,
-        },
-        "start": {
-          "column": 48,
-          "line": 11,
-        },
-      },
-      "range": [
-        347,
-        348,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 6,
-          "line": 20,
-        },
-        "start": {
-          "column": 49,
-          "line": 19,
-        },
-      },
-      "range": [
-        348,
-        355,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-      ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 8,
-          "line": 12,
-        },
-        "start": {
-          "column": 6,
-          "line": 28,
-        },
-      },
-      "range": [
-        355,
-        357,
-      ],
-      "type": "HTMLTagOpen",
-      "value": "p",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 20,
-        },
-        "start": {
-          "column": 15,
-          "line": 12,
-        },
-      },
-      "range": [
-        364,
-        365,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 18,
-          "line": 12,
-        },
-        "start": {
-          "column": 16,
-          "line": 20,
-        },
-      },
-      "range": [
-        365,
-        367,
-      ],
-      "type": "HTMLText",
-      "value": "r2",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 19,
-          "line": 12,
-        },
-        "start": {
-          "column": 18,
-          "line": 12,
-        },
-      },
-      "range": [
-        367,
-        368,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 12,
-        },
-        "start": {
-          "column": 19,
-          "line": 12,
-        },
-      },
-      "range": [
-        368,
-        370,
-      ],
-      "type": "HTMLText",
-      "value": "is",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 22,
-          "line": 12,
-        },
-        "start": {
-          "column": 21,
-          "line": 12,
-        },
-      },
-      "range": [
-        370,
-        371,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 12,
-        },
-        "start": {
-          "column": 22,
-          "line": 12,
-        },
-      },
-      "range": [
-        371,
-        375,
-      ],
-      "type": "HTMLText",
-      "value": "less",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 12,
-        },
-        "start": {
-          "column": 26,
-          "line": 12,
-        },
-      },
-      "range": [
-        375,
-        376,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 31,
-          "line": 12,
-        },
-        "start": {
-          "column": 27,
-          "line": 12,
-        },
-      },
-      "range": [
-        376,
-        380,
-      ],
-      "type": "HTMLText",
-      "value": "than",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 32,
-          "line": 12,
-        },
-        "start": {
-          "column": 31,
-          "line": 12,
-        },
-      },
-      "range": [
-        380,
-        381,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 34,
-          "line": 20,
-        },
-        "start": {
-          "column": 32,
-          "line": 12,
-        },
-      },
-      "range": [
-        381,
-        383,
-      ],
-      "type": "HTMLText",
-      "value": "50",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 37,
-          "line": 12,
-        },
-        "start": {
-          "column": 34,
-          "line": 20,
-        },
-      },
-      "range": [
-        383,
-        386,
-      ],
-      "type": "HTMLEndTagOpen",
-      "value": "p",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 38,
-          "line": 28,
-        },
-        "start": {
-          "column": 37,
-          "line": 12,
-        },
-      },
-      "range": [
-        386,
-        387,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 6,
-          "line": 21,
-        },
-        "start": {
-          "column": 38,
-          "line": 20,
-        },
-      },
-      "range": [
-        387,
-        394,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-      ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 9,
-          "line": 13,
-        },
-        "start": {
-          "column": 6,
-          "line": 29,
-        },
-      },
-      "range": [
-        394,
-        397,
-      ],
-      "type": "HTMLTagOpen",
-      "value": "ul",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 21,
-        },
-        "start": {
-          "column": 10,
-          "line": 29,
-        },
-      },
-      "range": [
-        398,
-        403,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "class",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 16,
-          "line": 13,
-        },
-        "start": {
-          "column": 15,
-          "line": 13,
-        },
-      },
-      "range": [
-        403,
-        404,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 29,
-        },
-        "start": {
-          "column": 16,
-          "line": 21,
-        },
-      },
-      "range": [
-        404,
-        414,
-      ],
-      "type": "HTMLLiteral",
-      "value": "num-list",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 27,
-          "line": 21,
-        },
-        "start": {
-          "column": 26,
-          "line": 13,
-        },
-      },
-      "range": [
-        414,
-        415,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 8,
-          "line": 22,
-        },
-        "start": {
-          "column": 27,
-          "line": 21,
-        },
-      },
-      "range": [
-        415,
-        424,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-        ",
     },
     {
       "loc": {
         "end": {
           "column": 11,
-          "line": 14,
+          "line": 6,
         },
         "start": {
-          "column": 8,
-          "line": 30,
+          "column": 9,
+          "line": 10,
         },
       },
       "range": [
-        424,
-        427,
-      ],
-      "type": "HTMLTagOpen",
-      "value": "li",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 18,
-          "line": 14,
-        },
-        "start": {
-          "column": 17,
-          "line": 14,
-        },
-      },
-      "range": [
-        433,
-        434,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 19,
-          "line": 14,
-        },
-        "start": {
-          "column": 18,
-          "line": 14,
-        },
-      },
-      "range": [
-        434,
-        435,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    Token {
-      "end": 203,
-      "loc": SourceLocation {
-        "end": {
-          "column": 20,
-          "line": 14,
-        },
-        "start": {
-          "column": 19,
-          "line": 22,
-        },
-      },
-      "range": [
-        435,
-        436,
-      ],
-      "start": 202,
-      "type": "Identifier",
-      "value": "r",
-    },
-    Token {
-      "end": 206,
-      "loc": SourceLocation {
-        "end": {
-          "column": 23,
-          "line": 14,
-        },
-        "start": {
-          "column": 21,
-          "line": 14,
-        },
-      },
-      "range": [
-        437,
-        439,
-      ],
-      "start": 204,
-      "type": "Keyword",
-      "value": "in",
-    },
-    Token {
-      "end": 211,
-      "loc": SourceLocation {
-        "end": {
-          "column": 28,
-          "line": 22,
-        },
-        "start": {
-          "column": 24,
-          "line": 14,
-        },
-      },
-      "range": [
-        440,
-        444,
-      ],
-      "start": 207,
-      "type": "Identifier",
-      "value": "rArr",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 14,
-        },
-        "start": {
-          "column": 28,
-          "line": 14,
-        },
-      },
-      "range": [
-        444,
-        445,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 35,
-          "line": 14,
-        },
-        "start": {
-          "column": 34,
-          "line": 14,
-        },
-      },
-      "range": [
-        450,
-        451,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 36,
-          "line": 14,
-        },
-        "start": {
-          "column": 35,
-          "line": 14,
-        },
-      },
-      "range": [
-        451,
-        452,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    Token {
-      "end": 220,
-      "loc": SourceLocation {
-        "end": {
-          "column": 37,
-          "line": 14,
-        },
-        "start": {
-          "column": 36,
-          "line": 14,
-        },
-      },
-      "range": [
-        452,
-        453,
-      ],
-      "start": 219,
-      "type": "Identifier",
-      "value": "r",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 38,
-          "line": 14,
-        },
-        "start": {
-          "column": 37,
-          "line": 14,
-        },
-      },
-      "range": [
-        453,
-        454,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 39,
-          "line": 22,
-        },
-        "start": {
-          "column": 38,
-          "line": 14,
-        },
-      },
-      "range": [
-        454,
-        455,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 41,
-          "line": 14,
-        },
-        "start": {
-          "column": 39,
-          "line": 22,
-        },
-      },
-      "range": [
-        455,
-        457,
+        84,
+        86,
       ],
       "type": "VExpressionStart",
       "value": "{{",
     },
     Token {
-      "end": 226,
+      "end": 15,
       "loc": SourceLocation {
         "end": {
-          "column": 43,
-          "line": 14,
+          "column": 14,
+          "line": 6,
         },
         "start": {
-          "column": 42,
-          "line": 14,
+          "column": 12,
+          "line": 6,
         },
       },
       "range": [
-        458,
-        459,
+        87,
+        89,
       ],
-      "start": 225,
+      "start": 13,
       "type": "Identifier",
-      "value": "r",
+      "value": "v1",
     },
     {
       "loc": {
         "end": {
-          "column": 46,
-          "line": 22,
+          "column": 17,
+          "line": 10,
         },
         "start": {
-          "column": 44,
-          "line": 14,
+          "column": 15,
+          "line": 6,
         },
       },
       "range": [
-        460,
-        462,
+        90,
+        92,
       ],
       "type": "VExpressionEnd",
       "value": "}}",
@@ -5622,345 +1171,35 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 50,
+          "column": 22,
+          "line": 6,
+        },
+        "start": {
+          "column": 17,
+          "line": 10,
+        },
+      },
+      "range": [
+        92,
+        97,
+      ],
+      "type": "HTMLEndTagOpen",
+      "value": "div",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 23,
           "line": 14,
         },
         "start": {
-          "column": 46,
-          "line": 22,
-        },
-      },
-      "range": [
-        462,
-        466,
-      ],
-      "type": "HTMLEndTagOpen",
-      "value": "li",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 51,
-          "line": 30,
-        },
-        "start": {
-          "column": 50,
-          "line": 14,
-        },
-      },
-      "range": [
-        466,
-        467,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 6,
-          "line": 23,
-        },
-        "start": {
-          "column": 51,
-          "line": 22,
-        },
-      },
-      "range": [
-        467,
-        474,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-      ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 15,
-        },
-        "start": {
-          "column": 6,
-          "line": 23,
-        },
-      },
-      "range": [
-        474,
-        478,
-      ],
-      "type": "HTMLEndTagOpen",
-      "value": "ul",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 11,
-          "line": 31,
-        },
-        "start": {
-          "column": 10,
-          "line": 15,
-        },
-      },
-      "range": [
-        478,
-        479,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 6,
-          "line": 24,
-        },
-        "start": {
-          "column": 11,
-          "line": 23,
-        },
-      },
-      "range": [
-        479,
-        486,
-      ],
-      "type": "HTMLWhitespace",
-      "value": "
-      ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 13,
-          "line": 16,
-        },
-        "start": {
-          "column": 6,
-          "line": 32,
-        },
-      },
-      "range": [
-        486,
-        493,
-      ],
-      "type": "HTMLTagOpen",
-      "value": "button",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 21,
-          "line": 16,
-        },
-        "start": {
-          "column": 20,
-          "line": 16,
-        },
-      },
-      "range": [
-        500,
-        501,
-      ],
-      "type": "HTMLAssociation",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
           "column": 22,
-          "line": 16,
-        },
-        "start": {
-          "column": 21,
-          "line": 16,
+          "line": 6,
         },
       },
       "range": [
-        501,
-        502,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    Token {
-      "end": 271,
-      "loc": SourceLocation {
-        "end": {
-          "column": 24,
-          "line": 16,
-        },
-        "start": {
-          "column": 22,
-          "line": 16,
-        },
-      },
-      "range": [
-        502,
-        504,
-      ],
-      "start": 269,
-      "type": "Identifier",
-      "value": "f1",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 25,
-          "line": 16,
-        },
-        "start": {
-          "column": 24,
-          "line": 16,
-        },
-      },
-      "range": [
-        504,
-        505,
-      ],
-      "type": "Punctuator",
-      "value": "\\"",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 26,
-          "line": 24,
-        },
-        "start": {
-          "column": 25,
-          "line": 16,
-        },
-      },
-      "range": [
-        505,
-        506,
-      ],
-      "type": "HTMLTagClose",
-      "value": "",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 29,
-          "line": 16,
-        },
-        "start": {
-          "column": 26,
-          "line": 24,
-        },
-      },
-      "range": [
-        506,
-        509,
-      ],
-      "type": "HTMLText",
-      "value": "Log",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 30,
-          "line": 16,
-        },
-        "start": {
-          "column": 29,
-          "line": 16,
-        },
-      },
-      "range": [
-        509,
-        510,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 39,
-          "line": 16,
-        },
-        "start": {
-          "column": 30,
-          "line": 16,
-        },
-      },
-      "range": [
-        510,
-        519,
-      ],
-      "type": "HTMLText",
-      "value": "something",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 40,
-          "line": 16,
-        },
-        "start": {
-          "column": 39,
-          "line": 16,
-        },
-      },
-      "range": [
-        519,
-        520,
-      ],
-      "type": "HTMLWhitespace",
-      "value": " ",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 43,
-          "line": 24,
-        },
-        "start": {
-          "column": 40,
-          "line": 16,
-        },
-      },
-      "range": [
-        520,
-        523,
-      ],
-      "type": "HTMLText",
-      "value": "...",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 51,
-          "line": 16,
-        },
-        "start": {
-          "column": 43,
-          "line": 24,
-        },
-      },
-      "range": [
-        523,
-        531,
-      ],
-      "type": "HTMLEndTagOpen",
-      "value": "button",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 52,
-          "line": 32,
-        },
-        "start": {
-          "column": 51,
-          "line": 16,
-        },
-      },
-      "range": [
-        531,
-        532,
+        97,
+        98,
       ],
       "type": "HTMLTagClose",
       "value": "",
@@ -5969,16 +1208,16 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 4,
-          "line": 25,
+          "line": 11,
         },
         "start": {
-          "column": 52,
-          "line": 24,
+          "column": 23,
+          "line": 10,
         },
       },
       "range": [
-        532,
-        537,
+        98,
+        103,
       ],
       "type": "HTMLWhitespace",
       "value": "
@@ -5987,53 +1226,163 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 9,
-          "line": 17,
+          "column": 11,
+          "line": 7,
         },
         "start": {
           "column": 4,
-          "line": 25,
+          "line": 15,
         },
       },
       "range": [
-        537,
-        542,
+        103,
+        110,
+      ],
+      "type": "HTMLTagOpen",
+      "value": "button",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 19,
+          "line": 7,
+        },
+        "start": {
+          "column": 18,
+          "line": 7,
+        },
+      },
+      "range": [
+        117,
+        118,
+      ],
+      "type": "HTMLAssociation",
+      "value": "",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 20,
+          "line": 7,
+        },
+        "start": {
+          "column": 19,
+          "line": 7,
+        },
+      },
+      "range": [
+        118,
+        119,
+      ],
+      "type": "Punctuator",
+      "value": "\\"",
+    },
+    Token {
+      "end": 48,
+      "loc": SourceLocation {
+        "end": {
+          "column": 23,
+          "line": 7,
+        },
+        "start": {
+          "column": 20,
+          "line": 7,
+        },
+      },
+      "range": [
+        119,
+        122,
+      ],
+      "start": 45,
+      "type": "Identifier",
+      "value": "fn1",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 24,
+          "line": 7,
+        },
+        "start": {
+          "column": 23,
+          "line": 7,
+        },
+      },
+      "range": [
+        122,
+        123,
+      ],
+      "type": "Punctuator",
+      "value": "\\"",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 25,
+          "line": 11,
+        },
+        "start": {
+          "column": 24,
+          "line": 7,
+        },
+      },
+      "range": [
+        123,
+        124,
+      ],
+      "type": "HTMLTagClose",
+      "value": "",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 27,
+          "line": 11,
+        },
+        "start": {
+          "column": 25,
+          "line": 11,
+        },
+      },
+      "range": [
+        124,
+        126,
+      ],
+      "type": "HTMLText",
+      "value": "Hi",
+    },
+    {
+      "loc": {
+        "end": {
+          "column": 35,
+          "line": 7,
+        },
+        "start": {
+          "column": 27,
+          "line": 11,
+        },
+      },
+      "range": [
+        126,
+        134,
       ],
       "type": "HTMLEndTagOpen",
-      "value": "div",
+      "value": "button",
     },
     {
       "loc": {
         "end": {
-          "column": 13,
-          "line": 19,
+          "column": 36,
+          "line": 15,
         },
         "start": {
-          "column": 9,
-          "line": 19,
+          "column": 35,
+          "line": 7,
         },
       },
       "range": [
-        541,
-        545,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "v-if",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 10,
-          "line": 33,
-        },
-        "start": {
-          "column": 9,
-          "line": 17,
-        },
-      },
-      "range": [
-        542,
-        543,
+        134,
+        135,
       ],
       "type": "HTMLTagClose",
       "value": "",
@@ -6042,16 +1391,16 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 2,
-          "line": 26,
+          "line": 12,
         },
         "start": {
-          "column": 10,
-          "line": 25,
+          "column": 36,
+          "line": 11,
         },
       },
       "range": [
-        543,
-        546,
+        135,
+        138,
       ],
       "type": "HTMLWhitespace",
       "value": "
@@ -6061,16 +1410,16 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
       "loc": {
         "end": {
           "column": 1,
-          "line": 19,
+          "line": 9,
         },
         "start": {
           "column": 0,
-          "line": 19,
+          "line": 9,
         },
       },
       "range": [
-        548,
-        549,
+        140,
+        141,
       ],
       "type": "Punctuator",
       "value": "}",
@@ -6078,89 +1427,17 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 15,
-          "line": 20,
-        },
-        "start": {
-          "column": 9,
-          "line": 20,
-        },
-      },
-      "range": [
-        591,
-        597,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "v-else",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 17,
-          "line": 22,
+          "column": 13,
+          "line": 11,
         },
         "start": {
           "column": 12,
-          "line": 22,
+          "line": 11,
         },
       },
       "range": [
-        661,
-        666,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "v-for",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 31,
-          "line": 22,
-        },
-        "start": {
-          "column": 30,
-          "line": 22,
-        },
-      },
-      "range": [
-        679,
-        680,
-      ],
-      "type": "Punctuator",
-      "value": ":",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 34,
-          "line": 22,
-        },
-        "start": {
-          "column": 31,
-          "line": 22,
-        },
-      },
-      "range": [
-        680,
-        683,
-      ],
-      "type": "HTMLIdentifier",
-      "value": "key",
-    },
-    {
-      "loc": {
-        "end": {
-          "column": 15,
-          "line": 24,
-        },
-        "start": {
-          "column": 14,
-          "line": 24,
-        },
-      },
-      "range": [
-        727,
-        728,
+        185,
+        186,
       ],
       "type": "Punctuator",
       "value": "@",
@@ -6168,17 +1445,17 @@ exports[`Vine ESLint parser test > parse template root 1`] = `
     {
       "loc": {
         "end": {
-          "column": 20,
-          "line": 24,
+          "column": 18,
+          "line": 11,
         },
         "start": {
-          "column": 15,
-          "line": 24,
+          "column": 13,
+          "line": 11,
         },
       },
       "range": [
-        728,
-        733,
+        186,
+        191,
       ],
       "type": "HTMLIdentifier",
       "value": "click",

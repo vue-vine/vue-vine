@@ -27,7 +27,8 @@ import type {
   CallExpression,
   Declaration,
   FunctionExpression,
-  Identifier, Node,
+  Identifier,
+  Node,
   ObjectPattern,
   Statement,
   TSFunctionType,
@@ -255,10 +256,10 @@ function analyzeVariableDeclarationForBindings(
             varDecl.init,
             m =>
               m === userImportAliases.ref
-                || m === userImportAliases.computed
-                || m === userImportAliases.shallowRef
-                || m === userImportAliases.customRef
-                || m === userImportAliases.toRef,
+              || m === userImportAliases.computed
+              || m === userImportAliases.shallowRef
+              || m === userImportAliases.customRef
+              || m === userImportAliases.toRef,
           )
         ) {
           bindingType = VineBindingTypes.SETUP_REF
@@ -357,8 +358,8 @@ const analyzeVineProps: AnalyzeRunner = (
     // The Vine validator has guranateed there's only one formal params,
     // its type is `identifier`, and it must have an object literal type annotation.
     // Save this parameter's name as `propsAlias`
-    const propsFormalParam = (formalParams[0] as Identifier)
-    const propsTypeAnnotation = ((propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral)
+    const propsFormalParam = formalParams[0] as Identifier
+    const propsTypeAnnotation = (propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral
     vineCompFnCtx.propsAlias = propsFormalParam.name;
     // Analyze the object literal type annotation
     // and save the props info into `vineCompFnCtx.props`
@@ -619,9 +620,9 @@ const analyzeVineSlots: AnalyzeRunner = (
   for (const prop of slotsTypeLiteralProps) {
     if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
-        = (((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
+        = ((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
           ?.parameters?.[0]?.typeAnnotation as TSTypeAnnotation)
-          ?.typeAnnotation as TSTypeLiteral)
+          ?.typeAnnotation as TSTypeLiteral
 
       if (fnFirstParamType) {
         vineCompFnCtx.slots[prop.key.name] = {
@@ -631,8 +632,8 @@ const analyzeVineSlots: AnalyzeRunner = (
     }
     else if (isTSMethodSignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
-        = ((prop.parameters[0]!.typeAnnotation as TSTypeAnnotation)
-          .typeAnnotation as TSTypeLiteral)
+        = (prop.parameters[0]!.typeAnnotation as TSTypeAnnotation)
+          .typeAnnotation as TSTypeLiteral
 
       vineCompFnCtx.slots[prop.key.name] = {
         props: fnFirstParamType,

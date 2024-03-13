@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { parse as babelParse } from '@babel/parser'
 import {
   assignmentExpression,
@@ -24,7 +24,7 @@ import {
 } from '../src/babel-helpers/ast'
 
 describe('find Vine Function Component Declarations', () => {
-  test('should be able to find out all Vine component function', () => {
+  it('should be able to find out all Vine component function', () => {
     const content = `
 const Caculator = (props: { expr: string }) => {
   return vine\`
@@ -57,12 +57,12 @@ export default function App() {
 })
 
 describe('isDescendant function', () => {
-  test('should return true when node and potentialDescendant are the same', () => {
+  it('should return true when node and potentialDescendant are the same', () => {
     const node = identifier('a')
     expect(isDescendant(node, node)).toBe(true)
   })
 
-  test('should return true when potentialDescendant is a descendant of node', () => {
+  it('should return true when potentialDescendant is a descendant of node', () => {
     const descendant = identifier('b')
     const node = program([
       functionDeclaration(identifier('a'), [], blockStatement([
@@ -72,7 +72,7 @@ describe('isDescendant function', () => {
     expect(isDescendant(node, descendant)).toBe(true)
   })
 
-  test('should return false when potentialDescendant is not a descendant of node', () => {
+  it('should return false when potentialDescendant is not a descendant of node', () => {
     const descendant = identifier('b')
     const node = program([
       functionDeclaration(identifier('a'), [], blockStatement([
@@ -84,14 +84,15 @@ describe('isDescendant function', () => {
 })
 
 describe('vine ast operations and search helpers', () => {
-  test('isVineMacroOf', () => {
+  it('isVineMacroOf', () => {
     expect(isVineMacroOf('vineProp')(callExpression(identifier('vineProp'), []))).toBe(true)
     expect(isVineMacroOf('vineProp')(
       callExpression(
         memberExpression(
           identifier('vineProp'),
           identifier('validator'),
-        ), [],
+        ),
+        [],
       ),
     )).toBe(true)
     expect(isVineMacroOf('vineProp')(
@@ -99,7 +100,8 @@ describe('vine ast operations and search helpers', () => {
         memberExpression(
           identifier('vineProp'),
           identifier('default'),
-        ), [],
+        ),
+        [],
       ),
     )).toBe(true)
     expect(isVineMacroOf('vineStyle')(
@@ -107,7 +109,8 @@ describe('vine ast operations and search helpers', () => {
         memberExpression(
           identifier('vineStyle'),
           identifier('scoped'),
-        ), [],
+        ),
+        [],
       ),
     )).toBe(true)
   })

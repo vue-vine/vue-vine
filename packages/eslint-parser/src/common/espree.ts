@@ -78,7 +78,7 @@ function getNewestEspree(): Espree {
   const linterEspree = getEspreeFromLinter()
   if (
     linterEspree.version != null
-        && lte(newest.version, linterEspree.version)
+    && lte(newest.version, linterEspree.version)
   ) {
     newest = linterEspree
   }

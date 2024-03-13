@@ -33,13 +33,12 @@ const cssVarsPlugin: PluginCreator<CSSVarsPluginOptions> = (options) => {
               start: null,
               end: null,
             } as CSSVarsRange
-            const content = parseCssVars([ctx.value],
-              {
-                getIndex(start: number, end: number) {
-                  range.start = start
-                  range.end = end
-                },
-              })
+            const content = parseCssVars([ctx.value], {
+              getIndex(start: number, end: number) {
+                range.start = start
+                range.end = end
+              },
+            })
             if (content[0] === cbKey) {
               const mg = new MagicString(ctx.value)
               mg.overwrite(range.start!, range.end!, `--${cssBindings[cbKey]}`)

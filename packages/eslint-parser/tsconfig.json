@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "ESNext",
+    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "dist",
-    "skipLibCheck": true,
     "paths": {
       "*": ["typings/*"]
-    }
+    },
+    "strict": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
     "src",

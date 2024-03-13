@@ -147,7 +147,7 @@ export function isSurrogatePair(cp: number): boolean {
 export function isNonCharacter(cp: number): boolean {
   return (
     (cp >= 0xFDD0 && cp <= 0xFDEF)
-        || ((cp & 0xFFFE) === 0xFFFE && cp <= 0x10FFFF)
+    || ((cp & 0xFFFE) === 0xFFFE && cp <= 0x10FFFF)
   )
 }
 

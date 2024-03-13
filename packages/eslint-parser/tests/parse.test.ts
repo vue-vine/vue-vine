@@ -1,27 +1,17 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import type { VineESLintParserOptions } from '../src/types'
 import { runParse } from '../src/parse'
 
-describe('Vine ESLint parser test', () => {
-  test('parse template root', () => {
+describe('vine ESLint parser test', () => {
+  it('test variable reference', () => {
     const sampleSourceCode = `
 function MyComp() {
-  const r1 = ref(Math.random() * 10)
-  const r2 = ref(Math.random() * 100)
-  const rArr = Array.from({ length: 10 }, () => Math.random() * 100)
-  const f1 = () => {
-    console.log('f1: hello')
-  }
+  const v1 = 10
+  const fn1 = () => {}
 
   return vine\`
-    <div class="my-comp" :class="r1 > 5 ? 'bg-red' : 'bg-blue'">
-      <p v-if="r2 > 50">r2 is greater than 50</p>
-      <p v-else>r2 is less than 50</p>
-      <ul class="num-list">
-        <li v-for="r in rArr" :key="r">{{ r }}</li>
-      </ul>
-      <button @click="f1">Log something ...</button>
-    </div>
+    <div>{{ v1 }}</div>
+    <button @click="fn1">Hi</button>
   \`
 }`.trim()
 

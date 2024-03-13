@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../index'
 import { createMockTransformCtx } from './shared-utils'
 
-describe('Test Vine compiler validate', () => {
-  test('validate no outside macro calls', () => {
+describe('test Vine compiler validate', () => {
+  it('validate no outside macro calls', () => {
     const content = `
 const foo = vineProp()
 function App() {
@@ -18,7 +18,7 @@ function App() {
       .toMatchInlineSnapshot('"Vine macro calls must be inside Vue Vine component function!"')
   })
 
-  test('validate root scope statements no Vue API call', () => {
+  it('validate root scope statements no Vue API call', () => {
     const content = `
 const bar = ref(1)
 `
@@ -29,7 +29,7 @@ const bar = ref(1)
       .toMatchInlineSnapshot('"Vue API calls are not allowed to be called in Vine root scope!"')
   })
 
-  test('validate root scope statements\' type are matched with our restrictions', () => {
+  it('validate root scope statements\' type are matched with our restrictions', () => {
     const content = `
 here_is_a_function_call_expression();
 `
@@ -40,7 +40,7 @@ here_is_a_function_call_expression();
       .toMatchInlineSnapshot('"Invalid root scope statements must be inside Vue Vine component function!"')
   })
 
-  test('validate vine tagged template string usage', () => {
+  it('validate vine tagged template string usage', () => {
     const content = `
 function App() {
   const name = ref('xxx')
@@ -62,7 +62,7 @@ function App() {
       .toMatchInlineSnapshot('"[Vine template compile error] Element is missing end tag."')
   })
 
-  test('validate those macros can only be called once inside a Vine component function', () => {
+  it('validate those macros can only be called once inside a Vine component function', () => {
     const content = `
 function App() {
   const name = ref('xxx')
@@ -101,7 +101,7 @@ function App() {
       .toMatchInlineSnapshot('"Multiple `vineCustomElement` calls are not allowed inside Vine component function"')
   })
 
-  test('validate vine macro usage (except vineProp)', () => {
+  it('validate vine macro usage (except vineProp)', () => {
     const content = `
 function Box() {
   vineStyle(tailwind\`
@@ -158,7 +158,7 @@ function App() {
     expect(mockCompilerCtx.vineCompileErrors[10].msg).toMatchInlineSnapshot('"`vineOptions` must have one object literal argument"')
   })
 
-  test('validate vineStyle can not be inside a lexical declaration', () => {
+  it('validate vineStyle can not be inside a lexical declaration', () => {
     const content = `
 function App() {
   const style = vineStyle.scoped(\`
@@ -178,7 +178,7 @@ function App() {
       .toMatchInlineSnapshot('"`vineStyle` macro call is not allowed to be inside a variable declaration"')
   })
 
-  test('validate vine component function props', () => {
+  it('validate vine component function props', () => {
     const content = `
   function Valid(p: { 'foo-bar'?: number; x: number; y: number; }) {
     return vine\`<span>x + y = {{ x + y }}</span>\`
@@ -235,7 +235,7 @@ function App() {
       .toMatchInlineSnapshot('"`vineProp.optional` macro call must have a type parameter to specify the prop\'s type"')
   })
 
-  test('validate vineEmits usage', () => {
+  it('validate vineEmits usage', () => {
     const content = `
 function TestComp() {
   const { a } = vineEmits()
@@ -250,7 +250,7 @@ function TestComp() {
       .toMatchInlineSnapshot('"the declaration of macro call must be an identifier"')
   })
 
-  test('validate template invalid top level tags', () => {
+  it('validate template invalid top level tags', () => {
     const content = `
 function TestComp() {
   return vine\`

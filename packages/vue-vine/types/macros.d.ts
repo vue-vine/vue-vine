@@ -3,17 +3,17 @@ import type { Ref } from 'vue'
 declare const __VUE_VINE__: unique symbol
 declare const __VUE_VINE_STYLE__: unique symbol
 
-declare type VueVineComponent = { [__VUE_VINE__]: true }
-declare type VineStyle = { [__VUE_VINE_STYLE__]: true }
+declare interface VueVineComponent { [__VUE_VINE__]: true }
+declare interface VineStyle { [__VUE_VINE_STYLE__]: true }
 
-type IsEmptyObj<T> = keyof T extends never ? true : false;
+type IsEmptyObj<T> = keyof T extends never ? true : false
 
 type VineEmitsDefineSource = Record<string, any[]>
 type VineEmitsDefineResult<D extends VineEmitsDefineSource> = IsEmptyObj<D> extends true
   ? never :
-  {
-    [K in keyof D]: (evt: K, ...args: D[K]) => void
-  }[keyof D]
+    {
+      [K in keyof D]: (evt: K, ...args: D[K]) => void
+    }[keyof D]
 
 type VinePropValidator<T> = (value: T) => boolean
 interface VinePropMacro {
@@ -33,8 +33,8 @@ interface VineOptionsDef {
 }
 
 declare global {
-  const vineProp: VinePropMacro;
-  const vineEmits: <D extends Record<string, any[]> = {}>() => VineEmitsDefineResult<D>
+  const vineProp: VinePropMacro
+  const vineEmits: <D extends Record<string, any[]> = Record<string, any[]>>() => VineEmitsDefineResult<D>
   const vineSlots: <D extends Record<string, (props: any) => any>>() => D
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void

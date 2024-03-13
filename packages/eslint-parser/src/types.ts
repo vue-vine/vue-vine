@@ -9,10 +9,10 @@ export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
 export type VineESLintParserOptions = ParserOptions & {
   // ...To be extended
   parser?:
-  | boolean
-  | string
-  | ParserObject
-  | Record<string, string | ParserObject | undefined>
+    | boolean
+    | string
+    | ParserObject
+    | Record<string, string | ParserObject | undefined>
   ecmaFeatures?: ParserOptions['ecmaFeatures'] & {
     [key: string]: any
   }

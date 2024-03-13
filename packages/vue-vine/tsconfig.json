@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "customConditions": ["dev"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "declaration": true,
     "declarationDir": "dist",
     "emitDeclarationOnly": true,
-    "skipLibCheck": true,
-    "customConditions": ["dev"]
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
     "src",

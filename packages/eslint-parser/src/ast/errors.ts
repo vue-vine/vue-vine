@@ -7,14 +7,14 @@ import type { Location } from './locations'
  */
 function isAcornStyleParseError(
   x: any,
-): x is { message: string; pos: number; loc: Location } {
+): x is { message: string, pos: number, loc: Location } {
   return (
     typeof x.message === 'string'
-        && typeof x.pos === 'number'
-        && typeof x.loc === 'object'
-        && x.loc !== null
-        && typeof x.loc.line === 'number'
-        && typeof x.loc.column === 'number'
+    && typeof x.pos === 'number'
+    && typeof x.loc === 'object'
+    && x.loc !== null
+    && typeof x.loc.line === 'number'
+    && typeof x.loc.column === 'number'
   )
 }
 
@@ -25,14 +25,14 @@ function isAcornStyleParseError(
  */
 function isTSError(
   x: any,
-): x is { message: string; index: number; lineNumber: number; column: number } {
+): x is { message: string, index: number, lineNumber: number, column: number } {
   return (
     !(x instanceof ParseError)
-        && typeof x.message === 'string'
-        && typeof x.index === 'number'
-        && typeof x.lineNumber === 'number'
-        && typeof x.column === 'number'
-        && x.name === 'TSError'
+    && typeof x.message === 'string'
+    && typeof x.index === 'number'
+    && typeof x.lineNumber === 'number'
+    && typeof x.column === 'number'
+    && x.name === 'TSError'
   )
 }
 
@@ -120,10 +120,10 @@ export class ParseError extends SyntaxError {
   public static isParseError(x: any): x is ParseError {
     return (
       x instanceof ParseError
-            || (typeof x.message === 'string'
-                && typeof x.index === 'number'
-                && typeof x.lineNumber === 'number'
-                && typeof x.column === 'number')
+      || (typeof x.message === 'string'
+      && typeof x.index === 'number'
+      && typeof x.lineNumber === 'number'
+      && typeof x.column === 'number')
     )
   }
 }
@@ -133,43 +133,43 @@ export class ParseError extends SyntaxError {
  * https://html.spec.whatwg.org/multipage/parsing.html#parse-errors
  */
 export type ErrorCode =
-    | 'abrupt-closing-of-empty-comment'
-    | 'absence-of-digits-in-numeric-character-reference'
-    | 'cdata-in-html-content'
-    | 'character-reference-outside-unicode-range'
-    | 'control-character-in-input-stream'
-    | 'control-character-reference'
-    | 'eof-before-tag-name'
-    | 'eof-in-cdata'
-    | 'eof-in-comment'
-    | 'eof-in-tag'
-    | 'incorrectly-closed-comment'
-    | 'incorrectly-opened-comment'
-    | 'invalid-first-character-of-tag-name'
-    | 'missing-attribute-value'
-    | 'missing-end-tag-name'
-    | 'missing-semicolon-after-character-reference'
-    | 'missing-whitespace-between-attributes'
-    | 'nested-comment'
-    | 'noncharacter-character-reference'
-    | 'noncharacter-in-input-stream'
-    | 'null-character-reference'
-    | 'surrogate-character-reference'
-    | 'surrogate-in-input-stream'
-    | 'unexpected-character-in-attribute-name'
-    | 'unexpected-character-in-unquoted-attribute-value'
-    | 'unexpected-equals-sign-before-attribute-name'
-    | 'unexpected-null-character'
-    | 'unexpected-question-mark-instead-of-tag-name'
-    | 'unexpected-solidus-in-tag'
-    | 'unknown-named-character-reference'
-    | 'end-tag-with-attributes'
-    | 'duplicate-attribute'
-    | 'end-tag-with-trailing-solidus'
-    | 'non-void-html-element-start-tag-with-trailing-solidus'
-    | 'x-invalid-end-tag'
-    | 'x-invalid-namespace'
-    | 'x-missing-interpolation-end'
+  | 'abrupt-closing-of-empty-comment'
+  | 'absence-of-digits-in-numeric-character-reference'
+  | 'cdata-in-html-content'
+  | 'character-reference-outside-unicode-range'
+  | 'control-character-in-input-stream'
+  | 'control-character-reference'
+  | 'eof-before-tag-name'
+  | 'eof-in-cdata'
+  | 'eof-in-comment'
+  | 'eof-in-tag'
+  | 'incorrectly-closed-comment'
+  | 'incorrectly-opened-comment'
+  | 'invalid-first-character-of-tag-name'
+  | 'missing-attribute-value'
+  | 'missing-end-tag-name'
+  | 'missing-semicolon-after-character-reference'
+  | 'missing-whitespace-between-attributes'
+  | 'nested-comment'
+  | 'noncharacter-character-reference'
+  | 'noncharacter-in-input-stream'
+  | 'null-character-reference'
+  | 'surrogate-character-reference'
+  | 'surrogate-in-input-stream'
+  | 'unexpected-character-in-attribute-name'
+  | 'unexpected-character-in-unquoted-attribute-value'
+  | 'unexpected-equals-sign-before-attribute-name'
+  | 'unexpected-null-character'
+  | 'unexpected-question-mark-instead-of-tag-name'
+  | 'unexpected-solidus-in-tag'
+  | 'unknown-named-character-reference'
+  | 'end-tag-with-attributes'
+  | 'duplicate-attribute'
+  | 'end-tag-with-trailing-solidus'
+  | 'non-void-html-element-start-tag-with-trailing-solidus'
+  | 'x-invalid-end-tag'
+  | 'x-invalid-namespace'
+  | 'x-missing-interpolation-end'
 // ---- Use RAWTEXT state for <script> elements instead ----
 // "eof-in-script-html-comment-like-text" |
 // ---- Use BOGUS_COMMENT state for DOCTYPEs instead ----

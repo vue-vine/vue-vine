@@ -16,7 +16,7 @@ export function fixVineOffset<T extends HasLocation & { type: string }>(
   }
   cache.add(token)
 
-  // The start position of `VTemplateRoot` is correctly set on construction.
+  // The location of `VTemplateRoot` is correctly set on construction.
   if (token.type !== 'VTemplateRoot') {
     // Because the output token position is based on the start of the template,
     // but the final expected token requires accurate offset to the source code!
@@ -35,14 +35,13 @@ export function fixVineOffset<T extends HasLocation & { type: string }>(
         : token.loc.start.column
     )
     token.loc.end.line += templateStartLine - 1
+    token.loc.end.column = (
+      token.loc.end.line === templateStartLine
+        ? templateStartColumn + token.loc.end.column
+        : token.loc.end.column
+    )
+    token.range[1] += templateStartOffset
   }
-
-  token.range[1] += templateStartOffset
-  token.loc.end.column = (
-    token.loc.end.line === templateStartLine
-      ? templateStartColumn + token.loc.end.column
-      : token.loc.end.column
-  )
 }
 
 export type ExtractVineTemplateResult = Array<{
@@ -87,6 +86,7 @@ export function extractForVineTemplate(
           }
           // Not only `ReturnStatement`:
           // The tagged template expression can also be a bare return value in an arrow function.
+          // e.g. () => vine`...`
           else if (parent?.type === TSESTree.AST_NODE_TYPES.ArrowFunctionExpression) {
             // @ts-expect-error `body` will be replaced by our custom AST node.
             parent.body = null
@@ -136,9 +136,9 @@ export function prepareTemplate(
   const templateStartLine = templateRawNode.loc.start.line
   const templateStartColumn = templateRawNode.loc.start.column + 1 // +1 to move over the first quote.
   const templateStartOffset = templateRawNode.range[0] + 1
-  const templateEndOffset = templateRawNode.range[1] - 1
   const templateEndLine = templateRawNode.loc.end.line
   const templateEndColumn = templateRawNode.loc.end.column - 1 // -1 to move over the last quote.
+  const templateEndOffset = templateRawNode.range[1] - 1
   const templateRawContent = templateRawNode.value.raw
 
   return {

@@ -5,7 +5,7 @@ import type { ESLintExtendedProgram, ESLintProgram } from '../ast'
  * e.g. espree
  */
 export interface BasicParserObject<R = ESLintProgram> {
-  parse(code: string, options: any): R
+  parse: (code: string, options: any) => R
   parseForESLint: undefined
 }
 /**
@@ -13,7 +13,7 @@ export interface BasicParserObject<R = ESLintProgram> {
  * e.g. @babel/eslint-parser, @typescript-eslint/parser
  */
 export interface EnhancedParserObject<R = ESLintExtendedProgram> {
-  parseForESLint(code: string, options: any): R
+  parseForESLint: (code: string, options: any) => R
   parse: undefined
 }
 
@@ -21,8 +21,8 @@ export interface EnhancedParserObject<R = ESLintExtendedProgram> {
  * The type of ESLint (custom) parsers.
  */
 export type ParserObject<R1 = ESLintExtendedProgram, R2 = ESLintProgram> =
-    | EnhancedParserObject<R1>
-    | BasicParserObject<R2>
+  | EnhancedParserObject<R1>
+  | BasicParserObject<R2>
 
 export function isParserObject<R1, R2>(
   value: ParserObject<R1, R2> | unknown | undefined | null,

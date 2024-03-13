@@ -2335,4 +2335,5 @@ export const entitySets: EntitySets = [
       'yen': [165],
     },
   },
-  { length: 2, entities: { GT: [62], LT: [60], gt: [62], lt: [60] } }]
+  { length: 2, entities: { GT: [62], LT: [60], gt: [62], lt: [60] } },
+]

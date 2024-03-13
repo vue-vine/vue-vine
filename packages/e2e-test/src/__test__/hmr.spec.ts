@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import type { E2EPlaywrightContext } from '../../utils/test-utils'
 import { createBrowserContext, editFile, freeBrowserContext, getColor, untilUpdated } from '../../utils/test-utils'
 
@@ -27,7 +27,7 @@ describe('hmr', () => {
     }
   }
 
-  test('should update style and preserve state when style is edited', createBrowserCtxEnvironment(async (browserCtx) => {
+  it('should update style and preserve state when style is edited', createBrowserCtxEnvironment(async (browserCtx) => {
     expect(await getColor(browserCtx, 'button.test-btn')).toBe('rgb(0, 0, 0)')
     await untilUpdated(
       () => browserCtx.page!.textContent('.counter'),
@@ -43,7 +43,7 @@ describe('hmr', () => {
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
   }))
 
-  test('should re-render and preserve state when template is edited', createBrowserCtxEnvironment(async (browserCtx) => {
+  it('should re-render and preserve state when template is edited', createBrowserCtxEnvironment(async (browserCtx) => {
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
@@ -52,7 +52,7 @@ describe('hmr', () => {
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
   }))
 
-  test('should re-render and preserve state after element tag has changed', createBrowserCtxEnvironment(async (browserCtx) => {
+  it('should re-render and preserve state after element tag has changed', createBrowserCtxEnvironment(async (browserCtx) => {
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
@@ -60,13 +60,12 @@ describe('hmr', () => {
       code.replace(
         '<div class="name">{{name}}</div>',
         '<span class="name">{{name}}</span>',
-      ),
-    )
+      ))
     await untilUpdated(() => browserCtx.page!.textContent('span.name'), 'vine')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
   }))
 
-  test('should reload and reset state when script is edited', createBrowserCtxEnvironment(async (browserCtx) => {
+  it('should reload and reset state when script is edited', createBrowserCtxEnvironment(async (browserCtx) => {
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')

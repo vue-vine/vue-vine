@@ -36,15 +36,15 @@ function fallbackKeysFilter(this: any, key: string): boolean {
   let value = null
   return (
     key !== 'comments'
-        && key !== 'leadingComments'
-        && key !== 'loc'
-        && key !== 'parent'
-        && key !== 'range'
-        && key !== 'tokens'
-        && key !== 'trailingComments'
-        && (value = this[key]) !== null
-        && typeof value === 'object'
-        && (typeof value.type === 'string' || Array.isArray(value))
+    && key !== 'leadingComments'
+    && key !== 'loc'
+    && key !== 'parent'
+    && key !== 'range'
+    && key !== 'tokens'
+    && key !== 'trailingComments'
+    && (value = this[key]) !== null
+    && typeof value === 'object'
+    && (typeof value.type === 'string' || Array.isArray(value))
   )
 }
 
@@ -104,8 +104,8 @@ function traverse(node: Node, parent: Node | null, visitor: Visitor): void {
 
 export interface Visitor {
   visitorKeys?: VisitorKeys
-  enterNode(node: Node, parent: Node | null): void
-  leaveNode(node: Node, parent: Node | null): void
+  enterNode: (node: Node, parent: Node | null) => void
+  leaveNode: (node: Node, parent: Node | null) => void
 }
 
 /**

@@ -51,9 +51,9 @@ function getStandardDirectiveKind(
   }
   else if (
     directiveName === 'slot'
-      || directiveName === 'slot-scope'
-      || (directiveName === 'scope'
-          && element.rawName === 'template')
+    || directiveName === 'slot-scope'
+    || (directiveName === 'scope'
+    && element.rawName === 'template')
   ) {
     return 'slot'
   }
@@ -97,11 +97,11 @@ function parseAttributeValue(
   )
 
   let result: ExpressionParseResult<
-      | ESLintExpression
-      | VFilterSequenceExpression
-      | VForExpression
-      | VOnExpression
-      | VSlotScopeExpression
+    | ESLintExpression
+    | VFilterSequenceExpression
+    | VForExpression
+    | VOnExpression
+    | VSlotScopeExpression
   >
   if (quoted && node.value === '') {
     result = {
@@ -287,7 +287,7 @@ function parseDirectiveKeyStatically(
   // v-bind.prop shorthand
   if (
     directiveKey.name.rawName === '.'
-      && !directiveKey.modifiers.some(isPropModifier)
+    && !directiveKey.modifiers.some(isPropModifier)
   ) {
     const pos
           = (directiveKey.argument || directiveKey.name).range[1] - offset
@@ -385,9 +385,9 @@ function convertDynamicArgument(
   if (
     !(
       argument != null
-          && argument.type === 'VIdentifier'
-          && argument.name.startsWith('[')
-          && argument.name.endsWith(']')
+      && argument.type === 'VIdentifier'
+      && argument.name.startsWith('[')
+      && argument.name.endsWith(']')
     )
   ) {
     return
