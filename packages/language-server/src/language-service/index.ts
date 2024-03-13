@@ -1,13 +1,13 @@
 import {
-  buildMappings,
-  forEachEmbeddedCode,
-  replaceAll,
-  toString,
   type CodeInformation,
   type LanguagePlugin,
   type Segment,
   type VirtualCode,
-  type VueCompilerOptions
+  type VueCompilerOptions,
+  buildMappings,
+  forEachEmbeddedCode,
+  replaceAll,
+  toString,
 } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/lib/generators/template'
 import { turnBackToCRLF } from 'src/utils'
@@ -31,11 +31,11 @@ export function createVueVineLanguagePlugin(
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
 ): LanguagePlugin {
-  let globalTypesHolder: string | undefined;
+  let globalTypesHolder: string | undefined
   return {
     createVirtualCode(id, langaugeId, snapshot) {
       if (id.endsWith('.vine.ts') && langaugeId === 'typescript') {
-        globalTypesHolder ??= id;
+        globalTypesHolder ??= id
         return createVueVineCode(ts, id, snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === id)
       }
     },
@@ -70,17 +70,17 @@ function createVueVineCode(
   const content = snapshot.getText(0, snapshot.getLength())
 
   const vineFileCtx = createVineFileCtx(sourceFileName, content)
-  const tsCodeSegments: Segment<CodeInformation>[] = [];
+  const tsCodeSegments: Segment<CodeInformation>[] = []
 
-  let currentOffset = 0;
+  let currentOffset = 0
 
   for (const vineCompFn of vineFileCtx.vineCompFns) {
     if (!vineCompFn.templateStringNode || !vineCompFn.templateReturn) {
       continue
     }
-    generateScriptUntil(vineCompFn.templateReturn.start!);
+    generateScriptUntil(vineCompFn.templateReturn.start!)
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
-      tsCodeSegments.push('\n{\n');
+      tsCodeSegments.push('\n{\n')
       for (const [type, segment] of generateTemplate(
         ts,
         compilerOptions,
@@ -103,13 +103,13 @@ function createVueVineCode(
         false,
         undefined,
         undefined,
-        false
+        false,
       )) {
         if (type !== 'ts') {
-          continue;
+          continue
         }
         if (typeof segment === 'string') {
-          tsCodeSegments.push(segment);
+          tsCodeSegments.push(segment)
         }
         else if (segment[1] === 'template') {
           tsCodeSegments.push([
@@ -117,31 +117,31 @@ function createVueVineCode(
             undefined,
             segment[2] + quasi.start!,
             segment[3],
-          ]);
+          ])
         }
         else {
           tsCodeSegments.push(segment[0])
         }
       }
-      tsCodeSegments.push('\n}\n');
+      tsCodeSegments.push('\n}\n')
     }
-    generateScriptUntil(vineCompFn.templateStringNode.quasi.start!);
+    generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
     // clear the template string
-    tsCodeSegments.push('``');
-    currentOffset = vineCompFn.templateStringNode.quasi.end!;
+    tsCodeSegments.push('``')
+    currentOffset = vineCompFn.templateStringNode.quasi.end!
   }
-  generateScriptUntil(snapshot.getLength());
+  generateScriptUntil(snapshot.getLength())
 
-  replaceAll(tsCodeSegments, /__VLS_ctx\./g, ''); // TODO: replace __VLS_ctx.xxx with _unref(xxx)
-  replaceAll(tsCodeSegments, /__VLS_components\./g, '');
+  replaceAll(tsCodeSegments, /__VLS_ctx\./g, '') // TODO: replace __VLS_ctx.xxx with _unref(xxx)
+  replaceAll(tsCodeSegments, /__VLS_components\./g, '')
 
   if (withGlobalTypes) {
     tsCodeSegments.push(generateGlobalHelperTypes(vueCompilerOptions))
   }
 
-  const tsCode = toString(tsCodeSegments);
-  const tsCodeMappings = buildMappings(tsCodeSegments);
+  const tsCode = toString(tsCodeSegments)
+  const tsCodeMappings = buildMappings(tsCodeSegments)
 
   return {
     id: 'root',
@@ -154,7 +154,7 @@ function createVueVineCode(
         return tsCode.substring(start, end)
       },
       getChangeRange() {
-        return undefined;
+        return undefined
       },
     },
     mappings: tsCodeMappings,
@@ -170,8 +170,8 @@ function createVueVineCode(
       undefined,
       currentOffset,
       FULL_FEATURES,
-    ]);
-    currentOffset = targetOffset;
+    ])
+    currentOffset = targetOffset
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {

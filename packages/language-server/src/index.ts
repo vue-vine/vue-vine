@@ -3,15 +3,16 @@ import {
   createServer,
   createTypeScriptProjectProviderFactory,
   loadTsdkByPath,
-} from '@volar/language-server/node';
-import type * as ts from 'typescript';
-import { create as createCssService } from 'volar-service-css';
-import { create as createEmmetService } from 'volar-service-emmet';
-import { create as createHtmlService } from 'volar-service-html';
-import { create as createTypeScriptService } from 'volar-service-typescript';
+} from '@volar/language-server/node'
+import type * as ts from 'typescript'
+import { create as createCssService } from 'volar-service-css'
+import { create as createEmmetService } from 'volar-service-emmet'
+import { create as createHtmlService } from 'volar-service-html'
+import { create as createTypeScriptService } from 'volar-service-typescript'
 
-import { VueCompilerOptions, createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core';
-import { createVueVineLanguagePlugin } from './language-service';
+import type { VueCompilerOptions } from '@vue/language-core'
+import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
+import { createVueVineLanguagePlugin } from './language-service'
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -32,15 +33,15 @@ connection.onInitialize((params) => {
     ),
     {
       getLanguagePlugins(env, projectContext) {
-        let compilerOptions: ts.CompilerOptions = {};
-        let vueCompilerOptions: VueCompilerOptions;
+        let compilerOptions: ts.CompilerOptions = {}
+        let vueCompilerOptions: VueCompilerOptions
         if (projectContext.typescript?.configFileName) {
-          const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, projectContext.typescript.configFileName);
-          vueCompilerOptions = resolveVueCompilerOptions(vueOptions);
-          compilerOptions = options;
+          const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, projectContext.typescript.configFileName)
+          vueCompilerOptions = resolveVueCompilerOptions(vueOptions)
+          compilerOptions = options
         }
         else {
-          vueCompilerOptions = resolveVueCompilerOptions({});
+          vueCompilerOptions = resolveVueCompilerOptions({})
         }
         return [createVueVineLanguagePlugin(tsdk.typescript, compilerOptions, vueCompilerOptions)]
       },
