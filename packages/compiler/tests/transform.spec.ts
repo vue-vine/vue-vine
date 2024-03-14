@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { format } from 'prettier'
-import { compileVineTypeScriptFile } from '../index'
+import { compileVineTypeScriptFile } from '../src/index'
 import { createMockTransformCtx } from './shared-utils'
 
 const testContent = `

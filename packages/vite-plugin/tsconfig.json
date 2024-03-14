@@ -1,25 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "customConditions": ["dev"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "declaration": true,
-    "declarationDir": "dist",
-    "emitDeclarationOnly": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  },
+  "extends": "../../tsconfig.json",
   "include": [
     "src",
-    "test",
-    "index.ts",
     "../../types/shims.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
   ]
 }

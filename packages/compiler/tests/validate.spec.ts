@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compileVineTypeScriptFile } from '../index'
+import { compileVineTypeScriptFile } from '../src/index'
 import { createMockTransformCtx } from './shared-utils'
 
 describe('test Vine compiler validate', () => {

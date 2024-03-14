@@ -53,7 +53,7 @@ pnpm install
 pnpm run build
 
 # Start watching the VSCode extension's building
-pnpm run ext:dev
+pnpm run dev:ext
 ```
 
 After building the VSCode extension, you can open the 'Debug' tab in VSCode, and start the **'Run Vine Extension'** debug session.
