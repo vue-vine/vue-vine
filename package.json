@@ -8,8 +8,7 @@
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "dev": "esno scripts/run-dev.js",
-    "build:base": "pnpm build:compiler && pnpm build:ls",
-    "build": "pnpm build:base && pnpm build:vite && pnpm build:main && pnpm build:eslint-parser && pnpm build:ls && pnpm build:ext",
+    "build": "pnpm build:compiler && pnpm build:ls && pnpm build:vite && pnpm build:main && pnpm build:eslint-parser && pnpm build:ls && pnpm build:ext",
     "dev:compiler": "cross-env NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
     "dev:vite": "cross-env NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
     "dev:main": "cross-env NODE_ENV=development pnpm --filter vue-vine run dev",
