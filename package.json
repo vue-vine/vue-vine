@@ -13,6 +13,7 @@
     "dev:compiler": "cross-env NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
     "dev:vite": "cross-env NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
     "dev:main": "cross-env NODE_ENV=development pnpm --filter vue-vine run dev",
+    "dev:ls": "cross-env NODE_ENV=production pnpm --filter @vue-vine/language-server run dev",
     "dev:ext": "cross-env NODE_ENV=development esno scripts/ext-dev.js",
     "build:compiler": "cross-env NODE_ENV=production pnpm --filter @vue-vine/compiler run build",
     "build:vite": "cross-env NODE_ENV=production pnpm --filter @vue-vine/vite-plugin run build",
@@ -36,7 +37,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.1",
-    "@antfu/ni": "^0.21.12",
     "@baiwusanyu/utils-log": "^1.0.15",
     "@changesets/cli": "^2.26.2",
     "@types/node": "^20.11.27",

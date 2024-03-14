@@ -14,9 +14,6 @@ importers:
       '@antfu/eslint-config':
         specifier: ^2.8.1
         version: 2.8.1(@vue/compiler-sfc@3.3.4)(eslint@8.57.0)(typescript@5.2.2)(vitest@1.3.1)
-      '@antfu/ni':
-        specifier: ^0.21.12
-        version: 0.21.12
       '@baiwusanyu/utils-log':
         specifier: ^1.0.15
         version: 1.0.16(ansi-colors@4.1.3)
@@ -624,11 +621,6 @@ packages:
     resolution: {integrity: sha512-A3zWY9VeTPnxlMiZtsGHw2lSd3ghwvL8s9RiGOtqvDxhhFfZ781ynsGBa/iUnDJ5zBrmTFQrJDud3TGgRISaxw==}
     dependencies:
       execa: 8.0.1
-    dev: true
-
-  /@antfu/ni@0.21.12:
-    resolution: {integrity: sha512-2aDL3WUv8hMJb2L3r/PIQWsTLyq7RQr3v9xD16fiz6O8ys1xEyLhhTOv8gxtZvJiTzjTF5pHoArvRdesGL1DMQ==}
-    hasBin: true
     dev: true
 
   /@antfu/utils@0.7.5:

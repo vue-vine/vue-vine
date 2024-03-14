@@ -6,9 +6,9 @@ async function runExtScript() {
     + '-p "  {name}  " '
     + '-n "COMPILER,BUILD:EXT,LSP" '
     + '-c "bgGreen.bold,bgBlue.bold,bgMagenta.bold" '
-    + '"nr build:compiler" '
-    + '"sleep 6 && pnpm --filter vue-vine-extension run dev" '
-    + '"sleep 12 && pnpm --filter @vue-vine/language-server run dev" '
+    + '"pnpm run build:compiler" '
+    + '"sleep 6 && pnpm run dev:ext" '
+    + '"sleep 12 && pnpm run dev:ls" '
 
   // set log prefix
   setGlobalPrefix('[vue-vine]: ')

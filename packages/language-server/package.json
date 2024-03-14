@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "prepublishOnly": "nr build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@volar/language-core": "~2.1.2",
