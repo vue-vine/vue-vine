@@ -22,7 +22,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
+    "dev": "tsup -w",
     "build": "tsup"
   },
   "dependencies": {
