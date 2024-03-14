@@ -1,5 +1,6 @@
 {
   "prettier.enable": false,
   "cSpell.enabled": false,
-  "testing.automaticallyOpenPeekView": "never"
+  "testing.automaticallyOpenPeekView": "never",
+  "eslint.experimental.useFlatConfig": true
 }
