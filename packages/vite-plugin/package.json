@@ -31,8 +31,6 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.1",
     "@types/hash-sum": "^1.0.0"
   },
   "publishConfig": {
