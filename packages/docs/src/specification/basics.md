@@ -63,7 +63,7 @@ function MyComponent(props: {
 
   return vine`
     <div :data-test-id="testId">
-      <button>Pick</button>
+      <button @click="randomPick">Pick</button>
       <div>{{ num }}</div>
     </div>
   `
