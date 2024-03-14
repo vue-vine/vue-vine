@@ -10,20 +10,18 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     }
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "rollup -w -c ./rollup.config.mjs",
-    "build": "rollup -c ./rollup.config.mjs",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "test": "vitest"
   },
   "peerDependencies": {
@@ -35,12 +33,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
-    "@types/hash-sum": "^1.0.0",
-    "rollup": "^3.28.1",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "vite": "^4.4.9",
-    "vitest": "^0.31.4",
-    "vue": "^3.3.4"
+    "@types/hash-sum": "^1.0.0"
   },
   "publishConfig": {
     "access": "public",

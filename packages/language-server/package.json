@@ -31,7 +31,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup src/index.ts",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "prepublishOnly": "nr build"
   },
   "dependencies": {
@@ -47,7 +48,6 @@
     "volar-service-typescript": "0.0.31-patch.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.25",
-    "tsup": "^8.0.2"
+    "@types/node": "^20.11.25"
   }
 }

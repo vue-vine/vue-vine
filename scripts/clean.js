@@ -1,7 +1,7 @@
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { deleteAsync } from 'del'
 
-const OUTPUT_NODE_MODULES = ['packages/**/dist', 'packages/**/tsconfig.tsbuildinfo', 'packages/**/out']
+const OUTPUT_NODE_MODULES = ['packages/**/dist']
 async function doCleanOutput() {
   // set log prefix
   setGlobalPrefix('[vue-vine]: ')

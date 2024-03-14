@@ -14,7 +14,7 @@
   "include": [
     "src",
     "tests",
-    "index.ts",
+    "src/index.ts",
     "../../types/shims.d.ts"
   ],
   "exclude": [

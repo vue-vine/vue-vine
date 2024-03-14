@@ -7,15 +7,13 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
-      "types": "./dist/vite/index.d.ts",
-      "import": "./dist/vite/index.mjs",
-      "require": "./dist/vite/index.js"
+      "import": "./dist/vite.mjs",
+      "require": "./dist/vite.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"
@@ -26,19 +24,12 @@
     "types"
   ],
   "scripts": {
-    "dev": "rimraf dist && rollup -w -c ./rollup.config.mjs",
-    "build": "rimraf dist && rollup -c ./rollup.config.mjs"
+    "dev": "tsup --watch",
+    "build": "tsup"
   },
   "dependencies": {
     "@vue-vine/vite-plugin": "workspace:*",
-    "@vueuse/core": "^10.4.1",
-    "vue": "^3.3.4"
-  },
-  "devDependencies": {
-    "rollup": "^3.28.1",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "typescript": "^5.2.2"
+    "@vueuse/core": "^10.4.1"
   },
   "publishConfig": {
     "access": "public",

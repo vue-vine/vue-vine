@@ -53,7 +53,7 @@ pnpm install
 pnpm run build
 
 # 开启 VSCode 插件的构建监听
-pnpm run ext:dev
+pnpm run dev:ext
 ```
 
 在构建完 VSCode 插件后，你可以在 VSCode 的 'Debug' 选项卡中找到 'Rune Vine Extension' 的配置项，然后点击运行。
