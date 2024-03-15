@@ -14,7 +14,8 @@ export function compileVineTemplate(
   params: Partial<CompilerOptions>,
 ) {
   return compile(source, {
-    mode: 'module',
+    // TODO: this option break virtual code mapping
+    // mode: 'module',
     hoistStatic: true,
     cacheHandlers: true,
     inline: true,
