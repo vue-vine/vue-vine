@@ -43,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
   console.log('Vine language server started')
 
   // support for auto close tag
-  activateAutoInsertion('vue-vine', client)
+  activateAutoInsertion(['typescript'], client)
 
   const labsInfo = createLabsInfo(serverProtocol)
   labsInfo.addLanguageClient(client)
