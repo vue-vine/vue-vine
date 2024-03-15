@@ -133,7 +133,11 @@ function createVueVineCode(
   }
   generateScriptUntil(snapshot.getLength())
 
-  replaceAll(tsCodeSegments, /__VLS_ctx\./g, '') // TODO: replace __VLS_ctx.xxx with _unref(xxx)
+  // replace __VLS_ctx.foo with (await import('vue').unref(foo))
+  replaceAll(tsCodeSegments, /(?<=__VLS_ctx\.\w+\b)/g, ')')
+  replaceAll(tsCodeSegments, /(__VLS_ctx\.)/g, `(await import('vue')).unref(`)
+
+  // replace __VLS_components.foo with foo
   replaceAll(tsCodeSegments, /__VLS_components\./g, '')
 
   if (withGlobalTypes) {
