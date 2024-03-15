@@ -133,6 +133,10 @@ function createVueVineCode(
   }
   generateScriptUntil(snapshot.getLength())
 
+  // replace typeof __VLS_ctx.foo with import('vue').UnwrapRef(typeof foo)
+  replaceAll(tsCodeSegments, /(?<=typeof __VLS_ctx\.\w+\b)/g, '>')
+  replaceAll(tsCodeSegments, /(typeof __VLS_ctx\.)/g, `import('vue').UnwrapRef<typeof `)
+
   // replace __VLS_ctx.foo with (await import('vue').unref(foo))
   replaceAll(tsCodeSegments, /(?<=__VLS_ctx\.\w+\b)/g, ')')
   replaceAll(tsCodeSegments, /(__VLS_ctx\.)/g, `(await import('vue')).unref(`)
