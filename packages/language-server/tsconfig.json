@@ -1,24 +1,4 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "target": "ES2021",
-    "lib": ["ES2021"],
-    "baseUrl": "./",
-    "rootDir": "src",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "types": ["node"],
-    "strict": true,
-    "alwaysStrict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "declaration": true,
-    "outDir": "out",
-    "sourceMap": true,
-    "skipLibCheck": true
-  },
-  "include": [
-    "src"
-  ]
+  "extends": "../../tsconfig.json",
+  "include": ["src"]
 }

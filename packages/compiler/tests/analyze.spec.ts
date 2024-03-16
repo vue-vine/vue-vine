@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compileVineTypeScriptFile } from '../index'
+import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
 import { createMockTransformCtx } from './shared-utils'
 
@@ -299,9 +299,9 @@ function MyComp() {
     compileVineTypeScriptFile(content, 'testReferenceLocallyDeclaredVariables', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"Cannot reference \\"val1\\" locally declared variables because it will be hoisted outside of the setup() function."')
+      .toMatchInlineSnapshot(`"Cannot reference "val1" locally declared variables because it will be hoisted outside of the setup() function."`)
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
-      .toMatchInlineSnapshot('"Cannot reference \\"val2\\" locally declared variables because it will be hoisted outside of the setup() function."')
+      .toMatchInlineSnapshot(`"Cannot reference "val2" locally declared variables because it will be hoisted outside of the setup() function."`)
   })
 })
 

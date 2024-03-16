@@ -2,8 +2,8 @@ import type {
   ParseForESLintResult,
   VineESLintAST,
   VineESLintParserOptions,
-} from './src/types'
-import { runParse } from './src/parse'
+} from './types'
+import { runParse } from './parse'
 
 export function parse(
   code: string,

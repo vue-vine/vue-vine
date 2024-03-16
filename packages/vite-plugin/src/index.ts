@@ -12,10 +12,10 @@ import type {
   VineFileCtx,
   VineProcessorLang,
 } from '@vue-vine/compiler'
-import type { VineQuery } from './src/parse-query'
-import { parseQuery } from './src/parse-query'
-import { vineHMR } from './src/hot-update'
-import { QUERY_TYPE_STYLE } from './src/constants'
+import type { VineQuery } from './parse-query'
+import { parseQuery } from './parse-query'
+import { vineHMR } from './hot-update'
+import { QUERY_TYPE_STYLE } from './constants'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx({

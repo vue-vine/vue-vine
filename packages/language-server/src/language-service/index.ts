@@ -10,8 +10,8 @@ import {
   toString,
 } from '@vue/language-core'
 import { generate as generateTemplate } from '@vue/language-core/lib/generators/template'
-import { turnBackToCRLF } from 'src/utils'
 import type * as ts from 'typescript'
+import { turnBackToCRLF } from '../utils'
 import { generateGlobalHelperTypes } from './globalTypes'
 import { createVineFileCtx } from './vine-ctx'
 
