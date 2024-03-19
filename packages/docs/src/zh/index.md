@@ -17,10 +17,12 @@ hero:
       link: ./introduction/why
 
 features:
-  - title: 函数式组件，但不是 JSX
-    details: 现在你可以在一个文件中写多个组件，享受所有你喜欢的模板特性。
+  - title: 使用函数和模板定义组件
+    details: 现在你可以在一个文件中写多个组件，同时可以使用所有 Vue 的模板特性。
+  - title: 更聚合的类型上下文
+    details: Vine 始终使用 TypeScript 文件，让用户可以更直接地访问类型上下文。
   - title: 更加简明的宏 API
-    details: 继承了 Vue 的宏机制，简洁易用，更少的心智负担。
+    details: 继承和精简了 Vue 提供的宏机制，简洁易用，尽可能减少心智负担。
 ---
 
 <Recommend />
