@@ -43,7 +43,9 @@ export default defineConfig(
     },
     {
       ...base,
-      entry: ['src/typescript-plugin.ts'],
+      entry: {
+        index: 'src/typescript-plugin.ts',
+      },
       outDir: './node_modules/@vue-vine/typescript-plugin',
     },
   ],
