@@ -1,7 +1,7 @@
 {
-  "name": "@vue-vine/language-server",
+  "name": "@vue-vine/language-service",
   "version": "0.0.0",
-  "author": "Ray <i@mk1.io> (@so1ve)",
+  "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
   "repository": {
@@ -21,9 +21,6 @@
       ]
     }
   },
-  "bin": {
-    "vue-vine-language-server": "./bin/vue-vine-language-server.js"
-  },
   "files": [
     "dist"
   ],
@@ -36,17 +33,9 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-core": "~2.1.2",
     "@volar/language-server": "~2.1.2",
-    "@volar/language-service": "~2.1.2",
     "@vue-vine/compiler": "workspace:*",
-    "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "^2.0.6",
-    "@vue/language-service": "^2.0.6",
-    "volar-service-css": "0.0.31",
-    "volar-service-emmet": "0.0.31",
-    "volar-service-html": "0.0.31",
-    "volar-service-typescript": "0.0.31-patch.1"
+    "@vue/language-core": "^2.0.6"
   },
   "devDependencies": {
     "@types/node": "^20.11.25"

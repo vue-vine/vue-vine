@@ -12,7 +12,7 @@ import { create as createTypeScriptService } from 'volar-service-typescript'
 
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
-import { createVueVineLanguagePlugin } from './language-service'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 
 const connection = createConnection()
 const server = createServer(connection)

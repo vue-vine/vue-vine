@@ -63,6 +63,13 @@
         "scopeName": "source.vine-vue-template",
         "path": "./syntaxes/vine-vue-template.json"
       }
+    ],
+    "typescriptServerPlugins": [
+      {
+        "name": "@vue-vine/typescript-plugin",
+        "enableForWorkspaceTypeScriptVersions": true,
+        "configNamespace": "typescript"
+      }
     ]
   },
   "scripts": {
@@ -73,15 +80,18 @@
     "lint": "eslint src --ext ts"
   },
   "dependencies": {
-    "@vue-vine/language-server": "workspace:*"
+    "@vue-vine/language-server": "workspace:*",
+    "@vue-vine/language-service": "workspace:*"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@types/vscode": "1.85.0",
     "@volar/language-server": "~2.1.2",
+    "@volar/typescript": "~2.1.2",
     "@volar/vscode": "~2.1.2",
     "@vscode/vsce": "latest",
+    "@vue/language-core": "^2.0.6",
     "vscode-languageclient": "^9.0.1"
   }
 }
