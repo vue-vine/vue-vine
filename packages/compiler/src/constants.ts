@@ -4,6 +4,7 @@ export const DEFINE_COMPONENT_HELPER = 'defineComponent'
 export const USE_DEFAULTS_HELPER = 'useDefaults'
 export const TO_REFS_HELPER = 'toRefs'
 export const CSS_VARS_HELPER = 'useCssVars'
+export const USE_SLOT_HELPER = 'useSlots'
 export const UN_REF_HELPER = 'unref'
 export const BARE_CALL_MACROS = [
   'vineExpose',

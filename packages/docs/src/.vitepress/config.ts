@@ -16,7 +16,7 @@ export default defineConfig({
     ['link', { rel: 'shortcut icon', href: '/favicons/favicon.ico' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
   ],
   lang: 'en-US',
   themeConfig: {
@@ -59,10 +59,10 @@ export default defineConfig({
         {
           text: '定义说明',
           items: [
-            { text: '基础', link: '/zh/specification/basics' },
+            { text: '总览', link: '/zh/specification/overview' },
+            { text: '注意事项', link: '/zh/specification/caveats' },
             { text: 'Props', link: '/zh/specification/props' },
             { text: '宏', link: '/zh/specification/macros' },
-            { text: '注意事项', link: '/zh/specification/caveats' },
           ],
         },
       ],
@@ -77,10 +77,10 @@ export default defineConfig({
         {
           text: 'Specification',
           items: [
-            { text: 'Basics', link: '/specification/basics' },
+            { text: 'Overview', link: '/specification/overview' },
+            { text: 'Caveats', link: '/specification/caveats' },
             { text: 'Props', link: '/specification/props' },
             { text: 'Macros', link: '/specification/macros' },
-            { text: 'Caveats', link: '/specification/caveats' },
           ],
         },
       ],

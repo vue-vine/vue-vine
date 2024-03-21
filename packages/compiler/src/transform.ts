@@ -15,6 +15,7 @@ import {
   TO_REFS_HELPER,
   UN_REF_HELPER,
   USE_DEFAULTS_HELPER,
+  USE_SLOT_HELPER,
 } from './constants'
 import { sortStyleImport } from './style/order'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
@@ -127,6 +128,7 @@ export function transformFile(
       mergedImportsMap,
       bindingMetadata: vineCompFnCtx.bindings,
     })
+    const isNeedUseDefaults = Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.default))
 
     // Add `defineComponent` helper function import specifier
     let vueImportsMeta = mergedImportsMap.get('vue')
@@ -146,12 +148,17 @@ export function transformFile(
       vueImportsSpecs.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
       inline && vueImportsSpecs.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
     }
+    // add useSlots
+    if (Object.entries(vineCompFnCtx.slots).length > 0) {
+      vueImportsSpecs.set(USE_SLOT_HELPER, `_${USE_SLOT_HELPER}`)
+    }
 
     const vineCompFnStart = vineCompFnCtx.fnDeclNode.start!
     const vineCompFnEnd = vineCompFnCtx.fnDeclNode.end!
     const vineCompFnBody = vineCompFnCtx.fnItselfNode!.body
     if (isBlockStatement(vineCompFnBody)) {
       let hasAwait = false
+
       for (const vineFnBodyStmt of vineCompFnBody.body) {
         const isContained = mayContainAwaitExpr(vineFnBodyStmt)
         if (!isContained) {
@@ -228,7 +235,15 @@ export function transformFile(
           .map(([propName, _]) => propName)
         ms.prependLeft(
           firstStmt.start!,
-          `const { ${propsFromMacro.join(', ')} } = _toRefs(__props);\n`,
+          `const { ${propsFromMacro.join(', ')} } = _toRefs(${vineCompFnCtx.propsAlias});\n`,
+        )
+      }
+
+      // vineSlots
+      if (Object.entries(vineCompFnCtx.slots).length > 0) {
+        ms.prependLeft(
+          firstStmt.start!,
+          `const ${vineCompFnCtx.slotsAlias} = _${USE_SLOT_HELPER}();\n`,
         )
       }
 
@@ -246,7 +261,7 @@ export function transformFile(
       // And prepend `const __props = useDefaults(...)` before the first statement.
       let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;`
       if (
-        Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.default))
+        isNeedUseDefaults
         && !isPrependedUseDefaults
       ) {
         isPrependedUseDefaults = true

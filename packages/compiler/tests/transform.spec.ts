@@ -18,6 +18,15 @@ function MyProfile() {
     // ...
   }
 
+  const mySlots = vineSlots<{
+    default(props: { msg: string }): any
+  }>()
+
+  vineExpose({
+    age,
+    bio,
+  })
+
   vineStyle(\`
     .my-profile {
       padding: 10px;

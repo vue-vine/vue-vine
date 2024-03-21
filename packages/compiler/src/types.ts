@@ -156,6 +156,7 @@ export interface VineCompFnCtx {
   slots: Record<string, {
     props: TSTypeLiteral
   }>
+  slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
 }

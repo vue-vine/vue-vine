@@ -599,9 +599,12 @@ const analyzeVineSlots: AnalyzeRunner = (
 ) => {
   // Find if there's any `vineSlots` macro call exists
   let vineSlotsMacroCall: CallExpression | undefined
-  _breakableTraverse(fnItselfNode, (node) => {
+  let parentVarDecl: VariableDeclarator | undefined
+  _breakableTraverse(fnItselfNode, (node, parent) => {
     if (isVineMacroOf('vineSlots')(node)) {
       vineSlotsMacroCall = node
+      const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
+      parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
       throw exitTraverse
     }
   })
@@ -639,6 +642,11 @@ const analyzeVineSlots: AnalyzeRunner = (
         props: fnFirstParamType,
       }
     }
+  }
+
+  // find slots alias
+  if (parentVarDecl && isIdentifier(parentVarDecl.id)) {
+    vineCompFnCtx.slotsAlias = parentVarDecl.id.name
   }
 }
 
@@ -756,6 +764,7 @@ function buildVineCompFnCtx(
     props: {},
     emits: [],
     slots: {},
+    slotsAlias: 'slots',
     bindings: {},
     cssBindings: {},
     hoistSetupStmts: [],

@@ -12,11 +12,12 @@
   );
   --vp-home-hero-image-filter: blur(56px);
 
-  --vine-bold-text-color: #38a179;
+  --vine-bold-text-color: var(--vp-c-brand-1);
 }
 
 body, html {
-  font-family: Space Grotesk,
+  font-family:
+    Figtree,
     -apple-system,
     BlinkMacSystemFont,
     avenir next,avenir,

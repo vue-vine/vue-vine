@@ -17,8 +17,10 @@ hero:
       link: /introduction/why
 
 features:
-  - title: Function component, but no JSX
-    details: Now you can write multiple components in one file, with all template features you love.
+  - title: Function component with template
+    details: Now you can write multiple components in one file, with all template features you love in Vue.js.
+  - title: More uniform and intuitive type context
+    details: Vine use TypeScript file everywhere so that type context would flow more naturally.
   - title: Simple and intuitive macro API
     details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
