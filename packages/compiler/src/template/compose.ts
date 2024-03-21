@@ -14,8 +14,7 @@ export function compileVineTemplate(
   params: Partial<CompilerOptions>,
 ) {
   return compile(source, {
-    // TODO: this option break virtual code mapping
-    // mode: 'module',
+    mode: 'module',
     hoistStatic: true,
     cacheHandlers: true,
     inline: true,
@@ -182,6 +181,7 @@ export function createSeparatedTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
+          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
           bindingMetadata,
           inline: false,
@@ -332,6 +332,7 @@ export function createInlineTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
+          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           bindingMetadata,
           onError: (e) => {

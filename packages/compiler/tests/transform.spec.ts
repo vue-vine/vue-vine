@@ -79,7 +79,7 @@ describe('test transform', () => {
 
   it('not output HMR content in non-dev mode', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
-      mode: 'production',
+      envMode: 'production',
     })
     compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)

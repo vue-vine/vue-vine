@@ -862,6 +862,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
           "children": [
             {
               "content": {
+                "ast": null,
                 "constType": 0,
                 "content": "__props.title",
                 "isStatic": false,
@@ -899,6 +900,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
           "codegenNode": {
             "children": {
               "content": {
+                "ast": null,
                 "constType": 0,
                 "content": "__props.title",
                 "isStatic": false,
@@ -955,7 +957,6 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
             "tag": ""h1"",
             "type": 13,
           },
-          "isSelfClosing": false,
           "loc": {
             "end": {
               "column": 27,
@@ -1025,6 +1026,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
             "children": [
               {
                 "content": {
+                  "ast": null,
                   "constType": 0,
                   "content": "__props.title",
                   "isStatic": false,
@@ -1062,6 +1064,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
             "codegenNode": {
               "children": {
                 "content": {
+                  "ast": null,
                   "constType": 0,
                   "content": "__props.title",
                   "isStatic": false,
@@ -1118,7 +1121,6 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
               "tag": ""h1"",
               "type": 13,
             },
-            "isSelfClosing": false,
             "loc": {
               "end": {
                 "column": 27,
@@ -1208,7 +1210,6 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
         "tag": ""div"",
         "type": 13,
       },
-      "isSelfClosing": false,
       "loc": {
         "end": {
           "column": 11,
@@ -1238,6 +1239,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
         "children": [
           {
             "content": {
+              "ast": null,
               "constType": 0,
               "content": "__props.title",
               "isStatic": false,
@@ -1275,6 +1277,7 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
         "codegenNode": {
           "children": {
             "content": {
+              "ast": null,
               "constType": 0,
               "content": "__props.title",
               "isStatic": false,
@@ -1331,7 +1334,6 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
           "tag": ""h1"",
           "type": 13,
         },
-        "isSelfClosing": false,
         "loc": {
           "end": {
             "column": 27,
@@ -1451,7 +1453,14 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
       "offset": 0,
     },
   },
+  "source": "
+    <div>
+      <h1>{{ title }}</h1>
+      <slot />
+    </div>
+  ",
   "temps": 0,
+  "transformed": true,
   "type": 0,
 }
 `;
@@ -1542,7 +1551,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
             },
             "type": 4,
           },
-          "isSelfClosing": false,
           "loc": {
             "end": {
               "column": 36,
@@ -1713,7 +1721,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                       },
                       "type": 4,
                     },
-                    "isSelfClosing": false,
                     "loc": {
                       "end": {
                         "column": 36,
@@ -1892,7 +1899,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
         "tag": "MyBox",
         "type": 13,
       },
-      "isSelfClosing": false,
       "loc": {
         "end": {
           "column": 13,
@@ -1925,6 +1931,19 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
             },
           },
           "name": "title",
+          "nameLoc": {
+            "end": {
+              "column": 17,
+              "line": 2,
+              "offset": 17,
+            },
+            "source": "title",
+            "start": {
+              "column": 12,
+              "line": 2,
+              "offset": 12,
+            },
+          },
           "type": 6,
           "value": {
             "content": "Test template",
@@ -2100,7 +2119,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                   },
                   "type": 4,
                 },
-                "isSelfClosing": false,
                 "loc": {
                   "end": {
                     "column": 36,
@@ -2351,7 +2369,13 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
       "offset": 0,
     },
   },
+  "source": "
+    <MyBox title="Test template">
+      <div>Test inner content</div>
+    </MyBox>
+  ",
   "temps": 0,
+  "transformed": true,
   "type": 0,
 }
 `;
