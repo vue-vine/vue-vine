@@ -120,7 +120,7 @@ function MyComp() {
   it('analyze vine slots definition', () => {
     const content = `
 function MyComp() {
-  const myEmits = vineSlots<{
+  const mySlots = vineSlots<{
     default(props: { id: string; msg: string; }): any;
     header: (props: { align: 'left' | 'right' }) => any;
   }>()
@@ -135,6 +135,7 @@ function MyComp() {
     const vineFnComp = fileCtx?.vineCompFns[0]
     const slots = vineFnComp?.slots
     expect(slots).toMatchSnapshot()
+    expect(vineFnComp?.slotsAlias).toBe('mySlots')
 
     const defaultSlot = slots!.default!
     expect(
