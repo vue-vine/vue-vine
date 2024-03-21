@@ -19,7 +19,7 @@ We'll talk about all the basic concepts of Vue Vine in this chapter.
 
 Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
 
-But we do restrict some scenarios in TypeScript to form an analyzable context for Vine compiler, which you must know and follow. You can check the [Caveats](./specification/caveats.html) chapter for more details.
+But we do restrict some scenarios in TypeScript to form an analyzable context for Vine compiler, which you must know and follow. You can check the [Caveats](./caveats) chapter for more details.
 
 ## Vine component function
 
