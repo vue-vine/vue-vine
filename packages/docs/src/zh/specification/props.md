@@ -1,14 +1,22 @@
 # Props {#props}
 
+最开始在 Vue 中定义 props 类型的方式是使用诸如 `String`、`Number`、`Boolean` 等类型构造函数，这是用于 Vue 的运行时类型检查的。
+
+但从 Vue 3 开始，用户逐渐期望类型检查过程由 TypeScript 和 IDE 来完成，因此我们决定放弃对 props 的 `type` 字段的支持，因为我们认为当我们已经全面使用 TypeScript 时，它并不是非常有用。
+
+Vine 会在生成组件对象的 `props` 字段时会删除所有类型信息。
+
 在 VCF 中定义 props 有两种方式，第一种是为函数的第一个形参提供 TypeScript 类型注解，另一种是使用 [`vineProp` 宏](./macros.md#宏)。
 
 如果您没有为 VCF 提供形参，并且在 VCF 内部也没有 `vineProp` 宏的调用，组件的 `props` 字段将为 `{}`。
 
-## 属性类型 {#prop-type}
+## 用类型注解声明 {#using-type-annotation-to-define}
+
+如果你想在 VCF 参数上定义 props，它应该是第一个参数，并为其编写一个 TypeScript 对象字面量类型注解，其中包含您想要定义的所有 props。
 
 我们决定不再支持属性的 `type` 字段，因为我们认为当我们已经使用 TypeScript 时，它并不是非常有用。
 
-Vine 默认将所有属性视为**必需的**，您可以使用 `?` 标记为可选属性。
+在这种定义方式下，Vine 默认将所有 prop 视为**必需的**，您可以使用 `?` 标记其为可选 prop。
 
 ```vue-vine
 import { SomeExternalType } from './path/to/somewhere'
@@ -20,17 +28,46 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-当您注解一个 props 的类型时，它会在您的 IDE 环境中根据当前 TypeScript 上下文进行分析。Vine 让 IDE 接管类型检查，我们在生成组件对象的 `props` 字段时会删除所有类型信息。
+### 布尔型转换机制 {#boolean-cast-mechanism}
 
-### 布尔型转换 {#boolean-cast}
+在编译时，我们必须知道一个属性是否为布尔型，以确定如何处理这样的属性传递：`<MyComponent foo />`。在 Web 标准 HTML 中，属性 `foo` 的值实际上是一个空字符串。
 
-Vine 确实忽略 props 的类型，但由于 Vue 的“布尔型转换”机制，这里会有一个特殊情况，也就是说，在编译时，我们必须知道一个属性是否为布尔型，以确定如何处理这样的属性传递：`<MyComponent foo />`。在 Web 标准 HTML 中，属性 `foo` 的值实际上是一个空字符串。
-
-因此，您必须使用字面量 `boolean` 类型注解来指定任何布尔型属性。
+因此，你必须使用**字面量** `boolean` 注解来指定任何布尔型属性，不允许在这里使用其他在别处定义的类型，即使它最终的结果是布尔类型。
 
 ```vue-vine
 function MyComponent(props: {
-  // ... 其他属性
-  foo: boolean
+  // ...
+  isFrontEnd: boolean
+  isBackEnd: OtherTypeButActuallyBoolean
 }) { ... }
+```
+
+## `vineProp` {#vineprop}
+
+这是一个用于定义组件的 prop 的编译宏函数。这个想法启发自 [Vue Macros](https://vue-macros.sxzz.moe/macros/define-prop.html)。
+
+- 您必须给出一个类型参数来指定 prop 的类型，或者您必须提供一个默认值来推导出类型。
+- `vineProp` 的第一个参数是 prop 的验证器，它是可选的。
+
+```vue-vine
+const foo = vineProp<string>()
+const title = vineProp<string>(value => value.startsWith('#'))
+```
+
+- 若要设置带有默认值的 prop，您可以使用 `vineProp.withDefault`，验证器是第二个参数。
+
+  由于 TypeScript 能够自动推断出默认值的类型，您不需要将类型参数传递给它。
+
+就像我们上面在 “布尔型转换机制” 部分所提到的，当您确实需要一个布尔型 prop 时，类型参数应该是一个字面量 `boolean`，并且不应该将变量作为默认值传递，而只能传递 `true` 或 `false` 字面量。尽管 TypeScript 可以从变量中推断出类型，但 Vine 编译器并没有嵌入 TypeScript 编译器来得知这个 prop 是布尔型的。
+
+```vue-vine
+// Correct examples
+const foo = vineProp.withDefault('bar')
+const biz = vineProp.withDefault(someStringVariable)
+const dar = vineProp<boolean>()
+const bool = vineProp.withDefault(false)
+
+// Incorrect examples
+const bad1 = vineProp<SomeBooleanType>()
+const bad2 = vineProp.withDefault(someBooleanVariable)
 ```

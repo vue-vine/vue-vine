@@ -86,7 +86,7 @@ function MyComponent() {
 
 To define props for component, there're two ways for you:
 
-1. Give your VCF a `props` formal parameter as the first one, and write a TypeScript Object literal type annotation for it, with all the props you want to define.
+1. Define props on a VCF parameter, it should be the first one, and write a TypeScript Object literal type annotation for it, with all the props you want to define.
 
 2. Use `vineProp` macro to define prop one by one, but the advantage of this way is that you can easily use every single prop's value as a `Ref`, instead of wrapping `props` with`toRefs` manually.
 
