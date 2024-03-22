@@ -60,7 +60,6 @@ export default defineConfig({
           text: '定义说明',
           items: [
             { text: '总览', link: '/zh/specification/overview' },
-            { text: '注意事项', link: '/zh/specification/caveats' },
             { text: 'Props', link: '/zh/specification/props' },
             { text: '宏', link: '/zh/specification/macros' },
           ],
@@ -78,7 +77,6 @@ export default defineConfig({
           text: 'Specification',
           items: [
             { text: 'Overview', link: '/specification/overview' },
-            { text: 'Caveats', link: '/specification/caveats' },
             { text: 'Props', link: '/specification/props' },
             { text: 'Macros', link: '/specification/macros' },
           ],

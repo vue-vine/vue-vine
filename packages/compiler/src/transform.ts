@@ -271,7 +271,7 @@ export function transformFile(
           USE_DEFAULTS_HELPER,
           `_${USE_DEFAULTS_HELPER}`,
         )
-        propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _useDefaults(__props, {\n${
+        propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _${USE_DEFAULTS_HELPER}(__props, {\n${
           Object.entries(vineCompFnCtx.props)
             .filter(([_, propMeta]) => Boolean(propMeta.default))
             .map(([propName, propMeta]) => `  ${propName}: ${
@@ -390,7 +390,7 @@ export function transformFile(
       if (isDev) {
         ms.appendRight(
           ms.length(),
-          `\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
+          `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
         )
       }
     }

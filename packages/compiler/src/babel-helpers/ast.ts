@@ -12,7 +12,6 @@ import type {
 import {
   isArrowFunctionExpression,
   isCallExpression,
-  isClassDeclaration,
   isExportDefaultDeclaration,
   isExportNamedDeclaration,
   isFunctionDeclaration,
@@ -23,9 +22,6 @@ import {
   isNode,
   isReturnStatement,
   isStringLiteral,
-  isTSEnumDeclaration,
-  isTSInterfaceDeclaration,
-  isTSTypeAliasDeclaration,
   isTaggedTemplateExpression,
   isVariableDeclaration,
   isVariableDeclarator,
@@ -45,17 +41,6 @@ import {
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
 } from '../constants'
-
-const vineRootScopeStatementTypeValidators = [
-  isImportDeclaration,
-  isExportNamedDeclaration,
-  isFunctionDeclaration,
-  isClassDeclaration,
-  isTSEnumDeclaration,
-  isVariableDeclaration,
-  isTSTypeAliasDeclaration,
-  isTSInterfaceDeclaration,
-] as const
 
 export function isVineCompFnDecl(target: Node) {
   if (
@@ -210,10 +195,6 @@ export function isVueReactivityApiCallExpression(node: Node) {
     && isIdentifier(node.callee)
     && (VUE_REACTIVITY_APIS as any).includes(node.callee.name)
   )
-}
-
-export function isValidVineRootScopeStatement(node: Node) {
-  return vineRootScopeStatementTypeValidators.some(check => check(node))
 }
 
 export function isTagTemplateStringContainsInterpolation(tagTmplNode: TaggedTemplateExpression) {

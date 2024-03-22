@@ -19,8 +19,6 @@ outline: deep
 
 Vine 使用 `.vine.ts` 作为文件扩展名，因此您知道您实际上是在编写 TypeScript，TypeScript 中的任何有效语法在 Vine 中也是合法的。
 
-但是我们的确限制了一些在 TypeScript 中的使用场景，这都是为了形成一个容易解析的上下文给 Vine 编译器，您必须了解并遵循这些限制。您可以查看 [注意事项](./caveats) 章节了解更多详细信息。
-
 ## Vine 组件函数 {#vine-component-function}
 
 Vine 组件函数（在接下来的文档中，我们将称之为 **"VCF"**）是一个返回由 `vine` 标记的模板字符串的函数，用于声明组件的模板。
