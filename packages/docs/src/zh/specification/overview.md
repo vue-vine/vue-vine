@@ -11,7 +11,7 @@ outline: deep
 <b>在开始使用之前，您应该了解以下约定：</b>
 
 - Vine 只支持 Vue 3.0+ 和 Vite。
-- Vine 仅支持 TypeScript，JavaScript 用户可能无法体验完整功能。
+- Vine 仅支持 TypeScript，JavaScript 用户无法使用完整功能。
 
 :::
 

@@ -11,7 +11,7 @@ We'll talk about all the basic concepts of Vue Vine in this chapter.
 <b>Before starting to use it, you're supposed to know the following conventions:</b>
 
 - Vine was designed to only support Vue 3.0+ and Vite.
-- Vine is only designed to support TypeScript, JavaScript-only users may not enjoy the full functionality
+- Vine is only designed to support TypeScript, JavaScript-only users can't harness the complete range of functionalities.
 
 :::
 
