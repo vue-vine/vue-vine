@@ -26,18 +26,16 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { CountingMacros, VineBabelRoot, VineCompilerHooks, VineFileCtx } from './types'
+import type { CountingMacros, VineCompilerHooks, VineFileCtx } from './types'
 import {
   getFunctionInfo,
   getFunctionParams,
   getVineMacroCalleeName,
   isDescendant,
   isTagTemplateStringContainsInterpolation,
-  isValidVineRootScopeStatement,
   isVineMacroCallExpression,
   isVineMacroOf,
   isVineTaggedTemplateString,
-  isVueReactivityApiCallExpression,
 } from './babel-helpers/ast'
 import { vineErr } from './diagnostics'
 import { BARE_CALL_MACROS, SUPPORTED_CSS_LANGS } from './constants'
@@ -111,51 +109,6 @@ function validateNoOutsideMacroCalls(
     }
   })
   return isMacroInsideVineCompFn
-}
-
-/**
- * Restrict root scope statement types
- * for not making any side effects
- */
-function validateNoInvalidTypesRootScopeStmt(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
-  root: Node,
-) {
-  for (const stmt of (root as VineBabelRoot).program.body) {
-    if (isVariableDeclaration(stmt)) {
-      let hasVueReactivityApiCallInRootVarDeclaration = false
-      traverse(stmt, (node) => {
-        if (isVueReactivityApiCallExpression(node)) {
-          vineCompilerHooks.onError(
-            vineErr(
-              vineFileCtx,
-              {
-                msg: 'Vue API calls are not allowed to be called in Vine root scope!',
-                location: node.loc,
-              },
-            ),
-          )
-          hasVueReactivityApiCallInRootVarDeclaration = true
-        }
-      })
-      if (hasVueReactivityApiCallInRootVarDeclaration) {
-        return false
-      }
-    }
-    else if (!isValidVineRootScopeStatement(stmt)) {
-      vineCompilerHooks.onError(
-        vineErr(
-          vineFileCtx,
-          {
-            msg: 'Invalid root scope statements must be inside Vue Vine component function!',
-            location: stmt.loc,
-          },
-        ),
-      )
-      return false
-    }
-  }
-  return true
 }
 
 /**
@@ -943,7 +896,6 @@ function validateVineFunctionCompProps(
 
 const validatesFromRoot: VineValidator[] = wrapVineValidatorWithLog([
   validateNoOutsideMacroCalls,
-  validateNoInvalidTypesRootScopeStmt,
 ])
 
 const validatesFromVineFn: VineValidator[] = wrapVineValidatorWithLog([

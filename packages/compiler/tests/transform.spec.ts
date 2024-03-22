@@ -4,9 +4,17 @@ import { compileVineTypeScriptFile } from '../src/index'
 import { createMockTransformCtx } from './shared-utils'
 
 const testContent = `
+import { ref } from 'vue'
 import someDefaultExport from 'some-module-1'
 import { someNamedExport } from 'some-module-2'
 import * as someNamespaceExport from 'some-module-3'
+import type { SomeType } from 'some-module-4'
+import { someExternalFunction1, someExternalFunction2  } from 'some-module-4'
+
+const v1: SomeType = someExternalFunction1({ a: 1, b: 2 })
+const v2 = ref(0)
+
+someExternalFunction2()
 
 function MyProfile() {
   const name = vineProp<string>()

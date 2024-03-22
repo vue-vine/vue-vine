@@ -23,9 +23,17 @@ import {
 import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css";
 import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&virtual.css";
 
+import { ref } from "vue";
 import someDefaultExport from "some-module-1";
 import { someNamedExport } from "some-module-2";
 import * as someNamespaceExport from "some-module-3";
+import type { SomeType } from "some-module-4";
+import { someExternalFunction1, someExternalFunction2 } from "some-module-4";
+
+const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
+const v2 = ref(0);
+
+someExternalFunction2();
 
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
@@ -48,7 +56,7 @@ export const MyProfile = (() => {
       });
 
       _useCssVars((_ctx) => ({
-        "601ae0ef": _unref(textColor),
+        "601ae0ef": textColor.value,
       }));
       const mySlots = _useSlots();
       const { name, age, bio } = _toRefs(props);
@@ -143,6 +151,7 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
@@ -191,9 +200,17 @@ import {
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css";
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&virtual.css";
 
+import { ref } from "vue";
 import someDefaultExport from "some-module-1";
 import { someNamedExport } from "some-module-2";
 import * as someNamespaceExport from "some-module-3";
+import type { SomeType } from "some-module-4";
+import { someExternalFunction1, someExternalFunction2 } from "some-module-4";
+
+const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
+const v2 = ref(0);
+
+someExternalFunction2();
 
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
@@ -216,7 +233,7 @@ export const MyProfile = (() => {
       });
 
       _useCssVars((_ctx) => ({
-        "601ae0ef": _unref(textColor),
+        "601ae0ef": textColor.value,
       }));
       const mySlots = _useSlots();
       const { name, age, bio } = _toRefs(props);
@@ -334,9 +351,17 @@ import {
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css";
 import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css";
 
+import { ref } from "vue";
 import someDefaultExport from "some-module-1";
 import { someNamedExport } from "some-module-2";
 import * as someNamespaceExport from "some-module-3";
+import type { SomeType } from "some-module-4";
+import { someExternalFunction1, someExternalFunction2 } from "some-module-4";
+
+const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
+const v2 = ref(0);
+
+someExternalFunction2();
 
 export const MyProfile = (() => {
   const _withScopeId = (n) => (
@@ -380,9 +405,14 @@ export const MyProfile = (() => {
         bio,
         textColor,
         handleRefresh,
+        ref,
         someDefaultExport,
         someNamedExport,
         someNamespaceExport,
+        someExternalFunction1,
+        someExternalFunction2,
+        v1,
+        v2,
         MyProfile,
         MyApp,
       };
@@ -447,9 +477,14 @@ export const MyApp = (() => {
       /* No expose */
 
       return {
+        ref,
         someDefaultExport,
         someNamedExport,
         someNamespaceExport,
+        someExternalFunction1,
+        someExternalFunction2,
+        v1,
+        v2,
         MyProfile,
         MyApp,
       };
@@ -473,6 +508,7 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 

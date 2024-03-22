@@ -20,24 +20,13 @@ function App() {
 
   it('validate root scope statements no Vue API call', () => {
     const content = `
-const bar = ref(1)
+const bar = vineProp<number>()
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVCFRootScopeContainsVueReactivityAPICall', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"Vue API calls are not allowed to be called in Vine root scope!"')
-  })
-
-  it('validate root scope statements\' type are matched with our restrictions', () => {
-    const content = `
-here_is_a_function_call_expression();
-`
-    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVCFRootScopeAllowedStatements', mockCompilerHooks)
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
-    expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"Invalid root scope statements must be inside Vue Vine component function!"')
+      .toMatchInlineSnapshot(`"Vine macro calls must be inside Vue Vine component function!"`)
   })
 
   it('validate vine tagged template string usage', () => {
