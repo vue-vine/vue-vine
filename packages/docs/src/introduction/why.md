@@ -18,7 +18,7 @@ In the comparison of development experience between Vue and React, the most obvi
 
 because it's not just JSX or function that makes React more flexible in coding, but because this pattern represents its pursuit of more aggregated JavaScript context.
 
-Maybe this is the secret to keeping JavaScript users in their heart-flow. Front-end work requires developers to switch between views, styles, and logic frequently, and we find that in the increasingly complex front-end application development trend, writing logic has gradually become the main task.
+Maybe this is the secret to keep JavaScript users in their heart-flow. Front-end work requires developers to switch between views, styles, and logic frequently, and we find that in the increasingly complex front-end application development trend, writing logic has gradually become the main task.
 
 So users definitely want to write less boilerplate code outside of JS code. And Vine provides a relatively concise way to do this.
 
