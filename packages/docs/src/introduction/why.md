@@ -10,19 +10,27 @@ People often writing a long component first, and then cut out reusable component
 
 Navigating between multiple files is not a good experience too, especially when you're writing a small component that's only used in one place. For examples, the props definition and interactions with parent component will make you probably feel annoying after switching between files time and time again.
 
-## The key point of flexibility
+## Original design intention
 
 Here's how I asked everyone: "What do you miss the most from React when writing Vue?"
 
-In the comparison of development experience between Vue and React, the most obvious difference is the the forms of component organization. Since JSX is just JavaScript expression, so you can easily start writing a new component aside. Many people replied that JSX is actually what they like.
+In the comparison of development experience between Vue and React, the most obvious difference is the the forms of component organization. Since JSX is just JavaScript expression, so you can easily start writing a new component aside. Many people replied that this is actually what they want.
 
-Vue also has not-bad support for JSX, so why don't we put more effort on developing toolchain with JSX?
+because it's not just JSX or function that makes React more flexible in coding, but because this pattern represents its pursuit of more aggregated JavaScript context.
 
-Because it's not just JSX or functions makes React's code more flexible, it's all because of an uniform JavaScript context. It's the key to keep JavaScript users working better in a flow, rather than always need to carry the mental burden of tool chain effects such as some features provided by framework and IDE.
+Maybe this is the secret to keeping JavaScript users in their heart-flow. Front-end work requires developers to switch between views, styles, and logic frequently, and we find that in the increasingly complex front-end application development trend, writing logic has gradually become the main task.
 
-So, it seems we need to compose our code into just one file type.
+So users definitely want to write less boilerplate code outside of JS code. And Vine provides a relatively concise way to do this.
+
+We must admit this may just be a sweet syntax sugar, and it won't change the reality that you "need to write XML-like when describing views, and CSS-like when describing styles".
+
+The original intention of Vine is to **provide a more convenient form of organization**.
+
+So, it seems we'd better compose our code into just one file type.
 
 ## The trade-off between JSX and template
+
+Vue also has not-bad support for JSX, so why don't we put more effort on developing toolchain with JSX?
 
 The main problem with JSX is that it's too flexible, and it's hard to provide enough compile-time information for Vue to optimize, and template is native supported by Vue with a lot of compile-time optimizations.
 
