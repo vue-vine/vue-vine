@@ -280,6 +280,7 @@ export function createSeparatedTemplateComposer(
           allBindings[key] = true
         }
       }
+
       let setupFnReturns = '{ '
       for (const key in allBindings) {
         if (

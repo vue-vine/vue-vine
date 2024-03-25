@@ -3,9 +3,15 @@ import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
 export const DEFINE_COMPONENT_HELPER = 'defineComponent'
 export const USE_DEFAULTS_HELPER = 'useDefaults'
 export const TO_REFS_HELPER = 'toRefs'
+export const USE_MODEL_HELPER = 'useModel'
 export const CSS_VARS_HELPER = 'useCssVars'
 export const USE_SLOT_HELPER = 'useSlots'
 export const UN_REF_HELPER = 'unref'
+export const DEFAULT_MODEL_NAME = 'modelValue'
+export const DEFAULT_MODEL_MODIFIERS_NAME = 'modelModifiers'
+/**
+ * These macros can't be inside other expressions but just called directly.
+ */
 export const BARE_CALL_MACROS = [
   'vineExpose',
   'vineOptions',
@@ -19,6 +25,7 @@ export const VINE_MACROS = [
   'vineProp.withDefault',
   'vineEmits',
   'vineSlots',
+  'vineModel',
   ...BARE_CALL_MACROS,
 ] as const
 export const VINE_TAG_TEMPLATE_CALLER = [
@@ -30,6 +37,9 @@ export const VINE_TAG_TEMPLATE_CALLER = [
   'stylus',
   'postcss',
 ] as const
+export const CAN_BE_CALLED_MULTI_TIMES_MACROS = [
+  'vineModel',
+]
 export const SUPPORTED_CSS_LANGS = ['css', 'scss', 'sass', 'less', 'stylus', 'postcss'] as const
 export const VUE_REACTIVITY_APIS = [
   'ref',

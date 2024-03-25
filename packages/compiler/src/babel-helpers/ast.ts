@@ -179,6 +179,13 @@ export function isVineMacroOf(
   }
 }
 
+export const isVineProp = isVineMacroOf('vineProp')
+export const isVineSlots = isVineMacroOf('vineSlots')
+export const isVineEmits = isVineMacroOf('vineEmits')
+export const isVineModel = isVineMacroOf('vineModel')
+export const isVineStyle = isVineMacroOf('vineStyle')
+export const isVineCustomElement = isVineMacroOf('vineCustomElement')
+
 export function isStatementContainsVineMacroCall(node: Node) {
   let result = false
   traverse(node, (descendant) => {

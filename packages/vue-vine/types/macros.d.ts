@@ -38,6 +38,20 @@ declare global {
   const vineSlots: <D extends Record<string, (props: any) => any>>() => D
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void
+
+  function vineModel<T>(): Ref<T>
+  function vineModel<T>(modelOptions: {
+    default?: T
+    required?: boolean
+  }): Ref<T>
+  function vineModel<T>(
+    modelName: string,
+    modelOptions?: {
+      default?: T
+      required?: boolean
+    }
+  ): Ref<T>
+
   const vineStyle: VineStyleMacro
 
   const vine: (template: TemplateStringsArray) => VueVineComponent

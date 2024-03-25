@@ -31,6 +31,7 @@ import type {
   Node,
   ObjectPattern,
   Statement,
+  StringLiteral,
   TSFunctionType,
   TSPropertySignature,
   TSTypeAnnotation,
@@ -38,7 +39,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { VineBindingTypes } from './constants'
+import { DEFAULT_MODEL_MODIFIERS_NAME, VineBindingTypes } from './constants'
 import type {
   BabelFunctionNodeTypes,
   Nil,
@@ -65,8 +66,13 @@ import {
   isCallOf,
   isStaticNode,
   isVineCompFnDecl,
+  isVineCustomElement,
+  isVineEmits,
   isVineMacroCallExpression,
   isVineMacroOf,
+  isVineModel,
+  isVineSlots,
+  isVineStyle,
 } from './babel-helpers/ast'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/importUsageCheck'
@@ -424,7 +430,7 @@ const analyzeVineEmits: AnalyzeRunner = (
   let parentVarDecl: VariableDeclarator | undefined
   _breakableTraverse(fnItselfNode, {
     enter(descendant, parent) {
-      if (isVineMacroOf('vineEmits')(descendant)) {
+      if (isVineEmits(descendant)) {
         vineEmitsMacroCall = descendant
         const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
         parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
@@ -538,7 +544,7 @@ const analyzeVineStyle: AnalyzeRunner = (
 ) => {
   let vineStyleMacroCall: CallExpression | undefined
   _breakableTraverse(fnItselfNode, (node) => {
-    if (isVineMacroOf('vineStyle')(node)) {
+    if (isVineStyle(node)) {
       vineStyleMacroCall = node
       throw exitTraverse
     }
@@ -586,7 +592,7 @@ const analyzeVineCustomElement: AnalyzeRunner = (
 ) => {
   // Find if there's any `vineCustomElement` macro call exists
   _breakableTraverse(fnItselfNode, (node) => {
-    if (isVineMacroOf('vineCustomElement')(node)) {
+    if (isVineCustomElement(node)) {
       vineCompFnCtx.isCustomElement = true
       throw exitTraverse
     }
@@ -601,7 +607,7 @@ const analyzeVineSlots: AnalyzeRunner = (
   let vineSlotsMacroCall: CallExpression | undefined
   let parentVarDecl: VariableDeclarator | undefined
   _breakableTraverse(fnItselfNode, (node, parent) => {
-    if (isVineMacroOf('vineSlots')(node)) {
+    if (isVineSlots(node)) {
       vineSlotsMacroCall = node
       const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
       parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
@@ -650,11 +656,101 @@ const analyzeVineSlots: AnalyzeRunner = (
   }
 }
 
+const analyzeVineModel: AnalyzeRunner = (
+  { vineCompFnCtx },
+  fnItselfNode,
+) => {
+  // Find if all `vineModel` macro call exists
+  const vineModelMacroCalls: Array<{
+    macroCall: CallExpression
+    parentVarDecl?: VariableDeclarator
+  }> = []
+
+  _breakableTraverse(fnItselfNode, (node, parent) => {
+    if (isVineModel(node)) {
+      const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
+      vineModelMacroCalls.push({
+        macroCall: node,
+        parentVarDecl: foundVarDeclAncestor?.node as VariableDeclarator,
+      })
+    }
+  })
+
+  // Traverse all `vineModel` macro calls
+  for (const { macroCall, parentVarDecl } of vineModelMacroCalls) {
+    if (!parentVarDecl || !isIdentifier(parentVarDecl.id)) {
+      continue
+    }
+
+    const varName = parentVarDecl.id.name
+
+    // If the macro call has no argument,
+    // - its model name is 'modelValue' as default
+    // - its model modifiers name is 'modelModifiers' as default
+    // - its model options is null
+    if (!macroCall.arguments.length) {
+      vineCompFnCtx.vineModels.modelValue = {
+        varName,
+        modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
+        modelOptions: null,
+      }
+      continue
+    }
+
+    // If the macro call has just one argument,
+    else if (macroCall.arguments.length === 1) {
+      // If this argument is a string literal,
+      // - it's the model name
+      // - its model modifiers name is based on the model name
+      // - its model options is null
+      if (isStringLiteral(macroCall.arguments[0])) {
+        const modelName = macroCall.arguments[0].value
+        vineCompFnCtx.vineModels[modelName] = {
+          varName,
+          modelModifiersName: `${modelName}Modifiers`,
+          modelOptions: null,
+        }
+      }
+      // If this argument is a object literal,
+      // - its model name is 'modelValue' as default
+      // - its model modifiers name is 'modelModifiers' as default
+      // - its model options is the object literal
+      else {
+        vineCompFnCtx.vineModels.modelValue = {
+          varName,
+          modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
+          modelOptions: macroCall.arguments[0],
+        }
+      }
+    }
+
+    // If the macro call has two arguments,
+    // - the first argument is the model name
+    // - the second argument is the model options
+    else {
+      const modelName = (macroCall.arguments[0] as StringLiteral).value
+      vineCompFnCtx.vineModels[modelName] = {
+        varName,
+        modelModifiersName: `${modelName}Modifiers`,
+        modelOptions: macroCall.arguments[1],
+      }
+    }
+  }
+
+  // All vineModel definitions are treated as `setup-ref` bindings
+  for (const [modelName, modelDef] of Object.entries(vineCompFnCtx.vineModels)) {
+    vineCompFnCtx.bindings[modelName] = VineBindingTypes.PROPS
+    // If `varName` is equal to `modelName`, it would be overrided to `setup-ref`
+    vineCompFnCtx.bindings[modelDef.varName] = VineBindingTypes.SETUP_REF
+  }
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineEmits,
   analyzeVineExpose,
   analyzeVineSlots,
+  analyzeVineModel,
   analyzeVineOptions,
   analyzeVineBindings,
   analyzeVineStyle,
@@ -765,6 +861,7 @@ function buildVineCompFnCtx(
     emits: [],
     slots: {},
     slotsAlias: 'slots',
+    vineModels: {},
     bindings: {},
     cssBindings: {},
     hoistSetupStmts: [],
@@ -813,7 +910,7 @@ export function analyzeVine(
       if (binding && binding !== VineBindingTypes.LITERAL_CONST) {
         vineCompilerHooks.onError(
           vineWarn(vineFileCtx, {
-            msg: `Cannot reference "${id.name}" locally declared variables because it will be hoisted outside of the setup() function.`,
+            msg: `Cannot reference "${id.name}" locally declared variables because it will be hoisted outside of component's setup() function.`,
             location: id.loc,
           }),
         )
@@ -842,6 +939,17 @@ export function analyzeVine(
       const identifiers: Identifier[] = []
       walkIdentifiers(vineOptionsArg, id => identifiers.push(id))
       makeErrorOnRefHoistedIdentifiers(vineFnComp, identifiers)
+    }
+    // - `vineModel`'s 2nd argument, its options
+    if (vineFnComp.vineModels) {
+      for (const { modelOptions } of Object.values(vineFnComp.vineModels)) {
+        if (!modelOptions) {
+          continue
+        }
+        const identifiers: Identifier[] = []
+        walkIdentifiers(modelOptions, id => identifiers.push(id))
+        makeErrorOnRefHoistedIdentifiers(vineFnComp, identifiers)
+      }
     }
   }
 }

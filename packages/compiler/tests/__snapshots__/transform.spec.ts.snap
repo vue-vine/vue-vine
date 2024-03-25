@@ -16,6 +16,7 @@ import {
   useCssVars as _useCssVars,
   unref as _unref,
   useSlots as _useSlots,
+  useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
 } from "vue";
@@ -48,18 +49,28 @@ export const MyProfile = (() => {
       bio: {
         /* Simple prop */
       },
+      modelValue: { default: "test" },
+      modelModifiers: {},
+      title: { default: "" },
+      titleModifiers: {},
+      count: {},
+      countModifiers: {},
     },
-    /* No emits */
+    emits: ["update:modelValue", "update:title", "update:count"],
     setup(__props, { expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
+      const { name, age, bio } = _toRefs(props);
 
       _useCssVars((_ctx) => ({
         "601ae0ef": textColor.value,
       }));
+
+      const defaultModelWithValue = _useModel(__props, "modelValue");
+      const title = _useModel(__props, "title");
+      const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const { name, age, bio } = _toRefs(props);
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -193,6 +204,7 @@ import {
   useCssVars as _useCssVars,
   unref as _unref,
   useSlots as _useSlots,
+  useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
 } from "vue";
@@ -225,18 +237,28 @@ export const MyProfile = (() => {
       bio: {
         /* Simple prop */
       },
+      modelValue: { default: "test" },
+      modelModifiers: {},
+      title: { default: "" },
+      titleModifiers: {},
+      count: {},
+      countModifiers: {},
     },
-    /* No emits */
+    emits: ["update:modelValue", "update:title", "update:count"],
     setup(__props, { expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
+      const { name, age, bio } = _toRefs(props);
 
       _useCssVars((_ctx) => ({
         "601ae0ef": textColor.value,
       }));
+
+      const defaultModelWithValue = _useModel(__props, "modelValue");
+      const title = _useModel(__props, "title");
+      const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const { name, age, bio } = _toRefs(props);
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -344,6 +366,7 @@ import {
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   useSlots as _useSlots,
+  useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
 } from "vue";
@@ -376,18 +399,28 @@ export const MyProfile = (() => {
       bio: {
         /* Simple prop */
       },
+      modelValue: { default: "test" },
+      modelModifiers: {},
+      title: { default: "" },
+      titleModifiers: {},
+      count: {},
+      countModifiers: {},
     },
-    /* No emits */
+    emits: ["update:modelValue", "update:title", "update:count"],
     setup(__props, { expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
+      const { name, age, bio } = _toRefs(props);
 
       _useCssVars((_ctx) => ({
         "601ae0ef": _ctx.textColor,
       }));
+
+      const defaultModelWithValue = _useModel(__props, "modelValue");
+      const title = _useModel(__props, "title");
+      const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const { name, age, bio } = _toRefs(props);
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -403,6 +436,9 @@ export const MyProfile = (() => {
         name,
         age,
         bio,
+        defaultModelWithValue,
+        title,
+        count,
         textColor,
         handleRefresh,
         ref,

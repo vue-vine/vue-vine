@@ -2,6 +2,7 @@ import process from 'node:process'
 import {
   isIdentifier,
   isObjectExpression,
+  isObjectProperty,
   isStringLiteral,
   isTSFunctionType,
   isTSMethodSignature,
@@ -26,7 +27,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { CountingMacros, VineCompilerHooks, VineFileCtx } from './types'
+import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx } from './types'
 import {
   getFunctionInfo,
   getFunctionParams,
@@ -34,17 +35,27 @@ import {
   isDescendant,
   isTagTemplateStringContainsInterpolation,
   isVineMacroCallExpression,
-  isVineMacroOf,
+  isVineModel,
+  isVineProp,
   isVineTaggedTemplateString,
 } from './babel-helpers/ast'
 import { vineErr } from './diagnostics'
-import { BARE_CALL_MACROS, SUPPORTED_CSS_LANGS } from './constants'
+import {
+  BARE_CALL_MACROS,
+  CAN_BE_CALLED_MULTI_TIMES_MACROS,
+  SUPPORTED_CSS_LANGS,
+} from './constants'
 import { colorful } from './utils/color-string'
+import { _breakableTraverse } from './utils'
 
 interface VineValidatorCtx {
   vineCompilerHooks: VineCompilerHooks
   vineFileCtx: VineFileCtx
   vineCompFns: Node[]
+}
+
+interface VineModelValidateCtx {
+  hasDefaultModel: boolean
 }
 
 type VineValidator = (
@@ -68,7 +79,7 @@ function wrapVineValidatorWithLog(validators: VineValidator[]) {
     : validators
 }
 
-function logMacroAssert(macroName: string, isPass: boolean) {
+function vitestLogMacroAssert(macroName: string, isPass: boolean) {
   if (process.env.VINE_DEV_VITEST !== 'true') {
     return
   }
@@ -294,9 +305,12 @@ function assertMacroCanOnlyHaveOneTypeParam(
   return true
 }
 
-function assetMacroVariableDeclarationMustBeIdentifier(
+function assertMacroVariableDeclarationMustBeIdentifier(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  macroName: VINE_MACRO_NAMES,
+  macroCallNode: CallExpression,
   parent?: TraversalAncestors,
+  { isMustBeInsideVarDecl }: { isMustBeInsideVarDecl: boolean } = { isMustBeInsideVarDecl: false },
 ) {
   const varDeclaratorThatMayBeInside = parent?.find(ancestor => isVariableDeclarator(ancestor.node))
   if (varDeclaratorThatMayBeInside) {
@@ -306,13 +320,25 @@ function assetMacroVariableDeclarationMustBeIdentifier(
         vineErr(
           vineFileCtx,
           {
-            msg: 'the declaration of macro call must be an identifier',
+            msg: `the declaration of macro \`${macroName}\` call must be an identifier`,
             location: varDeclThatMayBeInsideNode.id.loc,
           },
         ),
       )
       return false
     }
+  }
+  else if (isMustBeInsideVarDecl) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: `the declaration of \`${macroName}\` macro call must be inside a variable declaration`,
+          location: macroCallNode.loc,
+        },
+      ),
+    )
+    return false
   }
   return true
 }
@@ -359,7 +385,14 @@ function assertVineEmitsUsage(
     }
   }
 
-  if (assetMacroVariableDeclarationMustBeIdentifier(validatorCtx, parent)) {
+  if (
+    !assertMacroVariableDeclarationMustBeIdentifier(
+      validatorCtx,
+      'vineEmits',
+      macroCallNode,
+      parent,
+    )
+  ) {
     isVineEmitsUsageCorrect = false
   }
 
@@ -512,7 +545,10 @@ function assertVineSlotsUsage(
       if (isTSMethodSignature(prop))
         return true
 
-      if (isTSPropertySignature(prop) && isTSFunctionType(prop.typeAnnotation?.typeAnnotation)) {
+      if (
+        isTSPropertySignature(prop)
+        && isTSFunctionType(prop.typeAnnotation?.typeAnnotation)
+      ) {
         return true
       }
 
@@ -547,11 +583,162 @@ function assertVineSlotsUsage(
       })
   }
 
-  if (assetMacroVariableDeclarationMustBeIdentifier(validatorCtx, parent)) {
+  if (
+    !assertMacroVariableDeclarationMustBeIdentifier(
+      validatorCtx,
+      'vineSlots',
+      macroCallNode,
+      parent,
+    )
+  ) {
     isVineSlotsUsageCorrect = false
   }
 
   return isVineSlotsUsageCorrect
+}
+
+function assertVineModelDefaultDuplicated(
+  validatorCtx: VineValidatorCtx,
+  modelCtx: VineModelValidateCtx,
+  macroCallNode: CallExpression,
+  extraAssert: {
+    isInsideVarDecl: boolean
+  },
+) {
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  const macroCallArgs = macroCallNode.arguments
+
+  const isAlreadyHasDefault = modelCtx.hasDefaultModel
+  let isThisOneAsDefault = false
+
+  const isExtraAssertValid = Object.values(extraAssert).every(Boolean)
+
+  // Judge if the current `vineModel` is treated as a default model
+  if (macroCallArgs?.length === 0 && isExtraAssertValid) {
+    isThisOneAsDefault = true
+  }
+  else if (
+    macroCallArgs?.length === 1
+    && isObjectExpression(macroCallArgs[0])
+    && isExtraAssertValid
+  ) {
+    isThisOneAsDefault = true
+  }
+
+  if (isThisOneAsDefault) {
+    if (isAlreadyHasDefault) {
+      vineCompilerHooks.onError(
+        vineErr(
+          vineFileCtx,
+          {
+            msg: 'Vue Vine component function can only have one default model',
+            location: macroCallNode.loc,
+          },
+        ),
+      )
+      return false
+    }
+
+    // Got the first and the only default model
+    modelCtx.hasDefaultModel = true
+  }
+
+  return true
+}
+
+function assertVineModelUsage(
+  validatorCtx: VineValidatorCtx,
+  modelCtx: VineModelValidateCtx,
+  macroCallNode: CallExpression,
+  parent?: TraversalAncestors,
+) {
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  let isVineModelUsageCorrect = true
+
+  const typeParams = macroCallNode.typeParameters?.params
+  const macroCallArgs = macroCallNode.arguments
+  const lastArg = macroCallArgs?.[macroCallArgs.length - 1]
+
+  if (typeParams?.length === 0) {
+    // vineModel can be called without type parameter and argument,
+    // if so, it's a `Ref<unknown>` type and user will notice that during reference it.
+    if (macroCallArgs?.length === 0) {
+      // PASS! Very simple case
+    }
+    // Check the last argument, i.e. the options object literal
+    // if there's not a 'default' field, report an error for no type parameter defined
+    else if (
+      isObjectExpression(lastArg)
+      && !lastArg.properties.some((prop) => {
+        if (
+          isObjectProperty(prop)
+          && isIdentifier(prop.key)
+          && prop.key.name === 'default'
+        ) {
+          return true
+        }
+
+        return false
+      })
+    ) {
+      vineCompilerHooks.onError(
+        vineErr(
+          vineFileCtx,
+          {
+            msg: 'If `vineModel` macro call doesn\'t have type parameter, it must have a `default` field in the options object literal',
+            location: lastArg.loc,
+          },
+        ),
+      )
+      isVineModelUsageCorrect = false
+    }
+  }
+
+  let isInsideVarDecl = false
+
+  // vineModel macro call must be inside a variable declaration
+  if (
+    !assertMacroVariableDeclarationMustBeIdentifier(
+      validatorCtx,
+      'vineModel',
+      macroCallNode,
+      parent,
+      {
+        isMustBeInsideVarDecl: true,
+      },
+    )
+  ) {
+    isVineModelUsageCorrect = false
+  }
+  else {
+    isInsideVarDecl = true
+  }
+
+  // Check the at most 2 arguments of `vineModel` macro call
+  if (macroCallArgs?.length > 2) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: '`vineModel` macro call can only have at most 2 arguments',
+          location: macroCallNode.loc,
+        },
+      ),
+    )
+    isVineModelUsageCorrect = false
+  }
+  else {
+    isVineModelUsageCorrect = assertVineModelDefaultDuplicated(
+      validatorCtx,
+      modelCtx,
+      macroCallNode,
+      {
+        isInsideVarDecl,
+      },
+    )
+  }
+
+  return isVineModelUsageCorrect
 }
 
 function validateMacrosUsage(
@@ -566,6 +753,7 @@ function validateMacrosUsage(
   interface MacroDescriptor {
     count: number
     asserts: MacroAssert[]
+    checkMultiCall?: boolean
     node?: CallExpression
     parent?: TraversalAncestors
   }
@@ -649,7 +837,16 @@ function validateMacrosUsage(
     },
   })
 
-  const macroMoreThanOnce = Object.entries(macroCountMap).filter(([, it]) => it.count > 1)
+  // Check if a macro is called only once,
+  const macroMoreThanOnce = Object
+    .entries(macroCountMap)
+    .filter(([macroName, it]) => {
+      if (CAN_BE_CALLED_MULTI_TIMES_MACROS.includes(macroName)) {
+        return false
+      }
+
+      return it.count > 1
+    })
   if (macroMoreThanOnce.length > 0) {
     macroMoreThanOnce.forEach(([macroName, it]) => {
       vineCompilerHooks.onError(
@@ -671,13 +868,52 @@ function validateMacrosUsage(
         const isPass = it.node
           ? assert(validatorCtx, it.node, it.parent)
           : true
-        logMacroAssert(macroName, isPass)
+        vitestLogMacroAssert(macroName, isPass)
         return isPass
       })
       .every(Boolean),
     ).every(Boolean)
 
   return isCountCorrect && isBareCallMacrosPass && isAssertsPass
+}
+
+function validateVineModel(
+  validatorCtx: VineValidatorCtx,
+  vineCompFn: Node,
+) {
+  // Find all `vineModel` macro calls
+  const vineModelMacroCalls: Array<{
+    macroCall: CallExpression
+    parent: TraversalAncestors
+  }> = []
+
+  _breakableTraverse(vineCompFn, (node, parent) => {
+    if (isVineModel(node)) {
+      vineModelMacroCalls.push({
+        macroCall: node,
+        parent: [...parent],
+      })
+    }
+  })
+
+  let isVineModelUsageCorrect = true
+  const modelCtx: VineModelValidateCtx = {
+    hasDefaultModel: false,
+  }
+  for (const { macroCall, parent } of vineModelMacroCalls) {
+    // Assert every `vineModel` macro call
+    if (!assertVineModelUsage(
+      validatorCtx,
+      modelCtx,
+      macroCall,
+      parent,
+    )
+    ) {
+      isVineModelUsageCorrect = false
+    }
+  }
+
+  return isVineModelUsageCorrect
 }
 
 function validateVineFunctionCompProps(
@@ -696,7 +932,7 @@ function validateVineFunctionCompProps(
     let isVinePropCheckPass = true
     traverse(vineCompFnDecl, {
       enter(node, parent) {
-        if (!isVineMacroOf('vineProp')(node)) {
+        if (!isVineProp(node)) {
           return
         }
         vinePropMacroCallCount += 1
@@ -901,6 +1137,7 @@ const validatesFromRoot: VineValidator[] = wrapVineValidatorWithLog([
 const validatesFromVineFn: VineValidator[] = wrapVineValidatorWithLog([
   validateVineTemplateStringUsage,
   validateMacrosUsage,
+  validateVineModel,
   validateVineFunctionCompProps,
 ])
 
