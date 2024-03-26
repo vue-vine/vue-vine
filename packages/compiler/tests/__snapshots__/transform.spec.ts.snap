@@ -138,9 +138,9 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props /* No setup ctx destructuring */) {
+    setup(__props, { expose: __expose }) {
+      __expose();
       const props = __props;
-      /* No expose */
 
       return (_ctx, _cache) => {
         return (
@@ -325,9 +325,9 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props /* No setup ctx destructuring */) {
+    setup(__props, { expose: __expose }) {
+      __expose();
       const props = __props;
-      /* No expose */
 
       return (_ctx, _cache) => {
         return (
@@ -508,9 +508,9 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props /* No setup ctx destructuring */) {
+    setup(__props, { expose: __expose }) {
+      __expose();
       const props = __props;
-      /* No expose */
 
       return {
         ref,

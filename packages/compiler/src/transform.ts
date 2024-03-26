@@ -287,12 +287,13 @@ export function transformFile(
           alias: vineCompFnCtx.emitsAlias,
         })
       }
-      if (vineCompFnCtx.expose) {
-        setupCtxDestructFormalParams.push({
-          field: 'expose',
-          alias: '__expose',
-        })
-      }
+
+      // Always add `expose` to the setup context destructuring
+      setupCtxDestructFormalParams.push({
+        field: 'expose',
+        alias: '__expose',
+      })
+
       let setupFormalParams = `__props${
         setupCtxDestructFormalParams.length > 0
           ? `, { ${
@@ -398,19 +399,20 @@ export function transformFile(
       }
 
       // vineExpose
-      ms.appendRight(
-        lastStmt.end!,
-        `${
-          vineCompFnCtx.expose
-            ? `\n__expose(${
-              ms.original.slice(
-                vineCompFnCtx.expose.start!,
-                vineCompFnCtx.expose.end!,
-              )
-            })`
-            : '/* No expose */'
-        }\n`,
-      )
+      vineCompFnCtx.expose
+        ? ms.appendRight(
+          lastStmt.end!,
+          `\n__expose(${
+            ms.original.slice(
+              vineCompFnCtx.expose.start!,
+              vineCompFnCtx.expose.end!,
+            )
+          });\n`,
+        )
+        : ms.prependLeft(
+          firstStmt.start!,
+          '\n__expose();\n',
+        )
 
       // Insert setup function's return statement
       ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
