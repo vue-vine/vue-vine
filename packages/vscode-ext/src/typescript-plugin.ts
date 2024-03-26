@@ -12,5 +12,6 @@ const plugin = createLanguageServicePlugin((ts) => {
   ]
 })
 
-// @ts-expect-error
-export = plugin;
+// @ts-expect-error TypeScript Plugin needs to be exported with `export =`
+// eslint-disable-next-line no-restricted-syntax
+export = plugin

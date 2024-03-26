@@ -59,7 +59,7 @@ connection.onInitialize((params) => {
         if (debug) {
           plugins.push(...createTypeScriptServices(tsdk.typescript))
         }
-        return plugins;
+        return plugins
       },
     },
   )
