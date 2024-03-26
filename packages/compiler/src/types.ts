@@ -30,6 +30,7 @@ export type CountingMacros = Exclude<
   | 'vineStyle.scoped'
   | 'vineProp.optional'
   | 'vineProp.withDefault'
+  | 'vineModel'
 >
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
@@ -153,6 +154,12 @@ export interface VineCompFnCtx {
   /** Store every slot's props definition */
   slots: Record<string, {
     props: TSTypeLiteral
+  }>
+  /** Store `vineModel` defines */
+  vineModels: Record<string, {
+    varName: string
+    modelModifiersName: string
+    modelOptions: Node | null
   }>
   slotsAlias: string
   hoistSetupStmts: Node[]

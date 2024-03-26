@@ -58,6 +58,7 @@ export function App() {
   const randomState = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
+  const userInputText = vineModel<string>()
 
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 
@@ -84,6 +85,14 @@ export function App() {
       <button class="random-state-change-btn" @click="randomState">
         Click to change random string
       </button>
+    </div>
+    <div class="flex flex-col items-center justify-center my-4">
+      <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>
+      <input
+        type="text"
+        class="bg-blueGray-200 border-none outline-none p-2 rounded w-300px"
+        v-model="userInputText"
+      />
     </div>
   `
 }

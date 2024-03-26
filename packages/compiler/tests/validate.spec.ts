@@ -105,6 +105,11 @@ function Box() {
     footer: Boolean;
   }>()
 
+  vineModel()
+  const { val } = vineModel<string, Object>(SomeString, SomeOptions)
+  const m1 = vineModel()
+  const m2 = vineModel({ default: 1 })
+
   return vine\`
     <div class="box">Test Box</div>
   \`
@@ -133,18 +138,36 @@ function App() {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', mockCompilerHooks)
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot('11')
-    expect(mockCompilerCtx.vineCompileErrors[0].msg).toMatchInlineSnapshot('"vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`"')
-    expect(mockCompilerCtx.vineCompileErrors[1].msg).toMatchInlineSnapshot('"Every property of Vue Vine component function\'s `vineSlots` type must be function signature"')
-    expect(mockCompilerCtx.vineCompileErrors[2].msg).toMatchInlineSnapshot('"Function signature of `vineSlots` can only have one parameter named `props`, and its type annotation must be object literal"')
-    expect(mockCompilerCtx.vineCompileErrors[3].msg).toMatchInlineSnapshot('"Function signature of `vineSlots` definition can only have one parameter named `props`, and its parameter name must be `props`, but got `yyy`"')
-    expect(mockCompilerCtx.vineCompileErrors[4].msg).toMatchInlineSnapshot('"Properties of `vineSlots` can only have function type annotation"')
-    expect(mockCompilerCtx.vineCompileErrors[5].msg).toMatchInlineSnapshot('"`vineCustomElement` macro call is not allowed to be inside a variable declaration"')
-    expect(mockCompilerCtx.vineCompileErrors[6].msg).toMatchInlineSnapshot('"`vineStyle` can only have one string argument\'"')
-    expect(mockCompilerCtx.vineCompileErrors[7].msg).toMatchInlineSnapshot('"`vineEmits` must have 1 type parameter"')
-    expect(mockCompilerCtx.vineCompileErrors[8].msg).toMatchInlineSnapshot('"`vineSlots` can only have 1 type parameter"')
-    expect(mockCompilerCtx.vineCompileErrors[9].msg).toMatchInlineSnapshot('"`vineExpose` must have one object literal argument"')
-    expect(mockCompilerCtx.vineCompileErrors[10].msg).toMatchInlineSnapshot('"`vineOptions` must have one object literal argument"')
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`14`)
+
+    expect(mockCompilerCtx.vineCompileErrors[0].msg)
+      .toMatchInlineSnapshot('"vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`"')
+    expect(mockCompilerCtx.vineCompileErrors[1].msg)
+      .toMatchInlineSnapshot('"Every property of Vue Vine component function\'s `vineSlots` type must be function signature"')
+    expect(mockCompilerCtx.vineCompileErrors[2]?.msg)
+      .toMatchInlineSnapshot('"Function signature of `vineSlots` can only have one parameter named `props`, and its type annotation must be object literal"')
+    expect(mockCompilerCtx.vineCompileErrors[3]?.msg)
+      .toMatchInlineSnapshot('"Function signature of `vineSlots` definition can only have one parameter named `props`, and its parameter name must be `props`, but got `yyy`"')
+    expect(mockCompilerCtx.vineCompileErrors[4]?.msg)
+      .toMatchInlineSnapshot('"Properties of `vineSlots` can only have function type annotation"')
+    expect(mockCompilerCtx.vineCompileErrors[5]?.msg)
+      .toMatchInlineSnapshot(`"the declaration of \`vineModel\` macro call must be inside a variable declaration"`)
+    expect(mockCompilerCtx.vineCompileErrors[6]?.msg)
+      .toMatchInlineSnapshot(`"the declaration of macro \`vineModel\` call must be an identifier"`)
+    expect(mockCompilerCtx.vineCompileErrors[7]?.msg)
+      .toMatchInlineSnapshot(`"Vue Vine component function can only have one default model"`)
+    expect(mockCompilerCtx.vineCompileErrors[8]?.msg)
+      .toMatchInlineSnapshot(`"\`vineCustomElement\` macro call is not allowed to be inside a variable declaration"`)
+    expect(mockCompilerCtx.vineCompileErrors[9]?.msg)
+      .toMatchInlineSnapshot(`"\`vineStyle\` can only have one string argument'"`)
+    expect(mockCompilerCtx.vineCompileErrors[10]?.msg)
+      .toMatchInlineSnapshot(`"\`vineEmits\` must have 1 type parameter"`)
+    expect(mockCompilerCtx.vineCompileErrors[11]?.msg)
+      .toMatchInlineSnapshot(`"\`vineSlots\` can only have 1 type parameter"`)
+    expect(mockCompilerCtx.vineCompileErrors[12]?.msg)
+      .toMatchInlineSnapshot(`"\`vineExpose\` must have one object literal argument"`)
+    expect(mockCompilerCtx.vineCompileErrors[13]?.msg)
+      .toMatchInlineSnapshot(`"\`vineOptions\` must have one object literal argument"`)
   })
 
   it('validate vineStyle can not be inside a lexical declaration', () => {
@@ -236,7 +259,7 @@ function TestComp() {
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"`vineEmits` must have 1 type parameter"')
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
-      .toMatchInlineSnapshot('"the declaration of macro call must be an identifier"')
+      .toMatchInlineSnapshot(`"the declaration of macro \`vineEmits\` call must be an identifier"`)
   })
 
   it('validate template invalid top level tags', () => {

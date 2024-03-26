@@ -1,7 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
+import type { Nil } from '../src/types'
 import { createMockTransformCtx } from './shared-utils'
+
+// implement a function for excluding fields of an object
+function excludeFields<T extends Record<string, any>, K extends keyof T>(
+  obj: T | Nil,
+  keys: K[],
+): Omit<T, K> {
+  if (!obj)
+    return {} as Omit<T, K>
+
+  const res = { ...obj }
+  keys.forEach((key) => {
+    delete res[key]
+  })
+  return res
+}
 
 describe('test Vine compiler analyze', () => {
   it('analyze imports', () => {
@@ -144,6 +160,67 @@ function MyComp() {
         defaultSlot.props.end!,
       ),
     ).toMatchInlineSnapshot('"{ id: string; msg: string; }"')
+  })
+
+  it('analyze vineModel definition', () => {
+    const content = `
+function MyComp() {
+  const defaultModelWithValue = vineModel({ default: 'test' })
+  const title = vineModel('title', { default: '' })
+  const count = vineModel<number>('count')
+
+  return vine\`<div>Test slots</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineModel', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineModel')
+    expect(fileCtx?.vineCompFns.length).toBe(1)
+    const vineFnComp = fileCtx?.vineCompFns[0]
+
+    const pickOneModel = (name: string) => {
+      return {
+        ...excludeFields(
+          vineFnComp?.vineModels[name],
+          ['modelOptions'],
+        ),
+        modelOptions: vineFnComp!.vineModels[name].modelOptions
+          ? content.slice(
+            vineFnComp!.vineModels[name].modelOptions!.start!,
+            vineFnComp!.vineModels[name].modelOptions!.end!,
+          )
+          : undefined,
+      }
+    }
+
+    expect(
+      pickOneModel('modelValue'),
+    ).toMatchInlineSnapshot(`
+      {
+        "modelModifiersName": "modelModifiers",
+        "modelOptions": "{ default: 'test' }",
+        "varName": "defaultModelWithValue",
+      }
+    `)
+    expect(
+      pickOneModel('title'),
+    ).toMatchInlineSnapshot(`
+      {
+        "modelModifiersName": "titleModifiers",
+        "modelOptions": "{ default: '' }",
+        "varName": "title",
+      }
+    `)
+    expect(
+      pickOneModel('count'),
+    ).toMatchInlineSnapshot(`
+      {
+        "modelModifiersName": "countModifiers",
+        "modelOptions": undefined,
+        "varName": "count",
+      }
+    `)
   })
 
   it('analyze `vineExpose` and `vineOptions` macro calls', () => {
@@ -300,9 +377,9 @@ function MyComp() {
     compileVineTypeScriptFile(content, 'testReferenceLocallyDeclaredVariables', mockCompilerHooks)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot(`"Cannot reference "val1" locally declared variables because it will be hoisted outside of the setup() function."`)
+      .toMatchInlineSnapshot(`"Cannot reference "val1" locally declared variables because it will be hoisted outside of component's setup() function."`)
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
-      .toMatchInlineSnapshot(`"Cannot reference "val2" locally declared variables because it will be hoisted outside of the setup() function."`)
+      .toMatchInlineSnapshot(`"Cannot reference "val2" locally declared variables because it will be hoisted outside of component's setup() function."`)
   })
 })
 
