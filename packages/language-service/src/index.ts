@@ -112,6 +112,10 @@ function createVueVineCode(
           tsCodeSegments.push(segment)
         }
         else if (segment[1] === 'template') {
+          // TODO: fix in upstream
+          segment[3].structure = false;
+          segment[3].format = false;
+
           tsCodeSegments.push([
             segment[0],
             undefined,

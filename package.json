@@ -63,6 +63,7 @@
   },
   "pnpm": {
     "overrides": {
+      "@volar/typescript": "2.1.5-patch.2",
       "vscode-uri": "^3.0.8"
     }
   },
