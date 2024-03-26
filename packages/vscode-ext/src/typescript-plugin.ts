@@ -12,4 +12,5 @@ const plugin = createLanguageServicePlugin((ts) => {
   ]
 })
 
-export default plugin
+// @ts-expect-error
+export = plugin;

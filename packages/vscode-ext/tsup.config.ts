@@ -42,7 +42,8 @@ export default defineConfig(
       ],
     },
     {
-      ...base,
+      // TODO: base options breaks the plugin
+      // ...base,
       entry: {
         index: 'src/typescript-plugin.ts',
       },

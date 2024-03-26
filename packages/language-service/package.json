@@ -40,7 +40,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-server": "~2.1.2",
+    "@volar/language-server": "~2.1.5",
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "^2.0.6"
   },
