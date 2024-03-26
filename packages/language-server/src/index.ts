@@ -1,6 +1,7 @@
 import {
   createConnection,
   createServer,
+  createSimpleProjectProviderFactory,
   createTypeScriptProjectProviderFactory,
   loadTsdkByPath,
 } from '@volar/language-server/node'
@@ -8,11 +9,13 @@ import type * as ts from 'typescript'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createHtmlService } from 'volar-service-html'
-import { create as createTypeScriptService } from 'volar-service-typescript'
+import { create as createTypeScriptServices } from 'volar-service-typescript'
 
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+
+const debug = false
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -27,10 +30,12 @@ connection.onInitialize((params) => {
 
   return server.initialize(
     params,
-    createTypeScriptProjectProviderFactory(
-      tsdk.typescript,
-      tsdk.diagnosticMessages,
-    ),
+    debug
+      ? createTypeScriptProjectProviderFactory(
+        tsdk.typescript,
+        tsdk.diagnosticMessages,
+      )
+      : createSimpleProjectProviderFactory(),
     {
       getLanguagePlugins(env, projectContext) {
         let compilerOptions: ts.CompilerOptions = {}
@@ -46,12 +51,15 @@ connection.onInitialize((params) => {
         return [createVueVineLanguagePlugin(tsdk.typescript, compilerOptions, vueCompilerOptions)]
       },
       getServicePlugins() {
-        return [
+        const plugins = [
           createHtmlService(),
           createCssService(),
           createEmmetService(),
-          createTypeScriptService(tsdk.typescript),
         ]
+        if (debug) {
+          plugins.push(...createTypeScriptServices(tsdk.typescript))
+        }
+        return plugins;
       },
     },
   )

@@ -258,17 +258,17 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6(typescript@5.2.2)
       volar-service-css:
-        specifier: 0.0.31
-        version: 0.0.31(@volar/language-service@2.1.5)
+        specifier: 0.0.34
+        version: 0.0.34(@volar/language-service@2.1.5)
       volar-service-emmet:
-        specifier: 0.0.31
-        version: 0.0.31(@volar/language-service@2.1.5)
+        specifier: 0.0.34
+        version: 0.0.34(@volar/language-service@2.1.5)
       volar-service-html:
-        specifier: 0.0.31
-        version: 0.0.31(@volar/language-service@2.1.5)
+        specifier: 0.0.34
+        version: 0.0.34(@volar/language-service@2.1.5)
       volar-service-typescript:
-        specifier: 0.0.31-patch.1
-        version: 0.0.31-patch.1(@volar/language-service@2.1.5)(@volar/typescript@2.1.5)
+        specifier: 0.0.34
+        version: 0.0.34(@volar/language-service@2.1.5)
     devDependencies:
       '@types/node':
         specifier: ^20.11.25
@@ -8830,6 +8830,20 @@ packages:
       vscode-uri: 3.0.8
     dev: false
 
+  /volar-service-css@0.0.34(@volar/language-service@2.1.5):
+    resolution: {integrity: sha512-C7ua0j80ZD7bsgALAz/cA1bykPehoIa5n+3+Ccr+YLpj0fypqw9iLUmGLX11CqzqNCO2XFGe/1eXB/c+SWrF/g==}
+    peerDependencies:
+      '@volar/language-service': ~2.1.0
+    peerDependenciesMeta:
+      '@volar/language-service':
+        optional: true
+    dependencies:
+      '@volar/language-service': 2.1.5
+      vscode-css-languageservice: 6.2.10
+      vscode-languageserver-textdocument: 1.0.11
+      vscode-uri: 3.0.8
+    dev: false
+
   /volar-service-emmet@0.0.31(@volar/language-service@2.1.5):
     resolution: {integrity: sha512-d+KfC0axTB6Ku4v70So3GEqsEzrE9zifDvwnqHUrg+Bts05kCFlRgDCLziXmddKhtaaJJ6oSizHr7WcFUyesww==}
     peerDependencies:
@@ -8843,8 +8857,35 @@ packages:
       vscode-html-languageservice: 5.1.1
     dev: false
 
+  /volar-service-emmet@0.0.34(@volar/language-service@2.1.5):
+    resolution: {integrity: sha512-ubQvMCmHPp8Ic82LMPkgrp9ot+u2p/RDd0RyT0EykRkZpWsagHUF5HWkVheLfiMyx2rFuWx/+7qZPOgypx6h6g==}
+    peerDependencies:
+      '@volar/language-service': ~2.1.0
+    peerDependenciesMeta:
+      '@volar/language-service':
+        optional: true
+    dependencies:
+      '@volar/language-service': 2.1.5
+      '@vscode/emmet-helper': 2.9.2
+      vscode-html-languageservice: 5.1.1
+    dev: false
+
   /volar-service-html@0.0.31(@volar/language-service@2.1.5):
     resolution: {integrity: sha512-duMjl/VLvPWtmYsIAUtwYw/esFY3FWnVmH7537UpnfY9ncYTX/G43xmoVd+oQJPWh7xi8zwFeUQgZAA6T45Bhg==}
+    peerDependencies:
+      '@volar/language-service': ~2.1.0
+    peerDependenciesMeta:
+      '@volar/language-service':
+        optional: true
+    dependencies:
+      '@volar/language-service': 2.1.5
+      vscode-html-languageservice: 5.1.1
+      vscode-languageserver-textdocument: 1.0.11
+      vscode-uri: 3.0.8
+    dev: false
+
+  /volar-service-html@0.0.34(@volar/language-service@2.1.5):
+    resolution: {integrity: sha512-kMEneea1tQbiRcyKavqdrSVt8zV06t+0/3pGkjO3gV6sikXTNShIDkdtB4Tq9vE2cQdM50TuS7utVV7iysUxHw==}
     peerDependencies:
       '@volar/language-service': ~2.1.0
     peerDependenciesMeta:
@@ -8922,19 +8963,17 @@ packages:
       vscode-nls: 5.2.0
     dev: false
 
-  /volar-service-typescript@0.0.31-patch.1(@volar/language-service@2.1.5)(@volar/typescript@2.1.5):
-    resolution: {integrity: sha512-q9Dv9lg3fyLopMgXll4Xal862YLVHw4PShFcllHqIQXUMiPzQndZ7dA7B/3OldVFYeJLWP44w/M+90tjdxtl7w==}
+  /volar-service-typescript@0.0.34(@volar/language-service@2.1.5):
+    resolution: {integrity: sha512-NbAry0w8ZXFgGsflvMwmPDCzgJGx3C+eYxFEbldaumkpTAJiywECWiUbPIOfmEHgpOllUKSnhwtLlWFK4YnfQg==}
     peerDependencies:
       '@volar/language-service': ~2.1.0
-      '@volar/typescript': ~2.1.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
     dependencies:
       '@volar/language-service': 2.1.5
-      '@volar/typescript': 2.1.5
       path-browserify: 1.0.1
-      semver: 7.5.4
+      semver: 7.6.0
       typescript-auto-import-cache: 0.3.2
       vscode-languageserver-textdocument: 1.0.11
       vscode-nls: 5.2.0
