@@ -30,6 +30,10 @@ function MyProfile() {
     default(props: { msg: string }): any
   }>()
 
+  const defaultModelWithValue = vineModel({ default: 'test' })
+  const title = vineModel('title', { default: '' })
+  const count = vineModel<number>('count')
+
   vineExpose({
     age,
     bio,

@@ -15,12 +15,13 @@ import {
   TO_REFS_HELPER,
   UN_REF_HELPER,
   USE_DEFAULTS_HELPER,
+  USE_MODEL_HELPER,
   USE_SLOT_HELPER,
 } from './constants'
 import { sortStyleImport } from './style/order'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
 import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
-import type { VineCompilerHooks, VineFileCtx } from './types'
+import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from './types'
 import { filterJoin, showIf } from './utils'
 import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import { compileCSSVars } from './style/transform-css-var'
@@ -87,6 +88,77 @@ function registerImport(
   }
 }
 
+function setupCodeGenerationForVineModel(
+  vineFnCompCtx: VineCompFnCtx,
+): string {
+  let modelCodeGen: string[] = []
+
+  for (const [modelName, modelDef] of Object.entries(vineFnCompCtx.vineModels)) {
+    const { varName } = modelDef
+    modelCodeGen.push(
+      `const ${varName} = _${USE_MODEL_HELPER}(__props, '${modelName}')`,
+    )
+  }
+
+  return `\n${modelCodeGen.join('\n')}\n`
+}
+
+function propsOptionsCodeGeneration(
+  vineFileCtx: VineFileCtx,
+  vineCompFnCtx: VineCompFnCtx,
+) {
+  const segementsFromProps = Object.entries(vineCompFnCtx.props).map(([propName, propMeta]) => {
+    const metaFields = []
+    if (propMeta.isRequired) {
+      metaFields.push('required: true')
+    }
+    if (propMeta.isBool) {
+      metaFields.push('type: Boolean')
+    }
+    if (propMeta.validator) {
+      metaFields.push(`validator: ${
+        vineFileCtx.originCode.slice(
+          propMeta.validator.start!,
+          propMeta.validator.end!,
+        )
+      }`)
+    }
+    return `${propName}: { ${
+      showIf(
+        metaFields.filter(Boolean).length > 0,
+        filterJoin(metaFields, ', '),
+        '/* Simple prop */',
+      )
+    } },`
+  })
+
+  const segementsFromVineModel = Object
+    .entries(vineCompFnCtx.vineModels)
+    .reduce<string[]>((segments, [modelName, modelDef]) => {
+      const { modelModifiersName, modelOptions } = modelDef
+      segments.push(
+        `${modelName}: ${
+          modelOptions
+            ? vineFileCtx.originCode.slice(
+                modelOptions.start!,
+                modelOptions.end!,
+              )
+            : '{}'
+        },`,
+      )
+      segments.push(
+        `${modelModifiersName}: {},`,
+      )
+
+      return segments
+    }, [])
+
+  return [
+    ...segementsFromProps,
+    ...segementsFromVineModel,
+  ]
+}
+
 /**
  * Processing `.vine.ts` file transforming.
  *
@@ -107,10 +179,15 @@ export function transformFile(
 ) {
   const isDev = compilerHooks.getCompilerCtx().options.envMode !== 'production'
   const ms = vineFileCtx.fileMagicCode
+
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
   const styleImportStmts = sortStyleImport(vineFileCtx)
   const mergedImportsMap: MergedImportsMap = new Map()
+
+  // Flag that is used for noticing prepend `useDefaults` helper function.
+  let isPrependedUseDefaults = false
+
   const {
     templateCompileResults,
     generatedPreambleStmts,
@@ -119,7 +196,7 @@ export function transformFile(
     ? createInlineTemplateComposer(compilerHooks)
     : createSeparatedTemplateComposer(compilerHooks)
 
-  let isPrependedUseDefaults = false
+  // Traverse all component functions and transform them into IIFE
   for (const vineCompFnCtx of vineFileCtx.vineCompFns) {
     const setupFnReturns = compileSetupFnReturns({
       vineFileCtx,
@@ -128,7 +205,9 @@ export function transformFile(
       mergedImportsMap,
       bindingMetadata: vineCompFnCtx.bindings,
     })
-    const isNeedUseDefaults = Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.default))
+    const isNeedUseDefaults = Object
+      .values(vineCompFnCtx.props)
+      .some(meta => Boolean(meta.default))
 
     // Add `defineComponent` helper function import specifier
     let vueImportsMeta = mergedImportsMap.get('vue')
@@ -223,7 +302,48 @@ export function transformFile(
           } }`
           : ' /* No setup ctx destructuring */'
       }`
-      if (Object.values(vineCompFnCtx.props).some(meta => Boolean(meta.isFromMacroDefine))) {
+
+      // Code generation for vineSlots
+      if (Object.entries(vineCompFnCtx.slots).length > 0) {
+        ms.prependLeft(
+          firstStmt.start!,
+          `const ${vineCompFnCtx.slotsAlias} = _${USE_SLOT_HELPER}();\n`,
+        )
+      }
+
+      // Code generation for vineModel
+      if (Object.entries(vineCompFnCtx.vineModels).length > 0) {
+        registerImport(
+          mergedImportsMap,
+          'vue',
+          USE_MODEL_HELPER,
+          `_${USE_MODEL_HELPER}`,
+        )
+        ms.prependLeft(
+          firstStmt.start!,
+          setupCodeGenerationForVineModel(vineCompFnCtx),
+        )
+      }
+
+      // Insert `useCssVars` helper function call
+      if (
+        Array.from(
+          Object.entries(vineCompFnCtx.cssBindings),
+        ).length > 0
+      ) {
+        ms.prependLeft(
+          firstStmt.start!,
+          `\n${compileCSSVars(vineCompFnCtx, inline)}\n`,
+        )
+      }
+
+      // If there's any prop that is from macro define,
+      // we need to import `toRefs`
+      if (
+        Object
+          .values(vineCompFnCtx.props)
+          .some(meta => Boolean(meta.isFromMacroDefine))
+      ) {
         registerImport(
           mergedImportsMap,
           'vue',
@@ -236,24 +356,6 @@ export function transformFile(
         ms.prependLeft(
           firstStmt.start!,
           `const { ${propsFromMacro.join(', ')} } = _toRefs(${vineCompFnCtx.propsAlias});\n`,
-        )
-      }
-
-      // vineSlots
-      if (Object.entries(vineCompFnCtx.slots).length > 0) {
-        ms.prependLeft(
-          firstStmt.start!,
-          `const ${vineCompFnCtx.slotsAlias} = _${USE_SLOT_HELPER}();\n`,
-        )
-      }
-
-      // Insert `useCssVars` helper function call
-      if (Array.from(
-        Object.entries(vineCompFnCtx.cssBindings),
-      ).length > 0) {
-        ms.prependLeft(
-          firstStmt.start!,
-          `\n${compileCSSVars(vineCompFnCtx, inline)}\n`,
         )
       }
 
@@ -315,7 +417,18 @@ export function transformFile(
 
       ms.prependLeft(firstStmt.start!, `setup(${setupFormalParams}) {\n`)
       ms.appendRight(lastStmt.end!, '\n}')
+
+      const emitsKeys = [
+        ...vineCompFnCtx.emits.map(emit => `'${emit}'`),
+        ...Object.keys(vineCompFnCtx.vineModels).map(modelName => `'update:${modelName}'`),
+      ]
+      const propsOptionFields = propsOptionsCodeGeneration(
+        vineFileCtx,
+        vineCompFnCtx,
+      )
+
       ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
+        // Some basic component options
         vineCompFnCtx.options
           ? `...${ms.original.slice(
             vineCompFnCtx.options.start!,
@@ -323,40 +436,23 @@ export function transformFile(
           )},`
           : `name: '${vineCompFnCtx.fnName}',`
       }\n${
-        Object.keys(vineCompFnCtx.props).length > 0
+        propsOptionFields.length > 0
           ? `props: {\n${
-            Object.entries(vineCompFnCtx.props).map(([propName, propMeta]) => {
-              const metaFields = []
-              if (propMeta.isRequired) {
-                metaFields.push('required: true')
-              }
-              if (propMeta.isBool) {
-                metaFields.push('type: Boolean')
-              }
-              if (propMeta.validator) {
-                metaFields.push(`validator: ${
-                  ms.original.slice(
-                    propMeta.validator.start!,
-                    propMeta.validator.end!,
-                  )
-                }`)
-              }
-              return `${propName}: { ${
-                showIf(
-                  metaFields.filter(Boolean).length > 0,
-                  filterJoin(metaFields, ', '),
-                  '/* Simple prop */',
-                )
-              } },`
-            }).join('\n')
+            propsOptionsCodeGeneration(
+              vineFileCtx,
+              vineCompFnCtx,
+            ).join('\n')
           }\n},`
           : '/* No props */'
       }\n${
-        vineCompFnCtx.emits.length > 0
-          ? `emits: [${vineCompFnCtx.emits.map(emit => `'${emit}'`).join(', ')}],`
+        emitsKeys.length > 0
+          ? `emits: [${
+            emitsKeys.join(', ')
+          }],`
           : '/* No emits */'
       }\n`)
       ms.appendRight(lastStmt.end!, '\n})')
+
       // Defaultly set `export` for all component functions
       // because it's required by HMR context.
       ms.prependLeft(firstStmt.start!, `\nexport const ${
@@ -367,6 +463,7 @@ export function transformFile(
           .get(vineCompFnCtx)
           ?.join('\n') ?? ''
       }\n`)
+
       ms.appendRight(lastStmt.end!, `\n${
         inline
           ? ''
@@ -375,8 +472,8 @@ export function transformFile(
           : `${
             templateCompileResults.get(vineCompFnCtx) ?? ''
           }\n__vine.render = __sfc_render`
-      }\n${
-        showIf(
+        }\n${
+          showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
           `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n${
             isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
@@ -386,6 +483,7 @@ export function transformFile(
           Boolean(vineCompFnCtx.isCustomElement),
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
         )}\nreturn __vine\n})();`)
+
       // Record component function to HMR
       if (isDev) {
         ms.appendRight(
@@ -396,7 +494,7 @@ export function transformFile(
     }
   }
 
-  // HMR
+  // HMR helper code
   if (isDev) {
     ms.appendRight(
       ms.length(),

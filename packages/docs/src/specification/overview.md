@@ -11,7 +11,7 @@ We'll talk about all the basic concepts of Vue Vine in this chapter.
 <b>Before starting to use it, you're supposed to know the following conventions:</b>
 
 - Vine was designed to only support Vue 3.0+ and Vite.
-- Vine is only designed to support TypeScript, JavaScript-only users may not enjoy the full functionality
+- Vine is only designed to support TypeScript, JavaScript-only users can't harness the complete range of functionalities.
 
 :::
 
@@ -86,7 +86,7 @@ function MyComponent() {
 
 To define props for component, there're two ways for you:
 
-1. Give your VCF a `props` formal parameter as the first one, and write a TypeScript Object literal type annotation for it, with all the props you want to define.
+1. Define props on a VCF parameter, it should be the first one, and write a TypeScript Object literal type annotation for it, with all the props you want to define.
 
 2. Use `vineProp` macro to define prop one by one, but the advantage of this way is that you can easily use every single prop's value as a `Ref`, instead of wrapping `props` with`toRefs` manually.
 
