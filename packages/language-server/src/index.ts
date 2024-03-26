@@ -22,13 +22,13 @@ const server = createServer(connection)
 
 connection.listen()
 
-connection.onInitialize((params) => {
+connection.onInitialize(async (params) => {
   const tsdk = loadTsdkByPath(
     params.initializationOptions.typescript.tsdk,
     params.locale,
   )
 
-  return server.initialize(
+  const result = await server.initialize(
     params,
     debug
       ? createTypeScriptProjectProviderFactory(
@@ -63,6 +63,12 @@ connection.onInitialize((params) => {
       },
     },
   )
+
+  // tsserver already provides semantic tokens
+  // TODO: handle in upstream instead of here
+  result.capabilities.semanticTokensProvider = undefined;
+
+  return result;
 })
 
 connection.onInitialized(server.initialized)
