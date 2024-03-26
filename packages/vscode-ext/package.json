@@ -87,7 +87,7 @@
     "@changesets/cli": "^2.26.2",
     "@types/vscode": "1.85.0",
     "@volar/language-server": "~2.1.5",
-    "@volar/typescript": "~2.1.5-patch.1",
+    "@volar/typescript": "~2.1.5-patch.2",
     "@volar/vscode": "~2.1.5",
     "@vscode/vsce": "latest",
     "@vue/language-core": "^2.0.6",

@@ -368,8 +368,8 @@ importers:
         specifier: ~2.1.5
         version: 2.1.5
       '@volar/typescript':
-        specifier: ~2.1.5-patch.1
-        version: 2.1.5-patch.1
+        specifier: ~2.1.5-patch.2
+        version: 2.1.5
       '@volar/vscode':
         specifier: ~2.1.5
         version: 2.1.5
@@ -2799,13 +2799,6 @@ packages:
     dependencies:
       '@volar/language-core': 2.1.5
       path-browserify: 1.0.1
-
-  /@volar/typescript@2.1.5-patch.1:
-    resolution: {integrity: sha512-FgbOcx+J3faVMiBM4XI/4LokIGI3k3k//rstmlS5445excVsCdbIfswvQ6XngNSmnRQNK586BfuZgW+eaGx3Nw==}
-    dependencies:
-      '@volar/language-core': 2.1.5
-      path-browserify: 1.0.1
-    dev: true
 
   /@volar/vscode@2.1.5:
     resolution: {integrity: sha512-NjiJr4Fd7Vm0d1LwOdpPJYoTpXjzZCB1xKNZmilCJG2e+MpzYiYlsnz/fiYBEa8brcSLmfMpw8vJD2DaBLE/Jw==}
