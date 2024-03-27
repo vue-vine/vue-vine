@@ -1,6 +1,11 @@
+/* eslint-disable no-console */
 import type { InitializationOptions } from '@volar/language-server'
 import * as serverProtocol from '@volar/language-server/protocol'
-import { activateAutoInsertion, createLabsInfo, getTsdk } from '@volar/vscode'
+import {
+  activateAutoInsertion,
+  createLabsInfo,
+  getTsdk,
+} from '@volar/vscode'
 import * as vscode from 'vscode'
 import * as lsp from 'vscode-languageclient/node'
 
@@ -41,7 +46,6 @@ export async function activate(context: vscode.ExtensionContext) {
     clientOptions,
   )
   await client.start()
-  // eslint-disable-next-line no-console
   console.log('Vine language server started')
 
   // support for auto close tag
@@ -49,12 +53,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const labsInfo = createLabsInfo(serverProtocol)
   labsInfo.addLanguageClient(client)
-
-  const disposable = vscode.commands.registerCommand(
-    'vue-vine-extension.helloWorld',
-    () => vscode.window.showInformationMessage('[Vue Vine language service] Hello World!'),
-  )
-  context.subscriptions.push(disposable)
 
   return labsInfo.extensionExports
 }
