@@ -38,8 +38,6 @@ export default defineConfig({
 
 ## Try the demo
 
-**warning:** For now, `Vue Vine` is still under heavy development, please don't use it in production.
-
 You can try the demo by following steps:
 
 For development environment setup, first you need to get the VSCode extension bundle ouput.
