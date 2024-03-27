@@ -66,9 +66,9 @@ connection.onInitialize(async (params) => {
 
   // tsserver already provides semantic tokens
   // TODO: handle in upstream instead of here
-  result.capabilities.semanticTokensProvider = undefined;
+  result.capabilities.semanticTokensProvider = undefined
 
-  return result;
+  return result
 })
 
 connection.onInitialized(server.initialized)
