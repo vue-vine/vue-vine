@@ -1,21 +1,18 @@
 import { createRequire } from 'node:module'
 import { defineConfig } from 'tsup'
-import base from '../../tsup.config'
 
 const require = createRequire(import.meta.url)
 
 export default defineConfig(
   [
     {
-      ...base,
       entry: {
         client: './src/index.ts',
         server: './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
       },
       format: 'cjs',
-      external: [
-        'vscode',
-      ],
+      external: ['vscode'],
+      clean: true,
       splitting: false,
       define: { 'process.env.NODE_ENV': '"production"' },
       esbuildPlugins: [
@@ -42,8 +39,6 @@ export default defineConfig(
       ],
     },
     {
-      // TODO: base options breaks the plugin
-      // ...base,
       entry: {
         index: 'src/typescript-plugin.ts',
       },
