@@ -7,13 +7,15 @@ export default defineConfig(
   [
     {
       entry: {
-        client: './src/index.ts',
-        server: './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
+        'dist/client': './src/index.ts',
+        'dist/server': './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
+        // We need to generate this inside node_modules so VS Code can resolve it
+        'node_modules/@vue-vine/typescript-plugin/index': 'src/typescript-plugin.ts',
       },
+      outDir: '.',
       format: 'cjs',
       external: ['vscode'],
-      clean: true,
-      splitting: false,
+      bundle: true,
       define: { 'process.env.NODE_ENV': '"production"' },
       esbuildPlugins: [
         {
@@ -37,12 +39,6 @@ export default defineConfig(
           },
         },
       ],
-    },
-    {
-      entry: {
-        index: 'src/typescript-plugin.ts',
-      },
-      outDir: './node_modules/@vue-vine/typescript-plugin',
     },
   ],
 )

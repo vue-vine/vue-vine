@@ -1,7 +1,7 @@
 {
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
-  "displayName": "Vue Vine extension",
+  "displayName": "Vue Vine",
   "version": "0.0.0",
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -14,24 +14,12 @@
   "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
-    "vscode": "^1.78.0"
+    "vscode": "^1.85.0"
   },
   "activationEvents": [
     "onLanguage:typescript"
   ],
   "contributes": {
-    "commands": [
-      {
-        "command": "vue-vine-extension.helloWorld",
-        "title": "Hello world",
-        "category": "Vue Vine"
-      },
-      {
-        "command": "vue-vine-extension.action.writeVirtualFiles",
-        "title": "Write Virtual Files",
-        "category": "Vue Vine"
-      }
-    ],
     "languages": [
       {
         "id": "vine-vue-template"
@@ -72,15 +60,12 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
+    "vscode:prepublish": "pnpm run build",
     "dev": "cross-env NODE_ENV=development tsup --watch",
     "build": "cross-env NODE_ENV=production tsup --minify",
-    "pretest": "pnpm run compile && pnpm run lint",
-    "lint": "eslint src --ext ts"
-  },
-  "dependencies": {
-    "@vue-vine/language-server": "workspace:*",
-    "@vue-vine/language-service": "workspace:*"
+    "lint": "eslint src --ext ts",
+    "pack": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
@@ -90,6 +75,8 @@
     "@volar/typescript": "~2.1.5",
     "@volar/vscode": "~2.1.5",
     "@vscode/vsce": "latest",
+    "@vue-vine/language-server": "workspace:*",
+    "@vue-vine/language-service": "workspace:*",
     "@vue/language-core": "^2.0.6",
     "vscode-languageclient": "^9.0.1"
   }
