@@ -21,7 +21,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsup -w",
+    "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest"

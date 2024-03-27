@@ -1,9 +1,7 @@
 import { Header } from './header.vine'
 import { generateRandomString } from '~/utils'
 
-function StateContainer(props: {
-  id: string
-}) {
+function StateContainer(props: { id: string }) {
   vineStyle.scoped(scss`
     .loading-view {
       margin: 1rem 0;

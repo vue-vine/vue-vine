@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "dev": "tsup -w",
+    "dev": "tsup --watch",
     "build": "tsup"
   },
   "dependencies": {
