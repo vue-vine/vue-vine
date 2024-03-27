@@ -5,7 +5,12 @@ import {
 } from '@vue-vine/compiler'
 
 export function createVineFileCtx(sourceFileName: string, source: string) {
-  const compilerCtx = createCompilerCtx({})
+  const compilerCtx = createCompilerCtx({
+    envMode: 'module',
+    vueCompilerOptions: {
+      mode: 'function', // 'module' will break Volar virtual code's mapping
+    },
+  })
   const vineCompileErrs: VineDiagnostic[] = []
   const vineCompileWarns: VineDiagnostic[] = []
   const compilerHooks: VineCompilerHooks = {

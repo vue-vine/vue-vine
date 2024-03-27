@@ -177,7 +177,7 @@ export function transformFile(
   compilerHooks: VineCompilerHooks,
   inline = true,
 ) {
-  const isDev = compilerHooks.getCompilerCtx().options.mode !== 'production'
+  const isDev = compilerHooks.getCompilerCtx().options.envMode !== 'production'
   const ms = vineFileCtx.fileMagicCode
 
   // Traverse file context's `styleDefine`, and generate import statements.

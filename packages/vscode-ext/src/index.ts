@@ -7,6 +7,8 @@ import * as lsp from 'vscode-languageclient/node'
 let client: lsp.BaseLanguageClient
 
 export async function activate(context: vscode.ExtensionContext) {
+  vscode.extensions.getExtension('vscode.typescript-language-features')?.activate()
+
   const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js')
   const runOptions = { execArgv: <string[]>[] }
   const debugOptions = { execArgv: ['--nolazy', `--inspect=${6009}`] }
@@ -43,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext) {
   console.log('Vine language server started')
 
   // support for auto close tag
-  activateAutoInsertion('vue-vine', client)
+  activateAutoInsertion(['typescript'], client)
 
   const labsInfo = createLabsInfo(serverProtocol)
   labsInfo.addLanguageClient(client)

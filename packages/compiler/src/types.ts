@@ -1,4 +1,5 @@
 import type {
+  CompilerOptions,
   RootNode,
   BindingTypes as VueBindingTypes,
 } from '@vue/compiler-dom'
@@ -56,7 +57,8 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
-  mode?: string // 'development' | 'production'
+  envMode?: string // 'development' | 'production'
+  vueCompilerOptions?: CompilerOptions
   inlineTemplate?: boolean
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
