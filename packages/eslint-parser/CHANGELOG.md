@@ -1,4 +1,4 @@
-# @vue-vine/vite-plugin
+# @vue-vine/eslint-parser
 
 ## 0.1.0
 

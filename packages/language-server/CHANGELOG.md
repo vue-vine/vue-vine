@@ -1,4 +1,4 @@
-# @vue-vine/vite-plugin
+# @vue-vine/language-server
 
 ## 0.1.0
 

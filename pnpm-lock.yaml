@@ -348,13 +348,6 @@ importers:
         version: 1.0.0
 
   packages/vscode-ext:
-    dependencies:
-      '@vue-vine/language-server':
-        specifier: workspace:*
-        version: link:../language-server
-      '@vue-vine/language-service':
-        specifier: workspace:*
-        version: link:../language-service
     devDependencies:
       '@changesets/changelog-github':
         specifier: ^0.4.8
@@ -377,6 +370,12 @@ importers:
       '@vscode/vsce':
         specifier: latest
         version: 2.24.0
+      '@vue-vine/language-server':
+        specifier: workspace:*
+        version: link:../language-server
+      '@vue-vine/language-service':
+        specifier: workspace:*
+        version: link:../language-service
       '@vue/language-core':
         specifier: ^2.0.6
         version: 2.0.6(typescript@5.2.2)
