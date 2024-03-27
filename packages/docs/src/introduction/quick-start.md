@@ -4,11 +4,10 @@ Welcome to join us to exploring another style of writing Vue!
 
 Vine provides a Vite plugin and a VSCode extension to offer feature support.
 
-::: warning Heads up!
-
-Vine is still in early development, please wait for the first stable release `v0.1.0`.
-
 ![npm](https://img.shields.io/npm/v/vue-vine)
+
+::: info TIPS
+Vine's first stable release is `v0.1.0`.
 :::
 
 ## Install Vite plugin
@@ -29,6 +28,12 @@ export default defineConfig({
   ],
 })
 ```
+
+## Install VSCode extension
+
+Search "Vue Vine" in the marketplace and install it.
+
+<img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
 
 ## Use macro types
 

@@ -4,11 +4,10 @@
 
 Vine 提供了一个 Vite 插件和一个 VSCode 扩展。
 
-::: warning 注意！
-
-Vine 目前还处于早期开发阶段，请等待第一个稳定版本 `v0.1.0`。
-
 ![npm](https://img.shields.io/npm/v/vue-vine)
+
+::: info 温馨提示
+Vine 的第一个稳定版本是 `v0.1.0`。
 :::
 
 ## 安装 Vite 插件 {#install-vite-plugin}
@@ -29,6 +28,12 @@ export default defineConfig({
   ],
 })
 ```
+
+## 安装 VSCode 扩展 {#install-vscode-extension}
+
+在市场中搜索 "Vue Vine" 并安装。
+
+<img width="320" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/e4058bbb-f1e4-48f5-909a-760f1edabec3">
 
 ## 使用 macro 类型 {#use-macro-types}
 
