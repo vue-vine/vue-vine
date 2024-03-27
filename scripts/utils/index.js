@@ -16,13 +16,16 @@ export async function runCommand(command, options = {}) {
   return new Promise((resolve, reject) => {
     try {
       const proc = exec(command, {
+        env: {
+          ...process.env,
+          FORCE_COLOR: 'true',
+        },
         cwd: r('../'),
         shell: true,
-        stdio: 'inherit',
       })
-      proc.stdout.on('data', (data) => {
-        console.log(String(data).trim())
-      })
+      proc.stdout.pipe(process.stdout)
+      proc.stderr.pipe(process.stderr)
+
       proc.on('close', resolve)
       proc.on('exit', resolve)
       proc.on('error', (err) => {
