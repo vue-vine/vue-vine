@@ -42,7 +42,7 @@ Vine provides a typescript declaration file to help you write macros with intell
 ```json
 {
   "compilerOptions": {
-    "types": ["vue-vine/macro"]
+    "types": ["vue-vine/macros"]
   }
 }
 ```

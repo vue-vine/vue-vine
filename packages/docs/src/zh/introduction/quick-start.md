@@ -42,7 +42,7 @@ Vine 提供了一个 typescript 声明文件，以帮助你使用宏时获得智
 ```json
 {
   "compilerOptions": {
-    "types": ["vue-vine/macro"]
+    "types": ["vue-vine/macros"]
   }
 }
 ```
