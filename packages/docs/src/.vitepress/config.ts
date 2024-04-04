@@ -1,9 +1,13 @@
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const vineGrammar = JSON.parse(
+  readFileSync(join(__dirname, './vine-ts.tmLanguage.json'), 'utf-8'),
+)
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -105,12 +109,6 @@ export default defineConfig({
     },
     languages: [
       {
-        id: 'vue-vine',
-        scopeName: 'source.vue-vine',
-        path: join(
-          __dirname,
-          './vine-ts.tmLanguage.json',
-        ),
         embeddedLangs: [
           'vue-html',
           'css',
@@ -119,6 +117,7 @@ export default defineConfig({
           'less',
           'stylus',
         ],
+        ...vineGrammar,
       },
     ],
   },
