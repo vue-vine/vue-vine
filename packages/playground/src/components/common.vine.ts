@@ -55,7 +55,7 @@ export function Common() {
 
   return vine`
     <div class="my-header">
-      <h2>测试网站</h2>
+      <h2>Test Website</h2>
       <Button :text="buttonText" :handleClick="clickFunc"></Button>
     </div>
   `

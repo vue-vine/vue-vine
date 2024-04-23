@@ -1,5 +1,5 @@
 /**
- * 实现一个简单包含Common、Button组件的页面 & router跳转
+ * sample page about Common、Button & router
  */
 import { useRouter } from 'vue-router'
 import { Common } from '../components/common.vine'
@@ -84,7 +84,7 @@ export function Home() {
   }
 
   return vine`
-    <Common text="去注册" :handleClick="handleClick"></Common> 
+    <Common text="registry" :handleClick="handleClick"></Common> 
     <StateContainer :id="id" />
     <div class="flex flex-row items-center justify-center my-4">
       <div

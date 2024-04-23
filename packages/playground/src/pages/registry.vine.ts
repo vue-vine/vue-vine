@@ -9,9 +9,9 @@ export function Registry() {
   }
 
   return vine`
-    <Common text="返回" :handleClick="handleClick"></Common> 
+    <Common text="return" :handleClick="handleClick"></Common> 
     <div>
-      <h2>注册页面</h2>
+      <h2>registry page</h2>
     </div> 
   `
 }
