@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { App as VineApp } from './vine/app.vine'
+import { App as VineApp } from './app.vine'
 import router from './router'
 
 // UnoCSS

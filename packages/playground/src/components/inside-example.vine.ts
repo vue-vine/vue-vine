@@ -1,4 +1,4 @@
-export function Header() {
+export function InsideExample() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
 
