@@ -1,7 +1,8 @@
-import { Header } from './header.vine'
+import { PageHeader } from '../components/page-header.vine'
+import { InsideExample } from '../components/inside-example.vine'
 import { generateRandomString } from '~/utils'
 
-function StateContainer(props: { id: string }) {
+function OutsideExample(props: { id: string }) {
   vineStyle.scoped(scss`
     .loading-view {
       margin: 1rem 0;
@@ -33,11 +34,16 @@ function StateContainer(props: { id: string }) {
   }, { immediate: true })
 
   return vine`
-    <article class="state-container">
-      <Header title="Vue Vine Playground" author="ShenQingchuan" />
+    <div class="state-container">
+      <InsideExample
+        title="Here's a title"
+        author="ShenQingchuan"
+      />
+
       <div class="state-container-title text-lime-800/50 dark:text-#999">
         Random string:
       </div>
+
       <div v-if="loading" class="loading-view">
         <div class="icon-loading" />
         <span>Loading...</span>
@@ -45,11 +51,11 @@ function StateContainer(props: { id: string }) {
       <p v-else class="state-container-meta">
         {{ randomStr }}
       </p>
-    </article>
+    </div>
   `
 }
 
-export function App() {
+export function Home() {
   const id = ref('1')
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
@@ -74,12 +80,16 @@ export function App() {
   `)
 
   return vine`
-    <StateContainer :id="id" />
+    <PageHeader />
+    <OutsideExample :id="id" />
     <div class="flex flex-row items-center justify-center my-4">
       <div
         :class="[
           isDark ? 'i-carbon:moon' : 'i-carbon:sun',
-          'mr-2 text-6 cursor-pointer']" @click="toggleDark()" />
+          'mr-2 text-6 cursor-pointer']
+        "
+        @click="toggleDark()"
+      />
       <button class="random-state-change-btn" @click="randomState">
         Click to change random string
       </button>
@@ -88,7 +98,11 @@ export function App() {
       <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>
       <input
         type="text"
-        class="bg-blueGray-200 border-none outline-none p-2 rounded w-300px"
+        class="
+          bg-blueGray-200:80 dark:bg-coolgray-400:20
+          dark:caret-light border-none outline-none p-2
+          dark:text-light rounded w-300px
+        "
         v-model="userInputText"
       />
     </div>
