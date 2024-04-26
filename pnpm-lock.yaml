@@ -130,6 +130,9 @@ importers:
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
+      picocolors:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       citty:
         specifier: ^0.1.6

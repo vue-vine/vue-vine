@@ -2,6 +2,7 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { exit as processExit } from 'node:process'
 import { defineCommand, runMain } from 'citty'
 import { cancel, intro, isCancel, outro, text } from '@clack/prompts'
+import color from 'picocolors'
 import { bugs, description, name as pkgName, version as pkgVersion } from '../package.json'
 
 const main = defineCommand({
@@ -31,11 +32,16 @@ const main = defineCommand({
       return
     }
 
-    intro(`${pkgName} v${pkgVersion}`)
+    intro(color.bgGreen(color.white(`${pkgName} v${pkgVersion}`)))
 
     const projectName = await text({
       message: 'Project name',
       placeholder: 'my-vue-vine-app',
+      validate: (input) => {
+        if (!input.length) {
+          return 'Project name is required'
+        }
+      },
     })
 
     if (isCancel(projectName)) {
