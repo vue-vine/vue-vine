@@ -63,8 +63,8 @@ function patchModule(
     const oCompFns = oVineCompFns[i]
     const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
     const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
-    const nCompFnsStyle = normalizeLineEndings(nStyleDefine[nCompFns.scopeId].source)
-    const oCompFnsStyle = normalizeLineEndings(oStyleDefine[oCompFns.scopeId].source)
+    const nCompFnsStyle = normalizeLineEndings((nStyleDefine[nCompFns.scopeId] || { source: '' }).source)
+    const oCompFnsStyle = normalizeLineEndings((oStyleDefine[oCompFns.scopeId] || { source: '' }).source)
     // 1. Get component function AST Node range for its code content
     const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode!.start), Number((nCompFns!.fnItselfNode!.end)))
     const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode!.start), Number((oCompFns!.fnItselfNode!.end)))
