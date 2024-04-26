@@ -1,38 +1,45 @@
 {
   "name": "create-vue-vine",
-  "version": "0.0.1",
-  "description": "Create Vue Vine CLI",
+  "version": "0.0.0",
+  "description": "Official CLI for creating Vue Vine project.",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "funding": "https://github.com/vue-vine/vue-vine?sponsor=1",
+  "homepage": "https://github.com/vue-vine/vue-vine/tree/main/packages/create-vue-vine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/create-vue-vine"
+  },
+  "bugs": {
+    "url": "https://github.com/vue-vine/vue-vine/issues"
+  },
   "keywords": [
     "Vue",
     "Vine",
     "CLI"
   ],
-  "exports": {
-    ".": {
-      "dev": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "bin": {
-    "create-vue-vine": "index.js",
-    "cvva": "index.js"
+    "create-vue-vine": "index.mjs",
+    "cvva": "index.mjs"
   },
   "files": [
     "dist",
-    "index.js"
+    "index.mjs"
   ],
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
   "scripts": {
     "dev": "tsup --watch",
+    "dry-run": "node ./index.mjs",
     "build": "tsup"
   },
   "dependencies": {
+    "@clack/prompts": "^0.7.0"
   },
   "devDependencies": {
+    "citty": "^0.1.6"
   },
   "publishConfig": {
     "access": "public",
