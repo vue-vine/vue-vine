@@ -477,10 +477,10 @@ export function transformFile(
         }\n${
           showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
-          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n${
-            isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
-          }\n`,
-        )}${showIf(
+          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';`,
+        )}\n${
+          isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
+        }\n${showIf(
           // handle Web Component styles
           Boolean(vineCompFnCtx.isCustomElement),
           `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
