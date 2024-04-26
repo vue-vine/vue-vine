@@ -125,6 +125,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
 
+  packages/create-vue-vine: {}
+
   packages/docs:
     devDependencies:
       '@iconify-json/logos':
