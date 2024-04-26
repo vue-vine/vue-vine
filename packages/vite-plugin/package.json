@@ -28,7 +28,8 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@types/hash-sum": "^1.0.0"
+    "@types/hash-sum": "^1.0.0",
+    "vite": "^5.2.10"
   },
   "publishConfig": {
     "access": "public",
