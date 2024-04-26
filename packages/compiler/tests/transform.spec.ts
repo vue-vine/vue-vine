@@ -114,4 +114,30 @@ describe('test transform', () => {
     expect(formated.includes('__hmrId')).toBe(false)
     expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(false)
   })
+
+  // #83
+  it('hmrId should be generated If there is no style', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const testContent = `
+    export function About() {
+      return vine\`
+        <div>
+          <h2>About page</h2>
+        </div>
+      \`
+    }`
+    compileVineTypeScriptFile(testContent, 'testHMRContentOnNoStyle', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testHMRContentOnNoStyle')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+    expect(formated.includes('__hmrId')).toBe(true)
+    expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(true)
+  })
 })
