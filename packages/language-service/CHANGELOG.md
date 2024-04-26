@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix HMR issue and remove peer dependency requirement for Vite plugin.
+- Updated dependencies
+  - @vue-vine/compiler@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
