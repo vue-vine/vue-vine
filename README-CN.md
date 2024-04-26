@@ -1,4 +1,4 @@
-# Vue Vine
+# Vue Vine ![NPM Version](https://img.shields.io/npm/v/vue-vine)
 
 [English README](./README.md)
 
