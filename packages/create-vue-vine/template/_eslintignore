@@ -1,4 +1,0 @@
-# Ignore playground files
-# because we didn't implement `.vine.ts`
-# template ESTree support yet
-*.vine.ts

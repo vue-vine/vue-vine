@@ -1,5 +1,7 @@
+import { ref } from 'vue'
+
 function Counter(props: {
-  step: number;
+  step: number
 }) {
   const count = ref(0)
 

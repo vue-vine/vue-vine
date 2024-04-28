@@ -20,29 +20,29 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.mjs"
     }
   },
-  "module": "./dist/index.js",
-  "bin": "./bin/create-vue-vine.js",
+  "module": "./dist/index.mjs",
+  "bin": "./bin/create-vue-vine.mjs",
   "files": [
     "bin",
     "dist"
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "play": "node bin/create-vue-vine.mjs"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "clerc": "^0.42.2",
     "execa": "^8.0.1",
-    "gradient-string": "^2.0.2",
+    "gradient-string": "2.0.2",
     "pkg-dir": "^7.0.0",
     "yoctocolors": "^1.0.0"
   },
   "devDependencies": {
-    "@types/gradient-string": "^1.1.2",
     "@types/node": "^20.4.9",
     "eslint": "^8.48.0",
     "unocss": "^0.55.3",

@@ -12,6 +12,7 @@ module.exports = antfu(
       'packages/docs/.vitepress/cache',
       'packages/e2e-test/**/*.vine.ts',
       'packages/playground/**/*.vine.ts',
+      'packages/create-vue-vine/template/**/*.vine.ts',
     ],
   },
   {

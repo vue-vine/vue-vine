@@ -3,14 +3,14 @@ import { rm } from 'node:fs/promises'
 import process from 'node:process'
 import { intro, log, outro, spinner } from '@clack/prompts'
 import { Root, defineCommand } from 'clerc'
-import gradient from 'gradient-string'
 import { bold, green } from 'yoctocolors'
-import { createProject } from '../create'
-import { cancel, confirm, exists, getTemplateDirectory, text, validateProjectName } from '../utils'
-import { getPmCommand, runPmCommand } from '../utils/pm'
+import { cancel, confirm, exists, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
+import { creaateProjectOptions, createProject } from '@/create'
+import { useFlags } from '@/flags'
 
 const defaultProjectName = 'vue-vine-project'
-const VUE_VINE = gradient.atlas('Vue Vine - Another style of writing Vue components')
+
+const { flags, executeFlags } = useFlags()
 
 export const createCommand = defineCommand({
   name: Root,
@@ -30,10 +30,11 @@ export const createCommand = defineCommand({
       description: 'Install dependencies',
       alias: 'i',
     },
+    ...flags,
   },
   alias: 'create',
 }, async (ctx) => {
-  intro(VUE_VINE)
+  intro(gradientBanner)
   const cwd = process.cwd()
   if (!ctx.parameters.projectName) {
     ctx.parameters.projectName = await text({
@@ -67,13 +68,18 @@ export const createCommand = defineCommand({
   if (!templateDir) {
     cancel('Unable to find template directory')
   }
-  const s = spinner()
-  s.start(`Creating project ${ctx.parameters.projectName}`)
-  await createProject({
+
+  const projectOptions = creaateProjectOptions({
     path: projectPath,
     name: ctx.parameters.projectName,
     templateDir,
   })
+
+  await executeFlags(ctx.flags, projectOptions)
+
+  const s = spinner()
+  s.start(`Creating project ${ctx.parameters.projectName}`)
+  await createProject(projectOptions)
   s.stop(`Project created at: ${projectPath}`)
   if (ctx.flags.install === undefined) {
     ctx.flags.install = await confirm({
