@@ -13,10 +13,12 @@ export interface FeatureFlagActionCtx {
 export interface FeatureFlag<N extends string, T extends FlagOptions> {
   name: N
   message: string
-  action: (ctx: FeatureFlagActionCtx) => void
   flag: T
+  initialValue: boolean
 }
 
-export function defineFlag<N extends string, T extends FlagOptions>(flag: FeatureFlag<N, T>) {
+export type ParsedFeatureFlag = Record<string, boolean>
+
+export function defineFlagMeta<N extends string, T extends FlagOptions>(flag: FeatureFlag<N, T>) {
   return flag
 }

@@ -1,14 +1,40 @@
-import type { FlagOptions } from 'clerc'
-import ts from './ts'
 import type { ProjectOptions } from '@/create'
-import { type FeatureFlagActionCtx, confirm } from '@/utils'
+import { confirm, defineFlagMeta } from '@/utils'
+import type { FeatureFlagActionCtx } from '@/utils'
 
-const flags = {
-  [ts.name]: ts.flag,
-} satisfies Record<string, FlagOptions>
+const metas = {
+  typescript: defineFlagMeta({
+    name: 'typescript',
+    message: 'Use TypeScript?',
+    flag: {
+      type: Boolean,
+      description: 'Add TypeScript',
+      default: false,
+    } as const,
+    initialValue: true,
+  }),
+  router: defineFlagMeta({
+    name: 'router',
+    message: 'Use Vue Router?',
+    flag: {
+      type: Boolean,
+      description: 'Add Vue Router',
+      default: false,
+    } as const,
+    initialValue: false,
+  }),
+}
 
-type ParsedFlags = {
-  [K in keyof typeof flags]: boolean
+const flags = Object.entries(metas).reduce((acc, [key, value]) => {
+  // @ts-expect-error - TS doesn't like the computed key
+  acc[key] = value.flag
+  return acc
+}, {} as {
+  [K in keyof typeof metas]: typeof metas[K]['flag']
+})
+
+export type ParsedFlags = {
+  [K in keyof typeof metas]: boolean
 }
 
 export function useFlags() {
@@ -32,16 +58,26 @@ export function useFlags() {
         },
       }
 
-      // Execute flags, order is sensitive
-      for (const item of [ts]) {
-        if (!flags[item.name]) {
-          flags[item.name] = await confirm({
-            message: item.message,
+      // Confirm flags, order is sensitive
+      for (const item of [metas.typescript.name, metas.router.name]) {
+        if (!flags[item]) {
+          const { initialValue, message } = metas[item]
+          flags[item] = await confirm({
+            message,
+            initialValue,
           })
-          if (flags[item.name]) {
-            item.action(context)
-          }
         }
+      }
+
+      if (flags.typescript) {
+        context.feature({
+          name: 'typescript',
+          path: 'https://typescriptlang.org',
+        })
+        context.source.template('ts/main')
+      }
+      else {
+        context.source.template('js/main')
       }
     },
   }
