@@ -28,7 +28,7 @@ export function App() {
   return vine`
     <div class="container">
       <h1>Vue Vine</h1>
-      <Counter step="2" />
+      <Counter :step="2" />
     </div>
   `
 }

@@ -25,9 +25,8 @@ export async function createProject(options: ProjectOptions) {
   await writeFile(join(options.path, 'package.json'), JSON.stringify({
     name: options.name,
   }, null, 2))
-  await renderTemplate(withBase('common'), options.path)
 
-  for (const template of options.templates) {
+  for (const template of ['common', 'code/base', 'config/ts', ...options.templates]) {
     await renderTemplate(withBase(template), options.path)
   }
 }

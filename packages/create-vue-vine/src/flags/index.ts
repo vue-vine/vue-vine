@@ -1,19 +1,8 @@
-import { green } from 'yoctocolors'
 import type { ProjectOptions } from '@/create'
 import { confirm, defineFlagMeta } from '@/utils'
 import type { FeatureFlagActionCtx } from '@/utils'
 
 const metas = {
-  typescript: defineFlagMeta({
-    name: 'typescript',
-    message: `Use TypeScript? ${green('(Recommended)')}`,
-    flag: {
-      type: Boolean,
-      description: 'Add TypeScript',
-      default: false,
-    } as const,
-    initialValue: true,
-  }),
   router: defineFlagMeta({
     name: 'router',
     message: 'Use Vue Router?',
@@ -22,7 +11,7 @@ const metas = {
       description: 'Add Vue Router',
       default: false,
     } as const,
-    initialValue: true,
+    initialValue: false,
   }),
 }
 
@@ -48,7 +37,7 @@ export function useFlags() {
       }
 
       // Confirm flags, order is sensitive
-      for (const item of [metas.typescript.name, metas.router.name]) {
+      for (const item of [metas.router.name]) {
         if (!flags[item]) {
           const { initialValue, message } = metas[item]
           flags[item] = await confirm({
@@ -57,29 +46,8 @@ export function useFlags() {
           })
         }
       }
-
-      let op = 0
-
-      if (flags.typescript) {
-        op |= 1
-      }
       if (flags.router) {
-        op |= 2
-      }
-
-      switch (op) {
-        case 0:
-          context.template('code/js-base')
-          break
-        case 1:
-          context.template('code/ts-base', 'config/ts')
-          break
-        case 2:
-          context.template('code/js-router', 'config/router')
-          break
-        case 3:
-          context.template('code/ts-router', 'config/ts', 'config/router')
-          break
+        context.template('code/router', 'config/router')
       }
     },
   }
