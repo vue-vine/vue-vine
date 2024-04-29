@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "ES2020",
     "jsx": "preserve",
-    "lib": ["DOM", "ESNext"],
+    "jsxImportSource": "vue",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "bundler",

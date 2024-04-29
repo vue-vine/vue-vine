@@ -1,18 +1,16 @@
 {
-  "name": "vue-vine-app",
+  "version": "0.0.0",
   "private": true,
+  "description": "A vue-vine app created with create-vue-vine",
   "scripts": {
-    "dev": "vite --port 3333",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint ."
+    "dev": "vite",
+    "build": "vite build"
   },
   "dependencies": {
-    "@vueuse/core": "^9.13.0",
-    "vue": "^3.3.4"
+    "vue": "^3.4.25"
   },
   "devDependencies": {
-    "vite": "^4.4.9",
+    "vite": "^5.2.10",
     "vue-vine": "*"
   }
 }

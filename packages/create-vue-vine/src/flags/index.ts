@@ -1,3 +1,4 @@
+import { green } from 'yoctocolors'
 import type { ProjectOptions } from '@/create'
 import { confirm, defineFlagMeta } from '@/utils'
 import type { FeatureFlagActionCtx } from '@/utils'
@@ -5,7 +6,7 @@ import type { FeatureFlagActionCtx } from '@/utils'
 const metas = {
   typescript: defineFlagMeta({
     name: 'typescript',
-    message: 'Use TypeScript?',
+    message: `Use TypeScript? ${green('(Recommended)')}`,
     flag: {
       type: Boolean,
       description: 'Add TypeScript',
@@ -21,13 +22,12 @@ const metas = {
       description: 'Add Vue Router',
       default: false,
     } as const,
-    initialValue: false,
+    initialValue: true,
   }),
 }
 
 const flags = Object.entries(metas).reduce((acc, [key, value]) => {
-  // @ts-expect-error - TS doesn't like the computed key
-  acc[key] = value.flag
+  Reflect.set(acc, key, value.flag)
   return acc
 }, {} as {
   [K in keyof typeof metas]: typeof metas[K]['flag']
@@ -42,19 +42,8 @@ export function useFlags() {
     flags,
     executeFlags: async (flags: ParsedFlags, options: ProjectOptions) => {
       const context: FeatureFlagActionCtx = {
-        dep: (params) => {
-          options.deps.push(params)
-        },
-        feature: (params) => {
-          options.features.push(params)
-        },
-        source: {
-          code: (params) => {
-            options.sourceCodes.push(params)
-          },
-          template: (path) => {
-            options.sourceTemplates.push(path)
-          },
+        template: (...path) => {
+          options.templates.push(...path)
         },
       }
 
@@ -69,15 +58,28 @@ export function useFlags() {
         }
       }
 
+      let op = 0
+
       if (flags.typescript) {
-        context.feature({
-          name: 'typescript',
-          path: 'https://typescriptlang.org',
-        })
-        context.source.template('ts/main')
+        op |= 1
       }
-      else {
-        context.source.template('js/main')
+      if (flags.router) {
+        op |= 2
+      }
+
+      switch (op) {
+        case 0:
+          context.template('code/js-base')
+          break
+        case 1:
+          context.template('code/ts-base', 'config/ts')
+          break
+        case 2:
+          context.template('code/js-router', 'config/router')
+          break
+        case 3:
+          context.template('code/ts-router', 'config/ts', 'config/router')
+          break
       }
     },
   }
