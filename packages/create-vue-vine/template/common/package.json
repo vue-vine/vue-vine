@@ -1,7 +1,7 @@
 {
+  "private": true,
   "type": "module",
   "version": "0.0.0",
-  "private": true,
   "description": "A vue-vine app created with create-vue-vine",
   "scripts": {
     "dev": "vite",
