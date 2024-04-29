@@ -6,8 +6,6 @@ The official CLI for creating your Vue Vine projects.
 
 With NPM:
 
-With NPM:
-
 ```bash
 $ npm create vue-vine@latest
 ```
@@ -27,7 +25,7 @@ $ pnpm create vue-vine
 With Bun:
 
 ```bash
-$ bun create vue-bine
+$ bun create vue-vine
 ```
 
 Then follow the prompts!
@@ -36,14 +34,14 @@ You can also directly specify the project name and the template you want to use 
 
 ```bash
 # npm 7+, extra double-dash is needed:
-npm create vue-vine@latest my-vue-vine-app -- --template router
+npm create vue-vine@latest my-vue-vine-app -- --router
 
 # yarn
-yarn create vue-vine my-vue-vine-app --template router
+yarn create vue-vine my-vue-vine-app --router
 
 # pnpm
-pnpm create vue-vine my-vue-vine-app --template router
+pnpm create vue-vine my-vue-vine-app --router
 
 # Bun
-bun create vue-vine my-vue-vine-app --template router
+bun create vue-vine my-vue-vine-app --router
 ```
