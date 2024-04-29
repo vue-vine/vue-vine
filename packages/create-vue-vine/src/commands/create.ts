@@ -4,7 +4,7 @@ import process from 'node:process'
 import { intro, log, outro, spinner } from '@clack/prompts'
 import { Root, defineCommand } from 'clerc'
 import { bold, green } from 'yoctocolors'
-import { cancel, confirm, exists, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
+import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
 import { creaateProjectOptions, createProject } from '@/create'
 import { useFlags } from '@/flags'
 
@@ -98,8 +98,8 @@ export const createCommand = defineCommand({
     'You\'re all set! Now run:',
     '',
     `  cd ${bold(green(cdProjectPath.includes(' ') ? `"${cdProjectPath}"` : cdProjectPath))}`,
-    ctx.flags.install ? undefined : `  ${bold(green(getPmCommand('install')))}`,
-    `  ${bold(green(getPmCommand('dev')))}`,
+    ctx.flags.install ? undefined : `  ${bold(green(formatPmCommand(getPmCommand('install'))))}`,
+    `  ${bold(green(formatPmCommand(getPmCommand('dev'))))}`,
     '',
     '  Happy hacking!',
   ].filter(s => s !== undefined).join('\n')
