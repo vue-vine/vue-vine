@@ -23,7 +23,9 @@
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "test": "vitest --run",
+    "test:dev": "vitest"
   },
   "dependencies": {
     "@types/lodash": "^4.14.201",

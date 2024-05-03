@@ -1275,7 +1275,7 @@ exports[`vine ESLint parser test > test variable reference 1`] = `
         119,
       ],
       "type": "Punctuator",
-      "value": "\\"",
+      "value": """,
     },
     Token {
       "end": 48,
@@ -1313,7 +1313,7 @@ exports[`vine ESLint parser test > test variable reference 1`] = `
         123,
       ],
       "type": "Punctuator",
-      "value": "\\"",
+      "value": """,
     },
     {
       "loc": {
