@@ -4,7 +4,7 @@ import { getTemplateDirectory, renderTemplate } from './utils'
 
 export interface ProjectOptions {
   path: string
-  name: string // TODO
+  name: string
   templateDir: string
 
   templates: string[]

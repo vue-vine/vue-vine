@@ -1,15 +1,49 @@
 import process from 'node:process'
-import { execa } from 'execa'
+import { execa, execaSync } from 'execa'
 
-const userAgent = process.env.npm_config_user_agent ?? ''
+const userAgentEnv = process.env.npm_config_user_agent ?? ''
 
-const packageManager = /pnpm/.test(userAgent)
-  ? 'pnpm'
-  : /yarn/.test(userAgent)
-    ? /bun/.test(userAgent)
-      ? 'bun'
-      : 'yarn'
-    : 'npm'
+function detectPackageManager() {
+  const fromUserAgent = /pnpm/.test(userAgentEnv)
+    ? 'pnpm'
+    : /yarn/.test(userAgentEnv)
+      ? /bun/.test(userAgentEnv)
+        ? 'bun'
+        : 'yarn'
+      : undefined
+
+  if (fromUserAgent)
+    return fromUserAgent
+
+  let pnpmVersionExitCode: number,
+    yarnVersionExitCode: number
+
+  // Run 'pnpm --version' to check if pnpm is installed
+  try {
+    pnpmVersionExitCode = execaSync('pnpm', ['--version'], { stdio: 'ignore' }).exitCode
+  }
+  catch (error) {
+    pnpmVersionExitCode = -1
+  }
+  // Run 'yarn --version' to check if yarn is installed
+  try {
+    yarnVersionExitCode = execaSync('yarn', ['--version'], { stdio: 'ignore' }).exitCode
+  }
+  catch (error) {
+    yarnVersionExitCode = -1
+  }
+
+  if (pnpmVersionExitCode === 0) {
+    return 'pnpm'
+  }
+  else if (yarnVersionExitCode === 0) {
+    return 'yarn'
+  }
+
+  return 'npm'
+}
+
+const packageManager = detectPackageManager()
 
 type Command = 'install' | 'dev'
 
