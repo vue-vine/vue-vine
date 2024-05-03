@@ -1,0 +1,54 @@
+{
+  "name": "create-vue-vine",
+  "version": "0.0.1",
+  "description": "Official CLI for creating Vue Vine project.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "funding": "https://github.com/vue-vine/vue-vine?sponsor=1",
+  "homepage": "https://github.com/vue-vine/vue-vine/tree/main/packages/create-vue-vine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/create-vue-vine"
+  },
+  "bugs": {
+    "url": "https://github.com/vue-vine/vue-vine/issues"
+  },
+  "keywords": [
+    "Vue",
+    "Vine"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs"
+    }
+  },
+  "module": "./dist/index.mjs",
+  "bin": "./bin/create-vue-vine.mjs",
+  "files": [
+    "bin",
+    "dist",
+    "template"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "clerc": "^0.42.2",
+    "execa": "^8.0.1",
+    "pkg-dir": "^7.0.0",
+    "yoctocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.9",
+    "eslint": "^8.48.0",
+    "unocss": "^0.55.3",
+    "unplugin-auto-import": "^0.16.6",
+    "vite": "^4.4.9",
+    "vite-plugin-inspect": "^0.7.38",
+    "vue": "^3.3.4",
+    "vue-vine": "workspace:*"
+  }
+}
