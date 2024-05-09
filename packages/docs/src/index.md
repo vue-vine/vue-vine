@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Vue Vine"
   text: "Another style to write Vue."
-  tagline: "Provide greater flexibility for writing Vue components."
+  tagline: "Provide more flexibility for writing Vue components."
   image:
     src: /vine-logo.png
     alt: Vue Vine
