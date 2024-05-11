@@ -66,7 +66,7 @@ function MyComponent() {
 
 以下是一个示例，高亮的部分会被编译为 Vue 组件的 `setup` 函数中，处理的方式就像 Vue SFC 中的 `<script setup>` 一样。
 
-```vue-vine
+```vue-vine {2-5}
 function MyComponent() {
   const num = ref(0)
   const randomPick = () => {
