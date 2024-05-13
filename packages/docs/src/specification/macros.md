@@ -13,11 +13,11 @@ This macro has zero parameter, and returns the emits function, you **must** defi
 This type parameter's syntax is the same as Vue 3.3's more succinct one, check the [official documentaion](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits) for more details.
 
 ```vue-vine
-const myEmits = vineEmits<{
+const myEmit = vineEmits<{
   update: [foo: string, bar: number]
 }>()
 
-myEmits('update', 'foo', 1)
+myEmit('update', 'foo', 1)
 ```
 
 ## `vineExpose`
