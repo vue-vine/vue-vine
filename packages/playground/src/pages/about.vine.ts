@@ -1,6 +1,11 @@
 import { PageHeader } from '../components/page-header.vine'
 
 export function About() {
+
+  const fn = (a: string) => {
+
+  }
+
   return vine`
     <PageHeader />
     <div>
