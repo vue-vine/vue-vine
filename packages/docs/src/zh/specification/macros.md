@@ -13,11 +13,11 @@
 这个类型参数的语法与 Vue 3.3 更简洁的语法相同，请查阅[官方文档](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits)了解更多细节。
 
 ```vue-vine
-const myEmits = vineEmits<{
+const myEmit = vineEmits<{
   update: [foo: string, bar: number]
 }>()
 
-myEmits('update', 'foo', 1)
+myEmit('update', 'foo', 1)
 ```
 
 ## `vineExpose` {#vineexpose}
