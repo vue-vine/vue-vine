@@ -24,6 +24,7 @@
     "build:main": "cross-env NODE_ENV=production pnpm --filter vue-vine run build",
     "build:ext": "cross-env NODE_ENV=production pnpm --filter vue-vine-extension run build",
     "test": "esno scripts/run-test.js",
+    "test:update": "esno scripts/run-test.js --update",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test",

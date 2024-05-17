@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
 import type { Nil } from '../src/types'
+import { VineBindingTypes } from '../src/constants'
 import { createMockTransformCtx } from './shared-utils'
 
 // implement a function for excluding fields of an object
@@ -423,5 +424,24 @@ function MyBox() {
         "import 'testSortStyleImport?type=vine-style&scopeId=939fac16&comp=MyBox&lang=scss&scoped=true&virtual.scss';",
       ]
     `)
+  })
+
+  it('vineEmits should also set in bindings #89', () => {
+    const content = `
+    function MyComp() {
+      const myEmits = vineEmits<{
+        foo: [a: string];
+        bar: [b: number];
+      }>()
+      return vine\`<div>Test emits</div>\`
+    }`
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVineEmitsBindings', mockCompilerHooks)
+    expect(mockCompilerCtx.fileCtxMap.get('testVineEmitsBindings')?.vineCompFns[0]?.bindings).toEqual(
+      expect.objectContaining({
+        myEmits: VineBindingTypes.SETUP_CONST,
+      }),
+    )
   })
 })

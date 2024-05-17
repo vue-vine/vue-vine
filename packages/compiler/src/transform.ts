@@ -283,7 +283,7 @@ export function transformFile(
       }[] = []
       if (vineCompFnCtx.emits.length > 0) {
         setupCtxDestructFormalParams.push({
-          field: 'emits',
+          field: 'emit',
           alias: vineCompFnCtx.emitsAlias,
         })
       }

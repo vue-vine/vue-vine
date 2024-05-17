@@ -33,6 +33,9 @@ function MyProfile() {
   const defaultModelWithValue = vineModel({ default: 'test' })
   const title = vineModel('title', { default: '' })
   const count = vineModel<number>('count')
+  const emit = vineEmits<{
+    click: [e: MouseEvent]
+  }>()
 
   vineExpose({
     age,
@@ -48,7 +51,7 @@ function MyProfile() {
   \`)
 
   return vine\`
-    <div class="my-profile">
+    <div class="my-profile" @click="(e) => emit('click', e)">
       <div>{{ name }}<span> - {{ age }}</span></div>
       <p v-show="bio">{{ bio }}</p>
       <button @click="handleRefresh">Refresh</button>

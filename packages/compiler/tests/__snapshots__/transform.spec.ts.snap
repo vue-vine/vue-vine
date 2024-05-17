@@ -75,8 +75,6 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
@@ -84,6 +82,8 @@ import {
   useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
 } from "vue";
 
 import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css";
@@ -102,10 +102,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3921d7bd"), (n = n()), _popScopeId(), n
-  );
-  const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
@@ -121,8 +117,8 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: ["click", "update:modelValue", "update:title", "update:count"],
+    setup(__props, { emit: emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -150,31 +146,38 @@ export const MyProfile = (() => {
       return (_ctx, _cache) => {
         return (
           _openBlock(),
-          _createElementBlock("div", _hoisted_1, [
-            _createElementVNode("div", null, [
-              _createTextVNode(_toDisplayString(name.value), 1 /* TEXT */),
-              _createElementVNode(
-                "span",
-                null,
-                " - " + _toDisplayString(age.value),
-                1 /* TEXT */,
+          _createElementBlock(
+            "div",
+            {
+              class: "my-profile",
+              onClick: _cache[0] || (_cache[0] = (e) => emit("click", e)),
+            },
+            [
+              _createElementVNode("div", null, [
+                _createTextVNode(_toDisplayString(name.value), 1 /* TEXT */),
+                _createElementVNode(
+                  "span",
+                  null,
+                  " - " + _toDisplayString(age.value),
+                  1 /* TEXT */,
+                ),
+              ]),
+              _withDirectives(
+                _createElementVNode(
+                  "p",
+                  null,
+                  _toDisplayString(bio.value),
+                  513 /* TEXT, NEED_PATCH */,
+                ),
+                [[_vShow, bio.value]],
               ),
-            ]),
-            _withDirectives(
               _createElementVNode(
-                "p",
-                null,
-                _toDisplayString(bio.value),
-                513 /* TEXT, NEED_PATCH */,
+                "button",
+                { onClick: handleRefresh },
+                "Refresh",
               ),
-              [[_vShow, bio.value]],
-            ),
-            _createElementVNode(
-              "button",
-              { onClick: handleRefresh },
-              "Refresh",
-            ),
-          ])
+            ],
+          )
         );
       };
     },
@@ -263,8 +266,6 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
@@ -272,6 +273,8 @@ import {
   useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
 } from "vue";
 
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css";
@@ -290,10 +293,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3b48c990"), (n = n()), _popScopeId(), n
-  );
-  const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
@@ -309,8 +308,8 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: ["click", "update:modelValue", "update:title", "update:count"],
+    setup(__props, { emit: emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -338,31 +337,38 @@ export const MyProfile = (() => {
       return (_ctx, _cache) => {
         return (
           _openBlock(),
-          _createElementBlock("div", _hoisted_1, [
-            _createElementVNode("div", null, [
-              _createTextVNode(_toDisplayString(name.value), 1 /* TEXT */),
-              _createElementVNode(
-                "span",
-                null,
-                " - " + _toDisplayString(age.value),
-                1 /* TEXT */,
+          _createElementBlock(
+            "div",
+            {
+              class: "my-profile",
+              onClick: _cache[0] || (_cache[0] = (e) => emit("click", e)),
+            },
+            [
+              _createElementVNode("div", null, [
+                _createTextVNode(_toDisplayString(name.value), 1 /* TEXT */),
+                _createElementVNode(
+                  "span",
+                  null,
+                  " - " + _toDisplayString(age.value),
+                  1 /* TEXT */,
+                ),
+              ]),
+              _withDirectives(
+                _createElementVNode(
+                  "p",
+                  null,
+                  _toDisplayString(bio.value),
+                  513 /* TEXT, NEED_PATCH */,
+                ),
+                [[_vShow, bio.value]],
               ),
-            ]),
-            _withDirectives(
               _createElementVNode(
-                "p",
-                null,
-                _toDisplayString(bio.value),
-                513 /* TEXT, NEED_PATCH */,
+                "button",
+                { onClick: handleRefresh },
+                "Refresh",
               ),
-              [[_vShow, bio.value]],
-            ),
-            _createElementVNode(
-              "button",
-              { onClick: handleRefresh },
-              "Refresh",
-            ),
-          ])
+            ],
+          )
         );
       };
     },
@@ -426,14 +432,14 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
   createVNode as _createVNode,
+  pushScopeId as _pushScopeId,
+  popScopeId as _popScopeId,
 } from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css";
@@ -452,10 +458,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-25e4e706"), (n = n()), _popScopeId(), n
-  );
-  const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
@@ -471,8 +473,8 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: ["click", "update:modelValue", "update:title", "update:count"],
+    setup(__props, { emit: emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -504,6 +506,7 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        emit,
         textColor,
         handleRefresh,
         ref,
@@ -522,31 +525,38 @@ export const MyProfile = (() => {
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return (
       _openBlock(),
-      _createElementBlock("div", _hoisted_1, [
-        _createElementVNode("div", null, [
-          _createTextVNode(_toDisplayString($setup.name), 1 /* TEXT */),
-          _createElementVNode(
-            "span",
-            null,
-            " - " + _toDisplayString($setup.age),
-            1 /* TEXT */,
+      _createElementBlock(
+        "div",
+        {
+          class: "my-profile",
+          onClick: _cache[0] || (_cache[0] = (e) => $setup.emit("click", e)),
+        },
+        [
+          _createElementVNode("div", null, [
+            _createTextVNode(_toDisplayString($setup.name), 1 /* TEXT */),
+            _createElementVNode(
+              "span",
+              null,
+              " - " + _toDisplayString($setup.age),
+              1 /* TEXT */,
+            ),
+          ]),
+          _withDirectives(
+            _createElementVNode(
+              "p",
+              null,
+              _toDisplayString($setup.bio),
+              513 /* TEXT, NEED_PATCH */,
+            ),
+            [[_vShow, $setup.bio]],
           ),
-        ]),
-        _withDirectives(
           _createElementVNode(
-            "p",
-            null,
-            _toDisplayString($setup.bio),
-            513 /* TEXT, NEED_PATCH */,
+            "button",
+            { onClick: $setup.handleRefresh },
+            "Refresh",
           ),
-          [[_vShow, $setup.bio]],
-        ),
-        _createElementVNode(
-          "button",
-          { onClick: $setup.handleRefresh },
-          "Refresh",
-        ),
-      ])
+        ],
+      )
     );
   }
   __vine.render = __sfc_render;
