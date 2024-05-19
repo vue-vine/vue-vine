@@ -28,6 +28,10 @@ function OutsideExample(props: { id: string }) {
     }, 2000)
   }
 
+  const a = (a: string) => {
+
+  }
+
   // Mock result of a network request
   watch(() => props.id, () => {
     mockUpdate()
