@@ -6,13 +6,21 @@ export function InsideExample() {
   const defaultMetaBgColor = computed(() => isDark.value ? '#333' : '#ddd')
   const metaBgColor = ref(defaultMetaBgColor.value)
   const toggleMetaBgColor = () => {
-    metaBgColor.value = metaBgColor.value === defaultMetaBgColor.value
-      ? '#59e'
-      : defaultMetaBgColor.value
+    const nextBgColor = (
+      metaBgColor.value === defaultMetaBgColor.value
+        ? '#59e'
+        : defaultMetaBgColor.value
+    )
+    metaBgColor.value = nextBgColor
+    emit('metaBgColorChange', nextBgColor)
   }
   watch(isDark, () => {
     metaBgColor.value = defaultMetaBgColor.value
   })
+
+  const emit = vineEmits<{
+    metaBgColorChange: [string]
+  }>()
 
   vineStyle.scoped(`
     .playground-title {

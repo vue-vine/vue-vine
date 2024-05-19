@@ -39,6 +39,10 @@ function MyProfile() {
     bio,
   })
 
+  vineEmits<{
+    somethingChange: [string];
+  }>()
+
   vineStyle(\`
     .my-profile {
       padding: 10px;

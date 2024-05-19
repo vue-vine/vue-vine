@@ -283,9 +283,13 @@ export function transformFile(
       }[] = []
       if (vineCompFnCtx.emits.length > 0) {
         setupCtxDestructFormalParams.push({
-          field: 'emits',
-          alias: vineCompFnCtx.emitsAlias,
+          field: 'emit',
+          alias: '__emit',
         })
+        ms.prependLeft(
+          firstStmt.start!,
+          `const ${vineCompFnCtx.emitsAlias} = __emit;\n`,
+        )
       }
 
       // Always add `expose` to the setup context destructuring

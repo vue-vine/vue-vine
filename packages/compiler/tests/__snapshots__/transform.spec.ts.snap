@@ -121,8 +121,13 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: [
+      "somethingChange",
+      "update:modelValue",
+      "update:title",
+      "update:count",
+    ],
+    setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -136,6 +141,7 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
+      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -309,8 +315,13 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: [
+      "somethingChange",
+      "update:modelValue",
+      "update:title",
+      "update:count",
+    ],
+    setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -324,6 +335,7 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
+      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -471,8 +483,13 @@ export const MyProfile = (() => {
       count: {},
       countModifiers: {},
     },
-    emits: ["update:modelValue", "update:title", "update:count"],
-    setup(__props, { expose: __expose }) {
+    emits: [
+      "somethingChange",
+      "update:modelValue",
+      "update:title",
+      "update:count",
+    ],
+    setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
         age: 18,
       });
@@ -486,6 +503,7 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
+      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {

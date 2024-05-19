@@ -38,6 +38,7 @@ function OutsideExample(props: { id: string }) {
       <InsideExample
         title="Here's a title"
         author="ShenQingchuan"
+        @metaBgColorChange="(color: string) => console.log(color)"
       />
 
       <div class="state-container-title text-lime-800/50 dark:text-#999">
