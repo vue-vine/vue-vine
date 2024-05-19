@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.1.2
+
+### Patch Changes
+
+- fix(compiler): vineEmits codegen incorrect
+- Updated dependencies
+  - @vue-vine/compiler@0.1.2
+  - @vue-vine/language-service@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

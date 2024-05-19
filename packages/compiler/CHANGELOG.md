@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.2
+
+### Patch Changes
+
+- fix(compiler): vineEmits codegen incorrect
+
 ## 0.1.1
 
 ### Patch Changes
