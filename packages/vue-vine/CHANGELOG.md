@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.1.3
+
+### Patch Changes
+
+- fix(types): vineEmits should exist on setup return bindings, and have correct types
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.3
+
+### Patch Changes
+
+- fix(types): vineEmits should exist on setup return bindings, and have correct types
+
 ## 0.1.2
 
 ### Patch Changes
