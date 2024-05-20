@@ -60,17 +60,7 @@ function OutsideExample(props: { id: string }) {
   `
 }
 
-export function Home() {
-  const id = ref('1')
-  const isDark = useDark()
-  const toggleDark = useToggle(isDark)
-  const randomState = () => {
-    id.value = String(Math.floor(Math.random() * 100) + 1)
-  }
-  const userInputText = vineModel<string>()
-
-  console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
-
+function RandomStringButton() {
   vineStyle(`
     .random-state-change-btn {
       font-size: 1rem;
@@ -84,6 +74,27 @@ export function Home() {
     }
   `)
 
+  const tapEmit = vineEmits<{
+    click: []
+  }>()
+
+  return vine`<button class="random-state-change-btn" @click="tapEmit('click')">
+    Click to change random string
+  </button>`
+}
+
+export function Home() {
+  const id = ref('1')
+  const isDark = useDark()
+  const toggleDark = useToggle(isDark)
+  const randomState = () => {
+    id.value = String(Math.floor(Math.random() * 100) + 1)
+  }
+  const userInputText = vineModel<string>()
+
+  console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
+
+
   return vine`
     <PageHeader />
     <OutsideExample :id="id" />
@@ -95,9 +106,7 @@ export function Home() {
         "
         @click="toggleDark()"
       />
-      <button class="random-state-change-btn" @click="randomState">
-        Click to change random string
-      </button>
+      <RandomStringButton @click="randomState" />
     </div>
     <div class="flex flex-col items-center justify-center my-4">
       <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>

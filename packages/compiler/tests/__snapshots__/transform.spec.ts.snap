@@ -522,6 +522,7 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        emits,
         textColor,
         handleRefresh,
         ref,
