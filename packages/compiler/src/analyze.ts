@@ -743,6 +743,11 @@ const analyzeVineModel: AnalyzeRunner = (
     // If `varName` is equal to `modelName`, it would be overrided to `setup-ref`
     vineCompFnCtx.bindings[modelDef.varName] = VineBindingTypes.SETUP_REF
   }
+
+  // vineEmits is treated as `setup-const` bindings #89
+  if (vineCompFnCtx.emitsAlias && vineCompFnCtx.emits.length) {
+    vineCompFnCtx.bindings[vineCompFnCtx.emitsAlias] = VineBindingTypes.SETUP_CONST
+  }
 }
 
 const analyzeRunners: AnalyzeRunner[] = [
