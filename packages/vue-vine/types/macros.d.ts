@@ -10,10 +10,11 @@ type IsEmptyObj<T> = keyof T extends never ? true : false
 
 type VineEmitsDefineSource = Record<string, any[]>
 type VineEmitsDefineResult<D extends VineEmitsDefineSource> = IsEmptyObj<D> extends true
-  ? never :
-    {
-      [K in keyof D]: (evt: K, ...args: D[K]) => void
-    }[keyof D]
+  ? never
+  : <E extends keyof D>(
+  eventName: E,
+  ...args: D[E]
+) => void
 
 type VinePropValidator<T> = (value: T) => boolean
 interface VinePropMacro {
@@ -32,9 +33,16 @@ interface VineOptionsDef {
   inheritAttrs?: boolean
 }
 
+interface VineEmitsFn {
+  <E extends string>(events: E[]): VineEmitsDefineResult<Record<E, any[]>>
+  <D>(): VineEmitsDefineResult<D>
+}
+
 declare global {
   const vineProp: VinePropMacro
-  const vineEmits: <D extends Record<string, any[]> = Record<string, any[]>>() => VineEmitsDefineResult<D>
+
+  const vineEmits: VineEmitsFn
+
   const vineSlots: <D extends Record<string, (props: any) => any>>() => D
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void

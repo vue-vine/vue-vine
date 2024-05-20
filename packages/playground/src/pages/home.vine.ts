@@ -28,10 +28,6 @@ function OutsideExample(props: { id: string }) {
     }, 2000)
   }
 
-  const a = (a: string) => {
-
-  }
-
   // Mock result of a network request
   watch(() => props.id, () => {
     mockUpdate()
@@ -74,13 +70,23 @@ function RandomStringButton() {
     }
   `)
 
-  const tapEmit = vineEmits<{
-    click: []
+  const emit = vineEmits<{
+    tap: [number, number],
+    move: [number, number, number]
   }>()
+  // const emit = vineEmits(['tap', 'move'])
 
-  return vine`<button class="random-state-change-btn" @click="tapEmit('click')">
-    Click to change random string
-  </button>`
+  const onBtnTap = (event: MouseEvent) => {
+    const mouseX = event.clientX
+    const mouseY = event.clientY
+    emit('tap', mouseX, mouseY)
+  }
+
+  return vine`
+    <button class="random-state-change-btn" @click="onBtnTap">
+      Click to change random string
+    </button>
+  `
 }
 
 export function Home() {
@@ -106,7 +112,7 @@ export function Home() {
         "
         @click="toggleDark()"
       />
-      <RandomStringButton @click="randomState" />
+      <RandomStringButton @tap="randomState" />
     </div>
     <div class="flex flex-col items-center justify-center my-4">
       <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>
