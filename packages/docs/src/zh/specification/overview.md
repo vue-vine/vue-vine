@@ -54,6 +54,21 @@ function MyComponent() {
 }
 ```
 
+值得一提的是，Vue 的模板上可能在 v-bind 或是双花括号之间中存在 JS 表达式，因而也有可能出现带插值表达式的模板字符串，但在 Vine 中，这是不被允许的。
+
+```ts
+function MyComponent() {
+  const userName = ref('Vine')
+
+  // IDE 中无法正常显示模板部分的高亮
+  return vine`
+    <a :href="/user/\`\${userName}\`">
+      Profile
+    </a>
+  `
+}
+```
+
 ### setup {#setup}
 
 ::: info 提示

@@ -54,6 +54,21 @@ function MyComponent() {
 }
 ```
 
+To be noted, in Vue's template, there might be JS expressions in v-bind, two curly brackets or somewhere else, so there might be template strings with interpolation expressions, but in Vine, this is not allowed.
+
+```ts
+function MyComponent() {
+  const userName = ref('Vine')
+
+  // IDE can't highlight the template part correctly
+  return vine`
+    <a :href="/user/\`\${userName}\`">
+      Profile
+    </a>
+  `
+}
+```
+
 ### setup
 
 ::: info 💡 TIPS

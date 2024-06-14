@@ -49,6 +49,12 @@ function MyComponent(props: {
 This is a macro for defining a single component prop. it's inspired from [Vue Macros](https://vue-macros.sxzz.moe/macros/define-prop.html), but with some differences:
 
 - You must give a type argument to specify the type of the prop, or you must provide a default value.
+- If you want to define an optional prop, please use `vineProp.optional`.
+
+```vue-vine
+const foo = vineProp.optional<string>()
+```
+
 - `vineProp`'s first parameter is the prop's validator, it's optional.
 
 ```vue-vine

@@ -47,6 +47,12 @@ function MyComponent(props: {
 这是一个用于定义组件的 prop 的编译宏函数。这个想法启发自 [Vue Macros](https://vue-macros.sxzz.moe/macros/define-prop.html)。
 
 - 您必须给出一个类型参数来指定 prop 的类型，或者您必须提供一个默认值来推导出类型。
+- 如果你要定义一个可选的 prop，请使用 `vineProp.optional`。
+
+```vue-vine
+const foo = vineProp.optional<string>()
+```
+
 - `vineProp` 的第一个参数是 prop 的验证器，它是可选的。
 
 ```vue-vine
