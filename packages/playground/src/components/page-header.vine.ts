@@ -4,11 +4,13 @@ export function PageHeader() {
   const route = useRoute()
   const router = useRouter()
 
-  const handleRouteChangeBtnClick = () => {
+  const handleNavBtnClick = (
+    target: '/about' | '/style-order'
+  ) => {
     router.push(
-      route.path === '/about'
+      route.path === target
         ? '/'
-        : '/about'
+        : target
     )
   }
 
@@ -22,18 +24,32 @@ export function PageHeader() {
       "
     >
       <h2>Vine playground</h2>
+
       <div
         class="
           ml-auto px-4 py-2 rounded
           bg-teal-700:20 dark:bg-coolgray-100:20
           cursor-pointer
         "
-        @click="handleRouteChangeBtnClick()"
+        @click="handleNavBtnClick('/style-order')"
+      >
+        <span>
+          {{ route.path === '/style-order' ? 'Go Home' : 'TestStyleOrder'}}
+        </span>
+      </div>
+      <div
+        class="
+          ml-2 px-4 py-2 rounded
+          bg-teal-700:20 dark:bg-coolgray-100:20
+          cursor-pointer
+        "
+        @click="handleNavBtnClick('/about')"
       >
         <span>
           {{ route.path === '/about' ? 'Go Home' : 'About'}}
         </span>
       </div>
+
     </div>
   `
 }
