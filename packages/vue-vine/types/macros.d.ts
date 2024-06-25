@@ -35,7 +35,7 @@ interface VineOptionsDef {
 
 interface VineEmitsFn {
   <E extends string>(events: E[]): VineEmitsDefineResult<Record<E, any[]>>
-  <D>(): VineEmitsDefineResult<D>
+  <D extends VineEmitsDefineSource>(): VineEmitsDefineResult<D>
 }
 
 declare global {
