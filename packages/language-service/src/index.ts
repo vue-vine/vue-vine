@@ -2,12 +2,11 @@ import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
 import type {
-  type CodeInformation,
-
-  type LanguagePlugin,
+  CodeInformation,
+  LanguagePlugin,
   Mapping,
-  type VirtualCode,
-  type VueCompilerOptions,
+  VirtualCode,
+  VueCompilerOptions,
 } from '@vue/language-core'
 import { generateTemplate } from '@vue/language-core/lib/codegen/template'
 import type * as ts from 'typescript'
