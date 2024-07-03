@@ -36,17 +36,17 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-core": "~2.1.5",
-    "@volar/language-server": "~2.1.5",
-    "@volar/language-service": "~2.1.5",
+    "@volar/language-core": "~2.4.0-alpha.12",
+    "@volar/language-server": "~2.4.0-alpha.12",
+    "@volar/language-service": "~2.4.0-alpha.12",
     "@vue-vine/compiler": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "^2.0.6",
-    "@vue/language-service": "^2.0.6",
-    "volar-service-css": "0.0.34",
-    "volar-service-emmet": "0.0.34",
-    "volar-service-html": "0.0.34",
-    "volar-service-typescript": "0.0.34"
+    "@vue/language-core": "~v2.0.26-alpha.2",
+    "@vue/language-service": "~v2.0.26-alpha.2",
+    "volar-service-css": "0.0.59",
+    "volar-service-emmet": "0.0.59",
+    "volar-service-html": "0.0.59",
+    "volar-service-typescript": "0.0.59"
   },
   "devDependencies": {
     "@types/node": "^20.11.25"

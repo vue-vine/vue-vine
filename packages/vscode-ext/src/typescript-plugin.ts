@@ -3,13 +3,15 @@ import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 
 const plugin = createLanguageServicePlugin((ts) => {
-  return [
-    createVueVineLanguagePlugin(
-      ts,
-      { /* ts.CompilerOptions */ },
-      resolveVueCompilerOptions({}),
-    ),
-  ]
+  return {
+    languagePlugins: [
+      createVueVineLanguagePlugin(
+        ts,
+        { /* ts.CompilerOptions */ },
+        resolveVueCompilerOptions({}),
+      ),
+    ],
+  }
 })
 
 // @ts-expect-error TypeScript Plugin needs to be exported with `export =`

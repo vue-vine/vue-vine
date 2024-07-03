@@ -61,12 +61,6 @@
     "vitest": "^1.6.0",
     "vue": "^3.4.21"
   },
-  "pnpm": {
-    "overrides": {
-      "@volar/typescript": "2.1.5-patch.2",
-      "vscode-uri": "^3.0.8"
-    }
-  },
   "simple-git-hooks": {
     "pre-commit": "pnpm esno scripts/pre-commit.js"
   },
