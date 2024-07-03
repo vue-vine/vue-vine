@@ -295,10 +295,10 @@ importers:
         specifier: workspace:*
         version: link:../language-service
       '@vue/language-core':
-        specifier: ~v2.0.26-alpha.2
+        specifier: ~2.0.26-alpha.2
         version: 2.0.26-alpha.2(typescript@5.2.2)
       '@vue/language-service':
-        specifier: ~v2.0.26-alpha.2
+        specifier: ~2.0.26-alpha.2
         version: 2.0.26-alpha.2(typescript@5.2.2)
       volar-service-css:
         specifier: 0.0.59
@@ -326,7 +326,7 @@ importers:
         specifier: workspace:*
         version: link:../compiler
       '@vue/language-core':
-        specifier: ~v2.0.26-alpha.2
+        specifier: ~2.0.26-alpha.2
         version: 2.0.26-alpha.2(typescript@5.2.2)
       muggle-string:
         specifier: ^0.4.1
@@ -425,7 +425,7 @@ importers:
         specifier: workspace:*
         version: link:../language-service
       '@vue/language-core':
-        specifier: ~v2.0.26-alpha.2
+        specifier: ~2.0.26-alpha.2
         version: 2.0.26-alpha.2(typescript@5.2.2)
 
   packages/vue-vine:

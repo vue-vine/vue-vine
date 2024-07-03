@@ -77,6 +77,6 @@
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~v2.0.26-alpha.2"
+    "@vue/language-core": "~2.0.26-alpha.2"
   }
 }
