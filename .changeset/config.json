@@ -7,5 +7,8 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "vue-vine-docs",
+    "vue-vine-extension"
+  ]
 }
