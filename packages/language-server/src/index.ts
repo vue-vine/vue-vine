@@ -1,8 +1,8 @@
 import {
   createConnection,
   createServer,
-  createSimpleProjectProviderFactory,
-  createTypeScriptProjectProviderFactory,
+  createSimpleProject,
+  createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
 import type * as ts from 'typescript'
@@ -27,41 +27,28 @@ connection.onInitialize(async (params) => {
     params.initializationOptions.typescript.tsdk,
     params.locale,
   )
+  const plugins = [
+    createHtmlService(),
+    createCssService(),
+    createEmmetService(),
+  ]
+  if (debug) {
+    plugins.push(...createTypeScriptServices(tsdk.typescript))
+  }
 
   const result = await server.initialize(
     params,
     debug
-      ? createTypeScriptProjectProviderFactory(
+      ? createTypeScriptProject(
         tsdk.typescript,
         tsdk.diagnosticMessages,
+        ({ configFileName }) => ({
+          languagePlugins: getLanguagePlugins(configFileName),
+          setup() { },
+        }),
       )
-      : createSimpleProjectProviderFactory(),
-    {
-      getLanguagePlugins(env, projectContext) {
-        let compilerOptions: ts.CompilerOptions = {}
-        let vueCompilerOptions: VueCompilerOptions
-        if (projectContext.typescript?.configFileName) {
-          const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, projectContext.typescript.configFileName)
-          vueCompilerOptions = resolveVueCompilerOptions(vueOptions)
-          compilerOptions = options
-        }
-        else {
-          vueCompilerOptions = resolveVueCompilerOptions({})
-        }
-        return [createVueVineLanguagePlugin(tsdk.typescript, compilerOptions, vueCompilerOptions)]
-      },
-      getServicePlugins() {
-        const plugins = [
-          createHtmlService(),
-          createCssService(),
-          createEmmetService(),
-        ]
-        if (debug) {
-          plugins.push(...createTypeScriptServices(tsdk.typescript))
-        }
-        return plugins
-      },
-    },
+      : createSimpleProject(getLanguagePlugins(undefined)),
+    plugins,
   )
 
   // tsserver already provides semantic tokens
@@ -69,6 +56,20 @@ connection.onInitialize(async (params) => {
   result.capabilities.semanticTokensProvider = undefined
 
   return result
+
+  function getLanguagePlugins(configFileName: string | undefined) {
+    let compilerOptions: ts.CompilerOptions = {}
+    let vueCompilerOptions: VueCompilerOptions
+    if (configFileName) {
+      const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, configFileName)
+      vueCompilerOptions = resolveVueCompilerOptions(vueOptions)
+      compilerOptions = options
+    }
+    else {
+      vueCompilerOptions = resolveVueCompilerOptions({})
+    }
+    return [createVueVineLanguagePlugin(tsdk.typescript, compilerOptions, vueCompilerOptions)]
+  }
 })
 
 connection.onInitialized(server.initialized)

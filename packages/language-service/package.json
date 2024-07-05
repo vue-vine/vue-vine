@@ -40,11 +40,13 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-server": "~2.1.5",
+    "@volar/language-server": "~2.4.0-alpha.15",
     "@vue-vine/compiler": "workspace:*",
-    "@vue/language-core": "^2.0.6"
+    "@vue/language-core": "~2.0.26",
+    "muggle-string": "^0.4.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.25"
+    "@types/node": "^20.11.25",
+    "vscode-uri": "^3.0.8"
   }
 }

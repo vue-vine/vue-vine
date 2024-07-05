@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import type { InitializationOptions } from '@volar/language-server'
 import * as serverProtocol from '@volar/language-server/protocol'
 import {
   activateAutoInsertion,
@@ -7,7 +6,7 @@ import {
   getTsdk,
 } from '@volar/vscode'
 import * as vscode from 'vscode'
-import * as lsp from 'vscode-languageclient/node'
+import * as lsp from '@volar/vscode/node'
 
 let client: lsp.BaseLanguageClient
 
@@ -29,10 +28,9 @@ export async function activate(context: vscode.ExtensionContext) {
       options: debugOptions,
     },
   }
-  const initializationOptions: InitializationOptions = {
-    // @ts-expect-error Volar 2.0 types are currently still not satisfied with the new initialization options
+  const initializationOptions = {
     typescript: {
-      tsdk: (await getTsdk(context)).tsdk,
+      tsdk: (await getTsdk(context))!.tsdk,
     },
   }
   const clientOptions: lsp.LanguageClientOptions = {

@@ -1,19 +1,24 @@
 import {
-  type CodeInformation,
-  type LanguagePlugin,
-  type Segment,
-  type VirtualCode,
-  type VueCompilerOptions,
-  buildMappings,
   forEachEmbeddedCode,
+} from '@vue/language-core'
+import type {
+  CodeInformation,
+  LanguagePlugin,
+  Mapping,
+  VirtualCode,
+  VueCompilerOptions,
+} from '@vue/language-core'
+import { generateTemplate } from '@vue/language-core/lib/codegen/template'
+import type * as ts from 'typescript'
+import { generateGlobalTypes } from '@vue/language-core/lib/codegen/script/globalTypes'
+import {
+  type Segment,
   replaceAll,
   toString,
-} from '@vue/language-core'
-import { generate as generateTemplate } from '@vue/language-core/lib/generators/template'
-import type * as ts from 'typescript'
-import { turnBackToCRLF } from './utils'
-import { generateGlobalHelperTypes } from './globalTypes'
+} from 'muggle-string'
+import type { URI } from 'vscode-uri'
 import { createVineFileCtx } from './vine-ctx'
+import { turnBackToCRLF } from './utils'
 
 export interface VueVineCode extends VirtualCode { }
 
@@ -30,22 +35,25 @@ export function createVueVineLanguagePlugin(
   ts: typeof import('typescript'),
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
-): LanguagePlugin {
+): LanguagePlugin<string | URI> {
   let globalTypesHolder: string | undefined
   return {
-    createVirtualCode(id, langaugeId, snapshot) {
-      if (id.endsWith('.vine.ts') && langaugeId === 'typescript') {
-        globalTypesHolder ??= id
-        return createVueVineCode(ts, id, snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === id)
+    getLanguageId() {
+      return undefined
+    },
+    createVirtualCode(uriOrFileName, langaugeId, snapshot) {
+      if (String(uriOrFileName).endsWith('.vine.ts') && langaugeId === 'typescript') {
+        globalTypesHolder ??= String(uriOrFileName)
+        return createVueVineCode(ts, String(uriOrFileName), snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
       }
     },
-    updateVirtualCode(id, _oldVirtualCode, newSnapshot) {
-      return createVueVineCode(ts, id, newSnapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === id)
+    updateVirtualCode(uriOrFileName, _oldVirtualCode, newSnapshot) {
+      return createVueVineCode(ts, String(uriOrFileName), newSnapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
     },
     typescript: {
       extraFileExtensions: [],
-      getScript(rootVirtualCode) {
-        for (const code of forEachEmbeddedCode(rootVirtualCode)) {
+      getServiceScript(root) {
+        for (const code of forEachEmbeddedCode(root)) {
           if (code.id === 'root') {
             return {
               code,
@@ -81,11 +89,11 @@ function createVueVineCode(
     generateScriptUntil(vineCompFn.templateReturn.start!)
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n{\n')
-      for (const [type, segment] of generateTemplate(
+      for (const segment of generateTemplate({
         ts,
         compilerOptions,
         vueCompilerOptions,
-        {
+        template: {
           ast: vineCompFn.templateAst,
           errors: [],
           warnings: [],
@@ -98,16 +106,9 @@ function createVueVineCode(
           content: vineCompFn.templateSource,
           attrs: {},
         },
-        false,
-        new Set(),
-        false,
-        undefined,
-        undefined,
-        false,
-      )) {
-        if (type !== 'ts') {
-          continue
-        }
+        scriptSetupBindingNames: new Set(),
+        scriptSetupImportComponentNames: new Set(),
+      })) {
         if (typeof segment === 'string') {
           tsCodeSegments.push(segment)
         }
@@ -149,7 +150,7 @@ function createVueVineCode(
   replaceAll(tsCodeSegments, /__VLS_components\./g, '')
 
   if (withGlobalTypes) {
-    tsCodeSegments.push(generateGlobalHelperTypes(vueCompilerOptions))
+    tsCodeSegments.push(generateGlobalTypes(vueCompilerOptions))
   }
 
   const tsCode = toString(tsCodeSegments)
@@ -251,4 +252,24 @@ function createVueVineCode(
       }
     }
   }
+}
+
+function buildMappings<T>(chunks: Segment<T>[]) {
+  let length = 0
+  const mappings: Mapping<T>[] = []
+  for (const segment of chunks) {
+    if (typeof segment === 'string') {
+      length += segment.length
+    }
+    else {
+      mappings.push({
+        sourceOffsets: [segment[2]],
+        generatedOffsets: [length],
+        lengths: [segment[0].length],
+        data: segment[3]!,
+      })
+      length += segment[0].length
+    }
+  }
+  return mappings
 }

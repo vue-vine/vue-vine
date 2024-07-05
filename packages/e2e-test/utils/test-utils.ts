@@ -131,5 +131,14 @@ export async function getColor(
   page?: Page,
 ) {
   const pageCtx = page ?? e2eTestCtx.page
-  return await pageCtx?.$eval(selector, el => getComputedStyle(el).color)
+  return await pageCtx?.evaluate(
+    (selector: string) => {
+      const el = document.querySelector(selector)
+      if (!el) {
+        return null
+      }
+      return getComputedStyle(el).color
+    },
+    selector,
+  )
 }

@@ -2,14 +2,16 @@ import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/cr
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 
-const plugin = createLanguageServicePlugin((ts) => {
-  return [
-    createVueVineLanguagePlugin(
-      ts,
-      { /* ts.CompilerOptions */ },
-      resolveVueCompilerOptions({}),
-    ),
-  ]
+const plugin = createLanguageServicePlugin((ts, info) => {
+  return {
+    languagePlugins: [
+      createVueVineLanguagePlugin(
+        ts,
+        info.languageServiceHost.getCompilationSettings(),
+        resolveVueCompilerOptions({}),
+      ),
+    ],
+  }
 })
 
 // @ts-expect-error TypeScript Plugin needs to be exported with `export =`
