@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.1.4
+
+### Patch Changes
+
+- Fix type macros declaration scope.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

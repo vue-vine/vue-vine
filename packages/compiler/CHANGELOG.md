@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.4
+
+### Patch Changes
+
+- Fix type macros declaration scope.
+
 ## 0.1.3
 
 ### Patch Changes
