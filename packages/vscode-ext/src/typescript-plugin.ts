@@ -2,12 +2,12 @@ import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/cr
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { resolveVueCompilerOptions } from '@vue/language-core'
 
-const plugin = createLanguageServicePlugin((ts) => {
+const plugin = createLanguageServicePlugin((ts, info) => {
   return {
     languagePlugins: [
       createVueVineLanguagePlugin(
         ts,
-        { /* ts.CompilerOptions */ },
+        info.languageServiceHost.getCompilationSettings(),
         resolveVueCompilerOptions({}),
       ),
     ],

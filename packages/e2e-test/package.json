@@ -6,20 +6,20 @@
     "dev": "vite"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "vue": "^3.4.31"
   },
   "devDependencies": {
     "@tsconfig/node18": "^2.0.1",
-    "@types/jsdom": "^21.1.2",
-    "@types/node": "^18.17.12",
-    "@vitejs/plugin-vue": "^4.3.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^18.19.39",
+    "@vitejs/plugin-vue": "^4.6.2",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.4.0",
     "jsdom": "^22.1.0",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.9",
+    "typescript": "^5.5.3",
+    "vite": "^4.5.3",
     "vitest": "^1.6.0",
-    "vue-tsc": "^1.8.8",
+    "vue-tsc": "^2.0.26",
     "vue-vine": "workspace:*"
   }
 }
