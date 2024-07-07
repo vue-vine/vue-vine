@@ -119,7 +119,7 @@ describe('test transform', () => {
     expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(false)
   })
 
-  // #83
+  // issue#83
   it('hmrId should be generated If there is no style', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'development',

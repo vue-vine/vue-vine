@@ -63,6 +63,14 @@ export function isVineCompFnDecl(target: Node) {
         ) {
           throw new Error(EXPECTED_ERROR)
         }
+
+        // issue#100: simple function component like () => vine`...`
+        if (
+          isArrowFunctionExpression(node)
+          && isVineTaggedTemplateString(node.body)
+        ) {
+          throw new Error(EXPECTED_ERROR)
+        }
       })
     }
     catch (error: any) {
