@@ -17,6 +17,6 @@
     "skipLibCheck": true
   },
   "exclude": [
-    "template"
+    "template/**/*"
   ]
 }

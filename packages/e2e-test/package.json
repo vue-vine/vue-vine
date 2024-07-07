@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/e2e-test",
+  "type": "module",
   "private": "true",
   "scripts": {
     "test": "vitest",
