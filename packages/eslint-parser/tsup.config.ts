@@ -13,9 +13,5 @@ export default defineConfig({
     '@typescript-eslint/parser',
     '@typescript-eslint/scope-manager',
     '@typescript-eslint/typescript-estree',
-    'lodash/sortedIndexBy',
-    'lodash/sortedLastIndexBy',
-    'lodash/first',
-    'lodash/last',
   ],
 })

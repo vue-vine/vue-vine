@@ -28,7 +28,6 @@
     "test:dev": "vitest"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.201",
     "@typescript-eslint/parser": "^6.21.0",
     "@typescript-eslint/scope-manager": "^6.21.0",
     "@typescript-eslint/typescript-estree": "^6.21.0",
@@ -36,15 +35,16 @@
     "eslint-scope": "^7.2.2",
     "espree": "^9.6.1",
     "line-column": "^1.0.2",
-    "lodash": "^4.17.21",
     "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/eslint-scope": "^3.7.7",
     "@types/line-column": "^1.0.2",
+    "@types/lodash": "^4.14.201",
     "@types/node": "^20.9.2",
     "@types/semver": "^7.5.5",
-    "eslint": "^8.54.0"
+    "eslint": "^8.54.0",
+    "lodash": "^4.17.21"
   }
 }
