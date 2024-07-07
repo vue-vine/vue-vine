@@ -23,7 +23,16 @@ import {
   isVineMacroOf,
 } from '../src/babel-helpers/ast'
 
-describe('find Vine Function Component Declarations', () => {
+function parseForTest(content: string) {
+  return babelParse(content, {
+    sourceType: 'module',
+    plugins: [
+      'typescript',
+    ],
+  })
+}
+
+describe('find Vine function component declarations', () => {
   it('should be able to find out all Vine component function', () => {
     const content = `
 const Caculator = (props: { expr: string }) => {
@@ -42,17 +51,23 @@ export default function App() {
   \`
 }
 `
-    const root = babelParse(content, {
-      sourceType: 'module',
-      plugins: [
-        'typescript',
-      ],
-    })
+    const root = parseForTest(content)
 
     const foundVCFs = findVineCompFnDecls(root)
     expect(foundVCFs).toHaveLength(2)
     expect(((foundVCFs[0] as VariableDeclaration).declarations[0]?.id as Identifier).name).toBe('Caculator')
     expect(((foundVCFs[1] as ExportDefaultDeclaration).declaration as FunctionDeclaration).id?.name).toBe('App')
+  })
+})
+
+// issue#100
+describe('function component can simply return vine template', () => {
+  it('should recongnize a simple function component', () => {
+    const content = `const App = () => vine\`<div>Hello Vine</div>\``
+    const root = parseForTest(content)
+    const foundVCFs = findVineCompFnDecls(root)
+    expect(foundVCFs).toHaveLength(1)
+    expect(((foundVCFs[0] as VariableDeclaration).declarations[0]?.id as Identifier).name).toBe('App')
   })
 })
 
