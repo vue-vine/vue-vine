@@ -4,17 +4,23 @@
 
 Another style of writing Vue components.
 
-## Why this ?
+Check more details in our [documentation](https://vue-vine.dev/). [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
-There are many discussions in community that hopes for a solution that supports writing multiple Vue components in a single file. That's why `Vue Vine` was born.
+<details>
+  <summary>
+    <b>Why this ?</b>
+  </summary>
+  <br>
 
-Check more details in our [documentation](https://vue-vine.netlify.app/). [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+  There are many discussions in community that hopes for a solution that supports writing multiple Vue components in a single file. That's why `Vue Vine` was born.
 
-`Vue Vine` was designed to provide more flexibility of managing Vue components. It is a parallel style to SFC.
+  `Vue Vine` was designed to provide more flexibility of managing Vue components. It is a parallel style to SFC.
 
-Take a quick view:
+  Take a quick view:
 
-![Quick view](./packages/docs/src/public/highlight-demo.png)
+  ![Quick view](./packages/docs/src/public/highlight-demo.png)
+
+</details>
 
 ## Install
 
@@ -35,6 +41,20 @@ export default defineConfig({
   ],
 })
 ```
+
+Then add macro's type definition in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vue-vine/macro"]
+  }
+}
+```
+
+Finally, install the VSCode extension, search `Vue Vine` in the marketplace.
+
+<img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
 
 ## Try the demo
 

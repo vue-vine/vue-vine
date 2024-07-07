@@ -4,17 +4,23 @@
 
 创造另一种书写 Vue 组件的方式。
 
-## 背景
+要了解更多细节，请查看我们的[文档](https://vue-vine.dev/)。 [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
-在社区中，有很多帖子讨论过希望有一个支持在单个文件中编写多个 Vue 组件的解决方案。`Vue Vine` 因此而生。
+<details>
+  <summary>
+    <b>为什么做这样一个项目？</b>
+  </summary>
+  <br>
 
-要了解更多细节，请查看我们的[文档](https://vue-vine.netlify.app/)。 [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+  在社区中，有很多帖子讨论过希望有一个支持在单个文件中编写多个 Vue 组件的解决方案。`Vue Vine` 因此而生。
 
-`Vue Vine` 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代 Vue SFC，而是作为一种并行的解决方案。
+  `Vue Vine` 旨在提供更多管理 Vue 组件的灵活性，它并不是要取代 Vue SFC，而是作为一种并行的解决方案。
 
-下面是一个简单的示例预览：
+  下面是一个简单的示例预览：
 
-![示例预览](./packages/docs/src/public/highlight-demo.png)
+  ![示例预览](./packages/docs/src/public/highlight-demo.png)
+
+</details>
 
 ## 安装
 
@@ -36,7 +42,21 @@ export default defineConfig({
 })
 ```
 
-## 即刻尝鲜
+然后在 `tsconfig.json` 中添加宏的类型定义：
+
+```json
+{
+  "compilerOptions": {
+    "types": ["vue-vine/macro"]
+  }
+}
+```
+
+最后，安装 VSCode 插件，在市场中搜索 `Vue Vine`。
+
+<img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
+
+## 尝试示例
 
 你可以按照下面的步骤操作，启动示例项目来预览：
 
