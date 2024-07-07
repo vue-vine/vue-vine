@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.1.5
+
+### Patch Changes
+
+- fix(compiler): Remove 'external' in bundle config to make sure this package don't lose any dependencies.
+
 ## 0.1.0
 
 ### Minor Changes

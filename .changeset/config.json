@@ -8,7 +8,6 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "vue-vine-docs",
-    "vue-vine-extension"
+    "vue-vine-docs"
   ]
 }

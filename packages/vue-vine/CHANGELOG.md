@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.5
+
+### Patch Changes
+
+- fix(compiler): parse simple function component definition.
+
 ## 0.1.4
 
 ### Patch Changes
