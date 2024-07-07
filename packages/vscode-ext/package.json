@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -18,7 +18,7 @@
     "vscode": "^1.85.0"
   },
   "activationEvents": [
-    "onFile:*.vine.ts"
+    "onLanguage:typescript"
   ],
   "contributes": {
     "languages": [

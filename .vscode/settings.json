@@ -1,9 +1,8 @@
 {
-  "cSpell.enabled": false,
   "testing.automaticallyOpenPeekView": "never",
   "prettier.enable": false,
 
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.useFlatConfig": true,
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -58,6 +57,5 @@
     "json",
     "jsonc",
     "yaml"
-  ],
-  "vitest.disableWorkspaceWarning": true
+  ]
 }

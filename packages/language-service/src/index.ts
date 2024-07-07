@@ -202,7 +202,7 @@ function createVueVineCode(
         : bableParsedSource
 
       yield {
-        id: `${compCtx.fnName}_style_${lang}`,
+        id: `${compCtx.fnName}_style_${lang}`.toLowerCase(),
         languageId: lang,
         snapshot: {
           getText: (start, end) => source.slice(start, end),
@@ -233,7 +233,7 @@ function createVueVineCode(
         : templateSource
 
       yield {
-        id: `${fnName}_template`,
+        id: `${fnName}_template`.toLowerCase(),
         languageId: 'html',
         snapshot: {
           getText: (start, end) => source.slice(start, end),
