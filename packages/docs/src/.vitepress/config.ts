@@ -48,7 +48,6 @@ export default defineConfig({
 
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Guide', link: '/introduction/quick-start' },
     ],
 
     sidebar: {
@@ -96,10 +95,20 @@ export default defineConfig({
     root: {
       label: 'English',
       lang: 'en-US',
+      themeConfig: {
+        nav: [
+          { text: 'Guide', link: '/introduction/quick-start' },
+        ],
+      },
     },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',
+      themeConfig: {
+        nav: [
+          { text: '指引', link: '/zh/introduction/quick-start' },
+        ],
+      },
     },
   },
   markdown: {
