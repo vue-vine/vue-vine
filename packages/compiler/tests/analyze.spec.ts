@@ -33,6 +33,18 @@ const MyComp1 = () => { return vine\`<div>Test MyComp1</div>\` },
     expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeMultiCompsDecl')?.vineCompFns).toHaveLength(3)
   })
 
+  it('analyze comps define in export statements', () => {
+    const content = `
+export function MyComp1() { return vine\`<div>Test MyComp1</div>\` }
+export const MyComp2 = () => vine\`<div>Test MyComp2</div>\`
+export default function MyComp3() { return vine\`<div>Test MyComp3</div>\` }
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeExportCompsDecl', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeExportCompsDecl')?.vineCompFns).toHaveLength(3)
+  })
+
   it('analyze imports', () => {
     const content = `
 import { ref, reactive as VueReactive } from 'vue'

@@ -2,7 +2,7 @@ import { PageHeader } from '../components/page-header.vine'
 import { InsideExample } from '../components/inside-example.vine'
 import { generateRandomString } from '~/utils'
 
-function OutsideExample(props: { id: string }) {
+async function OutsideExample(props: { id: string }) {
   vineStyle.scoped(scss`
     .loading-view {
       margin: 1rem 0;
@@ -56,7 +56,7 @@ function OutsideExample(props: { id: string }) {
   `
 }
 
-function RandomStringButton() {
+async function RandomStringButton() {
   vineStyle(`
     .random-state-change-btn {
       font-size: 1rem;
@@ -89,7 +89,7 @@ function RandomStringButton() {
   `
 }
 
-export function Home() {
+export async function Home() {
   const id = ref('1')
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
