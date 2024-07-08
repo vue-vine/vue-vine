@@ -47,7 +47,7 @@ Then add macro's type definition in `tsconfig.json`:
 ```json
 {
   "compilerOptions": {
-    "types": ["vue-vine/macro"]
+    "types": ["vue-vine/macros"]
   }
 }
 ```

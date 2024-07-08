@@ -47,7 +47,7 @@ export default defineConfig({
 ```json
 {
   "compilerOptions": {
-    "types": ["vue-vine/macro"]
+    "types": ["vue-vine/macros"]
   }
 }
 ```
