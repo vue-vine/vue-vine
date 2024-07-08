@@ -173,3 +173,9 @@ export interface VineDiagnostic {
   msg: string
   location: SourceLocation | null | undefined
 }
+
+export interface VineFnPickedInfo {
+  fnDeclNode: Node
+  fnItselfNode: BabelFunctionNodeTypes
+  fnName: string
+}

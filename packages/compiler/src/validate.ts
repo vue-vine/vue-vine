@@ -27,10 +27,10 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx } from './types'
+import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
 import {
-  getFunctionInfo,
   getFunctionParams,
+  getFunctionPickedInfos,
   getVineMacroCalleeName,
   isDescendant,
   isTagTemplateStringContainsInterpolation,
@@ -916,11 +916,13 @@ function validateVineModel(
   return isVineModelUsageCorrect
 }
 
-function validateVineFunctionCompProps(
+function validatePropsForSingelFC(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
-  vineCompFnDecl: Node,
+  {
+    fnDeclNode: vineCompFnDecl,
+    fnItselfNode,
+  }: VineFnPickedInfo,
 ) {
-  const { fnItselfNode } = getFunctionInfo(vineCompFnDecl)
   const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
   let vinePropMacroCallCount = 0
@@ -1130,14 +1132,32 @@ function validateVineFunctionCompProps(
   return false
 }
 
+function validateVineFunctionCompProps(
+  validatorCtx: VineValidatorCtx,
+  vineCompFnDecl: Node,
+) {
+  const vineFnInfos = getFunctionPickedInfos(vineCompFnDecl)
+  const results = vineFnInfos.map(
+    vineFnInfo => validatePropsForSingelFC(
+      validatorCtx,
+      vineFnInfo,
+    ),
+  )
+
+  return results.every(Boolean)
+}
+
 const validatesFromRoot: VineValidator[] = wrapVineValidatorWithLog([
   validateNoOutsideMacroCalls,
 ])
 
-const validatesFromVineFn: VineValidator[] = wrapVineValidatorWithLog([
+const validatesFromVineFnItself: VineValidator[] = wrapVineValidatorWithLog([
   validateVineTemplateStringUsage,
   validateMacrosUsage,
   validateVineModel,
+])
+
+const validatesFromVineFnDecl: VineValidator[] = wrapVineValidatorWithLog([
   validateVineFunctionCompProps,
 ])
 
@@ -1177,9 +1197,17 @@ export function validateVine(
   // without quiting this function too early
   let hasErrInVineCompFns = false
   for (const vineCompFnDecl of vineCompFnDecls) {
-    const hasErr = findValidateError(validatesFromVineFn, vineCompFnDecl)
-    if (hasErr)
-      hasErrInVineCompFns = hasErr
+    const vineFnInfos = getFunctionPickedInfos(vineCompFnDecl)
+    vineFnInfos.forEach(({ fnDeclNode, fnItselfNode }) => {
+      const hasErrInDecl = findValidateError(validatesFromVineFnDecl, fnDeclNode)
+      if (hasErrInDecl) {
+        hasErrInVineCompFns = true
+      }
+      const hasErrInFnItself = findValidateError(validatesFromVineFnItself, fnItselfNode)
+      if (hasErrInFnItself) {
+        hasErrInVineCompFns = true
+      }
+    })
   }
 
   return !hasErrInVineCompFns

@@ -34,6 +34,7 @@ import type {
   Nil,
   VINE_MACRO_NAMES,
   VineBabelRoot,
+  VineFnPickedInfo,
 } from '../types'
 import {
   EXPECTED_ERROR,
@@ -230,41 +231,48 @@ export function getFunctionParams(fnItselfNode: BabelFunctionNodeTypes) {
   return params
 }
 
-export function getFunctionInfo(fnDecl: Node): {
-  fnItselfNode: BabelFunctionNodeTypes | undefined
-  fnName: string
-} {
-  let fnName = isFunctionDeclaration(fnDecl)
-    ? fnDecl.id?.name ?? ''
-    : ''
-  let fnItselfNode: BabelFunctionNodeTypes | undefined = isFunctionDeclaration(fnDecl)
-    ? fnDecl
-    : undefined
+export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
+  const pickedInfo: Array<{
+    fnDeclNode: Node
+    fnItselfNode: BabelFunctionNodeTypes
+    fnName: string
+  }> = []
+
   let target = fnDecl
   if (isExportNamedDeclaration(target) && target.declaration) {
     target = target.declaration
   }
-  if (isFunctionDeclaration(target)) {
-    fnItselfNode = target
-    fnName = target.id?.name ?? ''
-  }
-  else if (
-    isVariableDeclaration(target)
-    && (
-      (
-        isFunctionExpression(target.declarations[0].init)
-        || isArrowFunctionExpression(target.declarations[0].init)
-      )
-      && isIdentifier(target.declarations[0].id)
+
+  if (isVariableDeclaration(target)) {
+    target.declarations.forEach(
+      (decl) => {
+        if (
+          (
+            isFunctionExpression(decl.init)
+            || isArrowFunctionExpression(decl.init)
+          )
+          && isIdentifier(decl.id)
+        ) {
+          pickedInfo.push({
+            fnDeclNode: fnDecl,
+            fnItselfNode: decl.init,
+            fnName: decl.id.name,
+          })
+        }
+      },
     )
-  ) {
-    fnItselfNode = target.declarations[0].init
-    fnName = target.declarations[0].id.name
+
+    return pickedInfo
   }
-  return {
-    fnItselfNode,
-    fnName,
+
+  if (isFunctionDeclaration(target)) {
+    pickedInfo.push({
+      fnDeclNode: fnDecl,
+      fnItselfNode: target,
+      fnName: target.id?.name ?? '',
+    })
   }
+  return pickedInfo
 }
 
 export function findVineTagTemplateStringReturn(node: Node) {

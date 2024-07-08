@@ -47,6 +47,7 @@ import type {
   VineCompFnCtx,
   VineCompilerHooks,
   VineFileCtx,
+  VineFnPickedInfo,
   VinePropMeta,
   VineStyleLang,
   VineStyleMeta,
@@ -58,8 +59,8 @@ import {
   canNeverBeRef,
   findVineTagTemplateStringReturn,
   getAllVinePropMacroCall,
-  getFunctionInfo,
   getFunctionParams,
+  getFunctionPickedInfos,
   getImportStatements,
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
@@ -517,8 +518,10 @@ const analyzeVineBindings: AnalyzeRunner = (
     .filter((stmt): stmt is Declaration => isDeclaration(stmt))
   for (const declStmt of allTopLevelDeclStmts) {
     if (isVineCompFnDecl(declStmt)) {
-      const { fnName } = getFunctionInfo(declStmt)
-      vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
+      const pickedInfos = getFunctionPickedInfos(declStmt)
+      pickedInfos.forEach(({ fnName }) => {
+        vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
+      })
     }
     else if (isVariableDeclaration(declStmt)) {
       for (const decl of declStmt.declarations) {
@@ -830,7 +833,7 @@ function analyzeFileImportStmts(
 function buildVineCompFnCtx(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
-  fnDeclNode: Node,
+  vineFnInfo: VineFnPickedInfo,
 ) {
   // Get the function AST node itself
   // - for normal function declaration `function xxx(...) {...}`:
@@ -839,7 +842,7 @@ function buildVineCompFnCtx(
   //       - `const xxx = function(...) {...}`
   //       - `const xxx = (...) => {...}`:
   //       the AST node is the the function expression
-  const { fnName, fnItselfNode } = getFunctionInfo(fnDeclNode)
+  const { fnDeclNode, fnName, fnItselfNode } = vineFnInfo
   const {
     templateReturn,
     templateStringNode,
@@ -897,13 +900,23 @@ export function analyzeVine(
   // Analyze all Vine component function in this file
   vineCompFnDecls.forEach(
     (vineFnCompDecl) => {
-      vineFileCtx.vineCompFns.push(
-        buildVineCompFnCtx(
-          vineCompilerHooks,
-          vineFileCtx,
-          vineFnCompDecl,
-        ),
-      )
+      // Get the function AST node itself
+      // - for normal function declaration `function xxx(...) {...}`:
+      //       the AST node is the declaration itself
+      // - for variable function declaration
+      //       - `const xxx = function(...) {...}`
+      //       - `const xxx = (...) => {...}`:
+      //       the AST node is the the function expression
+      const pickedInfos = getFunctionPickedInfos(vineFnCompDecl)
+      pickedInfos.forEach((vineFnInfo) => {
+        vineFileCtx.vineCompFns.push(
+          buildVineCompFnCtx(
+            vineCompilerHooks,
+            vineFileCtx,
+            vineFnInfo,
+          ),
+        )
+      })
     },
   )
 

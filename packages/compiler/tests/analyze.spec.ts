@@ -21,6 +21,18 @@ function excludeFields<T extends Record<string, any>, K extends keyof T>(
 }
 
 describe('test Vine compiler analyze', () => {
+  it('analyze comps define in separated variable declarators', () => {
+    const content = `
+const MyComp1 = () => { return vine\`<div>Test MyComp1</div>\` },
+      MyComp2 = () => vine\`<div>Test MyComp2</div>\`,
+      MyComp3 = function () { return vine\`<div>Test MyComp3</div>\` }
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeMultiCompsDecl', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeMultiCompsDecl')?.vineCompFns).toHaveLength(3)
+  })
+
   it('analyze imports', () => {
     const content = `
 import { ref, reactive as VueReactive } from 'vue'
