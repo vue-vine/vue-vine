@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.6
+
+### Patch Changes
+
+- fix(compiler): support multiple declarator and export default statement.
+
 ## 0.1.5
 
 ### Patch Changes

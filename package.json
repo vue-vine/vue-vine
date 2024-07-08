@@ -35,7 +35,8 @@
     "postinstall": "simple-git-hooks",
     "clean": "esno scripts/clean.js",
     "clean:deps": "esno scripts/clean-deps.js && node scripts/clean-root-deps.js",
-    "update:deps": "esno scripts/update-deps.js"
+    "update:deps": "esno scripts/update-deps.js",
+    "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/eslint-parser --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.1",
