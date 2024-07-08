@@ -239,7 +239,10 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
   }> = []
 
   let target = fnDecl
-  if (isExportNamedDeclaration(target) && target.declaration) {
+  if ((
+    isExportNamedDeclaration(target)
+    || isExportDefaultDeclaration(target)
+  ) && target.declaration) {
     target = target.declaration
   }
 
