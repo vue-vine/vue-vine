@@ -18,7 +18,7 @@ import {
 } from 'muggle-string'
 import type { URI } from 'vscode-uri'
 import { createVineFileCtx } from './vine-ctx'
-import { turnBackToCRLF } from './utils'
+import { VLS_ErrorLog, turnBackToCRLF } from './utils'
 
 export interface VueVineCode extends VirtualCode { }
 
@@ -44,11 +44,24 @@ export function createVueVineLanguagePlugin(
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
       if (String(uriOrFileName).endsWith('.vine.ts') && langaugeId === 'typescript') {
         globalTypesHolder ??= String(uriOrFileName)
-        return createVueVineCode(ts, String(uriOrFileName), snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+        try {
+          const virtualCode = createVueVineCode(ts, String(uriOrFileName), snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+          return virtualCode
+        }
+        catch (err) {
+          VLS_ErrorLog(err, 'createVirtualCode')
+        }
       }
     },
     updateVirtualCode(uriOrFileName, _oldVirtualCode, newSnapshot) {
-      return createVueVineCode(ts, String(uriOrFileName), newSnapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+      try {
+        const newSnapshotVineCode = createVueVineCode(ts, String(uriOrFileName), newSnapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+        return newSnapshotVineCode
+      }
+      catch (err) {
+        VLS_ErrorLog(err, 'updateVirtualCode')
+        return _oldVirtualCode
+      }
     },
     typescript: {
       extraFileExtensions: [],
@@ -89,7 +102,7 @@ function createVueVineCode(
     generateScriptUntil(vineCompFn.templateReturn.start!)
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n{\n')
-      for (const segment of generateTemplate({
+      const generatedTemplate = generateTemplate({
         ts,
         compilerOptions,
         vueCompilerOptions,
@@ -108,7 +121,9 @@ function createVueVineCode(
         },
         scriptSetupBindingNames: new Set(),
         scriptSetupImportComponentNames: new Set(),
-      })) {
+      })
+
+      for (const segment of generatedTemplate) {
         if (typeof segment === 'string') {
           tsCodeSegments.push(segment)
         }

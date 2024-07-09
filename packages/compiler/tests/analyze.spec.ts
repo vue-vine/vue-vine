@@ -105,16 +105,19 @@ function MyComp(p: {
           "isBool": true,
           "isFromMacroDefine": false,
           "isRequired": true,
+          "typeAnnotationRaw": "boolean",
         },
         "data": {
           "isBool": false,
           "isFromMacroDefine": false,
           "isRequired": true,
+          "typeAnnotationRaw": "SomeExternalType",
         },
         "name": {
           "isBool": false,
           "isFromMacroDefine": false,
           "isRequired": true,
+          "typeAnnotationRaw": "string",
         },
       }
     `)
@@ -405,6 +408,36 @@ function MyComp() {
       .toMatchInlineSnapshot(`"Cannot reference "val1" locally declared variables because it will be hoisted outside of component's setup() function."`)
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
       .toMatchInlineSnapshot(`"Cannot reference "val2" locally declared variables because it will be hoisted outside of component's setup() function."`)
+  })
+
+  it('analyze and store vineProp type annotation record', () => {
+    const content = `
+import { V1 } from './constants'
+import type { T1, T2 } from './types'
+import { call1, call2 } from './utils'
+
+function MyComp() {
+  const p1 = vineProp<string>()
+  const p2 = vineProp.withDefault(0)
+  const p3 = vineProp.withDefault(V1)
+  const p4 = vineProp.withDefault(call1())
+  const p5 = vineProp.withDefault<T1>(call2())
+  const p6 = vineProp.withDefault(false)
+  const p7 = vineProp.optional<T2>()
+
+  return vine\`<div>Test store prop type record</div>\`
+}
+  `
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testStoreVinePropTypeAnnotation', mockCompilerHooks)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testStoreVinePropTypeAnnotation')
+    const MyComp = fileCtx?.vineCompFns[0]
+    expect(MyComp?.getPropsTypeRecordStr())
+      .toMatchInlineSnapshot(`"{ p1: string, p2: number, p3: typeof V1, p4: any, p5: T1 }"`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
+    expect(mockCompilerCtx.vineCompileWarnings[0].msg)
+      .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)
   })
 })
 

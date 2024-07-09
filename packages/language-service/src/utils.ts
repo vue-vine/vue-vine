@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import type { VineDiagnostic } from '@vue-vine/compiler'
 import type { Diagnostic } from '@volar/language-server/node'
 import { DiagnosticSeverity } from '@volar/language-server/node'
@@ -47,4 +49,15 @@ export function transformVineDiagnostic(
 
 export function turnBackToCRLF(code: string) {
   return code.replace(/\r?\n/g, '\r\n')
+}
+
+export function VLS_ErrorLog(err: any, tag: string) {
+  console.log(
+    `[VLS] ${tag} error: ${String(err)}`,
+  )
+  if (err.stack) {
+    const stackLines = err.stack.split('\n').slice(0, 6)
+    console.log('--- Error stack trace:')
+    console.log(stackLines.join('\n'))
+  }
 }

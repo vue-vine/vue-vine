@@ -162,6 +162,11 @@ export function getVineMacroCalleeName(node: CallExpression) {
   return ''
 }
 
+export function getVinePropCallTypeParams(node: CallExpression) {
+  // We restricted the `vineProp` can only have 1 type parameter
+  return node.typeParameters?.params?.[0]
+}
+
 export function isVineMacroOf(
   name: VINE_MACRO_NAMES | Array<VINE_MACRO_NAMES>,
 ) {
@@ -425,5 +430,29 @@ export function canNeverBeRef(node: Node, userReactiveImport?: string): boolean 
         return true
       }
       return false
+  }
+}
+
+export function tryInferExpressionTSType(node: Node) {
+  switch (node.type) {
+    case 'BooleanLiteral':
+      return 'boolean'
+    case 'NumericLiteral':
+      return 'number'
+    case 'BigIntLiteral':
+      return 'bigint'
+    case 'StringLiteral':
+      return 'string'
+    case 'NullLiteral':
+      return 'null'
+    case 'Identifier':
+      return (
+        node.name === 'undefined'
+          ? 'undefined'
+          : `typeof ${node.name}`
+      )
+
+    default:
+      return 'any' // Can't infer
   }
 }

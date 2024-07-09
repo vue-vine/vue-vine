@@ -15,6 +15,7 @@ export default defineConfig(
       outDir: '.',
       format: 'cjs',
       external: ['vscode'],
+      minify: false,
       bundle: true,
       define: { 'process.env.NODE_ENV': '"production"' },
       esbuildPlugins: [

@@ -62,6 +62,9 @@ export function createVineFileCtx(
     get originCode() {
       return this.fileMagicCode.original
     },
+    getAstNodeContent(node: Node) {
+      return this.originCode.slice(node.start!, node.end!)
+    },
   }
   return vineFileCtx
 }

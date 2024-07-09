@@ -75,6 +75,7 @@ export interface VineStyleMeta {
 }
 
 export interface VinePropMeta {
+  typeAnnotationRaw: string
   isFromMacroDefine: boolean
   isBool: boolean
   isRequired: boolean
@@ -129,6 +130,8 @@ export interface VineFileCtx {
    * so we store the its location here.
    */
   importsLastLine?: SourceLocation | null
+
+  getAstNodeContent: (node: Node) => string
 }
 
 export interface VineCompFnCtx {
@@ -166,6 +169,8 @@ export interface VineCompFnCtx {
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
+
+  getPropsTypeRecordStr: () => string
 }
 
 export interface VineDiagnostic {

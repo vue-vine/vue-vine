@@ -4,6 +4,7 @@ import { walkIdentifiers } from '@vue/compiler-dom'
 import {
   isArrayPattern,
   isBlockStatement,
+  isBooleanLiteral,
   isClassDeclaration,
   isDeclaration,
   isExportDeclaration,
@@ -64,6 +65,7 @@ import {
   getImportStatements,
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
+  getVinePropCallTypeParams,
   isCallOf,
   isStaticNode,
   isVineCompFnDecl,
@@ -74,6 +76,7 @@ import {
   isVineModel,
   isVineSlots,
   isVineStyle,
+  tryInferExpressionTSType,
 } from './babel-helpers/ast'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/importUsageCheck'
@@ -357,7 +360,7 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
 }
 
 const analyzeVineProps: AnalyzeRunner = (
-  { vineCompFnCtx, vineFileCtx },
+  { vineCompilerHooks, vineCompFnCtx, vineFileCtx },
   fnItselfNode,
 ) => {
   const formalParams = getFunctionParams(fnItselfNode)
@@ -375,14 +378,17 @@ const analyzeVineProps: AnalyzeRunner = (
         return
       }
       const propName = member.key.name
-      const propType = vineFileCtx.fileMagicCode.slice(
-        member.typeAnnotation!.typeAnnotation.start!,
-        member.typeAnnotation!.typeAnnotation.end!,
-      )
+      const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation!.typeAnnotation)
       const propMeta: VinePropMeta = {
         isFromMacroDefine: false,
         isRequired: member.optional === undefined ? true : !member.optional,
-        isBool: propType === 'boolean',
+        isBool: [
+          'boolean',
+          'Boolean',
+          'true',
+          'false',
+        ].includes(propType),
+        typeAnnotationRaw: propType,
       }
       vineCompFnCtx.props[propName] = propMeta
       vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
@@ -397,21 +403,38 @@ const analyzeVineProps: AnalyzeRunner = (
         isFromMacroDefine: true,
         isRequired: macroCalleeName !== 'vineProp.optional',
         isBool: false,
+        typeAnnotationRaw: 'any',
       }
-      const macroCallTypeParamNode = macroCall.typeParameters?.params[0]
-      if (macroCallTypeParamNode) {
-        const macroCallTypeParam = vineFileCtx.fileMagicCode.slice(
-          macroCallTypeParamNode.start!,
-          macroCallTypeParamNode.end!,
-        )
-        propMeta.isBool = macroCallTypeParam === 'boolean'
-      }
+
       if (macroCalleeName === 'vineProp.withDefault') {
+        // in `vineProp.withDefault`, type info comes from type inference by default value
+        // TypeScript will report but it's not guranteed that there's a default value.
         propMeta.default = macroCall.arguments[0]
         propMeta.validator = macroCall.arguments[1]
+        propMeta.isBool = isBooleanLiteral(propMeta.default)
+
+        const inferredType = tryInferExpressionTSType(propMeta.default)
+        propMeta.typeAnnotationRaw = inferredType
       }
       else {
         propMeta.validator = macroCall.arguments[0]
+      }
+
+      // Take explicit type annotation as higher priority
+      const macroCallTypeParamNode = getVinePropCallTypeParams(macroCall)
+      if (macroCallTypeParamNode) {
+        const macroCallTypeParam = vineFileCtx.getAstNodeContent(macroCallTypeParamNode)
+        propMeta.isBool = macroCallTypeParam === 'boolean'
+        propMeta.typeAnnotationRaw = macroCallTypeParam
+      }
+
+      if (propMeta.typeAnnotationRaw === 'any') {
+        vineCompilerHooks.onWarn(
+          vineWarn(vineFileCtx, {
+            msg: `The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check.`,
+            location: macroCall.loc,
+          }),
+        )
       }
 
       // Collect prop's information
@@ -873,6 +896,14 @@ function buildVineCompFnCtx(
     bindings: {},
     cssBindings: {},
     hoistSetupStmts: [],
+
+    getPropsTypeRecordStr(): string {
+      return `{ ${
+        Object.entries(this.props).map(
+          ([propName, propMeta]) => `${propName}: ${propMeta.typeAnnotationRaw}`,
+        ).join(', ')
+      } }`
+    },
   }
   const analyzeCtx: AnalyzeCtx = {
     vineCompilerHooks,
@@ -943,10 +974,13 @@ export function analyzeVine(
     const allValidatorFnBodys = Object.entries(vineFnComp.props)
       .filter(([_, propMeta]) => Boolean(propMeta.validator))
       .map(([_, propMeta]) => (
-        propMeta.validator as (FunctionExpression | ArrowFunctionExpression)
-      ).body)
+        propMeta.validator as (FunctionExpression | ArrowFunctionExpression | undefined)
+      )?.body)
 
     for (const validatorFnBody of allValidatorFnBodys) {
+      if (!validatorFnBody) {
+        continue
+      }
       const identifiers: Identifier[] = []
       walkIdentifiers(validatorFnBody, id => identifiers.push(id))
       makeErrorOnRefHoistedIdentifiers(vineFnComp, identifiers)

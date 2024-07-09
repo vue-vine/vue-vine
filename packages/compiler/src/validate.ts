@@ -974,6 +974,19 @@ function validatePropsForSingelFC(
             ),
           )
         }
+        else if (node.arguments.length > 2) {
+          isVinePropCheckPass = false
+          // `vineProp.withDefault` macro call can only have at most 2 arguments
+          vineCompilerHooks.onError(
+            vineErr(
+              vineFileCtx,
+              {
+                msg: `\`${macroCalleeName}\` macro call can only have at most 2 arguments`,
+                location: node.loc,
+              },
+            ),
+          )
+        }
 
         const parentVarDecl = parent.find(ancestor => isVariableDeclaration(ancestor.node))
         const parentVarDeclarator = parent.find(ancestor => isVariableDeclarator(ancestor.node))
@@ -1202,6 +1215,9 @@ export function validateVine(
       const hasErrInDecl = findValidateError(validatesFromVineFnDecl, fnDeclNode)
       if (hasErrInDecl) {
         hasErrInVineCompFns = true
+      }
+      if (!fnItselfNode) {
+        return
       }
       const hasErrInFnItself = findValidateError(validatesFromVineFnItself, fnItselfNode)
       if (hasErrInFnItself) {
