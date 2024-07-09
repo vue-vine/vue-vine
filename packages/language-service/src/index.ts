@@ -138,7 +138,7 @@ function createVueVineCode(
   }
   generateScriptUntil(snapshot.getLength())
 
-  // replace typeof __VLS_ctx.foo with import('vue').UnwrapRef(typeof foo)
+  // replace typeof __VLS_ctx.foo with import('vue').UnwrapRef<typeof foo>
   replaceAll(tsCodeSegments, /(?<=typeof __VLS_ctx\.\w+\b)/g, '>')
   replaceAll(tsCodeSegments, /(typeof __VLS_ctx\.)/g, `import('vue').UnwrapRef<typeof `)
 
@@ -228,6 +228,10 @@ function createVueVineCode(
       templateSource,
       templateStringNode,
     } of vineFileCtx.vineCompFns) {
+      if (!templateStringNode) {
+        continue
+      }
+
       const source = vineFileCtx.isCRLF
         ? turnBackToCRLF(templateSource)
         : templateSource
@@ -242,7 +246,7 @@ function createVueVineCode(
         },
         mappings: [
           {
-            sourceOffsets: [templateStringNode!.quasi.quasis[0].start!],
+            sourceOffsets: [templateStringNode.quasi.quasis[0].start!],
             generatedOffsets: [0],
             lengths: [source.length],
             data: FULL_FEATURES,

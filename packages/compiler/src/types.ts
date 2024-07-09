@@ -176,6 +176,6 @@ export interface VineDiagnostic {
 
 export interface VineFnPickedInfo {
   fnDeclNode: Node
-  fnItselfNode: BabelFunctionNodeTypes
+  fnItselfNode?: BabelFunctionNodeTypes | undefined
   fnName: string
 }

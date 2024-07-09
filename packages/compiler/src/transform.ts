@@ -234,7 +234,7 @@ export function transformFile(
 
     const vineCompFnStart = vineCompFnCtx.fnDeclNode.start!
     const vineCompFnEnd = vineCompFnCtx.fnDeclNode.end!
-    const vineCompFnBody = vineCompFnCtx.fnItselfNode!.body
+    const vineCompFnBody = vineCompFnCtx.fnItselfNode?.body
     if (isBlockStatement(vineCompFnBody)) {
       let hasAwait = false
 
