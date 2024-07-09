@@ -1,10 +1,12 @@
-# Vue Vine ![NPM Version](https://img.shields.io/npm/v/vue-vine)
+# Vue Vine
 
 [中文 README](./README-CN.md)
 
 Another style of writing Vue components.
 
-Check more details in our [documentation](https://vue-vine.dev/). [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+- NPM version: &nbsp; [![NPM Version](https://img.shields.io/npm/v/vue-vine)](https://www.npmjs.com/package/vue-vine)
+- VSCode extension: &nbsp; [![VSCode ext version](https://vsmarketplacebadges.dev/version/shenqingchuan.vue-vine-extension.svg)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
+- Check more details in docs: &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
 <details>
   <summary>
