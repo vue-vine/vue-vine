@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.5
+
+### Patch Changes
+
+- fix VSCode extension crash and feature enhancement, provide diagnostics.
+
 ## 0.1.0
 
 ### Minor Changes
