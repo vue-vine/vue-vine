@@ -536,8 +536,8 @@ const analyzeVineBindings: AnalyzeRunner = (
   }
 
   // #32 Append all valid declarations in top level scope
-  // to current VCF's bindings, helping  Vue template compiler
-  // to know  how to resolve them.
+  // to current VCF's bindings, helping Vue template compiler
+  // to know how to resolve them.
   const allTopLevelDeclStmts = vineFileCtx.root.program.body
     .filter((stmt): stmt is Declaration => isDeclaration(stmt))
   for (const declStmt of allTopLevelDeclStmts) {
