@@ -5,7 +5,7 @@ import { intro, log, outro, spinner } from '@clack/prompts'
 import { Root, defineCommand } from 'clerc'
 import { bold, green } from 'yoctocolors'
 import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
-import { createProjectOptions, createProject } from '@/create'
+import { createProject, createProjectOptions } from '@/create'
 import { useFlags } from '@/flags'
 
 const defaultProjectName = 'vue-vine-project'
