@@ -45,7 +45,7 @@ export function generateVLSContext(
   }\n${
     // Because we generate formal parameter above,
     // gurantee that function at least has a parameter `props`.
-    '  ...props,'
+    `  ...(props as any as ${vineCompFn.getPropsTypeRecordStr()}),`
   }\n});\n`
 
   function twoSpaceTab(str: string) {

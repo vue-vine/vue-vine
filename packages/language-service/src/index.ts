@@ -23,7 +23,7 @@ import type {
 import { generateGlobalTypes, generateVLSContext } from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
 import type { VueVineCode } from './shared'
-import { VLS_ErrorLog, VLS_InfoLog, turnBackToCRLF } from './shared'
+import { VLS_ErrorLog, VLS_InfoLog, getVineTempPropName, turnBackToCRLF } from './shared'
 
 export {
   isVueVineVirtualCode,
@@ -133,6 +133,8 @@ function createVueVineCode(
       continue
     }
 
+    // Gurantee the component function has a `props` formal parameter in virtual code,
+    // This is for props intellisense on editing template tag attrs.
     generateScriptUntil(
       getIndexAfterFnDeclLeftParen(
         vineCompFn.fnItselfNode!,
@@ -146,7 +148,34 @@ function createVueVineCode(
       tsCodeSegments.push(propsParam)
     }
 
+    // Need to extract all complex expression in `vineProp.withDefault`
+    // and generate a temporary variable like `__VINE_VLS_1` and use `typeof __VINE_VLS_1`
+    // as the type of that single prop.
+    const tempVarDecls: string[] = []
+    const isVineCompHasFnBlock = vineCompFn.fnItselfNode!.body.type === 'BlockStatement'
+    if (isVineCompHasFnBlock) {
+      Object.entries(vineCompFn.props).forEach(([propName, propMeta]) => {
+        const defaultValueExpr = propMeta.default
+        if (!defaultValueExpr || propMeta.typeAnnotationRaw !== 'any') {
+          return
+        }
+
+        const tempVarName = getVineTempPropName(propName)
+        const tempVarDecl = `const ${tempVarName} = (${
+          vineFileCtx.getAstNodeContent(defaultValueExpr)
+        });`
+        tempVarDecls.push(tempVarDecl)
+        propMeta.typeAnnotationRaw = `typeof ${tempVarName}`
+      })
+    }
+
     generateScriptUntil(vineCompFn.templateReturn.start!)
+    if (isVineCompHasFnBlock) {
+      tsCodeSegments.push(...tempVarDecls)
+      tsCodeSegments.push('\n\n')
+    }
+
+    // Generate the template virtual code
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n{\n')
 
