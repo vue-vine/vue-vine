@@ -17,8 +17,15 @@ import {
   toString,
 } from 'muggle-string'
 import type { URI } from 'vscode-uri'
+import type {
+  ArrowFunctionExpression,
+  FunctionDeclaration,
+  FunctionExpression,
+} from '@babel/types'
 import { createVineFileCtx } from './vine-ctx'
 import { VLS_ErrorLog, turnBackToCRLF } from './utils'
+
+type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
 export interface VueVineCode extends VirtualCode { }
 
@@ -99,6 +106,20 @@ function createVueVineCode(
     if (!vineCompFn.templateStringNode || !vineCompFn.templateReturn) {
       continue
     }
+
+    generateScriptUntil(
+      getIndexAfterFnDeclLeftParen(
+        vineCompFn.fnItselfNode!,
+        vineFileCtx.root.tokens ?? [],
+      ) + 1, // means generate after '(',
+    )
+    if (vineCompFn.fnItselfNode?.params.length === 0) {
+      // no defined `props` formal parameter,
+      // generate a `props` formal parameter in virtual code
+      const propsParam = `props: ${vineCompFn.getPropsTypeRecordStr()}`
+      tsCodeSegments.push(propsParam)
+    }
+
     generateScriptUntil(vineCompFn.templateReturn.start!)
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n{\n')
@@ -291,4 +312,51 @@ function buildMappings<T>(chunks: Segment<T>[]) {
     }
   }
   return mappings
+}
+
+interface BabelToken {
+  start: number
+  end: number
+  type: {
+    label: string
+  }
+}
+
+function getIndexAfterFnDeclLeftParen(
+  node: BabelFunctionNodeTypes,
+  tokens: BabelToken[] = [],
+): number {
+  switch (node.type) {
+    case 'FunctionDeclaration':
+      return (
+        tokens.find(
+          token => (
+            token.type.label === '('
+            && token.start >= node.id!.end!
+          ),
+        )?.start ?? Number.NaN
+      )
+    case 'FunctionExpression':
+      return (
+        tokens.find(
+          token => (
+            token.type.label === '('
+            && token.start >= node.start! + (
+              node.async
+                ? 5 // 'async'.length
+                : 0
+                + (
+                  node.generator
+                    ? 9 // 'function*'.length
+                    : 8 // 'function'.length
+                )
+                + (node.id?.name?.length ?? 0)
+            )
+          ),
+        )?.start ?? Number.NaN
+      )
+    default:
+      // ArrowFunctionExpression
+      return node.start! + 1 // '('.length
+  }
 }

@@ -28,7 +28,7 @@ const MyComp1 = () => { return vine\`<div>Test MyComp1</div>\` },
       MyComp3 = function () { return vine\`<div>Test MyComp3</div>\` }
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeMultiCompsDecl', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeMultiCompsDecl', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeMultiCompsDecl')?.vineCompFns).toHaveLength(3)
   })
@@ -40,7 +40,7 @@ export const MyComp2 = () => vine\`<div>Test MyComp2</div>\`
 export default function MyComp3() { return vine\`<div>Test MyComp3</div>\` }
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeExportCompsDecl', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeExportCompsDecl', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeExportCompsDecl')?.vineCompFns).toHaveLength(3)
   })
@@ -52,7 +52,7 @@ import * as Something from 'lib-1'
 import type { SomeType } from 'types-2'
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeImports', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeImports', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeImports')
     expect(fileCtx?.userImports).toMatchInlineSnapshot(`
@@ -92,7 +92,7 @@ function MyComp(p: {
   return vine\`<div>Test props by formal param</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVinePropsByFormalParam', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVinePropsByFormalParam', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVinePropsByFormalParam')
@@ -132,7 +132,7 @@ const MyComp = () => {
   return vine\`<div>Test props by macro calls</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVinePropsByMacroCalls', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVinePropsByMacroCalls', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVinePropsByMacroCalls')
@@ -151,7 +151,7 @@ function MyComp() {
   return vine\`<div>Test emits</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineEmits', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineEmits', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineEmits')
@@ -171,7 +171,7 @@ function MyComp() {
   return vine\`<div>Test slots</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineSlots', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineSlots', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineSlots')
@@ -200,7 +200,7 @@ function MyComp() {
   return vine\`<div>Test slots</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineModel', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineModel', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineModel')
@@ -263,7 +263,7 @@ function Comp() {
   return vine\`<div>Test expose and options</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineExposeAndOptions', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineExposeAndOptions', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineExposeAndOptions')
@@ -306,7 +306,7 @@ export function MyComp() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineVueBindingsType', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineVueBindingsType', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineVueBindingsType')
     const vineFnComp = fileCtx?.vineCompFns[0]
@@ -337,7 +337,7 @@ function MyComp() {
   return vine\`<div>Test vine style</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineStyle', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineStyle', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineStyle')
     const vineFnComp = fileCtx?.vineCompFns[0]
@@ -374,7 +374,7 @@ function MyApp() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testAnalyzeVineTemplate', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testAnalyzeVineTemplate', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineTemplate')
     const MyBoxComp = fileCtx?.vineCompFns[0]
@@ -402,7 +402,7 @@ function MyComp() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testReferenceLocallyDeclaredVariables', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testReferenceLocallyDeclaredVariables', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot(`"Cannot reference "val1" locally declared variables because it will be hoisted outside of component's setup() function."`)
@@ -429,15 +429,15 @@ function MyComp() {
 }
   `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testStoreVinePropTypeAnnotation', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testStoreVinePropTypeAnnotation', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testStoreVinePropTypeAnnotation')
     const MyComp = fileCtx?.vineCompFns[0]
     expect(MyComp?.getPropsTypeRecordStr())
-      .toMatchInlineSnapshot(`"{ p1: string, p2: number, p3: typeof V1, p4: any, p5: T1 }"`)
-    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
-    expect(mockCompilerCtx.vineCompileWarnings[0].msg)
-      .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)
+      .toMatchInlineSnapshot(`"{ p1: string, p2: number, p3: typeof V1, p4: any, p5: T1, p6: boolean, p7: T2 }"`)
+    // expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
+    // expect(mockCompilerCtx.vineCompileWarnings[0].msg)
+    //   .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)
   })
 })
 
@@ -471,7 +471,7 @@ function MyBox() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testSortStyleImport', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testSortStyleImport', { compilerHooks: mockCompilerHooks })
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testSortStyleImport')
     expect(fileCtx).not.toBeUndefined()
     const sorted = sortStyleImport(fileCtx!)
@@ -494,7 +494,7 @@ function MyBox() {
     }`
 
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVineEmitsBindings', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVineEmitsBindings', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.fileCtxMap.get('testVineEmitsBindings')?.vineCompFns[0]?.bindings).toEqual(
       expect.objectContaining({
         myEmits: VineBindingTypes.SETUP_CONST,

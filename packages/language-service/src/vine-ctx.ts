@@ -21,7 +21,12 @@ export function createVineFileCtx(sourceFileName: string, source: string) {
   const vineFileCtx = compileVineTypeScriptFile(
     source,
     sourceFileName,
-    compilerHooks,
+    {
+      compilerHooks,
+      babelParseOptions: {
+        tokens: true,
+      },
+    },
   )
 
   return vineFileCtx

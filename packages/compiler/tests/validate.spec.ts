@@ -12,7 +12,7 @@ function App() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVCFMacroCallOutsideOfVCF', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVCFMacroCallOutsideOfVCF', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"Vine macro calls must be inside Vue Vine component function!"')
@@ -23,7 +23,7 @@ function App() {
 const bar = vineProp<number>()
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVCFRootScopeContainsVueReactivityAPICall', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVCFRootScopeContainsVueReactivityAPICall', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot(`"Vine macro calls must be inside Vue Vine component function!"`)
@@ -41,7 +41,7 @@ function App() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVCFHasOnlyOneVineTaggedTemplateString', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVCFHasOnlyOneVineTaggedTemplateString', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(3)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"Multiple vine tagged template are not allowed inside Vine component function"')
@@ -76,7 +76,7 @@ function App() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVCFMacroCallMultipleTimes', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVCFMacroCallMultipleTimes', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(5)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"Multiple `vineStyle` calls are not allowed inside Vine component function"')
@@ -137,7 +137,7 @@ function App() {
 }
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVineMacrosUsage', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVineMacrosUsage', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`14`)
 
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
@@ -184,7 +184,7 @@ function App() {
 }
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVineStyleInsideLexicalDeclaration', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVineStyleInsideLexicalDeclaration', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"`vineStyle` macro call is not allowed to be inside a variable declaration"')
@@ -220,7 +220,7 @@ function App() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(10)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot(
@@ -254,7 +254,7 @@ function TestComp() {
   return vine\`<div>Test Comp</div>\`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testVineEmitsUsage', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testVineEmitsUsage', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"`vineEmits` must have 1 type parameter"')
@@ -280,7 +280,7 @@ function TestComp() {
   \`
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(content, 'testTemplateTopLevelTags', mockCompilerHooks)
+    compileVineTypeScriptFile(content, 'testTemplateTopLevelTags', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates."')

@@ -16,7 +16,7 @@ import type {
   TaggedTemplateExpression,
   TemplateLiteral,
 } from '@babel/types'
-import type { ParseResult } from '@babel/parser'
+import type { ParseResult, ParserOptions } from '@babel/parser'
 import type MagicString from 'magic-string'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 
@@ -183,4 +183,10 @@ export interface VineFnPickedInfo {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes | undefined
   fnName: string
+}
+
+export interface VineCompileCtx {
+  compilerHooks: VineCompilerHooks
+  fileCtxCache?: VineFileCtx
+  babelParseOptions?: ParserOptions
 }

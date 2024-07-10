@@ -360,6 +360,7 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
 }
 
 const analyzeVineProps: AnalyzeRunner = (
+  // eslint-disable-next-line unused-imports/no-unused-vars
   { vineCompilerHooks, vineCompFnCtx, vineFileCtx },
   fnItselfNode,
 ) => {
@@ -428,14 +429,14 @@ const analyzeVineProps: AnalyzeRunner = (
         propMeta.typeAnnotationRaw = macroCallTypeParam
       }
 
-      if (propMeta.typeAnnotationRaw === 'any') {
-        vineCompilerHooks.onWarn(
-          vineWarn(vineFileCtx, {
-            msg: `The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check.`,
-            location: macroCall.loc,
-          }),
-        )
-      }
+      // if (propMeta.typeAnnotationRaw === 'any') {
+      //   vineCompilerHooks.onWarn(
+      //     vineWarn(vineFileCtx, {
+      //       msg: `The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check.`,
+      //       location: macroCall.loc,
+      //     }),
+      //   )
+      // }
 
       // Collect prop's information
       const propName = propVarIdentifier.name

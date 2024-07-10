@@ -51,8 +51,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
-      compilerHooks,
-      fileCtxMap,
+      {
+        compilerHooks,
+        fileCtxCache: fileCtxMap,
+      },
     )
 
     // Print all warnings

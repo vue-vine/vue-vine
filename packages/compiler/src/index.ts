@@ -1,6 +1,6 @@
 import MagicString from 'magic-string'
 import type { Node } from '@babel/types'
-import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
+import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
 import { findVineCompFnDecls } from './babel-helpers/ast'
 import { validateVine } from './validate'
 import { analyzeVine } from './analyze'
@@ -45,9 +45,10 @@ export function createCompilerCtx(
 export function createVineFileCtx(
   code: string,
   fileId: string,
-  fileCtxCache?: VineFileCtx,
+  vineCompileCtx: VineCompileCtx,
 ) {
-  const root = babelParse(code)
+  const { fileCtxCache, babelParseOptions = {} } = vineCompileCtx
+  const root = babelParse(code, babelParseOptions)
   const vineFileCtx: VineFileCtx = {
     root,
     fileId,
@@ -90,12 +91,12 @@ export function doAnalyzeVine(
 export function compileVineTypeScriptFile(
   code: string,
   fileId: string,
-  compilerHooks: VineCompilerHooks,
-  fileCtxCache?: VineFileCtx,
+  vineCompileCtx: VineCompileCtx,
 ) {
+  const { compilerHooks } = vineCompileCtx
   const compilerOptions = compilerHooks.getCompilerCtx().options
   // Using babel to validate vine declarations
-  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, fileCtxCache)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, vineCompileCtx)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
