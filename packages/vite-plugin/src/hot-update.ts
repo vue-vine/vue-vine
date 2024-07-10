@@ -26,7 +26,7 @@ function reAnalyzeVine(
   fileId: string,
   compilerHooks: VineCompilerHooks,
 ) {
-  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, undefined)
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, { compilerHooks })
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
   doValidateVine(compilerHooks, vineFileCtx, vineCompFnDecls)

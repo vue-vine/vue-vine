@@ -8,9 +8,7 @@ const plugin = createLanguageServicePlugin((ts, info) => {
       createVueVineLanguagePlugin(
         ts,
         info.languageServiceHost.getCompilationSettings(),
-        resolveVueCompilerOptions({
-
-        }),
+        resolveVueCompilerOptions({}),
       ),
     ],
   }
