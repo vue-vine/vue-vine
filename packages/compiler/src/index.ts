@@ -15,6 +15,10 @@ export {
   findVineCompFnDecls,
 } from './babel-helpers/ast'
 
+export {
+  VineBindingTypes,
+} from './constants'
+
 export type {
   VineFileCtx,
   VineCompFnCtx as VineFnCompCtx,

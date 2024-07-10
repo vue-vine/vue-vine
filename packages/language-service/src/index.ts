@@ -10,10 +10,8 @@ import type {
 } from '@vue/language-core'
 import { generateTemplate } from '@vue/language-core/lib/codegen/template'
 import type * as ts from 'typescript'
-import { generateGlobalTypes } from '@vue/language-core/lib/codegen/script/globalTypes'
 import {
   type Segment,
-  replaceAll,
   toString,
 } from 'muggle-string'
 import type { URI } from 'vscode-uri'
@@ -22,8 +20,9 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
 } from '@babel/types'
+import { generateGlobalTypes, generateVLSContext } from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
-import { VLS_ErrorLog, turnBackToCRLF } from './utils'
+import { VLS_ErrorLog, VLS_InfoLog, turnBackToCRLF } from './utils'
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
@@ -49,10 +48,22 @@ export function createVueVineLanguagePlugin(
       return undefined
     },
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
-      if (String(uriOrFileName).endsWith('.vine.ts') && langaugeId === 'typescript') {
-        globalTypesHolder ??= String(uriOrFileName)
+      const moduleId = String(uriOrFileName)
+      if (moduleId.endsWith('.vine.ts') && langaugeId === 'typescript') {
+        if (!moduleId.startsWith('volar_virtual_code://')) {
+          globalTypesHolder ??= moduleId
+          VLS_InfoLog('globalTypesHolder =', moduleId)
+        }
+
         try {
-          const virtualCode = createVueVineCode(ts, String(uriOrFileName), snapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+          const virtualCode = createVueVineCode(
+            ts,
+            moduleId,
+            snapshot,
+            compilerOptions,
+            vueCompilerOptions,
+            globalTypesHolder === moduleId,
+          )
           return virtualCode
         }
         catch (err) {
@@ -62,7 +73,15 @@ export function createVueVineLanguagePlugin(
     },
     updateVirtualCode(uriOrFileName, _oldVirtualCode, newSnapshot) {
       try {
-        const newSnapshotVineCode = createVueVineCode(ts, String(uriOrFileName), newSnapshot, compilerOptions, vueCompilerOptions, globalTypesHolder === uriOrFileName)
+        const moduleId = String(uriOrFileName)
+        const newSnapshotVineCode = createVueVineCode(
+          ts,
+          moduleId,
+          newSnapshot,
+          compilerOptions,
+          vueCompilerOptions,
+          globalTypesHolder === moduleId,
+        )
         return newSnapshotVineCode
       }
       catch (err) {
@@ -123,6 +142,12 @@ function createVueVineCode(
     generateScriptUntil(vineCompFn.templateReturn.start!)
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n{\n')
+
+      // Insert all component bindings to __VLS_ctx
+      tsCodeSegments.push(
+        generateVLSContext(vineCompFn),
+      )
+
       const generatedTemplate = generateTemplate({
         ts,
         compilerOptions,
@@ -169,24 +194,14 @@ function createVueVineCode(
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
     // clear the template string
-    tsCodeSegments.push('``')
+    tsCodeSegments.push('`` as any as __VLS_Element')
     currentOffset = vineCompFn.templateStringNode.quasi.end!
   }
   generateScriptUntil(snapshot.getLength())
 
-  // replace typeof __VLS_ctx.foo with import('vue').UnwrapRef<typeof foo>
-  replaceAll(tsCodeSegments, /(?<=typeof __VLS_ctx\.\w+\b)/g, '>')
-  replaceAll(tsCodeSegments, /(typeof __VLS_ctx\.)/g, `import('vue').UnwrapRef<typeof `)
-
-  // replace __VLS_ctx.foo with (await import('vue').unref(foo))
-  replaceAll(tsCodeSegments, /(?<=__VLS_ctx\.\w+\b)/g, ')')
-  replaceAll(tsCodeSegments, /(__VLS_ctx\.)/g, `(await import('vue')).unref(`)
-
-  // replace __VLS_components.foo with foo
-  replaceAll(tsCodeSegments, /__VLS_components\./g, '')
-
   if (withGlobalTypes) {
-    tsCodeSegments.push(generateGlobalTypes(vueCompilerOptions))
+    const globalTypes = generateGlobalTypes(vueCompilerOptions)
+    tsCodeSegments.push(globalTypes)
   }
 
   const tsCode = toString(tsCodeSegments)

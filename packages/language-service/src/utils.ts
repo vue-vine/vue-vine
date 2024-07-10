@@ -51,6 +51,10 @@ export function turnBackToCRLF(code: string) {
   return code.replace(/\r?\n/g, '\r\n')
 }
 
+export function VLS_InfoLog(...msgs: any[]) {
+  console.log(`[VLS]`, ...msgs)
+}
+
 export function VLS_ErrorLog(err: any, tag: string) {
   console.log(
     `[VLS] ${tag} error: ${String(err)}`,
