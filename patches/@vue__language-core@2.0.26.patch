@@ -1,8 +1,8 @@
 diff --git a/lib/codegen/template/context.js b/lib/codegen/template/context.js
-index bdae8e6bdd6853fb0cce9ad0f417fb01313a1dd1..9574a2c48c777e3ed8c81ca1fbeb5fb8d1b866f2 100644
+index bdae8e6bdd6853fb0cce9ad0f417fb01313a1dd1..542e5cedd91fddfffcad08fa21e377d8dd391cd2 100644
 --- a/lib/codegen/template/context.js
 +++ b/lib/codegen/template/context.js
-@@ -184,7 +184,8 @@ function createTemplateCodegenContext(scriptSetupBindingNames) {
+@@ -184,7 +184,7 @@ function createTemplateCodegenContext(scriptSetupBindingNames) {
                              varName,
                              'template',
                              offset,
@@ -12,7 +12,7 @@ index bdae8e6bdd6853fb0cce9ad0f417fb01313a1dd1..9574a2c48c777e3ed8c81ca1fbeb5fb8
                      }
                      yield `,`;
 diff --git a/lib/codegen/template/element.js b/lib/codegen/template/element.js
-index b208961a53e8118c8ad77b69e4fe8d461511ad0e..cb62d2d896b105d6694b8a54c662420b6513a09e 100644
+index b208961a53e8118c8ad77b69e4fe8d461511ad0e..a4316182569643a590966ba8487f969f7fe05ab5 100644
 --- a/lib/codegen/template/element.js
 +++ b/lib/codegen/template/element.js
 @@ -126,10 +126,8 @@ function* generateComponent(options, ctx, node, currentComponent, componentCtxVa
@@ -29,7 +29,7 @@ index b208961a53e8118c8ad77b69e4fe8d461511ad0e..cb62d2d896b105d6694b8a54c662420b
                  yield `,`;
              }
 diff --git a/lib/codegen/template/elementProps.js b/lib/codegen/template/elementProps.js
-index bedc7f6692cdf6052947fbe4f2761f2aa2481689..3178e31b7fc9adb5463fa874b1ea8135964c1b20 100644
+index bedc7f6692cdf6052947fbe4f2761f2aa2481689..b328195634193641982c7a80210832ab37dc9b66 100644
 --- a/lib/codegen/template/elementProps.js
 +++ b/lib/codegen/template/elementProps.js
 @@ -78,7 +78,7 @@ function* generateElementProps(options, ctx, node, props, enableCodeFeatures, pr
