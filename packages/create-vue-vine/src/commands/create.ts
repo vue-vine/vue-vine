@@ -5,7 +5,7 @@ import { intro, log, outro, spinner } from '@clack/prompts'
 import { Root, defineCommand } from 'clerc'
 import { bold, green } from 'yoctocolors'
 import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
-import { creaateProjectOptions, createProject } from '@/create'
+import { createProjectOptions, createProject } from '@/create'
 import { useFlags } from '@/flags'
 
 const defaultProjectName = 'vue-vine-project'
@@ -69,7 +69,7 @@ export const createCommand = defineCommand({
     cancel('Unable to find template directory')
   }
 
-  const projectOptions = creaateProjectOptions({
+  const projectOptions = createProjectOptions({
     path: projectPath,
     name: ctx.parameters.projectName,
     templateDir,

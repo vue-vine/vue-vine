@@ -10,7 +10,7 @@ export interface ProjectOptions {
   templates: string[]
 }
 
-export function creaateProjectOptions(params: Pick<ProjectOptions, 'path' | 'name' | 'templateDir'>): ProjectOptions {
+export function createProjectOptions(params: Pick<ProjectOptions, 'path' | 'name' | 'templateDir'>): ProjectOptions {
   return {
     ...params,
     templates: [],
