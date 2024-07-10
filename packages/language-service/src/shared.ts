@@ -1,8 +1,15 @@
 /* eslint-disable no-console */
 
 import type { VineDiagnostic } from '@vue-vine/compiler'
-import type { Diagnostic } from '@volar/language-server/node'
+import type { Diagnostic, VirtualCode } from '@volar/language-server/node'
 import { DiagnosticSeverity } from '@volar/language-server/node'
+
+export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
+export interface VueVineCode extends VirtualCode {
+  __VUE_VINE_VIRTUAL_CODE__: true
+  vineCompileErrs: VineDiagnostic[]
+  vineCompileWarns: VineDiagnostic[]
+}
 
 export function transformVineDiagnostic(
   diag: VineDiagnostic,
@@ -64,4 +71,8 @@ export function VLS_ErrorLog(err: any, tag: string) {
     console.log('--- Error stack trace:')
     console.log(stackLines.join('\n'))
   }
+}
+
+export function isVueVineVirtualCode(vCode: any): vCode is VueVineCode {
+  return Boolean(vCode.__VUE_VINE_VIRTUAL_CODE__)
 }

@@ -17,6 +17,7 @@ export function compileVineTemplate(
     mode: 'module',
     hoistStatic: true,
     cacheHandlers: true,
+    prefixIdentifiers: true,
     inline: true,
     ...params,
   })
@@ -181,10 +182,10 @@ export function createSeparatedTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           scopeId: `data-v-${vineFnCompCtx.scopeId}`,
-          bindingMetadata,
           inline: false,
+          bindingMetadata,
+          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           onError: (e) => {
             if (hasTemplateCompileErr) {
               return
@@ -333,9 +334,9 @@ export function createInlineTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           bindingMetadata,
+          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           onError: (e) => {
             if (hasTemplateCompileErr) {
               return

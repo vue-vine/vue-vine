@@ -8,7 +8,13 @@ export function createVineFileCtx(sourceFileName: string, source: string) {
   const compilerCtx = createCompilerCtx({
     envMode: 'module',
     vueCompilerOptions: {
-      mode: 'function', // 'module' will break Volar virtual code's mapping
+      // 'module' will break Volar virtual code's mapping
+      mode: 'function',
+      // These options below is for resolving conflicts
+      // with original compiler's mode: 'module'
+      cacheHandlers: false,
+      prefixIdentifiers: false,
+      scopeId: null,
     },
   })
   const vineCompileErrs: VineDiagnostic[] = []
@@ -29,5 +35,9 @@ export function createVineFileCtx(sourceFileName: string, source: string) {
     },
   )
 
-  return vineFileCtx
+  return {
+    vineFileCtx,
+    vineCompileErrs,
+    vineCompileWarns,
+  }
 }

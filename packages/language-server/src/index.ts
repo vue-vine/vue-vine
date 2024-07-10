@@ -14,6 +14,7 @@ import { create as createTypeScriptServices } from 'volar-service-typescript'
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+import { createVineDiagnostics } from './provide-diagnostics'
 
 const debug = false
 
@@ -31,6 +32,7 @@ connection.onInitialize(async (params) => {
     createHtmlService(),
     createCssService(),
     createEmmetService(),
+    createVineDiagnostics(),
   ]
   if (debug) {
     plugins.push(...createTypeScriptServices(tsdk.typescript))

@@ -22,11 +22,14 @@ import type {
 } from '@babel/types'
 import { generateGlobalTypes, generateVLSContext } from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
-import { VLS_ErrorLog, VLS_InfoLog, turnBackToCRLF } from './utils'
+import type { VueVineCode } from './shared'
+import { VLS_ErrorLog, VLS_InfoLog, turnBackToCRLF } from './shared'
+
+export {
+  isVueVineVirtualCode,
+} from './shared'
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
-
-export interface VueVineCode extends VirtualCode { }
 
 const FULL_FEATURES = {
   completion: true,
@@ -116,7 +119,11 @@ function createVueVineCode(
 ): VueVineCode {
   const content = snapshot.getText(0, snapshot.getLength())
 
-  const vineFileCtx = createVineFileCtx(sourceFileName, content)
+  const {
+    vineCompileErrs,
+    vineCompileWarns,
+    vineFileCtx,
+  } = createVineFileCtx(sourceFileName, content)
   const tsCodeSegments: Segment<CodeInformation>[] = []
 
   let currentOffset = 0
@@ -208,6 +215,7 @@ function createVueVineCode(
   const tsCodeMappings = buildMappings(tsCodeSegments)
 
   return {
+    __VUE_VINE_VIRTUAL_CODE__: true,
     id: 'root',
     languageId: 'typescript',
     snapshot: {
@@ -226,6 +234,8 @@ function createVueVineCode(
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
     ],
+    vineCompileErrs,
+    vineCompileWarns,
   }
 
   function generateScriptUntil(targetOffset: number) {

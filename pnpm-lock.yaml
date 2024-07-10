@@ -317,6 +317,9 @@ importers:
       volar-service-typescript:
         specifier: 0.0.59
         version: 0.0.59(@volar/language-service@2.4.0-alpha.15)
+      vscode-uri:
+        specifier: ^3.0.8
+        version: 3.0.8
     devDependencies:
       '@types/node':
         specifier: ^20.11.25
