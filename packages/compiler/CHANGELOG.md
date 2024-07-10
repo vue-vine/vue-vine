@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.8
+
+### Patch Changes
+
+- Add validation for bare macro call and enhance VSCode extension for accurate type display.
+
 ## 0.1.6
 
 ### Patch Changes

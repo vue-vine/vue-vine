@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.6
+
+### Patch Changes
+
+- Add validation for bare macro call and enhance VSCode extension for accurate type display.
+
 ## 0.1.5
 
 ### Patch Changes

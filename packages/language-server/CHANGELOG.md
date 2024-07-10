@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.8
+
+### Patch Changes
+
+- Add validation for bare macro call and enhance VSCode extension for accurate type display.
+
 ## 0.1.7
 
 ### Patch Changes
