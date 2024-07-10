@@ -166,6 +166,34 @@ function validateVineTemplateStringUsage(
   return isVineTemplateUsagePass
 }
 
+function assertMacroCallMustBeBare(
+  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  macroCallNode: CallExpression,
+  parent?: TraversalAncestors,
+) {
+  const isBareCall = !!(
+    parent
+    && parent.length > 0
+    && parent[parent.length - 1]?.node.type === 'ExpressionStatement'
+  )
+
+  if (!isBareCall) {
+    vineCompilerHooks.onError(
+      vineErr(
+        vineFileCtx,
+        {
+          msg: `\`${
+            getVineMacroCalleeName(macroCallNode)
+          }\` call must be a bare call`,
+          location: macroCallNode.loc,
+        },
+      ),
+    )
+  }
+
+  return isBareCall
+}
+
 function assertVineStyleUsage(
   { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
   vineStyleMacroCallNode: CallExpression,
@@ -782,17 +810,21 @@ function validateMacrosUsage(
       count: 0,
       asserts: [
         assertMacroCanOnlyHaveOneObjLiteralArg,
+        assertMacroCallMustBeBare,
       ],
     },
     vineOptions: {
       count: 0,
       asserts: [
         assertMacroCanOnlyHaveOneObjLiteralArg,
+        assertMacroCallMustBeBare,
       ],
     },
     vineCustomElement: {
       count: 0,
-      asserts: [],
+      asserts: [
+        assertMacroCallMustBeBare,
+      ],
     },
   }
 
