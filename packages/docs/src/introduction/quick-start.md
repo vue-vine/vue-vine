@@ -6,10 +6,6 @@ Vine provides a Vite plugin and a VSCode extension to offer feature support.
 
 ![npm](https://img.shields.io/npm/v/vue-vine)
 
-::: info TIPS
-Vine's first stable release is `v0.1.0`.
-:::
-
 ## Install Vite plugin
 
 ```bash

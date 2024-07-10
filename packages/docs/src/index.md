@@ -17,11 +17,13 @@ hero:
       link: /introduction/why
 
 features:
-  - title: Function component with template
-    details: Now you can write multiple components in one file, with all template features you love in Vue.js.
+  - title: Compatible <br> with SFC
+    details: Vine is fully compatible with SFC, you can use it in your existing project.
+  - title: Function component
+    details: Write multiple components in one file, with all template features you love in Vue.js.
   - title: More uniform and intuitive type context
     details: Vine use TypeScript file everywhere so that type context would flow more naturally.
-  - title: Simple and intuitive macro API
+  - title: Simple and intuitive macros
     details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
 

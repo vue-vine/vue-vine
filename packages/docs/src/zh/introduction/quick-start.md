@@ -6,10 +6,6 @@ Vine 提供了一个 Vite 插件和一个 VSCode 扩展。
 
 ![npm](https://img.shields.io/npm/v/vue-vine)
 
-::: info 温馨提示
-Vine 的第一个稳定版本是 `v0.1.0`。
-:::
-
 ## 安装 Vite 插件 {#install-vite-plugin}
 
 ```bash
