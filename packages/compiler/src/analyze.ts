@@ -901,11 +901,11 @@ function buildVineCompFnCtx(
     cssBindings: {},
     hoistSetupStmts: [],
 
-    getPropsTypeRecordStr(): string {
+    getPropsTypeRecordStr(joinStr = ', '): string {
       return `{ ${
         Object.entries(this.props).map(
           ([propName, propMeta]) => `${propName}: ${propMeta.typeAnnotationRaw}`,
-        ).join(', ')
+        ).join(joinStr)
       } }`
     },
   }

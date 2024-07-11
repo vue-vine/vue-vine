@@ -170,7 +170,7 @@ export interface VineCompFnCtx {
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
 
-  getPropsTypeRecordStr: () => string
+  getPropsTypeRecordStr: (joinStr?: string) => string
 }
 
 export interface VineDiagnostic {

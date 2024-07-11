@@ -336,6 +336,9 @@ importers:
       '@vue/language-core':
         specifier: ~2.0.26
         version: 2.0.26(patch_hash=lgnpilqe7mihvahm2rgzwd7jdq)(typescript@5.5.3)
+      '@vue/shared':
+        specifier: ^3.4.31
+        version: 3.4.31
       muggle-string:
         specifier: ^0.4.1
         version: 0.4.1
@@ -8148,7 +8151,7 @@ snapshots:
     dependencies:
       '@volar/language-core': 2.4.0-alpha.15
       '@vue/compiler-dom': 3.4.21
-      '@vue/shared': 3.4.21
+      '@vue/shared': 3.4.31
       computeds: 0.0.1
       minimatch: 9.0.3
       muggle-string: 0.4.1
@@ -8164,7 +8167,7 @@ snapshots:
       '@volar/typescript': 2.4.0-alpha.15
       '@vue/compiler-dom': 3.4.21
       '@vue/language-core': 2.0.26(patch_hash=lgnpilqe7mihvahm2rgzwd7jdq)(typescript@5.5.3)
-      '@vue/shared': 3.4.21
+      '@vue/shared': 3.4.31
       '@vue/typescript-plugin': 2.0.26(typescript@5.5.3)
       computeds: 0.0.1
       path-browserify: 1.0.1
@@ -8271,7 +8274,7 @@ snapshots:
     dependencies:
       '@volar/typescript': 2.4.0-alpha.15
       '@vue/language-core': 2.0.26(patch_hash=lgnpilqe7mihvahm2rgzwd7jdq)(typescript@5.5.3)
-      '@vue/shared': 3.4.21
+      '@vue/shared': 3.4.31
     transitivePeerDependencies:
       - typescript
 

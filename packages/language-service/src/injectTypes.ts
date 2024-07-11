@@ -29,26 +29,28 @@ export function generateGlobalTypes(
 
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
-) {
+): string {
   const bindingEntries = Object.entries(vineCompFn.bindings)
-  const setupBindings = bindingEntries.filter(
+  const notPropsBindings = bindingEntries.filter(
     ([, bindingType]) => (
       bindingType !== VineBindingTypes.PROPS
       && bindingType !== VineBindingTypes.PROPS_ALIASED
     ),
   )
 
-  return `const __VLS_ctx = __createVineVLSCtx({\n${
-    setupBindings
-      .map(([bindingName]) => twoSpaceTab(bindingName))
-      .join(', \n')
-  }\n${
-    // Because we generate formal parameter above,
-    // gurantee that function at least has a parameter `props`.
-    `  ...(props as any as ${vineCompFn.getPropsTypeRecordStr()}),`
-  }\n});\n`
+  const __VINE_CONTEXT_TYPES = `
+type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
+  vineCompFn.getPropsTypeRecordStr('; ')
+};
+type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
+  __CTX_TYPES_FROM_BINDING,
+  __CTX_TYPES_FROM_FORMAL_PARAMS
+>>;
+const __VLS_ctx = __createVineVLSCtx({
+${notPropsBindings.map(([name]) => `  ${name},`).join('\n')}
+  ...props as any as ${vineCompFn.getPropsTypeRecordStr('; ')},
+});
+`
 
-  function twoSpaceTab(str: string) {
-    return `  ${str}`
-  }
+  return __VINE_CONTEXT_TYPES
 }
