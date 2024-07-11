@@ -1,46 +1,59 @@
 import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
-import type { ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
-import type { HasLocation, VTemplateRoot } from '../../ast'
+import type { NeedFixToken, ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
+import type { VTemplateRoot, Location, OffsetRange } from '../../ast'
 
-export function fixVineOffset<T extends HasLocation & { type: string }>(
-  token: T,
-  {
-    templateStartOffset,
-    templateStartLine,
-    templateStartColumn,
-  }: VineTemplatePositionInfo,
-  cache: WeakSet<T>,
+export function fixVineOffset(
+  token: NeedFixToken,
+  fixCtx: {
+    posInfo: VineTemplatePositionInfo,
+    fixedCache: WeakSet<Location | OffsetRange>
+  },
 ) {
-  if (cache.has(token)) {
-    return
-  }
-  cache.add(token)
-
+  const {
+    posInfo: {
+      templateStartOffset,
+      templateStartLine,
+      templateStartColumn,
+    },
+    fixedCache: cache,
+  } = fixCtx
   // The location of `VTemplateRoot` is correctly set on construction.
   if (token.type !== 'VTemplateRoot') {
     // Because the output token position is based on the start of the template,
     // but the final expected token requires accurate offset to the source code!
-    token.range[0] += templateStartOffset
+    if (!cache.has(token.range)) {
+      token.range[0] += templateStartOffset
+      token.range[1] += templateStartOffset
+      cache.add(token.range)
+    }
 
-    // Also, the line number should be based on the start of the template.
-    // -1 is because the TSESTree's line number is 1-based.
-    token.loc.start.line += templateStartLine - 1
+    if (!cache.has(token.loc.start)) {
+      // Also, the line number should be based on the start of the template.
+      // -1 is because the TSESTree's line number is 1-based.
+      token.loc.start.line += templateStartLine - 1
 
-    // For column, it's a little bit more complicated:
-    // 1) If the token is at the first line, then the column number should be based on the start of the template.
-    // 2) If the token is not at the first line, then the column number is what it is.
-    token.loc.start.column = (
-      token.loc.start.line === templateStartLine
-        ? templateStartColumn + token.loc.start.column
-        : token.loc.start.column
-    )
-    token.loc.end.line += templateStartLine - 1
-    token.loc.end.column = (
-      token.loc.end.line === templateStartLine
-        ? templateStartColumn + token.loc.end.column
-        : token.loc.end.column
-    )
-    token.range[1] += templateStartOffset
+      // For column, it's a little bit more complicated:
+      // 1) If the token is at the first line, then the column number should be based on the start of the template.
+      // 2) If the token is not at the first line, then the column number is what it is.
+      token.loc.start.column = (
+        token.loc.start.line === templateStartLine
+          ? templateStartColumn + token.loc.start.column
+          : token.loc.start.column
+      )
+
+      cache.add(token.loc.start)
+    }
+
+    if (!cache.has(token.loc.end)) {
+      token.loc.end.line += templateStartLine - 1
+      token.loc.end.column = (
+        token.loc.end.line === templateStartLine
+          ? templateStartColumn + token.loc.end.column
+          : token.loc.end.column
+      )
+
+      cache.add(token.loc.end)
+    }
   }
 }
 
@@ -59,7 +72,7 @@ export function extractForVineTemplate(
   try {
     traverse(ast, {
       enter(node, parent) {
-        // Find all tagged template expressions which are tagged with `vine`.
+        // Find all tagged template expressions which are tagged with 'vine'.
         if (
           node.type === 'TaggedTemplateExpression'
           && node.tag.type === 'Identifier'
@@ -133,13 +146,15 @@ export function prepareTemplate(
 
   // This `TemplateElement` node still contains two quotes.
   const templateRawNode = quasis[0]!
-  const templateStartLine = templateRawNode.loc.start.line
-  const templateStartColumn = templateRawNode.loc.start.column + 1 // +1 to move over the first quote.
-  const templateStartOffset = templateRawNode.range[0] + 1
-  const templateEndLine = templateRawNode.loc.end.line
-  const templateEndColumn = templateRawNode.loc.end.column - 1 // -1 to move over the last quote.
-  const templateEndOffset = templateRawNode.range[1] - 1
   const templateRawContent = templateRawNode.value.raw
+  const templateStartLine = templateRawNode.loc.start.line
+  const templateEndLine = templateRawNode.loc.end.line
+  // +1 to move forward, over the first quote.
+  const templateStartColumn = templateRawNode.loc.start.column + 1
+  const templateStartOffset = templateRawNode.range[0] + 1
+  // -1 to move back, before the last quote.
+  const templateEndColumn = templateRawNode.loc.end.column - 1
+  const templateEndOffset = templateRawNode.range[1] - 1
 
   return {
     templatePositionInfo: {

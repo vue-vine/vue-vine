@@ -1,5 +1,5 @@
 import { debug } from '../../common/debug'
-import type { VineESLintParserOptions, VineTemplateMeta } from '../../types'
+import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
 import type { LocationCalculatorForHtml } from '../../common/location-calculator'
 import { ParseError } from '../../ast'
 import type { ESLintExpression, Reference, Token, VAttribute, VDirective, VDirectiveKey, VElement, VExpressionContainer, VFilterSequenceExpression, VForExpression, VIdentifier, VLiteral, VNode, VOnExpression, VSlotScopeExpression } from '../../ast'
@@ -7,6 +7,7 @@ import { insertError } from '../../common/error-utils'
 import { createSimpleToken, insertComments, replaceTokens } from '../../common/token-utils'
 import type { ExpressionParseResult } from '../../script'
 import { parseExpression, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
+import { fixVineOffset } from './process-vine-template-node'
 
 const shorthandSign = /^[.:@#]/u
 const shorthandNameMap = { ':': 'bind', '.': 'bind', '@': 'on', '#': 'slot' }
@@ -76,6 +77,7 @@ function parseAttributeValue(
   code: string,
   parserOptions: VineESLintParserOptions,
   globalLocationCalculator: LocationCalculatorForHtml,
+  vineFixLocationContext: VineFixLocationContext,
   node: VLiteral,
   element: VElement,
   directiveKey: VDirectiveKey,
@@ -116,6 +118,7 @@ function parseAttributeValue(
     result = parseVForExpression(
       node.value,
       locationCalculator,
+      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -123,6 +126,7 @@ function parseAttributeValue(
     result = parseVOnExpression(
       node.value,
       locationCalculator,
+      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -130,6 +134,7 @@ function parseAttributeValue(
     result = parseSlotScopeExpression(
       node.value,
       locationCalculator,
+      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -137,12 +142,18 @@ function parseAttributeValue(
     result = parseExpression(
       node.value,
       locationCalculator,
+      vineFixLocationContext,
       parserOptions,
       { allowFilters: true },
     )
   }
   else {
-    result = parseExpression(node.value, locationCalculator, parserOptions)
+    result = parseExpression(
+      node.value,
+      locationCalculator,
+      vineFixLocationContext,
+      parserOptions,
+    )
   }
 
   // Add the tokens of quotes.
@@ -179,6 +190,7 @@ function parseAttributeValue(
 function parseDirectiveKeyStatically(
   node: VIdentifier,
   templateMeta: VineTemplateMeta,
+  vineFixLocationContext: VineFixLocationContext,
 ): VDirectiveKey {
   const {
     name: text,
@@ -197,14 +209,17 @@ function parseDirectiveKeyStatically(
     argument: null as VIdentifier | null,
     modifiers: [] as VIdentifier[],
   }
+  fixVineOffset(directiveKey, vineFixLocationContext)
+
   let i = 0
 
   function createIdentifier(
+    vineFixLocationContext: VineFixLocationContext,
     start: number,
     end: number,
     name?: string,
   ): VIdentifier {
-    return {
+    const id: VIdentifier = {
       type: 'VIdentifier',
       parent: directiveKey,
       range: [offset + start, offset + end],
@@ -215,18 +230,20 @@ function parseDirectiveKeyStatically(
       name: name || text.slice(start, end),
       rawName: rawText.slice(start, end),
     }
+    fixVineOffset(id, vineFixLocationContext)
+    return id
   }
 
   // Parse.
   if (shorthandSign.test(text)) {
     const sign = text[0] as ':' | '.' | '@' | '#'
-    directiveKey.name = createIdentifier(0, 1, shorthandNameMap[sign])
+    directiveKey.name = createIdentifier(vineFixLocationContext, 0, 1, shorthandNameMap[sign])
     i = 1
   }
   else {
     const colon = text.indexOf(':')
     if (colon !== -1) {
-      directiveKey.name = createIdentifier(0, colon)
+      directiveKey.name = createIdentifier(vineFixLocationContext, 0, colon)
       i = colon + 1
     }
   }
@@ -235,7 +252,7 @@ function parseDirectiveKeyStatically(
     // Dynamic argument.
     const len = text.slice(i).lastIndexOf(']')
     if (len !== -1) {
-      directiveKey.argument = createIdentifier(i, i + len + 1)
+      directiveKey.argument = createIdentifier(vineFixLocationContext, i, i + len + 1)
       i = i + len + 1 + (text[i + len + 1] === '.' ? 1 : 0)
     }
   }
@@ -244,7 +261,7 @@ function parseDirectiveKeyStatically(
     .slice(i)
     .split('.')
     .map((modifierName) => {
-      const modifier = createIdentifier(i, i + modifierName.length)
+      const modifier = createIdentifier(vineFixLocationContext, i, i + modifierName.length)
       if (modifierName === '' && i < text.length) {
         insertError(
           templateMeta,
@@ -291,7 +308,7 @@ function parseDirectiveKeyStatically(
   ) {
     const pos
           = (directiveKey.argument || directiveKey.name).range[1] - offset
-    const propModifier = createIdentifier(pos, pos, 'prop')
+    const propModifier = createIdentifier(vineFixLocationContext, pos, pos, 'prop')
     directiveKey.modifiers.unshift(propModifier)
   }
 
@@ -380,6 +397,7 @@ function convertDynamicArgument(
   templateMeta: VineTemplateMeta,
   parserOptions: VineESLintParserOptions,
   locationCalculator: LocationCalculatorForHtml,
+  vineFixLocationContext: VineFixLocationContext,
 ): void {
   const { argument } = node
   if (
@@ -398,6 +416,7 @@ function convertDynamicArgument(
     const { comments, expression, references, tokens } = parseExpression(
       rawName.slice(1, -1),
       locationCalculator.getSubCalculatorAfter(range[0] + 1),
+      vineFixLocationContext,
       parserOptions,
     )
 
@@ -409,6 +428,7 @@ function convertDynamicArgument(
       expression,
       references,
     }
+    fixVineOffset(node.argument, vineFixLocationContext)
 
     if (expression != null) {
       expression.parent = node.argument
@@ -467,9 +487,10 @@ function createDirectiveKey(
   templateMeta: VineTemplateMeta,
   parserOptions: VineESLintParserOptions,
   locationCalculator: LocationCalculatorForHtml,
+  vineFixLocationContext: VineFixLocationContext,
 ): VDirectiveKey {
   // Parse node and tokens.
-  const directiveKey = parseDirectiveKeyStatically(node, templateMeta)
+  const directiveKey = parseDirectiveKeyStatically(node, templateMeta, vineFixLocationContext)
   const tokens = parseDirectiveKeyTokens(directiveKey)
   replaceTokens(templateMeta, directiveKey, tokens)
 
@@ -487,6 +508,7 @@ function createDirectiveKey(
     templateMeta,
     parserOptions,
     locationCalculator,
+    vineFixLocationContext,
   )
 
   return directiveKey
@@ -505,6 +527,7 @@ export function convertToDirective(
   code: string,
   templateMeta: VineTemplateMeta,
   locationCalculator: LocationCalculatorForHtml,
+  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): void {
   debug(
@@ -521,6 +544,11 @@ export function convertToDirective(
     templateMeta,
     parserOptions,
     locationCalculator,
+    vineFixLocationContext,
+  )
+  fixVineOffset(
+    directive.key,
+    vineFixLocationContext,
   )
 
   const { argument } = directive.key
@@ -556,6 +584,7 @@ export function convertToDirective(
       code,
       parserOptions,
       locationCalculator,
+      vineFixLocationContext,
       node.value,
       node.parent.parent,
       directive.key,
@@ -569,6 +598,10 @@ export function convertToDirective(
       expression: ret.expression,
       references: ret.references,
     }
+    fixVineOffset(
+      directive.value,
+      vineFixLocationContext,
+    )
     if (ret.expression != null) {
       ret.expression.parent = directive.value
     }
@@ -611,6 +644,7 @@ export function convertToDirective(
 export function processMustache(
   parserOptions: VineESLintParserOptions,
   globalLocationCalculator: LocationCalculatorForHtml,
+  vineFixLocationContext: VineFixLocationContext,
   templateMeta: VineTemplateMeta,
   node: VExpressionContainer,
   mustache: Mustache,
@@ -627,6 +661,7 @@ export function processMustache(
     const ret = parseExpression(
       mustache.value,
       locationCalculator,
+      vineFixLocationContext,
       parserOptions,
       { allowEmpty: true, allowFilters: true },
     )

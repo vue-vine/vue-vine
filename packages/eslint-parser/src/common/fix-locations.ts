@@ -7,7 +7,36 @@ import type {
   ParseError,
 } from '../ast'
 import { traverseNodes } from '../ast'
+import { fixVineOffset } from '../template/utils/process-vine-template-node'
+import type { VineFixLocationContext } from '../types'
 import type { LocationCalculator } from './location-calculator'
+
+export function fixVineOffsetForScript(
+  result: ESLintExtendedProgram,
+  vineFixLocationContext: VineFixLocationContext,
+) {
+  const traversed = new WeakSet<Node>()
+  traverseNodes(result.ast, {
+    visitorKeys: result.visitorKeys,
+
+    enterNode(node) {
+      if (!traversed.has(node)) {
+        fixVineOffset(node, vineFixLocationContext)
+      }
+    },
+
+    leaveNode() {
+      // Do nothing.
+    }
+  })
+
+  for (const token of result.ast.tokens || []) {
+    fixVineOffset(token, vineFixLocationContext)
+  }
+  for (const comment of result.ast.comments || []) {
+    fixVineOffset(comment, vineFixLocationContext)
+  }
+}
 
 /**
  * Do post-process of parsing an expression.

@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import type { TSESTree } from '@typescript-eslint/types'
 import findLastIndex from 'lodash/findLastIndex'
 import last from 'lodash/last'
-import { NS, ParseError, traverseNodes } from '../ast'
+import { NS, ParseError, Location } from '../ast'
 import type { ErrorCode, HasLocation, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
 import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
 import { debug } from '../common/debug'
@@ -129,7 +129,7 @@ export class VineTemplateParser {
     parserOptions: VineESLintParserOptions
   ) => void)[] = []
 
-  private offsetFixedTokenSet = new WeakSet<HasLocation & { type: string }>()
+  private offsetFixedTokenSet = new WeakSet<Location>()
 
   constructor(
     parserOptions: VineESLintParserOptions,
@@ -176,31 +176,23 @@ export class VineTemplateParser {
     this.expressionEnabled = true
   }
 
+  get fixVineOffsetCtx() {
+    return {
+      posInfo: this.templatePos,
+      fixedCache: this.offsetFixedTokenSet,
+    }
+  }
+
   private correctMetaTokenPos() {
     this.vTemplateMeta.tokens.forEach(token => fixVineOffset(
       token,
-      this.templatePos,
-      this.offsetFixedTokenSet,
+      this.fixVineOffsetCtx,
     ))
     this.vTemplateMeta.comments.forEach(comment => fixVineOffset(
       comment,
-      this.templatePos,
-      this.offsetFixedTokenSet,
+      this.fixVineOffsetCtx,
     ))
-    fixVineOffset(this.vTemplateRoot, this.templatePos, this.offsetFixedTokenSet)
-  }
-
-  private correctESTreeTokenPos() {
-    traverseNodes(this.vTemplateRoot, {
-      enterNode: (node) => {
-        fixVineOffset(
-          node,
-          this.templatePos,
-          this.offsetFixedTokenSet,
-        )
-      },
-      leaveNode: () => { /* NOOP */ },
-    })
+    fixVineOffset(this.vTemplateRoot, this.fixVineOffsetCtx)
   }
 
   /**
@@ -364,6 +356,7 @@ export class VineTemplateParser {
             this.text,
             this.vTemplateMeta,
             this.locationCalculator,
+            this.fixVineOffsetCtx,
             parserOptions,
           )
         },
@@ -597,6 +590,7 @@ export class VineTemplateParser {
       processMustache(
         parserOptions,
         this.locationCalculator,
+        this.fixVineOffsetCtx,
         this.vTemplateMeta,
         container,
         token,
@@ -633,7 +627,6 @@ export class VineTemplateParser {
 
     // Finally, fix all token positions with vine`...` offset among this file
     this.correctMetaTokenPos()
-    this.correctESTreeTokenPos()
 
     return [templateRoot, templateMeta]
   }

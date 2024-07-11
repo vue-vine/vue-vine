@@ -1,5 +1,7 @@
 import path from 'node:path'
-import { createRequire } from './create-require'
+import { fileURLToPath } from 'node:url'
+import { createRequire as NodeCreateRequire } from 'node:module'
+import { createRequire as createRequireWithPolyfill } from './create-require'
 
 function isLinterPath(p: string): boolean {
   return (
@@ -14,10 +16,13 @@ function isLinterPath(p: string): boolean {
 
 export function getLinterRequire() {
   // Lookup the loaded eslint
-  const linterPath = Object.keys(require.cache).find(isLinterPath)
+  const __require = NodeCreateRequire(
+    fileURLToPath(import.meta.url),
+  )
+  const linterPath = Object.keys(__require.cache).find(isLinterPath)
   if (linterPath) {
     try {
-      return createRequire(linterPath)
+      return createRequireWithPolyfill(linterPath)
     }
     catch {
       // ignore
