@@ -225,7 +225,9 @@ export function transformFile(
     // add useCssVars
     if (!vueImportsSpecs.has(CSS_VARS_HELPER) && vineCompFnCtx.cssBindings) {
       vueImportsSpecs.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
-      inline && vueImportsSpecs.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
+      if (inline) {
+        vueImportsSpecs.set(UN_REF_HELPER, `_${UN_REF_HELPER}`)
+      }
     }
     // add useSlots
     if (Object.entries(vineCompFnCtx.slots).length > 0) {
@@ -403,8 +405,8 @@ export function transformFile(
       }
 
       // vineExpose
-      vineCompFnCtx.expose
-        ? ms.appendRight(
+      if (vineCompFnCtx.expose) {
+        ms.appendRight(
           lastStmt.end!,
           `\n__expose(${
             ms.original.slice(
@@ -413,10 +415,13 @@ export function transformFile(
             )
           });\n`,
         )
-        : ms.prependLeft(
+      }
+      else {
+        ms.prependLeft(
           firstStmt.start!,
           '\n__expose();\n',
         )
+      }
 
       // Insert setup function's return statement
       ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)

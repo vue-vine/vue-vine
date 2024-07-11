@@ -27,7 +27,7 @@ export function fixVineOffsetForScript(
 
     leaveNode() {
       // Do nothing.
-    }
+    },
   })
 
   for (const token of result.ast.tokens || []) {

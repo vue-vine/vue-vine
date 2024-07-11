@@ -22,14 +22,14 @@ function detectPackageManager() {
   try {
     pnpmVersionExitCode = execaSync('pnpm', ['--version'], { stdio: 'ignore' }).exitCode
   }
-  catch (error) {
+  catch {
     pnpmVersionExitCode = -1
   }
   // Run 'yarn --version' to check if yarn is installed
   try {
     yarnVersionExitCode = execaSync('yarn', ['--version'], { stdio: 'ignore' }).exitCode
   }
-  catch (error) {
+  catch {
     yarnVersionExitCode = -1
   }
 

@@ -1,7 +1,7 @@
-const antfu = require('@antfu/eslint-config').default
-const VueVineESLintParser = require('@vue-vine/eslint-parser')
+import antfu from '@antfu/eslint-config'
+import * as VueVineESLintParser from '@vue-vine/eslint-parser'
 
-module.exports = antfu(
+export default antfu(
   {
     ignores: [
       'node_modules',

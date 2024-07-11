@@ -7,7 +7,7 @@ export interface AnalysisOptions {
   ignoreEval?: boolean
   nodejsScope?: boolean
   impliedStrict?: boolean
-  fallback?: string | Function
+  fallback?: string | ((...args: any[]) => any)
   sourceType?: 'script' | 'module' | 'commonjs'
   ecmaVersion?: number
   childVisitorKeys?: VisitorKeys

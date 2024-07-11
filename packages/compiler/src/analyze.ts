@@ -189,7 +189,9 @@ function walkArrayPattern(
   isConst: boolean,
 ) {
   for (const e of node.elements) {
-    e && walkPattern(e, bindings, isConst)
+    if (!e)
+      continue
+    walkPattern(e, bindings, isConst)
   }
 }
 
@@ -609,7 +611,7 @@ const analyzeVineStyle: AnalyzeRunner = (
   // Collect css v-bind
   const cssvarsValueList = parseCssVars([styleSource])
   if (cssvarsValueList.length > 0) {
-    !vineCompFnCtx.cssBindings && (vineCompFnCtx.cssBindings = {})
+    vineCompFnCtx.cssBindings ??= {}
     cssvarsValueList.forEach((value) => {
       vineCompFnCtx.cssBindings![value] = hashId(`${vineCompFnCtx.fnName}__${value}`)
     })

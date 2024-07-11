@@ -11,7 +11,7 @@ export function babelParse(code: string, options: ParserOptions = {}) {
   try {
     return parse(code, finalOptions)
   }
-  catch (err) {
+  catch {
     return parse('', finalOptions)
   }
 }

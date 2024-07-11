@@ -77,7 +77,7 @@ export function parseCssVars(
       const start = match.index + match[0].length
       const end = lexBinding(content, start)
       if (end !== null) {
-        hook && hook.getIndex(start, end)
+        hook?.getIndex(start, end)
         const variable = normalizeExpression(content.slice(start, end))
         if (!vars.includes(variable)) {
           vars.push(variable)

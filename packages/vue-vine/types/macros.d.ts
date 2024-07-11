@@ -13,9 +13,9 @@ declare global {
   type VineEmitsDefineResult<D extends VineEmitsDefineSource> = IsEmptyObj<D> extends true
     ? never
     : <E extends keyof D>(
-    eventName: E,
-    ...args: D[E]
-  ) => void
+        eventName: E,
+        ...args: D[E]
+      ) => void
 
   type VinePropValidator<T> = (value: T) => boolean
   interface VinePropMacro {

@@ -49,24 +49,25 @@ import {
 import type { ParserObject } from '../common/parser-object'
 import { isEnhancedParserObject, isParserObject } from '../common/parser-object'
 import { createRequire } from '../common/create-require'
+import { fixVineOffset } from '../template/utils/process-vine-template-node'
 import {
   analyzeExternalReferences,
   analyzeVariablesAndExternalReferences,
 } from './scope-analyzer'
-import { fixVineOffset } from '../template/utils/process-vine-template-node'
 
 // [1] = aliases.
 // [2] = delimiter.
 // [3] = iterator.
+// eslint-disable-next-line regexp/no-useless-assertions
 const ALIAS_ITERATOR = /^([\s\S]*?(?:\s|\)))(\bin\b|\bof\b)([\s\S]*)$/u
 const PARENS = /^(\s*\()([\s\S]*?)(\)\s*)$/u
 const DUMMY_PARENT: any = {}
 
 // Like Vue, it judges whether it is a function expression or not.
 // https://github.com/vuejs/vue/blob/0948d999f2fddf9f90991956493f976273c5da1f/src/compiler/codegen/events.js#L3
-const IS_FUNCTION_EXPRESSION = /^\s*([\w$_]+|\([^)]*?\))\s*=>|^function\s*\(/u
+const IS_FUNCTION_EXPRESSION = /^\s*(?:[\w$]+|\([^)]*\))\s*=>|^function\s*\(/u
 const IS_SIMPLE_PATH
-    = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?'\]|\["[^"]*?"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/u
+    = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*'\]|\["[^"]*"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/u
 
 /**
  * Parse the alias and iterator of 'v-for' directive values.
@@ -193,6 +194,7 @@ function throwErrorAsAdjustingOutsideOfCode(
  *
  * @param code The source code to parse.
  * @param locationCalculator The location calculator for fixLocations.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -221,7 +223,7 @@ export function parseScriptFragment(
   }
 }
 
-const validDivisionCharRE = /[\w).+\-_$\]]/u
+const validDivisionCharRE = /[\w).+\-$\]]/u
 
 /**
  * This is a fork of https://github.com/vuejs/vue/blob/2686818beb5728e3b7aa22f47a3b3f0d39d90c8e/src/compiler/parser/filter-parser.js
@@ -332,6 +334,7 @@ function splitFilters(exp: string): string[] {
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -391,6 +394,7 @@ function parseExpressionBody(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -585,6 +589,7 @@ export function parseScript(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -999,6 +1004,7 @@ function parseVForIteratorForEcmaVersion5(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -1028,6 +1034,7 @@ export function parseVOnExpression(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
@@ -1108,6 +1115,7 @@ function parseVOnExpressionBody(
  * Parse the source code of `slot-scope` directive.
  * @param code The source code of `slot-scope` directive.
  * @param locationCalculator The location calculator for the inline script.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */

@@ -1,11 +1,11 @@
 import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
 import type { NeedFixToken, ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
-import type { VTemplateRoot, Location, OffsetRange } from '../../ast'
+import type { Location, OffsetRange, VTemplateRoot } from '../../ast'
 
 export function fixVineOffset(
   token: NeedFixToken,
   fixCtx: {
-    posInfo: VineTemplatePositionInfo,
+    posInfo: VineTemplatePositionInfo
     fixedCache: WeakSet<Location | OffsetRange>
   },
 ) {

@@ -171,7 +171,9 @@ export async function vineHMR(
     })
 
     // update vineFileCtx
-    patchRes && (vineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName)
+    if (patchRes) {
+      vineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName
+    }
     compilerCtx.fileCtxMap.set(file, vineFileCtx)
     compilerCtx.isRunningHMR = true
 

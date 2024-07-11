@@ -4,8 +4,8 @@ import type { VineCompilerCtx, VineFileCtx } from '../types'
 import type { DiagnosticParams } from '../diagnostics'
 import { vineWarn } from '../diagnostics'
 
-const animationNameRE = /^(-\w+-)?animation-name$/
-const animationRE = /^(-\w+-)?animation$/
+const animationNameRE = /^(?:-\w+-)?animation-name$/
+const animationRE = /^(?:-\w+-)?animation$/
 
 const processedRules = new WeakSet<Rule>()
 

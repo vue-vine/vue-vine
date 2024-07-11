@@ -9,7 +9,7 @@ import type {
   VElement,
   VExpressionContainer,
   VIdentifier,
-  VTemplateRoot
+  VTemplateRoot,
 } from '../src/ast'
 
 function __loc(node: HasLocation, property: 'start' | 'end') {

@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types'
 import type { ParserOptions, parseForESLint as tsESLintParseForESLint } from '@typescript-eslint/parser'
-import type { HasLocation, ParseError, Token, Location, OffsetRange } from './ast'
+import type { HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
 import type { ParserObject } from './common/parser-object'
 
 export type VineESLintAST = TSESTree.Program
@@ -36,6 +36,6 @@ export interface VineTemplateMeta {
 export type NeedFixToken = HasLocation & { type: string }
 
 export interface VineFixLocationContext {
-  posInfo: VineTemplatePositionInfo,
+  posInfo: VineTemplatePositionInfo
   fixedCache: WeakSet<Location | OffsetRange>
 }

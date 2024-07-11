@@ -11,7 +11,7 @@ import { fixVineOffset } from './process-vine-template-node'
 
 const shorthandSign = /^[.:@#]/u
 const shorthandNameMap = { ':': 'bind', '.': 'bind', '@': 'on', '#': 'slot' }
-const invalidDynamicArgumentNextChar = /^[\s\r\n=/>]$/u
+const invalidDynamicArgumentNextChar = /^[\s=/>]$/u
 
 /**
  * Information of a mustache.
@@ -69,6 +69,7 @@ function getStandardDirectiveKind(
  * @param code Whole source code text.
  * @param parserOptions The parser options to parse expressions.
  * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param node The attribute node to replace. This function modifies this node directly.
  * @param element The element which is currently parsing attrs.
  * @param directiveKey The key of this directive.
@@ -87,7 +88,7 @@ function parseAttributeValue(
   | VForExpression
   | VOnExpression
   | VSlotScopeExpression
-> {
+  > {
   const firstChar = code[node.range[0]]
   const quoted = firstChar === '"' || firstChar === '\''
   const locationCalculator = globalLocationCalculator.getSubCalculatorAfter(
@@ -520,6 +521,7 @@ function createDirectiveKey(
  * @param code Whole source code text.
  * @param templateMeta template tokens, comments and errors.
  * @param locationCalculator The location calculator to adjust the locations of nodes.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options to parse expressions.
  */
 export function convertToDirective(
@@ -637,6 +639,7 @@ export function convertToDirective(
  * Parse the content of the given mustache.
  * @param parserOptions The parser options to parse expressions.
  * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
+ * @param vineFixLocationContext The context for fixing vine template locations.
  * @param templateMeta Template tokens, comments and errors
  * @param node The expression container node. This function modifies the `expression` and `references` properties of this node.
  * @param mustache The information of mustache to parse.

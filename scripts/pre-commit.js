@@ -12,6 +12,7 @@ const RUN_TEST = 'pnpm run test --run'
 
 const msgPath = r('../.git/COMMIT_EDITMSG')
 const commitRE
+      // eslint-disable-next-line regexp/no-unused-capturing-group
       = /^(revert: )?(feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?: .{1,50}/
 
 async function runPreCommit() {

@@ -10,6 +10,7 @@ import type { VineCompFnCtx } from '../types'
 
 const templateUsageCheckCache = new Map<string, string>()
 
+// eslint-disable-next-line regexp/no-super-linear-backtracking
 const forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/
 
 function resolveTemplateUsageCheckString(
@@ -96,7 +97,7 @@ function stripStrings(exp: string) {
 }
 
 function stripTemplateString(str: string): string {
-  const interpMatch = str.match(/\${[^}]+}/g)
+  const interpMatch = str.match(/\$\{[^}]+\}/g)
   if (interpMatch) {
     return interpMatch.map(m => m.slice(2, -1)).join(',')
   }
