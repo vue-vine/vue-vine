@@ -1,5 +1,12 @@
 # vue-vine
 
+## 0.1.9
+
+### Patch Changes
+
+- Refactor ESLint parser for ESM and more accurate location.
+- Cleaner inject types in virtual code.
+
 ## 0.1.8
 
 ### Patch Changes

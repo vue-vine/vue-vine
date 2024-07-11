@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.1.9
+
+### Patch Changes
+
+- Cleaner inject types in virtual code.
+
 ## 0.1.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.1.9
+
+### Patch Changes
+
+- Refactor ESLint parser for ESM and more accurate location.
+
 ## 0.1.5
 
 ### Patch Changes

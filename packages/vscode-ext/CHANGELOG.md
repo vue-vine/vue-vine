@@ -1,5 +1,9 @@
 # vue-vine-extension
 
+## 0.1.7
+
+- Cleaner inject types in virtual code.
+
 ## 0.1.6
 
 ### Patch Changes
