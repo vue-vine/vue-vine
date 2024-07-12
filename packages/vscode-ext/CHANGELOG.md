@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.8
+
+### Patch Changes
+
+- Support code actions like commenting in template by fixed language configuration
+
 ## 0.1.7
 
 - Cleaner inject types in virtual code.
