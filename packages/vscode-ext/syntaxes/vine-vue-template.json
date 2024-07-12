@@ -451,10 +451,7 @@
     "tag-stuff": {
       "patterns": [
         {
-          "include": "#vue-builtin-directives"
-        },
-        {
-          "include": "#vue-directive-shorthand"
+          "include": "#vue-directives"
         },
         {
           "include": "#tag-id-attribute"
@@ -477,117 +474,281 @@
       "name": "string.unquoted.vine-vue-template",
       "match": "(?<==)(?:[^\\s<>/'\"]|/(?!>))+"
     },
-    "vue-builtin-directives": {
-      "name": "meta.directive.builtin.vue",
-      "begin": "(v-(?:if|else-if|else|show|for|on|bind|model|slot|once|text|html|memo|pre))(?:\\:([a-zA-Z\\-_]+))?(?:\\.([a-zA-Z\\-_]+))*(\\s*=)?",
-      "end": "(?<='|\")|(?=[\\s<>`])",
-      "captures": {
-        "1": {
-          "name": "storage.other.directive.vue"
-        },
-        "2": {
-          "name": "entity.other.attribute-name.html"
-        },
-        "3": {
-          "name": "entity.other.attribute-name.html"
-        },
-        "4": {
-          "name": "punctuation.separator.key-value.html"
-        }
-      },
+    "vue-directives": {
       "patterns": [
         {
-          "include": "#vue-directives-value"
+          "include": "#vue-directives-control"
+        },
+        {
+          "include": "#vue-directives-style-attr"
+        },
+        {
+          "include": "#vue-directives-original"
+        },
+        {
+          "include": "#vue-directives-generic-attr"
         }
       ]
     },
-    "vue-directive-shorthand": {
-      "name": "meta.directive.shorthand.vue",
-      "begin": "(:|@|#)([a-zA-Z0-9\\-_]+)(?:\\:([a-zA-Z\\-_]+))?(?:\\.([a-zA-Z\\-_]+))*\\s*(=)",
-      "end": "(?<='|\")|(?=[\\s<>`])",
-      "captures": {
+    "vue-directives-original": {
+      "begin": "(?:(?:(v-[\\w-]+)(:)?)|([:\\.])|(@)|(#))(?:(?:(\\[)([^\\]]*)(\\]))|([\\w-]+))?",
+      "beginCaptures": {
         "1": {
-          "name": "punctuation.separator.key-value.html"
+          "name": "entity.other.attribute-name.vine-vue-template"
         },
         "2": {
-          "name": "entity.other.attribute-name.html"
+          "name": "punctuation.separator.key-value.vine-vue-template"
         },
         "3": {
-          "name": "entity.other.attribute-name.html"
+          "name": "punctuation.attribute-shorthand.bind.vine-vue-template"
         },
         "4": {
-          "name": "entity.other.attribute-name.html"
+          "name": "punctuation.attribute-shorthand.event.vine-vue-template"
         },
         "5": {
-          "name": "punctuation.separator.key-value.html"
+          "name": "punctuation.attribute-shorthand.slot.vine-vue-template"
+        },
+        "6": {
+          "name": "punctuation.separator.key-value.vine-vue-template"
+        },
+        "7": {
+          "name": "source.ts.embedded.vine-vue-template",
+          "patterns": [
+            {
+              "include": "source.ts#expression"
+            }
+          ]
+        },
+        "8": {
+          "name": "punctuation.separator.key-value.vine-vue-template"
+        },
+        "9": {
+          "name": "entity.other.attribute-name.vine-vue-template"
         }
       },
+      "end": "(?=\\s*[^=\\s])",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.string.end.vine-vue-template"
+        }
+      },
+      "name": "meta.attribute.directive.vine-vue-template",
       "patterns": [
+			  {
+          "match": "(\\.)([\\w-]*)",
+          "1": {
+            "name": "punctuation.separator.key-value.vine-vue-template"
+          },
+          "2": {
+            "name": "entity.other.attribute-name.vine-vue-template"
+          }
+        },
         {
-          "include": "#vue-directives-value"
+          "include": "#vue-directives-expression"
         }
       ]
     },
-    "vue-directives-value": {
-      "name": "meta.directive.value.vue",
+    "vue-directives-control": {
+      "begin": "(v-for)|(v-if|v-else-if|v-else)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.loop.vue"
+        },
+        "2": {
+          "name": "keyword.control.conditional.vue"
+        }
+      },
+      "end": "(?=\\s*+[^=\\s])",
+      "name": "meta.attribute.directive.control.vue",
       "patterns": [
         {
-          "name": "source.directive.vue",
-          "begin": "`",
+          "include": "#vue-directives-expression"
+        }
+      ]
+    },
+    "vue-directives-expression": {
+      "patterns": [
+        {
+          "begin": "(=)\\s*('|\"|`)",
           "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.html"
+            "1": {
+              "name": "punctuation.separator.key-value.vine-vue-template"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.vine-vue-template"
             }
           },
-          "end": "`",
+          "end": "(\\2)",
           "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.html"
+            "1": {
+              "name": "punctuation.definition.string.end.vine-vue-template"
             }
           },
           "patterns": [
             {
-              "include": "source.ts"
+              "begin": "(?<=('|\"|`))",
+              "end": "(?=\\1)",
+              "name": "source.ts.embedded.vine-vue-template",
+              "patterns": [
+                {
+                  "include": "source.ts#expression"
+                }
+              ]
             }
           ]
         },
         {
-          "name": "source.directive.vue",
-          "begin": "\"",
+          "begin": "(=)\\s*(?=[^'\"`])",
           "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.html"
+            "1": {
+              "name": "punctuation.separator.key-value.vine-vue-template"
             }
           },
-          "end": "\"",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.html"
-            }
-          },
+          "end": "(?=(\\s|>|\\/>))",
           "patterns": [
             {
-              "include": "source.ts"
+              "begin": "(?=[^'\"`])",
+              "end": "(?=(\\s|>|\\/>))",
+              "name": "source.ts.embedded.vine-vue-template",
+              "patterns": [
+                {
+                  "include": "source.ts#expression"
+                }
+              ]
             }
           ]
+        }
+      ]
+    },
+    "vue-directives-style-attr": {
+      "begin": "\\b(style)\\s*(=)",
+      "captures": {
+        "1": {
+          "name": "entity.other.attribute-name.vine-vue-template"
         },
+        "2": {
+          "name": "punctuation.separator.key-value.vine-vue-template"
+        }
+      },
+      "end": "(?<='|\")",
+      "name": "meta.attribute.style.vue",
+      "patterns": [
         {
-          "name": "source.directive.vue",
-          "begin": "'",
+          "comment": "Copy from source.css#rule-list-innards",
+          "begin": "('|\")",
           "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.html"
+            "1": {
+              "name": "punctuation.definition.string.begin.vine-vue-template"
             }
           },
-          "end": "'",
+          "end": "(\\1)",
           "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.html"
+            "1": {
+              "name": "punctuation.definition.string.end.vine-vue-template"
             }
           },
+          "name": "source.css.embedded.vine-vue-template",
           "patterns": [
             {
-              "include": "source.ts"
+              "include": "source.css#comment-block"
+            },
+            {
+              "include": "source.css#escapes"
+            },
+            {
+              "include": "source.css#font-features"
+            },
+            {
+              "match": "(?x) (?<![\\w-])\n--\n(?:[-a-zA-Z_]    | [^\\x00-\\x7F])     # First letter\n(?:[-a-zA-Z0-9_] | [^\\x00-\\x7F]      # Remainder of identifier\n  |\\\\(?:[0-9a-fA-F]{1,6}|.)\n)*",
+              "name": "variable.css"
+            },
+            {
+              "begin": "(?<![-a-zA-Z])(?=[-a-zA-Z])",
+              "end": "$|(?![-a-zA-Z])",
+              "name": "meta.property-name.css",
+              "patterns": [
+                {
+                  "include": "source.css#property-names"
+                }
+              ]
+            },
+            {
+              "comment": "Modify end to fix #199. TODO: handle ' character.",
+              "begin": "(:)\\s*",
+              "beginCaptures": {
+                "1": {
+                  "name": "punctuation.separator.key-value.css"
+                }
+              },
+              "end": "\\s*(;)|\\s*(?='|\")",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.terminator.rule.css"
+                }
+              },
+              "contentName": "meta.property-value.css",
+              "patterns": [
+                {
+                  "include": "source.css#comment-block"
+                },
+                {
+                  "include": "source.css#property-values"
+                }
+              ]
+            },
+            {
+              "match": ";",
+              "name": "punctuation.terminator.rule.css"
+            }
+          ]
+        }
+      ]
+    },
+    "vue-directives-generic-attr": {
+      "begin": "\\b(generic)\\s*(=)",
+      "captures": {
+        "1": {
+          "name": "entity.other.attribute-name.vine-vue-template"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.vine-vue-template"
+        }
+      },
+      "end": "(?<='|\")",
+      "name": "meta.attribute.generic.vue",
+      "patterns": [
+        {
+          "begin": "('|\")",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.begin.vine-vue-template"
+            }
+          },
+          "end": "(\\1)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.string.end.vine-vue-template"
+            }
+          },
+          "name": "meta.type.parameters.vue",
+          "comment": "https://github.com/microsoft/vscode/blob/fd4346210f59135fad81a8b8c4cea7bf5a9ca6b4/extensions/typescript-basics/syntaxes/TypeScript.tmLanguage.json#L4002-L4020",
+          "patterns": [
+            {
+              "include": "source.ts#comment"
+            },
+            {
+              "name": "storage.modifier.ts",
+              "match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(extends|in|out)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
+            },
+            {
+              "include": "source.ts#type"
+            },
+            {
+              "include": "source.ts#punctuation-comma"
+            },
+            {
+              "name": "keyword.operator.assignment.ts",
+              "match": "(=)(?!>)"
             }
           ]
         }
@@ -599,13 +760,13 @@
           "begin": "(\\{\\{)",
           "beginCaptures": {
             "1": {
-              "name": "punctuation.definition.interpolation.begin.html.vue"
+              "name": "punctuation.definition.interpolation.begin.vine-vue-template"
             }
           },
           "end": "(\\}\\})",
           "endCaptures": {
             "1": {
-              "name": "punctuation.definition.interpolation.end.html.vue"
+              "name": "punctuation.definition.interpolation.end.vine-vue-template"
             }
           },
           "name": "expression.embedded.vue",
@@ -613,10 +774,10 @@
             {
               "begin": "\\G",
               "end": "(?=\\}\\})",
-              "name": "source.ts.embedded.html.vue",
+              "name": "source.ts.embedded.vine-vue-template",
               "patterns": [
                 {
-                  "include": "source.ts"
+                  "include": "source.ts#expression"
                 }
               ]
             }
