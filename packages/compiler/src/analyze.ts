@@ -7,7 +7,7 @@ import {
   isBooleanLiteral,
   isClassDeclaration,
   isDeclaration,
-  isExportDeclaration,
+  isExportDefaultDeclaration,
   isFunctionDeclaration,
   isIdentifier,
   isImportDefaultSpecifier,
@@ -882,7 +882,7 @@ function buildVineCompFnCtx(
   const templateStringQuasiNode = templateStringNode?.quasi.quasis[0]
   const templateSource = templateStringQuasiNode?.value.raw ?? ''
   const vineCompFnCtx: VineCompFnCtx = {
-    isExport: isExportDeclaration(fnDeclNode),
+    isExportDefault: isExportDefaultDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
     isCustomElement: false,
     fnName,

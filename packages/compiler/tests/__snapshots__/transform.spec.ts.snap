@@ -237,6 +237,8 @@ export const MyApp = (() => {
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
+export default MyApp;
+
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
 export const _rerender_only = false;
@@ -425,6 +427,8 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
+export default MyApp;
 "
 `;
 
@@ -631,6 +635,8 @@ export const MyApp = (() => {
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+
+export default MyApp;
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
