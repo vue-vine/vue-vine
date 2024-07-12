@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.10
+
+### Patch Changes
+
+- Support using export default declaration for component function.
+
 ## 0.1.9
 
 ### Patch Changes

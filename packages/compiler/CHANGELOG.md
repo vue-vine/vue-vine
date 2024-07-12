@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.10
+
+### Patch Changes
+
+- Support using export default declaration for component function.
+
 ## 0.1.8
 
 ### Patch Changes
