@@ -62,7 +62,6 @@ ni -D @vue-vine/eslint-parser
 
 你需要为 `.vine.ts` 文件设置自定义 ESLint 解析器：
 
-
 ```js
 // eslint.config.mjs
 import antfu from '@antfu/eslint-config'

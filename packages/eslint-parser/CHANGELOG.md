@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.1.11
+
+### Patch Changes
+
+- Fix ESLint parser for not reporting unused var on `props` formal parameter.
+
 ## 0.1.9
 
 ### Patch Changes

@@ -62,7 +62,6 @@ ni -D @vue-vine/eslint-parser
 
 You need to set custom ESLint parser for `.vine.ts` files:
 
-
 ```js
 // eslint.config.mjs
 import antfu from '@antfu/eslint-config'
