@@ -24,7 +24,7 @@
     "languages": [
       {
         "id": "vine-vue-template",
-        "configuration": "./vine-vue-template-configuration.json"
+        "configuration": "./language/vine-vue-template-configuration.json"
       }
     ],
     "grammars": [
@@ -32,8 +32,7 @@
         "scopeName": "source.vine-vue-template-inject",
         "path": "./syntaxes/vine-inject.json",
         "embeddedLanguages": {
-          "text.vine-vue-template": "vine-vue-template",
-          "source.vue": "vue",
+          "source.vine-vue-template": "vine-vue-template",
           "source.css": "css",
           "source.css.scss": "scss",
           "source.css.less": "less",
@@ -42,7 +41,7 @@
           "source.stylus": "stylus"
         },
         "tokenTypes": {
-          "text.vine-vue-template": "other"
+          "source.vine-vue-template": "other"
         },
         "injectTo": [
           "source.ts"
@@ -52,6 +51,20 @@
         "language": "vine-vue-template",
         "scopeName": "source.vine-vue-template",
         "path": "./syntaxes/vine-vue-template.json"
+      },
+      {
+        "scopeName": "vine-vue-template.interpolations",
+        "path": "./syntaxes/vue-interpolations.json",
+        "injectTo": [
+          "source.vine-vue-template"
+        ]
+      },
+      {
+        "scopeName": "vine-vue-template.directives",
+        "path": "./syntaxes/vue-directives.json",
+        "injectTo": [
+          "source.vine-vue-template"
+        ]
       }
     ],
     "typescriptServerPlugins": [
