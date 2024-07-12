@@ -59,7 +59,7 @@ function MyProfile() {
     </div>
   \`
 }
-function MyApp() {
+export default function MyApp() {
   vineStyle.scoped(\`
     .my-app {
       font-size: 16px;

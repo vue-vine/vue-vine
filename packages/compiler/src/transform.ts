@@ -474,6 +474,12 @@ export function transformFile(
           .get(vineCompFnCtx)
           ?.join('\n') ?? ''
       }\n`)
+      if (vineCompFnCtx.isExportDefault) {
+        ms.appendRight(
+          ms.length(),
+          `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
+        )
+      }
 
       ms.appendRight(lastStmt.end!, `\n${
         inline
