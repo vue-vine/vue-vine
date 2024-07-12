@@ -7,11 +7,10 @@ import { VineTemplateParser } from './template/parser'
 import { KEYS, type VTemplateRoot } from './ast'
 import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
 
-type TemplateRootASTPreparation = ReturnType<typeof prepareTemplate> & {
-  templateNode: TSESTree.TaggedTemplateExpression
-  parentOfTemplate: TSESTree.Node
-  bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void
-}
+type TemplateRootASTPreparation = (
+  ReturnType<typeof prepareTemplate>
+  & ReturnType<typeof extractForVineTemplate>[number]
+)
 
 const forceEnableLocationOptions = {
   range: true,
@@ -42,13 +41,12 @@ export function prepareForTemplateRootAST(
   }
 
   return extractResults.map((extractResult) => {
-    const { templateNode, parentOfTemplate, bindVineTemplateESTree } = extractResult
+    const { templateNode, ...restOfExtractResult } = extractResult
 
     return {
       templateNode,
-      parentOfTemplate,
-      bindVineTemplateESTree,
       ...prepareTemplate(templateNode),
+      ...restOfExtractResult,
     }
   })
 }

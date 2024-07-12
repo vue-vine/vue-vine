@@ -39,3 +39,13 @@ export interface VineFixLocationContext {
   posInfo: VineTemplatePositionInfo
   fixedCache: WeakSet<Location | OffsetRange>
 }
+
+export enum ReferenceFlag {
+  Read = 1,
+  Write = 2,
+  ReadWrite = 3,
+}
+export enum ReferenceTypeFlag {
+  Value = 1,
+  Type = 2,
+}

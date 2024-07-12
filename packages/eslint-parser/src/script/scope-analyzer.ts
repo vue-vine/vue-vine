@@ -1,7 +1,7 @@
 import type * as escopeTypes from 'eslint-scope'
 import type { TSESTree } from '@typescript-eslint/types'
 import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
-import type { VineESLintParserOptions } from '../types'
+import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
 import type {
   ESLintIdentifier,
   ESLintProgram,
@@ -16,16 +16,7 @@ import type {
 import { getFallbackKeys, traverseNodes } from '../ast'
 import { getEslintScope } from '../common/eslint-scope'
 import { getEcmaVersionIfUseEspree } from '../common/espree'
-
-enum ReferenceFlag {
-  Read = 1,
-  Write = 2,
-  ReadWrite = 3,
-}
-enum ReferenceTypeFlag {
-  Value = 1,
-  Type = 2,
-}
+import { createVirtualVineFnPropsReference } from '../common/vine-specific'
 
 const BUILTIN_COMPONENTS = new Set([
   'template',
@@ -293,6 +284,28 @@ function collectVariablesForVCF(
 
         for (const variable of foundVCFScope.variables) {
           scriptVariables.set(variable.name, variable)
+        }
+
+        // Additionally, we need to add some special reference that not in the template.
+        // For example, the `props` that user may define as function formal parameter,
+        // it may not been used, but it must be considered as a used reference.
+        const compFnPropsIdentifier = (
+          (
+            foundVCF.params?.[0]?.type === 'Identifier'
+            && foundVCF.params[0]?.name === 'props'
+          )
+            ? foundVCF.params[0]
+            : null
+        )
+        const propsVar = scriptVariables.get('props')
+        if (compFnPropsIdentifier && propsVar) {
+          ;(propsVar as any).eslintUsed = true
+          propsVar.references.push(
+            createVirtualVineFnPropsReference({
+              foundVCFScope,
+              compFnPropsIdentifier,
+            }),
+          )
         }
       }
     }

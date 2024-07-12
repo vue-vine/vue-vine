@@ -23,7 +23,8 @@
   "contributes": {
     "languages": [
       {
-        "id": "vine-vue-template"
+        "id": "vine-vue-template",
+        "configuration": "./vine-vue-template-configuration.json"
       }
     ],
     "grammars": [
