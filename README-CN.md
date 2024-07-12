@@ -54,6 +54,45 @@ export default defineConfig({
 }
 ```
 
+若要配置 ESLint，请安装我们的自定义 ESLint 解析器：
+
+```bash
+ni -D @vue-vine/eslint-parser
+```
+
+你需要为 `.vine.ts` 文件设置自定义 ESLint 解析器：
+
+
+```js
+// eslint.config.mjs
+import antfu from '@antfu/eslint-config'
+import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+export default antfu(
+  {
+    // 在这里覆盖 antfu 的设置：
+    // - 目前不支持 ESLint Stylistic
+    stylistic: false,
+  },
+  {
+    rules: {
+      // ... 在这里自定义规则
+    },
+  },
+  {
+    files: [
+      'path/to/**/*.vine.ts',
+    ],
+    languageOptions: {
+      parser: VueVineESLintParser,
+    },
+    rules: {
+      // ... 在这里自定义规则
+    },
+  },
+)
+```
+
 最后，安装 VSCode 插件，在市场中搜索 `Vue Vine`。
 
 <img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">

@@ -54,6 +54,45 @@ Then add macro's type definition in `tsconfig.json`:
 }
 ```
 
+For ESLint, install our custom ESLint parser:
+
+```bash
+ni -D @vue-vine/eslint-parser
+```
+
+You need to set custom ESLint parser for `.vine.ts` files:
+
+
+```js
+// eslint.config.mjs
+import antfu from '@antfu/eslint-config'
+import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+export default antfu(
+  {
+    // Override antfu's settings here:
+    // - ESLint Stylistic is not supported yet
+    stylistic: false,
+  },
+  {
+    rules: {
+      // ... Customize rules here
+    },
+  },
+  {
+    files: [
+      'path/to/**/*.vine.ts',
+    ],
+    languageOptions: {
+      parser: VueVineESLintParser,
+    },
+    rules: {
+      // ... Customize rules here
+    },
+  },
+)
+```
+
 Finally, install the VSCode extension, search `Vue Vine` in the marketplace.
 
 <img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
