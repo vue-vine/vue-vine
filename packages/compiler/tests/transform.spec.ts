@@ -59,7 +59,9 @@ function MyProfile() {
     </div>
   \`
 }
-export default function MyApp() {
+export default async function MyApp() {
+  const data = await fetch("https://api.sampleapis.com/futurama/characters")
+
   vineStyle.scoped(\`
     .my-app {
       font-size: 16px;

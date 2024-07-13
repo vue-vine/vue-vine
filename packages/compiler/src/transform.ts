@@ -31,28 +31,35 @@ function wrapWithAsyncContext(
   exprSourceCode: string,
 ) {
   return isNeedResult
-    ? `;(
-    ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
-    await __temp,
-    __restore()
-  );`
-    : `;(
+  ? `(
     ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
     __temp = await __temp,
     __restore(),
     __temp
+    );`
+  : `;(
+    ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
+    await __temp,
+    __restore()
   );`
 }
 
 function mayContainAwaitExpr(targetNode: Node) {
   let awaitExpr: AwaitExpression | undefined
+  const isVarDecl = isVariableDeclaration(targetNode)
+  const isAssignExpr = isAssignmentExpression(targetNode)
+  const isExprStmt = isExpressionStatement(targetNode)
+
   if (!(
-    isVariableDeclaration(targetNode)
-    || isAssignmentExpression(targetNode)
-    || isExpressionStatement(targetNode)
+    isVarDecl
+    || isAssignExpr
+    || isExprStmt
   )) {
-    return false
+    return null
   }
+
+  const isNeedResult = isVarDecl || isAssignExpr
+
   try {
     traverse(targetNode, (descendant) => {
       if (isAwaitExpression(descendant)) {
@@ -61,12 +68,17 @@ function mayContainAwaitExpr(targetNode: Node) {
       }
     })
   }
-  catch (error) {
-    if (error === EXPECTED_ERROR) {
-      return awaitExpr
+  catch (error: any) {
+    if (error.message === EXPECTED_ERROR) {
+      return {
+        isNeedResult,
+        awaitExpr,
+      }
     }
     throw error
   }
+
+  return null
 }
 
 function registerImport(
@@ -241,19 +253,20 @@ export function transformFile(
       let hasAwait = false
 
       for (const vineFnBodyStmt of vineCompFnBody.body) {
-        const isContained = mayContainAwaitExpr(vineFnBodyStmt)
-        if (!isContained) {
+        const mayContain = mayContainAwaitExpr(vineFnBodyStmt)
+        if (!mayContain || !mayContain.awaitExpr) {
           continue
         }
+        const { awaitExpr, isNeedResult } = mayContain
         hasAwait = true
         ms.update(
-          vineFnBodyStmt.start!,
-          vineFnBodyStmt.end!,
+          awaitExpr.start!,
+          awaitExpr.end!,
           wrapWithAsyncContext(
-            isExpressionStatement(vineFnBodyStmt),
+            isNeedResult,
             ms.original.slice(
-              vineFnBodyStmt.start!,
-              vineFnBodyStmt.end!,
+              awaitExpr.argument.start!,
+              awaitExpr.argument.end!,
             ),
           ),
         )
@@ -368,7 +381,7 @@ export function transformFile(
 
       // Insert `useDefaults` helper function import specifier.
       // And prepend `const __props = useDefaults(...)` before the first statement.
-      let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;`
+      let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;\n`
       if (
         isNeedUseDefaults
         && !isPrependedUseDefaults
@@ -426,7 +439,7 @@ export function transformFile(
       // Insert setup function's return statement
       ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
 
-      ms.prependLeft(firstStmt.start!, `setup(${setupFormalParams}) {\n`)
+      ms.prependLeft(firstStmt.start!, `${vineCompFnCtx.isAsync ? 'async ' : ''}setup(${setupFormalParams}) {\n`)
       ms.appendRight(lastStmt.end!, '\n}')
 
       const emitsKeys = [

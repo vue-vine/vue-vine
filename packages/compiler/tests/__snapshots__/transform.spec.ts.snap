@@ -32,6 +32,7 @@ export const About = (() => {
     setup(__props, { expose: __expose }) {
       __expose();
       const props = __props;
+
       return (_ctx, _cache) => {
         return _openBlock(), _createElementBlock("div", null, _hoisted_2);
       };
@@ -209,9 +210,17 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props, { expose: __expose }) {
+    async setup(__props, { expose: __expose }) {
       __expose();
+      let __temp, __restore;
       const props = __props;
+      const data =
+        (([__temp, __restore] = _withAsyncContext(() =>
+          fetch("https://api.sampleapis.com/futurama/characters"),
+        )),
+        (__temp = await __temp),
+        __restore(),
+        __temp);
 
       return (_ctx, _cache) => {
         return (
@@ -404,9 +413,17 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props, { expose: __expose }) {
+    async setup(__props, { expose: __expose }) {
       __expose();
+      let __temp, __restore;
       const props = __props;
+      const data =
+        (([__temp, __restore] = _withAsyncContext(() =>
+          fetch("https://api.sampleapis.com/futurama/characters"),
+        )),
+        (__temp = await __temp),
+        __restore(),
+        __temp);
 
       return (_ctx, _cache) => {
         return (
@@ -596,11 +613,20 @@ export const MyApp = (() => {
     name: "MyApp",
     /* No props */
     /* No emits */
-    setup(__props, { expose: __expose }) {
+    async setup(__props, { expose: __expose }) {
       __expose();
+      let __temp, __restore;
       const props = __props;
+      const data =
+        (([__temp, __restore] = _withAsyncContext(() =>
+          fetch("https://api.sampleapis.com/futurama/characters"),
+        )),
+        (__temp = await __temp),
+        __restore(),
+        __temp);
 
       return {
+        data,
         ref,
         someDefaultExport,
         someNamedExport,
