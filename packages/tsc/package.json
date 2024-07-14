@@ -1,6 +1,6 @@
 {
   "name": "vue-vine-tsc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Command line typescript checker for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -8,14 +8,6 @@
     "Vue",
     "Vine"
   ],
-  "exports": {
-    ".": {
-      "dev": "./src/index.ts",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "main": "./dist/index.js",
   "bin": {
     "vue-vine-tsc": "./bin/vue-vine-tsc.js"
   },
