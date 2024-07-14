@@ -7,8 +7,11 @@ const plugin = createLanguageServicePlugin((ts, info) => {
     languagePlugins: [
       createVueVineLanguagePlugin(
         ts,
-        info.languageServiceHost.getCompilationSettings(),
-        resolveVueCompilerOptions({}),
+        {
+          compilerOptions: info.languageServiceHost.getCompilationSettings(),
+          vueCompilerOptions: resolveVueCompilerOptions({}),
+          target: 'extension',
+        },
       ),
     ],
   }
