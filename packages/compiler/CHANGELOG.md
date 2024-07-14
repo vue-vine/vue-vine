@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.12
+
+### Patch Changes
+
+- Fix async function component support in compiler and extension.
+
 ## 0.1.10
 
 ### Patch Changes
