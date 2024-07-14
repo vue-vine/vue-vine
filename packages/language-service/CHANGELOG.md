@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.1.13
+
+### Patch Changes
+
+- Fix wrong parameters for ts plugin.
+
 ## 0.1.9
 
 ### Patch Changes
