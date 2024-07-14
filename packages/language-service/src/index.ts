@@ -40,12 +40,26 @@ const FULL_FEATURES = {
   verification: true,
 } satisfies CodeInformation
 
+interface VineLanguagePluginOptions {
+  compilerOptions: ts.CompilerOptions
+  vueCompilerOptions: VueCompilerOptions
+  target?: 'extension' | 'tsc'
+}
+
 export function createVueVineLanguagePlugin(
   ts: typeof import('typescript'),
-  compilerOptions: ts.CompilerOptions,
-  vueCompilerOptions: VueCompilerOptions,
+  options: VineLanguagePluginOptions,
 ): LanguagePlugin<string | URI> {
+  const {
+    compilerOptions,
+    vueCompilerOptions,
+    target = 'extension',
+  } = options
+  const printLog = target === 'extension'
+    ? VLS_InfoLog
+    : () => { /* NOOP */ }
   let globalTypesHolder: string | undefined
+
   return {
     getLanguageId() {
       return undefined
@@ -55,7 +69,7 @@ export function createVueVineLanguagePlugin(
       if (moduleId.endsWith('.vine.ts') && langaugeId === 'typescript') {
         if (!moduleId.startsWith('volar_virtual_code://')) {
           globalTypesHolder ??= moduleId
-          VLS_InfoLog('globalTypesHolder =', moduleId)
+          printLog('globalTypesHolder =', moduleId)
         }
 
         try {

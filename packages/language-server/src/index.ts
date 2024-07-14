@@ -70,7 +70,16 @@ connection.onInitialize(async (params) => {
     else {
       vueCompilerOptions = resolveVueCompilerOptions({})
     }
-    return [createVueVineLanguagePlugin(tsdk.typescript, compilerOptions, vueCompilerOptions)]
+    return [
+      createVueVineLanguagePlugin(
+        tsdk.typescript,
+        {
+          compilerOptions,
+          vueCompilerOptions,
+          target: 'extension',
+        },
+      ),
+    ]
   }
 })
 

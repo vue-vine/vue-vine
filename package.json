@@ -16,12 +16,12 @@
     "dev:lang-server": "cross-env NODE_ENV=development pnpm --filter @vue-vine/language-server run dev",
     "build:compiler": "cross-env NODE_ENV=production pnpm --filter @vue-vine/compiler run build",
     "build:vite": "cross-env NODE_ENV=production pnpm --filter @vue-vine/vite-plugin run build",
-    "build:ls": "cross-env NODE_ENV=production pnpm build:lang-service && pnpm build:lang-server",
     "build:lang-service": "cross-env NODE_ENV=production pnpm --filter @vue-vine/language-service run build",
     "build:lang-server": "cross-env NODE_ENV=production pnpm --filter @vue-vine/language-server run build",
     "build:eslint-parser": "cross-env NODE_ENV=production pnpm --filter @vue-vine/eslint-parser run build",
     "build:main": "cross-env NODE_ENV=production pnpm --filter vue-vine run build",
-    "build:ext": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter vue-vine-extension run build",
+    "build:ls": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter vue-vine-tsc run build",
+    "build:ext": "pnpm run build:ls && pnpm --filter vue-vine-extension run build",
     "test": "esno scripts/run-test.js",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
@@ -37,7 +37,8 @@
     "update:deps": "esno scripts/update-deps.js",
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/eslint-parser --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:ext": "pnpm --filter vue-vine-extension run publish:ext",
-    "publish:all": "pnpm publish:core && pnpm publish:ext"
+    "publish:all": "pnpm publish:core && pnpm publish:ext",
+    "publish:tsc": "pnpm --filter vue-vine-tsc publish"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.22.0",

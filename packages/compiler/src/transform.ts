@@ -31,13 +31,13 @@ function wrapWithAsyncContext(
   exprSourceCode: string,
 ) {
   return isNeedResult
-  ? `(
+    ? `(
     ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
     __temp = await __temp,
     __restore(),
     __temp
     );`
-  : `;(
+    : `;(
     ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
     await __temp,
     __restore()

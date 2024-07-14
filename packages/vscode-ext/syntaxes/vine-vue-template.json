@@ -534,7 +534,7 @@
       },
       "name": "meta.attribute.directive.vine-vue-template",
       "patterns": [
-			  {
+        {
           "match": "(\\.)([\\w-]*)",
           "1": {
             "name": "punctuation.separator.key-value.vine-vue-template"

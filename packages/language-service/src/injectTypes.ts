@@ -20,7 +20,7 @@ export function generateGlobalTypes(
     /declare global\s*\{/,
     `declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  function __createVineVLSCtx<T>(ctx: T): import('vue').UnwrapRef<T> & Record<string, unknown>;
+  function __createVineVLSCtx<T>(ctx: T): import('vue').UnwrapRef<T>;
     `,
   )
 
