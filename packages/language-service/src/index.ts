@@ -12,6 +12,7 @@ import { generateTemplate } from '@vue/language-core/lib/codegen/template'
 import type * as ts from 'typescript'
 import {
   type Segment,
+  replaceAll,
   toString,
 } from 'muggle-string'
 import type { URI } from 'vscode-uri'
@@ -253,6 +254,12 @@ function createVueVineCode(
     const globalTypes = generateGlobalTypes(vueCompilerOptions)
     tsCodeSegments.push(globalTypes)
   }
+
+  replaceAll(
+    tsCodeSegments,
+    /__VLS_/g,
+    '__VINE_VLS_',
+  )
 
   const tsCode = toString(tsCodeSegments)
   const tsCodeMappings = buildMappings(tsCodeSegments)
