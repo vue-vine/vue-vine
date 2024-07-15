@@ -2,23 +2,11 @@ import type { LanguageServicePlugin } from '@volar/language-service'
 import type { Diagnostic } from '@volar/language-server/node'
 import { URI } from 'vscode-uri'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
-import { VLS_InfoLog, transformVineDiagnostic } from '../../../language-service/src/shared'
+import { transformVineDiagnostic } from '../../../language-service/src/shared'
 
 const NOT_SHOW_VUE_VINE_MSG_TAG = [
-  'volar-embedded-content',
   'volar_virtual_code',
 ]
-
-function toLogInfo(diagnostic: Diagnostic) {
-  const startLocation = `${diagnostic.range.start.line}:${diagnostic.range.start.character}`
-  const endLocation = `${diagnostic.range.end.line}:${diagnostic.range.end.character}`
-
-  return {
-    msg: diagnostic.message,
-    start: startLocation,
-    end: endLocation,
-  }
-}
 
 export function createVineDiagnostics(): LanguageServicePlugin {
   return {
@@ -54,16 +42,6 @@ export function createVineDiagnostics(): LanguageServicePlugin {
             ...virtualCode.vineMetaCtx?.vineCompileErrs?.map(err => transformVineDiagnostic(err, 'err')) ?? [],
             ...virtualCode.vineMetaCtx?.vineCompileWarns?.map(warn => transformVineDiagnostic(warn, 'warn')) ?? [],
           ])
-
-          VLS_InfoLog(
-            '[VueVineDiagnosticsProvider]',
-            `results: `,
-            {
-              docUri: docUri.toString(),
-              virtualCode: virtualCode?.id,
-              diagnostics: results.map(toLogInfo),
-            },
-          )
 
           return results
         },

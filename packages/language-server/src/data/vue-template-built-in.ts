@@ -59,13 +59,5 @@ export const vueTemplateBuiltinData: HTMLDataV1 = {
       },
       attributes: [],
     },
-    {
-      name: 'template',
-      description: {
-        kind: 'markdown',
-        value: '\nThe `<template>` tag is used as a placeholder when we want to use a built-in directive without rendering an element in the DOM.\n\n- **Details**\n\n  The special handling for `<template>` is only triggered if it is used with one of these directives:\n\n  - `v-if`, `v-else-if`, or `v-else`\n  - `v-for`\n  - `v-slot`\n\n  If none of those directives are present then it will be rendered as a [native `<template>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) instead.\n\n  A `<template>` with a `v-for` can also have a [`key` attribute](https://vuejs.org/api/built-in-special-attributes.html#key). All other attributes and directives will be discarded, as they aren\'t meaningful without a corresponding element.\n\n  Single-file components use a [top-level `<template>` tag](https://vuejs.org/api/sfc-spec.html#language-blocks) to wrap the entire template. That usage is separate from the use of `<template>` described above. That top-level tag is not part of the template itself and doesn\'t support template syntax, such as directives.\n\n- **See also**\n  - [Guide - `v-if` on `<template>`](https://vuejs.org/guide/essentials/conditional.html#v-if-on-template)\n  - [Guide - `v-for` on `<template>`](https://vuejs.org/guide/essentials/list.html#v-for-on-template)\n  - [Guide - Named slots](https://vuejs.org/guide/components/slots.html#named-slots)\n',
-      },
-      attributes: [],
-    },
   ],
 }

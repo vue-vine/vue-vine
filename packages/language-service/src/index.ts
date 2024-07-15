@@ -340,11 +340,11 @@ function createVueVineCode(
   }
 
   function* createTemplateHTMLEmbeddedCodes(): Generator<VirtualCode> {
-    for (const {
+    for (const [i, {
       fnName,
       templateSource,
       templateStringNode,
-    } of vineFileCtx.vineCompFns) {
+    }] of Object.entries(vineFileCtx.vineCompFns)) {
       if (!templateStringNode) {
         continue
       }
@@ -354,7 +354,7 @@ function createVueVineCode(
         : templateSource
 
       yield {
-        id: `${fnName}_template`.toLowerCase(),
+        id: `${i}_${fnName}_template`.toLowerCase(),
         languageId: 'html',
         snapshot: {
           getText: (start, end) => source.slice(start, end),

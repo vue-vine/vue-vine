@@ -1,4 +1,4 @@
-import type { Disposable, LanguageServicePlugin, Position } from '@volar/language-service'
+import type { Disposable, LanguageServicePlugin, SourceScript } from '@volar/language-service'
 import { URI } from 'vscode-uri'
 import { type VueCompilerOptions, resolveVueCompilerOptions } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
@@ -7,6 +7,8 @@ import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import type { VueVineCode } from '@vue-vine/language-service'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
+
+const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 
 export function createVineTagIntellisense(): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
@@ -21,7 +23,7 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
     }
   }
   const baseService = createHtmlService({
-    documentSelector: ['.html'],
+    documentSelector: ['html'],
     getCustomData() {
       return [
         ...customData,
@@ -53,18 +55,23 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           let currentVersion: number | undefined
 
           const docUri = URI.parse(document.uri)
+          const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
           const decoded = context.decodeEmbeddedDocumentUri(docUri)
           const sourceScript = decoded && context.language.scripts.get(decoded[0])
-          const virtualCode = decoded && sourceScript?.generated?.embeddedCodes.get(decoded[1])
+          const vineVirtualCode = decoded && sourceScript?.generated?.root
 
-          if (sourceScript && virtualCode && isVueVineVirtualCode(virtualCode)) {
+          if (
+            sourceScript && vineVirtualCode && htmlEmbeddedId
+            && isVueVineVirtualCode(vineVirtualCode)
+          ) {
             // Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
             baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+
             sync = (await provideHtmlData(
               vueCompilerOptions,
-              sourceScript.id,
-              virtualCode,
-              position,
+              sourceScript,
+              vineVirtualCode,
+              htmlEmbeddedId,
             )).sync
             currentVersion = await sync()
           }
@@ -88,7 +95,7 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
 
       function createVineTemplateDataProvider(
         vineVirtualCode: VueVineCode,
-        position: Position,
+        htmlEmbeddedId: string,
       ): IHTMLDataProvider {
         return {
           getId: () => 'vine-vue-template',
@@ -96,17 +103,9 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           provideTags() {
             const tags: ITagData[] = []
 
-            const triggerLine = position.line
             const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
-              (compFn) => {
-                const { templateStringNode } = compFn
-                return (
-                  templateStringNode?.loc
-                  && triggerLine >= templateStringNode.loc.start.line
-                  && triggerLine <= templateStringNode.loc.end.line
-                )
-                  ? compFn
-                  : undefined
+              (compFn, i) => {
+                return `${i}_${compFn.fnName}`.toLowerCase() === htmlEmbeddedId
               },
             )
             if (!triggerAtVineCompFn) {
@@ -136,9 +135,9 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
 
       async function provideHtmlData(
         vueCompilerOptions: VueCompilerOptions,
-        sourceDocumentUri: URI,
+        sourceScript: SourceScript,
         vineVirtualCode: VueVineCode,
-        position: Position,
+        htmlEmbeddedId: string,
       ) {
         const promises: Promise<void>[] = []
         // const tagInfos = new Map<string, HtmlTagInfo>()
@@ -147,7 +146,7 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
 
         updateCustomData([
           newHTMLDataProvider('vine-vue-template-built-in', vueTemplateBuiltinData),
-          createVineTemplateDataProvider(vineVirtualCode, position),
+          createVineTemplateDataProvider(vineVirtualCode, htmlEmbeddedId),
         ])
 
         return {
