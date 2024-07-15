@@ -8,13 +8,13 @@ import {
 import type * as ts from 'typescript'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
-import { create as createHtmlService } from 'volar-service-html'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
 
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
-import { createVineDiagnostics } from './provide-diagnostics'
+import { createVineDiagnostics } from './plugins/vine-diagnostics'
+import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
 
 const debug = false
 
@@ -29,10 +29,13 @@ connection.onInitialize(async (params) => {
     params.locale,
   )
   const plugins = [
-    createHtmlService(),
+    // HTML Service is included in VineTagIntellisense service
+    // createHtmlService(),
     createCssService(),
     createEmmetService(),
+    // Vine plugins:
     createVineDiagnostics(),
+    createVineTagIntellisense(),
   ]
   if (debug) {
     plugins.push(...createTypeScriptServices(tsdk.typescript))

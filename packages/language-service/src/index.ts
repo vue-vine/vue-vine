@@ -29,6 +29,9 @@ import { VLS_ErrorLog, VLS_InfoLog, getVineTempPropName, turnBackToCRLF } from '
 export {
   isVueVineVirtualCode,
 } from './shared'
+export type {
+  VueVineCode,
+} from './shared'
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
@@ -284,8 +287,11 @@ function createVueVineCode(
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
     ],
-    vineCompileErrs,
-    vineCompileWarns,
+    vineMetaCtx: {
+      vineCompileErrs,
+      vineCompileWarns,
+      vineFileCtx,
+    },
   }
 
   function generateScriptUntil(targetOffset: number) {
@@ -334,11 +340,11 @@ function createVueVineCode(
   }
 
   function* createTemplateHTMLEmbeddedCodes(): Generator<VirtualCode> {
-    for (const {
+    for (const [i, {
       fnName,
       templateSource,
       templateStringNode,
-    } of vineFileCtx.vineCompFns) {
+    }] of Object.entries(vineFileCtx.vineCompFns)) {
       if (!templateStringNode) {
         continue
       }
@@ -348,7 +354,7 @@ function createVueVineCode(
         : templateSource
 
       yield {
-        id: `${fnName}_template`.toLowerCase(),
+        id: `${i}_${fnName}_template`.toLowerCase(),
         languageId: 'html',
         snapshot: {
           getText: (start, end) => source.slice(start, end),

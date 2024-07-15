@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import type { VineDiagnostic } from '@vue-vine/compiler'
+import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import type { Diagnostic, VirtualCode } from '@volar/language-server/node'
 import { DiagnosticSeverity } from '@volar/language-server/node'
 
@@ -11,8 +11,11 @@ export function getVineTempPropName(propName: string) {
 }
 export interface VueVineCode extends VirtualCode {
   __VUE_VINE_VIRTUAL_CODE__: true
-  vineCompileErrs: VineDiagnostic[]
-  vineCompileWarns: VineDiagnostic[]
+  vineMetaCtx: {
+    vineCompileErrs: VineDiagnostic[]
+    vineCompileWarns: VineDiagnostic[]
+    vineFileCtx: VineFileCtx
+  }
 }
 
 export function transformVineDiagnostic(

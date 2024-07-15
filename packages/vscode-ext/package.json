@@ -29,28 +29,12 @@
     ],
     "grammars": [
       {
-        "scopeName": "source.vine-vue-template-inject",
-        "path": "./syntaxes/vine-inject.json",
-        "embeddedLanguages": {
-          "source.vine-vue-template": "vine-vue-template",
-          "source.css": "css",
-          "source.css.scss": "scss",
-          "source.css.less": "less",
-          "source.css.postcss": "postcss",
-          "source.sass": "sass",
-          "source.stylus": "stylus"
-        },
-        "tokenTypes": {
-          "source.vine-vue-template": "other"
-        },
-        "injectTo": [
-          "source.ts"
-        ]
-      },
-      {
         "language": "vine-vue-template",
         "scopeName": "source.vine-vue-template",
-        "path": "./syntaxes/vine-vue-template.json"
+        "path": "./syntaxes/vine-vue-template.json",
+        "embeddedLanguages": {
+          "source.ts": "typescript"
+        }
       },
       {
         "scopeName": "vine-vue-template.interpolations",
@@ -64,6 +48,24 @@
         "path": "./syntaxes/vue-directives.json",
         "injectTo": [
           "source.vine-vue-template"
+        ]
+      },
+      {
+        "scopeName": "source.vine-vue-template-inject",
+        "path": "./syntaxes/vine-inject.json",
+        "embeddedLanguages": {
+          "source.vine-vue-template": "vine-vue-template",
+          "source.css": "css",
+          "source.css.scss": "scss",
+          "source.css.less": "less",
+          "source.css.postcss": "postcss",
+          "source.sass": "sass",
+          "source.stylus": "stylus",
+          "source.ts": "typescript"
+        },
+
+        "injectTo": [
+          "source.ts"
         ]
       }
     ],
