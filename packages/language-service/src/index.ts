@@ -29,6 +29,9 @@ import { VLS_ErrorLog, VLS_InfoLog, getVineTempPropName, turnBackToCRLF } from '
 export {
   isVueVineVirtualCode,
 } from './shared'
+export type {
+  VueVineCode,
+} from './shared'
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 

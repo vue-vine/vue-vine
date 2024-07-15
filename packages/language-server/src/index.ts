@@ -14,7 +14,7 @@ import { create as createTypeScriptServices } from 'volar-service-typescript'
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
-import { createVineDiagnostics } from './provide-diagnostics'
+import { createVineDiagnostics } from './plugins/vine-diagnostics'
 
 const debug = false
 
