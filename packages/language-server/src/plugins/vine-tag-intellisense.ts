@@ -55,9 +55,9 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           const docUri = URI.parse(document.uri)
           const decoded = context.decodeEmbeddedDocumentUri(docUri)
           const sourceScript = decoded && context.language.scripts.get(decoded[0])
-          const virtualCode = sourceScript?.generated?.root
+          const virtualCode = decoded && sourceScript?.generated?.embeddedCodes.get(decoded[1])
 
-          if (virtualCode && isVueVineVirtualCode(virtualCode)) {
+          if (sourceScript && virtualCode && isVueVineVirtualCode(virtualCode)) {
             // Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
             baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
             sync = (await provideHtmlData(
