@@ -40,8 +40,8 @@ export function createVineDiagnostics(): LanguageServicePlugin {
           }
 
           return diagnostics.concat([
-            ...virtualCode.vineCompileErrs.map(err => transformVineDiagnostic(err, 'err')),
-            ...virtualCode.vineCompileWarns.map(warn => transformVineDiagnostic(warn, 'warn')),
+            ...virtualCode.vineMetaCtx?.vineCompileErrs?.map(err => transformVineDiagnostic(err, 'err')) ?? [],
+            ...virtualCode.vineMetaCtx?.vineCompileWarns?.map(warn => transformVineDiagnostic(warn, 'warn')) ?? [],
           ])
         },
       }

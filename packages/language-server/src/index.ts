@@ -15,6 +15,7 @@ import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { createVineDiagnostics } from './plugins/vine-diagnostics'
+import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
 
 const debug = false
 
@@ -32,7 +33,9 @@ connection.onInitialize(async (params) => {
     createHtmlService(),
     createCssService(),
     createEmmetService(),
+    // Vine plugins:
     createVineDiagnostics(),
+    createVineTagIntellisense(),
   ]
   if (debug) {
     plugins.push(...createTypeScriptServices(tsdk.typescript))

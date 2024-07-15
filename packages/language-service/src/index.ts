@@ -287,8 +287,11 @@ function createVueVineCode(
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
     ],
-    vineCompileErrs,
-    vineCompileWarns,
+    vineMetaCtx: {
+      vineCompileErrs,
+      vineCompileWarns,
+      vineFileCtx,
+    },
   }
 
   function generateScriptUntil(targetOffset: number) {

@@ -15,24 +15,32 @@ index bdae8e6bdd6853fb0cce9ad0f417fb01313a1dd1..9b04318e1cf290aa59783cdc53220433
                      }
                      yield `,`;
 diff --git a/lib/codegen/template/element.js b/lib/codegen/template/element.js
-index b208961a53e8118c8ad77b69e4fe8d461511ad0e..a4316182569643a590966ba8487f969f7fe05ab5 100644
+index b208961a53e8118c8ad77b69e4fe8d461511ad0e..25aa701e7843293334cc3c706da0dca920830582 100644
 --- a/lib/codegen/template/element.js
 +++ b/lib/codegen/template/element.js
-@@ -126,10 +126,8 @@ function* generateComponent(options, ctx, node, currentComponent, componentCtxVa
+@@ -124,12 +124,16 @@ function* generateComponent(options, ctx, node, currentComponent, componentCtxVa
+             // auto import support
+             yield `// @ts-ignore${common_1.newLine}`; // #2304
              yield `[`;
++            let isFirstProvideCompletion = false;
              for (const tagOffset of tagOffsets) {
++                let completion = false;
++                if (!isFirstProvideCompletion) {
++                    isFirstProvideCompletion = true;
++                    completion = true;
++                }
                  yield* (0, camelized_1.generateCamelized)((0, shared_1.capitalize)(node.tag), tagOffset, {
 -                    completion: {
 -                        isAdditional: true,
 -                        onlyImport: true,
 -                    },
 +                    navigation: true,
-+                    completion: true,
++                    completion,
                  });
                  yield `,`;
              }
 diff --git a/lib/codegen/template/elementProps.js b/lib/codegen/template/elementProps.js
-index bedc7f6692cdf6052947fbe4f2761f2aa2481689..3eac79749fdbd3bf7e6df45669630e278f772f3a 100644
+index bedc7f6692cdf6052947fbe4f2761f2aa2481689..ea42ec957d6a260106d3b6d7e5c5b3a84cda7723 100644
 --- a/lib/codegen/template/elementProps.js
 +++ b/lib/codegen/template/elementProps.js
 @@ -78,7 +78,7 @@ function* generateElementProps(options, ctx, node, props, enableCodeFeatures, pr
