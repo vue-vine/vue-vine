@@ -74,6 +74,12 @@
         "name": "@vue-vine/typescript-plugin",
         "enableForWorkspaceTypeScriptVersions": true
       }
+    ],
+    "snippets": [
+      {
+        "language": "typescript",
+        "path": "./snippets/vine-snippets.code-snippets"
+      }
     ]
   },
   "scripts": {
