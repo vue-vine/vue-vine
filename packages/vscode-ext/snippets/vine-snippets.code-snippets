@@ -1,17 +1,17 @@
 {
-  "vineComponentFunction": {
+  "Vine component function": {
 		"prefix": "vcf",
 		"body": [
 			"function ${1:Component}($2) {",
-      "  $3",
+      "  $4",
       "  return vine`",
-      "    $0",
+      "    $3",
       "  `",
       "}"
 		],
 		"description": "create vine component function."
 	},
-  "vineTemplate": {
+  "Vine template": {
 		"prefix": "vtpl",
 		"body": [
 			"vine`",
@@ -20,22 +20,22 @@
 		],
 		"description": "create vine template."
 	},
-  "vineStyle": {
+  "Quickly insert vineStyle": {
 		"prefix": "vsty",
 		"body": [
-			"vineStyle(`",
-      "  $0",
+			"vineStyle($1`",
+      "  $2",
       "`)"
 		],
 		"description": "create vine-style."
 	},
-  "vineStyleScoped": {
+  "Quickly insert vineStyle.scoped": {
 		"prefix": "vstysc",
 		"body": [
-			"vineStyle.scoped(`",
-      "  $0",
+			"vineStyle.scoped($1`",
+      "  $2",
       "`)"
 		],
-		"description": "create vine-style-scoped."
+		"description": "quickly insert vine-style-scoped."
 	}
 }

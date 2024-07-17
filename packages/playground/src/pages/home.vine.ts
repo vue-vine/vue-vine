@@ -70,8 +70,6 @@ async function RandomStringButton() {
     }
   `)
 
-  vineStyle(``)
-
   const emit = vineEmits<{
     tap: [number, number],
     move: [number, number, number]
@@ -128,5 +126,15 @@ export async function Home() {
         v-model="userInputText"
       />
     </div>
+  `
+}
+
+function TestComp() {
+  vineStyle.scoped(`
+  
+  `)
+
+  return vine`
+
   `
 }
