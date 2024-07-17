@@ -38,6 +38,22 @@ strong {
   color: var(--vine-bold-text-color);
 }
 
+.hlmark {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--vp-c-brand-1);
+  margin: 0 0.25rem;
+  border-bottom: 1px dashed var(--vp-c-brand-1);
+}
+
+/* ---------- Special tweaking ----------- */
+
+img[alt="npm"] {
+  display: inline-block;
+  margin: 0 0.5rem;
+  transform: translateY(0.2rem);
+}
+
 .items .item:nth-child(-n+2) .VPFeature article.box {
   --uno: "border-2px rounded-4 border-solid hover:(shadow-[0_0_12px_1px] shadow-op-35)";
 }

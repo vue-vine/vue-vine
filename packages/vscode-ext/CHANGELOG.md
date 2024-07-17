@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.11
+
+### Patch Changes
+
+- Support template tag intellisense from available bindings.
+
 ## 0.1.10
 
 ### Patch Changes

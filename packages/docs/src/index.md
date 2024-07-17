@@ -21,8 +21,8 @@ features:
     details: Vine is fully compatible with SFC, you can use it in your existing project.
   - title: <div class="i-twemoji-dizzy"></div>️&nbsp;Functional component
     details: Write multiple components in one file, with all template features you love in Vue.js.
-  - title: <div class="i-logos-typescript-icon"></div>&nbsp;TypeScript only
-    details: Vine uses TypeScript everywhere, ensuring natural type context flow.
+  - title: <div class="i-logos-typescript-icon"></div>&nbsp;Practical TS experience
+    details: The way we using Typescript in Vine feels more naturally than SFC.
   - title: <div class="i-twemoji-magic-wand"></div>&nbsp;Simple & intuitive macros
     details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
