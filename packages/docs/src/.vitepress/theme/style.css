@@ -70,6 +70,6 @@ img[alt="npm"] {
   --uno: 'flex items-center gap-2px'
 }
 
-.container {
+.VPHome .container {
   --uno: 'max-w-1350px!';
 }
