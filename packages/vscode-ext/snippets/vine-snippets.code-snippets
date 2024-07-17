@@ -1,4 +1,13 @@
 {
+  "vineTemplate": {
+		"prefix": "vtpl",
+		"body": [
+			"vine`",
+      "  $0",
+      "`"
+		],
+		"description": "create vine template."
+	},
   "vineStyle": {
 		"prefix": "vsty",
 		"body": [
