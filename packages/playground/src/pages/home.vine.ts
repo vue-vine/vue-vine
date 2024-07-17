@@ -128,13 +128,3 @@ export async function Home() {
     </div>
   `
 }
-
-function TestComp() {
-  vineStyle.scoped(`
-  
-  `)
-
-  return vine`
-
-  `
-}
