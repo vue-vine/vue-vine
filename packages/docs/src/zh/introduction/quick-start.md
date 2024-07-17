@@ -4,24 +4,24 @@
 
 <b>在开始使用之前，您应该了解以下约定：</b>
 
-- Vine 只支持 Vue 3.0+ 和 Vite。
-- Vine 仅支持 TypeScript，JavaScript 用户无法使用完整功能。
+- Vine 只支持 <span class="hlmark">Vue 3.0+</span> 和 <span class="hlmark">Vite</span>。
+- Vine <span class="hlmark">仅支持 TypeScript</span>，JavaScript 用户无法使用完整功能。
 
 :::
 
 欢迎加入用另一种方式编写 Vue 的探索旅程！
 
-Vine 提供了 Vite 插件和 VSCode 扩展来支持基础功能。
-
-除此之外，我们还提供了其他一些开发或配置时可能会需要用到的库，你可以在下一节 [周边生态](./ecosystem.md) 中了解更多细节。
-
-![npm](https://img.shields.io/npm/v/vue-vine)
-
-## 安装 Vite 插件 {#install-vite-plugin}
+首先请在你的项目中安装 Vue Vine ![npm](https://img.shields.io/npm/v/vue-vine)：
 
 ```bash
 pnpm i -D vue-vine
 ```
+
+Vine 提供了 Vite 插件和 VSCode 扩展来支持基础功能。
+
+除此之外，我们还提供了其他一些开发或配置时可能会需要用到的库，你可以在下一节 [周边生态](./ecosystem.md) 中了解更多细节。
+
+## 安装 Vite 插件 {#install-vite-plugin}
 
 在 `vite.config.ts` 中导入插件：
 

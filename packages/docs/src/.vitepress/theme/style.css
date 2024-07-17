@@ -38,6 +38,22 @@ strong {
   color: var(--vine-bold-text-color);
 }
 
+.hlmark {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--vp-c-brand-1);
+  margin: 0 0.25rem;
+  border-bottom: 1px dashed var(--vp-c-brand-1);
+}
+
+/* ---------- Special tweaking ----------- */
+
+img[alt="npm"] {
+  display: inline-block;
+  margin: 0 0.5rem;
+  transform: translateY(0.2rem);
+}
+
 .items .item:nth-child(1) .VPFeature article.box {
   background-color: rgba(251, 211, 11, 0.4);
   border: 2px solid rgb(250, 231, 135);
@@ -57,9 +73,9 @@ strong {
 }
 
 .items .item:nth-child(2) .VPFeature article.box {
-  background-color: rgba(2, 123, 77, 0.622);
-  border: 2px solid rgb(14, 210, 125);
-  box-shadow: 0 0 16px 5px rgba(73, 158, 111, 0.5);
+  background-color: rgba(41, 224, 142, 0.535);
+  border: 2px solid rgba(87, 225, 165, 0.724);
+  box-shadow: 0 0 16px 5px rgba(50, 201, 118, 0.5);
   border-radius: 1rem;
   padding: 24px 20px;
 }
