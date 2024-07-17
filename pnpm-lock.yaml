@@ -177,6 +177,9 @@ importers:
       '@iconify-json/logos':
         specifier: ^1.1.34
         version: 1.1.34
+      '@iconify-json/twemoji':
+        specifier: ^1.1.15
+        version: 1.1.15
       unocss:
         specifier: ^0.58.9
         version: 0.58.9(postcss@8.4.38)(rollup@4.14.0)(vite@5.2.10(@types/node@20.11.27)(less@4.2.0)(sass@1.66.1))
@@ -1589,6 +1592,9 @@ packages:
 
   '@iconify-json/logos@1.1.34':
     resolution: {integrity: sha512-2eBkFOKj0XhSGoxW/L7cEo6tJEOFCiFOlv/bnIAeZquHzCI+I7m0x9B8bbX+0aYoOb165jpGQQmB6wNO4IcLEA==}
+
+  '@iconify-json/twemoji@1.1.15':
+    resolution: {integrity: sha512-ze2CAOwIWBKIP6ih6qMDItasVjRicktl2Qr3/ohZSMToAHm9z3Q6HCwE48eT0+D+uFpGBlNRQ22HHyE5izyhDg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -7357,6 +7363,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/logos@1.1.34':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/twemoji@1.1.15':
     dependencies:
       '@iconify/types': 2.0.0
 

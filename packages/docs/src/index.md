@@ -17,13 +17,13 @@ hero:
       link: /introduction/why
 
 features:
-  - title: SFC Compatible
+  - title: <div class="i-logos-vue"></div>️&nbsp;Vue SFC Compatible
     details: Vine is fully compatible with SFC, you can use it in your existing project.
-  - title: Function component
+  - title: <div class="i-twemoji-dizzy"></div>️&nbsp;Functional component
     details: Write multiple components in one file, with all template features you love in Vue.js.
-  - title: More uniform and intuitive type context
-    details: Vine use TypeScript file everywhere so that type context would flow more naturally.
-  - title: Simple and intuitive macros
+  - title: <div class="i-logos-typescript-icon"></div>&nbsp;TypeScript only
+    details: Vine uses TypeScript everywhere, ensuring natural type context flow.
+  - title: <div class="i-twemoji-magic-wand"></div>&nbsp;Simple & intuitive macros
     details: Extends design of Vue's macro mechanism, it's very concise and less mental burden.
 ---
 

@@ -38,39 +38,22 @@ strong {
   color: var(--vine-bold-text-color);
 }
 
+.items .item:nth-child(-n+2) .VPFeature article.box {
+  --uno: "border-2px rounded-4 border-solid hover:(shadow-[0_0_12px_1px] shadow-op-35)";
+}
+
 .items .item:nth-child(1) .VPFeature article.box {
-  background-color: rgba(251, 211, 11, 0.4);
-  border: 2px solid rgb(250, 231, 135);
-  box-shadow: 0 0 16px 5px rgba(251, 226, 101, 0.5);
-  border-radius: 1rem;
-  padding: 24px 20px;
-}
-.items .item:nth-child(1) .VPFeature article.box h2.title {
-  font-size: 1.5rem;
-  line-height: 30px;
-  white-space: nowrap;
-}
-.items .item:nth-child(1) .VPFeature article.box p.details {
-  font-weight: bold;
-  line-height: 22px;
-  font-size: 16px;
+  --uno: "bg-green-500:10 border-green-500:25 hover:shadow-green:40";
 }
 
 .items .item:nth-child(2) .VPFeature article.box {
-  background-color: rgba(2, 123, 77, 0.622);
-  border: 2px solid rgb(14, 210, 125);
-  box-shadow: 0 0 16px 5px rgba(73, 158, 111, 0.5);
-  border-radius: 1rem;
-  padding: 24px 20px;
+  --uno: "bg-blue-500:10 border-blue-500:25 hover:shadow-blue:40";
 }
-.items .item:nth-child(2) .VPFeature article.box h2.title {
-  font-size: 1.35rem;
-  line-height: 30px;
-  white-space: nowrap;
+
+.items .item .VPFeature article.box h2.title {
+  --uno: 'flex items-center gap-2px'
 }
-.items .item:nth-child(2) .VPFeature article.box p.details {
-  font-weight: bold;
-  line-height: 22px;
-  font-size: 16px;
-  flex-grow: unset;
+
+.container {
+  --uno: 'max-w-1350px!';
 }
