@@ -6,15 +6,6 @@ outline: deep
 
 本章将介绍 Vue Vine 的所有基本概念。
 
-::: warning 🚨 注意
-
-<b>在开始使用之前，您应该了解以下约定：</b>
-
-- Vine 只支持 Vue 3.0+ 和 Vite。
-- Vine 仅支持 TypeScript，JavaScript 用户无法使用完整功能。
-
-:::
-
 ## 文件扩展名 {#file-extension-and-semantics}
 
 Vine 使用 `.vine.ts` 作为文件扩展名，因此您知道您实际上是在编写 TypeScript，TypeScript 中的任何有效语法在 Vine 中也是合法的。

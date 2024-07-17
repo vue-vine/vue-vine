@@ -17,7 +17,7 @@ hero:
       link: /introduction/why
 
 features:
-  - title: Compatible <br> with SFC
+  - title: SFC Compatible
     details: Vine is fully compatible with SFC, you can use it in your existing project.
   - title: Function component
     details: Write multiple components in one file, with all template features you love in Vue.js.

@@ -20,7 +20,7 @@ export default defineConfig({
     ['link', { rel: 'shortcut icon', href: '/favicons/favicon.ico' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
   ],
   lang: 'en-US',
   themeConfig: {
@@ -57,6 +57,7 @@ export default defineConfig({
           items: [
             { text: 'Why Vine', link: '/zh/introduction/why' },
             { text: '快速开始', link: '/zh/introduction/quick-start' },
+            { text: '周边生态', link: '/zh/introduction/ecosystem' },
           ],
         },
         {
@@ -74,6 +75,7 @@ export default defineConfig({
           items: [
             { text: 'Why Vine', link: '/introduction/why' },
             { text: 'Quick Start', link: '/introduction/quick-start' },
+            { text: 'Ecosystem', link: '/introduction/ecosystem' },
           ],
         },
         {

@@ -70,8 +70,6 @@ async function RandomStringButton() {
     }
   `)
 
-  vineStyle(``)
-
   const emit = vineEmits<{
     tap: [number, number],
     move: [number, number, number]

@@ -17,7 +17,7 @@
 
 body, html {
   font-family:
-    Figtree,
+    Rubik,
     -apple-system,
     BlinkMacSystemFont,
     avenir next,avenir,
@@ -30,7 +30,8 @@ body, html {
     noto,
     arial,
     sans-serif;
-  word-spacing: 0.1rem
+  word-spacing: 0.1rem;
+  font-variant-ligatures: none;
 }
 
 strong {
@@ -42,6 +43,7 @@ strong {
   border: 2px solid rgb(250, 231, 135);
   box-shadow: 0 0 16px 5px rgba(251, 226, 101, 0.5);
   border-radius: 1rem;
+  padding: 24px 20px;
 }
 .items .item:nth-child(1) .VPFeature article.box h2.title {
   font-size: 1.5rem;
@@ -59,9 +61,10 @@ strong {
   border: 2px solid rgb(14, 210, 125);
   box-shadow: 0 0 16px 5px rgba(73, 158, 111, 0.5);
   border-radius: 1rem;
+  padding: 24px 20px;
 }
 .items .item:nth-child(2) .VPFeature article.box h2.title {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   line-height: 30px;
   white-space: nowrap;
 }
@@ -69,12 +72,5 @@ strong {
   font-weight: bold;
   line-height: 22px;
   font-size: 16px;
-}
-
-
-html[lang="en-US"] .items .item:nth-child(2) .VPFeature article.box h2.title {
-  transform: translateX(-6px) translateY(2px);
-}
-html[lang="en-US"] .items .item:nth-child(2) .VPFeature article.box p.details {
-  transform: translateY(16px);
+  flex-grow: unset;
 }
