@@ -1,11 +1,11 @@
 {
-  "vineStyleForScss": {
-		"prefix": "vineStyle",
+  "vineStyle": {
+		"prefix": "vsty",
 		"body": [
-			"vineStyle.scoped(${1:scss}`",
-			"   $0",
+			"vineStyle(`",
+      "  $0",
       "`)"
 		],
-		"description": "create vine-style with scss."
+		"description": "create vine-style."
 	}
 }
