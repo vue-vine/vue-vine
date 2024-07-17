@@ -11,8 +11,8 @@ export default defineConfig({
     }),
   ],
   transformers: [
-    transformerVariantGroup(),
     transformerDirectives(),
+    transformerVariantGroup(),
   ],
   shortcuts: {
     'recommendation-bg': 'group-hover:(blur-md op100) op0 transition-opacity top-10% left-15% absolute rounded-50% w-75% h-75%',
