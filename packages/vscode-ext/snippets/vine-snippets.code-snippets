@@ -28,5 +28,14 @@
       "`)"
 		],
 		"description": "create vine-style."
+	},
+  "vineStyleScoped": {
+		"prefix": "vstysc",
+		"body": [
+			"vineStyle.scoped(`",
+      "  $0",
+      "`)"
+		],
+		"description": "create vine-style-scoped."
 	}
 }
