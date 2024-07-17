@@ -1,4 +1,16 @@
 {
+  "vineComponentFunction": {
+		"prefix": "vcf",
+		"body": [
+			"function ${1:Component}($2) {",
+      "  $3",
+      "  return vine`",
+      "    $0",
+      "  `",
+      "}"
+		],
+		"description": "create vine component function."
+	},
   "vineTemplate": {
 		"prefix": "vtpl",
 		"body": [
