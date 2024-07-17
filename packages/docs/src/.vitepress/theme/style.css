@@ -55,7 +55,7 @@ img[alt="npm"] {
 }
 
 .items .item:nth-child(-n+2) .VPFeature article.box {
-  --uno: "border-2px rounded-4 border-solid hover:(shadow-[0_0_12px_1px] shadow-op-35)";
+  --uno: "border-2px rounded-3 border-solid hover:(shadow-[0_0_12px_1px] shadow-op-35)";
 }
 
 .items .item:nth-child(1) .VPFeature article.box {
