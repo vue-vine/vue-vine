@@ -37,5 +37,26 @@
       "`)"
 		],
 		"description": "quickly insert vine-style-scoped."
+	},
+  "Quickly insert vineProp": {
+		"prefix": "vpr",
+		"body": [
+			"const ${1:propName} = vineProp<$2>($3)"
+		],
+		"description": "quickly insert vine-prop."
+	},
+  "Quickly insert vineProp.withDefault": {
+		"prefix": "vprdf",
+		"body": [
+			"const ${1:propName} = vineProp.withDefault($2)"
+		],
+		"description": "quickly insert vine-prop-with-default."
+	},
+  "Quickly insert vineProp.optional": {
+		"prefix": "vpr?",
+		"body": [
+			"const ${1:propName} = vineProp.optional<$2>($3)"
+		],
+		"description": "quickly insert vine-prop-optional."
 	}
 }
