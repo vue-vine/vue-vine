@@ -79,6 +79,13 @@
         "language": "typescript",
         "path": "./snippets/vine-snippets.code-snippets"
       }
+    ],
+    "themes": [
+      {
+        "label": "Rocking Vine",
+        "uiTheme": "vs-dark",
+        "path": "./themes/rocking-vine.json"
+      }
     ]
   },
   "scripts": {
