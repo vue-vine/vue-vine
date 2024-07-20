@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "scopeName": "source.vine-vue-template-inject",
-  "injectionSelector": "L:meta.function, L:meta.arrow.ts",
+  "injectionSelector": "L:meta.function -comment.line -comment.block, L:meta.arrow.ts -comment.line -comment.block",
   "patterns": [
     {
       "name": "source.vine-vue-template.embedded.ts",
@@ -20,15 +20,18 @@
     },
     {
       "name": "source.css.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "punctuation.definition.string.begin.vine-css.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "punctuation.definition.string.begin.vine-css.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-css.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-css.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css" }
@@ -36,16 +39,19 @@
     },
     {
       "name": "source.css.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((css)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(css)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-css.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-css.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-css.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-css.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-css.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-css.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css" }
@@ -53,16 +59,19 @@
     },
     {
       "name": "source.css.scss.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((scss)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(scss)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-scss.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-scss.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-scss.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-scss.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-scss.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-scss.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-scss.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css.scss" }
@@ -70,16 +79,19 @@
     },
     {
       "name": "source.css.sass.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((sass)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(sass)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-sass.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-sass.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-sass.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-sass.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-sass.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-sass.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-sass.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css.sass" }
@@ -87,16 +99,19 @@
     },
     {
       "name": "source.css.less.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((less)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(less)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-less.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-less.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-less.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-less.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-less.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-less.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-less.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css.less" }
@@ -104,16 +119,19 @@
     },
     {
       "name": "source.stylus.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((stylus)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(stylus)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-stylus.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-stylus.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-stylus.ts" }
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-stylus.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-stylus.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-stylus.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-stylus.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.stylus" }
@@ -121,16 +139,19 @@
     },
     {
       "name": "source.css.postcss.embedded.ts",
-      "begin": "(vineStyle)(?:\\.scoped)?\\((postcss)(`)",
+      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(postcss)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-postcss.start.ts" },
-        "1": { "name": "entity.name.function.macro.vine-css.ts" },
-        "2": { "name": "entity.name.function.macro.css.vine-postcss.ts" },
-        "3": { "name": "punctuation.definition.string.begin.vine-postcss.ts" }
+        "1": { "name": "support.style.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "meta.brace.round.ts" },
+        "4": { "name": "support.style.macro.vine-postcss.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-postcss.ts" }
       },
-      "end": "(`)(?:\\s*[,)])",
+      "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {
-        "1": { "name": "punctuation.definition.string.end.vine-postcss.ts" }
+        "1": { "name": "punctuation.definition.string.end.vine-postcss.ts" },
+        "2": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.css.postcss" }
