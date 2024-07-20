@@ -1,0 +1,68 @@
+{
+  "Vine component function": {
+		"prefix": "vcf",
+		"body": [
+			"function ${1:Component}($2) {",
+      "  $4",
+      "  return vine`",
+      "    $3",
+      "  `",
+      "}"
+		],
+		"description": "create vine component function."
+	},
+  "Vine template": {
+		"prefix": "vtpl",
+		"body": [
+			"vine`",
+      "  $0",
+      "`"
+		],
+		"description": "create vine template."
+	},
+  "Quickly insert vineStyle": {
+		"prefix": "vsty",
+		"body": [
+			"vineStyle($1`",
+      "  $2",
+      "`)"
+		],
+		"description": "create vine-style."
+	},
+  "Quickly insert vineStyle.scoped": {
+		"prefix": "vstysc",
+		"body": [
+			"vineStyle.scoped($1`",
+      "  $2",
+      "`)"
+		],
+		"description": "quickly insert vine-style-scoped."
+	},
+  "Quickly insert vineProp": {
+		"prefix": "vpr",
+		"body": [
+			"const ${1:propName} = vineProp<$2>($3)"
+		],
+		"description": "quickly insert vine-prop."
+	},
+  "Quickly insert vineProp.withDefault": {
+		"prefix": "vprdf",
+		"body": [
+			"const ${1:propName} = vineProp.withDefault($2)"
+		],
+		"description": "quickly insert vine-prop-with-default."
+	},
+  "Quickly insert vineProp.optional": {
+		"prefix": "vpr?",
+		"body": [
+			"const ${1:propName} = vineProp.optional<$2>($3)"
+		],
+		"description": "quickly insert vine-prop-optional."
+	},
+  "Quicly insert vineEmits": {
+    "prefix": "vemt",
+    "body": [
+      "const ${1:emit} = vineEmits<{$2}>()",
+    ],
+  }
+}
