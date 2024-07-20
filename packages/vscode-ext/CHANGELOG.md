@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.13
+
+### Patch Changes
+
+- Add Rocking Vine theme
+
 ## 0.1.12
 
 ### Patch Changes
