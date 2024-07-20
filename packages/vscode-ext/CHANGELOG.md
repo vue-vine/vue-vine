@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.14
+
+### Patch Changes
+
+- Improve grammar tokens capture and modify theme.
+
 ## 0.1.13
 
 ### Patch Changes
