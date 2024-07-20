@@ -58,5 +58,11 @@
 			"const ${1:propName} = vineProp.optional<$2>($3)"
 		],
 		"description": "quickly insert vine-prop-optional."
-	}
+	},
+  "Quicly insert vineEmits": {
+    "prefix": "vemt",
+    "body": [
+      "const ${1:emit} = vineEmits<{$2}>()",
+    ],
+  }
 }
