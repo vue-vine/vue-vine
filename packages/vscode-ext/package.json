@@ -86,6 +86,13 @@
         "uiTheme": "vs-dark",
         "path": "./themes/rocking-vine.json"
       }
+    ],
+    "iconThemes": [
+      {
+        "id": "vineIconTheme",
+        "label": "Vue Vine Icon Theme",
+        "path": "./themes/file-icons.json"
+      }
     ]
   },
   "scripts": {

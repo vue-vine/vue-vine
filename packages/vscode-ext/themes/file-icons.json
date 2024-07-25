@@ -1,0 +1,10 @@
+{
+  "iconDefinitions": {
+    "vineFileIcon": {
+      "iconPath": "../assets/ext-icon.png"
+    }
+  },
+  "fileExtensions": {
+    "vine.ts": "vineFileIcon"
+  }
+}
