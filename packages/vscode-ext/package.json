@@ -24,6 +24,11 @@
     "languages": [
       {
         "id": "vine-vue-template",
+        "extensions": [".vine.ts"],
+        "icon": {
+          "light": "./assets/ext-icon.png",
+          "dark": "./assets/ext-icon.png"
+        },
         "configuration": "./language/vine-vue-template-configuration.json"
       }
     ],
@@ -85,13 +90,6 @@
         "label": "Rocking Vine",
         "uiTheme": "vs-dark",
         "path": "./themes/rocking-vine.json"
-      }
-    ],
-    "iconThemes": [
-      {
-        "id": "vineIconTheme",
-        "label": "Vue Vine Icon Theme",
-        "path": "./themes/file-icons.json"
       }
     ]
   },
