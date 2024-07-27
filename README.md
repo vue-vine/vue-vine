@@ -1,6 +1,7 @@
 # Vue Vine
 
-[中文 README](./README-CN.md)
+- [Contribution Guide](./CONTRIBUTING.md)
+- [中文 README](./README-CN.md)
 
 Another style of writing Vue components.
 
