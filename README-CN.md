@@ -1,6 +1,7 @@
 # Vue Vine
 
-[English README](./README.md)
+- [English README](./README.md)
+- [贡献指南](./CONTRIBUTING-zhCN.md)
 
 创造另一种书写 Vue 组件的方式。
 
