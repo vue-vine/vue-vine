@@ -12,7 +12,6 @@ npx nuxi module add @vue-vine/nuxt
 
 That's it! You can now use Vue Vine Module in your Nuxt app ✨
 
-
 ## Contribution
 
 <details>

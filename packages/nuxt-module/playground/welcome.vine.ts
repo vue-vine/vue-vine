@@ -1,5 +1,4 @@
 function Welcome() {
-
   const content = vineProp<string>()
   const counter = ref(0)
 

@@ -10,13 +10,12 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'vueVineNuxtModule',
     compatibility: {
       // Semver version of supported nuxt versions
-      nuxt: '>=3.0.0'
-    }
+      nuxt: '>=3.0.0',
+    },
   },
   // Default configuration options of the Nuxt module
   defaults: {},
   setup(_options, _nuxt) {
-
     _nuxt.options.typescript.tsConfig ||= {}
     _nuxt.options.typescript.tsConfig.compilerOptions ||= {}
     const compilerOptions = _nuxt.options.typescript.tsConfig
