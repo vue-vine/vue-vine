@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="text-align: center;">
     <Welcome content="Nuxt module playground!" />
   </div>
 </template>

@@ -3,6 +3,7 @@
   "prettier.enable": false,
 
   "eslint.useFlatConfig": true,
+  "eslint.experimental.useFlatConfig": true,
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
