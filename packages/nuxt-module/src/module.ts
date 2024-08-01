@@ -1,4 +1,5 @@
 import { defineNuxtModule } from '@nuxt/kit'
+import type { PluginOption } from 'vite'
 import { VineVitePlugin } from 'vue-vine/vite'
 
 // Module options TypeScript interface definition
@@ -26,7 +27,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     _nuxt.hook('vite:extend', async ({ config }) => {
       config.plugins = config.plugins || []
-      config.plugins.unshift(VineVitePlugin())
+      config.plugins.unshift(VineVitePlugin() as PluginOption)
     })
   },
 })
