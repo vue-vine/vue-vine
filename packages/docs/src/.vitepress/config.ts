@@ -100,6 +100,10 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Guide', link: '/introduction/quick-start' },
+          {
+            text: 'Playground',
+            link: 'https://stackblitz.com/github/wzc520pyfm/vine-router-template/tree/main?file=README.md',
+          },
         ],
       },
     },
@@ -109,6 +113,10 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: '指引', link: '/zh/introduction/quick-start' },
+          {
+            text: '演练场',
+            link: 'https://stackblitz.com/github/wzc520pyfm/vine-router-template/tree/main?file=README.md',
+          },
         ],
       },
     },
