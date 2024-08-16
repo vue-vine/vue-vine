@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.15
+
+### Patch Changes
+
+- Fix folding issue for Vine component function in VSCode extension.
+
 ## 0.1.14
 
 ### Patch Changes
