@@ -40,6 +40,13 @@ connection.onInitialize(async (params) => {
   if (debug) {
     plugins.push(...createTypeScriptServices(tsdk.typescript))
   }
+  else {
+    plugins.push(
+      ...createTypeScriptServices(tsdk.typescript).filter(
+        plugin => plugin.name === 'typescript-syntactic',
+      ),
+    )
+  }
 
   const result = await server.initialize(
     params,
