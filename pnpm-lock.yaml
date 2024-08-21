@@ -94,6 +94,9 @@ importers:
       '@vue/compiler-dom':
         specifier: ^3.4.38
         version: 3.4.38
+      '@vue/compiler-ssr':
+        specifier: ^3.4.38
+        version: 3.4.38
       estree-walker:
         specifier: ^2.0.2
         version: 2.0.2
@@ -2437,6 +2440,9 @@ packages:
 
   '@vue/compiler-ssr@3.4.31':
     resolution: {integrity: sha512-RtefmITAje3fJ8FSg1gwgDhdKhZVntIVbwupdyZDSifZTRMiWxWehAOTCc8/KZDnBOcYQ4/9VWxsTbd3wT0hAA==}
+
+  '@vue/compiler-ssr@3.4.38':
+    resolution: {integrity: sha512-YXznKFQ8dxYpAz9zLuVvfcXhc31FSPFDcqr0kyujbOwNhlmaNvL2QfIy+RZeJgSn5Fk54CWoEUeW+NVBAogGaw==}
 
   '@vue/devtools-api@6.5.0':
     resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
@@ -8594,6 +8600,11 @@ snapshots:
       '@vue/compiler-dom': 3.4.31
       '@vue/shared': 3.4.31
 
+  '@vue/compiler-ssr@3.4.38':
+    dependencies:
+      '@vue/compiler-dom': 3.4.38
+      '@vue/shared': 3.4.38
+
   '@vue/devtools-api@6.5.0': {}
 
   '@vue/devtools-api@7.0.25(vue@3.4.21(typescript@5.5.3))':
@@ -8744,7 +8755,7 @@ snapshots:
     dependencies:
       '@volar/typescript': 2.4.0-alpha.15
       '@vue/language-core': 2.0.26(patch_hash=ryiikhzkzgjxansindmgzbjsei)(typescript@5.5.3)
-      '@vue/shared': 3.4.31
+      '@vue/shared': 3.4.38
     transitivePeerDependencies:
       - typescript
 
