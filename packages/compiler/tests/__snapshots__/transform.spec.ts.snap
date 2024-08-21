@@ -48,7 +48,7 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }
@@ -252,7 +252,7 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }
@@ -668,7 +668,7 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }

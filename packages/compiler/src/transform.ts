@@ -530,7 +530,7 @@ export function transformFile(
       ms.length(),
       `export const _rerender_only = ${vineFileCtx.renderOnly}
 export const _rerender_vcf_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
 if (!mod){return;}
 const { _rerender_only, _rerender_vcf_fn_name } = mod;
 if (!_rerender_vcf_fn_name){return;}
