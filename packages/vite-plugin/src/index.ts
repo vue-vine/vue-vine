@@ -43,7 +43,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     onAnalysisEnd: panicOnCompilerError,
   }
 
-  const runCompileScript = (code: string, fileId: string): Partial<TransformResult> => {
+  const runCompileScript = (code: string, fileId: string, ssr: boolean): Partial<TransformResult> => {
     let fileCtxMap: undefined | VineFileCtx
     if (compilerCtx.isRunningHMR) {
       fileCtxMap = compilerCtx.fileCtxMap.get(fileId)
@@ -55,6 +55,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         compilerHooks,
         fileCtxCache: fileCtxMap,
       },
+      ssr,
     )
 
     // Print all warnings
@@ -118,13 +119,14 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         return compiledStyle
       }
     },
-    async transform(code, id) {
+    async transform(code, id, opt) {
+      const ssr = opt?.ssr === true
       const { fileId, query } = parseQuery(id)
       if (!fileId.endsWith('.vine.ts') || query.type === QUERY_TYPE_STYLE) {
         return
       }
 
-      return runCompileScript(code, id)
+      return runCompileScript(code, id, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
       const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
