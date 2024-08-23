@@ -118,5 +118,7 @@ export function compileVineTypeScriptFile(
     compilerOptions?.inlineTemplate ?? true,
   )
 
+  compilerHooks.onEnd?.()
+
   return vineFileCtx
 }
