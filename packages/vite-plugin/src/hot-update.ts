@@ -31,6 +31,7 @@ function reAnalyzeVine(
   const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
   doValidateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
   doAnalyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+  compilerHooks.onEnd?.()
   return vineFileCtx
 }
 

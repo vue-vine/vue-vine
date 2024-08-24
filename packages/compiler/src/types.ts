@@ -54,6 +54,7 @@ export interface VineCompilerHooks {
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
   onValidateEnd?: () => void
   onAnalysisEnd?: () => void
+  onEnd?: () => void
 }
 
 export interface VineCompilerOptions {
