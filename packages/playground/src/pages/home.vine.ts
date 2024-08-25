@@ -3,10 +3,12 @@ import { InsideExample } from '../components/inside-example.vine'
 import { generateRandomString } from '~/utils'
 
 function OutsideExample(props: { id: string }) {
-  vineStyle.scoped(scss`
+  vineStyle(scss`
     .loading-view {
       margin: 1rem 0;
     }
+  `)
+  vineStyle.scoped(`
     .state-container-meta {
       margin-top: 16px;
       font-style: italic;

@@ -87,8 +87,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css";
-import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -170,7 +171,7 @@ export const MyProfile = (() => {
             _withDirectives(
               _createElementVNode(
                 "p",
-                null,
+                { class: "bio" },
                 _toDisplayString(bio.value),
                 513 /* TEXT, NEED_PATCH */,
               ),
@@ -291,8 +292,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css";
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -374,7 +376,7 @@ export const MyProfile = (() => {
             _withDirectives(
               _createElementVNode(
                 "p",
-                null,
+                { class: "bio" },
                 _toDisplayString(bio.value),
                 513 /* TEXT, NEED_PATCH */,
               ),
@@ -469,8 +471,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css";
-import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -575,7 +578,7 @@ export const MyProfile = (() => {
         _withDirectives(
           _createElementVNode(
             "p",
-            null,
+            { class: "bio" },
             _toDisplayString($setup.bio),
             513 /* TEXT, NEED_PATCH */,
           ),

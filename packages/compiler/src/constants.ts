@@ -39,6 +39,7 @@ export const VINE_TAG_TEMPLATE_CALLER = [
 ] as const
 export const CAN_BE_CALLED_MULTI_TIMES_MACROS = [
   'vineModel',
+  'vineStyle',
 ]
 export const SUPPORTED_CSS_LANGS = ['css', 'scss', 'sass', 'less', 'stylus', 'postcss'] as const
 export const VUE_REACTIVITY_APIS = [
