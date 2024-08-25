@@ -12,7 +12,8 @@
     ".": {
       "dev": "./src/index.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "node": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
