@@ -96,7 +96,7 @@ export function compileVineTypeScriptFile(
   code: string,
   fileId: string,
   vineCompileCtx: VineCompileCtx,
-  ssr: boolean,
+  ssr = false,
 ) {
   const { compilerHooks } = vineCompileCtx
   const compilerOptions = compilerHooks.getCompilerCtx().options

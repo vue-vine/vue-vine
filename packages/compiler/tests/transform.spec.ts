@@ -78,7 +78,7 @@ export default async function MyApp() {
 describe('test transform', () => {
   it('inline mode output result', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(testContent, 'testTransformInlineResult', { compilerHooks: mockCompilerHooks }, false)
+    compileVineTypeScriptFile(testContent, 'testTransformInlineResult', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformInlineResult')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
@@ -93,7 +93,7 @@ describe('test transform', () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       inlineTemplate: false,
     })
-    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks }, false)
+    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
@@ -108,7 +108,7 @@ describe('test transform', () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'production',
     })
-    compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', { compilerHooks: mockCompilerHooks }, false)
+    compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testNoHMRContentOnProduction')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
@@ -134,7 +134,7 @@ describe('test transform', () => {
         </div>
       \`
     }`
-    compileVineTypeScriptFile(testContent, 'testHMRContentOnNoStyle', { compilerHooks: mockCompilerHooks }, false)
+    compileVineTypeScriptFile(testContent, 'testHMRContentOnNoStyle', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testHMRContentOnNoStyle')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
