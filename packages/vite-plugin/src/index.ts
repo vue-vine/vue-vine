@@ -113,12 +113,12 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         const fullFileId = `${fileId}.vine.ts`
         const styleSource = compilerCtx.fileCtxMap
           .get(fullFileId)!
-          .styleDefine[query.scopeId]
+          .styleDefine[query.scopeId][query.index]
           .source
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
-            `${fileId /* This is virtual file id */}.vine.ts`,
+          `${fileId /* This is virtual file id */}.vine.ts`,
         )
         return compiledStyle
       }

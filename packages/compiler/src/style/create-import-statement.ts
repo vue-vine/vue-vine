@@ -5,6 +5,7 @@ export function createStyleImportStmt(
   vineFileCtx: VineFileCtx,
   vineCompFnCtx: VineCompFnCtx,
   styleDefine: VineStyleMeta,
+  index: number,
 ) {
   const styleLangExt = getStyleLangFileExt(styleDefine.lang)
   return `import ${showIf(
@@ -22,5 +23,5 @@ export function createStyleImportStmt(
       Boolean(styleDefine.scoped),
       '&scoped=true',
     )
-  }&virtual.${styleLangExt}';`
+  }&index=${index}&virtual.${styleLangExt}';`
 }

@@ -50,11 +50,16 @@ function MyProfile() {
       color: v-bind(textColor);
     }
   \`)
+  vineStyle.scoped(\`
+    .bio {
+      font-size: 12px;
+    }
+  \`)
 
   return vine\`
     <div class="my-profile">
       <div>{{ name }}<span> - {{ age }}</span></div>
-      <p v-show="bio">{{ bio }}</p>
+      <p class="bio" v-show="bio">{{ bio }}</p>
       <button @click="handleRefresh">Refresh</button>
     </div>
   \`
