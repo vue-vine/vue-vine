@@ -64,8 +64,8 @@ function patchModule(
     const oCompFns = oVineCompFns[i]
     const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
     const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
-    const nCompFnsStyle = normalizeLineEndings(nStyleDefine[nCompFns.scopeId]?.source ?? '')
-    const oCompFnsStyle = normalizeLineEndings(oStyleDefine[oCompFns.scopeId]?.source ?? '')
+    const nCompFnsStyles = nStyleDefine[nCompFns.scopeId]?.map(style => style.source ?? '')
+    const oCompFnsStyles = oStyleDefine[oCompFns.scopeId]?.map(style => style.source ?? '')
     // 1. Get component function AST Node range for its code content
     const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode!.start), Number((nCompFns!.fnItselfNode!.end)))
     const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode!.start), Number((oCompFns!.fnItselfNode!.end)))
@@ -73,8 +73,15 @@ function patchModule(
     const nCompFnCodeNonTemplate = nCompFnCode.replace(nCompFnsTemplate, '')
     const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnsTemplate, '')
     // 3. Clean style content
-    const nCompFnCodePure = nCompFnCodeNonTemplate.replace(nCompFnsStyle, '')
-    const oCompFnCodePure = oCompFnCodeNonTemplate.replace(oCompFnsStyle, '')
+    let nCompFnCodePure = nCompFnCodeNonTemplate
+    nCompFnsStyles.forEach((style) => {
+      nCompFnCodePure = nCompFnCodePure.replace(style, '')
+    })
+    let oCompFnCodePure = oCompFnCodeNonTemplate
+    oCompFnsStyles.forEach((style) => {
+      oCompFnCodePure = oCompFnCodePure.replace(style, '')
+    })
+
     // Compare with the remaining characters without style and template interference
     // 4. If not equal, it means that the script has changed
     if (nCompFnCodePure !== oCompFnCodePure) {
@@ -86,7 +93,7 @@ function patchModule(
       patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = true
     }
-    else if (nCompFnsStyle !== oCompFnsStyle) {
+    else if (nCompFnsStyles.join('\n') !== oCompFnsStyles.join('\n')) {
       // script and template equal, then compare style
       const oCssBindingsVariables = Object.keys(oCompFns.cssBindings)
       const nCssBindingsVariables = Object.keys(nCompFns.cssBindings)
