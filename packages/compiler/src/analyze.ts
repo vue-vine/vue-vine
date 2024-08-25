@@ -574,47 +574,50 @@ const analyzeVineStyle: AnalyzeRunner = (
   { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
-  let vineStyleMacroCall: CallExpression | undefined
+  let vineStyleMacroCalls: CallExpression[] = []
   _breakableTraverse(fnItselfNode, (node) => {
     if (isVineStyle(node)) {
-      vineStyleMacroCall = node
-      throw exitTraverse
+      vineStyleMacroCalls.push(node)
     }
   })
   // Our validation has guranteed that `vineStyle` macro call
   // has only one argument, and it maybe a string literal, a template literal,
   // or a tagged template expression.
-  if (!vineStyleMacroCall) {
+  if (!vineStyleMacroCalls.length) {
     return
-  }
-  const macroCalleeName = getVineMacroCalleeName(vineStyleMacroCall)
-  const vineStyleArg = vineStyleMacroCall.arguments[0]
-  if (!vineStyleArg) {
-    return
-  }
-  const { styleLang, styleSource, range } = getVineStyleSource(
-    vineStyleArg as VineStyleValidArg,
-  )
-  const styleMeta: VineStyleMeta = {
-    lang: styleLang,
-    source: styleSource,
-    range,
-    scoped: macroCalleeName === 'vineStyle.scoped',
-    fileCtx: vineFileCtx,
-    compCtx: vineCompFnCtx,
   }
 
-  // Collect style meta
-  if (vineCompFnCtx.scopeId) {
-    vineFileCtx.styleDefine[vineCompFnCtx.scopeId] = styleMeta
-  }
-  // Collect css v-bind
-  const cssvarsValueList = parseCssVars([styleSource])
-  if (cssvarsValueList.length > 0) {
-    vineCompFnCtx.cssBindings ??= {}
-    cssvarsValueList.forEach((value) => {
-      vineCompFnCtx.cssBindings![value] = hashId(`${vineCompFnCtx.fnName}__${value}`)
-    })
+  for (const vineStyleMacroCall of vineStyleMacroCalls) {
+    const macroCalleeName = getVineMacroCalleeName(vineStyleMacroCall)
+    const vineStyleArg = vineStyleMacroCall.arguments[0]
+    if (!vineStyleArg) {
+      return
+    }
+    const { styleLang, styleSource, range } = getVineStyleSource(
+      vineStyleArg as VineStyleValidArg,
+    )
+    const styleMeta: VineStyleMeta = {
+      lang: styleLang,
+      source: styleSource,
+      range,
+      scoped: macroCalleeName === 'vineStyle.scoped',
+      fileCtx: vineFileCtx,
+      compCtx: vineCompFnCtx,
+    }
+
+    // Collect style meta
+    if (vineCompFnCtx.scopeId) {
+      vineFileCtx.styleDefine[vineCompFnCtx.scopeId] ??= []
+      vineFileCtx.styleDefine[vineCompFnCtx.scopeId].push(styleMeta)
+    }
+    // Collect css v-bind
+    const cssvarsValueList = parseCssVars([styleSource])
+    if (cssvarsValueList.length > 0) {
+      vineCompFnCtx.cssBindings ??= {}
+      cssvarsValueList.forEach((value) => {
+        vineCompFnCtx.cssBindings![value] = hashId(`${vineCompFnCtx.fnName}__${value}`)
+      })
+    }
   }
 }
 
