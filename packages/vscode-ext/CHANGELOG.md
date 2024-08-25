@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.16
+
+### Patch Changes
+
+- Support multiple vineStyle macro.
+
 ## 0.1.15
 
 ### Patch Changes

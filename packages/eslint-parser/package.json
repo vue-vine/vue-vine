@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/eslint-parser",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "ESLint parser for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
