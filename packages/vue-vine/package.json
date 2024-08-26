@@ -1,6 +1,6 @@
 {
   "name": "vue-vine",
-  "version": "0.1.14",
+  "version": "0.1.16",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -8,12 +8,14 @@
     ".": {
       "dev": "./src/index.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "node": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
       "import": "./dist/vite.mjs",
-      "require": "./dist/vite.js"
+      "require": "./dist/vite.js",
+      "node": "./dist/index.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"

@@ -48,7 +48,7 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }
@@ -87,8 +87,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&virtual.css";
-import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -170,7 +171,7 @@ export const MyProfile = (() => {
             _withDirectives(
               _createElementVNode(
                 "p",
-                null,
+                { class: "bio" },
                 _toDisplayString(bio.value),
                 513 /* TEXT, NEED_PATCH */,
               ),
@@ -252,7 +253,7 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }
@@ -291,8 +292,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&virtual.css";
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -374,7 +376,7 @@ export const MyProfile = (() => {
             _withDirectives(
               _createElementVNode(
                 "p",
-                null,
+                { class: "bio" },
                 _toDisplayString(bio.value),
                 513 /* TEXT, NEED_PATCH */,
               ),
@@ -469,8 +471,9 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&virtual.css";
-import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -575,7 +578,7 @@ export const MyProfile = (() => {
         _withDirectives(
           _createElementVNode(
             "p",
-            null,
+            { class: "bio" },
             _toDisplayString($setup.bio),
             513 /* TEXT, NEED_PATCH */,
           ),
@@ -668,7 +671,236 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
+  if (!mod) {
+    return;
+  }
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name) {
+    return;
+  }
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});
+"
+`;
+
+exports[`test transform > separated mode output result by ssr 1`] = `
+"import { useDefaults as _useDefaults } from "vue-vine";
+import {
+  ssrRenderStyle as _ssrRenderStyle,
+  ssrRenderAttrs as _ssrRenderAttrs,
+  ssrInterpolate as _ssrInterpolate,
+  ssrRenderComponent as _ssrRenderComponent,
+} from "vue/server-renderer";
+import {
+  mergeProps as _mergeProps,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  useSlots as _useSlots,
+  useModel as _useModel,
+  toRefs as _toRefs,
+} from "vue";
+
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
+
+import { ref } from "vue";
+import someDefaultExport from "some-module-1";
+import { someNamedExport } from "some-module-2";
+import * as someNamespaceExport from "some-module-3";
+import type { SomeType } from "some-module-4";
+import { someExternalFunction1, someExternalFunction2 } from "some-module-4";
+
+const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
+const v2 = ref(0);
+
+someExternalFunction2();
+
+export const MyProfile = (() => {
+  const __vine = _defineComponent({
+    name: "MyProfile",
+    props: {
+      name: { required: true },
+      age: { required: true },
+      bio: {
+        /* Simple prop */
+      },
+      modelValue: { default: "test" },
+      modelModifiers: {},
+      title: { default: "" },
+      titleModifiers: {},
+      count: {},
+      countModifiers: {},
+    },
+    emits: [
+      "somethingChange",
+      "update:modelValue",
+      "update:title",
+      "update:count",
+    ],
+    setup(__props, { emit: __emit, expose: __expose }) {
+      const props = _useDefaults(__props, {
+        age: 18,
+      });
+      const { name, age, bio } = _toRefs(props);
+
+      _useCssVars((_ctx) => ({
+        "601ae0ef": _ctx.textColor,
+      }));
+
+      const defaultModelWithValue = _useModel(__props, "modelValue");
+      const title = _useModel(__props, "title");
+      const count = _useModel(__props, "count");
+      const mySlots = _useSlots();
+      const emits = __emit;
+
+      const textColor = ref("#1c1c1c");
+      const handleRefresh = () => {
+        // ...
+      };
+
+      __expose({
+        age,
+        bio,
+      });
+
+      return {
+        name,
+        age,
+        bio,
+        defaultModelWithValue,
+        title,
+        count,
+        emits,
+        textColor,
+        handleRefresh,
+        ref,
+        someDefaultExport,
+        someNamedExport,
+        someNamespaceExport,
+        someExternalFunction1,
+        someExternalFunction2,
+        v1,
+        v2,
+        MyProfile,
+        MyApp,
+      };
+    },
+  });
+  function __sfc_ssr_render(
+    _ctx,
+    _push,
+    _parent,
+    _attrs,
+    $props,
+    $setup,
+    $data,
+    $options,
+  ) {
+    _push(
+      \`<div\${_ssrRenderAttrs(
+        _mergeProps({ class: "my-profile" }, _attrs),
+      )} data-v-25e4e706><div data-v-25e4e706>\${_ssrInterpolate(
+        $setup.name,
+      )}<span data-v-25e4e706> - \${_ssrInterpolate(
+        $setup.age,
+      )}</span></div><p class="bio" style="\${_ssrRenderStyle(
+        $setup.bio ? null : { display: "none" },
+      )}" data-v-25e4e706>\${_ssrInterpolate(
+        $setup.bio,
+      )}</p><button data-v-25e4e706>Refresh</button></div>\`,
+    );
+  }
+  __vine.ssrRender = __sfc_ssr_render;
+  __vine.__scopeId = "data-v-25e4e706";
+  __vine.__hmrId = "25e4e706";
+
+  return __vine;
+})();
+
+export const MyApp = (() => {
+  const __vine = _defineComponent({
+    name: "MyApp",
+    /* No props */
+    /* No emits */
+    async setup(__props, { expose: __expose }) {
+      __expose();
+      let __temp, __restore;
+      const props = __props;
+      const data =
+        (([__temp, __restore] = _withAsyncContext(() =>
+          fetch("https://api.sampleapis.com/futurama/characters"),
+        )),
+        (__temp = await __temp),
+        __restore(),
+        __temp);
+
+      return {
+        data,
+        ref,
+        someDefaultExport,
+        someNamedExport,
+        someNamespaceExport,
+        someExternalFunction1,
+        someExternalFunction2,
+        v1,
+        v2,
+        MyProfile,
+        MyApp,
+      };
+    },
+  });
+  function __sfc_ssr_render(
+    _ctx,
+    _push,
+    _parent,
+    _attrs,
+    $props,
+    $setup,
+    $data,
+    $options,
+  ) {
+    _push(
+      \`<div\${_ssrRenderAttrs(
+        _mergeProps({ class: "my-app" }, _attrs),
+      )} data-v-b909f216><h2 data-v-b909f216>Hello world</h2>\`,
+    );
+    _push(
+      _ssrRenderComponent(
+        $setup["MyProfile"],
+        {
+          name: "Tomy",
+          age: 24,
+        },
+        null,
+        _parent,
+      ),
+    );
+    _push(\`</div>\`);
+  }
+  __vine.ssrRender = __sfc_ssr_render;
+  __vine.__scopeId = "data-v-b909f216";
+  __vine.__hmrId = "b909f216";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+
+export default MyApp;
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+export const _rerender_only = false;
+export const _rerender_vcf_fn_name = "";
+import.meta.hot?.accept((mod) => {
   if (!mod) {
     return;
   }

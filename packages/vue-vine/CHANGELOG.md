@@ -1,5 +1,23 @@
 # vue-vine
 
+## 0.1.17
+
+### Patch Changes
+
+- Support multiple vineStyle macro.
+
+## 0.1.16
+
+### Patch Changes
+
+- Fix package exports specification for Node ESM and error capture in Vite plugin.
+
+## 0.1.15
+
+### Patch Changes
+
+- Fix folding issue for Vine component function in VSCode extension.
+
 ## 0.1.14
 
 ### Patch Changes

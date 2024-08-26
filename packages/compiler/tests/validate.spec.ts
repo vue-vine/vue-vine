@@ -90,7 +90,6 @@ function App() {
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
-          "Multiple \`vineStyle\` calls are not allowed inside Vine component function",
           "Multiple \`vineEmits\` calls are not allowed inside Vine component function",
           "Multiple \`vineExpose\` calls are not allowed inside Vine component function",
           "Multiple \`vineOptions\` calls are not allowed inside Vine component function",
