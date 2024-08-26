@@ -93,7 +93,7 @@ function patchModule(
       patchRes.hmrCompFnsName = nCompFns.fnName
       newVFCtx.renderOnly = true
     }
-    else if (nCompFnsStyles.join('\n') !== oCompFnsStyles.join('\n')) {
+    else if (!areStrArraysEqual(nCompFnsStyles, oCompFnsStyles)) {
       // script and template equal, then compare style
       const oCssBindingsVariables = Object.keys(oCompFns.cssBindings)
       const nCssBindingsVariables = Object.keys(nCompFns.cssBindings)

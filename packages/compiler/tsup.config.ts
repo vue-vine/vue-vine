@@ -9,6 +9,7 @@ export default defineConfig({
     'estree-walker',
     'magic-string',
     '@vue/compiler-dom',
+    '@vue/compiler-ssr',
     'merge-source-map',
     'postcss',
     'postcss-selector-parser',
