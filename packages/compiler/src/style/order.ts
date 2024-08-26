@@ -92,12 +92,16 @@ export function sortStyleImport(vineFileCtx: VineFileCtx) {
       fnCompCtx => [fnCompCtx, styleDefine[fnCompCtx.scopeId]] as const,
     )
     .map(
-      ([fnCompCtx, styleMeta]) => createStyleImportStmt(
-        vineFileCtx,
-        fnCompCtx,
-        styleMeta,
+      ([fnCompCtx, styleMetas]) => styleMetas.map(
+        (styleMeta, i) => createStyleImportStmt(
+          vineFileCtx,
+          fnCompCtx,
+          styleMeta,
+          i,
+        ),
       ),
     )
+    .flat()
 
   return sortedStyleImportStmts
 }

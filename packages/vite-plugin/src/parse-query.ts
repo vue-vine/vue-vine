@@ -5,6 +5,7 @@ export interface VineQuery {
   scopeId: string
   scoped: boolean
   lang: string
+  index: number
 }
 type VineQueryRaw = Record<keyof VineQuery, string>
 
@@ -16,6 +17,7 @@ export function parseQuery(id: string) {
     lang: rawQuery.lang,
     scopeId: rawQuery.scopeId,
     scoped: rawQuery.scoped === 'true',
+    index: Number(rawQuery.index),
   }
 
   return {

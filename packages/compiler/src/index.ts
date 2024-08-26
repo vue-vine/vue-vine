@@ -120,5 +120,7 @@ export function compileVineTypeScriptFile(
     ssr,
   )
 
+  compilerHooks.onEnd?.()
+
   return vineFileCtx
 }

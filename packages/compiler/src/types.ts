@@ -54,6 +54,7 @@ export interface VineCompilerHooks {
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
   onValidateEnd?: () => void
   onAnalysisEnd?: () => void
+  onEnd?: () => void
 }
 
 export interface VineCompilerOptions {
@@ -121,7 +122,7 @@ export interface VineFileCtx {
   userImports: Record<string, VineUserImport>
   vueImportAliases: Record<string, string>
   /** key: `scopeId` => value: `VineStyleMeta` */
-  styleDefine: Record<string, VineStyleMeta>
+  styleDefine: Record<string, VineStyleMeta[]>
   /**
    * We assume that all import statments are at top of this file,
    * record the end line of these imports

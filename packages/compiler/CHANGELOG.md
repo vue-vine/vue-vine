@@ -1,5 +1,17 @@
 # @vue-vine/compiler
 
+## 0.1.17
+
+### Patch Changes
+
+- Support multiple vineStyle macro.
+
+## 0.1.16
+
+### Patch Changes
+
+- Fix package exports specification for Node ESM and error capture in Vite plugin.
+
 ## 0.1.12
 
 ### Patch Changes
