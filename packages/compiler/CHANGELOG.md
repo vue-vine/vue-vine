@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.18
+
+### Patch Changes
+
+- Fix HMR style update after support multiple vineStyle.
+
 ## 0.1.17
 
 ### Patch Changes
