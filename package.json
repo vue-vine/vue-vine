@@ -26,6 +26,7 @@
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test",
+    "test:nuxt": "pnpm --filter @vue-vine/nuxt run test",
     "lint": "pnpm run build:eslint-parser && eslint .",
     "lint:fix": "pnpm lint --fix",
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
@@ -63,7 +64,7 @@
     "typescript": "^5.5.3",
     "vite": "^5.2.8",
     "vitest": "^1.6.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.25"
   },
   "pnpm": {
     "overrides": {
