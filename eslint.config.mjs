@@ -25,6 +25,7 @@ export default antfu(
     files: [
       'packages/e2e-test/**/*.vine.ts',
       'packages/playground/**/*.vine.ts',
+      'packages/nuxt-module/playground/**/*.vine.ts',
     ],
     languageOptions: {
       parser: VueVineESLintParser,
