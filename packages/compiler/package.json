@@ -30,7 +30,8 @@
   "dependencies": {
     "@babel/parser": "^7.24.0",
     "@babel/types": "^7.24.0",
-    "@vue/compiler-dom": "^3.4.31",
+    "@vue/compiler-dom": "^3.4.38",
+    "@vue/compiler-ssr": "^3.4.38",
     "estree-walker": "^2.0.2",
     "hash-sum": "^2.0.0",
     "line-column": "^1.0.2",

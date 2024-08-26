@@ -188,6 +188,7 @@ export function transformFile(
   vineFileCtx: VineFileCtx,
   compilerHooks: VineCompilerHooks,
   inline = true,
+  ssr = false,
 ) {
   const isDev = compilerHooks.getCompilerCtx().options.envMode !== 'production'
   const ms = vineFileCtx.fileMagicCode
@@ -205,8 +206,8 @@ export function transformFile(
     generatedPreambleStmts,
     compileSetupFnReturns,
   } = inline // Get template composer based on inline option
-    ? createInlineTemplateComposer(compilerHooks)
-    : createSeparatedTemplateComposer(compilerHooks)
+    ? createInlineTemplateComposer(compilerHooks, ssr)
+    : createSeparatedTemplateComposer(compilerHooks, ssr)
 
   // Traverse all component functions and transform them into IIFE
   for (const vineCompFnCtx of vineFileCtx.vineCompFns) {
@@ -501,7 +502,7 @@ export function transformFile(
           // render function to the component object.
           : `${
             templateCompileResults.get(vineCompFnCtx) ?? ''
-          }\n__vine.render = __sfc_render`
+          }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
         }\n${
           showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
@@ -530,7 +531,7 @@ export function transformFile(
       ms.length(),
       `export const _rerender_only = ${vineFileCtx.renderOnly}
 export const _rerender_vcf_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
-import.meta.hot.accept((mod) => {
+import.meta.hot?.accept((mod) => {
 if (!mod){return;}
 const { _rerender_only, _rerender_vcf_fn_name } = mod;
 if (!_rerender_vcf_fn_name){return;}
