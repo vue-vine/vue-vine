@@ -1,4 +1,5 @@
 import { parse as VueCompilerDomParse, compile } from '@vue/compiler-dom'
+import { compile as ssrCompile } from '@vue/compiler-ssr'
 import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
@@ -12,8 +13,10 @@ import { VineBindingTypes } from '../constants'
 export function compileVineTemplate(
   source: string,
   params: Partial<CompilerOptions>,
+  ssr: boolean,
 ) {
-  return compile(source, {
+  const _compile = ssr ? ssrCompile : compile
+  return _compile(source, {
     mode: 'module',
     hoistStatic: true,
     cacheHandlers: true,
@@ -100,13 +103,13 @@ function saveImportSpecifier(
   }
 }
 
-function isExportRenderFnNode(node: Node): node is ExportNamedDeclaration {
+function isExportRenderFnNode(node: Node, ssr = false): node is ExportNamedDeclaration {
   if (!isExportNamedDeclaration(node)) {
     return false
   }
   return (
     isFunctionDeclaration(node.declaration)
-    && node.declaration.id?.name === 'render'
+    && node.declaration.id?.name === (ssr ? 'ssrRender' : 'render')
   )
 }
 
@@ -164,6 +167,7 @@ function computeTemplateErrLocation(
 
 export function createSeparatedTemplateComposer(
   compilerHooks: VineCompilerHooks,
+  ssr: boolean,
 ): TemplateCompileComposer {
   const templateCompileResults: WeakMap<VineCompFnCtx, string> = new WeakMap()
   const generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]> = new WeakMap()
@@ -213,6 +217,7 @@ export function createSeparatedTemplateComposer(
             )
           },
         },
+        ssr,
       )
       vineFnCompCtx.templateAst = hasTemplateCompileErr
         ? undefined
@@ -238,7 +243,7 @@ export function createSeparatedTemplateComposer(
           // Skip import statements
           continue
         }
-        else if (isExportRenderFnNode(codeStmt)) {
+        else if (isExportRenderFnNode(codeStmt, ssr)) {
           exportRenderFnNode = codeStmt
           continue
         }
@@ -264,8 +269,8 @@ export function createSeparatedTemplateComposer(
           exportRenderFnNode.start!,
           exportRenderFnNode.end!,
         ).replace(
-          'export function render',
-          'function __sfc_render',
+          ssr ? 'export function ssrRender' : 'export function render',
+          ssr ? 'function __sfc_ssr_render' : 'function __sfc_render',
         ),
       )
 
@@ -316,6 +321,7 @@ export function createSeparatedTemplateComposer(
 
 export function createInlineTemplateComposer(
   compilerHooks: VineCompilerHooks,
+  ssr: boolean,
 ): TemplateCompileComposer {
   const templateCompileResults: WeakMap<VineCompFnCtx, string> = new WeakMap()
   const generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]> = new WeakMap()
@@ -364,6 +370,7 @@ export function createInlineTemplateComposer(
             )
           },
         },
+        ssr,
       )
 
       const { preamble, code, ast } = compileResult

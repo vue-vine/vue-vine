@@ -109,6 +109,21 @@ describe('test transform', () => {
     expect(formated).toMatchSnapshot()
   })
 
+  it('separated mode output result by ssr', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      inlineTemplate: false,
+    })
+    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks }, true)
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
+
   it('not output HMR content in non-dev mode', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'production',
