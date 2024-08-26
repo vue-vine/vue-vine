@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.19
+
+### Patch Changes
+
+- Update version with SSR support features.
+
 ## 0.1.18
 
 ### Patch Changes

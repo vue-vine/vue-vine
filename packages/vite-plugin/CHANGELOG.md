@@ -1,5 +1,12 @@
 # @vue-vine/vite-plugin
 
+## 0.1.19
+
+### Patch Changes
+
+- Update version with SSR support features.
+- Fix again HMR style update after support multiple vineStyle.
+
 ## 0.1.18
 
 ### Patch Changes
