@@ -45,9 +45,13 @@ vineOptions({
 
 ## `vineStyle` {#vinestyle}
 
+:::tip 🧩 建议
+由于样式代码一写起来就会非常长，因此其实我们并不推荐使用这个宏，而是推荐你采用类似 [UnoCSS](https://unocss.dev)、[TailwindCSS](https://tailwindcss.com) 等原子化 CSS 方案或是导入外部样式表。
+:::
+
 这是一个用于定义样式的宏，替代了 SFC 的 `<style>` 块。如果您的组件需要 `scoped`，可以使用 `vineStyle.scoped`。
 
-在 VCF 外部不允许调用 `vineStyle`，在一个 VCF 中不允许调用多次。
+在 VCF 外部不允许调用 `vineStyle`，在一个 VCF 中可以调用多次，因为你可能在组件中想要同时提供 scoped 和非 scoped 样式。
 
 您还可以指定任何您想要的 CSS 处理器语言，查看下面的示例：
 
