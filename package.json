@@ -45,7 +45,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^2.22.0",
     "@baiwusanyu/utils-log": "^1.0.15",
-    "@changesets/cli": "^2.26.2",
+    "@changesets/cli": "^2.27.7",
     "@types/node": "^20.11.27",
     "@vitest/coverage-v8": "^1.6.0",
     "@vue-vine/eslint-parser": "workspace:*",

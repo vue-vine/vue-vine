@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.20
+
+### Patch Changes
+
+- fix vite-plugin read styleDefine of undefined.
+
 ## 0.1.19
 
 ### Patch Changes
