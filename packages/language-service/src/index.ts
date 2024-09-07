@@ -86,24 +86,6 @@ export function createVueVineLanguagePlugin(
         }
       }
     },
-    updateVirtualCode(uriOrFileName, _oldVirtualCode, newSnapshot) {
-      try {
-        const moduleId = String(uriOrFileName)
-        const newSnapshotVineCode = createVueVineCode(
-          ts,
-          moduleId,
-          newSnapshot,
-          compilerOptions,
-          vueCompilerOptions,
-          target,
-        )
-        return newSnapshotVineCode
-      }
-      catch (err) {
-        VLS_ErrorLog(err, 'updateVirtualCode')
-        return _oldVirtualCode
-      }
-    },
     typescript: {
       extraFileExtensions: [],
       getServiceScript(root) {
