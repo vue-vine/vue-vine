@@ -2,7 +2,6 @@ import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import type { LanguagePlugin } from '@volar/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import {
-  FileMap,
   createParsedCommandLine,
   createVueLanguagePlugin,
   resolveVueCompilerOptions,
@@ -36,18 +35,9 @@ export function run() {
         languagePlugins.push(
           createVueLanguagePlugin<string>(
             ts,
-            id => id,
-            () => '',
-            (fileName) => {
-              const fileMap = new FileMap(runTscOptions.host?.useCaseSensitiveFileNames?.() ?? false)
-              const vueFiles = runTscOptions.rootNames.map(rootName => rootName.replace(windowsPathReg, '/'))
-              for (const vueFileName of vueFiles) {
-                fileMap.set(vueFileName, undefined)
-              }
-              return fileMap.has(fileName)
-            },
             runTscOptions.options,
             vueOptions,
+            id => id,
           ),
         )
 

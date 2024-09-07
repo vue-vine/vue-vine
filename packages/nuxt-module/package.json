@@ -46,6 +46,6 @@
     "@nuxt/test-utils": "^3.13.1",
     "changelogen": "^0.5.5",
     "nuxt": "^3.12.4",
-    "vue-tsc": "^2.0.26"
+    "vue-tsc": "^2.1.6"
   }
 }

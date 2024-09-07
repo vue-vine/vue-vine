@@ -221,6 +221,9 @@ function createVueVineCode(
         },
         scriptSetupBindingNames: new Set(),
         scriptSetupImportComponentNames: new Set(),
+        templateRefNames: new Set(),
+        inheritAttrs: false,
+        edited: false,
       })
 
       for (const segment of generatedTemplate) {

@@ -71,7 +71,6 @@
       "vscode-uri": "^3.0.8"
     },
     "patchedDependencies": {
-      "@vue/language-core@2.0.26": "patches/@vue__language-core@2.0.26.patch"
     }
   },
   "simple-git-hooks": {

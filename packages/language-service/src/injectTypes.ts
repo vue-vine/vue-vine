@@ -1,12 +1,16 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import { VineBindingTypes } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
-import { generateGlobalTypes as vueLangCoreGenerateGlobalTypes } from '@vue/language-core/lib/codegen/script/globalTypes'
+import { generateGlobalTypes as vueLangCoreGenerateGlobalTypes } from '@vue/language-core/lib/codegen/globalTypes'
 
 export function generateGlobalTypes(
   vueCompilerOptions: VueCompilerOptions,
 ) {
-  let globalTypes = vueLangCoreGenerateGlobalTypes(vueCompilerOptions)
+  let globalTypes = vueLangCoreGenerateGlobalTypes(
+    vueCompilerOptions.lib,
+    vueCompilerOptions.target,
+    vueCompilerOptions.strictTemplates,
+  )
 
   // Replace __VLS_Element
   globalTypes = globalTypes
