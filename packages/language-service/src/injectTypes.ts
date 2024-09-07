@@ -69,8 +69,9 @@ export function generateVLSContext(
   )
 
   const __VINE_CONTEXT_TYPES = `
-type __CTX_TYPES_FROM_FORMAL_PARAMS = ${vineCompFn.getPropsTypeRecordStr('; ')
-    };
+type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
+  vineCompFn.getPropsTypeRecordStr('; ')
+};
 type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
   __CTX_TYPES_FROM_BINDING,
   __CTX_TYPES_FROM_FORMAL_PARAMS
