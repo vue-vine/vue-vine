@@ -12,6 +12,7 @@ import type {
   VineFileCtx,
   VineProcessorLang,
 } from '@vue-vine/compiler'
+import type { TransformPluginContext } from 'rollup'
 import type { VineQuery } from './parse-query'
 import { parseQuery } from './parse-query'
 import { vineHMR } from './hot-update'
@@ -23,27 +24,30 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     envMode: options.envMode ?? (process.env.NODE_ENV || 'development'),
     inlineTemplate: options.inlineTemplate ?? process.env.NODE_ENV === 'production',
   })
-  const panicOnCompilerError = () => {
+
+  const panicOnCompilerError = (pluginContext: TransformPluginContext) => {
     if (compilerCtx.vineCompileErrors.length > 0) {
       const allErrMsg = compilerCtx.vineCompileErrors
         .map(diagnositc => diagnositc.full)
         .join('\n')
       compilerCtx.vineCompileErrors.length = 0
-      throw new Error(
+      pluginContext.error(new Error(
         `Vue Vine compilation failed:\n${allErrMsg}`,
-      )
+      ))
     }
   }
+
+  let transformPluginContext: TransformPluginContext
+
   const compilerHooks: VineCompilerHooks = {
     getCompilerCtx: () => compilerCtx,
     onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
     onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
     onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
-    onValidateEnd: panicOnCompilerError,
-    onAnalysisEnd: panicOnCompilerError,
+    onEnd: () => panicOnCompilerError(transformPluginContext),
   }
 
-  const runCompileScript = (code: string, fileId: string): Partial<TransformResult> => {
+  const runCompileScript = (code: string, fileId: string, ssr: boolean): Partial<TransformResult> => {
     let fileCtxMap: undefined | VineFileCtx
     if (compilerCtx.isRunningHMR) {
       fileCtxMap = compilerCtx.fileCtxMap.get(fileId)
@@ -55,6 +59,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         compilerHooks,
         fileCtxCache: fileCtxMap,
       },
+      ssr,
     )
 
     // Print all warnings
@@ -65,6 +70,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
+
     return {
       code: vineFileCtx.fileMagicCode.toString(),
       map: vineFileCtx.fileMagicCode.generateMap({
@@ -107,24 +113,27 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
         const fullFileId = `${fileId}.vine.ts`
         const styleSource = compilerCtx.fileCtxMap
-          .get(fullFileId)!
-          .styleDefine[query.scopeId]
-          .source
+          .get(fullFileId)?.styleDefine[query.scopeId][query.index]
+          .source ?? ''
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
-            `${fileId /* This is virtual file id */}.vine.ts`,
+          `${fileId /* This is virtual file id */}.vine.ts`,
         )
         return compiledStyle
       }
     },
-    async transform(code, id) {
+    async transform(code, id, opt) {
+      const ssr = opt?.ssr === true
       const { fileId, query } = parseQuery(id)
       if (!fileId.endsWith('.vine.ts') || query.type === QUERY_TYPE_STYLE) {
         return
       }
 
-      return runCompileScript(code, id)
+      // eslint-disable-next-line ts/no-this-alias
+      transformPluginContext = this
+
+      return runCompileScript(code, id, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
       const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)

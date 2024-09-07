@@ -349,7 +349,8 @@ function MyComp() {
     expect(vineFnComp?.cssBindings).toEqual({
       color: '7aa07bf2',
     })
-    const styleDefine = fileCtx?.styleDefine[scopeId]
+    const styleDefines = fileCtx?.styleDefine[scopeId]
+    const styleDefine = styleDefines?.[0]
     expect(styleDefine?.lang).toBe('scss')
     expect(styleDefine?.scoped).toBe(true)
   })
@@ -477,8 +478,8 @@ function MyBox() {
     const sorted = sortStyleImport(fileCtx!)
     expect(sorted).toMatchInlineSnapshot(`
       [
-        "import 'testSortStyleImport?type=vine-style&scopeId=939fb36a&comp=MyApp&lang=css&virtual.css';",
-        "import 'testSortStyleImport?type=vine-style&scopeId=939fac16&comp=MyBox&lang=scss&scoped=true&virtual.scss';",
+        "import 'testSortStyleImport?type=vine-style&scopeId=939fb36a&comp=MyApp&lang=css&index=0&virtual.css';",
+        "import 'testSortStyleImport?type=vine-style&scopeId=939fac16&comp=MyBox&lang=scss&scoped=true&index=0&virtual.scss';",
       ]
     `)
   })

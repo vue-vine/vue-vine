@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/playground",
+  "type": "module",
   "private": true,
   "packageManager": "pnpm@9.0.6",
   "scripts": {
@@ -12,7 +13,7 @@
   "dependencies": {
     "@vueuse/core": "^9.13.0",
     "sass": "^1.66.1",
-    "vue": "^3.4.21",
+    "vue": "^3.4.25",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {

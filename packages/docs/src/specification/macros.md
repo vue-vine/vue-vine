@@ -45,9 +45,13 @@ vineOptions({
 
 ## `vineStyle`
 
+:::tip 🧩 Suggestion
+Due to the fact that style code can be very long to write, we as library authors actually don't recommend using this macro, but recommend you to use atomic CSS solutions like [UnoCSS](https://unocss.dev), [TailwindCSS](https://tailwindcss.com), or import external stylesheets.
+:::
+
 It's a macro for defining styles, alternative to SFC's `<style>` block. If you need `scoped` for your component, you can use `vineStyle.scoped` instead.
 
-`vineStyle` is not allowed to be called outside a VCF, and it's not allowed to be called more than once in a VCF.
+`vineStyle` is not allowed to be called outside a VCF, but it's allowed to be called more than once in a VCF, because you may want to provide both scoped and non-scoped styles in a component.
 
 You can also specify any CSS processor language you want, check the examples below:
 

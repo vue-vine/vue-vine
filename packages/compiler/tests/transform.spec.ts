@@ -50,11 +50,16 @@ function MyProfile() {
       color: v-bind(textColor);
     }
   \`)
+  vineStyle.scoped(\`
+    .bio {
+      font-size: 12px;
+    }
+  \`)
 
   return vine\`
     <div class="my-profile">
       <div>{{ name }}<span> - {{ age }}</span></div>
-      <p v-show="bio">{{ bio }}</p>
+      <p class="bio" v-show="bio">{{ bio }}</p>
       <button @click="handleRefresh">Refresh</button>
     </div>
   \`
@@ -94,6 +99,21 @@ describe('test transform', () => {
       inlineTemplate: false,
     })
     compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
+
+  it('separated mode output result by ssr', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      inlineTemplate: false,
+    })
+    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks }, true)
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''

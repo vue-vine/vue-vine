@@ -1,5 +1,41 @@
 # vue-vine
 
+## 0.1.20
+
+### Patch Changes
+
+- fix vite-plugin read styleDefine of undefined.
+
+## 0.1.19
+
+### Patch Changes
+
+- Update version with SSR support features.
+
+## 0.1.18
+
+### Patch Changes
+
+- Fix HMR style update after support multiple vineStyle.
+
+## 0.1.17
+
+### Patch Changes
+
+- Support multiple vineStyle macro.
+
+## 0.1.16
+
+### Patch Changes
+
+- Fix package exports specification for Node ESM and error capture in Vite plugin.
+
+## 0.1.15
+
+### Patch Changes
+
+- Fix folding issue for Vine component function in VSCode extension.
+
 ## 0.1.14
 
 ### Patch Changes

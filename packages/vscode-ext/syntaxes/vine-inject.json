@@ -20,13 +20,14 @@
     },
     {
       "name": "source.css.embedded.ts",
-      "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(`)",
+      "begin": "(vineStyle)(?:(\\.)(scoped))?(\\()(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
         "1": { "name": "support.name.macro.vine-style.ts" },
         "2": { "name": "punctuation.accessor.ts" },
-        "3": { "name": "meta.brace.round.ts" },
-        "4": { "name": "punctuation.definition.string.begin.vine-css.ts" }
+        "3": { "name": "support.name.macro.vine-style-scoped.ts" },
+        "4": { "name": "meta.brace.round.ts" },
+        "5": { "name": "punctuation.definition.string.begin.vine-css.ts" }
       },
       "end": "(`)(?:\\s*)(\\))",
       "endCaptures": {

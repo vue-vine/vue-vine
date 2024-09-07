@@ -1,5 +1,17 @@
 # vue-vine-extension
 
+## 0.1.16
+
+### Patch Changes
+
+- Support multiple vineStyle macro.
+
+## 0.1.15
+
+### Patch Changes
+
+- Fix folding issue for Vine component function
+
 ## 0.1.14
 
 ### Patch Changes

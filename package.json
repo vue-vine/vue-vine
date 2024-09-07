@@ -26,6 +26,7 @@
     "test:compiler": "pnpm --filter @vue-vine/compiler run test",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test",
     "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test",
+    "test:nuxt": "pnpm --filter @vue-vine/nuxt run test",
     "lint": "pnpm run build:eslint-parser && eslint .",
     "lint:fix": "pnpm lint --fix",
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
@@ -37,13 +38,14 @@
     "update:deps": "esno scripts/update-deps.js",
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/eslint-parser --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:ext": "pnpm --filter vue-vine-extension run publish:ext",
-    "publish:all": "pnpm publish:core && pnpm publish:ext",
-    "publish:tsc": "pnpm --filter vue-vine-tsc publish"
+    "publish:main": "pnpm publish:core && pnpm publish:ext",
+    "publish:tsc": "pnpm --filter vue-vine-tsc publish",
+    "publish:nuxt": "pnpm --filter @vue-vine/nuxt publish"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.22.0",
     "@baiwusanyu/utils-log": "^1.0.15",
-    "@changesets/cli": "^2.26.2",
+    "@changesets/cli": "^2.27.7",
     "@types/node": "^20.11.27",
     "@vitest/coverage-v8": "^1.6.0",
     "@vue-vine/eslint-parser": "workspace:*",
@@ -62,7 +64,7 @@
     "typescript": "^5.5.3",
     "vite": "^5.2.8",
     "vitest": "^1.6.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.25"
   },
   "pnpm": {
     "overrides": {

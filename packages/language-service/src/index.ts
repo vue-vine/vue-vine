@@ -298,36 +298,38 @@ function createVueVineCode(
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {
-    for (const { lang, source: bableParsedSource, range, compCtx } of Object.values(
+    for (const styleDefines of Object.values(
       vineFileCtx.styleDefine,
     )) {
-      if (!range) {
-        return
-      }
+      for (const { lang, source: bableParsedSource, range, compCtx } of styleDefines) {
+        if (!range) {
+          return
+        }
 
-      // String content parsed by @babel/parser would always be LF,
-      // But for Volar location mapping we need to turn it back to CRLF.
-      const source = vineFileCtx.isCRLF
-        ? turnBackToCRLF(bableParsedSource)
-        : bableParsedSource
+        // String content parsed by @babel/parser would always be LF,
+        // But for Volar location mapping we need to turn it back to CRLF.
+        const source = vineFileCtx.isCRLF
+          ? turnBackToCRLF(bableParsedSource)
+          : bableParsedSource
 
-      yield {
-        id: `${compCtx.fnName}_style_${lang}`.toLowerCase(),
-        languageId: lang,
-        snapshot: {
-          getText: (start, end) => source.slice(start, end),
-          getLength: () => source.length,
-          getChangeRange: () => undefined,
-        },
-        mappings: [
-          {
-            sourceOffsets: [range[0]],
-            generatedOffsets: [0],
-            lengths: [source.length],
-            data: FULL_FEATURES,
+        yield {
+          id: `${compCtx.fnName}_style_${lang}`.toLowerCase(),
+          languageId: lang,
+          snapshot: {
+            getText: (start, end) => source.slice(start, end),
+            getLength: () => source.length,
+            getChangeRange: () => undefined,
           },
-        ],
-        embeddedCodes: [],
+          mappings: [
+            {
+              sourceOffsets: [range[0]],
+              generatedOffsets: [0],
+              lengths: [source.length],
+              data: FULL_FEATURES,
+            },
+          ],
+          embeddedCodes: [],
+        }
       }
     }
   }

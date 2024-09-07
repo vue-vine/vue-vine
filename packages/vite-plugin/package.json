@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/vite-plugin",
-  "version": "0.1.14",
+  "version": "0.1.20",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -10,6 +10,8 @@
   ],
   "exports": {
     ".": {
+      "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     }
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@types/hash-sum": "^1.0.0",
+    "rollup": "^4.21.0",
     "vite": "^5.2.10"
   },
   "publishConfig": {

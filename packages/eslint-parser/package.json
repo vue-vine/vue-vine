@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/eslint-parser",
-  "version": "0.1.14",
+  "version": "0.1.20",
   "description": "ESLint parser for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -12,7 +12,8 @@
     ".": {
       "dev": "./src/index.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "node": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
