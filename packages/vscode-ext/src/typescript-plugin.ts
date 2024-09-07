@@ -1,6 +1,6 @@
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
-import { createParsedCommandLine, createParsedCommandLineByJson } from '@vue/language-core'
+import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
 import { posix as path } from 'path';
 
 const windowsPathReg = /\\/g;
@@ -26,7 +26,7 @@ const plugin = createLanguageServicePlugin((ts, info) => {
       return vueOptions;
     }
     else {
-      const { vueOptions } = createParsedCommandLineByJson(ts, ts.sys, info.languageServiceHost.getCurrentDirectory(), {}, undefined, true);
+      const vueOptions = resolveVueCompilerOptions({});
       vueOptions.__setupedGlobalTypes = setupGlobalTypes(info.languageServiceHost.getCurrentDirectory(), vueOptions, ts.sys);
       return vueOptions;
     }
