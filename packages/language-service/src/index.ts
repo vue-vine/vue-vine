@@ -157,8 +157,9 @@ function createVueVineCode(
         }
 
         const tempVarName = getVineTempPropName(propName)
-        const tempVarDecl = `const ${tempVarName} = (${vineFileCtx.getAstNodeContent(defaultValueExpr)
-          });`
+        const tempVarDecl = `const ${tempVarName} = (${
+          vineFileCtx.getAstNodeContent(defaultValueExpr)
+        });`
         tempVarDecls.push(tempVarDecl)
         propMeta.typeAnnotationRaw = `typeof ${tempVarName}`
       })
