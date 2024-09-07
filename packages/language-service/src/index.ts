@@ -50,7 +50,7 @@ const FULL_FEATURES = {
 interface VineLanguagePluginOptions {
   compilerOptions: ts.CompilerOptions
   vueCompilerOptions: VueCompilerOptions
-  target: 'extension' | 'tsc'
+  target?: 'extension' | 'tsc'
 }
 
 export function createVueVineLanguagePlugin(
@@ -60,7 +60,7 @@ export function createVueVineLanguagePlugin(
   const {
     compilerOptions,
     vueCompilerOptions,
-    target,
+    target = 'extension',
   } = options
 
   return {
