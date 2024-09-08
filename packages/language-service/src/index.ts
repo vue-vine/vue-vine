@@ -21,7 +21,7 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
 } from '@babel/types'
-import { generateVLSContext } from './injectTypes'
+import { LINKED_CODE_LEFT, LINKED_CODE_RIGHT, generateVLSContext } from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
 import type { VueVineCode } from './shared'
 import { VLS_ErrorLog, getVineTempPropName, turnBackToCRLF } from './shared'
@@ -242,6 +242,21 @@ function createVueVineCode(
 
   const tsCode = toString(tsCodeSegments)
   const tsCodeMappings = buildMappings(tsCodeSegments)
+  const linkedCodeLeftIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_LEFT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
+  const linkedCodeRightIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_RIGHT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
+  const linkedCodeMappings: Mapping[] = []
+
+  for (let i = 0; i < linkedCodeLeftIndexes.length; i++) {
+    const start = linkedCodeLeftIndexes[i] + LINKED_CODE_LEFT.length
+    const end = linkedCodeRightIndexes[i] + LINKED_CODE_RIGHT.length
+    const length = linkedCodeRightIndexes[i] - start - ': '.length
+    linkedCodeMappings.push({
+      sourceOffsets: [start],
+      generatedOffsets: [end],
+      lengths: [length],
+      data: undefined,
+    })
+  }
 
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
@@ -259,6 +274,7 @@ function createVueVineCode(
       },
     },
     mappings: tsCodeMappings,
+    linkedCodeMappings,
     embeddedCodes: [
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),

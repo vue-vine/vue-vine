@@ -58,6 +58,9 @@ export function generateGlobalTypes(
   return globalTypes
 }
 
+export const LINKED_CODE_LEFT = '/**__LINKED_CODE_LEFT__**/'
+export const LINKED_CODE_RIGHT = '/**__LINKED_CODE_RIGHT__**/'
+
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
 ): string {
@@ -78,7 +81,7 @@ type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
   __CTX_TYPES_FROM_FORMAL_PARAMS
 >>;
 const __VLS_ctx = __createVineVLSCtx({
-${notPropsBindings.map(([name]) => `  ${name},`).join('\n')}
+${notPropsBindings.map(([name]) => `  ${LINKED_CODE_LEFT}${name}: ${LINKED_CODE_RIGHT}${name},`).join('\n')}
   ...props as any as ${vineCompFn.getPropsTypeRecordStr('; ')},
 });
 `
