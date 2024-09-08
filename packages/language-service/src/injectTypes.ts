@@ -16,7 +16,7 @@ export function setupGlobalTypes(rootDir: string, vueOptions: VueCompilerOptions
     while (!host.fileExists(path.join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
       const parentDir = path.dirname(dir)
       if (dir === parentDir) {
-        return new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
+        throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
       }
       dir = parentDir
     }
