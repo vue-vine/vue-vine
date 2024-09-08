@@ -1,3 +1,4 @@
+import { posix as path } from 'node:path'
 import {
   createConnection,
   createServer,
@@ -9,7 +10,6 @@ import type * as ts from 'typescript'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
-import { posix as path } from 'path'
 
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'

@@ -120,7 +120,7 @@ function createVueVineCode(
   } = createVineFileCtx(sourceFileName, content)
   const tsCodeSegments: Segment<CodeInformation>[] = []
 
-  tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`);
+  tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
 
   let currentOffset = 0
 
