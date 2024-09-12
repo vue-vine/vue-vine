@@ -58,8 +58,8 @@ export function generateGlobalTypes(
   return globalTypes
 }
 
-export const LINKED_CODE_LEFT = '/**__LINKED_CODE_LEFT__**/'
-export const LINKED_CODE_RIGHT = '/**__LINKED_CODE_RIGHT__**/'
+export const LINKED_CODE_LEFT = '/* __LINKED_CODE_LEFT__ */'
+export const LINKED_CODE_RIGHT = '/* __LINKED_CODE_RIGHT__ */'
 
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
