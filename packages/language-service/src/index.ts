@@ -213,6 +213,15 @@ function createVueVineCode(
           segment[3].structure = false
           segment[3].format = false
 
+          if (
+            typeof segment[3].completion === 'object'
+            && segment[3].completion.isAdditional
+            && !segment[3].completion.onlyImport
+          ) {
+            // fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
+            segment[3].completion.onlyImport = true;
+          }
+
           tsCodeSegments.push([
             segment[0],
             undefined,
