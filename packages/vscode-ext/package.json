@@ -106,6 +106,6 @@
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.1.6"
+    "@vue/language-core": "~2.1.6-patch.1"
   }
 }
