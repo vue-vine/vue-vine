@@ -21,11 +21,14 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
 } from '@babel/types'
-import { generateGlobalTypes, generateVLSContext } from './injectTypes'
+import { LINKED_CODE_LEFT, LINKED_CODE_RIGHT, generateVLSContext } from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
 import type { VueVineCode } from './shared'
-import { VLS_ErrorLog, VLS_InfoLog, getVineTempPropName, turnBackToCRLF } from './shared'
+import { VLS_ErrorLog, getVineTempPropName, turnBackToCRLF } from './shared'
 
+export {
+  setupGlobalTypes,
+} from './injectTypes'
 export {
   isVueVineVirtualCode,
 } from './shared'
@@ -59,10 +62,6 @@ export function createVueVineLanguagePlugin(
     vueCompilerOptions,
     target = 'extension',
   } = options
-  const printLog = target === 'extension'
-    ? VLS_InfoLog
-    : () => { /* NOOP */ }
-  let globalTypesHolder: string | undefined
 
   return {
     getLanguageId() {
@@ -71,11 +70,6 @@ export function createVueVineLanguagePlugin(
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
       const moduleId = String(uriOrFileName)
       if (moduleId.endsWith('.vine.ts') && langaugeId === 'typescript') {
-        if (!moduleId.startsWith('volar_virtual_code://')) {
-          globalTypesHolder ??= moduleId
-          printLog('globalTypesHolder =', moduleId)
-        }
-
         try {
           const virtualCode = createVueVineCode(
             ts,
@@ -83,31 +77,13 @@ export function createVueVineLanguagePlugin(
             snapshot,
             compilerOptions,
             vueCompilerOptions,
-            globalTypesHolder === moduleId,
+            target,
           )
           return virtualCode
         }
         catch (err) {
           VLS_ErrorLog(err, 'createVirtualCode')
         }
-      }
-    },
-    updateVirtualCode(uriOrFileName, _oldVirtualCode, newSnapshot) {
-      try {
-        const moduleId = String(uriOrFileName)
-        const newSnapshotVineCode = createVueVineCode(
-          ts,
-          moduleId,
-          newSnapshot,
-          compilerOptions,
-          vueCompilerOptions,
-          globalTypesHolder === moduleId,
-        )
-        return newSnapshotVineCode
-      }
-      catch (err) {
-        VLS_ErrorLog(err, 'updateVirtualCode')
-        return _oldVirtualCode
       }
     },
     typescript: {
@@ -133,7 +109,7 @@ function createVueVineCode(
   snapshot: ts.IScriptSnapshot,
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
-  withGlobalTypes: boolean,
+  target: 'extension' | 'tsc',
 ): VueVineCode {
   const content = snapshot.getText(0, snapshot.getLength())
 
@@ -143,6 +119,8 @@ function createVueVineCode(
     vineFileCtx,
   } = createVineFileCtx(sourceFileName, content)
   const tsCodeSegments: Segment<CodeInformation>[] = []
+
+  tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
 
   let currentOffset = 0
 
@@ -221,6 +199,9 @@ function createVueVineCode(
         },
         scriptSetupBindingNames: new Set(),
         scriptSetupImportComponentNames: new Set(),
+        edited: target === 'extension',
+        inheritAttrs: false,
+        templateRefNames: new Set(),
       })
 
       for (const segment of generatedTemplate) {
@@ -231,6 +212,15 @@ function createVueVineCode(
           // TODO: fix in upstream
           segment[3].structure = false
           segment[3].format = false
+
+          if (
+            typeof segment[3].completion === 'object'
+            && segment[3].completion.isAdditional
+            && !segment[3].completion.onlyImport
+          ) {
+            // fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
+            segment[3].completion.onlyImport = true
+          }
 
           tsCodeSegments.push([
             segment[0],
@@ -253,11 +243,6 @@ function createVueVineCode(
   }
   generateScriptUntil(snapshot.getLength())
 
-  if (withGlobalTypes) {
-    const globalTypes = generateGlobalTypes(vueCompilerOptions)
-    tsCodeSegments.push(globalTypes)
-  }
-
   replaceAll(
     tsCodeSegments,
     /__VLS_/g,
@@ -266,6 +251,21 @@ function createVueVineCode(
 
   const tsCode = toString(tsCodeSegments)
   const tsCodeMappings = buildMappings(tsCodeSegments)
+  const linkedCodeLeftIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_LEFT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
+  const linkedCodeRightIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_RIGHT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
+  const linkedCodeMappings: Mapping[] = []
+
+  for (let i = 0; i < linkedCodeLeftIndexes.length; i++) {
+    const start = linkedCodeLeftIndexes[i] + LINKED_CODE_LEFT.length
+    const end = linkedCodeRightIndexes[i] + LINKED_CODE_RIGHT.length
+    const length = linkedCodeRightIndexes[i] - start - ': '.length
+    linkedCodeMappings.push({
+      sourceOffsets: [start],
+      generatedOffsets: [end],
+      lengths: [length],
+      data: undefined,
+    })
+  }
 
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
@@ -283,6 +283,7 @@ function createVueVineCode(
       },
     },
     mappings: tsCodeMappings,
+    linkedCodeMappings,
     embeddedCodes: [
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),

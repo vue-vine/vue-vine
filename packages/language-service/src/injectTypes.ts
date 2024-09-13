@@ -1,12 +1,41 @@
+import { posix as path } from 'node:path'
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import { VineBindingTypes } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
-import { generateGlobalTypes as vueLangCoreGenerateGlobalTypes } from '@vue/language-core/lib/codegen/script/globalTypes'
+import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
+
+export function setupGlobalTypes(rootDir: string, vueOptions: VueCompilerOptions, host: {
+  fileExists: (path: string) => boolean
+  writeFile?: (path: string, data: string) => void
+}) {
+  if (!host.writeFile) {
+    return false
+  }
+  try {
+    let dir = rootDir
+    while (!host.fileExists(path.join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
+      const parentDir = path.dirname(dir)
+      if (dir === parentDir) {
+        throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
+      }
+      dir = parentDir
+    }
+    const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_${vueOptions.strictTemplates}.d.ts`)
+    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions.lib, vueOptions.target, vueOptions.strictTemplates)}`
+    host.writeFile(globalTypesPath, globalTypesContents)
+    return true
+  }
+  catch {
+    return false
+  }
+}
 
 export function generateGlobalTypes(
-  vueCompilerOptions: VueCompilerOptions,
+  lib: string,
+  target: number,
+  strictTemplates: boolean,
 ) {
-  let globalTypes = vueLangCoreGenerateGlobalTypes(vueCompilerOptions)
+  let globalTypes = _generateGlobalTypes(lib, target, strictTemplates)
 
   // Replace __VLS_Element
   globalTypes = globalTypes
@@ -24,8 +53,13 @@ export function generateGlobalTypes(
     `,
   )
 
+  globalTypes = globalTypes.replace(/__VLS_/g, '__VINE_VLS_')
+
   return globalTypes
 }
+
+export const LINKED_CODE_LEFT = '/* __LINKED_CODE_LEFT__ */'
+export const LINKED_CODE_RIGHT = '/* __LINKED_CODE_RIGHT__ */'
 
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
@@ -47,9 +81,14 @@ type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
   __CTX_TYPES_FROM_FORMAL_PARAMS
 >>;
 const __VLS_ctx = __createVineVLSCtx({
-${notPropsBindings.map(([name]) => `  ${name},`).join('\n')}
+${notPropsBindings.map(([name]) => `  ${LINKED_CODE_LEFT}${name}: ${LINKED_CODE_RIGHT}${name},`).join('\n')}
   ...props as any as ${vineCompFn.getPropsTypeRecordStr('; ')},
 });
+const __VLS_localComponents = __VLS_ctx;
+const __VLS_components = {
+  ...{} as __VLS_GlobalComponents,
+  ...__VLS_localComponents,
+};
 `
 
   return __VINE_CONTEXT_TYPES

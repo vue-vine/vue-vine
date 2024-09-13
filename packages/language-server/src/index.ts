@@ -1,3 +1,4 @@
+import { posix as path } from 'node:path'
 import {
   createConnection,
   createServer,
@@ -12,7 +13,7 @@ import { create as createTypeScriptServices } from 'volar-service-typescript'
 
 import type { VueCompilerOptions } from '@vue/language-core'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
-import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import { createVineDiagnostics } from './plugins/vine-diagnostics'
 import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
 
@@ -73,7 +74,8 @@ connection.onInitialize(async (params) => {
     let compilerOptions: ts.CompilerOptions = {}
     let vueCompilerOptions: VueCompilerOptions
     if (configFileName) {
-      const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, configFileName)
+      const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, configFileName, true)
+      vueOptions.__setupedGlobalTypes = setupGlobalTypes(path.dirname(configFileName), vueOptions, tsdk.typescript.sys)
       vueCompilerOptions = resolveVueCompilerOptions(vueOptions)
       compilerOptions = options
     }
