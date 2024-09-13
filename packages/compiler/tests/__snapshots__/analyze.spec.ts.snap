@@ -857,7 +857,7 @@ exports[`test Vine compiler analyze > analyze vine slots definition 1`] = `
 
 exports[`test Vine compiler analyze > analyze vine template 1`] = `
 {
-  "cached": 0,
+  "cached": [],
   "children": [
     {
       "children": [
@@ -1470,34 +1470,48 @@ exports[`test Vine compiler analyze > analyze vine template 1`] = `
 
 exports[`test Vine compiler analyze > analyze vine template 2`] = `
 {
-  "cached": 0,
-  "children": [
+  "cached": [
     {
-      "children": [
-        {
-          "children": [
-            {
-              "content": "Test inner content",
-              "loc": {
-                "end": {
-                  "column": 30,
-                  "line": 3,
-                  "offset": 64,
+      "index": 0,
+      "loc": {
+        "end": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+        "source": "",
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "needArraySpread": false,
+      "needPauseTracking": false,
+      "type": 20,
+      "value": {
+        "elements": [
+          {
+            "children": [
+              {
+                "content": "Test inner content",
+                "loc": {
+                  "end": {
+                    "column": 30,
+                    "line": 3,
+                    "offset": 64,
+                  },
+                  "source": "Test inner content",
+                  "start": {
+                    "column": 12,
+                    "line": 3,
+                    "offset": 46,
+                  },
                 },
-                "source": "Test inner content",
-                "start": {
-                  "column": 12,
-                  "line": 3,
-                  "offset": 46,
-                },
+                "type": 2,
               },
-              "type": 2,
-            },
-          ],
-          "codegenNode": {
-            "constType": 2,
-            "content": "_hoisted_1",
-            "hoisted": {
+            ],
+            "codegenNode": {
               "children": {
                 "content": "Test inner content",
                 "loc": {
@@ -1538,7 +1552,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
               "tag": ""div"",
               "type": 13,
             },
-            "isStatic": false,
             "loc": {
               "end": {
                 "column": 36,
@@ -1552,7 +1565,93 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                 "offset": 41,
               },
             },
-            "type": 4,
+            "ns": 0,
+            "props": [],
+            "tag": "div",
+            "tagType": 0,
+            "type": 1,
+          },
+        ],
+        "loc": {
+          "end": {
+            "column": 1,
+            "line": 1,
+            "offset": 0,
+          },
+          "source": "",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0,
+          },
+        },
+        "type": 17,
+      },
+    },
+  ],
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "content": "Test inner content",
+              "loc": {
+                "end": {
+                  "column": 30,
+                  "line": 3,
+                  "offset": 64,
+                },
+                "source": "Test inner content",
+                "start": {
+                  "column": 12,
+                  "line": 3,
+                  "offset": 46,
+                },
+              },
+              "type": 2,
+            },
+          ],
+          "codegenNode": {
+            "children": {
+              "content": "Test inner content",
+              "loc": {
+                "end": {
+                  "column": 30,
+                  "line": 3,
+                  "offset": 64,
+                },
+                "source": "Test inner content",
+                "start": {
+                  "column": 12,
+                  "line": 3,
+                  "offset": 46,
+                },
+              },
+              "type": 2,
+            },
+            "directives": undefined,
+            "disableTracking": false,
+            "dynamicProps": undefined,
+            "isBlock": false,
+            "isComponent": false,
+            "loc": {
+              "end": {
+                "column": 36,
+                "line": 3,
+                "offset": 70,
+              },
+              "source": "<div>Test inner content</div>",
+              "start": {
+                "column": 7,
+                "line": 3,
+                "offset": 41,
+              },
+            },
+            "patchFlag": -1,
+            "props": undefined,
+            "tag": ""div"",
+            "type": 13,
           },
           "loc": {
             "end": {
@@ -1643,53 +1742,87 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                 },
                 "newline": false,
                 "params": undefined,
-                "returns": [
-                  {
-                    "children": [
+                "returns": {
+                  "index": 0,
+                  "loc": {
+                    "end": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                    "source": "",
+                    "start": {
+                      "column": 1,
+                      "line": 1,
+                      "offset": 0,
+                    },
+                  },
+                  "needArraySpread": false,
+                  "needPauseTracking": false,
+                  "type": 20,
+                  "value": {
+                    "elements": [
                       {
-                        "content": "Test inner content",
-                        "loc": {
-                          "end": {
-                            "column": 30,
-                            "line": 3,
-                            "offset": 64,
+                        "children": [
+                          {
+                            "content": "Test inner content",
+                            "loc": {
+                              "end": {
+                                "column": 30,
+                                "line": 3,
+                                "offset": 64,
+                              },
+                              "source": "Test inner content",
+                              "start": {
+                                "column": 12,
+                                "line": 3,
+                                "offset": 46,
+                              },
+                            },
+                            "type": 2,
                           },
-                          "source": "Test inner content",
-                          "start": {
-                            "column": 12,
-                            "line": 3,
-                            "offset": 46,
+                        ],
+                        "codegenNode": {
+                          "children": {
+                            "content": "Test inner content",
+                            "loc": {
+                              "end": {
+                                "column": 30,
+                                "line": 3,
+                                "offset": 64,
+                              },
+                              "source": "Test inner content",
+                              "start": {
+                                "column": 12,
+                                "line": 3,
+                                "offset": 46,
+                              },
+                            },
+                            "type": 2,
                           },
-                        },
-                        "type": 2,
-                      },
-                    ],
-                    "codegenNode": {
-                      "constType": 2,
-                      "content": "_hoisted_1",
-                      "hoisted": {
-                        "children": {
-                          "content": "Test inner content",
+                          "directives": undefined,
+                          "disableTracking": false,
+                          "dynamicProps": undefined,
+                          "isBlock": false,
+                          "isComponent": false,
                           "loc": {
                             "end": {
-                              "column": 30,
+                              "column": 36,
                               "line": 3,
-                              "offset": 64,
+                              "offset": 70,
                             },
-                            "source": "Test inner content",
+                            "source": "<div>Test inner content</div>",
                             "start": {
-                              "column": 12,
+                              "column": 7,
                               "line": 3,
-                              "offset": 46,
+                              "offset": 41,
                             },
                           },
-                          "type": 2,
+                          "patchFlag": -1,
+                          "props": undefined,
+                          "tag": ""div"",
+                          "type": 13,
                         },
-                        "directives": undefined,
-                        "disableTracking": false,
-                        "dynamicProps": undefined,
-                        "isBlock": false,
-                        "isComponent": false,
                         "loc": {
                           "end": {
                             "column": 36,
@@ -1703,47 +1836,29 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                             "offset": 41,
                           },
                         },
-                        "patchFlag": -1,
-                        "props": undefined,
-                        "tag": ""div"",
-                        "type": 13,
+                        "ns": 0,
+                        "props": [],
+                        "tag": "div",
+                        "tagType": 0,
+                        "type": 1,
                       },
-                      "isStatic": false,
-                      "loc": {
-                        "end": {
-                          "column": 36,
-                          "line": 3,
-                          "offset": 70,
-                        },
-                        "source": "<div>Test inner content</div>",
-                        "start": {
-                          "column": 7,
-                          "line": 3,
-                          "offset": 41,
-                        },
-                      },
-                      "type": 4,
-                    },
+                    ],
                     "loc": {
                       "end": {
-                        "column": 36,
-                        "line": 3,
-                        "offset": 70,
+                        "column": 1,
+                        "line": 1,
+                        "offset": 0,
                       },
-                      "source": "<div>Test inner content</div>",
+                      "source": "",
                       "start": {
-                        "column": 7,
-                        "line": 3,
-                        "offset": 41,
+                        "column": 1,
+                        "line": 1,
+                        "offset": 0,
                       },
                     },
-                    "ns": 0,
-                    "props": [],
-                    "tag": "div",
-                    "tagType": 0,
-                    "type": 1,
+                    "type": 17,
                   },
-                ],
+                },
                 "type": 18,
               },
             },
@@ -2041,53 +2156,87 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
             },
             "newline": false,
             "params": undefined,
-            "returns": [
-              {
-                "children": [
+            "returns": {
+              "index": 0,
+              "loc": {
+                "end": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+                "source": "",
+                "start": {
+                  "column": 1,
+                  "line": 1,
+                  "offset": 0,
+                },
+              },
+              "needArraySpread": false,
+              "needPauseTracking": false,
+              "type": 20,
+              "value": {
+                "elements": [
                   {
-                    "content": "Test inner content",
-                    "loc": {
-                      "end": {
-                        "column": 30,
-                        "line": 3,
-                        "offset": 64,
+                    "children": [
+                      {
+                        "content": "Test inner content",
+                        "loc": {
+                          "end": {
+                            "column": 30,
+                            "line": 3,
+                            "offset": 64,
+                          },
+                          "source": "Test inner content",
+                          "start": {
+                            "column": 12,
+                            "line": 3,
+                            "offset": 46,
+                          },
+                        },
+                        "type": 2,
                       },
-                      "source": "Test inner content",
-                      "start": {
-                        "column": 12,
-                        "line": 3,
-                        "offset": 46,
+                    ],
+                    "codegenNode": {
+                      "children": {
+                        "content": "Test inner content",
+                        "loc": {
+                          "end": {
+                            "column": 30,
+                            "line": 3,
+                            "offset": 64,
+                          },
+                          "source": "Test inner content",
+                          "start": {
+                            "column": 12,
+                            "line": 3,
+                            "offset": 46,
+                          },
+                        },
+                        "type": 2,
                       },
-                    },
-                    "type": 2,
-                  },
-                ],
-                "codegenNode": {
-                  "constType": 2,
-                  "content": "_hoisted_1",
-                  "hoisted": {
-                    "children": {
-                      "content": "Test inner content",
+                      "directives": undefined,
+                      "disableTracking": false,
+                      "dynamicProps": undefined,
+                      "isBlock": false,
+                      "isComponent": false,
                       "loc": {
                         "end": {
-                          "column": 30,
+                          "column": 36,
                           "line": 3,
-                          "offset": 64,
+                          "offset": 70,
                         },
-                        "source": "Test inner content",
+                        "source": "<div>Test inner content</div>",
                         "start": {
-                          "column": 12,
+                          "column": 7,
                           "line": 3,
-                          "offset": 46,
+                          "offset": 41,
                         },
                       },
-                      "type": 2,
+                      "patchFlag": -1,
+                      "props": undefined,
+                      "tag": ""div"",
+                      "type": 13,
                     },
-                    "directives": undefined,
-                    "disableTracking": false,
-                    "dynamicProps": undefined,
-                    "isBlock": false,
-                    "isComponent": false,
                     "loc": {
                       "end": {
                         "column": 36,
@@ -2101,47 +2250,29 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                         "offset": 41,
                       },
                     },
-                    "patchFlag": -1,
-                    "props": undefined,
-                    "tag": ""div"",
-                    "type": 13,
+                    "ns": 0,
+                    "props": [],
+                    "tag": "div",
+                    "tagType": 0,
+                    "type": 1,
                   },
-                  "isStatic": false,
-                  "loc": {
-                    "end": {
-                      "column": 36,
-                      "line": 3,
-                      "offset": 70,
-                    },
-                    "source": "<div>Test inner content</div>",
-                    "start": {
-                      "column": 7,
-                      "line": 3,
-                      "offset": 41,
-                    },
-                  },
-                  "type": 4,
-                },
+                ],
                 "loc": {
                   "end": {
-                    "column": 36,
-                    "line": 3,
-                    "offset": 70,
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
                   },
-                  "source": "<div>Test inner content</div>",
+                  "source": "",
                   "start": {
-                    "column": 7,
-                    "line": 3,
-                    "offset": 41,
+                    "column": 1,
+                    "line": 1,
+                    "offset": 0,
                   },
                 },
-                "ns": 0,
-                "props": [],
-                "tag": "div",
-                "tagType": 0,
-                "type": 1,
+                "type": 17,
               },
-            ],
+            },
             "type": 18,
           },
         },
@@ -2308,52 +2439,8 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
     Symbol(withCtx),
     Symbol(openBlock),
     Symbol(createBlock),
-    Symbol(pushScopeId),
-    Symbol(popScopeId),
   },
-  "hoists": [
-    {
-      "children": {
-        "content": "Test inner content",
-        "loc": {
-          "end": {
-            "column": 30,
-            "line": 3,
-            "offset": 64,
-          },
-          "source": "Test inner content",
-          "start": {
-            "column": 12,
-            "line": 3,
-            "offset": 46,
-          },
-        },
-        "type": 2,
-      },
-      "directives": undefined,
-      "disableTracking": false,
-      "dynamicProps": undefined,
-      "isBlock": false,
-      "isComponent": false,
-      "loc": {
-        "end": {
-          "column": 36,
-          "line": 3,
-          "offset": 70,
-        },
-        "source": "<div>Test inner content</div>",
-        "start": {
-          "column": 7,
-          "line": 3,
-          "offset": 41,
-        },
-      },
-      "patchFlag": -1,
-      "props": undefined,
-      "tag": ""div"",
-      "type": 13,
-    },
-  ],
+  "hoists": [],
   "imports": [],
   "loc": {
     "end": {

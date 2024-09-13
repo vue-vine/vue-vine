@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.21
+
+### Patch Changes
+
+- Update Vue language tools to v2.1.6
+
 ## 0.1.20
 
 ### Patch Changes

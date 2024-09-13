@@ -7,7 +7,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "vue": "^3.4.25"
+    "vue": "^3.5.3"
   },
   "devDependencies": {
     "@tsconfig/node18": "^2.0.1",

@@ -5,26 +5,12 @@ exports[`test transform > hmrId should be generated If there is no style 1`] = `
   createElementVNode as _createElementVNode,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
 } from "vue";
 
 export const About = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-ba945b60"), (n = n()), _popScopeId(), n
-  );
-  const _hoisted_1 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "About page",
-      -1 /* HOISTED */,
-    ),
-  );
-  const _hoisted_2 = [_hoisted_1];
   const __vine = _defineComponent({
     name: "About",
     /* No props */
@@ -34,7 +20,17 @@ export const About = (() => {
       const props = __props;
 
       return (_ctx, _cache) => {
-        return _openBlock(), _createElementBlock("div", null, _hoisted_2);
+        return (
+          _openBlock(),
+          _createElementBlock(
+            "div",
+            null,
+            _cache[0] ||
+              (_cache[0] = [
+                _createElementVNode("h2", null, "About page", -1 /* HOISTED */),
+              ]),
+          )
+        );
       };
     },
   });
@@ -76,8 +72,6 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
@@ -104,9 +98,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3921d7bd"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
@@ -195,18 +186,7 @@ export const MyProfile = (() => {
 })();
 
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-9c121b96"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -227,7 +207,13 @@ export const MyApp = (() => {
         return (
           _openBlock(),
           _createElementBlock("div", _hoisted_1, [
-            _hoisted_2,
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "h2",
+                null,
+                "Hello world",
+                -1 /* HOISTED */,
+              )),
             _createVNode(MyProfile, {
               name: "Tomy",
               age: 24,
@@ -281,8 +267,6 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
@@ -309,9 +293,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3b48c990"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
@@ -399,18 +380,7 @@ export const MyProfile = (() => {
 })();
 
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-c5a474f0"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -431,7 +401,13 @@ export const MyApp = (() => {
         return (
           _openBlock(),
           _createElementBlock("div", _hoisted_1, [
-            _hoisted_2,
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "h2",
+                null,
+                "Hello world",
+                -1 /* HOISTED */,
+              )),
             _createVNode(MyProfile, {
               name: "Tomy",
               age: 24,
@@ -461,8 +437,6 @@ import {
   withDirectives as _withDirectives,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   useSlots as _useSlots,
@@ -488,9 +462,6 @@ const v2 = ref(0);
 someExternalFunction2();
 
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-25e4e706"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
@@ -600,18 +571,7 @@ export const MyProfile = (() => {
 })();
 
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-b909f216"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -647,7 +607,13 @@ export const MyApp = (() => {
     return (
       _openBlock(),
       _createElementBlock("div", _hoisted_1, [
-        _hoisted_2,
+        _cache[0] ||
+          (_cache[0] = _createElementVNode(
+            "h2",
+            null,
+            "Hello world",
+            -1 /* HOISTED */,
+          )),
         _createVNode($setup["MyProfile"], {
           name: "Tomy",
           age: 24,
