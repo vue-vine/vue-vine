@@ -86,8 +86,8 @@ ${notPropsBindings.map(([name]) => `  ${LINKED_CODE_LEFT}${name}: ${LINKED_CODE_
 });
 const __VLS_localComponents = __VLS_ctx;
 const __VLS_components = {
-  ...__VLS_localComponents,
   ...{} as __VLS_GlobalComponents,
+  ...__VLS_localComponents,
 };
 `
 
