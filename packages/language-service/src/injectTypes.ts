@@ -84,6 +84,11 @@ const __VLS_ctx = __createVineVLSCtx({
 ${notPropsBindings.map(([name]) => `  ${LINKED_CODE_LEFT}${name}: ${LINKED_CODE_RIGHT}${name},`).join('\n')}
   ...props as any as ${vineCompFn.getPropsTypeRecordStr('; ')},
 });
+const __VLS_localComponents = __VLS_ctx;
+const __VLS_components = {
+  ...__VLS_localComponents,
+  ...{} as __VLS_GlobalComponents,
+};
 `
 
   return __VINE_CONTEXT_TYPES
