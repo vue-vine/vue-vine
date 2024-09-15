@@ -398,6 +398,8 @@ const analyzeVineProps: AnalyzeRunner = (
     })
   }
   else if (formalParams.length === 0) {
+    vineCompFnCtx.propsDefinitionBy = 'macro'
+
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
     allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
@@ -407,6 +409,7 @@ const analyzeVineProps: AnalyzeRunner = (
         isRequired: macroCalleeName !== 'vineProp.optional',
         isBool: false,
         typeAnnotationRaw: 'any',
+        declaredIdentifier: propVarIdentifier,
       }
 
       if (macroCalleeName === 'vineProp.withDefault') {
@@ -862,6 +865,13 @@ function analyzeFileImportStmts(
   vineFileCtx.importsLastLine = lastImportStmt.loc
 }
 
+export function createLinkedCodeTag(
+  side: 'left' | 'right',
+  itemLength: number,
+) {
+  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
+}
+
 function buildVineCompFnCtx(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
@@ -895,6 +905,7 @@ function buildVineCompFnCtx(
     templateStringNode,
     templateReturn,
     templateSource,
+    propsDefinitionBy: 'annotaion',
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},
@@ -906,10 +917,17 @@ function buildVineCompFnCtx(
     cssBindings: {},
     hoistSetupStmts: [],
 
-    getPropsTypeRecordStr(joinStr = ', '): string {
+    getPropsTypeRecordStr({
+      joinStr = ', ',
+      isNeedLinkedCodeTag = false,
+    } = {}): string {
       return `{ ${
         Object.entries(this.props).map(
-          ([propName, propMeta]) => `${propName}: ${propMeta.typeAnnotationRaw}`,
+          ([propName, propMeta]) => `${
+            isNeedLinkedCodeTag
+              ? `${createLinkedCodeTag('left', propName.length)}${propName}`
+              : propName
+            }: ${propMeta.typeAnnotationRaw}`,
         ).join(joinStr)
       } }`
     },

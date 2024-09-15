@@ -21,7 +21,12 @@ import type {
   FunctionDeclaration,
   FunctionExpression,
 } from '@babel/types'
-import { LINKED_CODE_LEFT, LINKED_CODE_RIGHT, generateVLSContext } from './injectTypes'
+import {
+  LINKED_CODE_TAG_PREFIX,
+  LINKED_CODE_TAG_SUFFIX,
+  createLinkedCodeTag,
+  generateVLSContext,
+} from './injectTypes'
 import { createVineFileCtx } from './vine-ctx'
 import type { VueVineCode } from './shared'
 import { VLS_ErrorLog, getVineTempPropName, turnBackToCRLF } from './shared'
@@ -103,6 +108,41 @@ export function createVueVineLanguagePlugin(
   }
 }
 
+const LINKED_CODE_LEFT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_LEFT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
+const LINKED_CODE_RIGHT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_RIGHT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
+function escapeStrForRegExp(str: string) {
+  return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+function getLinkedCodeTagMatch(matched: RegExpExecArray) {
+  return {
+    index: matched.index,
+    tagLength: matched[0]?.length ?? 0,
+    itemLength: Number(matched.groups?.itemLength ?? 0),
+  }
+}
+function getLinkedCodeMappings(tsCode: string): Mapping[] {
+  const linkedCodeMappings: Mapping[] = []
+
+  const linkedCodeLeftFounds = [...tsCode.matchAll(LINKED_CODE_LEFT_REGEXP)].map(getLinkedCodeTagMatch)
+  const linkedCodeRightFounds = [...tsCode.matchAll(LINKED_CODE_RIGHT_REGEXP)].map(getLinkedCodeTagMatch)
+  for (let i = 0; i < linkedCodeLeftFounds.length; i++) {
+    const foundLeft = linkedCodeLeftFounds[i]
+    const foundRight = linkedCodeRightFounds[i]
+
+    const start = foundLeft.index + foundLeft.tagLength
+    const end = foundRight.index + foundRight.tagLength
+    const length = foundLeft.tagLength
+    linkedCodeMappings.push({
+      sourceOffsets: [start],
+      generatedOffsets: [end],
+      lengths: [length],
+      data: undefined,
+    })
+  }
+
+  return linkedCodeMappings
+}
+
 function createVueVineCode(
   ts: typeof import('typescript'),
   sourceFileName: string,
@@ -137,10 +177,10 @@ function createVueVineCode(
         vineFileCtx.root.tokens ?? [],
       ) + 1, // means generate after '(',
     )
-    if (vineCompFn.fnItselfNode?.params.length === 0) {
-      // no defined `props` formal parameter,
+    if (vineCompFn.propsDefinitionBy === 'macro') {
+      // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
-      const propsParam = `props: ${vineCompFn.getPropsTypeRecordStr()}`
+      const propsParam = `props: ${vineCompFn.getPropsTypeRecordStr({ isNeedLinkedCodeTag: true })}`
       tsCodeSegments.push(propsParam)
     }
 
@@ -148,7 +188,7 @@ function createVueVineCode(
     // and generate a temporary variable like `__VINE_VLS_1` and use `typeof __VINE_VLS_1`
     // as the type of that single prop.
     const tempVarDecls: string[] = []
-    const isVineCompHasFnBlock = vineCompFn.fnItselfNode!.body.type === 'BlockStatement'
+    const isVineCompHasFnBlock = vineCompFn.fnItselfNode?.body?.type === 'BlockStatement'
     if (isVineCompHasFnBlock) {
       Object.entries(vineCompFn.props).forEach(([propName, propMeta]) => {
         const defaultValueExpr = propMeta.default
@@ -163,6 +203,21 @@ function createVueVineCode(
         tempVarDecls.push(tempVarDecl)
         propMeta.typeAnnotationRaw = `typeof ${tempVarName}`
       })
+    }
+
+    // We should generate linked code tag as block comment
+    // before the variable declared by `vineProp`
+    if (vineCompFn.propsDefinitionBy === 'macro') {
+      const propVarIdAstNodes = Object.entries(vineCompFn.props).map(([propName, propMeta]) => [propName, propMeta.declaredIdentifier] as const)
+      for (let i = 0; i < propVarIdAstNodes.length; i++) {
+        const [propName, propVarIdAstNode] = propVarIdAstNodes[i]
+        if (!propVarIdAstNode) {
+          continue
+        }
+
+        generateScriptUntil(propVarIdAstNode.start!)
+        tsCodeSegments.push(createLinkedCodeTag('right', propName.length))
+      }
     }
 
     generateScriptUntil(vineCompFn.templateReturn.start!)
@@ -209,10 +264,6 @@ function createVueVineCode(
           tsCodeSegments.push(segment)
         }
         else if (segment[1] === 'template') {
-          // TODO: fix in upstream
-          segment[3].structure = false
-          segment[3].format = false
-
           if (
             typeof segment[3].completion === 'object'
             && segment[3].completion.isAdditional
@@ -238,7 +289,7 @@ function createVueVineCode(
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
     // clear the template string
-    tsCodeSegments.push('`` as any as __VLS_Element')
+    tsCodeSegments.push('`` as any as VueVineComponent')
     currentOffset = vineCompFn.templateStringNode.quasi.end!
   }
   generateScriptUntil(snapshot.getLength())
@@ -251,21 +302,7 @@ function createVueVineCode(
 
   const tsCode = toString(tsCodeSegments)
   const tsCodeMappings = buildMappings(tsCodeSegments)
-  const linkedCodeLeftIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_LEFT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
-  const linkedCodeRightIndexes = [...tsCode.matchAll(new RegExp(LINKED_CODE_RIGHT.split('').map(s => `\\${s}`).join(''), 'g'))].map(match => match.index!)
-  const linkedCodeMappings: Mapping[] = []
-
-  for (let i = 0; i < linkedCodeLeftIndexes.length; i++) {
-    const start = linkedCodeLeftIndexes[i] + LINKED_CODE_LEFT.length
-    const end = linkedCodeRightIndexes[i] + LINKED_CODE_RIGHT.length
-    const length = linkedCodeRightIndexes[i] - start - ': '.length
-    linkedCodeMappings.push({
-      sourceOffsets: [start],
-      generatedOffsets: [end],
-      lengths: [length],
-      data: undefined,
-    })
-  }
+  const linkedCodeMappings: Mapping[] = getLinkedCodeMappings(tsCode)
 
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
