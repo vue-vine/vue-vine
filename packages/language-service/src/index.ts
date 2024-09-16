@@ -169,6 +169,13 @@ function createVueVineCode(
       continue
     }
 
+    if (vineCompFn.propsDefinitionBy === 'macro') {
+      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
+        isNeedLinkedCodeTag: true,
+        joinStr: ',\n',
+      })}\n\n`)
+    }
+
     // Gurantee the component function has a `props` formal parameter in virtual code,
     // This is for props intellisense on editing template tag attrs.
     generateScriptUntil(
@@ -180,7 +187,7 @@ function createVueVineCode(
     if (vineCompFn.propsDefinitionBy === 'macro') {
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
-      const propsParam = `props: ${vineCompFn.getPropsTypeRecordStr({ isNeedLinkedCodeTag: true })}`
+      const propsParam = `props: __VLS_${vineCompFn.fnName}_props__`
       tsCodeSegments.push(propsParam)
     }
 
