@@ -435,7 +435,11 @@ function MyComp() {
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testStoreVinePropTypeAnnotation')
     const MyComp = fileCtx?.vineCompFns[0]
     expect(MyComp?.getPropsTypeRecordStr())
-      .toMatchInlineSnapshot(`"{ p1: string, p2: number, p3: typeof V1, p4: any, p5: T1, p6: boolean, p7: T2 }"`)
+      .toMatchInlineSnapshot(`
+        "{
+        p1: string, p2: number, p3: typeof V1, p4: any, p5: T1, p6: boolean, p7: T2
+        }"
+      `)
     // expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
     // expect(mockCompilerCtx.vineCompileWarnings[0].msg)
     //   .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)

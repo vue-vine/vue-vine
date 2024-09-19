@@ -8,6 +8,7 @@ import type {
   File,
   FunctionDeclaration,
   FunctionExpression,
+  Identifier,
   Node,
   ReturnStatement,
   SourceLocation,
@@ -84,6 +85,8 @@ export interface VinePropMeta {
   validator?: Node
   /** Source code node of given default value */
   default?: Node
+  /** Declared identifier AST Node by vineProp */
+  declaredIdentifier?: Identifier
 }
 
 export interface VineCompilerCtx {
@@ -151,6 +154,7 @@ export interface VineCompFnCtx {
   bindings: VineTemplateBindings
   propsAlias: string
   props: Record<string, VinePropMeta>
+  propsDefinitionBy: 'annotaion' | 'macro'
   emitsAlias: string
   emits: string[]
   /** Store the `defineExpose`'s argument in source code */
@@ -171,7 +175,10 @@ export interface VineCompFnCtx {
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
 
-  getPropsTypeRecordStr: (joinStr?: string) => string
+  getPropsTypeRecordStr: (options?: {
+    joinStr?: string
+    isNeedLinkedCodeTag?: boolean
+  }) => string
 }
 
 export interface VineDiagnostic {

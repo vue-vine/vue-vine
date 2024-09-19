@@ -53,13 +53,20 @@ export function generateGlobalTypes(
     `,
   )
 
-  globalTypes = globalTypes.replace(/__VLS_/g, '__VINE_VLS_')
+  globalTypes += `\ntype VueVineComponent = __VLS_Element;\n`
 
+  globalTypes = globalTypes.replace(/__VLS_/g, '__VINE_VLS_')
   return globalTypes
 }
 
-export const LINKED_CODE_LEFT = '/* __LINKED_CODE_LEFT__ */'
-export const LINKED_CODE_RIGHT = '/* __LINKED_CODE_RIGHT__ */'
+export const LINKED_CODE_TAG_PREFIX = '/* __LINKED_CODE'
+export const LINKED_CODE_TAG_SUFFIX = ' */'
+export function createLinkedCodeTag(
+  side: 'left' | 'right',
+  itemLength: number,
+) {
+  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
+}
 
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
@@ -74,15 +81,25 @@ export function generateVLSContext(
 
   const __VINE_CONTEXT_TYPES = `
 type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
-  vineCompFn.getPropsTypeRecordStr('; ')
+  vineCompFn.getPropsTypeRecordStr({
+    joinStr: '; ',
+  })
 };
 type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
   __CTX_TYPES_FROM_BINDING,
   __CTX_TYPES_FROM_FORMAL_PARAMS
 >>;
 const __VLS_ctx = __createVineVLSCtx({
-${notPropsBindings.map(([name]) => `  ${LINKED_CODE_LEFT}${name}: ${LINKED_CODE_RIGHT}${name},`).join('\n')}
-  ...props as any as ${vineCompFn.getPropsTypeRecordStr('; ')},
+${notPropsBindings.map(([name]) => `  ${
+  createLinkedCodeTag('left', name.length)
+}${name}: ${
+  createLinkedCodeTag('right', name.length)
+}${name},`).join('\n')}
+  ${
+    vineCompFn.propsDefinitionBy === 'annotaion'
+      ? '...props,'
+      : '...{ /* No need append `props` due to vineProp */ }'
+  }
 });
 const __VLS_localComponents = __VLS_ctx;
 const __VLS_components = {
