@@ -60,8 +60,8 @@ function patchModule(
   const nOriginCode = normalizeLineEndings(newVFCtx.originCode)
   const oOriginCode = normalizeLineEndings(oldVFCtx.originCode)
   for (let i = 0; i < nVineCompFns.length; i++) {
-    const nCompFns = nVineCompFns[i]
-    const oCompFns = oVineCompFns[i]
+    const nCompFns = nVineCompFns[i]!
+    const oCompFns = oVineCompFns[i]!
     const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
     const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
     const nCompFnsStyles = nStyleDefine[nCompFns.scopeId]?.map(style => style.source ?? '')
@@ -74,11 +74,11 @@ function patchModule(
     const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnsTemplate, '')
     // 3. Clean style content
     let nCompFnCodePure = nCompFnCodeNonTemplate
-    nCompFnsStyles.forEach((style) => {
+    nCompFnsStyles?.forEach((style) => {
       nCompFnCodePure = nCompFnCodePure.replace(style, '')
     })
     let oCompFnCodePure = oCompFnCodeNonTemplate
-    oCompFnsStyles.forEach((style) => {
+    oCompFnsStyles?.forEach((style) => {
       oCompFnCodePure = oCompFnCodePure.replace(style, '')
     })
 
