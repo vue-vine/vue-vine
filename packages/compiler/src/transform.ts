@@ -144,7 +144,7 @@ function propsOptionsCodeGeneration(
     } },`
   })
 
-  const segementsFromVineModel = Object
+  const segmentsFromVineModel = Object
     .entries(vineCompFnCtx.vineModels)
     .reduce<string[]>((segments, [modelName, modelDef]) => {
       const { modelModifiersName, modelOptions } = modelDef
@@ -167,7 +167,7 @@ function propsOptionsCodeGeneration(
 
   return [
     ...segementsFromProps,
-    ...segementsFromVineModel,
+    ...segmentsFromVineModel,
   ]
 }
 
@@ -529,7 +529,7 @@ export function transformFile(
   if (isDev) {
     ms.appendRight(
       ms.length(),
-      `export const _rerender_only = ${vineFileCtx.renderOnly}
+      /* js */`export const _rerender_only = ${vineFileCtx.renderOnly}
 export const _rerender_vcf_fn_name = ${vineFileCtx.hmrCompFnsName ? `"${vineFileCtx.hmrCompFnsName!}"` : '""'}
 import.meta.hot?.accept((mod) => {
 if (!mod){return;}
