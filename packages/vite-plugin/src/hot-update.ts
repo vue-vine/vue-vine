@@ -60,15 +60,22 @@ function patchModule(
   const nOriginCode = normalizeLineEndings(newVFCtx.originCode)
   const oOriginCode = normalizeLineEndings(oldVFCtx.originCode)
   for (let i = 0; i < nVineCompFns.length; i++) {
-    const nCompFns = nVineCompFns[i]!
-    const oCompFns = oVineCompFns[i]!
+    const nCompFns = nVineCompFns[i]
+    const oCompFns = oVineCompFns[i]
+    if (
+      (!oCompFns || !nCompFns)
+      || (!oCompFns.fnItselfNode || !nCompFns.fnItselfNode)
+    ) {
+      continue
+    }
+
     const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
     const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
     const nCompFnsStyles = nStyleDefine[nCompFns.scopeId]?.map(style => style.source ?? '')
     const oCompFnsStyles = oStyleDefine[oCompFns.scopeId]?.map(style => style.source ?? '')
     // 1. Get component function AST Node range for its code content
-    const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode!.start), Number((nCompFns!.fnItselfNode!.end)))
-    const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode!.start), Number((oCompFns!.fnItselfNode!.end)))
+    const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode.start), Number((nCompFns.fnItselfNode!.end)))
+    const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode.start), Number((oCompFns.fnItselfNode!.end)))
     // 2. Clean template content
     const nCompFnCodeNonTemplate = nCompFnCode.replace(nCompFnsTemplate, '')
     const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnsTemplate, '')
