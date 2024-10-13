@@ -1,5 +1,11 @@
 # @vue-vine/vite-plugin
 
+## 0.1.22
+
+### Patch Changes
+
+- Fix hmr execute error by no vineStyle
+
 ## 0.1.20
 
 ### Patch Changes
