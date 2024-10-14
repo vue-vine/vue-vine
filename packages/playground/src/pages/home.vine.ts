@@ -102,7 +102,6 @@ export function Home() {
 
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 
-
   return vine`
     <PageHeader />
     <OutsideExample :id="id" />

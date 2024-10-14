@@ -18,6 +18,25 @@
         { "include": "source.vine-vue-template" }
       ]
     },
+
+    {
+      "name": "source.vine-prop.with-decorator.embedded.ts",
+      "begin": "(vineProp)(?:(\\.)([\\w]+))?(\\()",
+      "beginCaptures": {
+        "1": { "name": "support.name.macro.vine-prop.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "support.name.macro.decorator.vine-prop.ts" },
+        "4": { "name": "meta.brace.round.ts" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "meta.brace.round.ts" }
+      },
+      "patterns": [
+        { "include": "source.ts" }
+      ]
+    },
+
     {
       "name": "source.css.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)(scoped))?(\\()(`)",
@@ -25,7 +44,7 @@
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
         "1": { "name": "support.name.macro.vine-style.ts" },
         "2": { "name": "punctuation.accessor.ts" },
-        "3": { "name": "support.name.macro.vine-style-scoped.ts" },
+        "3": { "name": "support.name.macro.decorator.vine-style.ts" },
         "4": { "name": "meta.brace.round.ts" },
         "5": { "name": "punctuation.definition.string.begin.vine-css.ts" }
       },
