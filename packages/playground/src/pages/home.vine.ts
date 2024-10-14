@@ -8,17 +8,20 @@ function OutsideExample(props: { id: string }) {
       margin: 1rem 0;
     }
   `)
+  vineStyle.scoped('../styles/test.css')
   vineStyle.scoped(`
     .state-container-meta {
-      margin-top: 16px;
+      margin-top: 10px;
       font-style: italic;
     }
-    .state-container-title {
+  `)
+  vineStyle.scoped(`
+  .state-container-title {
       margin: 0.5rem 0;
       font-weight: bold;
-      opacity: 0.8;
-    }
-  `)
+      opacity: 0.2;
+    }`
+  )
 
   const randomStr = ref('')
   const loading = ref(true)
@@ -26,7 +29,7 @@ function OutsideExample(props: { id: string }) {
     loading.value = true
     setTimeout(() => {
       loading.value = false
-      randomStr.value = generateRandomString(30)
+      randomStr.value = generateRandomString(10)
     }, 2000)
   }
 
@@ -59,18 +62,18 @@ function OutsideExample(props: { id: string }) {
 }
 
 function RandomStringButton() {
-  vineStyle(`
-    .random-state-change-btn {
-      font-size: 1rem;
-      background: #334155c6;
-      border-radius: 0.25rem;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border: none;
-      outline: none;
-      cursor: pointer;
-    }
-  `)
+  // vineStyle(`
+  //   .random-state-change-btn {
+  //     font-size: 1rem;
+  //     background: #334155c6;
+  //     border-radius: 0.25rem;
+  //     color: #fff;
+  //     padding: 0.5rem 1rem;
+  //     border: none;
+  //     outline: none;
+  //     cursor: pointer;
+  //   }
+  // `)
 
   const emit = vineEmits<{
     tap: [number, number],

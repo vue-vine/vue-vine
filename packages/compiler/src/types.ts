@@ -107,6 +107,7 @@ export interface VineFileCtx {
   readonly root: ParseResult<File>
   readonly originCode: string
   readonly isCRLF: boolean
+  importStyleOriginCode?: string
   /**
    * Hot update only executes the
    * markup of the render function

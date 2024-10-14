@@ -593,9 +593,10 @@ const analyzeVineStyle: AnalyzeRunner = (
     if (!vineStyleArg) {
       return
     }
-    const { styleLang, styleSource, range } = getVineStyleSource(
+    let { styleLang, styleSource, range } = getVineStyleSource(
       vineStyleArg as VineStyleValidArg,
     )
+
     const styleMeta: VineStyleMeta = {
       lang: styleLang,
       source: styleSource,

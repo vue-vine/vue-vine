@@ -12,6 +12,7 @@ import {
   findVineCompFnDecls,
 } from '@vue-vine/compiler'
 import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
+import type { VineQuery } from './parse-query'
 import { parseQuery } from './parse-query'
 import { areStrArraysEqual, normalizeLineEndings } from './utils'
 
@@ -62,23 +63,30 @@ function patchModule(
   for (let i = 0; i < nVineCompFns.length; i++) {
     const nCompFns = nVineCompFns[i]
     const oCompFns = oVineCompFns[i]
+    if (
+      (!oCompFns || !nCompFns)
+      || (!oCompFns.fnItselfNode || !nCompFns.fnItselfNode)
+    ) {
+      continue
+    }
+
     const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
     const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
     const nCompFnsStyles = nStyleDefine[nCompFns.scopeId]?.map(style => style.source ?? '')
     const oCompFnsStyles = oStyleDefine[oCompFns.scopeId]?.map(style => style.source ?? '')
     // 1. Get component function AST Node range for its code content
-    const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode!.start), Number((nCompFns!.fnItselfNode!.end)))
-    const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode!.start), Number((oCompFns!.fnItselfNode!.end)))
+    const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode.start), Number((nCompFns.fnItselfNode!.end)))
+    const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode.start), Number((oCompFns.fnItselfNode!.end)))
     // 2. Clean template content
     const nCompFnCodeNonTemplate = nCompFnCode.replace(nCompFnsTemplate, '')
     const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnsTemplate, '')
     // 3. Clean style content
     let nCompFnCodePure = nCompFnCodeNonTemplate
-    nCompFnsStyles.forEach((style) => {
+    nCompFnsStyles?.forEach((style) => {
       nCompFnCodePure = nCompFnCodePure.replace(style, '')
     })
     let oCompFnCodePure = oCompFnCodeNonTemplate
-    oCompFnsStyles.forEach((style) => {
+    oCompFnsStyles?.forEach((style) => {
       oCompFnCodePure = oCompFnCodePure.replace(style, '')
     })
 
@@ -113,9 +121,9 @@ function patchModule(
       patchRes.hmrCompFnsName = nCompFns.fnName
       patchRes.scopeId = nCompFns.scopeId
       newVFCtx.renderOnly = false
+      break
     }
   }
-
   // If the number of components is different,
   // it means that the module has breaking change
   if (oVineCompFns.length !== nVineCompFns.length) {
@@ -123,7 +131,6 @@ function patchModule(
     newVFCtx.renderOnly = false
     return patchRes
   }
-
   return patchRes
 }
 
@@ -131,6 +138,8 @@ export async function vineHMR(
   ctx: HmrContext,
   compilerCtx: VineCompilerCtx,
   compilerHooks: VineCompilerHooks,
+  prevImportStyleCode?: string,
+  styleFileQuery?: VineQuery | null,
 ) {
   const { modules, file, read } = ctx
   const fileContent = await read()
@@ -138,15 +147,22 @@ export async function vineHMR(
   if (!orgVineFileCtx)
     return
   const orgFileContent = orgVineFileCtx.originCode
-
+  const orgFileImportStyleOrgCode = orgVineFileCtx.importStyleOriginCode
+  if (prevImportStyleCode === null) {
+    prevImportStyleCode = orgFileImportStyleOrgCode!
+  }
   // file changed !
-  if (fileContent !== orgFileContent) {
+  if (fileContent !== orgFileContent || prevImportStyleCode !== orgFileImportStyleOrgCode) {
     // analyze code again
     const vineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, file, compilerHooks)
-
+    if (styleFileQuery) {
+      vineFileCtx.styleDefine[styleFileQuery.scopeId][styleFileQuery.index].source = orgFileImportStyleOrgCode!
+      if (typeof prevImportStyleCode === 'string') {
+        orgVineFileCtx.styleDefine[styleFileQuery.scopeId][styleFileQuery.index].source = prevImportStyleCode
+      }
+    }
     let patchRes: PatchModuleRes | null = null
     const affectedModules = new Set<ModuleNode>()
-    // patch VineFileCtx
     modules.forEach((m) => {
       const importedModules = m.importedModules
       if (importedModules.size > 0) {
@@ -160,14 +176,15 @@ export async function vineHMR(
         })
       }
     })
-
     modules.forEach((m) => {
       const importedModules = m.importedModules
+
       if (importedModules.size > 0) {
         [...importedModules].forEach((im) => {
           if (!im.id)
             return
           const { query } = parseQuery(im.id)
+
           if (query.type === QUERY_TYPE_STYLE
             && patchRes?.type
             && patchRes.scopeId === query.scopeId
@@ -201,6 +218,9 @@ export async function vineHMR(
 
       return [...modules]
     }
-    return getFinalModules()
+    return {
+      newImportStyleCode: orgFileImportStyleOrgCode!,
+      affectedModules: getFinalModules(),
+    }
   }
 }

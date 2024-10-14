@@ -83,14 +83,13 @@ export default async function MyApp() {
 describe('test transform', () => {
   it('inline mode output result', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    compileVineTypeScriptFile(testContent, 'testTransformInlineResult', { compilerHooks: mockCompilerHooks })
+    compileVineTypeScriptFile(testContent, 'testTransformInlineResult', {
+      compilerHooks: mockCompilerHooks,
+    })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformInlineResult')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
-    )
+    const formated = await format(transformed, { parser: 'babel-ts' })
     expect(formated).toMatchSnapshot()
   })
 
@@ -98,14 +97,15 @@ describe('test transform', () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       inlineTemplate: false,
     })
-    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks })
+    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', {
+      compilerHooks: mockCompilerHooks,
+    })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
-    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
-    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(
+      'testTransformSeparatedResult',
     )
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(transformed, { parser: 'babel-ts' })
     expect(formated).toMatchSnapshot()
   })
 
@@ -113,14 +113,18 @@ describe('test transform', () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       inlineTemplate: false,
     })
-    compileVineTypeScriptFile(testContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks }, true)
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
-    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
-    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
+    compileVineTypeScriptFile(
+      testContent,
+      'testTransformSeparatedResult',
+      { compilerHooks: mockCompilerHooks },
+      true,
     )
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(
+      'testTransformSeparatedResult',
+    )
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(transformed, { parser: 'babel-ts' })
     expect(formated).toMatchSnapshot()
   })
 
@@ -128,14 +132,15 @@ describe('test transform', () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'production',
     })
-    compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', { compilerHooks: mockCompilerHooks })
+    compileVineTypeScriptFile(testContent, 'testNoHMRContentOnProduction', {
+      compilerHooks: mockCompilerHooks,
+    })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
-    const fileCtx = mockCompilerCtx.fileCtxMap.get('testNoHMRContentOnProduction')
-    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(
+      'testNoHMRContentOnProduction',
     )
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(transformed, { parser: 'babel-ts' })
     expect(formated).toMatchSnapshot()
     expect(formated.includes('__hmrId')).toBe(false)
     expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(false)
@@ -154,16 +159,32 @@ describe('test transform', () => {
         </div>
       \`
     }`
-    compileVineTypeScriptFile(testContent, 'testHMRContentOnNoStyle', { compilerHooks: mockCompilerHooks })
+    compileVineTypeScriptFile(testContent, 'testHMRContentOnNoStyle', {
+      compilerHooks: mockCompilerHooks,
+    })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testHMRContentOnNoStyle')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
-    )
+    const formated = await format(transformed, { parser: 'babel-ts' })
     expect(formated).toMatchSnapshot()
     expect(formated.includes('__hmrId')).toBe(true)
     expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(true)
+  })
+
+  // issue#151
+  it('import external CSS files', async () => {
+    const { mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const testContent = `
+      function App() {
+          vineStyle.scoped("../styles/test.css")
+          return vine\`
+          <div>Hello</div>
+              \`
+      }`
+    compileVineTypeScriptFile(testContent, 'testImportExternalCSS', {
+      compilerHooks: mockCompilerHooks,
+    })
   })
 })

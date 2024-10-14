@@ -1,24 +1,17 @@
 import process from 'node:process'
 import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
-import {
-  compileVineStyle,
-  compileVineTypeScriptFile,
-  createCompilerCtx,
-} from '@vue-vine/compiler'
-import type {
-  VineCompilerHooks,
-  VineCompilerOptions,
-  VineFileCtx,
-  VineProcessorLang,
-} from '@vue-vine/compiler'
+import type { VineCompilerHooks, VineCompilerOptions, VineFileCtx, VineProcessorLang } from '@vue-vine/compiler'
+import { compileVineStyle, compileVineTypeScriptFile, createCompilerCtx } from '@vue-vine/compiler'
 import type { TransformPluginContext } from 'rollup'
 import type { VineQuery } from './parse-query'
 import { parseQuery } from './parse-query'
 import { vineHMR } from './hot-update'
 import { QUERY_TYPE_STYLE } from './constants'
+import { hmrImportCss, saveImportCssFile } from './import-css'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
+  const watchedFiles = new Map()
   const compilerCtx = createCompilerCtx({
     ...options,
     envMode: options.envMode ?? (process.env.NODE_ENV || 'development'),
@@ -112,9 +105,16 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       const { fileId, query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
         const fullFileId = `${fileId}.vine.ts`
-        const styleSource = compilerCtx.fileCtxMap
+        let styleSource = compilerCtx.fileCtxMap
           .get(fullFileId)?.styleDefine[query.scopeId][query.index]
           .source ?? ''
+        if (query.importTag && styleSource.endsWith('.css')) {
+          const styleData = saveImportCssFile(fileId, styleSource, compilerCtx, fullFileId)
+          styleSource = styleData.styleSource
+          if (!watchedFiles.has(styleData.stylePath)) {
+            watchedFiles.set(styleData.stylePath, id)
+          }
+        }
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
@@ -136,9 +136,25 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       return runCompileScript(code, id, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
-      const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
-      return affectedModules
+      const { file } = ctx
+      let result = null
+      if (file.endsWith('.css') && watchedFiles.has(file)) {
+        const { prevImportStyleCode, styleFileQuery } = await hmrImportCss(ctx, file, compilerCtx, watchedFiles)
+        result = await vineHMR(ctx, compilerCtx, compilerHooks, prevImportStyleCode, styleFileQuery)
+        compilerCtx.fileCtxMap.get(file)!.importStyleOriginCode = result!.newImportStyleCode
+
+        // 过滤为外部css模块
+        const hmrResult = result?.affectedModules.filter((m) => {
+          return Array.from(watchedFiles.values()).includes(m.id!)
+        })
+        return hmrResult
+      }
+      else {
+        result = await vineHMR(ctx, compilerCtx, compilerHooks)
+        return result?.affectedModules
+      }
     },
+
   }
 }
 

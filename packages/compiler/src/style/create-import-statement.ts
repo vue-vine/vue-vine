@@ -8,6 +8,9 @@ export function createStyleImportStmt(
   index: number,
 ) {
   const styleLangExt = getStyleLangFileExt(styleDefine.lang)
+  const genImportTag = (source: string) => {
+    return source.endsWith('.css')
+  }
   return `import ${showIf(
     // handle web component styles
     Boolean(vineCompFnCtx.isCustomElement),
@@ -23,5 +26,5 @@ export function createStyleImportStmt(
       Boolean(styleDefine.scoped),
       '&scoped=true',
     )
-  }&index=${index}&virtual.${styleLangExt}';`
+  }&index=${index}${showIf(genImportTag(styleDefine.source), '&importTag=true')}&virtual.${styleLangExt}';`
 }
