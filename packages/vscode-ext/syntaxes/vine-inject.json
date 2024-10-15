@@ -38,7 +38,7 @@
     },
 
     {
-      "begin": "(vineStyle)(?:(\\.)(import))?(\\()",
+      "begin": "(vineStyle)(?:(\\.)(import))(\\()",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
         "1": { "name": "support.name.macro.vine-style.ts" },

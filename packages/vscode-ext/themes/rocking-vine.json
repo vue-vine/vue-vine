@@ -347,13 +347,13 @@
     {
       "scope": "keyword",
       "settings": {
-        "foreground": "##EB8888FF"
+        "foreground": "#EB8888FF"
       }
     },
     {
       "scope": "keyword.control",
       "settings": {
-        "foreground": "##EB8888FF"
+        "foreground": "#EB8888FF"
       }
     },
     {
