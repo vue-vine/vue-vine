@@ -119,7 +119,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
           ?.styleDefine
           ?.[query.scopeId]
           ?.[query.index]
-          .source ?? ''
+          ?.source ?? ''
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
