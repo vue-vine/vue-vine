@@ -17,6 +17,7 @@ export const BARE_CALL_MACROS = [
   'vineOptions',
   'vineStyle',
   'vineStyle.scoped',
+  'vineStyle.import',
   'vineCustomElement',
 ] as const
 export const VINE_MACROS = [
@@ -42,6 +43,13 @@ export const CAN_BE_CALLED_MULTI_TIMES_MACROS = [
   'vineStyle',
 ]
 export const SUPPORTED_CSS_LANGS = ['css', 'scss', 'sass', 'less', 'stylus', 'postcss'] as const
+export const SUPPORTED_STYLE_FILE_EXTS = [
+  '.css',
+  '.scss',
+  '.sass',
+  '.less',
+  '.styl',
+]
 export const VUE_REACTIVITY_APIS = [
   'ref',
   'shallowRef',

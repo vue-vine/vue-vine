@@ -353,16 +353,30 @@ function createVueVineCode(
     for (const styleDefines of Object.values(
       vineFileCtx.styleDefine,
     )) {
-      for (const { lang, source: bableParsedSource, range, compCtx } of styleDefines) {
+      for (const {
+        lang,
+        source: styleSource,
+        range,
+        compCtx,
+        isExternalFilePathSource,
+      } of styleDefines) {
         if (!range) {
           return
         }
 
+        if (isExternalFilePathSource || !styleSource.trim().length) {
+          // Don't recongnize this string argument
+          // which is a path to an external file,
+          // as CSS syntax format area
+          continue
+        }
+
+        // Here we have user-defined style raw content,
         // String content parsed by @babel/parser would always be LF,
         // But for Volar location mapping we need to turn it back to CRLF.
         const source = vineFileCtx.isCRLF
-          ? turnBackToCRLF(bableParsedSource)
-          : bableParsedSource
+          ? turnBackToCRLF(styleSource)
+          : styleSource
 
         yield {
           id: `${compCtx.fnName}_style_${lang}`.toLowerCase(),

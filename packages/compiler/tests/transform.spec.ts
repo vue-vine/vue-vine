@@ -55,6 +55,8 @@ function MyProfile() {
       font-size: 12px;
     }
   \`)
+  vineStyle.import('../styles/test1.less').scoped()
+  vineStyle.import(\`../styles/test2.scss\`)
 
   return vine\`
     <div class="my-profile">

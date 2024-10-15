@@ -8,17 +8,7 @@ function OutsideExample(props: { id: string }) {
       margin: 1rem 0;
     }
   `)
-  vineStyle.scoped(`
-    .state-container-meta {
-      margin-top: 16px;
-      font-style: italic;
-    }
-    .state-container-title {
-      margin: 0.5rem 0;
-      font-weight: bold;
-      opacity: 0.8;
-    }
-  `)
+  vineStyle.import('~/styles/outside-example.css').scoped()
 
   const randomStr = ref('')
   const loading = ref(true)
@@ -101,7 +91,6 @@ export function Home() {
   const userInputText = vineModel<string>()
 
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
-
 
   return vine`
     <PageHeader />

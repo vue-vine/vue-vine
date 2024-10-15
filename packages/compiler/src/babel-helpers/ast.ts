@@ -3,6 +3,7 @@ import type {
   File,
   Identifier,
   ImportDeclaration,
+  MemberExpression,
   Node,
   ReturnStatement,
   TSPropertySignature,
@@ -42,6 +43,7 @@ import {
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
 } from '../constants'
+import { _breakableTraverse, exitTraverse } from '../utils'
 
 export function isVineCompFnDecl(target: Node) {
   if (
@@ -200,11 +202,37 @@ export const isVineModel = isVineMacroOf('vineModel')
 export const isVineStyle = isVineMacroOf('vineStyle')
 export const isVineCustomElement = isVineMacroOf('vineCustomElement')
 
+interface VineImportScopedCallee extends MemberExpression {
+  object: CallExpression
+  property: Identifier
+}
+interface VineImportScoped extends CallExpression {
+  callee: VineImportScopedCallee
+}
+export function isVineImportScoped(
+  node: Node | Nil,
+): node is VineImportScoped {
+  if (!isCallExpression(node)) {
+    return false
+  }
+  const callee = node.callee
+  if (!isMemberExpression(callee)) {
+    return false
+  }
+
+  return (
+    isVineStyle(callee.object)
+    && isIdentifier(callee.property)
+    && callee.property.name === 'scoped'
+  )
+}
+
 export function isStatementContainsVineMacroCall(node: Node) {
   let result = false
-  traverse(node, (descendant) => {
+  _breakableTraverse(node, (descendant) => {
     if (isVineMacroCallExpression(descendant)) {
       result = true
+      throw exitTraverse
     }
   })
   return result

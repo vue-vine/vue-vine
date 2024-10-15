@@ -126,81 +126,102 @@ function patchModule(
 
   return patchRes
 }
+function patchVineFile(
+  compilerCtx: VineCompilerCtx,
+  compilerHooks: VineCompilerHooks,
+  originVineFileCtx: VineFileCtx,
+  modules: ModuleNode[],
+  fileId: string,
+  fileContent: string,
+) {
+  // file changed !
+  if (fileContent === originVineFileCtx.originCode) {
+    return
+  }
+
+  // analyze code again
+  const newVineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, fileId, compilerHooks)
+
+  let patchRes: PatchModuleRes | null = null
+  const affectedModules = new Set<ModuleNode>()
+
+  const forEachImportedModule = (
+    action: (importedModule: ModuleNode) => void,
+  ) => {
+    modules.forEach((m) => {
+      const importedModules = m.importedModules
+      if (importedModules.size > 0) {
+        [...importedModules].forEach((im) => {
+          if (!im.id) {
+            return
+          }
+
+          action(im)
+        })
+      }
+    })
+  }
+
+  // patch VineFileCtx, get patchRes
+  forEachImportedModule((im) => {
+    const { query } = parseQuery(im.id!)
+    if (query.type === QUERY_TYPE_SCRIPT) {
+      patchRes = patchModule(originVineFileCtx, newVineFileCtx)
+    }
+  })
+
+  // find affected modules
+  forEachImportedModule((im) => {
+    const { query } = parseQuery(im.id!)
+    if (query.type === QUERY_TYPE_STYLE
+      && patchRes?.type
+      && patchRes.scopeId === query.scopeId
+      && patchRes.hmrCompFnsName
+    ) {
+      affectedModules.add(im)
+    }
+  })
+
+  // update vineFileCtx
+  if (patchRes) {
+    newVineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName
+  }
+  compilerCtx.fileCtxMap.set(fileId, newVineFileCtx)
+  compilerCtx.isRunningHMR = true
+
+  if (!patchRes)
+    return [...modules]
+  const { type } = patchRes
+
+  if (affectedModules.size > 0) {
+    if (type === 'style') {
+      return [...affectedModules]
+    }
+    else if (type === 'module') {
+      return [...modules, ...affectedModules]
+    }
+  }
+
+  return [...modules]
+}
 
 export async function vineHMR(
   ctx: HmrContext,
   compilerCtx: VineCompilerCtx,
   compilerHooks: VineCompilerHooks,
 ) {
-  const { modules, file, read } = ctx
+  const { modules, file: fileId, read } = ctx
   const fileContent = await read()
-  const orgVineFileCtx = compilerCtx.fileCtxMap.get(file)
-  if (!orgVineFileCtx)
-    return
-  const orgFileContent = orgVineFileCtx.originCode
 
-  // file changed !
-  if (fileContent !== orgFileContent) {
-    // analyze code again
-    const vineFileCtx: VineFileCtx = reAnalyzeVine(fileContent, file, compilerHooks)
-
-    let patchRes: PatchModuleRes | null = null
-    const affectedModules = new Set<ModuleNode>()
-    // patch VineFileCtx
-    modules.forEach((m) => {
-      const importedModules = m.importedModules
-      if (importedModules.size > 0) {
-        [...importedModules].forEach((im) => {
-          if (!im.id)
-            return
-          const { query } = parseQuery(im.id)
-          if (query.type === QUERY_TYPE_SCRIPT) {
-            patchRes = patchModule(orgVineFileCtx, vineFileCtx)
-          }
-        })
-      }
-    })
-
-    modules.forEach((m) => {
-      const importedModules = m.importedModules
-      if (importedModules.size > 0) {
-        [...importedModules].forEach((im) => {
-          if (!im.id)
-            return
-          const { query } = parseQuery(im.id)
-          if (query.type === QUERY_TYPE_STYLE
-            && patchRes?.type
-            && patchRes.scopeId === query.scopeId
-            && patchRes.hmrCompFnsName) {
-            affectedModules.add(im)
-          }
-        })
-      }
-    })
-
-    // update vineFileCtx
-    if (patchRes) {
-      vineFileCtx.hmrCompFnsName = (patchRes as PatchModuleRes).hmrCompFnsName
-    }
-    compilerCtx.fileCtxMap.set(file, vineFileCtx)
-    compilerCtx.isRunningHMR = true
-
-    const getFinalModules = () => {
-      if (!patchRes)
-        return [...modules]
-      const { type } = patchRes
-
-      if (affectedModules.size > 0) {
-        if (type === 'style') {
-          return [...affectedModules]
-        }
-        else if (type === 'module') {
-          return [...modules, ...affectedModules]
-        }
-      }
-
-      return [...modules]
-    }
-    return getFinalModules()
+  const originVineFileCtx = compilerCtx.fileCtxMap.get(fileId)
+  if (originVineFileCtx) {
+    return patchVineFile(
+      compilerCtx,
+      compilerHooks,
+      originVineFileCtx,
+      modules,
+      fileId,
+      fileContent,
+    )
   }
 }
