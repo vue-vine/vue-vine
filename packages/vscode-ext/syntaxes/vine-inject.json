@@ -38,13 +38,35 @@
     },
 
     {
-      "name": "source.css.embedded.ts",
+      "begin": "(vineStyle)(?:(\\.)(import))?(\\()",
+      "beginCaptures": {
+        "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
+        "1": { "name": "support.name.macro.vine-style.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "support.name.macro.decorator.vine-style-import.ts" },
+        "4": { "name": "meta.brace.round.ts" }
+      },
+      "end": "(?:\\s*)(\\))(?:(\\.)(scoped)(\\()(\\)))?",
+      "endCaptures": {
+        "0": { "name": "meta.name.function.macro.vine-css.end.ts" },
+        "1": { "name": "meta.brace.round.ts" },
+        "2": { "name": "punctuation.accessor.ts" },
+        "3": { "name": "support.name.macro.decorator.vine-style-scoped.ts" },
+        "4": { "name": "meta.brace.round.ts" },
+        "5": { "name": "meta.brace.round.ts" }
+      },
+      "patterns": [
+        { "include": "source.ts" }
+      ]
+    },
+
+    {
       "begin": "(vineStyle)(?:(\\.)(scoped))?(\\()(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
         "1": { "name": "support.name.macro.vine-style.ts" },
         "2": { "name": "punctuation.accessor.ts" },
-        "3": { "name": "support.name.macro.decorator.vine-style.ts" },
+        "3": { "name": "support.name.macro.decorator.vine-style-scoped.ts" },
         "4": { "name": "meta.brace.round.ts" },
         "5": { "name": "punctuation.definition.string.begin.vine-css.ts" }
       },
@@ -58,7 +80,6 @@
       ]
     },
     {
-      "name": "source.css.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(css)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
@@ -78,7 +99,6 @@
       ]
     },
     {
-      "name": "source.css.scss.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(scss)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-scss.start.ts" },
@@ -98,7 +118,6 @@
       ]
     },
     {
-      "name": "source.css.sass.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(sass)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-sass.start.ts" },
@@ -118,7 +137,6 @@
       ]
     },
     {
-      "name": "source.css.less.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(less)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-less.start.ts" },
@@ -138,7 +156,6 @@
       ]
     },
     {
-      "name": "source.stylus.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(stylus)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-stylus.start.ts" },
@@ -158,7 +175,6 @@
       ]
     },
     {
-      "name": "source.css.postcss.embedded.ts",
       "begin": "(vineStyle)(?:(\\.)scoped)?(\\()(postcss)(`)",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-postcss.start.ts" },

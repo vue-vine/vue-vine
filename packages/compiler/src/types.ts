@@ -70,6 +70,7 @@ export interface VineCompilerOptions {
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
+  isExternalFilePathSource: boolean
   range: [number, number] | undefined
   scoped: boolean
   fileCtx: VineFileCtx
@@ -138,6 +139,23 @@ export interface VineFileCtx {
   getAstNodeContent: (node: Node) => string
 }
 
+export interface VineQuery {
+  type: string
+  scopeId: string
+  scoped: boolean
+  lang: string
+  index: number
+
+  // External style imports should
+  // store Vine file ID for postcss compilation
+  vineFileId?: string
+}
+
+export interface VineExternalStyleFileCtx {
+  query: VineQuery
+  sourceCode: string
+}
+
 export interface VineCompFnCtx {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
@@ -174,6 +192,7 @@ export interface VineCompFnCtx {
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
+  externalStyleFilePaths: string[]
 
   getPropsTypeRecordStr: (options?: {
     joinStr?: string

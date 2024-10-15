@@ -55,7 +55,9 @@ function topoSort(
  * higher than parent-component's style, so we must compute
  * a import map for the current file's multiple components.
  */
-export function sortStyleImport(vineFileCtx: VineFileCtx) {
+export function sortStyleImport(
+  vineFileCtx: VineFileCtx,
+) {
   const { vineCompFns, styleDefine } = vineFileCtx
   const relationsMap: ComponentRelationsMap = Object.fromEntries(
     vineCompFns.map(
