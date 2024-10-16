@@ -65,7 +65,7 @@ export default defineConfig({
           items: [
             { text: '总览', link: '/zh/specification/overview' },
             { text: 'Props', link: '/zh/specification/props' },
-            { text: '宏', link: '/zh/specification/macros' },
+            { text: '宏函数', link: '/zh/specification/macros' },
           ],
         },
       ],

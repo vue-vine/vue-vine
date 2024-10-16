@@ -65,3 +65,21 @@ vineStyle(scss`
   }
 `)
 ```
+
+If you're going to import an external style file, you may include it like this:
+
+```ts
+import "~/styles/some-style.less"
+```
+
+But if you want it to be **`scoped`**, you can use `vineStyle` in this way:
+
+```ts
+vineStyle.import('~/styles/some-style.less').scoped()
+```
+
+it's equivalent to write the following code in Vue SFC.
+
+```vue
+<style scoped src="~/styles/some-style.less"></style>
+```

@@ -1,4 +1,4 @@
-# 宏 {#macros}
+# 宏函数 {#macros}
 
 宏是一些特殊的函数，它们只在编译时具有意义，它们是 Vine 编译器转换相应组件属性的提示。
 
@@ -46,7 +46,7 @@ vineOptions({
 ## `vineStyle` {#vinestyle}
 
 :::tip 🧩 建议
-由于样式代码一写起来就会非常长，因此其实我们并不推荐使用这个宏，而是推荐你采用类似 [UnoCSS](https://unocss.dev)、[TailwindCSS](https://tailwindcss.com) 等原子化 CSS 方案或是导入外部样式表。
+由于样式代码一写起来就会非常长，因此其实作者并不推荐使用这个宏，而是推荐你采用类似 [UnoCSS](https://unocss.dev)、[TailwindCSS](https://tailwindcss.com) 等原子化 CSS 方案或是导入外部样式表。
 :::
 
 这是一个用于定义样式的宏，替代了 SFC 的 `<style>` 块。如果您的组件需要 `scoped`，可以使用 `vineStyle.scoped`。
@@ -64,4 +64,22 @@ vineStyle(scss`
     }
   }
 `)
+```
+
+如果你希望引入一个外部的样式文件，可能你会选择如下的方式：
+
+```ts
+import "~/styles/some-style.less"
+```
+
+但如果你想要该样式文件是带 **`scoped`** 作用的，可以这样使用 `vineStyle` 宏：
+
+```ts
+vineStyle.import('~/styles/some-style.less').scoped()
+```
+
+它等价于在 SFC 中这样写：
+
+```vue
+<style scoped src="~/styles/some-style.less"></style>
 ```
