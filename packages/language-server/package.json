@@ -36,9 +36,9 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-core": "~2.4.2",
-    "@volar/language-server": "~2.4.2",
-    "@volar/language-service": "~2.4.2",
+    "@volar/language-core": "~2.4.5",
+    "@volar/language-server": "~2.4.5",
+    "@volar/language-service": "~2.4.5",
     "@vue-vine/compiler": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
     "@vue/language-core": "~2.1.6-patch.1",

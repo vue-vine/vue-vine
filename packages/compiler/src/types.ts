@@ -8,6 +8,7 @@ import type {
   File,
   FunctionDeclaration,
   FunctionExpression,
+  Identifier,
   Node,
   ReturnStatement,
   SourceLocation,
@@ -69,6 +70,7 @@ export interface VineCompilerOptions {
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
+  isExternalFilePathSource: boolean
   range: [number, number] | undefined
   scoped: boolean
   fileCtx: VineFileCtx
@@ -84,6 +86,8 @@ export interface VinePropMeta {
   validator?: Node
   /** Source code node of given default value */
   default?: Node
+  /** Declared identifier AST Node by vineProp */
+  declaredIdentifier?: Identifier
 }
 
 export interface VineCompilerCtx {
@@ -135,6 +139,23 @@ export interface VineFileCtx {
   getAstNodeContent: (node: Node) => string
 }
 
+export interface VineQuery {
+  type: string
+  scopeId: string
+  scoped: boolean
+  lang: string
+  index: number
+
+  // External style imports should
+  // store Vine file ID for postcss compilation
+  vineFileId?: string
+}
+
+export interface VineExternalStyleFileCtx {
+  query: VineQuery
+  sourceCode: string
+}
+
 export interface VineCompFnCtx {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
@@ -151,6 +172,7 @@ export interface VineCompFnCtx {
   bindings: VineTemplateBindings
   propsAlias: string
   props: Record<string, VinePropMeta>
+  propsDefinitionBy: 'annotaion' | 'macro'
   emitsAlias: string
   emits: string[]
   /** Store the `defineExpose`'s argument in source code */
@@ -170,8 +192,12 @@ export interface VineCompFnCtx {
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
+  externalStyleFilePaths: string[]
 
-  getPropsTypeRecordStr: (joinStr?: string) => string
+  getPropsTypeRecordStr: (options?: {
+    joinStr?: string
+    isNeedLinkedCodeTag?: boolean
+  }) => string
 }
 
 export interface VineDiagnostic {

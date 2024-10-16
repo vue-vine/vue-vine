@@ -40,7 +40,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { DEFAULT_MODEL_MODIFIERS_NAME, VineBindingTypes } from './constants'
+import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
 import type {
   BabelFunctionNodeTypes,
   Nil,
@@ -71,6 +71,7 @@ import {
   isVineCompFnDecl,
   isVineCustomElement,
   isVineEmits,
+  isVineImportScoped,
   isVineMacroCallExpression,
   isVineMacroOf,
   isVineModel,
@@ -80,7 +81,7 @@ import {
 } from './babel-helpers/ast'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/importUsageCheck'
-import { vineWarn } from './diagnostics'
+import { vineErr, vineWarn } from './diagnostics'
 import { _breakableTraverse, exitTraverse } from './utils'
 
 interface AnalyzeCtx {
@@ -398,6 +399,8 @@ const analyzeVineProps: AnalyzeRunner = (
     })
   }
   else if (formalParams.length === 0) {
+    vineCompFnCtx.propsDefinitionBy = 'macro'
+
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
     allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
@@ -407,6 +410,7 @@ const analyzeVineProps: AnalyzeRunner = (
         isRequired: macroCalleeName !== 'vineProp.optional',
         isBool: false,
         typeAnnotationRaw: 'any',
+        declaredIdentifier: propVarIdentifier,
       }
 
       if (macroCalleeName === 'vineProp.withDefault') {
@@ -571,12 +575,18 @@ const analyzeVineBindings: AnalyzeRunner = (
 }
 
 const analyzeVineStyle: AnalyzeRunner = (
-  { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
+  { vineFileCtx, vineCompFnCtx, vineCompilerHooks }: AnalyzeCtx,
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
   let vineStyleMacroCalls: CallExpression[] = []
+  let vineStyleMacroCallOfScopedVineStyleImport = new WeakSet<CallExpression>()
   _breakableTraverse(fnItselfNode, (node) => {
-    if (isVineStyle(node)) {
+    if (isVineImportScoped(node)) {
+      vineStyleMacroCallOfScopedVineStyleImport.add(
+        node.callee.object,
+      )
+    }
+    else if (isVineStyle(node)) {
       vineStyleMacroCalls.push(node)
     }
   })
@@ -593,23 +603,57 @@ const analyzeVineStyle: AnalyzeRunner = (
     if (!vineStyleArg) {
       return
     }
-    const { styleLang, styleSource, range } = getVineStyleSource(
+    const {
+      styleLang,
+      styleSource,
+      range,
+    } = getVineStyleSource(
       vineStyleArg as VineStyleValidArg,
     )
+    const isExternalFilePathSource = macroCalleeName === 'vineStyle.import'
     const styleMeta: VineStyleMeta = {
       lang: styleLang,
       source: styleSource,
+      isExternalFilePathSource,
       range,
-      scoped: macroCalleeName === 'vineStyle.scoped',
+      scoped: (
+        macroCalleeName === 'vineStyle.scoped'
+        || (
+          macroCalleeName === 'vineStyle.import'
+          && vineStyleMacroCallOfScopedVineStyleImport.has(vineStyleMacroCall)
+        )
+      ),
       fileCtx: vineFileCtx,
       compCtx: vineCompFnCtx,
     }
 
+    // If `styleSource` is a path to a file,
+    if (isExternalFilePathSource) {
+      vineCompFnCtx.externalStyleFilePaths.push(styleSource)
+      const fileExt = SUPPORTED_STYLE_FILE_EXTS.find(ext => styleSource.endsWith(ext))
+      if (fileExt) {
+        styleMeta.lang = fileExt.slice(1) as VineStyleLang
+      }
+      else {
+        vineCompilerHooks.onError(
+          vineErr(vineFileCtx, {
+            msg: 'Invalid external style file',
+            location: vineStyleArg.loc,
+          }),
+        )
+      }
+    }
+
+    // Besides external file path, we have raw style source code here,
     // Collect style meta
     if (vineCompFnCtx.scopeId) {
       vineFileCtx.styleDefine[vineCompFnCtx.scopeId] ??= []
       vineFileCtx.styleDefine[vineCompFnCtx.scopeId].push(styleMeta)
     }
+    if (isExternalFilePathSource) {
+      continue
+    }
+
     // Collect css v-bind
     const cssvarsValueList = parseCssVars([styleSource])
     if (cssvarsValueList.length > 0) {
@@ -862,6 +906,13 @@ function analyzeFileImportStmts(
   vineFileCtx.importsLastLine = lastImportStmt.loc
 }
 
+export function createLinkedCodeTag(
+  side: 'left' | 'right',
+  itemLength: number,
+) {
+  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
+}
+
 function buildVineCompFnCtx(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
@@ -895,6 +946,7 @@ function buildVineCompFnCtx(
     templateStringNode,
     templateReturn,
     templateSource,
+    propsDefinitionBy: 'annotaion',
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},
@@ -904,14 +956,22 @@ function buildVineCompFnCtx(
     vineModels: {},
     bindings: {},
     cssBindings: {},
+    externalStyleFilePaths: [],
     hoistSetupStmts: [],
 
-    getPropsTypeRecordStr(joinStr = ', '): string {
-      return `{ ${
+    getPropsTypeRecordStr({
+      joinStr = ', ',
+      isNeedLinkedCodeTag = false,
+    } = {}): string {
+      return `{\n${
         Object.entries(this.props).map(
-          ([propName, propMeta]) => `${propName}: ${propMeta.typeAnnotationRaw}`,
+          ([propName, propMeta]) => `${
+            isNeedLinkedCodeTag
+              ? `${createLinkedCodeTag('left', propName.length)}${propName}`
+              : propName
+            }: ${propMeta.typeAnnotationRaw}`,
         ).join(joinStr)
-      } }`
+      }\n}`
     },
   }
   const analyzeCtx: AnalyzeCtx = {

@@ -249,6 +249,26 @@ Node {
 exports[`test Vine compiler analyze > analyze vine component props by macro calls 1`] = `
 {
   "disabled": {
+    "declaredIdentifier": Node {
+      "end": 74,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 16,
+          "index": 74,
+          "line": 4,
+        },
+        "filename": undefined,
+        "identifierName": "disabled",
+        "start": Position {
+          "column": 8,
+          "index": 66,
+          "line": 4,
+        },
+      },
+      "name": "disabled",
+      "start": 66,
+      "type": "Identifier",
+    },
     "isBool": true,
     "isFromMacroDefine": true,
     "isRequired": false,
@@ -256,6 +276,26 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "validator": undefined,
   },
   "name": {
+    "declaredIdentifier": Node {
+      "end": 36,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 12,
+          "index": 36,
+          "line": 3,
+        },
+        "filename": undefined,
+        "identifierName": "name",
+        "start": Position {
+          "column": 8,
+          "index": 32,
+          "line": 3,
+        },
+      },
+      "name": "name",
+      "start": 32,
+      "type": "Identifier",
+    },
     "isBool": false,
     "isFromMacroDefine": true,
     "isRequired": true,
@@ -263,6 +303,26 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "validator": undefined,
   },
   "title": {
+    "declaredIdentifier": Node {
+      "end": 119,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 13,
+          "index": 119,
+          "line": 5,
+        },
+        "filename": undefined,
+        "identifierName": "title",
+        "start": Position {
+          "column": 8,
+          "index": 114,
+          "line": 5,
+        },
+      },
+      "name": "title",
+      "start": 114,
+      "type": "Identifier",
+    },
     "default": Node {
       "end": 152,
       "extra": {

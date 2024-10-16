@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { readFile } from 'node:fs/promises'
 import type { HmrContext, Plugin, TransformResult } from 'vite'
 import { createLogger } from 'vite'
 import {
@@ -13,10 +14,10 @@ import type {
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { TransformPluginContext } from 'rollup'
-import type { VineQuery } from './parse-query'
+import type { VineQuery } from '../../compiler/src/types'
 import { parseQuery } from './parse-query'
 import { vineHMR } from './hot-update'
-import { QUERY_TYPE_STYLE } from './constants'
+import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
 
 function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   const compilerCtx = createCompilerCtx({
@@ -31,9 +32,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         .map(diagnositc => diagnositc.full)
         .join('\n')
       compilerCtx.vineCompileErrors.length = 0
-      pluginContext.error(new Error(
-        `Vue Vine compilation failed:\n${allErrMsg}`,
-      ))
+      pluginContext.error(`Vue Vine compilation failed:\n${allErrMsg}`)
     }
   }
 
@@ -103,32 +102,53 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     enforce: 'pre',
     async resolveId(id) {
       const { query } = parseQuery(id)
-      if (query.type === QUERY_TYPE_STYLE) {
+      if (
+        query.type === QUERY_TYPE_STYLE
+        || query.type === QUERY_TYPE_STYLE_EXTERNAL
+      ) {
         // serve vine style requests as virtual modules
         return id
       }
     },
     async load(id) {
-      const { fileId, query } = parseQuery(id)
+      const { filePath, query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
-        const fullFileId = `${fileId}.vine.ts`
+        const fullFileId = `${filePath}.vine.ts`
         const styleSource = compilerCtx.fileCtxMap
           .get(fullFileId)
-          ?.styleDefine[query.scopeId]
+          ?.styleDefine
+          ?.[query.scopeId]
           ?.[query.index]
           ?.source ?? ''
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
-          `${fileId /* This is virtual file id */}.vine.ts`,
+          `${filePath}.vine.ts`,
         )
+        return compiledStyle
+      }
+      else if (
+        query.type === QUERY_TYPE_STYLE_EXTERNAL
+        && query.scopeId
+        && query.vineFileId
+      ) {
+        const styleSource = await readFile(filePath, 'utf-8')
+        const compiledStyle = await runCompileStyle(
+          styleSource,
+          query,
+          `${query.vineFileId}.vine.ts`,
+        )
+
         return compiledStyle
       }
     },
     async transform(code, id, opt) {
       const ssr = opt?.ssr === true
-      const { fileId, query } = parseQuery(id)
-      if (!fileId.endsWith('.vine.ts') || query.type === QUERY_TYPE_STYLE) {
+      const { filePath, query } = parseQuery(id)
+      if (
+        !filePath.endsWith('.vine.ts')
+        || query.type === QUERY_TYPE_STYLE
+      ) {
         return
       }
 
