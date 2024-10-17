@@ -108,8 +108,8 @@ function patchModule(
       if (oCssBindingsVariables.length === 0 && nCssBindingsVariables.length === 0) {
         patchRes.type = 'style'
         patchRes.scopeId = nCompFns.scopeId
-      // The variables of v-bind() before and after the change are equal
       }
+      // The variables of v-bind() before and after the change are equal
       else if (areStrArraysEqual(oCssBindingsVariables, nCssBindingsVariables)) {
         patchRes.type = 'style'
         patchRes.scopeId = nCompFns.scopeId
