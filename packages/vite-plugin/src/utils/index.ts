@@ -1,5 +1,8 @@
 export function areStrArraysEqual(arr1: string[] | undefined, arr2: string[] | undefined): boolean {
-  if (!arr1 || !arr2) {
+  if (!arr1 && !arr2) {
+    return true
+  }
+  else if (!arr1 || !arr2) {
     return false
   }
   const set1 = new Set(arr1)
