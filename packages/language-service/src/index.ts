@@ -314,7 +314,7 @@ function createVueVineCode(
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
     id: 'root',
-    languageId: 'typescript',
+    languageId: 'ts',
     snapshot: {
       getLength() {
         return tsCode.length
