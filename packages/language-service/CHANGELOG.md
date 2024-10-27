@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.1.23
+
+### Patch Changes
+
+- Support jump to definition for vineProp macro
+
 ## 0.1.21
 
 ### Patch Changes

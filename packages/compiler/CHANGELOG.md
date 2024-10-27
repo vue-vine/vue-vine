@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.23
+
+### Patch Changes
+
+- Fix vineEmits validation on type parameter or call arg.
+
 ## 0.1.20
 
 ### Patch Changes
