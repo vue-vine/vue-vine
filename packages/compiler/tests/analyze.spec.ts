@@ -161,6 +161,23 @@ function MyComp() {
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
   })
 
+  it('analyze vine emits definition of plain string names', () => {
+    const content = `
+function MyComp() {
+  const myEmits = vineEmits(['foo', 'bar'])
+  return vine\`<div>Test emits</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineEmits', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineEmits')
+    expect(fileCtx?.vineCompFns.length).toBe(1)
+    const vineFnComp = fileCtx?.vineCompFns[0]
+    expect(vineFnComp?.emitsAlias).toBe('myEmits')
+    expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
+  })
+
   it('analyze vine slots definition', () => {
     const content = `
 function MyComp() {

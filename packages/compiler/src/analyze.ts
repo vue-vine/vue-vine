@@ -2,6 +2,7 @@ import hashId from 'hash-sum'
 import type { BindingTypes } from '@vue/compiler-dom'
 import { walkIdentifiers } from '@vue/compiler-dom'
 import {
+  isArrayExpression,
   isArrayPattern,
   isBlockStatement,
   isBooleanLiteral,
@@ -476,18 +477,27 @@ const analyzeVineEmits: AnalyzeRunner = (
     return
   }
   const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
-  if (!typeParam) {
-    return
-  }
+  const callArg = vineEmitsMacroCall.arguments[0]
 
-  // Save all the properties' name of
-  // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
-  // to a string array for `vineCompFn.emits`
-  const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
-  emitsTypeLiteralProps.forEach((prop) => {
-    const propName = getTSTypeLiteralPropertySignatureName(prop)
-    vineCompFnCtx.emits.push(propName)
-  })
+  if (typeParam) {
+    // Save all the properties' name of
+    // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
+    // to a string array for `vineCompFn.emits`
+    const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
+    emitsTypeLiteralProps.forEach((prop) => {
+      const propName = getTSTypeLiteralPropertySignatureName(prop)
+      vineCompFnCtx.emits.push(propName)
+    })
+  }
+  else if (isArrayExpression(callArg)) {
+    // Save all the string elements of the array expression
+    // as `vineCompFn.emits`
+    callArg.elements.forEach((el) => {
+      if (isStringLiteral(el)) {
+        vineCompFnCtx.emits.push((el as StringLiteral).value)
+      }
+    })
+  }
 
   // If `vineEmits` is inside a variable declaration,
   // save the variable name to `vineCompFn.emitsAlias`

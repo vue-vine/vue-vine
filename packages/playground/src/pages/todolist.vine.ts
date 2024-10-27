@@ -1,57 +1,76 @@
 import { PageHeader } from '../components/page-header.vine';
 import { useTodoStore } from '../store/todoList'
-import type { TodoItem } from '../store/todoList'
 
-function ToDoCheckbox() {
+function ToDoAction() {
   const state = vineProp<string>()
-  const emits = vineEmits<{
-    'complete':[]
-  }>()
-  function complete(){
-    emits('complete')
-  }
+  const showDelete = vineProp.withDefault(false)
+  const emits = vineEmits(['complete', 'delete', 'cancel'])
 
   return vine`
-    <div v-if="state==='complete'" class="complete i-mdi-check text-3xl bg-#16a34a" />
-    <div v-else-if="state==='cancel'" class="cancel i-mdi-close text-3xl bg-#dc2626" />
-    <div @click="complete" v-else class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer" />
+    <div class="flex items-center">
+      <div
+        v-if="state === 'complete'"
+        class="complete i-mdi-check-circle text-3xl cursor-default text-#7eff84"
+      />
+      <div
+        v-else-if="state === 'cancel'"
+        class="cancel i-mdi-close text-3xl cursor-default text-#dc2626"
+      />
+      <div v-else class="flex items-center">
+        <div
+          class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer mr-2"
+          @click="emits('complete')"
+        />
+        <div
+          class="i-mdi-cancel text-3xl text-#898989 cursor-pointer ml-2"
+          @click="emits('cancel')"
+        />
+      </div>
+      <div
+        v-if="showDelete"
+        class="complete i-mdi-delete-circle text-3xl text-#89898b ml-2"
+        @click="emits('delete')"
+      />
+    </div>
   `;
 }
 
 function TodoContent() {
-  const piniaStore  = useTodoStore()
-  const todoList = piniaStore.getTodoList
-  const completeList = piniaStore.getCompleteList
-
-  function completeTodo(todoItem:TodoItem){
-      piniaStore.completeTodo(todoItem)
-  }
+  const piniaStore = useTodoStore()
 
   return vine`
     <div class="todo">
       <div class="todo-content px-20px mt-20px ">
         <div class="title cursor-pointer">
-          <p>待办事项</p>
+          <p>Tasks</p>
         </div>
-      <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer" v-for="d in todoList">
+      <div v-for="d in piniaStore.todoList" :key="d.id" class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer">
         <div class="todo-item-content flex items-center justify-between">
           <div class="todo-item-text">
-            <div class="text-lg text-gray-100">{{d.title}}</div>
+            <div class="text-lg text-gray-100">{{ d.title }}</div>
           </div>
-          <ToDoCheckbox @complete="completeTodo(d)" :state="d.state"/>
+          <ToDoAction
+            @complete="piniaStore.completeTodo(d)"
+            @cancel="piniaStore.cancelTodo(d)"
+            :state="d.state"
+          />
         </div>
       </div>
       </div>
       <div class="todo-content px-20px mt-20px ">
         <div class="title cursor-pointer">
-          <p>完成事项</p>
+          <p>Handled</p>
         </div>
-        <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete" v-for="d in completeList">
+        <div v-for="d in piniaStore.handledList" :key="d.id" class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete">
         <div class="todo-item-content flex items-center justify-between">
           <div class="todo-item-text">
-            <div class="text-lg text-gray-100">{{d.title}}</div>
+            <div class="text-lg text-gray-100">{{ d.title }}</div>
           </div>
-          <ToDoCheckbox :state="d.state"/>
+          <ToDoAction
+            @delete="piniaStore.deleteTodo(d)"
+            :state="d.state"
+            show-delete
+          />
         </div>
       </div>
       </div>
@@ -60,17 +79,9 @@ function TodoContent() {
 }
 
 function TodoAdd(){
-  const title = vineProp<string>()
-  const piniaStore  = useTodoStore()
-  const emits = vineEmits(['clearTitle'])
+  const emits = vineEmits(['addItem'])
   function addTodo(){
-    if(title.value === '') return;
-    piniaStore.addTodo({
-      id: Date.now(),
-      title: title.value,
-      state: 'todo'
-    })
-    emits('clearTitle')
+    emits('addItem')
   }
 
   return vine`
@@ -81,29 +92,30 @@ function TodoAdd(){
 }
 
 function TodoInput() {
-  const emit = vineEmits<{'update:modelValue':[title:string]}>()
-  const title = vineProp<string>()
-  const value = ref(title.value)
-  function emitChange(){
-    emit('update:modelValue',value.value)
+  const piniaStore = useTodoStore()
+  const todoContent = ref('')
+
+  function onAddItem() {
+    piniaStore.addTodo({
+      id: Date.now(),
+      title: todoContent.value,
+      state: 'todo'
+    })
+    todoContent.value = ''
   }
 
   return vine`
-    <input type="text" class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10" @input="emitChange" v-model="value" />
-    <TodoAdd @clearTitle='value=""' :title="value"/>
+    <input type="text" class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10" v-model="todoContent" />
+    <TodoAdd @addItem="onAddItem()" />
   `;
 }
 
 function Header() {
-  const title = ref('')
-  const clearTitle = () => {
-    title.value = ''
-  }
   return vine`
     <div class="header flex justify-between p-20px">
       <div class="title">TodoList</div>
       <div class="input flex items-center justify-end">
-      <TodoInput :title="title" @update:modelValue="title = $event"/>
+      <TodoInput />
       </div>
     </div>
   `;
