@@ -69,7 +69,7 @@ vineStyle(scss`
 如果你希望引入一个外部的样式文件，可能你会选择如下的方式：
 
 ```ts
-import "~/styles/some-style.less"
+import '~/styles/some-style.less'
 ```
 
 但如果你想要该样式文件是带 **`scoped`** 作用的，可以这样使用 `vineStyle` 宏：

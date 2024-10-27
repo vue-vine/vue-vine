@@ -12,12 +12,9 @@ function ToDoCheckbox() {
   }
 
   return vine`
-  <div v-if="state==='complete'" class="complete i-mdi-check text-3xl bg-#16a34a">
-    </div>
-  <div v-else-if="state==='cancel'" class="cancel i-mdi-close text-3xl bg-#dc2626">
-  </div>
-  <div @click="complete" v-else class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer">
-  </div>
+  <div v-if="state==='complete'" class="complete i-mdi-check text-3xl bg-#16a34a" />
+  <div v-else-if="state==='cancel'" class="cancel i-mdi-close text-3xl bg-#dc2626" />
+  <div @click="complete" v-else class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer" />
   `;
 }
 
@@ -66,7 +63,7 @@ const piniaStore  = useTodoStore()
 function TodoAdd(){
   const title = vineProp<string>()
   const piniaStore  = useTodoStore()
-  const emits = vineEmits<{'clearTitle':[]}>()
+  const emits = vineEmits(['clearTitle'])
   function addTodo(){
       if(title.value === '') return;
       piniaStore.addTodo({
@@ -77,10 +74,10 @@ function TodoAdd(){
       emits('clearTitle')
   }
 
-    return vine`
-  <div @click="addTodo" class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer">
-  <div class="i-mdi-add text-3xl" />
-  </div>
+  return vine`
+    <div @click="addTodo" class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer">
+      <div class="i-mdi-add text-3xl" />
+    </div>
   `;
 }
 
@@ -94,8 +91,8 @@ function TodoInput() {
   }
 
   return vine`
-  <input type="text" class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10" @input="emitChange" v-model="value" />
-  <TodoAdd @clearTitle='value=""'  :title="value"/>
+    <input type="text" class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10" @input="emitChange" v-model="value" />
+    <TodoAdd @clearTitle='value=""' :title="value"/>
   `;
 }
 
@@ -105,22 +102,23 @@ function Header() {
     title.value = ''
   }
   return vine`
-  <div class="header flex justify-between p-20px">
-    <div class="title">TodoList</div>
-    <div class="input flex items-center justify-end">
-    <TodoInput :title="title" @update:modelValue="title = $event"/>
+    <div class="header flex justify-between p-20px">
+      <div class="title">TodoList</div>
+      <div class="input flex items-center justify-end">
+      <TodoInput :title="title" @update:modelValue="title = $event"/>
+      </div>
     </div>
-  </div>
   `;
 }
 
 export default function TodoList() {
   vineStyle.import('~/styles/todo-list.scss');
+
   return vine`
-  <PageHeader />
-  <div class="todo-container container xl flex items-center justify-center flex-col	">
-    <Header />
-    <TodoContent />
-  </div>
+    <PageHeader />
+    <div class="todo-container container xl flex items-center justify-center flex-col	">
+      <Header />
+      <TodoContent />
+    </div>
   `;
 }
