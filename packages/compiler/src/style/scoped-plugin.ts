@@ -1,7 +1,7 @@
 import type { AtRule, PluginCreator, Rule } from 'postcss'
-import selectorParser from 'postcss-selector-parser'
-import type { VineCompilerCtx, VineFileCtx } from '../types'
 import type { DiagnosticParams } from '../diagnostics'
+import type { VineCompilerCtx, VineFileCtx } from '../types'
+import selectorParser from 'postcss-selector-parser'
 import { vineWarn } from '../diagnostics'
 
 const animationNameRE = /^(?:-\w+-)?animation-name$/
@@ -32,8 +32,8 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
     if (
       processedRules.has(rule)
       || (rule.parent
-      && rule.parent.type === 'atrule'
-      && /-?keyframes$/.test((rule.parent as AtRule).name))
+        && rule.parent.type === 'atrule'
+        && /-?keyframes$/.test((rule.parent as AtRule).name))
     ) {
       return
     }

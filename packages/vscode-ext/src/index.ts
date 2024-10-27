@@ -5,8 +5,8 @@ import {
   createLabsInfo,
   getTsdk,
 } from '@volar/vscode'
-import * as vscode from 'vscode'
 import * as lsp from '@volar/vscode/node'
+import * as vscode from 'vscode'
 
 let client: lsp.BaseLanguageClient
 

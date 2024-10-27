@@ -1,7 +1,7 @@
 import { posix as path } from 'node:path'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
+import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 
 const windowsPathReg = /\\/g
 const plugin = createLanguageServicePlugin((ts, info) => {

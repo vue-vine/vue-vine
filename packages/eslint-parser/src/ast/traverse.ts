@@ -1,6 +1,6 @@
 import type { VisitorKeys } from 'eslint-visitor-keys'
-import * as Evk from 'eslint-visitor-keys'
 import type { Node } from './nodes'
+import * as Evk from 'eslint-visitor-keys'
 
 // ------------------------------------------------------------------------------
 // Helpers

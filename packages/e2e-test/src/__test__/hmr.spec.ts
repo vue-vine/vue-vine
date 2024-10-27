@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest'
 import type { E2EPlaywrightContext } from '../../utils/test-utils'
+import { afterEach, describe, expect, it } from 'vitest'
 import { createBrowserContext, editFile, freeBrowserContext, getColor, untilUpdated } from '../../utils/test-utils'
 
 afterEach(() => {

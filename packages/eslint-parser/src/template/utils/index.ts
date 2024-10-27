@@ -1,11 +1,11 @@
-import { debug } from '../../common/debug'
-import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
-import type { LocationCalculatorForHtml } from '../../common/location-calculator'
-import { ParseError } from '../../ast'
 import type { ESLintExpression, Reference, Token, VAttribute, VDirective, VDirectiveKey, VElement, VExpressionContainer, VFilterSequenceExpression, VForExpression, VIdentifier, VLiteral, VNode, VOnExpression, VSlotScopeExpression } from '../../ast'
+import type { LocationCalculatorForHtml } from '../../common/location-calculator'
+import type { ExpressionParseResult } from '../../script'
+import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
+import { ParseError } from '../../ast'
+import { debug } from '../../common/debug'
 import { insertError } from '../../common/error-utils'
 import { createSimpleToken, insertComments, replaceTokens } from '../../common/token-utils'
-import type { ExpressionParseResult } from '../../script'
 import { parseExpression, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
 import { fixVineOffset } from './process-vine-template-node'
 
@@ -54,7 +54,7 @@ function getStandardDirectiveKind(
     directiveName === 'slot'
     || directiveName === 'slot-scope'
     || (directiveName === 'scope'
-    && element.rawName === 'template')
+      && element.rawName === 'template')
   ) {
     return 'slot'
   }
@@ -292,7 +292,7 @@ function parseDirectiveKeyStatically(
       templateMeta,
       new ParseError(
         `Unexpected token '${
-            text[directiveKey.name.range[1] - offset]
+          text[directiveKey.name.range[1] - offset]
         }'`,
         undefined,
         directiveKey.name.range[1],

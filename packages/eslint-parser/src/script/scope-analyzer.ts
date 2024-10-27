@@ -1,22 +1,22 @@
-import type * as escopeTypes from 'eslint-scope'
 import type { TSESTree } from '@typescript-eslint/types'
-import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
-import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
+import type * as escopeTypes from 'eslint-scope'
 import type {
   ESLintIdentifier,
   ESLintProgram,
   Reference,
+  Variable,
   VAttribute,
   VDirective,
   VElement,
   VExpressionContainer,
   VTemplateRoot,
-  Variable,
 } from '../ast'
+import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
 import { getFallbackKeys, traverseNodes } from '../ast'
 import { getEslintScope } from '../common/eslint-scope'
 import { getEcmaVersionIfUseEspree } from '../common/espree'
 import { createVirtualVineFnPropsReference } from '../common/vine-specific'
+import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
 
 const BUILTIN_COMPONENTS = new Set([
   'template',
@@ -238,7 +238,8 @@ export function analyzeVariablesAndExternalReferences(
   const scope = analyze(parserResult, parserOptions)
   return {
     variables: getForScope(scope)
-      .variables.filter(hasDefinition)
+      .variables
+      .filter(hasDefinition)
       .map(v => transformVariable(v, kind)),
     references: scope.through.filter(isUnique).map(transformReference),
   }

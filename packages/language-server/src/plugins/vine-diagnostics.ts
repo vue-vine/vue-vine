@@ -1,7 +1,7 @@
-import type { LanguageServicePlugin } from '@volar/language-service'
 import type { Diagnostic } from '@volar/language-server/node'
-import { URI } from 'vscode-uri'
+import type { LanguageServicePlugin } from '@volar/language-service'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
+import { URI } from 'vscode-uri'
 import { transformVineDiagnostic } from '../../../language-service/src/shared'
 
 const NOT_SHOW_VUE_VINE_MSG_TAG = [
@@ -12,7 +12,10 @@ export function createVineDiagnostics(): LanguageServicePlugin {
   return {
     name: 'Vue Vine Diagnostics Provider',
     capabilities: {
-      diagnosticProvider: {},
+      diagnosticProvider: {
+        interFileDependencies: true,
+        workspaceDiagnostics: true,
+      },
     },
     create(context) {
       return {
@@ -32,7 +35,9 @@ export function createVineDiagnostics(): LanguageServicePlugin {
             return diagnostics
           }
           const virtualCode = context.language.scripts
-            .get(decoded[0])?.generated?.embeddedCodes
+            .get(decoded[0])
+            ?.generated
+            ?.embeddedCodes
             .get(decoded[1])
           if (!virtualCode || !isVueVineVirtualCode(virtualCode)) {
             return

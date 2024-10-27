@@ -1,8 +1,8 @@
+import fs from 'node:fs'
 import { copyFile, mkdir, readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
-import fs from 'node:fs'
-import sortDependencies from './sortDependencies'
 import deepMerge from './deepMerge'
+import sortDependencies from './sortDependencies'
 
 export async function renderTemplate(src: string, dest: string) {
   const stats = await stat(src)

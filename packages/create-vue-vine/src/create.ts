@@ -1,5 +1,5 @@
-import { join } from 'node:path'
 import { mkdir, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { getTemplateDirectory, renderTemplate } from './utils'
 
 export interface ProjectOptions {

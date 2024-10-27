@@ -1,3 +1,17 @@
+import type {
+  ArrayExpression,
+  CallExpression,
+  Identifier,
+  Node,
+  TraversalAncestors,
+  TSMethodSignature,
+  TSPropertySignature,
+  TSTypeAnnotation,
+  TSTypeLiteral,
+  VariableDeclaration,
+  VariableDeclarator,
+} from '@babel/types'
+import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
 import process from 'node:process'
 import {
   isArrayExpression,
@@ -5,31 +19,17 @@ import {
   isObjectExpression,
   isObjectProperty,
   isStringLiteral,
+  isTaggedTemplateExpression,
+  isTemplateLiteral,
   isTSFunctionType,
   isTSMethodSignature,
   isTSPropertySignature,
   isTSTypeAnnotation,
   isTSTypeLiteral,
-  isTaggedTemplateExpression,
-  isTemplateLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
-import type {
-  ArrayExpression,
-  CallExpression,
-  Identifier,
-  Node,
-  TSMethodSignature,
-  TSPropertySignature,
-  TSTypeAnnotation,
-  TSTypeLiteral,
-  TraversalAncestors,
-  VariableDeclaration,
-  VariableDeclarator,
-} from '@babel/types'
-import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
 import {
   getFunctionParams,
   getFunctionPickedInfos,
@@ -41,14 +41,14 @@ import {
   isVineProp,
   isVineTaggedTemplateString,
 } from './babel-helpers/ast'
-import { vineErr } from './diagnostics'
 import {
   BARE_CALL_MACROS,
   CAN_BE_CALLED_MULTI_TIMES_MACROS,
   SUPPORTED_CSS_LANGS,
 } from './constants'
-import { colorful } from './utils/color-string'
+import { vineErr } from './diagnostics'
 import { _breakableTraverse } from './utils'
+import { colorful } from './utils/color-string'
 
 interface VineValidatorCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -72,10 +72,10 @@ function wrapVineValidatorWithLog(validators: VineValidator[]) {
       // Bypass this ESLint is for local development to find out which test case is failed,
       // eslint-disable-next-line no-console
       console.log(`${
-          colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
-        } ${validator.name} => ${
-          colorful(isPass ? 'PASS' : 'FAIL', [isPass ? 'green' : 'red'])
-        }`)
+        colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
+      } ${validator.name} => ${
+        colorful(isPass ? 'PASS' : 'FAIL', [isPass ? 'green' : 'red'])
+      }`)
       return isPass
     })
     : validators
@@ -428,7 +428,7 @@ function assertVineEmitsUsage(
           vineFileCtx,
           {
             msg: 'Vue Vine component function\'s vineEmits type must be object literal! '
-            + 'And all properties\' key must be string literal or identifier',
+              + 'And all properties\' key must be string literal or identifier',
             location: theOnlyTypeParam?.loc,
           },
         ),
@@ -485,7 +485,7 @@ function assertSlotMethodSignature(
             isNameNotProps
               ? `, and its parameter name must be \`props\`, but got \`${
                 (theSignatureOnlyParam as Identifier).name
-                }\``
+              }\``
               : ''
           }`,
           location: theSignatureOnlyParam.loc,
@@ -927,7 +927,8 @@ function validateMacrosUsage(
         return isPass
       })
       .every(Boolean),
-    ).every(Boolean)
+    )
+    .every(Boolean)
 
   return isCountCorrect && isBareCallMacrosPass && isAssertsPass
 }
@@ -1146,7 +1147,7 @@ function validatePropsForSingelFC(
             vineFileCtx,
             {
               msg: 'Vine component function\'s props type annotation must be an object literal, '
-              + 'only contains properties signature, and all properties\' key must be string literal or identifier',
+                + 'only contains properties signature, and all properties\' key must be string literal or identifier',
               location: propsTypeAnnotation.loc,
             },
           ),

@@ -1,6 +1,6 @@
-import sortedIndexBy from 'lodash/sortedIndexBy'
 import type { ParseError } from '../ast'
 import type { VineTemplateMeta } from '../types'
+import sortedIndexBy from 'lodash/sortedIndexBy'
 
 /**
  * Get `x.pos`.

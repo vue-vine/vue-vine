@@ -1,16 +1,16 @@
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export function PageHeader() {
   const route = useRoute()
   const router = useRouter()
 
   const handleNavBtnClick = (
-    target: '/about' | '/style-order' | '/todolist'
+    target: '/about' | '/style-order' | '/todolist',
   ) => {
     router.push(
       route.path === target
         ? '/'
-        : target
+        : target,
     )
   }
 

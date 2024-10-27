@@ -1,12 +1,12 @@
-import { parseExpression } from '@babel/parser'
 import type { RootNode, SimpleExpressionNode } from '@vue/compiler-dom'
+import type { VineCompFnCtx } from '../types'
+import { parseExpression } from '@babel/parser'
 import {
   parserOptions,
   transform,
   walkIdentifiers,
 } from '@vue/compiler-dom'
 import { camelize, capitalize, isBuiltInDirective } from '../utils'
-import type { VineCompFnCtx } from '../types'
 
 const templateUsageCheckCache = new Map<string, string>()
 

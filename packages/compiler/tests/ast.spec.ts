@@ -1,4 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import type {
+  ExportDefaultDeclaration,
+  FunctionDeclaration,
+  Identifier,
+  VariableDeclaration,
+} from '@babel/types'
 import { parse as babelParse } from '@babel/parser'
 import {
   assignmentExpression,
@@ -11,12 +16,7 @@ import {
   numericLiteral,
   program,
 } from '@babel/types'
-import type {
-  ExportDefaultDeclaration,
-  FunctionDeclaration,
-  Identifier,
-  VariableDeclaration,
-} from '@babel/types'
+import { describe, expect, it } from 'vitest'
 import {
   findVineCompFnDecls,
   isDescendant,

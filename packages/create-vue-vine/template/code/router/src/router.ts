@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { Home } from './pages/home.vine'
 import { About } from './pages/about.vine'
+import { Home } from './pages/home.vine'
 
 const routes = [
   { path: '/', component: Home },

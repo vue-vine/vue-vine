@@ -1,7 +1,7 @@
-import assert from 'node:assert'
-import { debug } from '../common/debug'
 import type { ErrorCode, Namespace, Token } from '../ast'
+import assert from 'node:assert'
 import { NS, ParseError } from '../ast'
+import { debug } from '../common/debug'
 import { alternativeCR } from './utils/alternative-cr'
 import { entitySets } from './utils/entities'
 import {
@@ -14,6 +14,17 @@ import {
   GRAVE_ACCENT,
   GREATER_THAN_SIGN,
   HYPHEN_MINUS,
+  isControl,
+  isDigit,
+  isHexDigit,
+  isLetter,
+  isLowerHexDigit,
+  isNonCharacter,
+  isSurrogate,
+  isSurrogatePair,
+  isUpperHexDigit,
+  isUpperLetter,
+  isWhitespace,
   LATIN_CAPITAL_D,
   LATIN_CAPITAL_X,
   LATIN_SMALL_X,
@@ -30,17 +41,6 @@ import {
   RIGHT_SQUARE_BRACKET,
   SEMICOLON,
   SOLIDUS,
-  isControl,
-  isDigit,
-  isHexDigit,
-  isLetter,
-  isLowerHexDigit,
-  isNonCharacter,
-  isSurrogate,
-  isSurrogatePair,
-  isUpperHexDigit,
-  isUpperLetter,
-  isWhitespace,
   toLowerCodePoint,
 } from './utils/unicode'
 

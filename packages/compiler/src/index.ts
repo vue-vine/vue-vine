@@ -1,15 +1,11 @@
-import MagicString from 'magic-string'
 import type { Node } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
-import { findVineCompFnDecls } from './babel-helpers/ast'
-import { validateVine } from './validate'
+import MagicString from 'magic-string'
 import { analyzeVine } from './analyze'
-import { transformFile } from './transform'
+import { findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
-
-export {
-  compileVineStyle,
-} from './style/compile'
+import { transformFile } from './transform'
+import { validateVine } from './validate'
 
 export {
   findVineCompFnDecls,
@@ -19,15 +15,19 @@ export {
   VineBindingTypes,
 } from './constants'
 
+export {
+  compileVineStyle,
+} from './style/compile'
+
 export type {
-  VineFileCtx,
-  VineCompFnCtx as VineFnCompCtx,
-  VineCompilerOptions,
-  VineProcessorLang,
-  VineCompilerHooks,
-  VineDiagnostic,
-  VineCompilerCtx,
   HMRCompFnsName,
+  VineCompFnCtx as VineFnCompCtx,
+  VineCompilerCtx,
+  VineCompilerHooks,
+  VineCompilerOptions,
+  VineDiagnostic,
+  VineFileCtx,
+  VineProcessorLang,
 } from './types'
 
 export function createCompilerCtx(

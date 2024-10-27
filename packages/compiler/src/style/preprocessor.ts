@@ -1,6 +1,6 @@
-import merge from 'merge-source-map'
 import type { VineProcessorLang } from '../types'
 import type { StylePreprocessor } from './types'
+import merge from 'merge-source-map'
 
 // scss/.sass processor
 const scss: StylePreprocessor = (source, map, options, load = require) => {

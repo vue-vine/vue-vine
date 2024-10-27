@@ -1,6 +1,6 @@
 import type { ProjectOptions } from '@/create'
-import { confirm, defineFlagMeta } from '@/utils'
 import type { FeatureFlagActionCtx } from '@/utils'
+import { confirm, defineFlagMeta } from '@/utils'
 
 const metas = {
   router: defineFlagMeta({

@@ -1,6 +1,6 @@
 import type { PluginCreator } from 'postcss'
-import MagicString from 'magic-string'
 import type { VineFileCtx } from '../types'
+import MagicString from 'magic-string'
 import { parseCssVars } from './analyze-css-vars'
 
 interface CSSVarsPluginOptions {

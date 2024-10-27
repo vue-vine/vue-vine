@@ -47,7 +47,7 @@
     "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/**/package.json"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.22.0",
+    "@antfu/eslint-config": "^3.8.0",
     "@baiwusanyu/utils-log": "^1.0.15",
     "@changesets/cli": "^2.27.7",
     "@types/node": "^20.11.27",

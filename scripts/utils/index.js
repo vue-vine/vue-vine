@@ -1,6 +1,6 @@
-import process from 'node:process'
-import { resolve } from 'node:path'
 import { exec, spawn } from 'node:child_process'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
 import { colorful } from './color-str'
@@ -30,7 +30,7 @@ export async function runCommand(command, options = {}) {
       proc.on('exit', resolve)
       proc.on('error', (err) => {
         log('error', String(err), `${colorful(
-        `${options.title ? ` ${options.title} ` : ' '}`,
+          `${options.title ? ` ${options.title} ` : ' '}`,
           ['black', 'bgRed', 'bold'],
         )}  `)
         reject(err)
@@ -41,7 +41,7 @@ export async function runCommand(command, options = {}) {
     }
     catch (err) {
       log('error', String(err), `${colorful(
-      `${options.title ? ` ${options.title} ` : ' '}`,
+        `${options.title ? ` ${options.title} ` : ' '}`,
         ['white', 'bgRed', 'bold'],
       )}  `)
       reject(err)

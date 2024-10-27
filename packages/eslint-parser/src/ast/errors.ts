@@ -121,9 +121,9 @@ export class ParseError extends SyntaxError {
     return (
       x instanceof ParseError
       || (typeof x.message === 'string'
-      && typeof x.index === 'number'
-      && typeof x.lineNumber === 'number'
-      && typeof x.column === 'number')
+        && typeof x.index === 'number'
+        && typeof x.lineNumber === 'number'
+        && typeof x.column === 'number')
     )
   }
 }

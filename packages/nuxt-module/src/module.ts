@@ -1,5 +1,5 @@
-import { defineNuxtModule } from '@nuxt/kit'
 import type { PluginOption } from 'vite'
+import { defineNuxtModule } from '@nuxt/kit'
 import { VineVitePlugin } from 'vue-vine/vite'
 
 // Module options TypeScript interface definition

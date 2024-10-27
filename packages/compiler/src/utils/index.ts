@@ -1,5 +1,5 @@
-import { traverse } from '@babel/types'
 import type { VineStyleLang } from '../types'
+import { traverse } from '@babel/types'
 import { makeMap } from './makeMap'
 
 const camelizeRE = /-(\w)/g

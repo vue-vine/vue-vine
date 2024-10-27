@@ -1,11 +1,11 @@
 import type { Disposable, LanguageServicePlugin, SourceScript } from '@volar/language-service'
-import { URI } from 'vscode-uri'
-import { type VueCompilerOptions, resolveVueCompilerOptions } from '@vue/language-core'
-import { create as createHtmlService } from 'volar-service-html'
-import type { IHTMLDataProvider, ITagData } from 'vscode-html-languageservice'
-import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import type { VueVineCode } from '@vue-vine/language-service'
+import type { IHTMLDataProvider, ITagData } from 'vscode-html-languageservice'
+import { resolveVueCompilerOptions, type VueCompilerOptions } from '@vue/language-core'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
+import { create as createHtmlService } from 'volar-service-html'
+import { newHTMLDataProvider } from 'vscode-html-languageservice'
+import { URI } from 'vscode-uri'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/

@@ -1,5 +1,5 @@
-import process from 'node:process'
 import { readFileSync } from 'node:fs'
+import process from 'node:process'
 import { log, setGlobalPrefix } from '@baiwusanyu/utils-log'
 import { r, runCommand } from './utils'
 import { colorful } from './utils/color-str'
@@ -19,7 +19,7 @@ async function runPreCommit() {
   // set log prefix
   setGlobalPrefix(
     `${colorful(' PRE-COMMIT ', ['black', 'bgBlue', 'bold'])
-     }  `,
+    }  `,
   )
 
   try {

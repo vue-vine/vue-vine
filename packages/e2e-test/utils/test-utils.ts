@@ -1,20 +1,20 @@
-import process from 'node:process'
-import path from 'node:path'
+import type { InlineConfig, ViteDevServer } from 'vite'
 import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { expect } from 'vitest'
 import {
   type Browser,
   type BrowserContext,
-  type Page,
   chromium,
+  type Page,
 } from 'playwright-chromium'
-import type { InlineConfig, ViteDevServer } from 'vite'
 import {
   createServer,
   loadConfigFromFile,
   mergeConfig,
 } from 'vite'
+import { expect } from 'vitest'
 
 type Nil = null | undefined
 

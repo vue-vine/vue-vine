@@ -1,8 +1,8 @@
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readFileSync } from 'node:fs'
-import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
+import { defineConfig } from 'vitepress'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const vineGrammar = JSON.parse(

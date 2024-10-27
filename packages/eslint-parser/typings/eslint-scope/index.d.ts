@@ -1,5 +1,5 @@
-import type * as estree from 'estree'
 import type { VisitorKeys } from 'eslint-visitor-keys'
+import type * as estree from 'estree'
 
 export interface AnalysisOptions {
   optimistic?: boolean

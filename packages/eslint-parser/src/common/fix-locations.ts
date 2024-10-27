@@ -6,10 +6,10 @@ import type {
   Node,
   ParseError,
 } from '../ast'
-import { traverseNodes } from '../ast'
-import { fixVineOffset } from '../template/utils/process-vine-template-node'
 import type { VineFixLocationContext } from '../types'
 import type { LocationCalculator } from './location-calculator'
+import { traverseNodes } from '../ast'
+import { fixVineOffset } from '../template/utils/process-vine-template-node'
 
 export function fixVineOffsetForScript(
   result: ESLintExtendedProgram,

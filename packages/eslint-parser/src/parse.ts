@@ -1,11 +1,11 @@
-import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import type { TSESTree } from '@typescript-eslint/types'
 import type { ParseForESLintResult, VineESLintParserOptions, VineTemplateMeta } from './types'
-import { extractForVineTemplate, prepareTemplate } from './template/utils/process-vine-template-node'
-import { Tokenizer } from './template/tokenizer'
-import { VineTemplateParser } from './template/parser'
+import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import { KEYS, type VTemplateRoot } from './ast'
 import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
+import { VineTemplateParser } from './template/parser'
+import { Tokenizer } from './template/tokenizer'
+import { extractForVineTemplate, prepareTemplate } from './template/utils/process-vine-template-node'
 
 type TemplateRootASTPreparation = (
   ReturnType<typeof prepareTemplate>

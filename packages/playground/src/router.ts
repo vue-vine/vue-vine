@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { Home } from './pages/home.vine'
 import { About } from './pages/about.vine'
+import { Home } from './pages/home.vine'
 import { StyleOrder } from './pages/style-order.vine'
 import TodoList from './pages/todolist.vine'
 

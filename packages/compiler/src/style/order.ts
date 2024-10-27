@@ -1,7 +1,7 @@
 import type { ElementNode } from '@vue/compiler-dom'
+import type { VineFileCtx } from '../types'
 import { traverseTemplate } from '../template/traverse'
 import { isComponentNode, isTemplateElementNode } from '../template/type-predicate'
-import type { VineFileCtx } from '../types'
 import { createStyleImportStmt } from './create-import-statement'
 
 type ComponentRelationsMap = Record<string, Set<string>>

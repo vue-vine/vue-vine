@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
-import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import type { Diagnostic, VirtualCode } from '@volar/language-server/node'
+import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { DiagnosticSeverity } from '@volar/language-server/node'
 
 export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'

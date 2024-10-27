@@ -1,14 +1,14 @@
-import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import type { LanguagePlugin } from '@volar/language-core'
-import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import type {
   VueCompilerOptions,
 } from '@vue/language-core'
+import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import {
   createParsedCommandLine,
   createVueLanguagePlugin,
   resolveVueCompilerOptions,
 } from '@vue/language-core'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 
 const windowsPathReg = /\\/g
 

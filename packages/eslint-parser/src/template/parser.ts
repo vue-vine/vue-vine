@@ -1,19 +1,19 @@
-import assert from 'node:assert'
 import type { TSESTree } from '@typescript-eslint/types'
+import type { ErrorCode, HasLocation, Location, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
+import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
+import type { EndTag, IntermediateToken, Mustache, StartTag, Text } from './intermediate-tokenizer'
+import type { Tokenizer } from './tokenizer'
+import assert from 'node:assert'
 import findLastIndex from 'lodash/findLastIndex'
 import last from 'lodash/last'
 import { NS, ParseError } from '../ast'
-import type { ErrorCode, HasLocation, Location, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
-import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
 import { debug } from '../common/debug'
 import { LocationCalculatorForHtml } from '../common/location-calculator'
-import type { EndTag, IntermediateToken, Mustache, StartTag, Text } from './intermediate-tokenizer'
 import { IntermediateTokenizer } from './intermediate-tokenizer'
-import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
-import { fixVineOffset } from './utils/process-vine-template-node'
-import type { Tokenizer } from './tokenizer'
 import { convertToDirective, processMustache, resolveReferences } from './utils'
 import { MATHML_ATTRIBUTE_NAME_MAP, SVG_ATTRIBUTE_NAME_MAP } from './utils/attribute-names'
+import { fixVineOffset } from './utils/process-vine-template-node'
+import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
 
 const DIRECTIVE_NAME = /^(?:v-|[.:@#]).*[^.:@#]$/u
 const DT_DD = /^d[dt]$/u
@@ -84,7 +84,7 @@ function isHTMLIntegrationPoint(element: VElement): boolean {
           && a.key.name === 'encoding'
           && a.value != null
           && (a.value.value === 'text/html'
-          || a.value.value === 'application/xhtml+xml'),
+            || a.value.value === 'application/xhtml+xml'),
       )
     )
   }
@@ -303,8 +303,8 @@ export class VineTemplateParser {
         if (
           isHTMLIntegrationPoint(element)
           || (isMathMLIntegrationPoint(element)
-          && name !== 'mglyph'
-          && name !== 'malignmark')
+            && name !== 'mglyph'
+            && name !== 'malignmark')
         ) {
           ns = NS.HTML
         }

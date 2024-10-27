@@ -1,11 +1,11 @@
 import type { App } from 'vue'
-import { h } from 'vue'
 import Theme from 'vitepress/theme'
+import { h } from 'vue'
+import Recommend from './components/recommend.vue'
+import Sponsors from './components/sponsors.vue'
+
 import 'uno.css'
 import './style.css'
-
-import Sponsors from './components/sponsors.vue'
-import Recommend from './components/recommend.vue'
 
 export default {
   ...Theme,

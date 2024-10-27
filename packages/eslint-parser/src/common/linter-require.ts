@@ -1,6 +1,6 @@
+import { createRequire as NodeCreateRequire } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { createRequire as NodeCreateRequire } from 'node:module'
 import { createRequire as createRequireWithPolyfill } from './create-require'
 
 function isLinterPath(p: string): boolean {

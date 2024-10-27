@@ -1,3 +1,6 @@
+import type { AwaitExpression, Node } from '@babel/types'
+import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
+import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from './types'
 import {
   isAssignmentExpression,
   isAwaitExpression,
@@ -7,7 +10,7 @@ import {
   isVariableDeclaration,
   traverse,
 } from '@babel/types'
-import type { AwaitExpression, Node } from '@babel/types'
+import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import {
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
@@ -19,12 +22,9 @@ import {
   USE_SLOT_HELPER,
 } from './constants'
 import { sortStyleImport } from './style/order'
-import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
-import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
-import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from './types'
-import { filterJoin, showIf } from './utils'
-import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import { compileCSSVars } from './style/transform-css-var'
+import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
+import { filterJoin, showIf } from './utils'
 
 function wrapWithAsyncContext(
   isNeedResult: boolean,
@@ -152,9 +152,9 @@ function propsOptionsCodeGeneration(
         `${modelName}: ${
           modelOptions
             ? vineFileCtx.originCode.slice(
-                modelOptions.start!,
-                modelOptions.end!,
-              )
+              modelOptions.start!,
+              modelOptions.end!,
+            )
             : '{}'
         },`,
       )
@@ -402,7 +402,8 @@ export function transformFile(
                 propMeta.default!.start!,
                 propMeta.default!.end!,
               )
-            }`).join(',\n')
+            }`)
+            .join(',\n')
         }\n})\n`
       }
       ms.prependLeft(
@@ -503,17 +504,17 @@ export function transformFile(
           : `${
             templateCompileResults.get(vineCompFnCtx) ?? ''
           }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
-        }\n${
-          showIf(
+      }\n${
+        showIf(
           Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
           `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';`,
         )}\n${
-          isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
-        }\n${showIf(
-          // handle Web Component styles
-          Boolean(vineCompFnCtx.isCustomElement),
-          `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
-        )}\nreturn __vine\n})();`)
+        isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
+      }\n${showIf(
+        // handle Web Component styles
+        Boolean(vineCompFnCtx.isCustomElement),
+        `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
+      )}\nreturn __vine\n})();`)
 
       // Record component function to HMR
       if (isDev) {

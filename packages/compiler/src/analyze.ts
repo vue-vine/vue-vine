@@ -1,28 +1,3 @@
-import hashId from 'hash-sum'
-import type { BindingTypes } from '@vue/compiler-dom'
-import { walkIdentifiers } from '@vue/compiler-dom'
-import {
-  isArrayExpression,
-  isArrayPattern,
-  isBlockStatement,
-  isBooleanLiteral,
-  isClassDeclaration,
-  isDeclaration,
-  isExportDefaultDeclaration,
-  isFunctionDeclaration,
-  isIdentifier,
-  isImportDefaultSpecifier,
-  isImportNamespaceSpecifier,
-  isImportSpecifier,
-  isObjectPattern,
-  isStringLiteral,
-  isTSMethodSignature,
-  isTSPropertySignature,
-  isTaggedTemplateExpression,
-  isTemplateLiteral,
-  isVariableDeclaration,
-  isVariableDeclarator,
-} from '@babel/types'
 import type {
   ArrayPattern,
   ArrowFunctionExpression,
@@ -41,7 +16,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
+import type { BindingTypes } from '@vue/compiler-dom'
 import type {
   BabelFunctionNodeTypes,
   Nil,
@@ -56,7 +31,30 @@ import type {
   VineStyleValidArg,
   VineUserImport,
 } from './types'
-
+import {
+  isArrayExpression,
+  isArrayPattern,
+  isBlockStatement,
+  isBooleanLiteral,
+  isClassDeclaration,
+  isDeclaration,
+  isExportDefaultDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
+  isImportDefaultSpecifier,
+  isImportNamespaceSpecifier,
+  isImportSpecifier,
+  isObjectPattern,
+  isStringLiteral,
+  isTaggedTemplateExpression,
+  isTemplateLiteral,
+  isTSMethodSignature,
+  isTSPropertySignature,
+  isVariableDeclaration,
+  isVariableDeclarator,
+} from '@babel/types'
+import { walkIdentifiers } from '@vue/compiler-dom'
+import hashId from 'hash-sum'
 import {
   canNeverBeRef,
   findVineTagTemplateStringReturn,
@@ -80,9 +78,11 @@ import {
   isVineStyle,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
+
+import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
+import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/importUsageCheck'
-import { vineErr, vineWarn } from './diagnostics'
 import { _breakableTraverse, exitTraverse } from './utils'
 
 interface AnalyzeCtx {
@@ -719,7 +719,8 @@ const analyzeVineSlots: AnalyzeRunner = (
     if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
         = ((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
-          ?.parameters?.[0]?.typeAnnotation as TSTypeAnnotation)
+          ?.parameters?.[0]
+          ?.typeAnnotation as TSTypeAnnotation)
           ?.typeAnnotation as TSTypeLiteral
 
       if (fnFirstParamType) {
@@ -979,7 +980,7 @@ function buildVineCompFnCtx(
             isNeedLinkedCodeTag
               ? `${createLinkedCodeTag('left', propName.length)}${propName}`
               : propName
-            }: ${propMeta.typeAnnotationRaw}`,
+          }: ${propMeta.typeAnnotationRaw}`,
         ).join(joinStr)
       }\n}`
     },

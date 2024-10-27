@@ -1,3 +1,4 @@
+import type { ParseResult } from '@babel/parser'
 import type {
   CallExpression,
   File,
@@ -6,10 +7,18 @@ import type {
   MemberExpression,
   Node,
   ReturnStatement,
-  TSPropertySignature,
   TaggedTemplateExpression,
+  TSPropertySignature,
   VariableDeclarator,
 } from '@babel/types'
+import type {
+  BabelFunctionNodeTypes,
+  BabelFunctionParams,
+  Nil,
+  VINE_MACRO_NAMES,
+  VineBabelRoot,
+  VineFnPickedInfo,
+} from '../types'
 import {
   isArrowFunctionExpression,
   isCallExpression,
@@ -28,15 +37,6 @@ import {
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
-import type { ParseResult } from '@babel/parser'
-import type {
-  BabelFunctionNodeTypes,
-  BabelFunctionParams,
-  Nil,
-  VINE_MACRO_NAMES,
-  VineBabelRoot,
-  VineFnPickedInfo,
-} from '../types'
 import {
   EXPECTED_ERROR,
   TS_NODE_TYPES,

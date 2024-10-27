@@ -1,8 +1,3 @@
-import { fileURLToPath } from 'node:url'
-import first from 'lodash/first'
-import last from 'lodash/last'
-import sortedIndexBy from 'lodash/sortedIndexBy'
-import type { VineESLintParserOptions, VineFixLocationContext } from '../types'
 import type {
   ESLintArrayExpression,
   ESLintArrayPattern,
@@ -21,19 +16,27 @@ import type {
   OffsetRange,
   Reference,
   Token,
+  Variable,
   VFilter,
   VFilterSequenceExpression,
   VForExpression,
   VOnExpression,
   VSlotScopeExpression,
-  Variable,
 } from '../ast'
-import { ParseError } from '../ast'
-import { debug } from '../common/debug'
 import type {
   LocationCalculator,
   LocationCalculatorForHtml,
 } from '../common/location-calculator'
+import type { ParserObject } from '../common/parser-object'
+import type { VineESLintParserOptions, VineFixLocationContext } from '../types'
+import { fileURLToPath } from 'node:url'
+import first from 'lodash/first'
+import last from 'lodash/last'
+import sortedIndexBy from 'lodash/sortedIndexBy'
+import { ParseError } from '../ast'
+import { createRequire } from '../common/create-require'
+import { debug } from '../common/debug'
+
 import {
   getEcmaVersionIfUseEspree,
   getEspreeFromEcmaVersion,
@@ -45,10 +48,7 @@ import {
   fixLocations,
   fixVineOffsetForScript,
 } from '../common/fix-locations'
-
-import type { ParserObject } from '../common/parser-object'
 import { isEnhancedParserObject, isParserObject } from '../common/parser-object'
-import { createRequire } from '../common/create-require'
 import { fixVineOffset } from '../template/utils/process-vine-template-node'
 import {
   analyzeExternalReferences,
@@ -90,8 +90,8 @@ function processVForAliasAndIterator(code: string): {
       hasParens: Boolean(parenMatch),
       aliasesWithBrackets: parenMatch
         ? `${parenMatch[1].slice(0, -1)}[${
-                      parenMatch[2]
-                  }]${parenMatch[3].slice(1)}`
+          parenMatch[2]
+        }]${parenMatch[3].slice(1)}`
         : `[${aliases.slice(0, -1)}]`,
       delimiter: match[2] || '',
       iterator: match[3],
@@ -140,11 +140,11 @@ function throwEmptyError(
 ): never {
   const loc = locationCalculator.getLocation(0)
   const err = new ParseError(
-        `Expected to be ${expected}, but got empty.`,
-        undefined,
-        0,
-        loc.line,
-        loc.column,
+    `Expected to be ${expected}, but got empty.`,
+    undefined,
+    0,
+    loc.line,
+    loc.column,
   )
   fixErrorLocation(err, locationCalculator)
 
@@ -158,11 +158,11 @@ function throwEmptyError(
  */
 function throwUnexpectedTokenError(name: string, token: HasLocation): never {
   const err = new ParseError(
-        `Unexpected token '${name}'.`,
-        undefined,
-        token.range[0],
-        token.loc.start.line,
-        token.loc.start.column,
+    `Unexpected token '${name}'.`,
+    undefined,
+    token.range[0],
+    token.loc.start.line,
+    token.loc.start.column,
   )
 
   throw err

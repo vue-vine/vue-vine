@@ -1,9 +1,9 @@
-import MagicString from 'magic-string'
-import { traverse } from '@babel/types'
 import type { Identifier, Node } from '@babel/types'
 import type { VineCompFnCtx, VineTemplateBindings } from '../types'
-import { CSS_VARS_HELPER, VineBindingTypes } from '../constants'
+import { traverse } from '@babel/types'
+import MagicString from 'magic-string'
 import { babelParse } from '../babel-helpers/parse'
+import { CSS_VARS_HELPER, VineBindingTypes } from '../constants'
 
 function findIdentifierFromExp(scriptContent: string): Identifier[] {
   const identifiers: Identifier[] = []

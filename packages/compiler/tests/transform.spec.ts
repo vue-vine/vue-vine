@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { format } from 'prettier'
+import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
 import { createMockTransformCtx } from './shared-utils'
 

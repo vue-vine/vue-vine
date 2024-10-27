@@ -1,6 +1,3 @@
-import { describe, expect, it } from 'vitest'
-import type { VineESLintParserOptions } from '../src/types'
-import { runParse } from '../src/parse'
 import type {
   ESLintFunctionDeclaration,
   ESLintReturnStatement,
@@ -11,6 +8,9 @@ import type {
   VIdentifier,
   VTemplateRoot,
 } from '../src/ast'
+import type { VineESLintParserOptions } from '../src/types'
+import { describe, expect, it } from 'vitest'
+import { runParse } from '../src/parse'
 
 function __loc(node: HasLocation, property: 'start' | 'end') {
   return JSON.stringify(node.loc[property])

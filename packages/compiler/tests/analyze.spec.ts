@@ -1,8 +1,8 @@
+import type { Nil } from '../src/types'
 import { describe, expect, it } from 'vitest'
+import { VineBindingTypes } from '../src/constants'
 import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
-import type { Nil } from '../src/types'
-import { VineBindingTypes } from '../src/constants'
 import { createMockTransformCtx } from './shared-utils'
 
 // implement a function for excluding fields of an object

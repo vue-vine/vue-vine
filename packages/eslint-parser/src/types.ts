@@ -1,5 +1,5 @@
-import type { TSESTree } from '@typescript-eslint/types'
 import type { ParserOptions, parseForESLint as tsESLintParseForESLint } from '@typescript-eslint/parser'
+import type { TSESTree } from '@typescript-eslint/types'
 import type { HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
 import type { ParserObject } from './common/parser-object'
 

@@ -1,3 +1,5 @@
+import type { VueCompilerOptions } from '@vue/language-core'
+import type * as ts from 'typescript'
 import {
   createConnection,
   createServer,
@@ -5,14 +7,12 @@ import {
   createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
-import type * as ts from 'typescript'
+import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
-
-import type { VueCompilerOptions } from '@vue/language-core'
-import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
-import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { createVineDiagnostics } from './plugins/vine-diagnostics'
 import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
 

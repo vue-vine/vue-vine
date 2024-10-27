@@ -21,6 +21,8 @@
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.20",
     "@types/node": "^20.5.7",
+    "@vue-vine/eslint-parser": "workspace:*",
+    "eslint": "^9.6.0",
     "less": "^4.2.0",
     "typescript": "^5.5.3",
     "unocss": "^0.55.3",

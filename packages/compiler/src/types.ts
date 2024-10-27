@@ -1,8 +1,4 @@
-import type {
-  CompilerOptions,
-  RootNode,
-  BindingTypes as VueBindingTypes,
-} from '@vue/compiler-dom'
+import type { ParseResult, ParserOptions } from '@babel/parser'
 import type {
   ArrowFunctionExpression,
   File,
@@ -13,11 +9,15 @@ import type {
   ReturnStatement,
   SourceLocation,
   StringLiteral,
-  TSTypeLiteral,
   TaggedTemplateExpression,
   TemplateLiteral,
+  TSTypeLiteral,
 } from '@babel/types'
-import type { ParseResult, ParserOptions } from '@babel/parser'
+import type {
+  CompilerOptions,
+  RootNode,
+  BindingTypes as VueBindingTypes,
+} from '@vue/compiler-dom'
 import type MagicString from 'magic-string'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 

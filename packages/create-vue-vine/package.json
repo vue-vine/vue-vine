@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.4.9",
-    "eslint": "^8.48.0",
     "unocss": "^0.55.3",
     "unplugin-auto-import": "^0.16.6",
     "vite": "^4.4.9",

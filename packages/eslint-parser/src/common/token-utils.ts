@@ -1,8 +1,8 @@
-import sortedIndexBy from 'lodash/sortedIndexBy'
-import sortedLastIndexBy from 'lodash/sortedLastIndexBy'
 import type { Token } from '../ast'
 import type { VineTemplateMeta } from '../types'
 import type { LinesAndColumns } from './lines-and-columns'
+import sortedIndexBy from 'lodash/sortedIndexBy'
+import sortedLastIndexBy from 'lodash/sortedLastIndexBy'
 
 interface HasRange {
   range: [number, number]

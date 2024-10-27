@@ -1,14 +1,14 @@
-import { parse as VueCompilerDomParse, compile } from '@vue/compiler-dom'
-import { compile as ssrCompile } from '@vue/compiler-ssr'
-import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
-import lineColumn from 'line-column'
+import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
+import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
+import { compile, parse as VueCompilerDomParse } from '@vue/compiler-dom'
+import { compile as ssrCompile } from '@vue/compiler-ssr'
+import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
-import { appendToMapArray } from '../utils'
-import { vineErr, vineWarn } from '../diagnostics'
 import { VineBindingTypes } from '../constants'
+import { vineErr, vineWarn } from '../diagnostics'
+import { appendToMapArray } from '../utils'
 
 export function compileVineTemplate(
   source: string,

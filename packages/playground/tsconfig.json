@@ -22,5 +22,10 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "exclude": ["dist", "node_modules", "expectations/**/*.js"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "expectations/**/*.js",
+    "eslint.config.mjs"
+  ]
 }

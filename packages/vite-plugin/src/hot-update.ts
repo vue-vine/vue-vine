@@ -1,10 +1,10 @@
-import type { HmrContext, ModuleNode } from 'vite'
 import type {
   HMRCompFnsName,
   VineCompilerCtx,
   VineCompilerHooks,
   VineFileCtx,
 } from '@vue-vine/compiler'
+import type { HmrContext, ModuleNode } from 'vite'
 import {
   createVineFileCtx,
   doAnalyzeVine,
