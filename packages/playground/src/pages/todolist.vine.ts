@@ -1,6 +1,6 @@
 import { PageHeader } from '../components/page-header.vine';
-import {useTodoStore} from '../store/todoList'
-import type {TodoItem} from '../store/todoList'
+import { useTodoStore } from '../store/todoList'
+import type { TodoItem } from '../store/todoList'
 
 function ToDoCheckbox() {
   const state = vineProp<string>()
@@ -12,15 +12,14 @@ function ToDoCheckbox() {
   }
 
   return vine`
-  <div v-if="state==='complete'" class="complete i-mdi-check text-3xl bg-#16a34a" />
-  <div v-else-if="state==='cancel'" class="cancel i-mdi-close text-3xl bg-#dc2626" />
-  <div @click="complete" v-else class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer" />
+    <div v-if="state==='complete'" class="complete i-mdi-check text-3xl bg-#16a34a" />
+    <div v-else-if="state==='cancel'" class="cancel i-mdi-close text-3xl bg-#dc2626" />
+    <div @click="complete" v-else class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer" />
   `;
 }
 
 function TodoContent() {
-const piniaStore  = useTodoStore()
-
+  const piniaStore  = useTodoStore()
   const todoList = piniaStore.getTodoList
   const completeList = piniaStore.getCompleteList
 
@@ -29,34 +28,34 @@ const piniaStore  = useTodoStore()
   }
 
   return vine`
-  <div class="todo">
-    <div class="todo-content px-20px mt-20px ">
-      <div class="title cursor-pointer">
-        <p>待办事项</p>
-      </div>
-    <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer" v-for="d in todoList">
-      <div class="todo-item-content flex items-center justify-between">
-        <div class="todo-item-text">
-          <div class="text-lg text-gray-100">{{d.title}}</div>
+    <div class="todo">
+      <div class="todo-content px-20px mt-20px ">
+        <div class="title cursor-pointer">
+          <p>待办事项</p>
         </div>
-        <ToDoCheckbox @complete="completeTodo(d)" :state="d.state"/>
-      </div>
-    </div>
-    </div>
-    <div class="todo-content px-20px mt-20px ">
-      <div class="title cursor-pointer">
-        <p>完成事项</p>
-      </div>
-      <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete" v-for="d in completeList">
-      <div class="todo-item-content flex items-center justify-between">
-        <div class="todo-item-text">
-          <div class="text-lg text-gray-100">{{d.title}}</div>
+      <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer" v-for="d in todoList">
+        <div class="todo-item-content flex items-center justify-between">
+          <div class="todo-item-text">
+            <div class="text-lg text-gray-100">{{d.title}}</div>
+          </div>
+          <ToDoCheckbox @complete="completeTodo(d)" :state="d.state"/>
         </div>
-        <ToDoCheckbox :state="d.state"/>
+      </div>
+      </div>
+      <div class="todo-content px-20px mt-20px ">
+        <div class="title cursor-pointer">
+          <p>完成事项</p>
+        </div>
+        <div class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete" v-for="d in completeList">
+        <div class="todo-item-content flex items-center justify-between">
+          <div class="todo-item-text">
+            <div class="text-lg text-gray-100">{{d.title}}</div>
+          </div>
+          <ToDoCheckbox :state="d.state"/>
+        </div>
+      </div>
       </div>
     </div>
-    </div>
-  </div>
   `;
 }
 
@@ -65,13 +64,13 @@ function TodoAdd(){
   const piniaStore  = useTodoStore()
   const emits = vineEmits(['clearTitle'])
   function addTodo(){
-      if(title.value === '') return;
-      piniaStore.addTodo({
-        id:Date.now(),
-        title:title.value,
-        state: 'todo'
-      })
-      emits('clearTitle')
+    if(title.value === '') return;
+    piniaStore.addTodo({
+      id: Date.now(),
+      title: title.value,
+      state: 'todo'
+    })
+    emits('clearTitle')
   }
 
   return vine`
@@ -82,7 +81,6 @@ function TodoAdd(){
 }
 
 function TodoInput() {
-
   const emit = vineEmits<{'update:modelValue':[title:string]}>()
   const title = vineProp<string>()
   const value = ref(title.value)
@@ -98,7 +96,7 @@ function TodoInput() {
 
 function Header() {
   const title = ref('')
-  function clearTitle(){
+  const clearTitle = () => {
     title.value = ''
   }
   return vine`
