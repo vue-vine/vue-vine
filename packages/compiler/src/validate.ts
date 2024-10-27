@@ -1,5 +1,6 @@
 import process from 'node:process'
 import {
+  isArrayExpression,
   isIdentifier,
   isObjectExpression,
   isObjectProperty,
@@ -16,6 +17,7 @@ import {
   traverse,
 } from '@babel/types'
 import type {
+  ArrayExpression,
   CallExpression,
   Identifier,
   Node,
@@ -379,11 +381,32 @@ function assertVineEmitsUsage(
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
   let isVineEmitsUsageCorrect = true
 
-  if (!assertMacroCanOnlyHaveOneTypeParam(validatorCtx, macroCallNode)) {
-    isVineEmitsUsageCorrect = false
+  const callArgs = macroCallNode.arguments
+  const typeParams = macroCallNode.typeParameters?.params
+  if (!typeParams || typeParams.length === 0) {
+    // No type parameter and no argument, it's a invalid usage
+    // which doesn't provide emits key for Vue component
+    const isVineEmitsArgCorrect = !!(
+      callArgs.length === 1
+      && isArrayExpression(callArgs[0])
+      && (callArgs[0] as ArrayExpression).elements.every(el => isStringLiteral(el))
+    )
+
+    if (!isVineEmitsArgCorrect) {
+      vineCompilerHooks.onError(
+        vineErr(
+          vineFileCtx,
+          {
+            msg: '`vineEmits` macro must have a type parameter or an array of string for event names',
+            location: callArgs[0]?.loc,
+          },
+        ),
+      )
+    }
+
+    isVineEmitsUsageCorrect = isVineEmitsArgCorrect
   }
   else {
-    const typeParams = macroCallNode.typeParameters?.params
     const theOnlyTypeParam = typeParams?.[0]
     if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
@@ -787,7 +810,7 @@ function validateMacrosUsage(
   }
 
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
-  const macroCountMap: Record<CountingMacros, MacroDescriptor> = {
+  const macroCountMap: Partial<Record<CountingMacros, MacroDescriptor>> = {
     vineStyle: {
       count: 0,
       asserts: [
