@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.20
+
+### Patch Changes
+
+- Fix vineEmits analysis feature for plain event names feature which is not complete
+
 ## 0.1.19
 
 ### Patch Changes

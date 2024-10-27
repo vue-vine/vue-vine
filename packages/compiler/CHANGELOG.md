@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.24
+
+### Patch Changes
+
+- Fix vineEmits analysis feature for plain event names feature which is not complete
+
 ## 0.1.23
 
 ### Patch Changes
