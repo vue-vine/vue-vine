@@ -161,7 +161,7 @@ function App() {
           "Vue Vine component function can only have one default model",
           "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",
           "\`vineStyle\` can only have one string argument'",
-          "\`vineEmits\` must have 1 type parameter",
+          "\`vineEmits\` macro must have a type parameter or an array of string for event names",
           "\`vineSlots\` can only have 1 type parameter",
           "\`vineExpose\` must have one object literal argument",
           "\`vineOptions\` must have one object literal argument",
@@ -254,7 +254,7 @@ function TestComp() {
     compileVineTypeScriptFile(content, 'testVineEmitsUsage', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"`vineEmits` must have 1 type parameter"')
+      .toMatchInlineSnapshot(`"\`vineEmits\` macro must have a type parameter or an array of string for event names"`)
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
       .toMatchInlineSnapshot(`"the declaration of macro \`vineEmits\` call must be an identifier"`)
   })

@@ -5,7 +5,7 @@ export function PageHeader() {
   const router = useRouter()
 
   const handleNavBtnClick = (
-    target: '/about' | '/style-order'
+    target: '/about' | '/style-order' | '/todolist'
   ) => {
     router.push(
       route.path === target
@@ -47,6 +47,18 @@ export function PageHeader() {
       >
         <span>
           {{ route.path === '/about' ? 'Go Home' : 'About'}}
+        </span>
+      </div>
+      <div
+        class="
+          ml-2 px-4 py-2 rounded
+          bg-teal-700:20 dark:bg-coolgray-100:20
+          cursor-pointer
+        "
+        @click="handleNavBtnClick('/todolist')"
+      >
+        <span>
+          TodoList
         </span>
       </div>
 

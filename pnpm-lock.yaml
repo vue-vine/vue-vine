@@ -393,9 +393,15 @@ importers:
 
   packages/playground:
     dependencies:
+      '@iconify-json/mdi':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@vueuse/core':
         specifier: ^9.13.0
         version: 9.13.0(vue@3.5.3(typescript@5.5.3))
+      pinia:
+        specifier: ^2.2.4
+        version: 2.2.4(typescript@5.5.3)(vue@3.5.3(typescript@5.5.3))
       sass:
         specifier: ^1.66.1
         version: 1.66.1
@@ -487,7 +493,7 @@ importers:
         version: 2.4.8
       '@vscode/vsce':
         specifier: latest
-        version: 3.1.0
+        version: 3.2.0
       '@vue-vine/language-server':
         specifier: workspace:*
         version: link:../language-server
@@ -2106,6 +2112,9 @@ packages:
   '@iconify-json/logos@1.1.34':
     resolution: {integrity: sha512-2eBkFOKj0XhSGoxW/L7cEo6tJEOFCiFOlv/bnIAeZquHzCI+I7m0x9B8bbX+0aYoOb165jpGQQmB6wNO4IcLEA==}
 
+  '@iconify-json/mdi@1.2.1':
+    resolution: {integrity: sha512-dSkQU78gsZV6Yxnq78+LuX7jzeFC/5NAmz7O3rh558GimGFcwMVY/OtqRowIzjqJBmMmWZft7wkFV4TrwRXjlg==}
+
   '@iconify-json/twemoji@1.1.15':
     resolution: {integrity: sha512-ze2CAOwIWBKIP6ih6qMDItasVjRicktl2Qr3/ohZSMToAHm9z3Q6HCwE48eT0+D+uFpGBlNRQ22HHyE5izyhDg==}
 
@@ -3310,8 +3319,8 @@ packages:
   '@vscode/vsce-sign@2.0.4':
     resolution: {integrity: sha512-0uL32egStKYfy60IqnynAChMTbL0oqpqk0Ew0YHiIb+fayuGZWADuIPHWUcY1GCnAA+VgchOPDMxnc2R3XGWEA==}
 
-  '@vscode/vsce@3.1.0':
-    resolution: {integrity: sha512-fwdfp1Ol+bZtlSGkpcd/nztfo6+SVsTOMWjZ/+a88lVtUn7gXNbSu7dbniecl5mz4vINl+oaVDVtVdGbJDApmw==}
+  '@vscode/vsce@3.2.0':
+    resolution: {integrity: sha512-c/AId5Lp50HTszCBDfXfD/Go2djm6qO/WfedP2Y3BpRP+V+ttr8T0mTvZ8WEyTiBp2EfrYnzYUCx0ocB9mHy4Q==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -4722,11 +4731,13 @@ packages:
   eslint@8.54.0:
     resolution: {integrity: sha512-NY0DfAkM8BIZDVl6PgSa1ttZbx3xHgJzSNJKYcQglem6CppHyMhRIQkBVSSMaSRnLhig3jsDbEzOjwCVt4AmmA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@9.6.0:
@@ -6532,6 +6543,18 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
 
+  pinia@2.2.4:
+    resolution: {integrity: sha512-K7ZhpMY9iJ9ShTC0cR2+PnxdQRuwVIsXDO/WIEV/RnMC/vmSoKDTKW/exNQYPI+4ij10UjXqdNiEHwn47McANQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
@@ -8329,6 +8352,17 @@ packages:
 
   vue-component-type-helpers@2.0.22:
     resolution: {integrity: sha512-gPr2Ba7efUwy/Vfbuf735bHSVdN4ycoZUCHfypkI33M9DUH+ieRblLLVM2eImccFYaWNWwEzURx02EgoXDBmaQ==}
+
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   vue-demi@0.14.5:
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
@@ -10190,6 +10224,10 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/mdi@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/twemoji@1.1.15':
     dependencies:
       '@iconify/types': 2.0.0
@@ -11952,7 +11990,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.2
       '@vscode/vsce-sign-win32-x64': 2.0.2
 
-  '@vscode/vsce@3.1.0':
+  '@vscode/vsce@3.2.0':
     dependencies:
       '@azure/identity': 4.2.0
       '@vscode/vsce-sign': 2.0.4
@@ -12238,7 +12276,7 @@ snapshots:
 
   '@vueuse/shared@10.4.1(vue@3.5.3(typescript@5.5.3))':
     dependencies:
-      vue-demi: 0.14.5(vue@3.5.3(typescript@5.5.3))
+      vue-demi: 0.14.7(vue@3.5.3(typescript@5.5.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -15904,6 +15942,14 @@ snapshots:
 
   pify@4.0.1: {}
 
+  pinia@2.2.4(typescript@5.5.3)(vue@3.5.3(typescript@5.5.3)):
+    dependencies:
+      '@vue/devtools-api': 6.6.3
+      vue: 3.5.3(typescript@5.5.3)
+      vue-demi: 0.14.10(vue@3.5.3(typescript@5.5.3))
+    optionalDependencies:
+      typescript: 5.5.3
+
   pirates@4.0.6: {}
 
   pkg-dir@4.2.0:
@@ -18012,6 +18058,10 @@ snapshots:
       ufo: 1.5.4
 
   vue-component-type-helpers@2.0.22: {}
+
+  vue-demi@0.14.10(vue@3.5.3(typescript@5.5.3)):
+    dependencies:
+      vue: 3.5.3(typescript@5.5.3)
 
   vue-demi@0.14.5(vue@3.5.3(typescript@5.5.3)):
     dependencies:

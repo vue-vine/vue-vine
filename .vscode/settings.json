@@ -57,5 +57,8 @@
     "json",
     "jsonc",
     "yaml"
+  ],
+  "cSpell.words": [
+    "todolist"
   ]
 }
