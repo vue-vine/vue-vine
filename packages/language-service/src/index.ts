@@ -264,6 +264,7 @@ function createVueVineCode(
         edited: target === 'extension',
         inheritAttrs: false,
         templateRefNames: new Set(),
+        destructuredPropNames: new Set(),
       })
 
       for (const segment of generatedTemplate) {

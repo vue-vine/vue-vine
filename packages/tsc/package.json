@@ -23,6 +23,6 @@
     "@volar/language-core": "~2.4.8",
     "@volar/typescript": "~2.4.8",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.1.6-patch.1"
+    "@vue/language-core": "~2.1.8"
   }
 }

@@ -1,7 +1,6 @@
-import { posix as path } from 'node:path'
 import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import type { LanguagePlugin } from '@volar/language-core'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import type {
   VueCompilerOptions,
 } from '@vue/language-core'
@@ -26,7 +25,6 @@ export function run() {
         let vueOptions: VueCompilerOptions
         if (typeof configFilePath === 'string') {
           vueOptions = createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/'), true).vueOptions
-          vueOptions.__setupedGlobalTypes = setupGlobalTypes(path.dirname(configFilePath.replace(windowsPathReg, '/')), vueOptions, ts.sys)
         }
         else {
           vueOptions = resolveVueCompilerOptions({})
