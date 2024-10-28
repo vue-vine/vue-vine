@@ -1,8 +1,9 @@
-import type { Disposable, LanguageServicePlugin, SourceScript } from '@volar/language-service'
+import type { Disposable, LanguageServicePlugin, LanguageServicePluginInstance, SourceScript } from '@volar/language-service'
 import type { VueVineCode } from '@vue-vine/language-service'
-import type { IHTMLDataProvider, ITagData } from 'vscode-html-languageservice'
-import { resolveVueCompilerOptions, type VueCompilerOptions } from '@vue/language-core'
+import type { IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
+import { type VueCompilerOptions, resolveVueCompilerOptions } from '@vue/language-core'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
+import type * as vscode from 'vscode-languageserver-protocol'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
@@ -50,7 +51,14 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
 
       return {
         ...baseServiceInstance,
+        dispose() {
+          baseServiceInstance.dispose?.()
+        },
         async provideCompletionItems(document, position, completionContext, triggerCharToken) {
+          if (!isSupportedDocument(document)) {
+            return
+          }
+
           let sync: (() => Promise<number>) | undefined
           let currentVersion: number | undefined
 
@@ -59,6 +67,9 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           const decoded = context.decodeEmbeddedDocumentUri(docUri)
           const sourceScript = decoded && context.language.scripts.get(decoded[0])
           const vineVirtualCode = decoded && sourceScript?.generated?.root
+          if (!vineVirtualCode) {
+            return
+          }
 
           if (
             sourceScript && vineVirtualCode && htmlEmbeddedId
@@ -131,6 +142,15 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           },
           provideValues: () => [],
         }
+      }
+
+      function isSupportedDocument(document: TextDocument) {
+        return document.languageId === 'html'
+      }
+
+      // eslint-disable-next-line unused-imports/no-unused-vars
+      function getScanner(service: LanguageServicePluginInstance, document: TextDocument) {
+        return service.provide['html/languageService']().createScanner(document.getText())
       }
 
       async function provideHtmlData(

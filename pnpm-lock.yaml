@@ -315,6 +315,9 @@ importers:
       volar-service-typescript:
         specifier: 0.0.62
         version: 0.0.62(@volar/language-service@2.4.8)
+      vscode-languageserver-protocol:
+        specifier: ^3.17.5
+        version: 3.17.5
       vscode-uri:
         specifier: ^3.0.8
         version: 3.0.8
@@ -496,7 +499,7 @@ importers:
         version: 2.4.8
       '@vscode/vsce':
         specifier: latest
-        version: 3.2.0
+        version: 3.2.1
       '@vue-vine/language-server':
         specifier: workspace:*
         version: link:../language-server
@@ -3240,8 +3243,8 @@ packages:
   '@vscode/vsce-sign@2.0.4':
     resolution: {integrity: sha512-0uL32egStKYfy60IqnynAChMTbL0oqpqk0Ew0YHiIb+fayuGZWADuIPHWUcY1GCnAA+VgchOPDMxnc2R3XGWEA==}
 
-  '@vscode/vsce@3.2.0':
-    resolution: {integrity: sha512-c/AId5Lp50HTszCBDfXfD/Go2djm6qO/WfedP2Y3BpRP+V+ttr8T0mTvZ8WEyTiBp2EfrYnzYUCx0ocB9mHy4Q==}
+  '@vscode/vsce@3.2.1':
+    resolution: {integrity: sha512-AY9vBjwExakK1c0cI/3NN2Ey0EgiKLBye/fxl/ue+o4q6RZ7N+xzd1jAD6eI6eBeMVANi617+V2rxIAkDPco2Q==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -11885,7 +11888,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.2
       '@vscode/vsce-sign-win32-x64': 2.0.2
 
-  '@vscode/vsce@3.2.0':
+  '@vscode/vsce@3.2.1':
     dependencies:
       '@azure/identity': 4.2.0
       '@vscode/vsce-sign': 2.0.4

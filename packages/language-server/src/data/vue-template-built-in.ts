@@ -59,5 +59,13 @@ export const vueTemplateBuiltinData: HTMLDataV1 = {
       },
       attributes: [],
     },
+    {
+      name: 'template',
+      description: {
+        kind: 'markdown',
+        value: '\nA container element for grouping Vue template content.\n\nThis tag is often used with `v-if`, `v-for` or inserted as slot. This tag has specific semantics in Vue template, please don\'t confuse it with the native HTML `<template>` tag, See MDN [HTML Template Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).\n',
+      },
+      attributes: [],
+    },
   ],
 }

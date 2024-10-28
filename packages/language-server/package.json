@@ -47,6 +47,7 @@
     "volar-service-emmet": "0.0.62",
     "volar-service-html": "0.0.62",
     "volar-service-typescript": "0.0.62",
+    "vscode-languageserver-protocol": "^3.17.5",
     "vscode-uri": "^3.0.8"
   },
   "devDependencies": {

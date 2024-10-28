@@ -12,23 +12,23 @@ import type {
 } from '@vue/language-core'
 import type * as ts from 'typescript'
 import type { URI } from 'vscode-uri'
-import type { VueVineCode } from './shared'
 import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
 import { generateTemplate } from '@vue/language-core/lib/codegen/template'
 import {
-  replaceAll,
   type Segment,
+  replaceAll,
   toString,
 } from 'muggle-string'
+import type { VueVineCode } from './shared'
 import {
-  createLinkedCodeTag,
-  generateVLSContext,
   LINKED_CODE_TAG_PREFIX,
   LINKED_CODE_TAG_SUFFIX,
+  createLinkedCodeTag,
+  generateVLSContext,
 } from './injectTypes'
-import { getVineTempPropName, turnBackToCRLF, VLS_ErrorLog } from './shared'
+import { VLS_ErrorLog, getVineTempPropName, turnBackToCRLF } from './shared'
 import { createVineFileCtx } from './vine-ctx'
 
 export {
@@ -488,12 +488,12 @@ function getIndexAfterFnDeclLeftParen(
               node.async
                 ? 5 // 'async'.length
                 : 0
-                  + (
-                    node.generator
-                      ? 9 // 'function*'.length
-                      : 8 // 'function'.length
-                  )
-                  + (node.id?.name?.length ?? 0)
+                + (
+                  node.generator
+                    ? 9 // 'function*'.length
+                    : 8 // 'function'.length
+                )
+                + (node.id?.name?.length ?? 0)
             )
           ),
         )?.start ?? Number.NaN
