@@ -1,10 +1,6 @@
-/* eslint-disable unused-imports/no-unused-vars */ // Todo: Delete after development
-
 import type {
   Disposable,
-  LanguageServiceContext,
   LanguageServicePlugin,
-  LanguageServicePluginInstance,
   SourceScript,
 } from '@volar/language-service'
 import type { VueVineCode } from '@vue-vine/language-service'
@@ -19,24 +15,11 @@ import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 
 interface HtmlTagInfo {
-  attrs: string[]
   events: string[]
-  propsInfo: {
-    name: string
-    commentMarkdown: string
-  }[]
+  props: string[]
 }
-interface CreateVineTagIntellisenseOptions {
-  getTsPluginClient?: (context: LanguageServiceContext) => typeof import('../../../language-service/typescript-plugin/client') | undefined
-}
-type InternalItemId =
-  | 'componentEvent'
-  | 'componentProp'
-  | 'specialTag'
 
-export function createVineTagIntellisense(
-  { getTsPluginClient }: CreateVineTagIntellisenseOptions,
-): LanguageServicePlugin {
+export function createVineTagIntellisense(): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
 
   const onDidChangeCustomDataListeners = new Set<() => void>()
@@ -73,7 +56,6 @@ export function createVineTagIntellisense(
       const baseServiceInstance = baseService.create(context)
       // @ts-expect-error - The 'vue' field may not exist
       const vueCompilerOptions = context.project.vue?.compilerOptions ?? resolveVueCompilerOptions({})
-      const tsPluginClient = getTsPluginClient?.(context)
 
       return {
         ...baseServiceInstance,
@@ -130,21 +112,16 @@ export function createVineTagIntellisense(
         },
       }
 
+      interface CreateVineTemplateDataProviderOptions {
+        tagInfos: Map<string, HtmlTagInfo>
+        version: { value: number }
+      }
+
       function createVineTemplateDataProvider(
         vineVirtualCode: VueVineCode,
         htmlEmbeddedId: string,
-        context: {
-          tagInfos: Map<string, HtmlTagInfo>
-          promises: Promise<void>[]
-          version: { value: number }
-        },
+        { tagInfos }: CreateVineTemplateDataProviderOptions,
       ): IHTMLDataProvider {
-        const {
-          tagInfos,
-          promises,
-          version,
-        } = context
-
         return {
           getId: () => 'vine-vue-template',
           isApplicable: () => true,
@@ -171,117 +148,57 @@ export function createVineTagIntellisense(
             return tags
           },
           provideAttributes: (tag) => {
-            const tagInfo = tagInfos.get(tag)
+            const tagAttrs: IAttributeData[] = []
+            let tagInfo = tagInfos.get(tag)
 
             if (!tagInfo) {
-              promises.push((async () => {
-                const attrs = await tsPluginClient?.getElementAttrs(vineVirtualCode.fileName, tag) ?? []
-                const propsInfo = await tsPluginClient?.getComponentProps(vineVirtualCode.fileName, tag) ?? []
-                const events = await tsPluginClient?.getComponentEvents(vineVirtualCode.fileName, tag) ?? []
-                tagInfos.set(tag, {
-                  attrs,
-                  propsInfo: propsInfo.filter(prop => !prop.name.startsWith('ref_')),
-                  events,
-                })
-                version.value += 1
-              })())
-              return []
+              const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
+                (compFn) => {
+                  return compFn.fnName === tag
+                },
+              )
+              if (!triggerAtVineCompFn) {
+                return tagAttrs
+              }
+
+              tagInfo = {
+                props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
+                events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
+              }
+              tagInfos.set(tag, tagInfo)
             }
 
-            const { attrs, propsInfo, events } = tagInfo
-            const props = propsInfo.map(prop => prop.name)
+            const { props, events } = tagInfo
             const attributes: IAttributeData[] = []
-            const propsSet = new Set(props)
 
-            for (const prop of [...props, ...attrs]) {
-              const isGlobal = !propsSet.has(prop)
-              const name = hyphenateAttr(prop)
-
-              const isEvent = hyphenateAttr(name).startsWith('on-')
+            for (const prop of props) {
+              const isEvent = prop.startsWith('on-')
 
               if (isEvent) {
-                const propNameBase = name.startsWith('on-')
-                  ? name.slice('on-'.length)
-                  : (name['on'.length].toLowerCase() + name.slice('onX'.length))
-                const propKey = parseItemKey('componentEvent', isGlobal ? '*' : tag, propNameBase)
+                const propNameBase = prop.startsWith('on-')
+                  ? prop.slice('on-'.length)
+                  : (prop['on'.length].toLowerCase() + prop.slice('onX'.length))
 
                 attributes.push(
-                  {
-                    name: `v-on:${propNameBase}`,
-                    description: propKey,
-                  },
-                  {
-                    name: `@${propNameBase}`,
-                    description: propKey,
-                  },
+                  { name: `v-on:${propNameBase}` },
+                  { name: `@${propNameBase}` },
                 )
               }
               else {
-                const propName = name
-                const propKey = parseItemKey('componentProp', isGlobal ? '*' : tag, propName)
-
                 attributes.push(
-                  {
-                    name: propName,
-                    description: propKey,
-                  },
-                  {
-                    name: `:${propName}`,
-                    description: propKey,
-                  },
-                  {
-                    name: `v-bind:${propName}`,
-                    description: propKey,
-                  },
+                  { name: prop },
+                  { name: `:${prop}` },
+                  { name: `v-bind:${prop}` },
                 )
               }
             }
-
             for (const event of events) {
               const name = hyphenateAttr(event)
-              const propKey = parseItemKey('componentEvent', tag, name)
 
               attributes.push(
-                {
-                  name: `v-on:${name}`,
-                  description: propKey,
-                },
-                {
-                  name: `@${name}`,
-                  description: propKey,
-                },
+                { name: `v-on:${name}` },
+                { name: `@${name}` },
               )
-            }
-
-            const models: [boolean, string][] = []
-
-            for (const prop of [...props, ...attrs]) {
-              if (prop.startsWith('onUpdate:')) {
-                const isGlobal = !propsSet.has(prop)
-                models.push([isGlobal, prop.substring('onUpdate:'.length)])
-              }
-            }
-            for (const event of events) {
-              if (event.startsWith('update:')) {
-                models.push([false, event.substring('update:'.length)])
-              }
-            }
-
-            for (const [isGlobal, model] of models) {
-              const name = hyphenateAttr(model)
-              const propKey = parseItemKey('componentProp', isGlobal ? '*' : tag, name)
-
-              attributes.push({
-                name: `v-model:${name}`,
-                description: propKey,
-              })
-
-              if (model === 'modelValue') {
-                attributes.push({
-                  name: 'v-model',
-                  description: propKey,
-                })
-              }
             }
 
             return attributes
@@ -292,10 +209,6 @@ export function createVineTagIntellisense(
 
       function isSupportedDocument(document: TextDocument) {
         return document.languageId === 'html'
-      }
-
-      function getScanner(service: LanguageServicePluginInstance, document: TextDocument) {
-        return service.provide['html/languageService']().createScanner(document.getText())
       }
 
       async function provideHtmlData(
@@ -316,7 +229,6 @@ export function createVineTagIntellisense(
             htmlEmbeddedId,
             {
               tagInfos,
-              promises,
               version,
             },
           ),
@@ -336,8 +248,4 @@ export function createVineTagIntellisense(
     customData = extraData
     onDidChangeCustomDataListeners.forEach(l => l())
   }
-}
-
-function parseItemKey(type: InternalItemId, tag: string, prop: string) {
-  return `__VINE_VLS_data=${type},${tag},${prop}`
 }

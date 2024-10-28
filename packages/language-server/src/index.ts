@@ -12,7 +12,6 @@ import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
-import * as namedPipeClient from '../../language-service/typescript-plugin/client'
 import { createVineDiagnostics } from './plugins/vine-diagnostics'
 import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
 
@@ -35,9 +34,7 @@ connection.onInitialize(async (params) => {
     createEmmetService(),
     // Vine plugins:
     createVineDiagnostics(),
-    createVineTagIntellisense({
-      getTsPluginClient: () => namedPipeClient,
-    }),
+    createVineTagIntellisense(),
   ]
   if (debug) {
     plugins.push(...createTypeScriptServices(tsdk.typescript))
