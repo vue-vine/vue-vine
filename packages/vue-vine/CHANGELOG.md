@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.25
+
+### Patch Changes
+
+- feat(vscode-ext): support tag prop/event intellisense
+
 ## 0.1.24
 
 ### Patch Changes
