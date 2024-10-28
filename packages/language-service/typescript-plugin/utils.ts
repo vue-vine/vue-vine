@@ -239,8 +239,8 @@ function isFileInDir(fileName: string, dir: string) {
 
 export function sendRequestWorker<T>(request: Request, socket: net.Socket) {
   return new Promise<T | undefined | null>((resolve) => {
-    let dataChunks: Buffer[] = []
-    const onData = (chunk: Buffer) => {
+    let dataChunks: Uint8Array[] = []
+    const onData = (chunk: Uint8Array) => {
       dataChunks.push(chunk)
       const data = Buffer.concat(dataChunks)
       const text = data.toString()
