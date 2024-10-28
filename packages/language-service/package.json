@@ -17,6 +17,11 @@
       "dev": "./src/index.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./typescript-plugin": {
+      "dev": "./typescript-plugin/index.ts",
+      "import": "./dist/typescript-plugin/index.mjs",
+      "require": "./dist/typescript-plugin/index.js"
     }
   },
   "main": "./dist/index.js",
@@ -24,7 +29,8 @@
     "*": {
       "*": [
         "./dist/*",
-        "./dist/index.d.ts"
+        "./dist/index.d.ts",
+        "./dist/typescript-plugin/index.d.ts"
       ]
     }
   },
@@ -41,6 +47,7 @@
   },
   "dependencies": {
     "@volar/language-server": "~2.4.8",
+    "@volar/typescript": "~2.4.8",
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "~2.1.8",
     "@vue/shared": "^3.4.31",

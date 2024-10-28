@@ -16,6 +16,8 @@ export interface VueVineCode extends VirtualCode {
     vineCompileWarns: VineDiagnostic[]
     vineFileCtx: VineFileCtx
   }
+
+  get fileName(): string
 }
 
 export function transformVineDiagnostic(
