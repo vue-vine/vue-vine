@@ -438,7 +438,7 @@ const analyzeVineProps: AnalyzeRunner = (
 
       if (propMeta.typeAnnotationRaw === 'any') {
         vineCompilerHooks.onWarn(
-          vineWarn(vineFileCtx, {
+          vineWarn({ vineFileCtx, vineCompFnCtx }, {
             msg: (
               'The default value is an expression, Vine compiler doesn\'t embed TypeScript to infer its type.'
               + ' So it\'s recommended to provide a type anonation explicitly for IDE checking.'
@@ -646,7 +646,7 @@ const analyzeVineStyle: AnalyzeRunner = (
       }
       else {
         vineCompilerHooks.onError(
-          vineErr(vineFileCtx, {
+          vineErr({ vineFileCtx, vineCompFnCtx }, {
             msg: 'Invalid external style file',
             location: vineStyleArg.loc,
           }),
@@ -1038,7 +1038,7 @@ export function analyzeVine(
       const binding = vineFnComp.bindings[id.name]
       if (binding && binding !== VineBindingTypes.LITERAL_CONST) {
         vineCompilerHooks.onError(
-          vineWarn(vineFileCtx, {
+          vineWarn({ vineFileCtx }, {
             msg: `Cannot reference "${id.name}" locally declared variables because it will be hoisted outside of component's setup() function.`,
             location: id.loc,
           }),

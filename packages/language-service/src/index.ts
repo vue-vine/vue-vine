@@ -12,7 +12,7 @@ import type {
 } from '@vue/language-core'
 import type * as ts from 'typescript'
 import type { URI } from 'vscode-uri'
-import type { VueVineCode } from './shared'
+import type { BabelToken, VueVineCode } from './shared'
 import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
@@ -36,7 +36,6 @@ export {
 } from './injectTypes'
 export {
   isVueVineVirtualCode,
-  transformVineDiagnostic,
   VLS_ErrorLog,
   VLS_InfoLog,
 } from './shared'
@@ -462,14 +461,6 @@ function buildMappings<T>(chunks: Segment<T>[]) {
     }
   }
   return mappings
-}
-
-interface BabelToken {
-  start: number
-  end: number
-  type: {
-    label: string
-  }
 }
 
 function getIndexAfterFnDeclLeftParen(

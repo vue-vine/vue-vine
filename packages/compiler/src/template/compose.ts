@@ -177,7 +177,7 @@ export function createSeparatedTemplateComposer(
     generatedPreambleStmts,
     compileSetupFnReturns: ({
       vineFileCtx,
-      vineCompFnCtx: vineFnCompCtx,
+      vineCompFnCtx,
       templateSource,
       mergedImportsMap,
       bindingMetadata,
@@ -186,7 +186,7 @@ export function createSeparatedTemplateComposer(
       const compileResult = compileVineTemplate(
         templateSource,
         {
-          scopeId: `data-v-${vineFnCompCtx.scopeId}`,
+          scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           inline: false,
           bindingMetadata,
           ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
@@ -197,10 +197,11 @@ export function createSeparatedTemplateComposer(
             hasTemplateCompileErr = true
             compilerHooks.onError(
               vineErr(
-                vineFileCtx,
+                { vineFileCtx, vineCompFnCtx },
                 {
                   msg: `[Vine template compile error] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+                  rawVueTemplateLocation: e.loc,
                 },
               ),
             )
@@ -208,10 +209,11 @@ export function createSeparatedTemplateComposer(
           onWarn: (e) => {
             compilerHooks.onWarn(
               vineWarn(
-                vineFileCtx,
+                { vineFileCtx, vineCompFnCtx },
                 {
                   msg: `[Vine template compile warning] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineFnCompCtx, e.loc),
+                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+                  rawVueTemplateLocation: e.loc,
                 },
               ),
             )
@@ -219,7 +221,7 @@ export function createSeparatedTemplateComposer(
         },
         ssr,
       )
-      vineFnCompCtx.templateAst = hasTemplateCompileErr
+      vineCompFnCtx.templateAst = hasTemplateCompileErr
         ? undefined
         : VueCompilerDomParse(templateSource)
       if (hasTemplateCompileErr) {
@@ -249,7 +251,7 @@ export function createSeparatedTemplateComposer(
         }
         appendToMapArray(
           generatedPreambleStmts,
-          vineFnCompCtx,
+          vineCompFnCtx,
           code.slice(
             codeStmt.start!,
             codeStmt.end!,
@@ -258,13 +260,13 @@ export function createSeparatedTemplateComposer(
       }
 
       if (!exportRenderFnNode) {
-        compilerHooks.onError(vineErr(vineFileCtx, {
+        compilerHooks.onError(vineErr({ vineFileCtx, vineCompFnCtx }, {
           msg: '[Vine Error] Cannot find export render function on template composing',
         }))
         return ''
       }
       templateCompileResults.set(
-        vineFnCompCtx,
+        vineCompFnCtx,
         code.slice(
           exportRenderFnNode.start!,
           exportRenderFnNode.end!,
@@ -350,10 +352,11 @@ export function createInlineTemplateComposer(
             hasTemplateCompileErr = true
             compilerHooks.onError(
               vineErr(
-                vineFileCtx,
+                { vineFileCtx, vineCompFnCtx },
                 {
                   msg: `[Vine template compile error] ${e.message}`,
                   location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+                  rawVueTemplateLocation: e.loc,
                 },
               ),
             )
@@ -361,10 +364,11 @@ export function createInlineTemplateComposer(
           onWarn: (e) => {
             compilerHooks.onWarn(
               vineWarn(
-                vineFileCtx,
+                { vineFileCtx, vineCompFnCtx },
                 {
                   msg: `[Vine template compile warning] ${e.message}`,
                   location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+                  rawVueTemplateLocation: e.loc,
                 },
               ),
             )

@@ -17,6 +17,7 @@ import type {
   CompilerOptions,
   RootNode,
   BindingTypes as VueBindingTypes,
+  SourceLocation as VueSourceLocation,
 } from '@vue/compiler-dom'
 import type MagicString from 'magic-string'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
@@ -204,6 +205,8 @@ export interface VineDiagnostic {
   full: string
   msg: string
   location: SourceLocation | null | undefined
+  vineCompFnCtx?: VineCompFnCtx
+  rawVueTemplateLocation?: VueSourceLocation | null
 }
 
 export interface VineFnPickedInfo {

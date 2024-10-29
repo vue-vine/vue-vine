@@ -6,9 +6,6 @@ function ToDoAction() {
   const showDelete = vineProp.withDefault(false)
   const emits = vineEmits(['complete', 'delete', 'cancel'])
 
-  vineOptions({})
-  vineOptions({})
-
   return vine`
     <div class="flex items-center">
       <div
@@ -42,7 +39,7 @@ function TodoContent() {
   const piniaStore = useTodoStore()
 
   return vine`
-    <div v-if="" class="todo">
+    <div class="todo">
       <div class="todo-content px-20px mt-20px ">
         <div class="title cursor-pointer">
           <p>Tasks</p>

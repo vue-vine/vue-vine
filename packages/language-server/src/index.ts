@@ -4,18 +4,15 @@ import {
   createConnection,
   createServer,
   createSimpleProject,
-  createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
-import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
+import { resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
-import { createVineDiagnostics } from './plugins/vine-diagnostics'
-import { createVineTagIntellisense } from './plugins/vine-tag-intellisense'
-
-const debug = false
+import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
+import { createVineTemplatePlugin } from './plugins/vine-template'
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -28,37 +25,24 @@ connection.onInitialize(async (params) => {
     params.locale,
   )
   const plugins = [
-    // HTML Service is included in VineTagIntellisense service
-    // createHtmlService(),
     createCssService(),
     createEmmetService(),
     // Vine plugins:
-    createVineDiagnostics(),
-    createVineTagIntellisense(),
+    createVineDiagnosticsPlugin(),
+    // HTML Service is included here ↓
+    createVineTemplatePlugin(),
   ]
-  if (debug) {
-    plugins.push(...createTypeScriptServices(tsdk.typescript))
-  }
-  else {
-    plugins.push(
-      ...createTypeScriptServices(tsdk.typescript).filter(
-        plugin => plugin.name === 'typescript-syntactic',
-      ),
-    )
-  }
+  plugins.push(
+    ...createTypeScriptServices(tsdk.typescript).filter(
+      plugin => plugin.name === 'typescript-syntactic',
+    ),
+  )
 
   const result = await server.initialize(
     params,
-    debug
-      ? createTypeScriptProject(
-        tsdk.typescript,
-        tsdk.diagnosticMessages,
-        ({ configFileName }) => ({
-          languagePlugins: getLanguagePlugins(configFileName),
-          setup() { },
-        }),
-      )
-      : createSimpleProject(getLanguagePlugins(undefined)),
+    createSimpleProject(
+      getLanguagePlugins(),
+    ),
     plugins,
   )
 
@@ -68,17 +52,9 @@ connection.onInitialize(async (params) => {
 
   return result
 
-  function getLanguagePlugins(configFileName: string | undefined) {
-    let compilerOptions: ts.CompilerOptions = {}
-    let vueCompilerOptions: VueCompilerOptions
-    if (configFileName) {
-      const { vueOptions, options } = createParsedCommandLine(tsdk.typescript, tsdk.typescript.sys, configFileName, true)
-      vueCompilerOptions = resolveVueCompilerOptions(vueOptions)
-      compilerOptions = options
-    }
-    else {
-      vueCompilerOptions = resolveVueCompilerOptions({})
-    }
+  function getLanguagePlugins() {
+    const compilerOptions: ts.CompilerOptions = {}
+    const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({})
     return [
       createVueVineLanguagePlugin(
         tsdk.typescript,

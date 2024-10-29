@@ -1,12 +1,14 @@
 import type {
+  Diagnostic,
   Disposable,
+  LanguageServiceContext,
   LanguageServicePlugin,
-  SourceScript,
 } from '@volar/language-service'
+import type { VineDiagnostic } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import { hyphenateAttr, resolveVueCompilerOptions, type VueCompilerOptions } from '@vue/language-core'
-import { isVueVineVirtualCode } from '@vue-vine/language-service'
+import { hyphenateAttr } from '@vue/language-core'
+import { isVueVineVirtualCode, VLS_InfoLog } from '@vue-vine/language-service'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
@@ -19,7 +21,50 @@ interface HtmlTagInfo {
   props: string[]
 }
 
-export function createVineTagIntellisense(): LanguageServicePlugin {
+function getVueVineVirtualCode(
+  document: TextDocument,
+  context: LanguageServiceContext,
+) {
+  const docUri = URI.parse(document.uri)
+  const [sourceScriptId] = context.decodeEmbeddedDocumentUri(docUri) ?? []
+  const sourceScript = sourceScriptId && context.language.scripts.get(sourceScriptId)
+  const vineVirtualCode = sourceScript?.generated?.root
+
+  return {
+    docUri,
+    sourceScriptId,
+    sourceScript,
+    vineVirtualCode,
+  }
+}
+
+export function transformVineDiagnostic(
+  document: TextDocument,
+  diag: VineDiagnostic,
+  type: 'err' | 'warn',
+): Diagnostic {
+  const start = diag.rawVueTemplateLocation?.start.offset ?? 0
+  const end = diag.rawVueTemplateLocation?.end.offset ?? 0
+
+  return {
+    severity: type === 'err' ? 1 : 2,
+    source: 'vue-vine',
+    message: diag.msg,
+    range: {
+      start: document.positionAt(start),
+      end: document.positionAt(end),
+    },
+  }
+}
+
+export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vineCompName: string | undefined) {
+  return (
+    vineDiag.rawVueTemplateLocation != null
+    && vineDiag.vineCompFnCtx?.fnName.toLowerCase() === vineCompName?.toLowerCase()
+  )
+}
+
+export function createVineTemplatePlugin(): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
 
   const onDidChangeCustomDataListeners = new Set<() => void>()
@@ -42,7 +87,7 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
   })
 
   return {
-    name: 'Vine Template Tag Intellisense',
+    name: 'vue-vine-template',
     capabilities: {
       ...baseService.capabilities,
       completionProvider: {
@@ -51,11 +96,13 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           '@', // vue event shorthand
         ],
       },
+      diagnosticProvider: {
+        interFileDependencies: false,
+        workspaceDiagnostics: false,
+      },
     },
     create(context) {
       const baseServiceInstance = baseService.create(context)
-      // @ts-expect-error - The 'vue' field may not exist
-      const vueCompilerOptions = context.project.vue?.compilerOptions ?? resolveVueCompilerOptions({})
 
       return {
         ...baseServiceInstance,
@@ -63,21 +110,15 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           baseServiceInstance.dispose?.()
         },
         async provideCompletionItems(document, position, completionContext, triggerCharToken) {
-          if (!isSupportedDocument(document)) {
+          if (document.languageId !== 'html') {
             return
           }
 
-          let sync: (() => Promise<number>) | undefined
-          let currentVersion: number | undefined
-
-          const docUri = URI.parse(document.uri)
-          const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
-          const decoded = context.decodeEmbeddedDocumentUri(docUri)
-          const sourceScript = decoded && context.language.scripts.get(decoded[0])
-          const vineVirtualCode = decoded && sourceScript?.generated?.root
+          const { docUri, sourceScript, vineVirtualCode } = getVueVineVirtualCode(document, context)
           if (!vineVirtualCode) {
             return
           }
+          const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
 
           if (
             sourceScript && vineVirtualCode && htmlEmbeddedId
@@ -85,42 +126,55 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
           ) {
             // Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
             baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-
-            sync = (await provideHtmlData(
-              vueCompilerOptions,
-              sourceScript,
+            provideHtmlData(
               vineVirtualCode,
               htmlEmbeddedId,
-            )).sync
-            currentVersion = await sync()
+            )
           }
 
-          let htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          while (true) {
-            const newVersion = await sync?.()
-            if (currentVersion === newVersion) {
-              break
-            }
-            currentVersion = newVersion
-            htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          }
-          if (!htmlComplete) {
-            return
-          }
-
+          const htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
           return htmlComplete
         },
-      }
+        async provideDiagnostics(document) {
+          if (document.languageId !== 'html') {
+            return []
+          }
 
-      interface CreateVineTemplateDataProviderOptions {
-        tagInfos: Map<string, HtmlTagInfo>
-        version: { value: number }
+          const { docUri, sourceScript, vineVirtualCode } = getVueVineVirtualCode(document, context)
+          if (
+            !vineVirtualCode
+            || !sourceScript
+            || !isVueVineVirtualCode(vineVirtualCode)
+          ) {
+            return []
+          }
+          const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
+          VLS_InfoLog('vue-vine-template: htmlEmbeddedId', htmlEmbeddedId)
+          const vineCompFnNameLowerCase = htmlEmbeddedId.split('_').at(1)
+
+          const vineTemplateErrs = (
+            vineVirtualCode.vineMetaCtx.vineCompileErrs
+              ?.filter(diag => isTemplateDiagnosticOfVineCompName(diag, vineCompFnNameLowerCase))
+              ?? []
+          )
+          const vineTemplateWarns = (
+            vineVirtualCode.vineMetaCtx.vineCompileWarns
+              ?.filter(diag => isTemplateDiagnosticOfVineCompName(diag, vineCompFnNameLowerCase))
+              ?? []
+          )
+
+          const results: Diagnostic[] = [
+            ...vineTemplateErrs.map(err => transformVineDiagnostic(document, err, 'err')),
+            ...vineTemplateWarns.map(warn => transformVineDiagnostic(document, warn, 'warn')),
+          ]
+          return results
+        },
       }
 
       function createVineTemplateDataProvider(
         vineVirtualCode: VueVineCode,
         htmlEmbeddedId: string,
-        { tagInfos }: CreateVineTemplateDataProviderOptions,
+        tagInfos: Map<string, HtmlTagInfo>,
       ): IHTMLDataProvider {
         return {
           getId: () => 'vine-vue-template',
@@ -207,39 +261,20 @@ export function createVineTagIntellisense(): LanguageServicePlugin {
         }
       }
 
-      function isSupportedDocument(document: TextDocument) {
-        return document.languageId === 'html'
-      }
-
-      async function provideHtmlData(
-        vueCompilerOptions: VueCompilerOptions,
-        sourceScript: SourceScript,
+      function provideHtmlData(
         vineVirtualCode: VueVineCode,
         htmlEmbeddedId: string,
       ) {
-        const promises: Promise<void>[] = []
         const tagInfos = new Map<string, HtmlTagInfo>()
-
-        let version = { value: 0 }
 
         updateCustomData([
           newHTMLDataProvider('vine-vue-template-built-in', vueTemplateBuiltinData),
           createVineTemplateDataProvider(
             vineVirtualCode,
             htmlEmbeddedId,
-            {
-              tagInfos,
-              version,
-            },
+            tagInfos,
           ),
         ])
-
-        return {
-          async sync() {
-            await Promise.all(promises)
-            return version.value
-          },
-        }
       }
     },
   }

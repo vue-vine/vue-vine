@@ -1,6 +1,13 @@
-import type { Diagnostic, VirtualCode } from '@volar/language-server/node'
+import type { VirtualCode } from '@volar/language-server/node'
 import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
-import { DiagnosticSeverity } from '@volar/language-server/node'
+
+export interface BabelToken {
+  start: number
+  end: number
+  type: {
+    label: string
+  }
+}
 
 export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
 
@@ -18,60 +25,17 @@ export interface VueVineCode extends VirtualCode {
   get fileName(): string
 }
 
-export function transformVineDiagnostic(
-  diag: VineDiagnostic,
-  type: 'err' | 'warn',
-): Diagnostic {
-  let startLine = diag.location?.start.line
-
-  // Babel location is 1 based
-  // while VSCode Diagnostic is 0 based
-  if (startLine !== undefined) {
-    startLine -= 1
-  }
-  let startColumn = diag.location?.start.column
-  if (startColumn !== undefined) {
-    startColumn -= 1
-  }
-  let endLine = diag.location?.end.line
-  if (endLine !== undefined) {
-    endLine -= 1
-  }
-  let endColumn = diag.location?.end.column
-  if (endColumn !== undefined) {
-    endColumn -= 1
-  }
-
-  return {
-    severity: type === 'err'
-      ? DiagnosticSeverity.Error
-      : DiagnosticSeverity.Warning,
-    range: {
-      start: {
-        line: startLine ?? 0,
-        character: startColumn ?? 0,
-      },
-      end: {
-        line: endLine ?? 0,
-        character: endColumn ?? 0,
-      },
-    },
-    source: 'vue-vine',
-    message: diag.msg,
-  }
-}
-
 export function turnBackToCRLF(code: string) {
   return code.replace(/\r?\n/g, '\r\n')
 }
 
 export function VLS_InfoLog(...msgs: any[]) {
-  console.log(`[Vue Vine VLS]`, ...msgs)
+  console.log(`[vue-vine]`, ...msgs)
 }
 
 export function VLS_ErrorLog(err: any, tag: string) {
   console.log(
-    `[Vue Vine VLS] ${tag} error: ${String(err)}`,
+    `[vue-vine] ${tag} error: ${String(err)}`,
   )
   if (err.stack) {
     const stackLines = err.stack.split('\n').slice(0, 6)
