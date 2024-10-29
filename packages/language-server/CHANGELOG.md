@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.26
+
+### Patch Changes
+
+- Fix vscode extension diagnostics location incorrect.
+
 ## 0.1.25
 
 ### Patch Changes

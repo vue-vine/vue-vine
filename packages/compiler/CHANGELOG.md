@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.26
+
+### Patch Changes
+
+- Fix vscode extension diagnostics location incorrect.
+
 ## 0.1.24
 
 ### Patch Changes

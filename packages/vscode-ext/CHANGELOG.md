@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.22
+
+### Patch Changes
+
+- Fix vscode extension diagnostics location incorrect.
+
 ## 0.1.21
 
 ### Patch Changes
