@@ -44,4 +44,13 @@ export default antfu(
       'no-console': 'off',
     },
   },
+  {
+    files: [
+      'packages/language-service/**/*.ts',
+      'packages/language-server/**/*.ts',
+    ],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 )

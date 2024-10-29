@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import type { Diagnostic, VirtualCode } from '@volar/language-server/node'
 import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import { DiagnosticSeverity } from '@volar/language-server/node'
@@ -68,12 +66,12 @@ export function turnBackToCRLF(code: string) {
 }
 
 export function VLS_InfoLog(...msgs: any[]) {
-  console.log(`[VLS]`, ...msgs)
+  console.log(`[Vue Vine VLS]`, ...msgs)
 }
 
 export function VLS_ErrorLog(err: any, tag: string) {
   console.log(
-    `[VLS] ${tag} error: ${String(err)}`,
+    `[Vue Vine VLS] ${tag} error: ${String(err)}`,
   )
   if (err.stack) {
     const stackLines = err.stack.split('\n').slice(0, 6)

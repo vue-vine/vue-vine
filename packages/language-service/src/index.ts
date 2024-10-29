@@ -36,6 +36,9 @@ export {
 } from './injectTypes'
 export {
   isVueVineVirtualCode,
+  transformVineDiagnostic,
+  VLS_ErrorLog,
+  VLS_InfoLog,
 } from './shared'
 export type {
   VueVineCode,
