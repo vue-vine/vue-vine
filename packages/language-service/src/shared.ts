@@ -30,7 +30,17 @@ export function turnBackToCRLF(code: string) {
 }
 
 export function VLS_InfoLog(...msgs: any[]) {
-  console.log(`[vue-vine]`, ...msgs)
+  console.log(
+    msgs.map((msg, i) => (
+      i === 0
+        ? `[vue-vine] ${msg}`
+        : `${' '.repeat(3)}${
+          i === msgs.length - 1
+            ? '└─'
+            : '├─'
+        }${' '.repeat(6)}${msg}`
+    )).join('\n'),
+  )
 }
 
 export function VLS_ErrorLog(err: any, tag: string) {

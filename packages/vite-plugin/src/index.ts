@@ -47,16 +47,16 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   }
 
   const runCompileScript = (code: string, fileId: string, ssr: boolean): Partial<TransformResult> => {
-    let fileCtxMap: undefined | VineFileCtx
+    let fileCtxCache: undefined | VineFileCtx
     if (compilerCtx.isRunningHMR) {
-      fileCtxMap = compilerCtx.fileCtxMap.get(fileId)
+      fileCtxCache = compilerCtx.fileCtxMap.get(fileId)
     }
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
       {
         compilerHooks,
-        fileCtxCache: fileCtxMap,
+        fileCtxCache,
       },
       ssr,
     )

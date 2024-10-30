@@ -28,8 +28,8 @@ import {
   LINKED_CODE_TAG_PREFIX,
   LINKED_CODE_TAG_SUFFIX,
 } from './injectTypes'
-import { getVineTempPropName, turnBackToCRLF, VLS_ErrorLog } from './shared'
-import { createVineFileCtx } from './vine-ctx'
+import { getVineTempPropName, turnBackToCRLF, VLS_ErrorLog, VLS_InfoLog } from './shared'
+import { compileVineForVirtualCode } from './vine-ctx'
 
 export {
   setupGlobalTypes,
@@ -155,13 +155,20 @@ function createVueVineCode(
 ): VueVineCode {
   const content = snapshot.getText(0, snapshot.getLength())
 
+  // Compile `.vine.ts` with Vine's own compiler
+  const compileStartTime = performance.now()
   const {
     vineCompileErrs,
     vineCompileWarns,
     vineFileCtx,
-  } = createVineFileCtx(sourceFileName, content)
-  const tsCodeSegments: Segment<CodeInformation>[] = []
+  } = compileVineForVirtualCode(sourceFileName, content)
+  VLS_InfoLog(
+    'Creating virtual code ...',
+    `Compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`,
+    `at ${sourceFileName}`,
+  )
 
+  const tsCodeSegments: Segment<CodeInformation>[] = []
   tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
 
   let currentOffset = 0

@@ -4,7 +4,7 @@ import {
   createCompilerCtx,
 } from '@vue-vine/compiler'
 
-export function createVineFileCtx(sourceFileName: string, source: string) {
+export function compileVineForVirtualCode(sourceFileName: string, source: string) {
   const compilerCtx = createCompilerCtx({
     envMode: 'module',
     vueCompilerOptions: {

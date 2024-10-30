@@ -8,7 +8,7 @@ import type { VineDiagnostic } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
 import { hyphenateAttr } from '@vue/language-core'
-import { isVueVineVirtualCode, VLS_InfoLog } from '@vue-vine/language-service'
+import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
@@ -149,7 +149,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             return []
           }
           const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
-          VLS_InfoLog('vue-vine-template: htmlEmbeddedId', htmlEmbeddedId)
           const vineCompFnNameLowerCase = htmlEmbeddedId.split('_').at(1)
 
           const vineTemplateErrs = (
