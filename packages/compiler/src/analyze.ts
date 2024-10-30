@@ -964,6 +964,7 @@ function buildVineCompFnCtx(
     emits: [],
     slots: {},
     slotsAlias: 'slots',
+    slotsNamesInTemplate: [],
     vineModels: {},
     bindings: {},
     cssBindings: {},

@@ -184,6 +184,7 @@ export interface VineCompFnCtx {
   slots: Record<string, {
     props: TSTypeLiteral
   }>
+  slotsNamesInTemplate: string[]
   /** Store `vineModel` defines */
   vineModels: Record<string, {
     varName: string

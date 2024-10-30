@@ -1,14 +1,15 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { AttributeNode, BindingTypes, CompilerOptions, RootNode, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
-import { compile, parse as VueCompilerDomParse } from '@vue/compiler-dom'
+import { compile, ElementTypes, NodeTypes } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
+import { walkVueTemplateAst } from './walk'
 
 export function compileVineTemplate(
   source: string,
@@ -165,6 +166,40 @@ function computeTemplateErrLocation(
   return loc
 }
 
+function setVineTemplateAst(
+  vineCompFnCtx: VineCompFnCtx,
+  ast: RootNode,
+) {
+  vineCompFnCtx.templateAst = ast
+
+  // Walk the template AST to collect information
+  // for component context
+  if (!ast) {
+    return
+  }
+
+  // 1. Collect all `<slot name="...">`
+  //    for user defined slot names
+  walkVueTemplateAst(ast, {
+    enter(node) {
+      if (
+        node.type === NodeTypes.ELEMENT
+        && node.tagType === ElementTypes.SLOT
+      ) {
+        const slotNameAttr = node.props.find(
+          prop => (
+            prop.type === NodeTypes.ATTRIBUTE
+            && prop.name === 'name'
+          ),
+        ) as (AttributeNode | undefined)
+        if (slotNameAttr?.value) {
+          vineCompFnCtx.slotsNamesInTemplate.push(slotNameAttr.value.content)
+        }
+      }
+    },
+  })
+}
+
 export function createSeparatedTemplateComposer(
   compilerHooks: VineCompilerHooks,
   ssr: boolean,
@@ -221,9 +256,10 @@ export function createSeparatedTemplateComposer(
         },
         ssr,
       )
-      vineCompFnCtx.templateAst = hasTemplateCompileErr
-        ? undefined
-        : VueCompilerDomParse(templateSource)
+
+      // Store the template AST
+      setVineTemplateAst(vineCompFnCtx, compileResult.ast)
+
       if (hasTemplateCompileErr) {
         return ''
       }
@@ -378,7 +414,9 @@ export function createInlineTemplateComposer(
       )
 
       const { preamble, code, ast } = compileResult
-      vineCompFnCtx.templateAst = ast
+
+      // Store the template AST
+      setVineTemplateAst(vineCompFnCtx, ast)
 
       if (hasTemplateCompileErr) {
         return ''

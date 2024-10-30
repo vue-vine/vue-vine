@@ -51,14 +51,17 @@ export const vueTemplateBuiltinData: HTMLDataV1 = {
       },
       attributes: [],
     },
-    {
-      name: 'slot',
-      description: {
-        kind: 'markdown',
-        value: '\nDenotes slot content outlets in templates.\n\n- **Props**\n\n  ```ts\n  interface SlotProps {\n    /**\n     * Any props passed to <slot> to passed as arguments\n     * for scoped slots\n     */\n    [key: string]: any\n    /**\n     * Reserved for specifying slot name.\n     */\n    name?: string\n  }\n  ```\n\n- **Details**\n\n  The `<slot>` element can use the `name` attribute to specify a slot name. When no `name` is specified, it will render the default slot. Additional attributes passed to the slot element will be passed as slot props to the scoped slot defined in the parent.\n\n  The element itself will be replaced by its matched slot content.\n\n  `<slot>` elements in Vue templates are compiled into JavaScript, so they are not to be confused with [native `<slot>` elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot).\n\n- **See also** [Component - Slots](https://vuejs.org/guide/components/slots.html)\n',
-      },
-      attributes: [],
-    },
+
+    // Tips: duplicated with HTML built-in 'slot' tag,
+    //       no need to introduce twice for completion.
+    // {
+    //   name: 'slot',
+    //   description: {
+    //     kind: 'markdown',
+    //     value: '\nDenotes slot content outlets in templates.\n\n- **Props**\n\n  ```ts\n  interface SlotProps {\n    /**\n     * Any props passed to <slot> to passed as arguments\n     * for scoped slots\n     */\n    [key: string]: any\n    /**\n     * Reserved for specifying slot name.\n     */\n    name?: string\n  }\n  ```\n\n- **Details**\n\n  The `<slot>` element can use the `name` attribute to specify a slot name. When no `name` is specified, it will render the default slot. Additional attributes passed to the slot element will be passed as slot props to the scoped slot defined in the parent.\n\n  The element itself will be replaced by its matched slot content.\n\n  `<slot>` elements in Vue templates are compiled into JavaScript, so they are not to be confused with [native `<slot>` elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot).\n\n- **See also** [Component - Slots](https://vuejs.org/guide/components/slots.html)\n',
+    //   },
+    //   attributes: [],
+    // },
   ],
   globalAttributes: [
     {

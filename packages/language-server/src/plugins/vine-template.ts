@@ -94,6 +94,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         triggerCharacters: [
           ...baseService.capabilities.completionProvider?.triggerCharacters ?? [],
           '@', // vue event shorthand
+          ':', // vue bind shorthand
         ],
       },
       diagnosticProvider: {
