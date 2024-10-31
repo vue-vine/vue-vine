@@ -204,8 +204,37 @@ function createVueVineCode(
     if (vineCompFn.propsDefinitionBy === 'macro') {
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
-      const propsParam = `props: __VLS_${vineCompFn.fnName}_props__`
+      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__,`
       tsCodeSegments.push(propsParam)
+
+      // Generate `context: { ... }` after `props: ...`
+      const contextProperties: string[] = []
+
+      const slotsParam = `slots: { ${vineCompFn.slotsNamesInTemplate.map((slot) => {
+        const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
+        return `${slot}: ${
+          slotPropTypeLiteralNode
+            ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
+            : 'unknown'
+        }`
+      }).join(', ')} },`
+      contextProperties.push(slotsParam)
+
+      const emitsParam = `emit: ${
+        vineCompFn.emitsTypeParam
+          ? `VueDefineEmits<${
+            vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+          }>`
+          : `{ ${vineCompFn.emits.map(emit => `${emit}: (...args: any[]) => boolean`)} }`
+      },`
+      contextProperties.push(emitsParam)
+
+      const contextFormalParam = `\n  context: {\n${' '.repeat(4)}${contextProperties.join(`\n${' '.repeat(4)}`)}\n  }\n`
+      tsCodeSegments.push(contextFormalParam)
+    }
+    else {
+      // User provide a `props` formal parameter in the component function,
+      // we should keep it in virtual code, and generate `context: ...` after it.
     }
 
     // Need to extract all complex expression in `vineProp.withDefault`

@@ -4,10 +4,10 @@ import type {
   LanguageServiceContext,
   LanguageServicePlugin,
 } from '@volar/language-service'
+import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
 import { hyphenateAttr } from '@vue/language-core'
-import { isComponentNode, type VineDiagnostic, type VineFnCompCtx, walkVueTemplateAst } from '@vue-vine/compiler'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
@@ -131,7 +131,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
           provideHtmlData(
             vineVirtualCode,
             triggerAtVineCompFn,
-            document.offsetAt(position),
           )
 
           const htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
@@ -176,7 +175,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         vineVirtualCode: VueVineCode,
         triggerAtVineCompFn: VineFnCompCtx,
         tagInfos: Map<string, HtmlTagInfo>,
-        cursorOffset: number,
       ): IHTMLDataProvider {
         return {
           getId: () => 'vine-vue-template',
@@ -248,44 +246,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
               )
             }
 
-            // Provide 'v-slot:' and '#' completions
-            // for user selecting a slot name
-            if (tag === 'template') {
-              walkVueTemplateAst(
-                triggerAtVineCompFn.templateAst,
-                {
-                  enter(node, parents, breakWalk) {
-                    // - Find the closest component node,
-                    //   which is where the slot content finally put into.
-
-                    // - Searching is based on given 'position' which is cursor location
-                    //   If the current walking node is not containing it, just return to continue.
-                    if (!node.loc || !node.loc.start || !node.loc.end) {
-                      return
-                    }
-                    // The offset is zero-based
-                    const nodeStart = node.loc.start.offset
-                    const nodeEnd = node.loc.end.offset
-                    if (cursorOffset < nodeStart || cursorOffset > nodeEnd) {
-                      return
-                    }
-
-                    // - Find the closest component node
-                    const componentNode = parents.find(isComponentNode)
-                    if (!componentNode) {
-                      // Didn't find an ancestor component node,
-                      // Maybe is just a wrapper '<template>', stop providing completions.
-                      return breakWalk()
-                    }
-
-                    // Todo: ...
-                    // - Get the components' slot names
-                    // const componentName = componentNode.tag
-                  },
-                },
-              )
-            }
-
             return attributes
           },
           provideValues: () => [],
@@ -295,7 +255,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
       function provideHtmlData(
         vineVirtualCode: VueVineCode,
         triggerAtVineCompFn: VineFnCompCtx,
-        cursorOffset: number,
       ) {
         const tagInfos = new Map<string, HtmlTagInfo>()
 
@@ -305,7 +264,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             vineVirtualCode,
             triggerAtVineCompFn,
             tagInfos,
-            cursorOffset,
           ),
         ])
       }

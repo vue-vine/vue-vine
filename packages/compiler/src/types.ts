@@ -176,6 +176,7 @@ export interface VineCompFnCtx {
   propsDefinitionBy: 'annotaion' | 'macro'
   emitsAlias: string
   emits: string[]
+  emitsTypeParam?: TSTypeLiteral
   /** Store the `defineExpose`'s argument in source code */
   expose?: Node
   /** Store the `defineOptions`'s argument in source code */

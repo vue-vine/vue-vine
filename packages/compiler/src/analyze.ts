@@ -50,6 +50,7 @@ import {
   isTemplateLiteral,
   isTSMethodSignature,
   isTSPropertySignature,
+  isTSTypeLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
 } from '@babel/types'
@@ -479,7 +480,9 @@ const analyzeVineEmits: AnalyzeRunner = (
   const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
   const callArg = vineEmitsMacroCall.arguments[0]
 
-  if (typeParam) {
+  if (typeParam && isTSTypeLiteral(typeParam)) {
+    vineCompFnCtx.emitsTypeParam = typeParam
+
     // Save all the properties' name of
     // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
     // to a string array for `vineCompFn.emits`
@@ -718,7 +721,7 @@ const analyzeVineSlots: AnalyzeRunner = (
   for (const prop of slotsTypeLiteralProps) {
     if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
-        = ((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
+        = ((prop.typeAnnotation?.typeAnnotation as TSFunctionType | Nil)
           ?.parameters?.[0]
           ?.typeAnnotation as TSTypeAnnotation)
           ?.typeAnnotation as TSTypeLiteral
@@ -964,7 +967,7 @@ function buildVineCompFnCtx(
     emits: [],
     slots: {},
     slotsAlias: 'slots',
-    slotsNamesInTemplate: [],
+    slotsNamesInTemplate: ['default'], // Vue component's default slot name
     vineModels: {},
     bindings: {},
     cssBindings: {},
