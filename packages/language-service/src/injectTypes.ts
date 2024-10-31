@@ -49,11 +49,10 @@ export function generateGlobalTypes(
     /declare global\s*\{/,
     `declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  function __createVineVLSCtx<T>(ctx: T): import('vue').UnwrapRef<T>;
+  const __createVineVLSCtx: <T>(ctx: T) => import('vue').UnwrapRef<T>;
+  type VueVineComponent = __VLS_Element;
     `,
   )
-
-  globalTypes += `\ntype VueVineComponent = __VLS_Element;\n`
 
   globalTypes = globalTypes.replace(/__VLS_/g, '__VINE_VLS_')
   return globalTypes

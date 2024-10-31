@@ -1,13 +1,14 @@
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
+import path from 'node:path'
 import {
   createConnection,
   createServer,
-  createSimpleProject,
+  createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
 import { resolveVueCompilerOptions } from '@vue/language-core'
-import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
@@ -40,8 +41,13 @@ connection.onInitialize(async (params) => {
 
   const result = await server.initialize(
     params,
-    createSimpleProject(
-      getLanguagePlugins(),
+    createTypeScriptProject(
+      tsdk.typescript,
+      tsdk.diagnosticMessages,
+      ({ configFileName }) => ({
+        languagePlugins: getLanguagePlugins(configFileName),
+        setup() { },
+      }),
     ),
     plugins,
   )
@@ -52,9 +58,13 @@ connection.onInitialize(async (params) => {
 
   return result
 
-  function getLanguagePlugins() {
+  function getLanguagePlugins(configFileName: string | undefined) {
     const compilerOptions: ts.CompilerOptions = {}
     const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({})
+
+    if (configFileName)
+      setupGlobalTypes(path.dirname(configFileName), vueCompilerOptions, tsdk.typescript.sys)
+
     return [
       createVueVineLanguagePlugin(
         tsdk.typescript,
