@@ -48,7 +48,7 @@ export function VLS_ErrorLog(err: any, tag: string) {
     `[vue-vine] ${tag} error: ${String(err)}`,
   )
   if (err.stack) {
-    const stackLines = err.stack.split('\n').slice(0, 6)
+    const stackLines = err.stack.split('\n')
     console.log('--- Error stack trace:')
     console.log(stackLines.join('\n'))
   }
