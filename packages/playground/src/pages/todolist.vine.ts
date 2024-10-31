@@ -31,8 +31,6 @@ function ToDoAction() {
         class="complete i-mdi-delete-circle text-3xl text-#89898b ml-2"
         @click="emits('delete')"
       />
-      <template>
-      </template>
     </div>
   `;
 }
