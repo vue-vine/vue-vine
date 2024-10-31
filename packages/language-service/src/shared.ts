@@ -8,6 +8,10 @@ export interface BabelToken {
     label: string
   }
 }
+export interface SpawnLogger {
+  log: (msg: string) => void
+  reset: () => void
+}
 
 export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
 
@@ -51,6 +55,26 @@ export function VLS_ErrorLog(err: any, tag: string) {
     const stackLines = err.stack.split('\n')
     console.log('--- Error stack trace:')
     console.log(stackLines.join('\n'))
+  }
+}
+
+export function createSpawnLogger(tag: string) {
+  let isHeadLine = true
+
+  return {
+    log: (msg: string) => {
+      console.log(
+        isHeadLine
+          ? `[vue-vine] ${tag}: ${msg}`
+          : `${' '.repeat(3)}├─${' '.repeat(6)}${msg}`,
+      )
+      if (isHeadLine) {
+        isHeadLine = false
+      }
+    },
+    reset: () => {
+      isHeadLine = true
+    },
   }
 }
 

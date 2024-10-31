@@ -3,12 +3,11 @@ import type {
   Disposable,
   LanguageServiceContext,
   LanguageServicePlugin,
-  Position,
 } from '@volar/language-service'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
 import { hyphenateAttr } from '@vue/language-core'
-import { isComponentNode, isElementNode, type VineDiagnostic, type VineFnCompCtx, walkVueTemplateAst } from '@vue-vine/compiler'
+import { isComponentNode, type VineDiagnostic, type VineFnCompCtx, walkVueTemplateAst } from '@vue-vine/compiler'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'

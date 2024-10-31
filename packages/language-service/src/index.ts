@@ -12,7 +12,7 @@ import type {
 } from '@vue/language-core'
 import type * as ts from 'typescript'
 import type { URI } from 'vscode-uri'
-import type { BabelToken, VueVineCode } from './shared'
+import type { BabelToken, SpawnLogger, VueVineCode } from './shared'
 import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
@@ -28,7 +28,7 @@ import {
   LINKED_CODE_TAG_PREFIX,
   LINKED_CODE_TAG_SUFFIX,
 } from './injectTypes'
-import { getVineTempPropName, turnBackToCRLF, VLS_ErrorLog, VLS_InfoLog } from './shared'
+import { createSpawnLogger, getVineTempPropName, turnBackToCRLF, VLS_ErrorLog } from './shared'
 import { compileVineForVirtualCode } from './vine-ctx'
 
 export {
@@ -70,6 +70,10 @@ export function createVueVineLanguagePlugin(
     target = 'extension',
   } = options
 
+  // Observability
+  const vinePerfMonitorLogger = createSpawnLogger('(Perfomance Monitor)')
+  let vineActiveModuleId: string | undefined
+
   return {
     getLanguageId() {
       return undefined
@@ -77,6 +81,12 @@ export function createVueVineLanguagePlugin(
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
       const moduleId = String(uriOrFileName)
       if (moduleId.endsWith('.vine.ts') && langaugeId === 'typescript') {
+        if (vineActiveModuleId !== moduleId) {
+          vinePerfMonitorLogger.reset()
+          vineActiveModuleId = moduleId
+          vinePerfMonitorLogger.log(`Creating virtual code for ${vineActiveModuleId}`)
+        }
+
         try {
           const virtualCode = createVueVineCode(
             ts,
@@ -85,6 +95,7 @@ export function createVueVineLanguagePlugin(
             compilerOptions,
             vueCompilerOptions,
             target,
+            vinePerfMonitorLogger,
           )
           return virtualCode
         }
@@ -152,6 +163,7 @@ function createVueVineCode(
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
   target: 'extension' | 'tsc',
+  logger: SpawnLogger,
 ): VueVineCode {
   const content = snapshot.getText(0, snapshot.getLength())
 
@@ -162,11 +174,7 @@ function createVueVineCode(
     vineCompileWarns,
     vineFileCtx,
   } = compileVineForVirtualCode(sourceFileName, content)
-  VLS_InfoLog(
-    'Creating virtual code ...',
-    `Compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`,
-    `at ${sourceFileName}`,
-  )
+  logger.log(`compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`)
 
   const tsCodeSegments: Segment<CodeInformation>[] = []
   tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)

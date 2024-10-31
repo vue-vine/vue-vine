@@ -17,14 +17,19 @@ export function compileVineTemplate(
   ssr: boolean,
 ) {
   const _compile = ssr ? ssrCompile : compile
-  return _compile(source, {
-    mode: 'module',
-    hoistStatic: true,
-    cacheHandlers: true,
-    prefixIdentifiers: true,
-    inline: true,
-    ...params,
-  })
+  try {
+    return _compile(source, {
+      mode: 'module',
+      hoistStatic: true,
+      cacheHandlers: true,
+      prefixIdentifiers: true,
+      inline: true,
+      ...params,
+    })
+  }
+  catch {
+    return null
+  }
 }
 
 interface DefaultImportSpecifierMeta { type: 'defaultSpecifier', localName: string }
@@ -226,9 +231,6 @@ export function createSeparatedTemplateComposer(
           bindingMetadata,
           ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
           onError: (e) => {
-            if (hasTemplateCompileErr) {
-              return
-            }
             hasTemplateCompileErr = true
             compilerHooks.onError(
               vineErr(
@@ -256,6 +258,9 @@ export function createSeparatedTemplateComposer(
         },
         ssr,
       )
+      if (!compileResult) {
+        return ''
+      }
 
       // Store the template AST
       setVineTemplateAst(vineCompFnCtx, compileResult.ast)
@@ -412,6 +417,9 @@ export function createInlineTemplateComposer(
         },
         ssr,
       )
+      if (!compileResult) {
+        return ''
+      }
 
       const { preamble, code, ast } = compileResult
 
