@@ -19,6 +19,12 @@ export {
   compileVineStyle,
 } from './style/compile'
 
+export {
+  isComponentNode,
+  isElementNode,
+  walkVueTemplateAst,
+} from './template/walk'
+
 export type {
   HMRCompFnsName,
   VineCompFnCtx as VineFnCompCtx,

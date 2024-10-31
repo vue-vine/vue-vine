@@ -55,5 +55,5 @@ export function VLS_ErrorLog(err: any, tag: string) {
 }
 
 export function isVueVineVirtualCode(vCode: any): vCode is VueVineCode {
-  return Boolean(vCode.__VUE_VINE_VIRTUAL_CODE__)
+  return Boolean(vCode?.__VUE_VINE_VIRTUAL_CODE__)
 }
