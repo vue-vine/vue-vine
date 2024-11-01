@@ -375,16 +375,21 @@ const analyzeVineProps: AnalyzeRunner = (
     // its type is `identifier`, and it must have an object literal type annotation.
     // Save this parameter's name as `propsAlias`
     const propsFormalParam = formalParams[0] as Identifier
-    const propsTypeAnnotation = (propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral
+    const propsTypeAnnotation = (propsFormalParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation as TSTypeLiteral | undefined
+    if (!propsTypeAnnotation) {
+      return
+    }
+
+    vineCompFnCtx.propsFormalParam = propsTypeAnnotation
     vineCompFnCtx.propsAlias = propsFormalParam.name;
     // Analyze the object literal type annotation
     // and save the props info into `vineCompFnCtx.props`
     (propsTypeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
-      if (!isIdentifier(member.key)) {
+      if (!isIdentifier(member.key) || !member.typeAnnotation) {
         return
       }
       const propName = member.key.name
-      const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation!.typeAnnotation)
+      const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation.typeAnnotation)
       const propMeta: VinePropMeta = {
         isFromMacroDefine: false,
         isRequired: member.optional === undefined ? true : !member.optional,

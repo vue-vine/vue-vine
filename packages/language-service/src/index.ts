@@ -80,7 +80,11 @@ export function createVueVineLanguagePlugin(
     },
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
       const moduleId = String(uriOrFileName)
-      if (moduleId.endsWith('.vine.ts') && langaugeId === 'typescript') {
+      if (
+        moduleId.endsWith('.vine.ts')
+        && !moduleId.includes('volar_virtual_code')
+        && langaugeId === 'typescript'
+      ) {
         if (vineActiveModuleId !== moduleId) {
           vinePerfMonitorLogger.reset()
           vineActiveModuleId = moduleId
@@ -208,33 +212,19 @@ function createVueVineCode(
       tsCodeSegments.push(propsParam)
 
       // Generate `context: { ... }` after `props: ...`
-      const contextProperties: string[] = []
-
-      const slotsParam = `slots: { ${vineCompFn.slotsNamesInTemplate.map((slot) => {
-        const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
-        return `${slot}: ${
-          slotPropTypeLiteralNode
-            ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
-            : 'unknown'
-        }`
-      }).join(', ')} },`
-      contextProperties.push(slotsParam)
-
-      const emitsParam = `emit: ${
-        vineCompFn.emitsTypeParam
-          ? `VueDefineEmits<${
-            vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
-          }>`
-          : `{ ${vineCompFn.emits.map(emit => `${emit}: (...args: any[]) => boolean`)} }`
-      },`
-      contextProperties.push(emitsParam)
-
-      const contextFormalParam = `\n  context: {\n${' '.repeat(4)}${contextProperties.join(`\n${' '.repeat(4)}`)}\n  }\n`
-      tsCodeSegments.push(contextFormalParam)
+      tsCodeSegments.push(generateContextFormalParam(vineCompFn))
     }
     else {
       // User provide a `props` formal parameter in the component function,
-      // we should keep it in virtual code, and generate `context: ...` after it.
+      // we should keep it in virtual code, and generate `context: ...` after it,
+      const formalParamNode = vineCompFn.propsFormalParam!
+      generateScriptUntil(formalParamNode.end!)
+
+      // Generate `context: { ... }` after `props: ...`
+      tsCodeSegments.push(`, ${generateContextFormalParam(vineCompFn, {
+        tabNum: 2,
+        lineWrapAtStart: false,
+      })}`)
     }
 
     // Need to extract all complex expression in `vineProp.withDefault`
@@ -398,6 +388,44 @@ function createVueVineCode(
       FULL_FEATURES,
     ])
     currentOffset = targetOffset
+  }
+
+  function generateContextFormalParam(
+    vineCompFn: ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number],
+    {
+      tabNum = 4,
+      lineWrapAtStart = true,
+    }: {
+      tabNum?: number
+      lineWrapAtStart?: boolean
+    } = {},
+  ) {
+    // Generate `context: { ... }` after `props: ...`
+    const contextProperties: string[] = []
+
+    const slotsParam = `slots: { ${vineCompFn.slotsNamesInTemplate.map((slot) => {
+      const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
+      return `${slot}: ${
+        slotPropTypeLiteralNode
+          ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
+          : 'unknown'
+      }`
+    }).join(', ')} },`
+    contextProperties.push(slotsParam)
+
+    const emitsParam = `emit: ${
+      vineCompFn.emitsTypeParam
+        ? `VueDefineEmits<${
+          vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+        }>`
+        : `{ ${vineCompFn.emits.map(emit => `${emit}: (...args: any[]) => boolean`)} }`
+    },`
+    contextProperties.push(emitsParam)
+
+    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}  context: {\n${
+      ' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)
+    }\n  }\n`
+    return contextFormalParam
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {

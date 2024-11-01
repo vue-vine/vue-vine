@@ -1181,13 +1181,27 @@ function validatePropsForSingelFC(
       isCheckFormalParamsPropPass = false
     }
 
-    if (!isCheckFormalParamsPropPass) {
-      // Still check if there're maybe some invalid `vineProp` macro call
-      // that should be reported
-      isCheckVinePropMacroCallPass()
-      return false
-    }
-    return isCheckVinePropMacroCallPass()
+    // Still check if there're maybe some invalid `vineProp` macro call
+    // that should be reported, we don't allow two defintion styles to be used together
+    _breakableTraverse(
+      vineCompFnDecl,
+      (node) => {
+        if (isVineProp(node)) {
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: '`vineProp` macro calls is not allowed when props with props formal parameter defined',
+                location: node.loc,
+              },
+            ),
+          )
+          isCheckFormalParamsPropPass = false
+        }
+      },
+    )
+
+    return isCheckFormalParamsPropPass
   }
   vineCompilerHooks.onError(
     vineErr(

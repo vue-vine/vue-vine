@@ -1,7 +1,9 @@
 import { PageHeader } from '../components/page-header.vine'
 
-function TestSlotContainer() {
-  const fizz = vineProp<string>()
+function TestSlotContainer(props: {
+  fizz: string
+}) {
+  // const fizz = vineProp<string>()
   vineEmits<{ emitCamel: [bar: string] }>()
   vineSlots<{ slotCamel(props: { foo: number }): any }>()
 

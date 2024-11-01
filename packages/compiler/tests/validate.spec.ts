@@ -237,9 +237,9 @@ function App() {
           "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
           "Vine component function's props type annotation must be an object literal",
           "Vine component function's props type annotation must be an object literal",
-          "\`vineProp\` macro call must have a type parameter to specify the prop's type",
-          "\`vineProp.withDefault\` macro call must have at least 1 argument",
-          "\`vineProp.optional\` macro call must have a type parameter to specify the prop's type",
+          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
+          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
+          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
         ]
       `)
   })

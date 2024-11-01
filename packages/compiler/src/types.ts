@@ -174,6 +174,7 @@ export interface VineCompFnCtx {
   propsAlias: string
   props: Record<string, VinePropMeta>
   propsDefinitionBy: 'annotaion' | 'macro'
+  propsFormalParam?: TSTypeLiteral
   emitsAlias: string
   emits: string[]
   emitsTypeParam?: TSTypeLiteral
