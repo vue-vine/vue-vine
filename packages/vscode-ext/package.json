@@ -90,8 +90,8 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
-    "dev": "cross-env NODE_ENV=development tsup --watch",
-    "build": "cross-env NODE_ENV=production tsup",
+    "dev": "NODE_ENV=development tsup --watch",
+    "build": "NODE_ENV=production tsup",
     "lint": "eslint src --ext ts",
     "pack": "vsce package",
     "publish:ext": "vsce publish"

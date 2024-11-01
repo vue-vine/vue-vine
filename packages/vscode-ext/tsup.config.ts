@@ -1,22 +1,24 @@
+import fs from 'node:fs'
 import { createRequire } from 'node:module'
+import path from 'node:path'
+import process from 'node:process'
 import { defineConfig } from 'tsup'
 
 const require = createRequire(import.meta.url)
+const isDev = process.env.NODE_ENV === 'development'
 
 export default defineConfig(
   [
     {
       entry: {
-        'dist/client': './src/index.ts',
-        'dist/server': './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
-        // We need to generate this inside node_modules so VS Code can resolve it
-        'node_modules/@vue-vine/typescript-plugin/index': 'src/typescript-plugin.ts',
+        client: './src/index.ts',
+        server: './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
       },
-      outDir: '.',
       format: 'cjs',
       external: ['vscode'],
       minify: false,
       bundle: true,
+      sourcemap: isDev,
       define: { 'process.env.NODE_ENV': '"production"' },
       esbuildPlugins: [
         {
@@ -36,6 +38,18 @@ export default defineConfig(
               }
 
               return { path: pathEsm }
+            })
+          },
+        },
+        // We need to generate this inside node_modules so VS Code can resolve it
+        // Copy src/typescript-plugin.cjs -> node_modules/@vue-vine/typescript-plugin/index.js
+        {
+          name: 'copy-typescript-plugin',
+          setup(build) {
+            build.onEnd(() => {
+              const src = path.resolve(__dirname, 'src/typescript-plugin.cjs')
+              const dest = path.resolve(__dirname, 'node_modules/@vue-vine/typescript-plugin/index.js')
+              fs.copyFileSync(src, dest)
             })
           },
         },

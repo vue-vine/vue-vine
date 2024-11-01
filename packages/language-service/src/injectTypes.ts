@@ -51,6 +51,13 @@ export function generateGlobalTypes(
   const VUE_VINE_COMPONENT: unique symbol;
   const __createVineVLSCtx: <T>(ctx: T) => import('vue').UnwrapRef<T>;
   type VueVineComponent = __VLS_Element;
+
+  // From vuejs 'runtime-core.d.ts':
+  type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+  type RecordToUnion<T extends Record<string, any>> = T[keyof T];
+  type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<RecordToUnion<{
+      [K in keyof T]: (evt: K, ...args: T[K]) => void;
+  }>>;
     `,
   )
 
@@ -105,14 +112,6 @@ const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
   ...__VLS_localComponents,
 };
-
-// From vuejs 'runtime-core.d.ts':
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-type RecordToUnion<T extends Record<string, any>> = T[keyof T];
-type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<RecordToUnion<{
-    [K in keyof T]: (evt: K, ...args: T[K]) => void;
-}>>;
-
 `
 
   return __VINE_CONTEXT_TYPES

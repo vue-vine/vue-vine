@@ -31,8 +31,8 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "NODE_ENV=development tsup --watch",
+    "build": "NODE_ENV=production tsup",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
