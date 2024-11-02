@@ -62,8 +62,14 @@ connection.onInitialize(async (params) => {
     const compilerOptions: ts.CompilerOptions = {}
     const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({})
 
-    if (configFileName)
-      setupGlobalTypes(path.dirname(configFileName), vueCompilerOptions, tsdk.typescript.sys)
+    if (configFileName) {
+      const vineGlobalTypesPath = setupGlobalTypes(path.dirname(configFileName), vueCompilerOptions, tsdk.typescript.sys)
+      if (vineGlobalTypesPath) {
+        vueCompilerOptions.__setupedGlobalTypes = {
+          absolutePath: vineGlobalTypesPath,
+        }
+      }
+    }
 
     return [
       createVueVineLanguagePlugin(

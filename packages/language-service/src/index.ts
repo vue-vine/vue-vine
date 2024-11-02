@@ -7,8 +7,8 @@ import type {
 } from '@vue/language-core'
 import type { VinePropMeta } from '@vue-vine/compiler'
 import type * as ts from 'typescript'
-import type { URI } from 'vscode-uri'
 import type { BabelToken, SpawnLogger, VueVineCode } from './shared'
+import path from 'node:path/posix'
 import {
   type ArrowFunctionExpression,
   type CallExpression,
@@ -26,6 +26,7 @@ import {
   type Segment,
   toString,
 } from 'muggle-string'
+import { URI } from 'vscode-uri'
 import {
   createLinkedCodeTag,
   generateVLSContext,
@@ -87,7 +88,11 @@ export function createVueVineLanguagePlugin(
       return undefined
     },
     createVirtualCode(uriOrFileName, langaugeId, snapshot) {
-      const moduleId = String(uriOrFileName)
+      const moduleId = (
+        URI.isUri(uriOrFileName)
+          ? uriOrFileName.fsPath.replace(/\\/g, '/') // Maybe a windows path
+          : uriOrFileName // Must be a posix path
+      )
       if (
         moduleId.endsWith('.vine.ts')
         && !moduleId.includes('volar_virtual_code')
@@ -189,7 +194,24 @@ function createVueVineCode(
   logger.log(`compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`)
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
-  tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
+  if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
+    const globalTypes = vueCompilerOptions.__setupedGlobalTypes
+    let relativePath = path.relative(
+      path.dirname(vineFileCtx.fileId),
+      globalTypes.absolutePath,
+    )
+    if (
+      relativePath !== globalTypes.absolutePath
+      && !relativePath.startsWith('./')
+      && !relativePath.startsWith('../')
+    ) {
+      relativePath = `./${relativePath}`
+    }
+    tsCodeSegments.push(`/// <reference types="${relativePath}" />\n\n`)
+  }
+  else {
+    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
+  }
 
   let currentOffset = 0
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode

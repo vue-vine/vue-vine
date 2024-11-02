@@ -26,7 +26,12 @@ export function run() {
         let vueOptions: VueCompilerOptions
         if (typeof configFilePath === 'string') {
           vueOptions = createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/'), true).vueOptions
-          setupGlobalTypes(path.dirname(configFilePath.replace(windowsPathReg, '/')), vueOptions, ts.sys)
+          const globalTypesFilePath = setupGlobalTypes(path.dirname(configFilePath.replace(windowsPathReg, '/')), vueOptions, ts.sys)
+          if (globalTypesFilePath) {
+            vueOptions.__setupedGlobalTypes = {
+              absolutePath: globalTypesFilePath,
+            }
+          }
         }
         else {
           vueOptions = resolveVueCompilerOptions({})
