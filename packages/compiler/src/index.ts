@@ -1,4 +1,4 @@
-import type { Node, TSTypeLiteral } from '@babel/types'
+import type { Node } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
 import MagicString from 'magic-string'
 import { analyzeVine, createLinkedCodeTag } from './analyze'

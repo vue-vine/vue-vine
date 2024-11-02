@@ -49,6 +49,9 @@ export type {
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
+type VineCodeInformation = CodeInformation & {
+  __combineLastMapping?: boolean
+}
 
 const FULL_FEATURES = {
   completion: true,
@@ -185,7 +188,7 @@ function createVueVineCode(
   } = compileVineForVirtualCode(sourceFileName, content)
   logger.log(`compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`)
 
-  const tsCodeSegments: Segment<CodeInformation>[] = []
+  const tsCodeSegments: Segment<VineCodeInformation>[] = []
   tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
 
   let currentOffset = 0
@@ -660,23 +663,38 @@ function createVueVineCode(
   }
 }
 
-function buildMappings<T>(chunks: Segment<T>[]) {
+function buildMappings(chunks: Segment<VineCodeInformation>[]) {
   let length = 0
-  const mappings: Mapping<T>[] = []
+  let lastValidMapping: Mapping<VineCodeInformation> | undefined
+
+  const mappings: Mapping<VineCodeInformation>[] = []
   for (const segment of chunks) {
     if (typeof segment === 'string') {
       length += segment.length
     }
     else {
-      mappings.push({
+      const mapping: Mapping<VineCodeInformation> = {
         sourceOffsets: [segment[2]],
         generatedOffsets: [length],
         lengths: [segment[0].length],
         data: segment[3]!,
-      })
+      }
+
+      // Handling __combineLastMapping
+      if (mapping.data.__combineLastMapping && lastValidMapping) {
+        lastValidMapping.sourceOffsets.push(...mapping.sourceOffsets)
+        lastValidMapping.generatedOffsets.push(...mapping.generatedOffsets)
+        lastValidMapping.lengths.push(...mapping.lengths)
+      }
+      else {
+        mappings.push(mapping)
+        lastValidMapping = mapping
+      }
+
       length += segment[0].length
     }
   }
+
   return mappings
 }
 

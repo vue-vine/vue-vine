@@ -32,7 +32,6 @@ import type {
   VineUserImport,
 } from './types'
 import {
-  callExpression,
   isArrayExpression,
   isArrayPattern,
   isBlockStatement,
