@@ -1,18 +1,22 @@
 import type {
-  ArrowFunctionExpression,
-  FunctionDeclaration,
-  FunctionExpression,
-} from '@babel/types'
-import type {
   CodeInformation,
   LanguagePlugin,
   Mapping,
   VirtualCode,
   VueCompilerOptions,
 } from '@vue/language-core'
+import type { VinePropMeta } from '@vue-vine/compiler'
 import type * as ts from 'typescript'
 import type { URI } from 'vscode-uri'
 import type { BabelToken, SpawnLogger, VueVineCode } from './shared'
+import {
+  type ArrowFunctionExpression,
+  type CallExpression,
+  type FunctionDeclaration,
+  type FunctionExpression,
+  isIdentifier,
+  isTSTypeLiteral,
+} from '@babel/types'
 import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
@@ -44,6 +48,7 @@ export type {
 } from './shared'
 
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
+type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
 
 const FULL_FEATURES = {
   completion: true,
@@ -184,48 +189,18 @@ function createVueVineCode(
   tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
 
   let currentOffset = 0
+  const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
+  if (firstVineCompFnDeclNode) {
+    generateScriptUntil(firstVineCompFnDeclNode.start!)
+  }
 
   for (const vineCompFn of vineFileCtx.vineCompFns) {
     if (!vineCompFn.templateStringNode || !vineCompFn.templateReturn) {
       continue
     }
 
-    if (vineCompFn.propsDefinitionBy === 'macro') {
-      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
-        isNeedLinkedCodeTag: true,
-        joinStr: ',\n',
-      })}\n\n`)
-    }
-
-    // Gurantee the component function has a `props` formal parameter in virtual code,
-    // This is for props intellisense on editing template tag attrs.
-    generateScriptUntil(
-      getIndexAfterFnDeclLeftParen(
-        vineCompFn.fnItselfNode!,
-        vineFileCtx.root.tokens ?? [],
-      ) + 1, // means generate after '(',
-    )
-    if (vineCompFn.propsDefinitionBy === 'macro') {
-      // Define props by `vineProp`, no `props` formal parameter,
-      // generate a `props` formal parameter in virtual code
-      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__,`
-      tsCodeSegments.push(propsParam)
-
-      // Generate `context: { ... }` after `props: ...`
-      tsCodeSegments.push(generateContextFormalParam(vineCompFn))
-    }
-    else {
-      // User provide a `props` formal parameter in the component function,
-      // we should keep it in virtual code, and generate `context: ...` after it,
-      const formalParamNode = vineCompFn.propsFormalParam!
-      generateScriptUntil(formalParamNode.end!)
-
-      // Generate `context: { ... }` after `props: ...`
-      tsCodeSegments.push(`, ${generateContextFormalParam(vineCompFn, {
-        tabNum: 2,
-        lineWrapAtStart: false,
-      })}`)
-    }
+    // Write out the component function's formal parameters
+    generateComponentPropsAndContext(vineCompFn)
 
     // Need to extract all complex expression in `vineProp.withDefault`
     // and generate a temporary variable like `__VINE_VLS_1` and use `typeof __VINE_VLS_1`
@@ -248,35 +223,22 @@ function createVueVineCode(
       })
     }
 
-    // We should generate linked code tag as block comment
-    // before the variable declared by `vineProp`
-    if (vineCompFn.propsDefinitionBy === 'macro') {
-      const propVarIdAstNodes = Object.entries(vineCompFn.props).map(([propName, propMeta]) => [propName, propMeta.declaredIdentifier] as const)
-      for (let i = 0; i < propVarIdAstNodes.length; i++) {
-        const [propName, propVarIdAstNode] = propVarIdAstNodes[i]
-        if (!propVarIdAstNode) {
-          continue
-        }
+    generateLinkedCodeTagRightForMacros(vineCompFn)
 
-        generateScriptUntil(propVarIdAstNode.start!)
-        tsCodeSegments.push(createLinkedCodeTag('right', propName.length))
-      }
-    }
-
+    // Insert temp variables,
+    // after all statements in the function body
     generateScriptUntil(vineCompFn.templateReturn.start!)
-    if (isVineCompHasFnBlock) {
+    if (isVineCompHasFnBlock && tempVarDecls.length > 0) {
       tsCodeSegments.push(...tempVarDecls)
       tsCodeSegments.push('\n\n')
     }
 
     // Generate the template virtual code
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
-      tsCodeSegments.push('\n{\n')
+      tsCodeSegments.push('\n{ // --- Start: Template virtual code\n')
 
       // Insert all component bindings to __VLS_ctx
-      tsCodeSegments.push(
-        generateVLSContext(vineCompFn),
-      )
+      tsCodeSegments.push(generateVLSContext(vineCompFn))
 
       const generatedTemplate = generateTemplate({
         ts,
@@ -328,7 +290,7 @@ function createVueVineCode(
           tsCodeSegments.push(segment[0])
         }
       }
-      tsCodeSegments.push('\n}\n')
+      tsCodeSegments.push('\n} // --- End: Template virtual code\n')
     }
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
@@ -390,10 +352,51 @@ function createVueVineCode(
     currentOffset = targetOffset
   }
 
+  function generateContextSlots(
+    vineCompFn: VineCompFn,
+    tabNum = 2,
+  ) {
+    const slotsParam = `slots: {${vineCompFn.slotsNamesInTemplate.map((slot) => {
+      const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
+      return `\n${' '.repeat(tabNum + 2)}${
+        // '/* left linkCodeTag here ... */'
+        slot === 'default'
+          ? ''
+          : createLinkedCodeTag('left', slot.length)
+      }${slot}: ${
+        slotPropTypeLiteralNode
+          ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
+          : 'unknown'
+      }`
+    }).join(', ')}\n${' '.repeat(tabNum)}},`
+
+    return slotsParam
+  }
+
+  function generateEmitProps(
+    vineCompFn: VineCompFn,
+    tabNum = 2,
+  ) {
+    const emitParam = `{${
+      vineCompFn.emits.map((emit) => {
+        // Convert `emit` to a camelCase Name
+        const camelCaseEmit = emit.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+        const onEmit = `on${camelCaseEmit.charAt(0).toUpperCase()}${camelCaseEmit.slice(1)}`
+
+        return `\n${' '.repeat(tabNum + 2)}${
+          // '/* left linkCodeTag here ... */'
+          createLinkedCodeTag('left', onEmit.length)
+        }${onEmit}: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
+      }).join(', ')
+    }\n}`
+
+    return emitParam
+  }
+
   function generateContextFormalParam(
-    vineCompFn: ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number],
+    vineCompFn: VineCompFn,
     {
-      tabNum = 4,
+      tabNum = 2,
       lineWrapAtStart = true,
     }: {
       tabNum?: number
@@ -403,29 +406,171 @@ function createVueVineCode(
     // Generate `context: { ... }` after `props: ...`
     const contextProperties: string[] = []
 
-    const slotsParam = `slots: { ${vineCompFn.slotsNamesInTemplate.map((slot) => {
-      const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
-      return `${slot}: ${
-        slotPropTypeLiteralNode
-          ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
-          : 'unknown'
-      }`
-    }).join(', ')} },`
-    contextProperties.push(slotsParam)
+    vineCompFn.linkedMacroCalls
+      .forEach(
+        ({ macroType }) => {
+          if (macroType === 'vineSlots') {
+            contextProperties.push(generateContextSlots(vineCompFn, tabNum))
+          }
+        },
+      )
 
-    const emitsParam = `emit: ${
-      vineCompFn.emitsTypeParam
-        ? `VueDefineEmits<${
-          vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
-        }>`
-        : `{ ${vineCompFn.emits.map(emit => `${emit}: (...args: any[]) => boolean`)} }`
-    },`
-    contextProperties.push(emitsParam)
-
-    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}  context: {\n${
+    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {\n${
       ' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)
-    }\n  }\n`
+    }${lineWrapAtStart ? `\n  \n` : '\n'}}`
     return contextFormalParam
+  }
+
+  function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
+    tsCodeSegments.push('\n')
+    if (vineCompFn.propsDefinitionBy === 'macro') {
+      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
+        isNeedLinkedCodeTag: true,
+        joinStr: ',\n',
+      })}\n`)
+    }
+    if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
+      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${
+        vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+      }>>;\n`)
+    }
+    tsCodeSegments.push('\n')
+
+    // Gurantee the component function has a `props` formal parameter in virtual code,
+    // This is for props intellisense on editing template tag attrs.
+    generateScriptUntil(
+      getIndexAfterFnDeclLeftParen(
+        vineCompFn.fnItselfNode!,
+        vineFileCtx.root.tokens ?? [],
+      ) + 1, // means generate after '(',
+    )
+    if (vineCompFn.propsDefinitionBy === 'macro') {
+      // Define props by `vineProp`, no `props` formal parameter,
+      // generate a `props` formal parameter in virtual code
+      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ & ${
+        generateEmitProps(vineCompFn, 2)
+      }, `
+      tsCodeSegments.push(propsParam)
+
+      // Generate `context: { ... }` after `props: ...`
+      tsCodeSegments.push(generateContextFormalParam(vineCompFn))
+    }
+    else {
+      // User provide a `props` formal parameter in the component function,
+      // we should keep it in virtual code, and generate `context: ...` after it,
+      const formalParamNode = vineCompFn.propsFormalParam!
+      generateScriptUntil(formalParamNode.end!)
+
+      // Generate `context: { ... }` after `props: ...`
+      tsCodeSegments.push(` & ${
+        generateEmitProps(vineCompFn, 2)
+      }, ${generateContextFormalParam(vineCompFn, {
+        tabNum: 2,
+        lineWrapAtStart: false,
+      })}`)
+    }
+  }
+
+  function generateLinkedCodeTagRightForMacros(vineCompFn: VineCompFn) {
+    vineCompFn.linkedMacroCalls
+      .sort(
+        (
+          { macroCall: a },
+          { macroCall: b },
+        ) => {
+        // Sort by AST node start position
+          return a.start! - b.start!
+        },
+      )
+      .forEach(
+        (macroInfo) => {
+          if (macroInfo.macroType === 'vineProp') {
+            generateLinkedCodeTagRightForVineProp(
+              vineCompFn,
+              macroInfo.macroMeta,
+            )
+          }
+          else if (macroInfo.macroType === 'vineSlots') {
+            generateLinkedCodeTagRightForVineSlots(
+              macroInfo.macroCall,
+            )
+          }
+          else if (macroInfo.macroType === 'vineEmits') {
+            generateLinkedCodeTagRightForVineEmits(
+              macroInfo.macroCall,
+            )
+          }
+        },
+      )
+  }
+
+  function generateLinkedCodeTagRightForVineProp(
+    vineCompFn: VineCompFn,
+    vinePropMeta: VinePropMeta,
+  ) {
+    // We should generate linked code tag as block comment
+    // before the variable declared by `vineProp`
+    if (vineCompFn.propsDefinitionBy !== 'macro') {
+      return
+    }
+    const propsVarIdAstNode = vinePropMeta.declaredIdentifier
+    if (!propsVarIdAstNode) {
+      return
+    }
+    generateScriptUntil(propsVarIdAstNode.start!)
+    tsCodeSegments.push(createLinkedCodeTag('right', propsVarIdAstNode.name.length))
+  }
+
+  function generateLinkedCodeTagRightForVineSlots(
+    macroCall: CallExpression,
+  ) {
+    const vineSlotsType = macroCall.typeParameters?.params?.[0]
+    if (!vineSlotsType || !isTSTypeLiteral(vineSlotsType)) {
+      return
+    }
+
+    // Iterate every property in `vineSlots` type literal
+    vineSlotsType.members.forEach((member) => {
+      if (
+        !member
+        || (
+          member.type !== 'TSMethodSignature'
+          && member.type !== 'TSPropertySignature'
+        )
+        || !member.key
+        || !isIdentifier(member.key)
+      ) {
+        return
+      }
+
+      // Generate linked code tag as block comment
+      // before the variable declared by `vineSlots`
+      generateScriptUntil(member.key.start!)
+      tsCodeSegments.push(createLinkedCodeTag('right', member.key.name.length))
+    })
+  }
+
+  function generateLinkedCodeTagRightForVineEmits(
+    macroCall: CallExpression,
+  ) {
+    const vineEmitsType = macroCall.typeParameters?.params?.[0]
+    if (!vineEmitsType || !isTSTypeLiteral(vineEmitsType)) {
+      return
+    }
+
+    vineEmitsType.members.forEach((member) => {
+      if (
+        !member
+        || member.type !== 'TSPropertySignature'
+        || !member.key
+        || !isIdentifier(member.key)
+      ) {
+        return
+      }
+
+      generateScriptUntil(member.key.start!)
+      tsCodeSegments.push(createLinkedCodeTag('right', member.key.name.length))
+    })
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {

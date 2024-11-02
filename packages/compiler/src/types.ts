@@ -1,6 +1,7 @@
 import type { ParseResult, ParserOptions } from '@babel/parser'
 import type {
   ArrowFunctionExpression,
+  CallExpression,
   File,
   FunctionDeclaration,
   FunctionExpression,
@@ -35,6 +36,10 @@ export type CountingMacros = Exclude<
   | 'vineProp.withDefault'
   | 'vineModel'
 >
+export type LinkedMacroInfo =
+  | { macroType: 'vineProp', macroCall: CallExpression, macroMeta: VinePropMeta }
+  | { macroType: 'vineEmits', macroCall: CallExpression }
+  | { macroType: 'vineSlots', macroCall: CallExpression }
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
@@ -138,6 +143,7 @@ export interface VineFileCtx {
   importsLastLine?: SourceLocation | null
 
   getAstNodeContent: (node: Node) => string
+  getLinkedTSTypeLiteralNodeContent: (node: TSTypeLiteral) => string
 }
 
 export interface VineQuery {
@@ -171,6 +177,7 @@ export interface VineCompFnCtx {
   fnName: string
   scopeId: string
   bindings: VineTemplateBindings
+  linkedMacroCalls: LinkedMacroInfo[]
   propsAlias: string
   props: Record<string, VinePropMeta>
   propsDefinitionBy: 'annotaion' | 'macro'

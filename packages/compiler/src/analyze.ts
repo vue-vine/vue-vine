@@ -32,6 +32,7 @@ import type {
   VineUserImport,
 } from './types'
 import {
+  callExpression,
   isArrayExpression,
   isArrayPattern,
   isBlockStatement,
@@ -365,7 +366,6 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
 }
 
 const analyzeVineProps: AnalyzeRunner = (
-
   { vineCompilerHooks, vineCompFnCtx, vineFileCtx },
   fnItselfNode,
 ) => {
@@ -410,6 +410,7 @@ const analyzeVineProps: AnalyzeRunner = (
 
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
+
     allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
       const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
       const propMeta: VinePropMeta = {
@@ -458,6 +459,11 @@ const analyzeVineProps: AnalyzeRunner = (
       const propName = propVarIdentifier.name
       vineCompFnCtx.props[propName] = propMeta
       vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+      vineCompFnCtx.linkedMacroCalls.push({
+        macroCall,
+        macroType: 'vineProp',
+        macroMeta: propMeta,
+      })
     })
   }
 }
@@ -475,6 +481,12 @@ const analyzeVineEmits: AnalyzeRunner = (
         vineEmitsMacroCall = descendant
         const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
         parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+
+        vineCompFnCtx.linkedMacroCalls.push({
+          macroType: 'vineEmits',
+          macroCall: vineEmitsMacroCall,
+        })
+
         throw exitTraverse
       }
     },
@@ -708,6 +720,12 @@ const analyzeVineSlots: AnalyzeRunner = (
       vineSlotsMacroCall = node
       const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
       parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+
+      vineCompFnCtx.linkedMacroCalls.push({
+        macroType: 'vineSlots',
+        macroCall: node,
+      })
+
       throw exitTraverse
     }
   })
@@ -965,6 +983,7 @@ function buildVineCompFnCtx(
     templateStringNode,
     templateReturn,
     templateSource,
+    linkedMacroCalls: [],
     propsDefinitionBy: 'annotaion',
     propsAlias: 'props',
     emitsAlias: 'emits',

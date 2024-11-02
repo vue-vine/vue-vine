@@ -1,7 +1,7 @@
-import type { Node } from '@babel/types'
+import type { Node, TSTypeLiteral } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
 import MagicString from 'magic-string'
-import { analyzeVine } from './analyze'
+import { analyzeVine, createLinkedCodeTag } from './analyze'
 import { findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
 import { transformFile } from './transform'
@@ -34,6 +34,7 @@ export type {
   VineDiagnostic,
   VineFileCtx,
   VineProcessorLang,
+  VinePropMeta,
 } from './types'
 
 export function createCompilerCtx(
@@ -73,8 +74,24 @@ export function createVineFileCtx(
     get originCode() {
       return this.fileMagicCode.original
     },
-    getAstNodeContent(node: Node) {
+    getAstNodeContent(node) {
       return this.originCode.slice(node.start!, node.end!)
+    },
+    getLinkedTSTypeLiteralNodeContent(node) {
+      return `{ ${
+        node.members.map((member) => {
+          const memberOriginCode = this.originCode.slice(member.start!, member.end!)
+
+          return `${
+            (
+              member.type === 'TSMethodSignature'
+              || member.type === 'TSPropertySignature'
+            )
+              ? `${createLinkedCodeTag('left', this.getAstNodeContent(member.key).length)}${memberOriginCode}`
+              : memberOriginCode
+          }`
+        }).join(', ')
+      } }`
     },
   }
   return vineFileCtx
