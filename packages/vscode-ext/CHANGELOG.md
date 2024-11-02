@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.23
+
+### Patch Changes
+
+- Support navigating to definition for vineSlots and vineEmits.
+
 ## 0.1.22
 
 ### Patch Changes
