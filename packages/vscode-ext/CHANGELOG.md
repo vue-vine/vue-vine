@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.25
+
+### Patch Changes
+
+- Fix invalid bundle config for vscode ext
+
 ## 0.1.24
 
 ### Patch Changes
