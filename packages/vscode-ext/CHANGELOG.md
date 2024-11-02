@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.24
+
+### Patch Changes
+
+- Fix incorrectly generate global types file path.
+
 ## 0.1.23
 
 ### Patch Changes
