@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.26
+
+### Patch Changes
+
+- Fix incorrect virtual code linked mapping for no type param vineEmits
+
 ## 0.1.25
 
 ### Patch Changes
