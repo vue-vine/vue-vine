@@ -34,9 +34,8 @@ connection.onInitialize(async (params) => {
     createVineTemplatePlugin(),
   ]
   plugins.push(
-    ...createTypeScriptServices(tsdk.typescript).filter(
-      plugin => plugin.name === 'typescript-syntactic',
-    ),
+    ...createTypeScriptServices(tsdk.typescript)
+      .filter(plugin => plugin.name === 'typescript-syntactic'),
   )
 
   const result = await server.initialize(

@@ -322,6 +322,8 @@ function createVueVineCode(
     // clear the template string
     tsCodeSegments.push('`` as any as VueVineComponent')
     currentOffset = vineCompFn.templateStringNode.quasi.end!
+
+    generateScriptUntil(vineCompFn.fnDeclNode!.end!)
   }
   generateScriptUntil(snapshot.getLength())
 
@@ -410,7 +412,9 @@ function createVueVineCode(
 
         return `\n${' '.repeat(tabNum + 2)}${
           // '/* left linkCodeTag here ... */'
-          createLinkedCodeTag('left', onEmit.length)
+          vineCompFn.emitsTypeParam
+            ? createLinkedCodeTag('left', onEmit.length)
+            : ''
         }${onEmit}: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
       }).join(', ')
     }\n}`
