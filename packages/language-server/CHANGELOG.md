@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.29
+
+### Patch Changes
+
+- Fix feature of folding support for component functions.
+
 ## 0.1.28
 
 ### Patch Changes

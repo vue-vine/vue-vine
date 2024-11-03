@@ -1,9 +1,14 @@
 # vue-vine
 
-## 0.1.28
+## 0.1.29
 
 ### Patch Changes
 
+- Fix feature of folding support for component functions.
+
+## 0.1.28
+
+### Patch Changes
 
 ## 0.1.27
 

@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.27
+
+### Patch Changes
+
+- Fix feature of folding support for component functions.
+
 ## 0.1.26
 
 ### Patch Changes
