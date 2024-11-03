@@ -19,7 +19,7 @@ function transformVineDiagnostic(
   let start = 0
   let end = 0
 
-  // `toSourceLocation` is a generator so we need to iterate it to get the first value
+  // `toGeneratedLocation` is a generator so we need to iterate it to get the first value
   ;[start] = mapper.toGeneratedLocation(diag.location?.start.index ?? 0).next().value ?? []
   ;[end] = mapper.toGeneratedLocation(diag.location?.end.index ?? 0).next().value ?? []
 

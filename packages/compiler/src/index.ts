@@ -37,6 +37,11 @@ export type {
   VinePropMeta,
 } from './types'
 
+export {
+  _breakableTraverse,
+  exitTraverse,
+} from './utils'
+
 export function createCompilerCtx(
   options: VineCompilerOptions = {},
 ): VineCompilerCtx {

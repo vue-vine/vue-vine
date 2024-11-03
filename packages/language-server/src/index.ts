@@ -13,6 +13,7 @@ import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
 import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
+import { createVineFoldingRangesPlugin } from './plugins/vine-folding-ranges'
 import { createVineTemplatePlugin } from './plugins/vine-template'
 
 const connection = createConnection()
@@ -30,6 +31,7 @@ connection.onInitialize(async (params) => {
     createEmmetService(),
     // Vine plugins:
     createVineDiagnosticsPlugin(),
+    createVineFoldingRangesPlugin(),
     // HTML Service is included here ↓
     createVineTemplatePlugin(),
   ]
