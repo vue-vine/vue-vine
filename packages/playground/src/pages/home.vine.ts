@@ -1,6 +1,6 @@
-import { PageHeader } from '../components/page-header.vine'
-import { InsideExample } from '../components/inside-example.vine'
 import { generateRandomString } from '~/utils'
+import { InsideExample } from '../components/inside-example.vine'
+import { PageHeader } from '../components/page-header.vine'
 
 function OutsideExample(props: { id: string }) {
   vineStyle(scss`
