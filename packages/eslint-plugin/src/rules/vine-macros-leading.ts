@@ -50,19 +50,10 @@ export default createEslintRule<Options, MessageIds>({
       // - ArrowFunctionExpression
       // and in @vue-vine/eslint-parser we already
       // marked the component function with a flag `__isVine__: true`,
-      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression': (
+      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression[__isVine__]': (
         node: TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression,
       ) => {
         if (node.body.type !== 'BlockStatement') {
-          return
-        }
-        const returnStmt = node.body.body.find(
-          stmt => stmt.type === TSESTree.AST_NODE_TYPES.ReturnStatement,
-        )
-        if (
-          // @ts-expect-error - This template AST is handled by @vue-vine/eslint-parser
-          returnStmt?.argument?.type !== 'VTemplateRoot'
-        ) {
           return
         }
 
