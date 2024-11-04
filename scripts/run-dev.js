@@ -1,6 +1,6 @@
 import { cliExec } from './utils'
 
-const devCommand = 'cross-env NODE_ENV=development pnpm concurrently '
+const devCommand = 'NODE_ENV=development pnpm concurrently '
   + '-p "  {name}  " '
   + '-n "COMPILER,VITE,MAIN" '
   + '-c "bgGreen.bold,bgBlue.bold,bgMagenta.bold" '

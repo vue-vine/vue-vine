@@ -1,10 +1,7 @@
-import { createRequire } from 'node:module'
-import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
-import VueVineESLintPlugin from '@vue-vine/eslint-plugin'
+// @ts-check
 
-const require = createRequire(import.meta.url)
-const VueVineESLintParserPackageJSON = require('@vue-vine/eslint-parser/package.json')
+import antfu from '@antfu/eslint-config'
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
@@ -19,27 +16,10 @@ export default antfu(
     },
   },
   {
-    files: [
-      'src/**/*.vine.ts',
-    ],
-    plugins: {
-      'vue-vine': VueVineESLintPlugin,
-    },
-    languageOptions: {
-      parser: {
-        meta: {
-          name: '@vue-vine/eslint-parser',
-          version: VueVineESLintParserPackageJSON.version,
-        },
-        ...VueVineESLintParser,
-      },
-    },
+    files: ['src/**/*.vine.ts'],
     rules: {
       'no-console': 'off',
-      'vue-vine/format-vine-style-indent': [
-        'error',
-        { indent: 2 },
-      ],
     },
   },
+  ...VueVine(),
 )

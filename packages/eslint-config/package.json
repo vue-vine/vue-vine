@@ -1,14 +1,14 @@
 {
-  "name": "@vue-vine/eslint-plugin",
+  "name": "@vue-vine/eslint-config",
   "version": "0.0.1",
-  "description": "ESLint plugin for Vue Vine",
+  "description": "ESLint config for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
   "keywords": [
     "Vue",
     "Vine",
     "eslint",
-    "eslintPlugin"
+    "eslintConfig"
   ],
   "exports": {
     ".": {
@@ -32,14 +32,8 @@
     "test:dev": "vitest"
   },
   "dependencies": {
-    "@antfu/utils": "^0.7.10"
-  },
-  "devDependencies": {
-    "@types/eslint": "^9.6.0",
-    "@typescript-eslint/typescript-estree": "^8.6.0",
-    "@typescript-eslint/utils": "^8.6.0",
-    "eslint": "~9.6.0",
-    "eslint-vitest-rule-tester": "^0.6.1",
-    "jsonc-eslint-parser": "^2.4.0"
+    "@vue-vine/eslint-parser": "workspace:*",
+    "@vue-vine/eslint-plugin": "workspace:*",
+    "eslint": "~9.6.0"
   }
 }

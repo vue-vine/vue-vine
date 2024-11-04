@@ -1,11 +1,9 @@
-# eslint-plugin-vue-vine
+# @vue-vine/eslint-config
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-ESLint rules for [Vue Vine](https://vue-vine.dev).
-
-[Rules List](./src/rules)
+ESLint configs for [Vue Vine](https://vue-vine.dev).
 
 ## License
 

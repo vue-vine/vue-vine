@@ -68,41 +68,26 @@ Then add macro's type definition in `tsconfig.json`:
 }
 ```
 
-For ESLint, install our custom ESLint parser:
+For ESLint, install our custom ESLint config:
 
 ```bash
-ni -D @vue-vine/eslint-parser
+ni -D @vue-vine/eslint-config
 ```
 
-You need to set custom ESLint parser for `.vine.ts` files:
+You need to load the config into your flat configs.
 
 ```js
-// eslint.config.mjs
 import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+// `VueVine()` returns a ESLint flat config
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
-    // Override antfu's settings here:
-    // - ESLint Stylistic is not supported yet
-    stylistic: false,
+    // First option is not Linter.FlatConfig,
+    // it's a setting for antfu's config itself
   },
-  {
-    rules: {
-      // ... Customize rules here
-    },
-  },
-  {
-    files: [
-      'path/to/**/*.vine.ts',
-    ],
-    languageOptions: {
-      parser: VueVineESLintParser,
-    },
-    rules: {
-      // ... Customize rules here
-    },
-  },
+  ...VueVine(),
 )
 ```
 

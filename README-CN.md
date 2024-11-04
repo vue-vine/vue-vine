@@ -68,41 +68,26 @@ export default defineConfig({
 }
 ```
 
-若要配置 ESLint，请安装我们的自定义 ESLint 解析器：
+对于 ESLint, 请安装我们提供的 ESLint 配置包：
 
 ```bash
-ni -D @vue-vine/eslint-parser
+ni -D @vue-vine/eslint-config
 ```
 
-你需要为 `.vine.ts` 文件设置自定义 ESLint 解析器：
+你需要将其载入到 ESLint flat configs 中。
 
 ```js
-// eslint.config.mjs
 import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+// `VueVine()` 返回了一个 ESLint flat config
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
-    // 在这里覆盖 antfu 的设置：
-    // - 目前不支持 ESLint Stylistic
-    stylistic: false,
+    // 第一个选项对象不是 ESLint 的 FlatConfig
+    // 是 antfu 规则自身的配置
   },
-  {
-    rules: {
-      // ... 在这里自定义规则
-    },
-  },
-  {
-    files: [
-      'path/to/**/*.vine.ts',
-    ],
-    languageOptions: {
-      parser: VueVineESLintParser,
-    },
-    rules: {
-      // ... 在这里自定义规则
-    },
-  },
+  ...VueVine(),
 )
 ```
 
