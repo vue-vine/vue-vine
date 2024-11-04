@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.1.31
+
+### Patch Changes
+
+- Add format-vine-macros-leading rule.
+
 ## 0.1.30
 
 ### Patch Changes
