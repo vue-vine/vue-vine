@@ -14,6 +14,7 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
       },
       rules: {
         'vue-vine/format-vine-style-indent': ['error', { indent: 2 }],
+        'vue-vine/format-vine-macros-leading': 'error',
       },
     },
   ]

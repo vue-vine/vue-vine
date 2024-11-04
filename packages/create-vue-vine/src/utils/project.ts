@@ -1,6 +1,6 @@
 import { basename, resolve } from 'node:path'
-import { exists } from './fs'
 import { fileURLToPath } from 'node:url'
+import { exists } from './fs'
 
 export function validateProjectName(path: string) {
   return basename(path) === path

@@ -7,8 +7,17 @@ export type Options = [{
   indent?: number
 }]
 
+const VINE_STYLE_TAGS = [
+  'css',
+  'scss',
+  'sass',
+  'less',
+  'stylus',
+  'postcss',
+]
+
 export default createEslintRule<Options, MessageIds>({
-  name: 'indent-unindent',
+  name: messageId,
   meta: {
     type: 'layout',
     docs: {
@@ -35,21 +44,12 @@ export default createEslintRule<Options, MessageIds>({
   defaultOptions: [{ indent: 2 }],
   create(context) {
     const { indent = 2 } = context.options?.[0] ?? {}
-    const tags = [
-      'css',
-      'scss',
-      'sass',
-      'less',
-      'stylus',
-      'postcss',
-    ]
-
     return {
       TaggedTemplateExpression(node) {
         const id = node.tag
         if (!id || id.type !== 'Identifier')
           return
-        if (!tags.includes(id.name))
+        if (!VINE_STYLE_TAGS.includes(id.name))
           return
         if (node.quasi.quasis.length !== 1)
           return

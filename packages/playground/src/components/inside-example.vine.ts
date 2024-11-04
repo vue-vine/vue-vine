@@ -1,7 +1,6 @@
 export function InsideExample() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
-
   const emits = vineEmits<{ metaBgColorChange: [string] }>()
 
   const isDark = useDark()

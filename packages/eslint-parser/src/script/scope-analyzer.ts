@@ -279,6 +279,11 @@ function collectVariablesForVCF(
       && foundVCF.type !== 'ArrowFunctionExpression'
     ))
     if (foundVCF) {
+      Object.assign(
+        foundVCF,
+        { __isVine__: true },
+      )
+
       const tryGetVCFScope = tsFileScopeManager.nodeToScope.get(foundVCF)
       if (tryGetVCFScope?.[0]) {
         foundVCFScope = tryGetVCFScope[0]

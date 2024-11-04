@@ -1,5 +1,7 @@
 import type { ESLint, Linter } from 'eslint'
 import { version } from '../package.json'
+
+import vineMacrosLeading from './rules/vine-macros-leading'
 import vineStyleIndent from './rules/vine-style-indent'
 
 const plugin = {
@@ -9,6 +11,7 @@ const plugin = {
   },
   rules: {
     'format-vine-style-indent': vineStyleIndent,
+    'format-vine-macros-leading': vineMacrosLeading,
   },
 } satisfies ESLint.Plugin
 

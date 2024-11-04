@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/eslint": "^9.6.0",
+    "@typescript-eslint/types": "8.11.0",
     "@typescript-eslint/typescript-estree": "^8.6.0",
     "@typescript-eslint/utils": "^8.6.0",
     "eslint": "~9.6.0",

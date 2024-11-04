@@ -3,6 +3,16 @@ import { InsideExample } from '../components/inside-example.vine'
 import { PageHeader } from '../components/page-header.vine'
 
 function OutsideExample(props: { id: string }) {
+  const randomStr = ref('')
+  const loading = ref(true)
+  const mockUpdate = () => {
+  loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      randomStr.value = generateRandomString(30)
+    }, 2000)
+  }
+
   vineStyle(scss`
     .loading-view {
       margin: 1rem 0;
@@ -10,15 +20,6 @@ function OutsideExample(props: { id: string }) {
   `)
   vineStyle.import('~/styles/outside-example.css').scoped()
 
-  const randomStr = ref('')
-  const loading = ref(true)
-  const mockUpdate = () => {
-    loading.value = true
-    setTimeout(() => {
-      loading.value = false
-      randomStr.value = generateRandomString(30)
-    }, 2000)
-  }
 
   // Mock result of a network request
   watch(() => props.id, () => {
