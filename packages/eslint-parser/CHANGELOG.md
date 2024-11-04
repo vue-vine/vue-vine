@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.1.30
+
+### Patch Changes
+
+- Fix incorrect published files in v0.1.29
+
 ## 0.1.11
 
 ### Patch Changes

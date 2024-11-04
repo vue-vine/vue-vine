@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.30
+
+### Patch Changes
+
+- Fix incorrect published files in v0.1.29
+
 ## 0.1.29
 
 ### Patch Changes
