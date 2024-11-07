@@ -841,9 +841,7 @@ export const MyApp = (() => {
     $options,
   ) {
     _push(
-      \`<div\${_ssrRenderAttrs(
-        _mergeProps({ class: "my-app" }, _attrs),
-      )} data-v-b909f216><h2 data-v-b909f216>Hello world</h2>\`,
+      \`<div\${_ssrRenderAttrs(_mergeProps({ class: "my-app" }, _attrs))} data-v-b909f216><h2 data-v-b909f216>Hello world</h2>\`,
     );
     _push(
       _ssrRenderComponent(

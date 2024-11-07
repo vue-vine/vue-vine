@@ -50,6 +50,10 @@ function OutsideExample(props: { id: string }) {
 }
 
 function RandomStringButton() {
+  const emit = vineEmits<{
+    tap: [number, number],
+    move: [number, number, number]
+  }>()
   vineStyle(`
     .random-state-change-btn {
       font-size: 1rem;
@@ -63,10 +67,6 @@ function RandomStringButton() {
     }
   `)
 
-  const emit = vineEmits<{
-    tap: [number, number],
-    move: [number, number, number]
-  }>()
   // const emit = vineEmits(['tap', 'move'])
 
   const onBtnTap = (event: MouseEvent) => {
@@ -100,21 +100,17 @@ export function Home() {
       <div
         :class="[
           isDark ? 'i-carbon:moon' : 'i-carbon:sun',
-          'mr-2 text-6 cursor-pointer']
-        "
+          'mr-2 text-6 cursor-pointer',
+        ]"
         @click="toggleDark()"
       />
       <RandomStringButton @tap="randomState" />
     </div>
     <div class="flex flex-col items-center justify-center my-4">
-      <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>
+      <p class="my-4">{{ userInputText || "Please input something here..." }}</p>
       <input
         type="text"
-        class="
-          bg-blueGray-200:80 dark:bg-coolgray-400:20
-          dark:caret-light border-none outline-none p-2
-          dark:text-light rounded w-300px
-        "
+        class="bg-blueGray-200:80 dark:bg-coolgray-400:20 dark:caret-light border-none outline-none p-2 dark:text-light rounded w-300px"
         v-model="userInputText"
       />
     </div>

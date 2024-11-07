@@ -1,8 +1,12 @@
 import type { ESLint, Linter } from 'eslint'
+import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
 import { version } from '../package.json'
 
+import vineComponentNameNotHtmlBuiltin from './rules/vine-component-name-not-html-builtin'
 import vineMacrosLeading from './rules/vine-macros-leading'
 import vineStyleIndent from './rules/vine-style-indent'
+import vineTemplateFormat from './rules/vine-template-format'
 
 const plugin = {
   meta: {
@@ -10,12 +14,17 @@ const plugin = {
     version,
   },
   rules: {
+    'format-vine-template': vineTemplateFormat,
     'format-vine-style-indent': vineStyleIndent,
     'format-vine-macros-leading': vineMacrosLeading,
+    'component-name-not-html-builtin': vineComponentNameNotHtmlBuiltin,
   },
 } satisfies ESLint.Plugin
 
-export default plugin
+export {
+  plugin as default,
+  VueVineESLintParser as vineParser,
+}
 
 type RuleDefinitions = typeof plugin['rules']
 

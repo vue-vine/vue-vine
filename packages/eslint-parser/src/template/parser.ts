@@ -617,6 +617,9 @@ export class VineTemplateParser {
 
     this.popElementStackUntil(0)
 
+    // fix all token positions with vine`...` offset among this file
+    this.correctMetaTokenPos()
+
     const templateRoot = this.vTemplateRoot
     const templateMeta = this.vTemplateMeta
 
@@ -624,9 +627,6 @@ export class VineTemplateParser {
       proc(this.baseParserOptions)
     }
     this.postProcessForScript = []
-
-    // Finally, fix all token positions with vine`...` offset among this file
-    this.correctMetaTokenPos()
 
     return [templateRoot, templateMeta]
   }

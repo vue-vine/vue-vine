@@ -1,6 +1,11 @@
 import type { ParserOptions, parseForESLint as tsESLintParseForESLint } from '@typescript-eslint/parser'
-import type { ESLintProgram, HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
+import type { ESLintProgram, HasLocation, Location, OffsetRange, ParseError, Token, VTemplateRoot } from './ast'
 import type { ParserObject } from './common/parser-object'
+import type { prepareTemplate } from './template/utils/process-vine-template-node'
+
+export type PrettierType<T> = {
+  [K in keyof T]: T[K]
+} & {}
 
 export type TsESLintParseForESLint = ReturnType<typeof tsESLintParseForESLint>
 export interface ParseForESLintResult {
@@ -52,4 +57,9 @@ export enum ReferenceFlag {
 export enum ReferenceTypeFlag {
   Value = 1,
   Type = 2,
+}
+
+export type FinalProcessTemplateInfo = ReturnType<typeof prepareTemplate> & {
+  templateRootAST: VTemplateRoot
+  templateMeta: VineTemplateMeta
 }

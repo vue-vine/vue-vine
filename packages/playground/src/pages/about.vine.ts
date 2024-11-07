@@ -27,10 +27,7 @@ export function About() {
     <div>
       <h2>About page</h2>
     </div>
-    <TestSlotContainer
-      fizz="bass"
-      @emit-camel="handleEmitCamel"
-    >
+    <TestSlotContainer fizz="bass" @emit-camel="handleEmitCamel">
       <template #slotCamel="{ foo }">
         <p>in slot: {{ foo }}</p>
       </template>

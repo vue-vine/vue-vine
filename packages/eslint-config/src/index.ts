@@ -1,6 +1,5 @@
 import type { Linter } from 'eslint'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
-import VueVineESLintPlugin from '@vue-vine/eslint-plugin'
+import VueVineESLintPlugin, { vineParser } from '@vue-vine/eslint-plugin'
 
 function vueVineESLintConfigFactory(): Linter.Config[] {
   return [
@@ -10,11 +9,13 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
         'vue-vine': VueVineESLintPlugin,
       },
       languageOptions: {
-        parser: VueVineESLintParser,
+        parser: vineParser,
       },
       rules: {
-        'vue-vine/format-vine-style-indent': ['error', { indent: 2 }],
+        'vue-vine/component-name-not-html-builtin': 'error',
         'vue-vine/format-vine-macros-leading': 'error',
+        'vue-vine/format-vine-style-indent': ['warn', { indent: 2 }],
+        'vue-vine/format-vine-template': 'warn',
       },
     },
   ]

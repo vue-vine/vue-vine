@@ -1,5 +1,5 @@
-import type { Location, OffsetRange, VTemplateRoot } from '../../ast'
-import type { NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
+import type { Location, OffsetRange } from '../../ast'
+import type { FinalProcessTemplateInfo, NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
 import { simpleTraverse as traverse, TSESTree } from '@typescript-eslint/typescript-estree'
 
 export function fixVineOffset(
@@ -60,7 +60,7 @@ export function fixVineOffset(
 export type ExtractVineTemplateResult = Array<{
   templateNode: TSESTree.TaggedTemplateExpression
   parentOfTemplate: TSESTree.Node
-  bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void
+  bindVineTemplateESTree: (vineESTree: FinalProcessTemplateInfo) => void
 }>
 
 export function extractForVineTemplate(
@@ -85,16 +85,17 @@ export function extractForVineTemplate(
           extractedTemplateNodes.add(templateNode)
 
           let parentOfTemplate: TSESTree.Node | undefined
-          let bindVineTemplateESTree: ((vineESTree: VTemplateRoot) => void) | undefined
+          let bindVineTemplateESTree: ((templateInfo: FinalProcessTemplateInfo) => void) | undefined
 
           // Delete it from the AST, because we're going to replace it with
           // our custom AST node.
           if (parent?.type === TSESTree.AST_NODE_TYPES.ReturnStatement) {
             parent.argument = null
             parentOfTemplate = parent
-            bindVineTemplateESTree = (vineESTree) => {
+            bindVineTemplateESTree = ({ templateRootAST: vineESTree, templateMeta: _, ...templateInfo }) => {
               parent.argument = vineESTree as any as TSESTree.Expression
               vineESTree.parent = parent
+              vineESTree.templateInfo = templateInfo
             }
           }
           // Not only `ReturnStatement`:
@@ -104,9 +105,10 @@ export function extractForVineTemplate(
             // @ts-expect-error `body` will be replaced by our custom AST node.
             parent.body = null
             parentOfTemplate = parent
-            bindVineTemplateESTree = (vineESTree) => {
+            bindVineTemplateESTree = ({ templateRootAST: vineESTree, templateMeta: _, ...templateInfo }) => {
               parent.body = vineESTree as any as TSESTree.Expression
               vineESTree.parent = parent
+              vineESTree.templateInfo = templateInfo
             }
           }
 

@@ -17,6 +17,7 @@ export default antfu(
       'packages/e2e-test/**/*.vine.ts',
       'packages/playground/**/*.vine.ts',
       'packages/create-vue-vine/template/**/*.vine.[j|t]s',
+      'packages/nuxt-module/playground/*',
     ],
   },
   {

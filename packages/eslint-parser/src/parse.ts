@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import type { ESLintProgram, VTemplateRoot } from './ast'
-import type { ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions, VineTemplateMeta } from './types'
+import type { ESLintProgram } from './ast'
+import type { FinalProcessTemplateInfo, ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions } from './types'
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import { KEYS } from './ast'
 import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
@@ -73,19 +73,18 @@ export function getTemplateRootDataList(
 }
 
 export function finalProcessForTSFileAST(
-  bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void,
-  templateRootAST: VTemplateRoot,
-  templateMeta: VineTemplateMeta,
+  bindVineTemplateESTree: (templateInfo: FinalProcessTemplateInfo) => void,
   tsFileAST: TsESLintParseForESLint['ast'],
+  templateInfo: FinalProcessTemplateInfo,
 ) {
   // Put our custom ESTree node into its original place,
   // i.e. the return value of the Vine component function.
-  bindVineTemplateESTree(templateRootAST)
+  bindVineTemplateESTree(templateInfo)
 
   // Insert all tokens and comments into this TS file's root AST.
   tsFileAST.tokens = [
     ...tsFileAST.tokens ?? [],
-    ...templateMeta.tokens as TSESTree.Token[],
+    ...templateInfo.templateMeta.tokens as TSESTree.Token[],
   ].sort((a, b) => a.range[0] - b.range[0])
 }
 
@@ -105,7 +104,11 @@ export function runParse(
 
   const prepareResults = prepareForTemplateRootAST(tsESLintAST)
   for (const prepareResult of prepareResults) {
-    const { bindVineTemplateESTree } = prepareResult
+    const {
+      bindVineTemplateESTree,
+      templatePositionInfo,
+      templateRawContent,
+    } = prepareResult
     const rootData = getTemplateRootDataList(
       prepareResult,
       {
@@ -120,9 +123,13 @@ export function runParse(
 
     finalProcessForTSFileAST(
       bindVineTemplateESTree,
-      templateRootAST,
-      templateMeta,
       tsESLintAST,
+      {
+        templateRootAST,
+        templateMeta,
+        templatePositionInfo,
+        templateRawContent,
+      },
     )
 
     analyzeUsedInTemplateVariables(

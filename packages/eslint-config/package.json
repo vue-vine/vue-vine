@@ -32,7 +32,6 @@
     "test:dev": "vitest"
   },
   "dependencies": {
-    "@vue-vine/eslint-parser": "workspace:*",
     "@vue-vine/eslint-plugin": "workspace:*",
     "eslint": "~9.6.0"
   }

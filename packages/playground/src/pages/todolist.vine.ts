@@ -40,39 +40,47 @@ function TodoContent() {
 
   return vine`
     <div class="todo">
-      <div class="todo-content px-20px mt-20px ">
+      <div class="todo-content px-20px mt-20px">
         <div class="title cursor-pointer">
           <p>Tasks</p>
         </div>
-      <div v-for="d in piniaStore.todoList" :key="d.id" class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer">
-        <div class="todo-item-content flex items-center justify-between">
-          <div class="todo-item-text">
-            <div class="text-lg text-gray-100">{{ d.title }}</div>
+        <div
+          v-for="d in piniaStore.todoList"
+          :key="d.id"
+          class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer"
+        >
+          <div class="todo-item-content flex items-center justify-between">
+            <div class="todo-item-text">
+              <div class="text-lg text-gray-100">{{ d.title }}</div>
+            </div>
+            <ToDoAction
+              @complete="piniaStore.completeTodo(d)"
+              @cancel="piniaStore.cancelTodo(d)"
+              :state="d.state"
+            />
           </div>
-          <ToDoAction
-            @complete="piniaStore.completeTodo(d)"
-            @cancel="piniaStore.cancelTodo(d)"
-            :state="d.state"
-          />
         </div>
       </div>
-      </div>
-      <div class="todo-content px-20px mt-20px ">
+      <div class="todo-content px-20px mt-20px">
         <div class="title cursor-pointer">
           <p>Handled</p>
         </div>
-        <div v-for="d in piniaStore.handledList" :key="d.id" class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete">
-        <div class="todo-item-content flex items-center justify-between">
-          <div class="todo-item-text">
-            <div class="text-lg text-gray-100">{{ d.title }}</div>
+        <div
+          v-for="d in piniaStore.handledList"
+          :key="d.id"
+          class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete"
+        >
+          <div class="todo-item-content flex items-center justify-between">
+            <div class="todo-item-text">
+              <div class="text-lg text-gray-100">{{ d.title }}</div>
+            </div>
+            <ToDoAction
+              @delete="piniaStore.deleteTodo(d)"
+              :state="d.state"
+              show-delete
+            />
           </div>
-          <ToDoAction
-            @delete="piniaStore.deleteTodo(d)"
-            :state="d.state"
-            show-delete
-          />
         </div>
-      </div>
       </div>
     </div>
   `;
@@ -85,7 +93,10 @@ function TodoAdd(){
   }
 
   return vine`
-    <div @click="addTodo" class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer">
+    <div
+      @click="addTodo"
+      class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer"
+    >
       <div class="i-mdi-add text-3xl" />
     </div>
   `;
@@ -105,7 +116,11 @@ function TodoInput() {
   }
 
   return vine`
-    <input type="text" class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10" v-model="todoContent" />
+    <input
+      type="text"
+      class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10"
+      v-model="todoContent"
+    />
     <TodoAdd @addItem="onAddItem()" />
   `;
 }
@@ -115,7 +130,7 @@ function Header() {
     <div class="header flex justify-between p-20px">
       <div class="title">TodoList</div>
       <div class="input flex items-center justify-end">
-      <TodoInput />
+        <TodoInput />
       </div>
     </div>
   `;
@@ -126,7 +141,9 @@ export default function TodoList() {
 
   return vine`
     <PageHeader />
-    <div class="todo-container container xl flex items-center justify-center flex-col	">
+    <div
+      class="todo-container container xl flex items-center justify-center flex-col"
+    >
       <Header />
       <TodoContent />
     </div>

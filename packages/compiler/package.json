@@ -39,12 +39,12 @@
     "merge-source-map": "^1.1.0",
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13",
+    "prettier": "^3.3.2",
     "source-map-js": "^1.0.2"
   },
   "devDependencies": {
     "@types/hash-sum": "^1.0.0",
-    "@types/line-column": "^1.0.0",
-    "prettier": "^3.0.3"
+    "@types/line-column": "^1.0.0"
   },
   "publishConfig": {
     "access": "public",

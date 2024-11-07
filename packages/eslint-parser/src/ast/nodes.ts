@@ -1,5 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types'
 import type { ScopeManager } from 'eslint-scope'
+import type { FinalProcessTemplateInfo, PrettierType } from '../types'
 import type { ParseError } from './errors'
 import type { HasLocation } from './locations'
 import type { Token } from './tokens'
@@ -953,4 +954,5 @@ export interface VTemplateRoot extends HasLocation {
   type: 'VTemplateRoot'
   parent: TSESTree.Node
   children: (VElement | VText | VExpressionContainer)[]
+  templateInfo?: PrettierType<Omit<FinalProcessTemplateInfo, 'templateMeta' | 'templateRootAST'>>
 }

@@ -1,3 +1,5 @@
 export function App() {
-  return vine`<router-view></router-view>`
+  return vine`
+    <router-view></router-view>
+  `
 }
