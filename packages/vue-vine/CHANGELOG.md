@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.32
+
+### Patch Changes
+
+- Support formatting Vue Vine template.
+
 ## 0.1.30
 
 ### Patch Changes

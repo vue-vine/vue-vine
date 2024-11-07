@@ -1,5 +1,11 @@
 # @vue-vine/eslint-config
 
+## 0.0.4
+
+### Patch Changes
+
+- Support formatting Vue Vine template.
+
 ## 0.0.3
 
 ### Patch Changes
