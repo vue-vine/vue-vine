@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.1.33
+
+### Patch Changes
+
+- Fix incorrect token position in ESLint parsing result.
+
 ## 0.1.32
 
 ### Patch Changes

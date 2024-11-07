@@ -1,5 +1,11 @@
 # @vue-vine/eslint-plugin
 
+## 0.0.5
+
+### Patch Changes
+
+- Fix incorrect token position in ESLint parsing result.
+
 ## 0.0.4
 
 ### Patch Changes
