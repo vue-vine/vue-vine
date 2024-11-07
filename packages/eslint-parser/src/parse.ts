@@ -1,7 +1,8 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import type { ParseForESLintResult, VineESLintParserOptions, VineTemplateMeta } from './types'
+import type { ESLintProgram, VTemplateRoot } from './ast'
+import type { ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions, VineTemplateMeta } from './types'
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
-import { KEYS, type VTemplateRoot } from './ast'
+import { KEYS } from './ast'
 import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
 import { VineTemplateParser } from './template/parser'
 import { Tokenizer } from './template/tokenizer'
@@ -22,7 +23,7 @@ const forceEnableLocationOptions = {
 export function typescriptBasicESLintParse(
   code: string,
   parserOptions: VineESLintParserOptions,
-): ParseForESLintResult {
+): TsESLintParseForESLint {
   return tsParseForESLint(
     code,
     {
@@ -33,7 +34,7 @@ export function typescriptBasicESLintParse(
 }
 
 export function prepareForTemplateRootAST(
-  tsFileAST: ParseForESLintResult['ast'],
+  tsFileAST: TsESLintParseForESLint['ast'],
 ): TemplateRootASTPreparation[] {
   const extractResults = extractForVineTemplate(tsFileAST)
   if (!extractResults.length) {
@@ -75,7 +76,7 @@ export function finalProcessForTSFileAST(
   bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void,
   templateRootAST: VTemplateRoot,
   templateMeta: VineTemplateMeta,
-  tsFileAST: ParseForESLintResult['ast'],
+  tsFileAST: TsESLintParseForESLint['ast'],
 ) {
   // Put our custom ESTree node into its original place,
   // i.e. the return value of the Vine component function.
@@ -92,12 +93,17 @@ export function runParse(
   code: string,
   parserOptions: VineESLintParserOptions,
 ): ParseForESLintResult {
-  const { ast, services, scopeManager, visitorKeys: tsESLintVisitorKeys } = typescriptBasicESLintParse(
+  const {
+    ast: tsESLintAST,
+    scopeManager,
+    services: tsESLintParserServices,
+    visitorKeys: tsESLintVisitorKeys,
+  } = typescriptBasicESLintParse(
     code,
     parserOptions,
   )
 
-  const prepareResults = prepareForTemplateRootAST(ast)
+  const prepareResults = prepareForTemplateRootAST(tsESLintAST)
   for (const prepareResult of prepareResults) {
     const { bindVineTemplateESTree } = prepareResult
     const rootData = getTemplateRootDataList(
@@ -116,7 +122,7 @@ export function runParse(
       bindVineTemplateESTree,
       templateRootAST,
       templateMeta,
-      ast,
+      tsESLintAST,
     )
 
     analyzeUsedInTemplateVariables(
@@ -125,11 +131,20 @@ export function runParse(
     )
   }
 
+  // Now, the ts ESLint parsed AST is been processed
+  // to a Vue Vine ts AST now.
+  const ast = tsESLintAST as ESLintProgram
+
   // Supplement Vue Vine template's visitor keys to
   // the visitor keys of TypeScript ESLint parser.
   const visitorKeys = {
     ...tsESLintVisitorKeys,
     ...KEYS,
+  }
+
+  const services = {
+    ...tsESLintParserServices,
+    // Todo: Maybe additional services specific to Vue Vine
   }
 
   return {

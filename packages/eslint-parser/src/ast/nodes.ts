@@ -81,6 +81,7 @@ export interface ESLintProgram extends HasLocation, HasParent {
 
 export type ESLintStatement =
   | ESLintExpressionStatement
+  | ESLintDirective
   | ESLintBlockStatement
   | ESLintEmptyStatement
   | ESLintDebuggerStatement
@@ -112,6 +113,12 @@ export interface ESLintBlockStatement extends HasLocation, HasParent {
 export interface ESLintExpressionStatement extends HasLocation, HasParent {
   type: 'ExpressionStatement'
   expression: ESLintExpression
+}
+
+export interface ESLintDirective extends HasLocation, HasParent {
+  type: 'ExpressionStatement'
+  expression: ESLintLiteral
+  directive: string
 }
 
 export interface ESLintIfStatement extends HasLocation, HasParent {

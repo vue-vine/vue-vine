@@ -1,5 +1,5 @@
 import type { Location, OffsetRange, VTemplateRoot } from '../../ast'
-import type { NeedFixToken, ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
+import type { NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
 import { simpleTraverse as traverse, TSESTree } from '@typescript-eslint/typescript-estree'
 
 export function fixVineOffset(
@@ -64,7 +64,7 @@ export type ExtractVineTemplateResult = Array<{
 }>
 
 export function extractForVineTemplate(
-  ast: ParseForESLintResult['ast'],
+  ast: TsESLintParseForESLint['ast'],
 ) {
   const extractVineTemplateResult: ExtractVineTemplateResult = []
   const extractedTemplateNodes: WeakSet<TSESTree.TaggedTemplateExpression> = new WeakSet()

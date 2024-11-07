@@ -1,10 +1,14 @@
 import type { ParserOptions, parseForESLint as tsESLintParseForESLint } from '@typescript-eslint/parser'
-import type { TSESTree } from '@typescript-eslint/types'
-import type { HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
+import type { ESLintProgram, HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
 import type { ParserObject } from './common/parser-object'
 
-export type VineESLintAST = TSESTree.Program
-export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
+export type TsESLintParseForESLint = ReturnType<typeof tsESLintParseForESLint>
+export interface ParseForESLintResult {
+  ast: ESLintProgram
+  services: TsESLintParseForESLint['services']
+  scopeManager: TsESLintParseForESLint['scopeManager']
+  visitorKeys: TsESLintParseForESLint['visitorKeys']
+}
 
 export type VineESLintParserOptions = ParserOptions & {
   // ...To be extended

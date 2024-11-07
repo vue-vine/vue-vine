@@ -1,6 +1,5 @@
 import type {
   ParseForESLintResult,
-  VineESLintAST,
   VineESLintParserOptions,
 } from './types'
 import { runParse } from './parse'
@@ -8,7 +7,7 @@ import { runParse } from './parse'
 export function parse(
   code: string,
   parserOptions: VineESLintParserOptions,
-): VineESLintAST {
+) {
   return parseForESLint(code, parserOptions).ast
 }
 
