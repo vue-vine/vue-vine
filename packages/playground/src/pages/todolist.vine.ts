@@ -125,7 +125,7 @@ function TodoInput() {
   `;
 }
 
-function Header() {
+function TodoHeader() {
   return vine`
     <div class="header flex justify-between p-20px">
       <div class="title">TodoList</div>
@@ -144,7 +144,7 @@ export default function TodoList() {
     <div
       class="todo-container container xl flex items-center justify-center flex-col"
     >
-      <Header />
+      <TodoHeader />
       <TodoContent />
     </div>
   `;

@@ -626,8 +626,7 @@ export function parseExpression(
   if (!retB.expression) {
     return retB
   }
-  const ret
-        = retB as unknown as ExpressionParseResult<VFilterSequenceExpression>
+  const ret = retB as unknown as ExpressionParseResult<VFilterSequenceExpression>
 
   ret.expression = {
     type: 'VFilterSequenceExpression',

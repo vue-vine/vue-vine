@@ -659,8 +659,7 @@ export function processMustache(
   debug('[template] convert mustache {{%s}} %j', mustache.value, range)
 
   try {
-    const locationCalculator
-          = globalLocationCalculator.getSubCalculatorAfter(range[0])
+    const locationCalculator = globalLocationCalculator.getSubCalculatorAfter(range[0])
     const ret = parseExpression(
       mustache.value,
       locationCalculator,

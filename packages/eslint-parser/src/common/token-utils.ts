@@ -1,29 +1,9 @@
 import type { Token } from '../ast'
 import type { VineTemplateMeta } from '../types'
 import type { LinesAndColumns } from './lines-and-columns'
-import sortedIndexBy from 'lodash/sortedIndexBy'
-import sortedLastIndexBy from 'lodash/sortedLastIndexBy'
 
 interface HasRange {
   range: [number, number]
-}
-
-/**
- * Get `x.range[0]`.
- * @param x The object to get.
- * @returns `x.range[0]`.
- */
-function byRange0(x: HasRange): number {
-  return x.range[0]
-}
-
-/**
- * Get `x.range[1]`.
- * @param x The object to get.
- * @returns `x.range[1]`.
- */
-function byRange1(x: HasRange): number {
-  return x.range[1]
 }
 
 /**
@@ -65,7 +45,7 @@ export function insertComments(
     return
   }
 
-  const index = sortedIndexBy(templateMeta.comments, newComments[0], byRange0)
+  const index = templateMeta.comments.findIndex(comment => comment.range[0] === newComments[0].range[0])
   templateMeta.comments.splice(index, 0, ...newComments)
 }
 
@@ -80,7 +60,8 @@ export function replaceTokens(
   node: HasRange,
   newTokens: Token[],
 ): void {
-  const index = sortedIndexBy(templateMeta.tokens, node, byRange0)
-  const count = sortedLastIndexBy(templateMeta.tokens, node, byRange1) - index
+  const index = templateMeta.tokens.findIndex(token => token.range[0] === node.range[0]) // include the start token
+  const count = templateMeta.tokens.findIndex(token => token.range[1] === node.range[1]) - index + 1 // include the end token
+
   templateMeta.tokens.splice(index, count, ...newTokens)
 }

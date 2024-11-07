@@ -1,15 +1,5 @@
 import type { ParseError } from '../ast'
 import type { VineTemplateMeta } from '../types'
-import sortedIndexBy from 'lodash/sortedIndexBy'
-
-/**
- * Get `x.pos`.
- * @param x The object to get.
- * @returns `x.pos`.
- */
-function byIndex(x: ParseError): number {
-  return x.index
-}
 
 /**
  * Insert the given error.
@@ -20,6 +10,6 @@ export function insertError(
   templateMeta: VineTemplateMeta,
   error: ParseError,
 ): void {
-  const index = sortedIndexBy(templateMeta.errors, error, byIndex)
+  const index = templateMeta.errors.findIndex(e => e.index === error.index)
   templateMeta.errors.splice(index, 0, error)
 }
