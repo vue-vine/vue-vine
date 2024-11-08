@@ -1,5 +1,11 @@
 # @vue-vine/eslint-plugin
 
+## 0.0.6
+
+### Patch Changes
+
+- Support format Vine component function name as PascalCase.
+
 ## 0.0.5
 
 ### Patch Changes
