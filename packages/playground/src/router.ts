@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { About } from './pages/about.vine'
-import { Home } from './pages/home.vine'
+import { AboutPage } from './pages/about.vine'
+import { HomePage } from './pages/home.vine'
 import { StyleOrder } from './pages/style-order.vine'
 import TodoList from './pages/todolist.vine'
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/about', component: About },
+  { path: '/', component: HomePage },
+  { path: '/about', component: AboutPage },
   { path: '/style-order', component: StyleOrder },
   { path: '/todolist', component: TodoList },
 ]

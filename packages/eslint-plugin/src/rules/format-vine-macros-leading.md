@@ -1,4 +1,4 @@
-# vine-macros-leading
+# format-vine-macros-leading
 
 Enforce Vine macros call to be leading in component function.
 

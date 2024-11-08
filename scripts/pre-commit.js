@@ -29,13 +29,13 @@ async function runPreCommit() {
     log('info', 'Start run build ...')
     await runCommand(RUN_BUILD)
 
-    log('info', 'Start @vue-vine/compiler test ...')
+    log('info', 'Start test ...')
     await runCommand(RUN_TEST)
 
     log('info', 'Start lint ...')
     await runCommand(RUN_LINT)
 
-    log('info', 'Start lint format ...')
+    log('info', 'Start lint staged ...')
     await runCommand(LINT_STAGED)
 
     const msg = readFileSync(msgPath, 'utf-8').trim()

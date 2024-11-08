@@ -1,5 +1,5 @@
 import { TSESTree } from '@typescript-eslint/types'
-import { createEslintRule } from '../utils'
+import { createEslintRule, notVineCompFn } from '../utils'
 
 const messageId = 'format-vine-macros-leading' as const
 export type MessageIds = typeof messageId
@@ -50,9 +50,12 @@ export default createEslintRule<Options, MessageIds>({
       // - ArrowFunctionExpression
       // and in @vue-vine/eslint-parser we already
       // marked the component function with a flag `__isVine__: true`,
-      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression[__isVine__]': (
+      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression': (
         node: TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression,
       ) => {
+        if (notVineCompFn(node)) {
+          return
+        }
         if (node.body.type !== 'BlockStatement') {
           return
         }

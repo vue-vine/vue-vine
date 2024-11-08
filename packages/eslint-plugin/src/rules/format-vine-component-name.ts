@@ -1,11 +1,19 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import { createEslintRule } from '../utils'
+import { createEslintRule, notVineCompFn } from '../utils'
 
-const messageId = 'vine-component-not-html-builtin' as const
-export type MessageIds = typeof messageId
+const RULE_NAME = 'format-vine-component-name' as const
+
+const CONFLICT_WITH_HTML_BUILT_IN = `${RULE_NAME}-conflict-with-html-built-in`
+const NOT_PASCAL_CASE = `${RULE_NAME}-not-pascal-case`
+
+const CONFLICT_WITH_HTML_BUILT_IN_MSG = 'Vue Vine component function name must not conflict with HTML built-in tag names'
+const NOT_PASCAL_CASE_MSG = 'Vue Vine component function name must be in PascalCase'
+
+export type MessageIds =
+  | typeof CONFLICT_WITH_HTML_BUILT_IN
+  | typeof NOT_PASCAL_CASE
 export type Options = []
 
-const RULE_MSG = 'Vue Vine component function name must not be a HTML built-in element name'
 const HTML_BUILT_IN_ELEMENTS: string[] = [
   'a',
   'abbr',
@@ -119,12 +127,16 @@ const HTML_BUILT_IN_ELEMENTS: string[] = [
   'wbr',
 ]
 
-export default createEslintRule<Options, string>({
-  name: messageId,
+function checkPascalCase(fnName: string) {
+  return /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/.test(fnName)
+}
+
+export default createEslintRule<Options, MessageIds>({
+  name: RULE_NAME,
   meta: {
     type: 'layout',
     docs: {
-      description: RULE_MSG,
+      description: 'Enforce Vue Vine component function name format',
     },
     fixable: 'whitespace',
     schema: [
@@ -141,26 +153,43 @@ export default createEslintRule<Options, string>({
       },
     ],
     messages: {
-      [messageId]: RULE_MSG,
+      [CONFLICT_WITH_HTML_BUILT_IN]: CONFLICT_WITH_HTML_BUILT_IN_MSG,
+      [NOT_PASCAL_CASE]: NOT_PASCAL_CASE_MSG,
     },
   },
   defaultOptions: [],
   create(context) {
     return {
-      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression[__isVine__]': (
+      'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression': (
         node: TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression,
       ) => {
-        if (!node.id || node.id.type !== 'Identifier') {
+        if (notVineCompFn(node)) {
+          return
+        }
+        const fnNameIdentifier = node.id
+        if (!fnNameIdentifier || fnNameIdentifier.type !== 'Identifier') {
           return
         }
 
         // Check if the function name is a HTML built-in element name
-        const fnName = node.id.name
-        const isHTMLBuiltInElement = HTML_BUILT_IN_ELEMENTS.includes(fnName.toLowerCase())
+        const fnName = fnNameIdentifier.name
+        const isHTMLBuiltInElement = HTML_BUILT_IN_ELEMENTS.includes(fnName)
         if (isHTMLBuiltInElement) {
           context.report({
-            node: node.id,
-            messageId,
+            node: fnNameIdentifier,
+            messageId: CONFLICT_WITH_HTML_BUILT_IN,
+          })
+        }
+
+        const isPassedPascalCase = checkPascalCase(fnName)
+        if (!isPassedPascalCase) {
+          context.report({
+            node: fnNameIdentifier,
+            messageId: NOT_PASCAL_CASE,
+            fix: (fixer) => {
+              const fixedName = fnName[0].toUpperCase() + fnName.slice(1)
+              return fixer.replaceText(fnNameIdentifier, fixedName)
+            },
           })
         }
       },

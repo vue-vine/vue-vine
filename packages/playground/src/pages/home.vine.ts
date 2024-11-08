@@ -82,7 +82,7 @@ function RandomStringButton() {
   `
 }
 
-export function Home() {
+export function HomePage() {
   const id = ref('1')
   const isDark = useDark()
   const toggleDark = useToggle(isDark)

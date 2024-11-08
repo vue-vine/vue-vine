@@ -1,6 +1,6 @@
 import { PageHeader } from '../components/page-header.vine'
 
-function Child() {
+function ChildComp() {
   vineStyle(`
     .test {
       color: blue;
@@ -30,7 +30,7 @@ export function StyleOrder() {
     <PageHeader />
     <main class="test">
       <h2>Test style order</h2>
-      <Child />
+      <ChildComp />
     </main>
     <br />
     <a

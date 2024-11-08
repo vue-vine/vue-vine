@@ -17,7 +17,7 @@ function TestSlotContainer(props: {
   `
 }
 
-export function About() {
+export function AboutPage() {
   const handleEmitCamel = (bar: string) => {
     console.log(bar)
   }

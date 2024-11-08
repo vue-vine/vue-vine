@@ -12,7 +12,7 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
         parser: vineParser,
       },
       rules: {
-        'vue-vine/component-name-not-html-builtin': 'error',
+        'vue-vine/format-vine-component-name': 'error',
         'vue-vine/format-vine-macros-leading': 'error',
         'vue-vine/format-vine-style-indent': ['warn', { indent: 2 }],
         'vue-vine/format-vine-template': 'warn',

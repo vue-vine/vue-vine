@@ -3,10 +3,10 @@ import * as VueVineESLintParser from '@vue-vine/eslint-parser'
 
 import { version } from '../package.json'
 
-import vineComponentNameNotHtmlBuiltin from './rules/vine-component-name-not-html-builtin'
-import vineMacrosLeading from './rules/vine-macros-leading'
-import vineStyleIndent from './rules/vine-style-indent'
-import vineTemplateFormat from './rules/vine-template-format'
+import vineComponentNameFormat from './rules/format-vine-component-name'
+import vineMacrosLeading from './rules/format-vine-macros-leading'
+import vineStyleIndent from './rules/format-vine-style-indent'
+import vineTemplateFormat from './rules/format-vine-template'
 
 const plugin = {
   meta: {
@@ -17,7 +17,7 @@ const plugin = {
     'format-vine-template': vineTemplateFormat,
     'format-vine-style-indent': vineStyleIndent,
     'format-vine-macros-leading': vineMacrosLeading,
-    'component-name-not-html-builtin': vineComponentNameNotHtmlBuiltin,
+    'format-vine-component-name': vineComponentNameFormat,
   },
 } satisfies ESLint.Plugin
 
