@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.0
+
+### Minor Changes
+
+- Fix incorrect location for ESLint parse results and add new no-child-content rule.
+
 ## 0.1.33
 
 ### Patch Changes
