@@ -12,7 +12,7 @@ import { LocationCalculatorForHtml } from '../common/location-calculator'
 import { IntermediateTokenizer } from './intermediate-tokenizer'
 import { convertToDirective, processMustache, resolveReferences } from './utils'
 import { MATHML_ATTRIBUTE_NAME_MAP, SVG_ATTRIBUTE_NAME_MAP } from './utils/attribute-names'
-import { fixVineOffset } from './utils/process-vine-template-node'
+import { fixFromVineTemplateRoot, fixVineOffset } from './utils/process-vine-template-node'
 import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
 
 const DIRECTIVE_NAME = /^(?:v-|[.:@#]).*[^.:@#]$/u
@@ -129,15 +129,17 @@ export class VineTemplateParser {
     parserOptions: VineESLintParserOptions
   ) => void)[] = []
 
-  private offsetFixedTokenSet = new WeakSet<Location>()
+  private offsetFixedTokenSet: WeakSet<Location>
 
   constructor(
     parserOptions: VineESLintParserOptions,
     tokenizer: Tokenizer,
     parentOfTemplate: TSESTree.Node,
     templatePos: VineTemplatePositionInfo,
+    offsetFixedTokenSet: WeakSet<Location>,
   ) {
     this.baseParserOptions = parserOptions
+    this.offsetFixedTokenSet = offsetFixedTokenSet
     this.tokenizer = new IntermediateTokenizer(tokenizer, parserOptions)
     this.locationCalculator = new LocationCalculatorForHtml(
       tokenizer.gaps,
@@ -192,7 +194,10 @@ export class VineTemplateParser {
       comment,
       this.fixVineOffsetCtx,
     ))
-    fixVineOffset(this.vTemplateRoot, this.fixVineOffsetCtx)
+    fixFromVineTemplateRoot(
+      this.vTemplateRoot,
+      this.fixVineOffsetCtx,
+    )
   }
 
   /**

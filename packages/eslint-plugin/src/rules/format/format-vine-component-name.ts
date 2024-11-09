@@ -1,5 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import { createEslintRule, notVineCompFn } from '../utils'
+import { createEslintRule, notVineCompFn } from '../../utils'
 
 const RULE_NAME = 'format-vine-component-name' as const
 

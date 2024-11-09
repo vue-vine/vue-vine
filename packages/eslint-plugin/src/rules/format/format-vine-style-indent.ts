@@ -1,5 +1,5 @@
 import { unindent } from '@antfu/utils'
-import { createEslintRule } from '../utils'
+import { createEslintRule } from '../../utils'
 
 const messageId = 'format-vine-style-indent' as const
 export type MessageIds = typeof messageId

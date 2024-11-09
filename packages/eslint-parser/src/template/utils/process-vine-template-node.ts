@@ -1,6 +1,6 @@
-import type { Location, OffsetRange } from '../../ast'
 import type { FinalProcessTemplateInfo, NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
-import { simpleTraverse as traverse, TSESTree } from '@typescript-eslint/typescript-estree'
+import { simpleTraverse as tsESLintTravese, TSESTree } from '@typescript-eslint/typescript-estree'
+import { type Location, type OffsetRange, traverseNodes, type VTemplateRoot } from '../../ast'
 
 export function fixVineOffset(
   token: NeedFixToken,
@@ -17,44 +17,71 @@ export function fixVineOffset(
     },
     fixedCache: cache,
   } = fixCtx
-  // The location of `VTemplateRoot` is correctly set on construction.
-  if (token.type !== 'VTemplateRoot') {
-    // Because the output token position is based on the start of the template,
-    // but the final expected token requires accurate offset to the source code!
-    if (!cache.has(token.range)) {
-      token.range[0] += templateStartOffset
-      token.range[1] += templateStartOffset
-      cache.add(token.range)
+
+  // Because the output token position is based on the start of the template,
+  // but the final expected token requires accurate offset to the source code!
+  if (!cache.has(token.range)) {
+    token.range[0] += templateStartOffset
+    token.range[1] += templateStartOffset
+    cache.add(token.range)
+
+    if ('start' in token) {
+      token.start = token.range[0]
     }
-
-    if (!cache.has(token.loc.start)) {
-      // Also, the line number should be based on the start of the template.
-      // -1 is because the TSESTree's line number is 1-based.
-      token.loc.start.line += templateStartLine - 1
-
-      // For column, it's a little bit more complicated:
-      // 1) If the token is at the first line, then the column number should be based on the start of the template.
-      // 2) If the token is not at the first line, then the column number is what it is.
-      token.loc.start.column = (
-        token.loc.start.line === templateStartLine
-          ? templateStartColumn + token.loc.start.column
-          : token.loc.start.column
-      )
-
-      cache.add(token.loc.start)
-    }
-
-    if (!cache.has(token.loc.end)) {
-      token.loc.end.line += templateStartLine - 1
-      token.loc.end.column = (
-        token.loc.end.line === templateStartLine
-          ? templateStartColumn + token.loc.end.column
-          : token.loc.end.column
-      )
-
-      cache.add(token.loc.end)
+    if ('end' in token) {
+      token.end = token.range[1]
     }
   }
+
+  if (!cache.has(token.loc.start)) {
+    // Also, the line number should be based on the start of the template.
+    // -1 is because the TSESTree's line number is 1-based.
+    token.loc.start.line += templateStartLine - 1
+
+    // For column, it's a little bit more complicated:
+    // 1) If the token is at the first line, then the column number should be based on the start of the template.
+    // 2) If the token is not at the first line, then the column number is what it is.
+    token.loc.start.column = (
+      token.loc.start.line === templateStartLine
+        ? templateStartColumn + token.loc.start.column
+        : token.loc.start.column
+    )
+
+    cache.add(token.loc.start)
+  }
+
+  if (!cache.has(token.loc.end)) {
+    token.loc.end.line += templateStartLine - 1
+    token.loc.end.column = (
+      token.loc.end.line === templateStartLine
+        ? templateStartColumn + token.loc.end.column
+        : token.loc.end.column
+    )
+
+    cache.add(token.loc.end)
+  }
+}
+
+export function fixFromVineTemplateRoot(
+  root: VTemplateRoot,
+  fixCtx: {
+    posInfo: VineTemplatePositionInfo
+    fixedCache: WeakSet<Location | OffsetRange>
+  },
+) {
+  traverseNodes(
+    root,
+    {
+      enterNode: (node) => {
+        if (node.type === 'VTemplateRoot') {
+          return
+        }
+
+        fixVineOffset(node, fixCtx)
+      },
+      leaveNode: () => {},
+    },
+  )
 }
 
 export type ExtractVineTemplateResult = Array<{
@@ -70,7 +97,7 @@ export function extractForVineTemplate(
   const extractedTemplateNodes: WeakSet<TSESTree.TaggedTemplateExpression> = new WeakSet()
 
   try {
-    traverse(ast, {
+    tsESLintTravese(ast, {
       enter(node, parent) {
         // Find all tagged template expressions which are tagged with 'vine'.
         if (

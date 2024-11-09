@@ -6,7 +6,7 @@ import * as Evk from 'eslint-visitor-keys'
 // Helpers
 // ------------------------------------------------------------------------------
 
-const VineVisitorKeys = {
+const VineVisitorKeys: VisitorKeys = {
   VAttribute: ['key', 'value'],
   VDirectiveKey: ['name', 'argument', 'modifiers'],
   VTemplateRoot: ['children'],

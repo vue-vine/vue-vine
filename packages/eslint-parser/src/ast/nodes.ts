@@ -28,6 +28,17 @@ export type Node =
   | VFilterSequenceExpression
   | VFilter
 
+/**
+ * The union type for all template nodes.
+ */
+export type VTemplateNode =
+  | VNode
+  | VForExpression
+  | VOnExpression
+  | VSlotScopeExpression
+  | VFilterSequenceExpression
+  | VFilter
+
 // ------------------------------------------------------------------------------
 // Script
 // ------------------------------------------------------------------------------

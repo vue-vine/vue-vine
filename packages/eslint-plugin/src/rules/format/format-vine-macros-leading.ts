@@ -1,5 +1,5 @@
 import { TSESTree } from '@typescript-eslint/types'
-import { createEslintRule, notVineCompFn } from '../utils'
+import { createEslintRule, notVineCompFn } from '../../utils'
 
 const messageId = 'format-vine-macros-leading' as const
 export type MessageIds = typeof messageId

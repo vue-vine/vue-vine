@@ -5,8 +5,8 @@ import type { Options as PrettierOptions } from 'prettier'
 import { join } from 'node:path'
 import { generateDifferences, showInvisibles } from 'prettier-linter-helpers'
 import { createSyncFn } from 'synckit'
-import { createEslintRule } from '../utils'
-import { workerDir } from '../worker-dir'
+import { createEslintRule } from '../../utils'
+import { workerDir } from '../../worker-dir'
 
 const messageId = 'format-vine-template' as const
 export type MessageIds = typeof messageId

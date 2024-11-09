@@ -28,7 +28,7 @@ import type {
   LocationCalculatorForHtml,
 } from '../common/location-calculator'
 import type { ParserObject } from '../common/parser-object'
-import type { VineESLintParserOptions, VineFixLocationContext } from '../types'
+import type { VineESLintParserOptions } from '../types'
 import { fileURLToPath } from 'node:url'
 import first from 'lodash/first'
 import last from 'lodash/last'
@@ -46,10 +46,8 @@ import {
   fixErrorLocation,
   fixLocation,
   fixLocations,
-  fixVineOffsetForScript,
 } from '../common/fix-locations'
 import { isEnhancedParserObject, isParserObject } from '../common/parser-object'
-import { fixVineOffset } from '../template/utils/process-vine-template-node'
 import {
   analyzeExternalReferences,
   analyzeVariablesAndExternalReferences,
@@ -194,14 +192,12 @@ function throwErrorAsAdjustingOutsideOfCode(
  *
  * @param code The source code to parse.
  * @param locationCalculator The location calculator for fixLocations.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 export function parseScriptFragment(
   code: string,
   locationCalculator: LocationCalculator,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ESLintExtendedProgram {
   try {
@@ -210,7 +206,6 @@ export function parseScriptFragment(
       parserOptions,
     )
     fixLocations(result, locationCalculator)
-    fixVineOffsetForScript(result, vineFixLocationContext)
     return result
   }
   catch (err) {
@@ -334,14 +329,12 @@ function splitFilters(exp: string): string[] {
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 function parseExpressionBody(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
   allowEmpty = false,
 ): ExpressionParseResult<ESLintExpression> {
@@ -351,7 +344,6 @@ function parseExpressionBody(
     const result = parseScriptFragment(
       `0(${code})`,
       locationCalculator.getSubCalculatorShift(-2),
-      vineFixLocationContext,
       parserOptions,
     )
     const { ast } = result
@@ -381,8 +373,6 @@ function parseExpressionBody(
     tokens.shift()
     tokens.pop()
 
-    fixVineOffset(expression, vineFixLocationContext)
-
     return { expression, tokens, comments, references, variables: [] }
   }
   catch (err) {
@@ -394,14 +384,12 @@ function parseExpressionBody(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 function parseFilter(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<VFilter> | null {
   debug('[script] parse filter: "%s"', code)
@@ -433,7 +421,6 @@ function parseFilter(
       const { ast } = parseScriptFragment(
         `"${calleeCode.trim()}"`,
         subCalculator,
-        vineFixLocationContext,
         parserOptions,
       )
       const statement = ast.body[0] as ESLintExpressionStatement
@@ -483,7 +470,6 @@ function parseFilter(
         locationCalculator
           .getSubCalculatorAfter(paren)
           .getSubCalculatorShift(-1),
-        vineFixLocationContext,
         parserOptions,
       )
       const { ast } = result
@@ -589,14 +575,12 @@ export function parseScript(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 export function parseExpression(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
   { allowEmpty = false, allowFilters = false } = {},
 ): ExpressionParseResult<ESLintExpression | VFilterSequenceExpression> {
@@ -610,7 +594,6 @@ export function parseExpression(
     return parseExpressionBody(
       code,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
       allowEmpty,
     )
@@ -620,7 +603,6 @@ export function parseExpression(
   const retB = parseExpressionBody(
     mainCode,
     locationCalculator,
-    vineFixLocationContext,
     parserOptions,
   )
   if (!retB.expression) {
@@ -658,7 +640,6 @@ export function parseExpression(
     const retF = parseFilter(
       filterCode,
       locationCalculator.getSubCalculatorShift(prevLoc + 1),
-      vineFixLocationContext,
       parserOptions,
     )
     if (retF) {
@@ -693,7 +674,6 @@ export function parseExpression(
 export function parseVForExpression(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<VForExpression> {
   if (code.trim() === '') {
@@ -704,7 +684,6 @@ export function parseVForExpression(
     return parseVForExpressionForEcmaVersion5(
       code,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -726,7 +705,6 @@ export function parseVForExpression(
       locationCalculator.getSubCalculatorShift(
         processed.hasParens ? -8 : -9,
       ),
-      vineFixLocationContext,
       parserOptions,
     )
     const { ast } = result
@@ -795,8 +773,6 @@ export function parseVForExpression(
     }
     right.parent = expression
 
-    fixVineOffset(expression, vineFixLocationContext)
-
     return { expression, tokens, comments, references, variables }
   }
   catch (err) {
@@ -812,7 +788,6 @@ function isEcmaVersion5(parserOptions: VineESLintParserOptions) {
 function parseVForExpressionForEcmaVersion5(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<VForExpression> {
   const processed = processVForAliasAndIterator(code)
@@ -829,7 +804,6 @@ function parseVForExpressionForEcmaVersion5(
       locationCalculator.getSubCalculatorShift(
         processed.hasParens ? 0 : -1,
       ),
-      vineFixLocationContext,
       parserOptions,
     )
 
@@ -877,7 +851,6 @@ function parseVForExpressionForEcmaVersion5(
     const parsedIterator = parseVForIteratorForEcmaVersion5(
       processed.iterator,
       locationCalculator.getSubCalculatorShift(delimiterEnd),
-      vineFixLocationContext,
       parserOptions,
     )
 
@@ -913,13 +886,11 @@ function parseVForExpressionForEcmaVersion5(
 function parseVForAliasesForEcmaVersion5(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ) {
   const result = parseScriptFragment(
     `0(${code})`,
     locationCalculator.getSubCalculatorShift(-2),
-    vineFixLocationContext,
     parserOptions,
   )
   const { ast } = result
@@ -966,13 +937,11 @@ function parseVForAliasesForEcmaVersion5(
 function parseVForIteratorForEcmaVersion5(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ) {
   const result = parseScriptFragment(
     `0(${code})`,
     locationCalculator.getSubCalculatorShift(-2),
-    vineFixLocationContext,
     parserOptions,
   )
   const { ast } = result
@@ -1003,28 +972,24 @@ function parseVForIteratorForEcmaVersion5(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 export function parseVOnExpression(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<ESLintExpression | VOnExpression> {
   if (IS_FUNCTION_EXPRESSION.test(code) || IS_SIMPLE_PATH.test(code)) {
     return parseExpressionBody(
       code,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
   return parseVOnExpressionBody(
     code,
     locationCalculator,
-    vineFixLocationContext,
     parserOptions,
   )
 }
@@ -1033,14 +998,12 @@ export function parseVOnExpression(
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 function parseVOnExpressionBody(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<VOnExpression> {
   debug('[script] parse v-on expression: "void function($event){%s}"', code)
@@ -1053,7 +1016,6 @@ function parseVOnExpressionBody(
     const result = parseScriptFragment(
       `void function($event){${code}}`,
       locationCalculator.getSubCalculatorShift(-22),
-      vineFixLocationContext,
       parserOptions,
     )
     const { ast } = result
@@ -1101,8 +1063,6 @@ function parseVOnExpressionBody(
     tokens.splice(0, 6)
     tokens.pop()
 
-    fixVineOffset(expression, vineFixLocationContext)
-
     return { expression, tokens, comments, references, variables: [] }
   }
   catch (err) {
@@ -1114,14 +1074,12 @@ function parseVOnExpressionBody(
  * Parse the source code of `slot-scope` directive.
  * @param code The source code of `slot-scope` directive.
  * @param locationCalculator The location calculator for the inline script.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param parserOptions The parser options.
  * @returns The result of parsing.
  */
 export function parseSlotScopeExpression(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   parserOptions: VineESLintParserOptions,
 ): ExpressionParseResult<VSlotScopeExpression> {
   debug('[script] parse slot-scope expression: "void function(%s) {}"', code)
@@ -1137,7 +1095,6 @@ export function parseSlotScopeExpression(
     const result = parseScriptFragment(
       `void function(${code}) {}`,
       locationCalculator.getSubCalculatorShift(-14),
-      vineFixLocationContext,
       parserOptions,
     )
     const { ast } = result

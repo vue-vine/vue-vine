@@ -79,7 +79,9 @@ export const createEslintRule = RuleCreator(
   ruleName => hasDocs.includes(ruleName)
     ? `${blobUrl}${ruleName}.md`
     : `${blobUrl}${ruleName}.test.ts`,
-) as any as <TOptions extends readonly unknown[], TMessageIds extends string>({ name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>) => RuleModule<TOptions>
+) as any as <TOptions extends readonly unknown[], TMessageIds extends string>(
+  { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>
+) => RuleModule<TOptions>
 
 export function notVineCompFn(node: any) {
   return !(node as any).__isVine__

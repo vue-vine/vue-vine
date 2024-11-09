@@ -1,5 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import type { ESLintProgram } from './ast'
+import type { ESLintProgram, Location } from './ast'
 import type { FinalProcessTemplateInfo, ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions } from './types'
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import { KEYS } from './ast'
@@ -54,6 +54,7 @@ export function prepareForTemplateRootAST(
 
 export function getTemplateRootDataList(
   prepareResult: TemplateRootASTPreparation | null,
+  offsetFixedTokenSet: WeakSet<Location>,
   parserOptions: VineESLintParserOptions,
 ) {
   if (!prepareResult) {
@@ -67,6 +68,7 @@ export function getTemplateRootDataList(
     tokenizer,
     parentOfTemplate,
     templatePositionInfo,
+    offsetFixedTokenSet,
   )
 
   return templateParser.parse()
@@ -102,6 +104,7 @@ export function runParse(
     parserOptions,
   )
 
+  const offsetFixedTokenSet = new WeakSet<Location>()
   const prepareResults = prepareForTemplateRootAST(tsESLintAST)
   for (const prepareResult of prepareResults) {
     const {
@@ -111,6 +114,7 @@ export function runParse(
     } = prepareResult
     const rootData = getTemplateRootDataList(
       prepareResult,
+      offsetFixedTokenSet,
       {
         ...parserOptions,
         ...forceEnableLocationOptions,
