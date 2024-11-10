@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.1
+
+### Patch Changes
+
+- Add no-dupe-else-if and no-dupe-attributes rules.
+
 ## 0.2.0
 
 ### Minor Changes
