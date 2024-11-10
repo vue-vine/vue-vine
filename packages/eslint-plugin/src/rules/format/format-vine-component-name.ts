@@ -139,19 +139,7 @@ export default createEslintRule<Options, MessageIds>({
       description: 'Enforce Vue Vine component function name format',
     },
     fixable: 'whitespace',
-    schema: [
-      {
-        type: 'object',
-        properties: {
-          indent: {
-            type: 'number',
-            minimum: 0,
-            default: 2,
-          },
-        },
-        additionalProperties: true,
-      },
-    ],
+    schema: [],
     messages: {
       [CONFLICT_WITH_HTML_BUILT_IN]: CONFLICT_WITH_HTML_BUILT_IN_MSG,
       [NOT_PASCAL_CASE]: NOT_PASCAL_CASE_MSG,

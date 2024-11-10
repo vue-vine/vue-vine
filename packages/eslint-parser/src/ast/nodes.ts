@@ -838,6 +838,13 @@ export type VNode =
   | VStartTag
   | VText
 
+export type VExpression =
+  | ESLintExpression
+  | VFilterSequenceExpression
+  | VForExpression
+  | VOnExpression
+  | VSlotScopeExpression
+
 /**
  * Text nodes.
  */
@@ -854,13 +861,7 @@ export interface VText extends HasLocation, HasParent {
 export interface VExpressionContainer extends HasLocation, HasParent {
   type: 'VExpressionContainer'
   parent: VTemplateRoot | VElement | VDirective | VDirectiveKey
-  expression:
-    | ESLintExpression
-    | VFilterSequenceExpression
-    | VForExpression
-    | VOnExpression
-    | VSlotScopeExpression
-    | null
+  expression: VExpression | null
   references: Reference[]
 }
 

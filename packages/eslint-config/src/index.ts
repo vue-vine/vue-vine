@@ -14,6 +14,8 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
       rules: {
         // Essentials:
         'vue-vine/essentials-no-child-content': 'error',
+        'vue-vine/essentials-no-dupe-else-if': 'error',
+        'vue-vine/essentials-no-dupe-attributes': 'error',
 
         // Formats:
         'vue-vine/format-vine-component-name': 'error',

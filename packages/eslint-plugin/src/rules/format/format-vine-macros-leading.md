@@ -1,4 +1,4 @@
-# format-vine-macros-leading
+# format-vine-macros-leading ![](https://img.shields.io/badge/vue_vine-format-emerald)
 
 Enforce Vine macros call to be leading in component function.
 

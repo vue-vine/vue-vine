@@ -1,4 +1,4 @@
-# format-vine-style-indent
+# format-vine-style-indent ![](https://img.shields.io/badge/vue_vine-format-emerald)
 
 Enforce prettier indentation for template string inside vineStyle.
 

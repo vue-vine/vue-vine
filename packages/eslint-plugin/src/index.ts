@@ -5,6 +5,8 @@ import { version } from '../package.json'
 
 // Essentials:
 import noChildContent from './rules/essentials/no-child-content'
+import noDupeAttributes from './rules/essentials/no-dupe-attributes'
+import noDupeElseIf from './rules/essentials/no-dupe-else-if'
 
 // Formats:
 import vineComponentNameFormat from './rules/format/format-vine-component-name'
@@ -19,6 +21,8 @@ const plugin = {
   },
   rules: {
     'essentials-no-child-content': noChildContent,
+    'essentials-no-dupe-else-if': noDupeElseIf,
+    'essentials-no-dupe-attributes': noDupeAttributes,
 
     'format-vine-template': vineTemplateFormat,
     'format-vine-style-indent': vineStyleIndent,

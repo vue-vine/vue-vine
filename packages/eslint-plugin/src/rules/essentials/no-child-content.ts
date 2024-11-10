@@ -3,6 +3,7 @@ import { createEslintRule } from '../../utils'
 
 const RULE_NAME = 'no-child-content'
 const SUGGEST_REMOVE_CHILD_CONTENT = 'remove-child-content'
+const DEFAULT_CATCH_NAMES = ['html', 'text']
 
 export type MessageIds =
   | typeof RULE_NAME
@@ -27,13 +28,12 @@ export default createEslintRule<Options, MessageIds>({
       {
         type: 'object',
         properties: {
-          indent: {
-            type: 'number',
-            minimum: 0,
-            default: 2,
+          directives: {
+            type: 'string',
+            default: [],
           },
         },
-        additionalProperties: true,
+        additionalProperties: false,
       },
     ],
     messages: {
@@ -42,12 +42,14 @@ export default createEslintRule<Options, MessageIds>({
     },
   },
   defaultOptions: [{
-    directives: ['html', 'text'],
+    directives: [],
   }],
   create(context) {
     return {
       'VAttribute[directive=true]': (attrNode: VDirective) => {
-        const { directives: catchNames = ['html', 'text'] } = context.options?.[0] ?? {}
+        const { directives = [] } = context.options?.[0] ?? {}
+        const catchNames = [...new Set(DEFAULT_CATCH_NAMES.concat(directives))]
+
         const directiveName = attrNode.key.name.name
         if (!catchNames.includes(directiveName)) {
           return

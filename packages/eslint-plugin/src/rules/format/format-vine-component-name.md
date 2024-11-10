@@ -1,4 +1,4 @@
-# format-vine-component-name
+# format-vine-component-name ![](https://img.shields.io/badge/vue_vine-format-emerald)
 
 Enforce Vue Vine component function name format to be PascalCase.
 
