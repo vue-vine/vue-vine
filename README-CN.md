@@ -107,11 +107,8 @@ git clone https://github.com/vue-vine/vue-vine.git
 cd vue-vine
 pnpm install
 
-# 构建所有相关的包
+# 构建所有包
 pnpm run build
-
-# 构建 VSCode 插件
-pnpm run build:ext
 ```
 
 在构建完 VSCode 插件后，你可以在 VSCode 的 'Debug' 选项卡中找到 'Rune Vine Extension' 的配置项，然后点击运行。

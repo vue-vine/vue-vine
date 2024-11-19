@@ -107,11 +107,8 @@ git clone https://github.com/vue-vine/vue-vine.git
 cd vue-vine
 pnpm install
 
-# Build all the required packages
+# Build all packages
 pnpm run build
-
-# Build the VSCode extension
-pnpm run build:ext
 ```
 
 After building the VSCode extension, you can open the 'Debug' tab in VSCode, and start the **'Run Vine Extension'** debug session.
