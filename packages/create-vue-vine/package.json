@@ -35,19 +35,19 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@clack/prompts": "^0.7.0",
-    "clerc": "^0.42.2",
-    "execa": "^8.0.1",
-    "pkg-dir": "^7.0.0",
-    "yoctocolors": "^1.0.0"
+    "@clack/prompts": "^0.8.1",
+    "clerc": "^0.44.0",
+    "execa": "^9.5.1",
+    "pkg-dir": "^8.0.0",
+    "yoctocolors": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.4.9",
-    "unocss": "^0.55.3",
-    "unplugin-auto-import": "^0.16.6",
-    "vite": "^4.4.9",
-    "vite-plugin-inspect": "^0.7.38",
-    "vue": "^3.5.3",
+    "@types/node": "^22.9.1",
+    "unocss": "^0.64.1",
+    "unplugin-auto-import": "^0.18.5",
+    "vite": "^5.4.11",
+    "vite-plugin-inspect": "^0.8.8",
+    "vue": "^3.5.13",
     "vue-vine": "workspace:*"
   }
 }

@@ -5,7 +5,7 @@ import type {
   VineProcessorLang,
 } from '@vue-vine/compiler'
 import type { TransformPluginContext } from 'rollup'
-import type { HmrContext, Plugin, TransformResult } from 'vite'
+import type { HmrContext, PluginOption, TransformResult } from 'vite'
 import type { VineQuery } from '../../compiler/src/types'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
@@ -19,7 +19,7 @@ import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
 import { vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
 
-function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
+function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   const compilerCtx = createCompilerCtx({
     ...options,
     envMode: options.envMode ?? (process.env.NODE_ENV || 'development'),

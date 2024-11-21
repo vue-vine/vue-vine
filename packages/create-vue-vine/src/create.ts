@@ -2,6 +2,13 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { getTemplateDirectory, renderTemplate } from './utils'
 
+const builtInTemplates = [
+  'common',
+  'code/base',
+  'config/ts',
+  'config/eslint',
+]
+
 export interface ProjectOptions {
   path: string
   name: string
@@ -26,7 +33,10 @@ export async function createProject(options: ProjectOptions) {
     name: options.name,
   }, null, 2))
 
-  for (const template of ['common', 'code/base', 'config/ts', ...options.templates]) {
+  for (const template of [
+    ...builtInTemplates,
+    ...options.templates,
+  ]) {
     await renderTemplate(withBase(template), options.path)
   }
 }

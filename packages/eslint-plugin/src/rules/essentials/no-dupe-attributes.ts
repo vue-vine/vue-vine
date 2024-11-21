@@ -1,4 +1,4 @@
-import type { VAttribute, VDirective, Node as VineESLintNode } from '@vue-vine/eslint-parser'
+import type { VAttribute, VDirective } from '@vue-vine/eslint-parser'
 import { createEslintRule } from '../../utils'
 
 const RULE_NAME = 'no-dupe-attributes'
