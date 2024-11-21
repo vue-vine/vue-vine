@@ -1,4 +1,4 @@
-function comp() {
+function Comp() {
   const foo = vineProp<string>()
 
   return vine`

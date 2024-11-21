@@ -5,7 +5,20 @@ import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import { VineVitePlugin } from 'vue-vine/vite'
 
+const configForSassAndScss = {
+  api: 'modern-compiler',
+  silenceDeprecations: [
+    'legacy-js-api',
+  ],
+}
+
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      sass: configForSassAndScss,
+      scss: configForSassAndScss,
+    }
+  },
   resolve: {
     conditions: ['dev'],
     alias: {

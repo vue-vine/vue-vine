@@ -8,6 +8,14 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const vineGrammar = JSON.parse(
   readFileSync(join(__dirname, './vine-ts.tmLanguage.json'), 'utf-8'),
 )
+const vineRequiredLangs = [
+  'vue-html',
+  'css',
+  'scss',
+  'sass',
+  'less',
+  'stylus',
+]
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -127,15 +135,9 @@ export default defineConfig({
       dark: 'vitesse-dark',
     },
     languages: [
+      ...vineRequiredLangs,
       {
-        embeddedLangs: [
-          'vue-html',
-          'css',
-          'scss',
-          'sass',
-          'less',
-          'stylus',
-        ],
+        embeddedLangs: [...vineRequiredLangs],
         ...vineGrammar,
       },
     ],

@@ -13,9 +13,9 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
+      "node": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "node": "./dist/index.js"
+      "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest --run",
+    "test": "vitest",
     "test:dev": "vitest"
   },
   "dependencies": {

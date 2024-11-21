@@ -21,7 +21,7 @@ function getName(attribute: VAttribute | VDirective): string | null {
       (attribute.key.argument
         && attribute.key.argument.type === 'VIdentifier'
         && attribute.key.argument.name)
-        || null
+      || null
     )
   }
   return null

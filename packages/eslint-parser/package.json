@@ -11,9 +11,9 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
+      "node": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "node": "./dist/index.js"
+      "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -25,13 +25,13 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest --run",
+    "test": "vitest",
     "test:dev": "vitest"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^8.11.0",
-    "@typescript-eslint/scope-manager": "^8.11.0",
-    "@typescript-eslint/typescript-estree": "^8.11.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "@typescript-eslint/scope-manager": "^8.15.0",
+    "@typescript-eslint/typescript-estree": "^8.15.0",
     "debug": "^4.3.4",
     "eslint-scope": "^8.2.0",
     "espree": "^9.6.1",

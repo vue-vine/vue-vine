@@ -1532,6 +1532,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
 {
   "cached": [
     {
+      "inVOnce": false,
       "index": 0,
       "loc": {
         "end": {
@@ -1803,6 +1804,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                 "newline": false,
                 "params": undefined,
                 "returns": {
+                  "inVOnce": false,
                   "index": 0,
                   "loc": {
                     "end": {
@@ -2217,6 +2219,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
             "newline": false,
             "params": undefined,
             "returns": {
+              "inVOnce": false,
               "index": 0,
               "loc": {
                 "end": {

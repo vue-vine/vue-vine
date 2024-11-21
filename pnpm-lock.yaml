@@ -237,13 +237,13 @@ importers:
   packages/eslint-parser:
     dependencies:
       '@typescript-eslint/parser':
-        specifier: ^8.11.0
+        specifier: ^8.15.0
         version: 8.15.0(eslint@9.6.0)(typescript@5.6.3)
       '@typescript-eslint/scope-manager':
-        specifier: ^8.11.0
+        specifier: ^8.15.0
         version: 8.15.0
       '@typescript-eslint/typescript-estree':
-        specifier: ^8.11.0
+        specifier: ^8.15.0
         version: 8.15.0(typescript@5.6.3)
       debug:
         specifier: ^4.3.4
@@ -311,8 +311,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.4
       '@typescript-eslint/types':
-        specifier: 8.11.0
-        version: 8.11.0
+        specifier: 8.15.0
+        version: 8.15.0
       '@typescript-eslint/typescript-estree':
         specifier: ^8.6.0
         version: 8.15.0(typescript@5.6.3)
@@ -2493,10 +2493,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  '@typescript-eslint/types@8.11.0':
-    resolution: {integrity: sha512-tn6sNMHf6EBAYMvmPUaKaVeYvhUsrE6x+bXQTxjQRp360h1giATU0WvgeEys1spbvb5R+VpNOZ+XJmjD8wOUHw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@typescript-eslint/types@8.15.0':
     resolution: {integrity: sha512-n3Gt8Y/KyJNe0S3yDCD2RVKrHBC4gTUcLTebVBXacPy091E6tNspFLKRXlk3hwT4G55nfr1n2AdFqi/XMxzmPQ==}
@@ -9881,8 +9877,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/types@8.11.0': {}
-
   '@typescript-eslint/types@8.15.0': {}
 
   '@typescript-eslint/typescript-estree@8.15.0(typescript@5.6.3)':
@@ -10460,13 +10454,13 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.5(vite@5.4.11(@types/node@20.17.6)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))':
+  '@vitest/mocker@2.1.5(vite@5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))':
     dependencies:
       '@vitest/spy': 2.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.13
     optionalDependencies:
-      vite: 5.4.11(@types/node@20.17.6)(less@4.2.0)(sass@1.81.0)(terser@5.36.0)
+      vite: 5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0)
 
   '@vitest/pretty-format@2.1.5':
     dependencies:
@@ -12105,7 +12099,7 @@ snapshots:
 
   eslint-plugin-perfectionist@3.9.1(eslint@9.6.0)(typescript@5.6.3)(vue-eslint-parser@9.4.3(eslint@9.6.0)):
     dependencies:
-      '@typescript-eslint/types': 8.11.0
+      '@typescript-eslint/types': 8.15.0
       '@typescript-eslint/utils': 8.15.0(eslint@9.6.0)(typescript@5.6.3)
       eslint: 9.6.0
       minimatch: 9.0.5
@@ -16059,7 +16053,7 @@ snapshots:
   vitest@2.1.5(@types/node@22.9.1)(jsdom@25.0.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.5
-      '@vitest/mocker': 2.1.5(vite@5.4.11(@types/node@20.17.6)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))
+      '@vitest/mocker': 2.1.5(vite@5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.5
       '@vitest/runner': 2.1.5
       '@vitest/snapshot': 2.1.5
