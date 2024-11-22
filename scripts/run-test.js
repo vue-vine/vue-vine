@@ -1,5 +1,5 @@
-import process from 'node:process'
 import { runCommand } from './utils'
+import { toExitErr } from './utils/err-catch'
 
 const testCommand = 'NODE_ENV=test pnpm '
   + '--filter @vue-vine/compiler '
@@ -8,8 +8,4 @@ const testCommand = 'NODE_ENV=test pnpm '
   + '--filter @vue-vine/nuxt '
   + 'run test --run'
 
-runCommand(testCommand)
-  .catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
+runCommand(testCommand).catch(toExitErr)

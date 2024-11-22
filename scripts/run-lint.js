@@ -1,5 +1,6 @@
 import { env } from 'node:process'
 import { runCommand } from './utils'
+import { toExitErr } from './utils/err-catch'
 
 async function runLint() {
   const cmdOptions = { title: '[Vue Vine Lint]' }
@@ -10,4 +11,4 @@ async function runLint() {
   await runCommand('pnpm eslint .', cmdOptions)
 }
 
-runLint()
+runLint().catch(toExitErr)
