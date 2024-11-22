@@ -426,6 +426,7 @@ const analyzeVineProps: AnalyzeRunner = (
         propMeta.default = macroCall.arguments[0]
         propMeta.validator = macroCall.arguments[1]
         propMeta.isBool = isBooleanLiteral(propMeta.default)
+        propMeta.isRequired = false // prop with default value is optional
 
         const inferredType = tryInferExpressionTSType(propMeta.default)
         propMeta.typeAnnotationRaw = inferredType
@@ -1004,9 +1005,13 @@ function buildVineCompFnCtx(
       return `{\n${
         Object.entries(this.props).map(
           ([propName, propMeta]) => `${
-            isNeedLinkedCodeTag
-              ? `${createLinkedCodeTag('left', propName.length)}${propName}`
-              : propName
+            (
+              isNeedLinkedCodeTag
+                ? `${createLinkedCodeTag('left', propName.length)}${propName}`
+                : propName
+            ) + (
+              propMeta.isRequired ? '' : '?'
+            )
           }: ${propMeta.typeAnnotationRaw}`,
         ).join(joinStr)
       }\n}`

@@ -454,12 +454,12 @@ function MyComp() {
     expect(MyComp?.getPropsTypeRecordStr())
       .toMatchInlineSnapshot(`
         "{
-        p1: string, p2: number, p3: typeof V1, p4: any, p5: T1, p6: boolean, p7: T2
+        p1: string, p2?: number, p3?: typeof V1, p4?: any, p5?: T1, p6?: boolean, p7?: T2
         }"
       `)
-    // expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
-    // expect(mockCompilerCtx.vineCompileWarnings[0].msg)
-    //   .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
+    expect(mockCompilerCtx.vineCompileWarnings[0].msg)
+      .toMatchInlineSnapshot(`"The default value is an expression, Vine compiler doesn't embed TypeScript to infer its type. So it's recommended to provide a type anonation explicitly for IDE checking."`)
   })
 })
 
@@ -522,5 +522,33 @@ function MyBox() {
         myEmits: VineBindingTypes.SETUP_CONST,
       }),
     )
+  })
+
+  it('vineProp.withDefault should be an optional prop', () => {
+    const content = `
+    function MyComp() {
+      const prop1 = vineProp.withDefault(0)
+      const prop2 = vineProp<string>()
+      const p3 = vineProp.optional<boolean>()
+
+      return vine\`<div>Test default prop {{ prop1 }}</div>\`
+    }`
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVinePropWithDefault', { compilerHooks: mockCompilerHooks })
+    const MyComp = mockCompilerCtx.fileCtxMap.get('testVinePropWithDefault')?.vineCompFns[0]
+    expect(MyComp?.props).toEqual(
+      expect.objectContaining({
+        prop1: expect.objectContaining({
+          isRequired: false,
+        }),
+      }),
+    )
+    expect(MyComp?.getPropsTypeRecordStr())
+      .toMatchInlineSnapshot(`
+        "{
+        prop1?: number, prop2: string, p3?: boolean
+        }"
+      `)
   })
 })

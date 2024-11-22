@@ -349,7 +349,7 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     },
     "isBool": false,
     "isFromMacroDefine": true,
-    "isRequired": true,
+    "isRequired": false,
     "typeAnnotationRaw": "string",
     "validator": Node {
       "async": false,

@@ -105,7 +105,9 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -302,7 +304,9 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -473,7 +477,9 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -701,7 +707,9 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
