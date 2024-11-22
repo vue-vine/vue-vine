@@ -1,9 +1,13 @@
 import { exec, spawn } from 'node:child_process'
-import { resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
 import { colorful } from './color-str'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export const r = (...args) => resolve(__dirname, '..', ...args)
 
