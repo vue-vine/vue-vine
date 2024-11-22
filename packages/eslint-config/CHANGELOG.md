@@ -1,5 +1,11 @@
 # @vue-vine/eslint-config
 
+## 0.2.2
+
+### Patch Changes
+
+- Fix props with default value should be optional.
+
 ## 0.2.1
 
 ### Patch Changes

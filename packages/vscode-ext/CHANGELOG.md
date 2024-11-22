@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.28
+
+### Patch Changes
+
+- Fix props with default value should be optional.
+
 ## 0.1.27
 
 ### Patch Changes
