@@ -1,5 +1,6 @@
 {
   "name": "vue-vine-workspace",
+  "type": "module",
   "private": true,
   "packageManager": "pnpm@9.0.6",
   "description": "Yet another style to write Vue.js components",
