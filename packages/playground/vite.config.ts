@@ -17,7 +17,7 @@ export default defineConfig({
     preprocessorOptions: {
       sass: configForSassAndScss,
       scss: configForSassAndScss,
-    }
+    },
   },
   resolve: {
     conditions: ['dev'],
