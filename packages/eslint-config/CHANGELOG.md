@@ -1,5 +1,11 @@
 # @vue-vine/eslint-config
 
+## 0.2.3
+
+### Patch Changes
+
+- Fix exports field 'node' is useless for VSCode
+
 ## 0.2.2
 
 ### Patch Changes
