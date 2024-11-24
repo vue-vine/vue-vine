@@ -536,7 +536,9 @@ export interface ExpressionParseResult<T extends Node> {
 function loadParser(parser: string) {
   if (parser !== 'espree') {
     const __require = createRequire(
-      fileURLToPath(import.meta.url),
+      typeof __filename
+        ? __filename
+        : fileURLToPath(import.meta.url),
     )
     return __require(parser)
   }

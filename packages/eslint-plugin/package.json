@@ -13,7 +13,6 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "node": "./dist/index.js",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },

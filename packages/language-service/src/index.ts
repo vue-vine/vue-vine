@@ -191,7 +191,7 @@ function createVueVineCode(
     vineCompileWarns,
     vineFileCtx,
   } = compileVineForVirtualCode(sourceFileName, content)
-  logger.log(`compile time cost: ${(performance.now() - compileStartTime).toFixed(2)}ms`)
+  const compileTime = (performance.now() - compileStartTime).toFixed(2)
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
   if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
@@ -337,6 +337,7 @@ function createVueVineCode(
   const tsCodeMappings = buildMappings(tsCodeSegments)
   const linkedCodeMappings: Mapping[] = getLinkedCodeMappings(tsCode)
 
+  logger.log(`created in ${compileTime}ms.`)
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
     id: 'root',
@@ -366,6 +367,9 @@ function createVueVineCode(
 
     get fileName() {
       return sourceFileName
+    },
+    get compileTime() {
+      return compileTime
     },
   }
 

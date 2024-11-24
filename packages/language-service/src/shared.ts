@@ -27,6 +27,7 @@ export interface VueVineCode extends VirtualCode {
   }
 
   get fileName(): string
+  get compileTime(): string
 }
 
 export function turnBackToCRLF(code: string) {
