@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.6
+
+### Patch Changes
+
+- Fix compiler should remove unused-in-template bindings in separated mode returns.
+
 ## 0.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.35
+
+### Patch Changes
+
+- Fix compiler should remove unused-in-template bindings in separated mode returns.
+
 ## 0.1.34
 
 ### Patch Changes
