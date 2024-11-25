@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.7
+
+### Patch Changes
+
+- Enable strictTemplates option in VSCode extension for template checking.
+
 ## 0.0.6
 
 ### Patch Changes

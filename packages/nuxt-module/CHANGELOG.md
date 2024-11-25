@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.0.5
+
+### Patch Changes
+
+- Enable strictTemplates option in VSCode extension for template checking.
+
 ## 0.0.4
 
 ### Patch Changes

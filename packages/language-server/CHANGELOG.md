@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.36
+
+### Patch Changes
+
+- Enable strictTemplates option in VSCode extension for template checking.
+
 ## 0.1.35
 
 ### Patch Changes

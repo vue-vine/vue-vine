@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.29
+
+### Patch Changes
+
+- Enable strictTemplates option in VSCode extension for template checking.
+
 ## 0.1.28
 
 ### Patch Changes
