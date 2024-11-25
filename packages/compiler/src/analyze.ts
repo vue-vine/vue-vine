@@ -1002,8 +1002,9 @@ function buildVineCompFnCtx(
       joinStr = ', ',
       isNeedLinkedCodeTag = false,
     } = {}): string {
-      return `{\n${
-        Object.entries(this.props).map(
+      const fields = Object
+        .entries(this.props)
+        .map(
           ([propName, propMeta]) => `${
             (
               isNeedLinkedCodeTag
@@ -1013,8 +1014,15 @@ function buildVineCompFnCtx(
               propMeta.isRequired ? '' : '?'
             )
           }: ${propMeta.typeAnnotationRaw}`,
-        ).join(joinStr)
-      }\n}`
+        )
+        .filter(Boolean)
+        .join(joinStr)
+
+      return `{${
+        fields.length > 0
+          ? `\n${fields}\n`
+          : ''
+      }}`
     },
   }
   const analyzeCtx: AnalyzeCtx = {

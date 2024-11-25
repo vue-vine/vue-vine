@@ -49,7 +49,7 @@
     "@volar/language-server": "~2.4.8",
     "@volar/typescript": "~2.4.8",
     "@vue-vine/compiler": "workspace:*",
-    "@vue/language-core": "~2.1.8",
+    "@vue/language-core": "~2.1.10",
     "@vue/shared": "^3.4.31",
     "muggle-string": "^0.4.1"
   },

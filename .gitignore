@@ -9,3 +9,4 @@ out
 .eslintcache
 tsconfig.tsbuildinfo
 *.vsix
+*.virtual.ts

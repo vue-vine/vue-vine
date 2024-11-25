@@ -9,7 +9,10 @@ export function createVueVineTypeScriptPlugin() {
     const vueOptions = (
       isConfiguredTsProject
         ? createParsedCommandLine(ts, ts.sys, configFileName).vueOptions
-        : resolveVueCompilerOptions({})
+        : resolveVueCompilerOptions({
+          // enable strict templates by default
+          strictTemplates: true,
+        })
     )
 
     if (isConfiguredTsProject) {

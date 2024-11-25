@@ -4,10 +4,14 @@ import { posix as path } from 'node:path'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 import { VineBindingTypes } from '@vue-vine/compiler'
 
-export function setupGlobalTypes(rootDir: string, vueOptions: VueCompilerOptions, host: {
-  fileExists: (path: string) => boolean
-  writeFile?: (path: string, data: string) => void
-}) {
+export function setupGlobalTypes(
+  rootDir: string,
+  vueOptions: VueCompilerOptions,
+  host: {
+    fileExists: (path: string) => boolean
+    writeFile?: (path: string, data: string) => void
+  },
+) {
   if (!host.writeFile) {
     return ''
   }
@@ -20,8 +24,8 @@ export function setupGlobalTypes(rootDir: string, vueOptions: VueCompilerOptions
       }
       dir = parentDir
     }
-    const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_${vueOptions.strictTemplates}.d.ts`)
-    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions.lib, vueOptions.target, vueOptions.strictTemplates)}`
+    const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
+    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions.lib, vueOptions.target, true)}`
     host.writeFile(globalTypesPath, globalTypesContents)
     return globalTypesPath
   }
@@ -91,10 +95,6 @@ type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
     joinStr: '; ',
   })
 };
-type __CTX_TYPES = __VINE_VLS_Expand<__VINE_VLS_Modify<
-  __CTX_TYPES_FROM_BINDING,
-  __CTX_TYPES_FROM_FORMAL_PARAMS
->>;
 const __VLS_ctx = __createVineVLSCtx({
 ${notPropsBindings.map(([name]) => `  ${
   createLinkedCodeTag('left', name.length)

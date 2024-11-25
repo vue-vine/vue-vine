@@ -34,7 +34,10 @@ export function run() {
           }
         }
         else {
-          vueOptions = resolveVueCompilerOptions({})
+          vueOptions = resolveVueCompilerOptions({
+            // enable strict templates by default
+            strictTemplates: true,
+          })
         }
 
         languagePlugins.push(

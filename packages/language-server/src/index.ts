@@ -61,10 +61,17 @@ connection.onInitialize(async (params) => {
 
   function getLanguagePlugins(configFileName: string | undefined) {
     const compilerOptions: ts.CompilerOptions = {}
-    const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({})
+    const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({
+      // enable strict templates by default
+      strictTemplates: true,
+    })
 
     if (configFileName) {
-      const vineGlobalTypesPath = setupGlobalTypes(path.dirname(configFileName), vueCompilerOptions, tsdk.typescript.sys)
+      const vineGlobalTypesPath = setupGlobalTypes(
+        path.dirname(configFileName),
+        vueCompilerOptions,
+        tsdk.typescript.sys,
+      )
       if (vineGlobalTypesPath) {
         vueCompilerOptions.__setupedGlobalTypes = {
           absolutePath: vineGlobalTypesPath,

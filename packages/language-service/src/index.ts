@@ -210,7 +210,7 @@ function createVueVineCode(
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_${vueCompilerOptions.strictTemplates}" />\n\n`)
+    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n\n`)
   }
 
   let currentOffset = 0
@@ -420,7 +420,7 @@ function createVueVineCode(
             ? createLinkedCodeTag('left', onEmit.length)
             : ''
         }${onEmit}: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
-      }).join(', ')
+      }).filter(Boolean).join(', ')
     }\n}`
 
     return emitParam
@@ -443,14 +443,20 @@ function createVueVineCode(
       .forEach(
         ({ macroType }) => {
           if (macroType === 'vineSlots') {
-            contextProperties.push(generateContextSlots(vineCompFn, tabNum))
+            const slotField = generateContextSlots(vineCompFn, tabNum)
+            if (!slotField)
+              return
+            contextProperties.push(slotField)
           }
         },
       )
 
-    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {\n${
-      ' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)
-    }${lineWrapAtStart ? `\n  \n` : '\n'}}`
+    const contextFieldsStr = (
+      contextProperties.length > 0
+        ? `\n${' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)}${lineWrapAtStart ? `\n  \n` : '\n'}`
+        : ''
+    )
+    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}}`
     return contextFormalParam
   }
 
