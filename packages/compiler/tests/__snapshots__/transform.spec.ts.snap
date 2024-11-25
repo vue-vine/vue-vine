@@ -1,67 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`test transform > hmrId should be generated If there is no style 1`] = `
-"import {
-  createElementVNode as _createElementVNode,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref,
-} from "vue";
-
-export const About = (() => {
-  const __vine = _defineComponent({
-    name: "About",
-    /* No props */
-    /* No emits */
-    setup(__props, { expose: __expose }) {
-      __expose();
-      const props = __props;
-
-      return (_ctx, _cache) => {
-        return (
-          _openBlock(),
-          _createElementBlock(
-            "div",
-            null,
-            _cache[0] ||
-              (_cache[0] = [
-                _createElementVNode("h2", null, "About page", -1 /* HOISTED */),
-              ]),
-          )
-        );
-      };
-    },
-  });
-
-  __vine.__hmrId = "ba945b60";
-
-  return __vine;
-})();
-
-typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
-export const _rerender_only = false;
-export const _rerender_vcf_fn_name = "";
-import.meta.hot?.accept((mod) => {
-  if (!mod) {
-    return;
-  }
-  const { _rerender_only, _rerender_vcf_fn_name } = mod;
-  if (!_rerender_vcf_fn_name) {
-    return;
-  }
-  const component = mod[_rerender_vcf_fn_name];
-  if (_rerender_only) {
-    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-  } else {
-    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-  }
-});
-"
-`;
-
 exports[`test transform > inline mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
@@ -532,12 +470,6 @@ export const MyProfile = (() => {
         emits,
         textColor,
         handleRefresh,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
         v1,
         v2,
         MyProfile,
@@ -600,19 +532,7 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return {
-        data,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
-        v1,
-        v2,
-        MyProfile,
-        MyApp,
-      };
+      return { data, v1, v2, MyProfile, MyApp };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -762,12 +682,6 @@ export const MyProfile = (() => {
         emits,
         textColor,
         handleRefresh,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
         v1,
         v2,
         MyProfile,
@@ -823,19 +737,7 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return {
-        data,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
-        v1,
-        v2,
-        MyProfile,
-        MyApp,
-      };
+      return { data, v1, v2, MyProfile, MyApp };
     },
   });
   function __sfc_ssr_render(
@@ -878,6 +780,68 @@ export default MyApp;
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+export const _rerender_only = false;
+export const _rerender_vcf_fn_name = "";
+import.meta.hot?.accept((mod) => {
+  if (!mod) {
+    return;
+  }
+  const { _rerender_only, _rerender_vcf_fn_name } = mod;
+  if (!_rerender_vcf_fn_name) {
+    return;
+  }
+  const component = mod[_rerender_vcf_fn_name];
+  if (_rerender_only) {
+    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+  } else {
+    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+  }
+});
+"
+`;
+
+exports[`test transform > should generate hmrId If there is no style 1`] = `
+"import {
+  createElementVNode as _createElementVNode,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+} from "vue";
+
+export const About = (() => {
+  const __vine = _defineComponent({
+    name: "About",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            "div",
+            null,
+            _cache[0] ||
+              (_cache[0] = [
+                _createElementVNode("h2", null, "About page", -1 /* HOISTED */),
+              ]),
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "ba945b60";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
 export const _rerender_only = false;
 export const _rerender_vcf_fn_name = "";
 import.meta.hot?.accept((mod) => {

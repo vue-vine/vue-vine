@@ -1,4 +1,7 @@
-import { ref } from 'vue'
+import { ref, Ref } from 'vue'
+//           ^^^^ Deliberately import an extra useless type item here
+//                - For ESLint rules to catch it
+//                - Test if it broke compilation in JS runtime
 import { PageHeader } from '../components/page-header.vine'
 
 function TestSlotContainer(props: {

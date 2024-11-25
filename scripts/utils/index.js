@@ -18,38 +18,30 @@ export async function runCommand(command, options = {}) {
   )}  `)
 
   return new Promise((resolve, reject) => {
-    try {
-      const proc = exec(command, {
-        env: {
-          ...process.env,
-          FORCE_COLOR: 'true',
-        },
-        cwd: r('../'),
-        shell: true,
-      })
-      proc.stdout.pipe(process.stdout)
-      proc.stderr.pipe(process.stderr)
+    const proc = exec(command, {
+      env: {
+        ...process.env,
+        FORCE_COLOR: 'true',
+      },
+      cwd: r('../'),
+      shell: true,
+    })
+    proc.stdout.pipe(process.stdout)
+    proc.stderr.pipe(process.stderr)
 
-      proc.on('close', resolve)
-      proc.on('exit', resolve)
-      proc.on('error', (err) => {
-        log('error', String(err), `${colorful(
-          `${options.title ? ` ${options.title} ` : ' '}`,
-          ['black', 'bgRed', 'bold'],
-        )}  `)
-        reject(err)
-      })
-      proc.on('SIGINT', () => {
-        log('info', `Exit ${options.title} ...`)
-      })
-    }
-    catch (err) {
+    proc.on('close', resolve)
+    proc.on('exit', resolve)
+    proc.on('error', (err) => {
+      console.log(`[DEBUG] on error: ${err}`)
       log('error', String(err), `${colorful(
         `${options.title ? ` ${options.title} ` : ' '}`,
-        ['white', 'bgRed', 'bold'],
+        ['black', 'bgRed', 'bold'],
       )}  `)
       reject(err)
-    }
+    })
+    proc.on('SIGINT', () => {
+      log('info', `Exit ${options.title} ...`)
+    })
   })
 }
 

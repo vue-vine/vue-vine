@@ -55,30 +55,26 @@ import type { SomeType } from 'types-2'
     compileVineTypeScriptFile(content, 'testAnalyzeImports', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeImports')
-    expect(fileCtx?.userImports).toMatchInlineSnapshot(`
-      {
-        "SomeType": {
-          "isType": true,
-          "isUsedInTemplate": false,
-          "source": "types-2",
-        },
-        "Something": {
-          "isNamespace": true,
-          "isType": false,
-          "isUsedInTemplate": false,
-          "source": "lib-1",
+    expect(JSON.stringify(fileCtx?.userImports, null, 2)).toMatchInlineSnapshot(`
+      "{
+        "ref": {
+          "source": "vue",
+          "isType": false
         },
         "VueReactive": {
-          "isType": false,
-          "isUsedInTemplate": false,
           "source": "vue",
+          "isType": false
         },
-        "ref": {
+        "Something": {
+          "source": "lib-1",
           "isType": false,
-          "isUsedInTemplate": false,
-          "source": "vue",
+          "isNamespace": true
         },
-      }
+        "SomeType": {
+          "source": "types-2",
+          "isType": true
+        }
+      }"
     `)
   })
 

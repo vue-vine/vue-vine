@@ -91,9 +91,11 @@ function processExp(exp: string, dir?: string): string {
 }
 
 function stripStrings(exp: string) {
-  return exp
-    .replace(/'[^']*'|"[^"]*"/g, '')
-    .replace(/`[^`]+`/g, stripTemplateString)
+  return (
+    exp
+      ?.replace(/'[^']*'|"[^"]*"/g, '')
+      ?.replace(/`[^`]+`/g, stripTemplateString)
+  ) ?? ''
 }
 
 function stripTemplateString(str: string): string {

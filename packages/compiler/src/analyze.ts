@@ -933,10 +933,10 @@ function analyzeFileImportStmts(
         vineFileCtx.userImports[spec.local.name] = importMeta
       }
 
-      const isUsedInTemplate = vineFileCtx.vineCompFns.some(
-        vineCompFn => isImportUsed(vineCompFn, spec.local.name),
+      const specLocalName = spec.local.name
+      importMeta.isUsedInTemplate = () => vineFileCtx.vineCompFns.some(
+        vineCompFn => isImportUsed(vineCompFn, specLocalName),
       )
-      importMeta.isUsedInTemplate = isUsedInTemplate
     }
   }
   const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]

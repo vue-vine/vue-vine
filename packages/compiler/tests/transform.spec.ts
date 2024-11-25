@@ -144,7 +144,7 @@ describe('test transform', () => {
   })
 
   // issue#83
-  it('hmrId should be generated If there is no style', async () => {
+  it('should generate hmrId If there is no style', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'development',
     })
@@ -167,5 +167,92 @@ describe('test transform', () => {
     expect(formated).toMatchSnapshot()
     expect(formated.includes('__hmrId')).toBe(true)
     expect(formated.includes('__VUE_HMR_RUNTIME__')).toBe(true)
+  })
+
+  it('should not add unused-in-template imports to returns in separated mode', async () => {
+    const specContent = `
+import { ref, Ref } from 'vue'
+
+export function MyComp() {
+  const count = ref(0)
+  return vine\`
+    <div>{{ count.value }}</div>
+  \`
+}
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      inlineTemplate: false,
+    })
+    compileVineTypeScriptFile(specContent, 'testUnusedImports', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testUnusedImports')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchInlineSnapshot(`
+      "import {
+        toDisplayString as _toDisplayString,
+        openBlock as _openBlock,
+        createElementBlock as _createElementBlock,
+        defineComponent as _defineComponent,
+        useCssVars as _useCssVars,
+      } from "vue";
+
+      import { ref, Ref } from "vue";
+
+      export const MyComp = (() => {
+        const __vine = _defineComponent({
+          name: "MyComp",
+          /* No props */
+          /* No emits */
+          setup(__props, { expose: __expose }) {
+            __expose();
+            const props = __props;
+            const count = ref(0);
+
+            return { count, MyComp };
+          },
+        });
+        function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+          return (
+            _openBlock(),
+            _createElementBlock(
+              "div",
+              null,
+              _toDisplayString($setup.count.value),
+              1 /* TEXT */,
+            )
+          );
+        }
+        __vine.render = __sfc_render;
+
+        __vine.__hmrId = "01d6e3a5";
+
+        return __vine;
+      })();
+
+      typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+        __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+      export const _rerender_only = false;
+      export const _rerender_vcf_fn_name = "";
+      import.meta.hot?.accept((mod) => {
+        if (!mod) {
+          return;
+        }
+        const { _rerender_only, _rerender_vcf_fn_name } = mod;
+        if (!_rerender_vcf_fn_name) {
+          return;
+        }
+        const component = mod[_rerender_vcf_fn_name];
+        if (_rerender_only) {
+          __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+        } else {
+          __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+        }
+      });
+      "
+    `)
   })
 })

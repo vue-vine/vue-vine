@@ -1,6 +1,7 @@
-import process from 'node:process'
+// import process from 'node:process'
 
 export function toExitErr(err) {
+  console.log(`[DEBUG] toExitErr: ${err}`)
   console.error(err)
-  process.exit(1)
+  throw err
 }

@@ -323,17 +323,24 @@ export function createSeparatedTemplateComposer(
       // return bindings from script and script setup
       const allBindings: Record<string, any> = { ...bindingMetadata }
       for (const key in vineFileCtx.userImports) {
-        if (
-          !vineFileCtx.userImports[key].isType
-          && vineFileCtx.userImports[key].isUsedInTemplate
-        ) {
-          allBindings[key] = true
+        const isType = vineFileCtx.userImports[key].isType
+        const isUsedInTemplate = vineFileCtx.userImports[key].isUsedInTemplate?.()
+
+        if (isUsedInTemplate) {
+          if (!isType)
+            allBindings[key] = true
+        }
+        else {
+          allBindings[key] = false
         }
       }
 
       let setupFnReturns = '{ '
       for (const key in allBindings) {
-        if (
+        if (allBindings[key] === false) {
+          // skip unused bindings
+        }
+        else if (
           allBindings[key] === true
           && vineFileCtx.userImports[key].source !== 'vue'
           && !vineFileCtx.userImports[key].source.endsWith('.vue')
@@ -345,9 +352,10 @@ export function createSeparatedTemplateComposer(
         else if (bindingMetadata[key] === VineBindingTypes.SETUP_LET) {
           // local let binding, also add setter
           const setArg = key === 'v' ? '_v' : 'v'
-          setupFnReturns
-        += `get ${key}() { return ${key} }, `
-        + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
+          setupFnReturns += (
+            `get ${key}() { return ${key} }, `
+            + `set ${key}(${setArg}) { ${key} = ${setArg} }, `
+          )
         }
         else if (bindingMetadata[key] === VineBindingTypes.PROPS) {
           // Skip props bindings

@@ -109,7 +109,7 @@ export interface VineUserImport {
   isType: boolean
   isNamespace?: boolean
   isDefault?: boolean
-  isUsedInTemplate?: boolean
+  isUsedInTemplate?: () => boolean
 }
 
 export interface VineFileCtx {
