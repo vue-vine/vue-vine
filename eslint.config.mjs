@@ -6,7 +6,6 @@ export default antfu(
       'node_modules',
       'dist',
       'pnpm-lock.yaml',
-      'scripts/*.sh',
 
       'packages/docs/.vitepress/cache',
       'packages/e2e-test/**/*.vine.ts',
