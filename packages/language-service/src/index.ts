@@ -52,6 +52,7 @@ type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFu
 type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
 type VineCodeInformation = CodeInformation & {
   __combineLastMapping?: boolean
+  __combineOffsetMapping?: number
 }
 
 const FULL_FEATURES = {
@@ -710,14 +711,19 @@ function buildMappings(chunks: Segment<VineCodeInformation>[]) {
     }
     else {
       const mapping: Mapping<VineCodeInformation> = {
-        sourceOffsets: [segment[2]],
-        generatedOffsets: [length],
         lengths: [segment[0].length],
+        generatedOffsets: [length],
+        sourceOffsets: [segment[2]],
         data: segment[3]!,
       }
 
-      // Handling __combineLastMapping
-      if (mapping.data.__combineLastMapping && lastValidMapping) {
+      // Handling combine mapping
+      const isNeedCombine = (
+        mapping.data.__combineLastMapping
+        || mapping.data.__combineOffsetMapping
+      )
+
+      if (isNeedCombine && lastValidMapping) {
         lastValidMapping.sourceOffsets.push(...mapping.sourceOffsets)
         lastValidMapping.generatedOffsets.push(...mapping.generatedOffsets)
         lastValidMapping.lengths.push(...mapping.lengths)
