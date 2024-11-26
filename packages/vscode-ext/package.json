@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -94,6 +94,7 @@
     "build": "NODE_ENV=production tsup",
     "lint": "eslint src --ext ts",
     "pack": "vsce package",
+    "prepack": "pnpm run build",
     "publish:ext": "vsce publish"
   },
   "devDependencies": {

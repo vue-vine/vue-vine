@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.30
+
+### Patch Changes
+
+- Fix checking required props for template in VSCode.
+
 ## 0.1.29
 
 ### Patch Changes

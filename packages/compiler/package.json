@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/compiler",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -25,7 +25,8 @@
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
     "test": "vitest",
-    "test:verbose": "VINE_DEV_VITEST=true vitest"
+    "test:verbose": "VINE_DEV_VITEST=true vitest",
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@babel/parser": "^7.24.0",

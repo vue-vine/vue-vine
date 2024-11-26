@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.37
+
+### Patch Changes
+
+- Fix checking required props for template in VSCode.
+
 ## 0.1.36
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "vue-vine-tsc",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Command line typescript checker for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@volar/language-core": "~2.4.8",

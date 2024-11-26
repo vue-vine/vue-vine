@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.8
+
+### Patch Changes
+
+- Fix checking required props for template in VSCode.
+
 ## 0.0.7
 
 ### Patch Changes

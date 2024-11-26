@@ -32,7 +32,8 @@
   ],
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.1",

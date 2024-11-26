@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/vite-plugin",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@vue-vine/compiler": "workspace:*"

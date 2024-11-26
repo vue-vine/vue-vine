@@ -30,7 +30,8 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
-    "test:dev": "vitest"
+    "test:dev": "vitest",
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.10",

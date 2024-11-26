@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/language-service",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
@@ -43,7 +43,7 @@
   "scripts": {
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
-    "prepublishOnly": "pnpm run build"
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@volar/language-server": "~2.4.8",
