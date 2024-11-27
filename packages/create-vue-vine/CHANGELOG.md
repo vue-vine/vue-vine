@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.0.4
+
+### Patch Changes
+
+- Fix CLI templates should export component functions.
+
 ## 0.0.3
 
 ### Patch Changes
