@@ -58,6 +58,11 @@ function MyProfile() {
   vineStyle.import('../styles/test1.less').scoped()
   vineStyle.import(\`../styles/test2.scss\`)
 
+  onMounted(async () => {
+    const data = await fetch("https://api.sampleapis.com/futurama/characters")
+    console.log(data)
+  })
+
   return vine\`
     <div class="my-profile">
       <div>{{ name }}<span> - {{ age }}</span></div>

@@ -20,6 +20,7 @@ import {
   USE_DEFAULTS_HELPER,
   USE_MODEL_HELPER,
   USE_SLOT_HELPER,
+  WITH_ASYNC_CONTEXT_HELPER,
 } from './constants'
 import { sortStyleImport } from './style/order'
 import { compileCSSVars } from './style/transform-css-var'
@@ -44,11 +45,11 @@ function wrapWithAsyncContext(
   );`
 }
 
-function mayContainAwaitExpr(targetNode: Node) {
+function mayContainAwaitExpr(vineFnBodyStmt: Node) {
   let awaitExpr: AwaitExpression | undefined
-  const isVarDecl = isVariableDeclaration(targetNode)
-  const isAssignExpr = isAssignmentExpression(targetNode)
-  const isExprStmt = isExpressionStatement(targetNode)
+  const isVarDecl = isVariableDeclaration(vineFnBodyStmt)
+  const isAssignExpr = isAssignmentExpression(vineFnBodyStmt)
+  const isExprStmt = isExpressionStatement(vineFnBodyStmt)
 
   if (!(
     isVarDecl
@@ -58,10 +59,17 @@ function mayContainAwaitExpr(targetNode: Node) {
     return null
   }
 
+  if (
+    isExprStmt
+    && vineFnBodyStmt.expression.type !== 'AwaitExpression'
+  ) {
+    return null
+  }
+
   const isNeedResult = isVarDecl || isAssignExpr
 
   try {
-    traverse(targetNode, (descendant) => {
+    traverse(vineFnBodyStmt, (descendant) => {
       if (isAwaitExpression(descendant)) {
         awaitExpr = descendant
         throw new Error(EXPECTED_ERROR)
@@ -258,6 +266,11 @@ export function transformFile(
         if (!mayContain || !mayContain.awaitExpr) {
           continue
         }
+
+        // has await expression in function body root level statements,
+        // we need to add 'withAsyncContext' helper, imported from 'vue'
+        vueImportsSpecs.set(WITH_ASYNC_CONTEXT_HELPER, `_${WITH_ASYNC_CONTEXT_HELPER}`)
+
         const { awaitExpr, isNeedResult } = mayContain
         hasAwait = true
         ms.update(
