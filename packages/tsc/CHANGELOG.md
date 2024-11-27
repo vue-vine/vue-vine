@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.9
+
+### Patch Changes
+
+- Fix compiler should add withAsyncContext helper import from vue when transforming.
+
 ## 0.0.8
 
 ### Patch Changes

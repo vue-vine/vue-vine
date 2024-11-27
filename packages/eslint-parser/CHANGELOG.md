@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.6
+
+### Patch Changes
+
+- Fix compiler should add withAsyncContext helper import from vue when transforming.
+
 ## 0.2.4
 
 ### Patch Changes

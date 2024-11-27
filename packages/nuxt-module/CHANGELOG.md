@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.0.7
+
+### Patch Changes
+
+- Fix compiler should add withAsyncContext helper import from vue when transforming.
+
 ## 0.0.5
 
 ### Patch Changes

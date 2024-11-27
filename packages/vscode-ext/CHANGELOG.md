@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.31
+
+### Patch Changes
+
+- Fix compiler should add withAsyncContext helper import from vue when transforming.
+
 ## 0.1.30
 
 ### Patch Changes
