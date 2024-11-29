@@ -37,14 +37,14 @@
         }
       },
       {
-        "scopeName": "vine-vue-template.interpolations",
+        "scopeName": "source.vine-vue-template.interpolations",
         "path": "./syntaxes/vue-interpolations.json",
         "injectTo": [
           "source.vine-vue-template"
         ]
       },
       {
-        "scopeName": "vine-vue-template.directives",
+        "scopeName": "source.vine-vue-template.directives",
         "path": "./syntaxes/vue-directives.json",
         "injectTo": [
           "source.vine-vue-template"
@@ -56,7 +56,7 @@
         "embeddedLanguages": {
           "source.vine-vue-template": "vine-vue-template",
           "source.css": "css",
-          "source.css.scss": "scss",
+          "source.css.scess": "scss",
           "source.css.less": "less",
           "source.css.postcss": "postcss",
           "source.sass": "sass",

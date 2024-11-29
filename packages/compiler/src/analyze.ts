@@ -83,7 +83,7 @@ import {
 import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
 import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
-import { isImportUsed } from './template/importUsageCheck'
+import { isImportUsed } from './template/import-usage-check'
 import { _breakableTraverse, exitTraverse } from './utils'
 
 interface AnalyzeCtx {
@@ -934,9 +934,7 @@ function analyzeFileImportStmts(
       }
 
       const specLocalName = spec.local.name
-      importMeta.isUsedInTemplate = () => vineFileCtx.vineCompFns.some(
-        vineCompFn => isImportUsed(vineCompFn, specLocalName),
-      )
+      importMeta.isUsedInTemplate = compFnCtx => isImportUsed(compFnCtx, specLocalName)
     }
   }
   const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]

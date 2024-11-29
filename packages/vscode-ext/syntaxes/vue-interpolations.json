@@ -7,5 +7,5 @@
       "include": "source.vine-vue-template#vue-interpolations"
     }
   ],
-  "scopeName": "vine-vue-template.interpolations"
+  "scopeName": "source.vine-vue-template.interpolations"
 }

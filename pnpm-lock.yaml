@@ -89,6 +89,9 @@ importers:
       '@vue/compiler-ssr':
         specifier: ^3.4.38
         version: 3.5.13
+      '@vue/shared':
+        specifier: ^3.5.13
+        version: 3.5.13
       estree-walker:
         specifier: ^2.0.2
         version: 2.0.2
@@ -98,6 +101,9 @@ importers:
       line-column:
         specifier: ^1.0.2
         version: 1.0.2
+      lru-cache:
+        specifier: ^11.0.2
+        version: 11.0.2
       magic-string:
         specifier: ^0.30.10
         version: 0.30.13
@@ -10322,14 +10328,6 @@ snapshots:
     optionalDependencies:
       vite: 5.4.11(@types/node@20.17.6)(less@4.2.0)(sass@1.81.0)(terser@5.36.0)
 
-  '@vitest/mocker@2.1.5(vite@5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))':
-    dependencies:
-      '@vitest/spy': 2.1.5
-      estree-walker: 3.0.3
-      magic-string: 0.30.13
-    optionalDependencies:
-      vite: 5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0)
-
   '@vitest/pretty-format@2.1.5':
     dependencies:
       tinyrainbow: 1.2.0
@@ -15840,7 +15838,7 @@ snapshots:
   vitest@2.1.5(@types/node@22.9.1)(jsdom@25.0.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0):
     dependencies:
       '@vitest/expect': 2.1.5
-      '@vitest/mocker': 2.1.5(vite@5.4.11(@types/node@22.9.1)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))
+      '@vitest/mocker': 2.1.5(vite@5.4.11(@types/node@20.17.6)(less@4.2.0)(sass@1.81.0)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.5
       '@vitest/runner': 2.1.5
       '@vitest/snapshot': 2.1.5

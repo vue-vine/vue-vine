@@ -109,7 +109,7 @@ export interface VineUserImport {
   isType: boolean
   isNamespace?: boolean
   isDefault?: boolean
-  isUsedInTemplate?: () => boolean
+  isUsedInTemplate?: (vineCompFn: VineCompFnCtx) => boolean
 }
 
 export interface VineFileCtx {
@@ -170,6 +170,7 @@ export interface VineCompFnCtx {
   templateReturn?: ReturnStatement
   templateStringNode?: TaggedTemplateExpression
   templateAst?: RootNode
+  templateParsedAst?: RootNode
   isExportDefault: boolean
   isAsync: boolean
   /** is web component (customElement) */

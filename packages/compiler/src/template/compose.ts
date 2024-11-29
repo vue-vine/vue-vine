@@ -1,8 +1,8 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { AttributeNode, BindingTypes, CompilerOptions, RootNode, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { AttributeNode, BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
-import { compile, ElementTypes, NodeTypes } from '@vue/compiler-dom'
+import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
@@ -14,18 +14,34 @@ import { walkVueTemplateAst } from './walk'
 export function compileVineTemplate(
   source: string,
   params: Partial<CompilerOptions>,
-  ssr: boolean,
+  { ssr, getParsedAst = false }: {
+    ssr: boolean
+    getParsedAst?: boolean
+  },
 ) {
   const _compile = ssr ? ssrCompile : compile
   try {
-    return _compile(source, {
-      mode: 'module',
-      hoistStatic: true,
-      cacheHandlers: true,
-      prefixIdentifiers: true,
-      inline: true,
-      ...params,
-    })
+    return {
+      ..._compile(source, {
+        mode: 'module',
+        hoistStatic: true,
+        cacheHandlers: true,
+        prefixIdentifiers: true,
+        inline: true,
+        ...params,
+      }),
+      templateParsedAst: (
+        getParsedAst
+          ? parse(source, {
+            parseMode: 'base',
+            prefixIdentifiers: true,
+            expressionPlugins: [
+              'typescript',
+            ],
+          })
+          : (void 0)
+      ),
+    }
   }
   catch {
     return null
@@ -173,9 +189,11 @@ function computeTemplateErrLocation(
 
 function setVineTemplateAst(
   vineCompFnCtx: VineCompFnCtx,
-  ast: RootNode,
+  compileResult: ReturnType<typeof compileVineTemplate>,
 ) {
+  const { ast, templateParsedAst } = compileResult!
   vineCompFnCtx.templateAst = ast
+  vineCompFnCtx.templateParsedAst = templateParsedAst
 
   // Walk the template AST to collect information
   // for component context
@@ -183,8 +201,8 @@ function setVineTemplateAst(
     return
   }
 
-  // 1. Collect all `<slot name="...">`
-  //    for user defined slot names
+  // Collect all `<slot name="...">`
+  // for user defined slot names
   walkVueTemplateAst(ast, {
     enter(node) {
       if (
@@ -256,14 +274,19 @@ export function createSeparatedTemplateComposer(
             )
           },
         },
-        ssr,
+        {
+          ssr,
+          // Separate mode needs template's original AST,
+          // avoid expressions in template to be compiled as '$setup.foo()'
+          getParsedAst: true,
+        },
       )
       if (!compileResult) {
         return ''
       }
 
       // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, compileResult.ast)
+      setVineTemplateAst(vineCompFnCtx, compileResult)
 
       if (hasTemplateCompileErr) {
         return ''
@@ -324,7 +347,7 @@ export function createSeparatedTemplateComposer(
       const allBindings: Record<string, any> = { ...bindingMetadata }
       for (const key in vineFileCtx.userImports) {
         const isType = vineFileCtx.userImports[key].isType
-        const isUsedInTemplate = vineFileCtx.userImports[key].isUsedInTemplate?.()
+        const isUsedInTemplate = vineFileCtx.userImports[key].isUsedInTemplate?.(vineCompFnCtx)
 
         if (isUsedInTemplate) {
           if (!isType)
@@ -423,16 +446,16 @@ export function createInlineTemplateComposer(
             )
           },
         },
-        ssr,
+        { ssr },
       )
       if (!compileResult) {
         return ''
       }
 
-      const { preamble, code, ast } = compileResult
+      const { preamble, code } = compileResult
 
       // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, ast)
+      setVineTemplateAst(vineCompFnCtx, compileResult)
 
       if (hasTemplateCompileErr) {
         return ''

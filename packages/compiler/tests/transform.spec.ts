@@ -177,11 +177,12 @@ describe('test transform', () => {
   it('should not add unused-in-template imports to returns in separated mode', async () => {
     const specContent = `
 import { ref, Ref } from 'vue'
+import { foo } from './other' // Vue Vine issue #168
 
 export function MyComp() {
   const count = ref(0)
   return vine\`
-    <div>{{ count.value }}</div>
+    <div @click="foo()">{{ count }}</div>
   \`
 }
 `
@@ -206,6 +207,7 @@ export function MyComp() {
       } from "vue";
 
       import { ref, Ref } from "vue";
+      import { foo } from "./other"; // Vue Vine issue #168
 
       export const MyComp = (() => {
         const __vine = _defineComponent({
@@ -217,7 +219,13 @@ export function MyComp() {
             const props = __props;
             const count = ref(0);
 
-            return { count, MyComp };
+            return {
+              count,
+              get foo() {
+                return foo;
+              },
+              MyComp,
+            };
           },
         });
         function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -225,8 +233,10 @@ export function MyComp() {
             _openBlock(),
             _createElementBlock(
               "div",
-              null,
-              _toDisplayString($setup.count.value),
+              {
+                onClick: _cache[0] || (_cache[0] = ($event) => $setup.foo()),
+              },
+              _toDisplayString($setup.count),
               1 /* TEXT */,
             )
           );
