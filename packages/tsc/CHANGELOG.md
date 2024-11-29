@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.10
+
+### Patch Changes
+
+- Fix #168 import specifier usage checking in template and its perf improving.
+
 ## 0.0.9
 
 ### Patch Changes

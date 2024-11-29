@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.0.8
+
+### Patch Changes
+
+- Fix #168 import specifier usage checking in template and its perf improving.
+
 ## 0.0.7
 
 ### Patch Changes

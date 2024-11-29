@@ -1,5 +1,11 @@
 # @vue-vine/eslint-plugin
 
+## 0.2.7
+
+### Patch Changes
+
+- Fix #168 import specifier usage checking in template and its perf improving.
+
 ## 0.2.4
 
 ### Patch Changes

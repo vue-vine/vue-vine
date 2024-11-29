@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.1.39
+
+### Patch Changes
+
+- Fix #168 import specifier usage checking in template and its perf improving.
+
 ## 0.1.38
 
 ### Patch Changes
