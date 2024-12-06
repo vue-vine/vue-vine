@@ -409,18 +409,33 @@ function createVueVineCode(
     vineCompFn: VineCompFn,
     tabNum = 2,
   ) {
+    const { emitsTypeParam } = vineCompFn
+    const emitsOptionalKeys = (emitsTypeParam?.members?.map(
+      member => (
+        member.type === 'TSPropertySignature'
+        && member.key
+        && isIdentifier(member.key)
+        && member.optional
+          ? member.key.name
+          : null
+      ),
+    ).filter(Boolean) ?? []) as string[]
+
     const emitParam = `{${
       vineCompFn.emits.map((emit) => {
         // Convert `emit` to a camelCase Name
         const camelCaseEmit = emit.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
         const onEmit = `on${camelCaseEmit.charAt(0).toUpperCase()}${camelCaseEmit.slice(1)}`
+        const isOptional = emitsOptionalKeys.length && emitsOptionalKeys.includes(emit)
 
         return `\n${' '.repeat(tabNum + 2)}${
           // '/* left linkCodeTag here ... */'
           vineCompFn.emitsTypeParam
             ? createLinkedCodeTag('left', onEmit.length)
             : ''
-        }${onEmit}: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
+        }${onEmit}${
+          isOptional ? '?' : ''
+        }: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
       }).filter(Boolean).join(', ')
     }\n}`
 

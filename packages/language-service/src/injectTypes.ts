@@ -59,9 +59,9 @@ export function generateGlobalTypes(
   // From vuejs 'runtime-core.d.ts':
   type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
   type RecordToUnion<T extends Record<string, any>> = T[keyof T];
-  type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<RecordToUnion<{
-      [K in keyof T]: (evt: K, ...args: T[K]) => void;
-  }>>;
+  type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<Exclude<RecordToUnion<{
+      [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
+  }>, undefined>>;
     `,
   )
 
