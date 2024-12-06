@@ -52,7 +52,7 @@ function OutsideExample(props: { id: string }) {
 function RandomStringButton() {
   const emit = vineEmits<{
     tap: [number, number],
-    move: [number, number, number]
+    move?: [number, number, number]
   }>()
   vineStyle(`
     .random-state-change-btn {
