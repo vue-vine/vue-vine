@@ -1,5 +1,13 @@
 # vue-vine-extension
 
+## 0.1.33
+
+### Patch Changes
+
+Fix:
+- (1) Navigation failed between multiple files
+- (2) Optional emits type infer not correct.
+
 ## 0.1.32
 
 ### Patch Changes

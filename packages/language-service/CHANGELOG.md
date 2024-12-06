@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.1.40
+
+### Patch Changes
+
+Fix:
+- (1) Navigation failed between multiple files
+- (2) Optional emits type infer not correct.
+
 ## 0.1.39
 
 ### Patch Changes
