@@ -9,6 +9,7 @@ import noDupeAttributes from './rules/essentials/no-dupe-attributes'
 import noDupeElseIf from './rules/essentials/no-dupe-else-if'
 
 // Formats:
+import preferTemplate from './rules/format/format-prefer-template'
 import vineComponentNameFormat from './rules/format/format-vine-component-name'
 import vineMacrosLeading from './rules/format/format-vine-macros-leading'
 import vineStyleIndent from './rules/format/format-vine-style-indent'
@@ -28,6 +29,7 @@ const plugin = {
     'format-vine-style-indent': vineStyleIndent,
     'format-vine-macros-leading': vineMacrosLeading,
     'format-vine-component-name': vineComponentNameFormat,
+    'format-prefer-template': preferTemplate,
   },
 } satisfies ESLint.Plugin
 

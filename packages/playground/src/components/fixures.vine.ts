@@ -1,3 +1,5 @@
+const Foo = 123
+
 // #region Fixures for ESLint show warns and errors in VSCode
 function Comp() {
   const foo = vineProp<string>()
@@ -7,7 +9,9 @@ function Comp() {
   `
 }
 
-export function Sample() {
+// - Case 1: 'vue-vine/format-vine-macros-leading'
+// - Case 2: 'vue-vine/essentials-no-child-content'
+export function SampleOne() {
   const count = ref(0)
   const msg = ref('hello world')
 
@@ -25,6 +29,23 @@ export function Sample() {
     >
       <p v-text="msg">Dida dida</p>
       <comp foo="111" :foo="'222'" />
+    </div>
+  `
+}
+
+// - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
+// - Case 2: 'vue-vine/format-prefer-template' not autofix in template
+export function SampleTwo() {
+  let count = ref('0x' + Foo + 'CAFE')
+  let type = ref('primary')
+
+  return vine`
+    <div :class="['btn', 'btn' + type]">
+      <span>{{ count }}</span>
+      <!-- <div
+        :data-count="count"
+        :data-type="type"
+      /> -->
     </div>
   `
 }

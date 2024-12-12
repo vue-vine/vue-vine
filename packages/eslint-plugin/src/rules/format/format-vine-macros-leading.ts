@@ -31,8 +31,9 @@ function getMemberExpressionName(node: TSESTree.MemberExpression): string {
 export default createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
-    type: 'layout',
+    type: 'suggestion',
     docs: {
+      category: 'format',
       description: 'Enforce all vine macros are at the leading of component function body',
     },
     fixable: 'code',

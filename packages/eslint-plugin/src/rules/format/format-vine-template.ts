@@ -27,6 +27,7 @@ export default createEslintRule<Options, string>({
   meta: {
     type: 'layout',
     docs: {
+      category: 'format',
       description: 'Use prettier to format Vue Vine template',
     },
     fixable: 'whitespace',
@@ -76,19 +77,32 @@ export default createEslintRule<Options, string>({
               filepath: context.filename,
               ...formatOptions,
             },
-          ).split('\n')
+          )
+            .split('\n')
+            .slice(1, -2) // Remove '<template>' and '</template>'
+
+          const rawLines = templateRawContent
+            .trim() // For comparing with formatted lines
+            .split('\n')
           const formatted = `\n${
             formattedLines
-              .slice(1, -2) // Remove '<template>' and '</template>'
-              .map(line => (
-                line.trim().length > 0
-                  ? baseIndent + line
-                  : '' // in favor of clean empty lines' style
-              ))
+              .map((line, i) => {
+                const rawLine = rawLines[i]
+                // If line's indent is not equal to rawLines[i]'s indent,
+                // then we should make their indent the same.
+                const rawIndent = (rawLine.match(/^\s*/)?.[0] ?? '').length
+                const formattedIndent = (line.match(/^\s*/)?.[0] ?? '').length
+                return `${
+                  formattedIndent !== rawIndent ? baseIndent : ''
+                }${line}`
+              })
               .join('\n')
           }\n${baseIndent}`
 
-          const differences = generateDifferences(templateRawContent, formatted)
+          const differences = generateDifferences(
+            templateRawContent,
+            formatted,
+          )
           for (const difference of differences) {
             const { operation, offset, deleteText = '', insertText = '' } = difference
             const range: [number, number] = [

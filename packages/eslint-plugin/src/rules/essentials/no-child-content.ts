@@ -21,6 +21,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'layout',
     docs: {
+      category: 'essentials',
       description: 'Disallow element\'s child contents which would be overwritten by a directive like v-html or v-text',
     },
     hasSuggestions: true,

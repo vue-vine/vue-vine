@@ -21,6 +21,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'layout',
     docs: {
+      category: 'format',
       description: 'Enforce prettier indentation for template string in vineStyle',
     },
     fixable: 'code',

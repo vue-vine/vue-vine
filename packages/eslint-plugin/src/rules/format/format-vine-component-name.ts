@@ -134,8 +134,9 @@ function checkPascalCase(fnName: string) {
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
-    type: 'layout',
+    type: 'suggestion',
     docs: {
+      category: 'format',
       description: 'Enforce Vue Vine component function name format',
     },
     fixable: 'whitespace',

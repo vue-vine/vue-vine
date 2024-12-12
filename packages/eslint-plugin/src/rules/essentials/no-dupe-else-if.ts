@@ -101,6 +101,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'layout',
     docs: {
+      category: 'essentials',
       description: 'Disallow duplicate conditions in `v-if` / `v-else-if` chains',
     },
     hasSuggestions: true,

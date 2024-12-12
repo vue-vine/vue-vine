@@ -2,6 +2,7 @@ import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescrip
 import type { RuleContext, SourceCode } from '@typescript-eslint/utils/ts-eslint'
 import type { Node, VDirective, VElement } from '@vue-vine/eslint-parser'
 import type { Rule } from 'eslint'
+import type { VineESLintDocs } from './types'
 
 export interface RuleModule<
   T extends readonly unknown[],
@@ -13,7 +14,7 @@ export interface RuleModule<
 const hasDocs: string[] = [
 ]
 
-const blobUrl = 'https://github.com/vue-vine/vue-vine/blob/main/packages/eslint-plugin/src/rules/'
+const blobUrl = 'https://github.com/vue-vine/vue-vine/blob/main/packages/eslint-plugin/src/rules'
 
 /**
  * Creates reusable function to create rules with default options and docs URLs.
@@ -21,23 +22,24 @@ const blobUrl = 'https://github.com/vue-vine/vue-vine/blob/main/packages/eslint-
  * @param urlCreator Creates a documentation URL for a given rule name.
  * @returns Function to create a rule with the docs URL format.
  */
-function RuleCreator(urlCreator: (name: string) => string) {
+function RuleCreator(urlCreator: (name: string, category: string) => string) {
   // This function will get much easier to call when this is merged https://github.com/Microsoft/TypeScript/pull/26349
   // TODO - when the above PR lands; add type checking for the context.report `data` property
   return function createNamedRule<
     TOptions extends readonly unknown[],
     TMessageIds extends string,
+    TDocs extends VineESLintDocs = VineESLintDocs,
   >({
     name,
     meta,
     ...rule
-  }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>): RuleModule<TOptions> {
+  }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, TDocs>>): RuleModule<TOptions> {
     return createRule<TOptions, TMessageIds>({
       meta: {
         ...meta,
         docs: {
           ...meta.docs,
-          url: urlCreator(name),
+          url: urlCreator(name, meta.docs.category),
         },
       },
       ...rule,
@@ -77,11 +79,15 @@ function createRule<
 }
 
 export const createEslintRule = RuleCreator(
-  ruleName => hasDocs.includes(ruleName)
-    ? `${blobUrl}${ruleName}.md`
-    : `${blobUrl}${ruleName}.test.ts`,
-) as any as <TOptions extends readonly unknown[], TMessageIds extends string>(
-  { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>
+  (ruleName, category) => hasDocs.includes(ruleName)
+    ? `${blobUrl}/${category}/${ruleName}.md`
+    : `${blobUrl}/${category}/${ruleName}.ts`,
+) as any as <
+  TOptions extends readonly unknown[],
+  TMessageIds extends string,
+  TDocs extends VineESLintDocs = VineESLintDocs,
+>(
+  { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, TDocs>>
 ) => RuleModule<TOptions>
 
 export function notVineCompFn(node: any) {

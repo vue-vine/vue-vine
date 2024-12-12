@@ -32,6 +32,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'layout',
     docs: {
+      category: 'essentials',
       description: 'Disallow duplication of attributes',
     },
     schema: [
