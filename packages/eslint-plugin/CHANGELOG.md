@@ -1,5 +1,11 @@
 # @vue-vine/eslint-plugin
 
+## 0.2.9
+
+### Patch Changes
+
+- Fix template format broken in multi-line comment and add new rule 'prefer-template' (fork from ESLint built-in rule)
+
 ## 0.2.7
 
 ### Patch Changes
