@@ -1,10 +1,14 @@
 # Props {#props}
 
-最开始在 Vue 中定义 props 类型的方式是使用诸如 `String`、`Number`、`Boolean` 等类型构造函数，这是用于 Vue 的运行时类型检查的。
+你最开始学习在 Vue 中定义 props 类型的方式应该是使用诸如 `String`、`Number`、`Boolean` 等类型构造函数，这是用于 Vue 的运行时类型检查的。事实上，Vue 仅主要关注组件的 props 名字说什么，以更好地与普通 attribute 区分，即使提供运行时检查也仅仅只会报告 warning 而不会抛出异常导致程序中断。
 
-但从 Vue 3 开始，用户逐渐期望类型检查过程由 TypeScript 和 IDE 来完成，因此我们决定放弃对 props 的 `type` 字段的支持，因为我们认为当我们已经全面使用 TypeScript 时，它并不是非常有用。
+但从 Vue 3 开始，用户逐渐期望类型检查过程由 TypeScript 和 IDE 提示来完成，因此我们决定放弃对 props 的 `type` 字段的支持，因为我们认为当我们已经全面使用 TypeScript 时，它并不是非常有用。
 
-Vine 会在生成组件对象的 `props` 字段时会删除所有类型信息。
+::: warning 💡 注意
+
+Vine 会在生成组件对象的 `props` 字段时会删除所有类型信息，彻底抛弃运行时检查类型这一过程。
+
+:::
 
 在 VCF 中定义 props 有两种方式，第一种是为函数的第一个形参提供 TypeScript 类型注解，另一种是使用 [`vineProp` 宏](./macros.md#宏)。
 

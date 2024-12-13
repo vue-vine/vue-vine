@@ -2,7 +2,9 @@
 
 宏是一些特殊的函数，它们只在编译时具有意义，它们是 Vine 编译器转换相应组件属性的提示。
 
-这些宏的类型定义可以在[我们的 Github 仓库](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts)中找到。
+这一解决方式的基本思想就是通过在源代码中使用特定的函数，方便在编译期识别出来，然后转换成想要的任何操作。
+
+这些宏的类型定义可以在 [我们的 Github 仓库](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts) 中找到。
 
 ## `vineEmits` {#vineemits}
 

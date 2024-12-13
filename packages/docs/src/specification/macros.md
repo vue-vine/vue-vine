@@ -2,6 +2,8 @@
 
 Macros are some special functions that only have meaning in compile time, they're hints for Vine compiler to transform corresponding component properties.
 
+This solution's basic idea is to use specific functions in the source code to make it easy to identify at compile time, and then transform it into any operation you want.
+
 The type definition of these macros can be found in [our Github repo](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts).
 
 ## `vineEmits`

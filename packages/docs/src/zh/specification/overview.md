@@ -25,6 +25,8 @@ function MyComponent() {
 const AnotherComponent = () => vine`<div>Hello World</div>`
 ```
 
+> 你可能会好奇这个没头没脑的 vine 是从哪里导入的，它实际上只是通过函数签名来声明，完全没有实现，通过类型定义文件（`macros.d.ts`）写入在 global 环境上，使得在编译时可用。
+
 Vine 编译器将在底层将这种函数转换为 Vue 组件对象。
 
 而这个标记模板字符串表达式最终的值只是 `undefined`，没有任何运行时的意义。

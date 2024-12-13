@@ -21,7 +21,7 @@ pnpm i -D @vue-vine/eslint-config
 ```js
 import antfu from '@antfu/eslint-config'
 
-// `VueVine()` returns a ESLint flat config
+// `VueVine()` 返回一个 ESLint flat config
 import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(

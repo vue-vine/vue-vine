@@ -25,6 +25,8 @@ function MyComponent() {
 const AnotherComponent = () => vine`<div>Hello World</div>`
 ```
 
+> You may wonder where this `vine` tag function is imported from, it's actually just declared a function signature and no implementation, written in a type definition file (`macros.d.ts`) on the global environment, making it available at compile time.
+
 Vine compiler will transform this kind of function into a Vue component object in underhood.
 
 In addition, the tagged template string expression will just return an `undefined`, without any effect in runtime.

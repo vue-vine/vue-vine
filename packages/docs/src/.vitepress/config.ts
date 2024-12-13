@@ -108,10 +108,10 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Guide', link: '/introduction/quick-start' },
-          {
-            text: 'Playground',
-            link: 'https://stackblitz.com/edit/github-uhgeyo?file=README.md',
-          },
+          // {
+          //   text: 'Playground',
+          //   link: 'https://stackblitz.com/edit/github-uhgeyo?file=README.md',
+          // },
         ],
       },
     },
@@ -121,10 +121,10 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: '指引', link: '/zh/introduction/quick-start' },
-          {
-            text: '演练场',
-            link: 'https://stackblitz.com/edit/github-uhgeyo?file=README.md',
-          },
+          // {
+          //   text: '演练场',
+          //   link: 'https://stackblitz.com/edit/github-uhgeyo?file=README.md',
+          // },
         ],
       },
     },

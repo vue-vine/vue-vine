@@ -1,10 +1,14 @@
-# Props
+# Propss
 
-The original way to define props type in Vue is using type constructor such as `String`, `Number`, `Boolean`, etc, this is used for Vue's runtime type checking.
+Maybe you started to learn how to define props type in Vue by using type constructors like `String`, `Number`, `Boolean`, etc, this is used for Vue's runtime type checking. In fact, Vue only cares about what the props' name is, to better distinguish from normal attributes. Even you provide types for runtime to check, it will only report a warning instead of throwing an exception to interrupt the program.
 
 But since Vue 3 the type checking process is more expected to be done by TypeScript and IDE side, so we decide to drop support for props' `type` field, because we hold the opinion that it's not quite useful when we already all-in TypeScript.
 
-Vine will remove all the types when generating the component object's `props` field.
+::: warning 💡 Mention
+
+Vine will remove all the types when generating the component object's `props` field, totally abandon the process of runtime type checking.
+
+:::
 
 There're two ways to define props for VCF, the first one is giving TypeScript type annotation for function's first formal parameter, and another is using [`vineProp` macro](./macros.md#macros).
 
