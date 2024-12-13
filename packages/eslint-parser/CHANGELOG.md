@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.10
+
+### Patch Changes
+
+- Fix format should warn incorrectly in plain text case
+
 ## 0.2.9
 
 ### Patch Changes
