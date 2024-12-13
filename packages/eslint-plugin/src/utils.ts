@@ -12,6 +12,13 @@ export interface RuleModule<
 
 // @keep-sorted
 const hasDocs: string[] = [
+  'format-prefer-template',
+  'format-vine-component-name',
+  'format-vine-macros-leading',
+  'format-vine-style-indent',
+  'no-child-content',
+  'no-dupe-attributes',
+  'no-dupe-else-if',
 ]
 
 const blobUrl = 'https://github.com/vue-vine/vue-vine/blob/main/packages/eslint-plugin/src/rules'
