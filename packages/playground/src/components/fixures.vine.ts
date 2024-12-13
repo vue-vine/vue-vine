@@ -49,6 +49,13 @@ export function SampleTwo() {
     </div>
   `
 }
+
+export function TestPlainTextTemplate() {
+  // This should not report any formatting warning
+  return vine`
+    hello
+  `
+}
 // #endregion
 
 
