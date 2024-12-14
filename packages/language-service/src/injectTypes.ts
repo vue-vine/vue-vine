@@ -53,7 +53,13 @@ export function generateGlobalTypes(
     /declare global\s*\{/,
     `declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  const __createVineVLSCtx: <T>(ctx: T) => import('vue').UnwrapRef<T>;
+  type StrictIsAny<T> = [unknown] extends [T]
+    ? ([T] extends [unknown] ? true : false)
+    : false;
+  type MakeVLSCtx<T extends object> = {
+    [K in keyof T as StrictIsAny<T[K]> extends true ? never : K]: T[K]
+  }
+  const __createVineVLSCtx: <T>(ctx: T) => MakeVLSCtx<import('vue').UnwrapRef<T>>;
   type VueVineComponent = __VLS_Element;
 
   // From vuejs 'runtime-core.d.ts':
@@ -81,7 +87,20 @@ export function createLinkedCodeTag(
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
 ): string {
-  const bindingEntries = Object.entries(vineCompFn.bindings)
+  const bindingEntries = Object.entries(
+    Object.fromEntries(
+      [
+        // https://github.com/vue-vine/vue-vine/issues/171
+        // Maybe component is auto-imported so we remain
+        // that ability to resolve it.
+        ...[...vineCompFn.templateComponentNames].map(
+          compName => [compName, VineBindingTypes.SETUP_CONST] as const,
+        ),
+        ...Object.entries(vineCompFn.bindings),
+      ],
+    ), // Deduplicate same binding keys
+  )
+  // const bindingEntries = Object.entries(vineCompFn.bindings)
   const notPropsBindings = bindingEntries.filter(
     ([, bindingType]) => (
       bindingType !== VineBindingTypes.PROPS

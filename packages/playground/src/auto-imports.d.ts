@@ -6,6 +6,11 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const InsideExample: typeof import('./components/inside-example.vine')['InsideExample']
+  const PageHeader: typeof import('./components/page-header.vine')['PageHeader']
+  const SampleOne: typeof import('./components/fixures.vine')['SampleOne']
+  const SampleTwo: typeof import('./components/fixures.vine')['SampleTwo']
+  const TestPlainTextTemplate: typeof import('./components/fixures.vine')['TestPlainTextTemplate']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']

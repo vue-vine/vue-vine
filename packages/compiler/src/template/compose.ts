@@ -205,10 +205,14 @@ function setVineTemplateAst(
   // for user defined slot names
   walkVueTemplateAst(ast, {
     enter(node) {
-      if (
-        node.type === NodeTypes.ELEMENT
-        && node.tagType === ElementTypes.SLOT
-      ) {
+      if (node.type !== NodeTypes.ELEMENT) {
+        return
+      }
+
+      if (node.tagType === ElementTypes.COMPONENT) {
+        vineCompFnCtx.templateComponentNames.add(node.tag)
+      }
+      else if (node.tagType === ElementTypes.SLOT) {
         const slotNameAttr = node.props.find(
           prop => (
             prop.type === NodeTypes.ATTRIBUTE

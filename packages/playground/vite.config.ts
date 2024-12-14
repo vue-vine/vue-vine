@@ -34,6 +34,9 @@ export default defineConfig({
         'vue',
         '@vueuse/core',
       ],
+      dirs: [
+        'src/components',
+      ],
       dts: 'src/auto-imports.d.ts',
     }),
   ],
