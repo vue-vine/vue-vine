@@ -1,10 +1,17 @@
 # @vue-vine/language-server
 
+## 0.1.41
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.1.40
 
 ### Patch Changes
 
 Fix:
+
 - (1) Navigation failed between multiple files
 - (2) Optional emits type infer not correct.
 

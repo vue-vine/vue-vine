@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.1.41
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.1.39
 
 ### Patch Changes

@@ -1,10 +1,17 @@
 # vue-vine-extension
 
+## 0.1.34
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.1.33
 
 ### Patch Changes
 
 Fix:
+
 - (1) Navigation failed between multiple files
 - (2) Optional emits type infer not correct.
 

@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.0.10
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.0.8
 
 ### Patch Changes

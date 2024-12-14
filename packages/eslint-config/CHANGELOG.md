@@ -1,5 +1,11 @@
 # @vue-vine/eslint-config
 
+## 0.2.11
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.2.10
 
 ### Patch Changes

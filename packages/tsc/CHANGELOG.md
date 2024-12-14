@@ -1,10 +1,17 @@
 # vue-vine-tsc
 
+## 0.0.12
+
+### Patch Changes
+
+- Fix compatibility issue with unplugin-auto-import.
+
 ## 0.0.11
 
 ### Patch Changes
 
 Fix:
+
 - (1) Navigation failed between multiple files
 - (2) Optional emits type infer not correct.
 
