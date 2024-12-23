@@ -20,6 +20,14 @@
 		],
 		"description": "create vine template."
 	},
+  "Return vine template": {
+    "prefix": "rtv",
+    "body": [
+      "return vine`",
+      "  $0",
+      "`"
+    ],
+  },
   "Quickly insert vineStyle": {
 		"prefix": "vsty",
 		"body": [
