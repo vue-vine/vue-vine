@@ -270,4 +270,35 @@ export function MyComp() {
       "
     `)
   })
+
+  // issue#
+  it('should transform top-level await expressions', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export async function MyComp() {
+  await someAsyncFunction()
+  const data = await fetch('https://test-api.com')
+  window.fooList[await bar()] = true
+
+  useDebounceFn(async () => {
+    await doSomeAsync()
+  })
+
+  return vine\`
+    <div>Test</div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformTopLevelAwait', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformTopLevelAwait')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
 })
