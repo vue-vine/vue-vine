@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.12
+
+### Patch Changes
+
+- Fix compiler transform for top-level await in component function body.
+
 ## 0.2.11
 
 ### Patch Changes

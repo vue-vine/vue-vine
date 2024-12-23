@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.1.35
+
+### Patch Changes
+
+- Fix compiler transform for top-level await in component function body.
+
 ## 0.1.34
 
 ### Patch Changes

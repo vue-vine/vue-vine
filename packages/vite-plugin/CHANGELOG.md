@@ -1,5 +1,11 @@
 # @vue-vine/vite-plugin
 
+## 0.1.42
+
+### Patch Changes
+
+- Fix compiler transform for top-level await in component function body.
+
 ## 0.1.41
 
 ### Patch Changes

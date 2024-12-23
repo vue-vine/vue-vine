@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.0.13
+
+### Patch Changes
+
+- Fix compiler transform for top-level await in component function body.
+
 ## 0.0.12
 
 ### Patch Changes
