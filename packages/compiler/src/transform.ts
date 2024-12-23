@@ -2,7 +2,6 @@ import type { AwaitExpression, Node } from '@babel/types'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from './types'
 import {
-  isAssignmentExpression,
   isAwaitExpression,
   isBlockStatement,
   isExpressionStatement,
@@ -37,7 +36,7 @@ function wrapWithAsyncContext(
     __temp = await __temp,
     __restore(),
     __temp
-    );`
+    )`
     : `;(
     ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
     await __temp,
@@ -47,30 +46,27 @@ function wrapWithAsyncContext(
 
 function mayContainAwaitExpr(vineFnBodyStmt: Node) {
   let awaitExpr: AwaitExpression | undefined
-  const isVarDecl = isVariableDeclaration(vineFnBodyStmt)
-  const isAssignExpr = isAssignmentExpression(vineFnBodyStmt)
   const isExprStmt = isExpressionStatement(vineFnBodyStmt)
+  const isVarDeclStmt = isVariableDeclaration(vineFnBodyStmt)
 
   if (!(
-    isVarDecl
-    || isAssignExpr
+    isVarDeclStmt
     || isExprStmt
   )) {
     return null
   }
 
-  if (
-    isExprStmt
-    && vineFnBodyStmt.expression.type !== 'AwaitExpression'
-  ) {
-    return null
-  }
-
-  const isNeedResult = isVarDecl || isAssignExpr
+  const isNeedResult = (
+    isVarDeclStmt
+    || vineFnBodyStmt.expression.type === 'AssignmentExpression'
+  )
 
   try {
     traverse(vineFnBodyStmt, (descendant) => {
-      if (isAwaitExpression(descendant)) {
+      if (isBlockStatement(descendant)) {
+        throw new Error(EXPECTED_ERROR)
+      }
+      else if (isAwaitExpression(descendant)) {
         awaitExpr = descendant
         throw new Error(EXPECTED_ERROR)
       }
