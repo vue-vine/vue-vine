@@ -24,7 +24,6 @@ import {
   isTSFunctionType,
   isTSMethodSignature,
   isTSPropertySignature,
-  isTSTypeAnnotation,
   isTSTypeLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
@@ -981,7 +980,6 @@ function validatePropsForSingelFC(
 ) {
   const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
-  let vinePropMacroCallCount = 0
 
   const isCheckVinePropMacroCallPass = () => {
     // Check vineProp macro call,
@@ -993,7 +991,6 @@ function validatePropsForSingelFC(
         if (!isVineProp(node)) {
           return
         }
-        vinePropMacroCallCount += 1
         const macroCalleeName = getVineMacroCalleeName(node)
         if (!macroCalleeName) {
           return
@@ -1125,61 +1122,9 @@ function validatePropsForSingelFC(
       )
       isCheckFormalParamsPropPass = false
     }
-    if (
-      isTSTypeAnnotation(theOnlyFormalParamTypeAnnotation)
-      && isTSTypeLiteral(theOnlyFormalParamTypeAnnotation.typeAnnotation)
-    ) {
-      // The object literal's properties must all be 'TSPropertySignature'
-      // and its key must be string literal or identifier
-      const propsTypeAnnotation = theOnlyFormalParamTypeAnnotation.typeAnnotation
-      const isTSTypeAnnotationValid = propsTypeAnnotation.members.every(
-        member => (
-          isTSPropertySignature(member)
-          && (
-            isStringLiteral(member.key)
-            || isIdentifier(member.key)
-          )
-        ),
-      )
-      if (!isTSTypeAnnotationValid) {
-        vineCompilerHooks.onError(
-          vineErr(
-            { vineFileCtx },
-            {
-              msg: 'Vine component function\'s props type annotation must be an object literal, '
-                + 'only contains properties signature, and all properties\' key must be string literal or identifier',
-              location: propsTypeAnnotation.loc,
-            },
-          ),
-        )
-        isCheckFormalParamsPropPass = false
-      }
-    }
-    else {
-      vineCompilerHooks.onError(
-        vineErr(
-          { vineFileCtx },
-          {
-            msg: 'Vine component function\'s props type annotation must be an object literal',
-            location: theOnlyFormalParamTypeAnnotation?.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
-    }
 
-    if (vinePropMacroCallCount > 0) {
-      vineCompilerHooks.onError(
-        vineErr(
-          { vineFileCtx },
-          {
-            msg: 'Vine component function\'s props can only be defined with formal parameter or `vineProp` macro calls, not both',
-            location: theOnlyFormalParam.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
-    }
+    // Since Vue Vine 0.2.0, the type of this formal parameter
+    // could be any type instead of an object literal.
 
     // Still check if there're maybe some invalid `vineProp` macro call
     // that should be reported, we don't allow two defintion styles to be used together

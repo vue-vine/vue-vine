@@ -226,17 +226,14 @@ function App() {
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`10`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`7`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
-          "Vine component function's props type annotation must be an object literal, only contains properties signature, and all properties' key must be string literal or identifier",
           "the declaration of \`vineProp\` macro call must be an identifier",
           "\`vineProp\` macro call must be inside a \`const\` declaration",
           "\`vineProp\` macro call must be inside a \`const\` variable declaration",
           "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
-          "Vine component function's props type annotation must be an object literal",
-          "Vine component function's props type annotation must be an object literal",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
