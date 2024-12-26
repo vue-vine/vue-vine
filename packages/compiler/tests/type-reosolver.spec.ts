@@ -1,5 +1,6 @@
 import type { ParserOptions } from '@babel/parser'
 import type { Identifier, Node } from '@babel/types'
+import type { ResolvedElements } from '../src/type-resolver'
 import type { VineBabelRoot } from '../src/types'
 import { normalize } from 'node:path'
 import { generateCodeFrame } from '@vue/shared'
@@ -9,6 +10,17 @@ import { _breakableTraverse, exitTraverse } from '../src'
 import { getFunctionParams, getFunctionPickedInfos, isVineCompFnDecl } from '../src/babel-helpers/ast'
 import { babelParse } from '../src/babel-helpers/parse'
 import { invalidateTypeCache, registerTS, TypeResolver } from '../src/type-resolver'
+
+function getPropsResolved(
+  props: ResolvedElements['props'],
+) {
+  return (
+    [...Object.entries(props)]
+      .map(([name, { optional }]) => {
+        return `${name}${optional ? '?' : ''}`
+      })
+  )
+}
 
 function findVineComponentFunctionPropsTypeAnnotation(
   astRoot: VineBabelRoot,
@@ -91,7 +103,7 @@ function resolve(
 
 registerTS(() => ts)
 
-describe('resolve type', () => {
+describe('resolve type declaration in current file', () => {
   it('should resolve type alias', () => {
     const code = `
 type Aliased = { foo: number }
@@ -101,7 +113,7 @@ export function MyComp(props: Aliased) {
 }
     `
     const { props } = resolve(code)
-    expect(Object.keys(props)).toStrictEqual(['foo'])
+    expect(getPropsResolved(props)).toStrictEqual(['foo'])
   })
 
   it('should resolve complex type', () => {
@@ -126,11 +138,11 @@ export function MyComp(props: Props) {
 }
     `
     const { props } = resolve(code)
-    expect(Object.keys(props)).toStrictEqual([
+    expect(getPropsResolved(props)).toStrictEqual([
       'title',
       'variant',
-      'message',
-      'errorCode',
+      'message?',
+      'errorCode?',
     ])
   })
 })
