@@ -1,8 +1,6 @@
 import type {
   Node,
   Statement,
-  TSCallSignatureDeclaration,
-  TSFunctionType,
   TSMethodSignature,
   TSModuleDeclaration,
   TSPropertySignature,
@@ -72,8 +70,9 @@ export interface MaybeWithScope {
 /**
  * A scope-aware type node
  */
-export type ScopeTypeNode = Node &
-  WithScope & { _ns?: TSModuleDeclaration & WithScope }
+export type ScopeTypeNode = Node
+  & WithScope
+  & { _ns?: TSModuleDeclaration & WithScope }
 
 /**
  * Resolved type elements, containing props and call signatures
@@ -85,7 +84,6 @@ export interface ResolvedElements {
       _ownerScope: TypeScope
     }
   >
-  calls?: (TSCallSignatureDeclaration | TSFunctionType)[]
 }
 
 /**

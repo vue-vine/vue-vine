@@ -50,16 +50,6 @@ export class TypeScope {
      * Type declarations in this scope
      */
     public types: Record<string, ScopeTypeNode> = Object.create(null),
-
-    /**
-     * Declare statements in this scope
-     */
-    public declares: Record<string, ScopeTypeNode> = Object.create(null),
-
-    /**
-     * Runtime values in this scope
-     */
-    public runtime: Record<string, any> = Object.create(null),
   ) {}
 }
 
@@ -67,14 +57,17 @@ export class TypeScope {
  * Creates a child scope inheriting from a parent scope
  */
 export function createChildScope(parentScope: TypeScope): TypeScope {
-  return new TypeScope(
+  const childScope = new TypeScope(
     parentScope.filename,
     parentScope.source,
     parentScope.offset,
-    Object.create(parentScope.imports),
-    Object.create(parentScope.types),
-    Object.create(parentScope.declares),
   )
+
+  // Properly set up prototype chain inheritance
+  childScope.imports = { ...parentScope.imports }
+  childScope.types = { ...parentScope.types }
+
+  return childScope
 }
 
 /**

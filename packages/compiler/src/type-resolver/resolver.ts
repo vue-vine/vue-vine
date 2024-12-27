@@ -5,18 +5,41 @@ import type {
   TSExpressionWithTypeArguments,
   TSIndexedAccessType,
   TSInterfaceDeclaration,
-  TSLiteralType,
   TSMappedType,
   TSPropertySignature,
   TSType,
   TSTypeElement,
+  TSTypeParameterDeclaration,
   TSTypeReference,
 } from '@babel/types'
-import type { MaybeWithScope, ResolvedElements, ScopeTypeNode, TypeResolveContext } from './types'
+import type { MaybeWithScope, ResolvedElements, ScopeTypeNode, TypeResolveContext, WithScope } from './types'
+import { hasOwn } from '@vue/shared'
 import { fileToScope } from './cache'
 import { resolveWithTS } from './module'
 import { createChildScope, recordImports, TypeScope } from './scope'
 import { getId } from './utils'
+
+function createProperty(
+  key: Expression,
+  typeAnnotation: TSType,
+  scope: TypeScope,
+  optional: boolean,
+): TSPropertySignature & WithScope {
+  return {
+    type: 'TSPropertySignature',
+    key,
+    kind: 'get',
+    optional,
+    typeAnnotation: {
+      type: 'TSTypeAnnotation',
+      typeAnnotation,
+    },
+    _ownerScope: scope,
+  }
+}
+
+// Add type calculator type
+type TypeCalculator = (params: TSType[]) => ResolvedElements
 
 /**
  * Core class for resolving TypeScript types
@@ -30,23 +53,46 @@ export class TypeResolver {
       ctx.source,
       0,
       recordImports(ctx.ast),
-      Object.create(null),
-      Object.create(null),
     )
 
     // Collect current file's types
     for (const stmt of ctx.ast) {
-      if (stmt.type === 'TSTypeAliasDeclaration') {
-        const node = stmt as ScopeTypeNode
-        node._ownerScope = this.scope
-        this.scope.types[stmt.id.name] = node
-        this.resolveTypeElements(stmt.typeAnnotation, this.scope)
+      const node = (
+        stmt.type === 'TSTypeAliasDeclaration'
+          ? stmt.typeAnnotation
+          : stmt.type === 'TSInterfaceDeclaration'
+            ? stmt
+            : (void 0)
+      ) as ScopeTypeNode
+      const id = (
+        stmt.type === 'TSTypeAliasDeclaration'
+          ? stmt.id.name
+          : stmt.type === 'TSInterfaceDeclaration'
+            ? stmt.id.name
+            : (void 0)
+      )
+      const typeParameters = (
+        stmt.type === 'TSTypeAliasDeclaration'
+          ? stmt.typeParameters
+          : stmt.type === 'TSInterfaceDeclaration'
+            ? stmt.typeParameters
+            : (void 0)
+      )
+
+      if (!node || !id) {
+        continue
       }
-      else if (stmt.type === 'TSInterfaceDeclaration') {
-        const node = stmt as ScopeTypeNode
-        node._ownerScope = this.scope
-        this.scope.types[stmt.id.name] = node
-        this.resolveTypeElements(node, this.scope)
+
+      node._ownerScope = this.scope
+      this.scope.types[id] = node
+
+      if (typeParameters) {
+        // Resolve calculator for generic type declaration
+        this.resolveTypeCalculation(node, this.scope, typeParameters)
+      }
+      else {
+        // Resolve elements for non-generic or immediate use
+        this.resolveTypeElements(node, this.scope, typeParameters)
       }
     }
 
@@ -59,24 +105,91 @@ export class TypeResolver {
   resolveTypeElements(
     node: Node & MaybeWithScope,
     scope?: TypeScope,
-    typeParameters?: Record<string, Node>,
+    typeParameters?: TSTypeParameterDeclaration | null,
   ): ResolvedElements {
+    // Only cache non-generic types
     const canCache = !typeParameters
+      && !this.hasTypeParameters(node)
+      && !scope?.isGenericScope
+
     if (canCache && (node as any)._resolvedElements) {
       return (node as any)._resolvedElements
     }
     const resolved = this.innerResolveTypeElements(
       node,
-      node._ownerScope || scope || this.scope,
+      scope || node._ownerScope || this.scope,
       typeParameters,
     )
     return canCache ? ((node as any)._resolvedElements = resolved) : resolved
   }
 
+  /**
+   * Resolve type calculation for generic types
+   */
+  private resolveTypeCalculation(
+    node: ScopeTypeNode,
+    scope: TypeScope,
+    typeParams: TSTypeParameterDeclaration,
+  ): TypeCalculator {
+    // Cache calculator if not already cached
+    if (!(node as any)._resolvedCalculator) {
+      const calculator = (params: TSType[]) => {
+        // Create child scope for generic parameters
+        const calculationScope = createChildScope(scope)
+        calculationScope.isGenericScope = true
+
+        // Create a new types object that shadows parent's types
+        calculationScope.types = Object.create(null)
+
+        // Map type parameters to passed arguments first
+        typeParams.params.forEach((param, index) => {
+          if (params[index]) {
+            calculationScope.types[param.name] = {
+              ...params[index],
+              _ownerScope: calculationScope,
+            } as ScopeTypeNode
+          }
+        })
+
+        // Then inherit parent scope's types
+        Object.assign(calculationScope.types, {
+          ...scope.types,
+          // Exclude any names that conflict with type parameters
+          ...Object.fromEntries(
+            Object.entries(scope.types)
+              .filter(([key]) => !(key in calculationScope.types)),
+          ),
+        })
+
+        // Resolve with mapped parameters
+        return this.resolveTypeElements(
+          node,
+          calculationScope,
+          typeParams,
+        )
+      }
+
+      ;(node as any)._resolvedCalculator = calculator
+    }
+
+    return (node as any)._resolvedCalculator
+  }
+
+  /**
+   * Check if a node contains type parameters
+   */
+  private hasTypeParameters(node: Node): boolean {
+    return !!(
+      (node as any).typeParameters
+      || (node as any).typeParameter
+      || (node.type === 'TSTypeAliasDeclaration' && node.typeAnnotation.type === 'TSTypeReference')
+    )
+  }
+
   private innerResolveTypeElements(
     node: Node,
     scope: TypeScope,
-    typeParameters?: Record<string, Node>,
+    typeParameters?: TSTypeParameterDeclaration | null,
   ): ResolvedElements {
     if (
       node.leadingComments?.some(c => c.value.includes('@vue-vine-ignore'))
@@ -85,6 +198,29 @@ export class TypeResolver {
     }
 
     switch (node.type) {
+      // Handle literal type directly
+      case 'TSLiteralType': {
+        const value = (node.literal as any).value
+        if (typeof value === 'string') {
+          return {
+            props: {
+              [value]: createProperty(
+                {
+                  type: 'Identifier',
+                  name: value,
+                },
+                {
+                  type: 'TSAnyKeyword',
+                },
+                scope,
+                false,
+              ),
+            },
+          }
+        }
+        return { props: {} }
+      }
+
       case 'TSTypeLiteral':
         return this.typeElementsToMap(node.members, scope, typeParameters)
 
@@ -105,7 +241,7 @@ export class TypeResolver {
           node.types.map(t =>
             this.resolveTypeElements(t, scope, typeParameters),
           ),
-          'union',
+          'TSUnionType',
         )
 
       case 'TSIntersectionType':
@@ -113,7 +249,7 @@ export class TypeResolver {
           node.types.map(t =>
             this.resolveTypeElements(t, scope, typeParameters),
           ),
-          'intersection',
+          'TSIntersectionType',
         )
 
       case 'TSMappedType':
@@ -125,32 +261,64 @@ export class TypeResolver {
           types.map(t =>
             this.resolveTypeElements(t, t._ownerScope),
           ),
-          'union',
+          'TSUnionType',
         )
       }
 
-      case 'TSTypeReference':
-      case 'TSExpressionWithTypeArguments': {
+      case 'TSTypeReference': {
+        if (this.isBuiltInType(getId(node.typeName))) {
+          return this.resolveBuiltInType(node, scope)
+        }
+
+        const local = scope.types[getId(node.typeName)]
+        if (local) {
+          if ((local as any)._resolvedCalculator && node.typeParameters) {
+            const calculator = (local as any)._resolvedCalculator as TypeCalculator
+            const resolvedParams = node.typeParameters.params.map(param =>
+              this.resolveTypeReference(param, scope) ?? param,
+            ).filter(Boolean) as TSType[]
+
+            return calculator(resolvedParams)
+          }
+          return this.resolveTypeElements(local, local._ownerScope)
+        }
+
         const resolved = this.resolveTypeReference(node, scope)
         if (resolved) {
-          let typeParams: Record<string, Node> | undefined
-          if (
-            (resolved.type === 'TSTypeAliasDeclaration'
-              || resolved.type === 'TSInterfaceDeclaration')
-            && resolved.typeParameters
-            && node.typeParameters
-          ) {
-            typeParams = Object.create(null)
-            resolved.typeParameters.params.forEach((p, i) => {
-              typeParams![p.name]
-                = (typeParameters && typeParameters[p.name])
-                || node.typeParameters!.params[i]
-            })
-          }
           return this.resolveTypeElements(
-            resolved,
-            resolved._ownerScope,
-            typeParams,
+            resolved.type === 'TSTypeAliasDeclaration'
+              ? resolved.typeAnnotation
+              : resolved,
+          )
+        }
+        break
+      }
+
+      case 'TSExpressionWithTypeArguments': {
+        const typeName = getId(node.expression)
+        if (!typeName)
+          return { props: {} }
+
+        const local = scope.types[typeName]
+        if (local)
+          return this.resolveTypeElements(local, local._ownerScope)
+
+        const imported = scope.imports[typeName]
+        if (imported) {
+          const resolvedImportedType = this.resolveImportedType(imported, typeName, scope)
+          if (resolvedImportedType) {
+            return this.resolveTypeElements(resolvedImportedType, resolvedImportedType._ownerScope)
+          }
+        }
+        break
+      }
+
+      case 'TSTypeQuery': {
+        const queryResolved = this.resolveTypeReference(node, scope)
+        if (queryResolved) {
+          return this.resolveTypeElements(
+            queryResolved,
+            queryResolved._ownerScope,
           )
         }
         break
@@ -174,17 +342,6 @@ export class TypeResolver {
         }
         return { props: {} }
       }
-
-      case 'TSTypeQuery': {
-        const queryResolved = this.resolveTypeReference(node, scope)
-        if (queryResolved) {
-          return this.resolveTypeElements(
-            queryResolved,
-            queryResolved._ownerScope,
-          )
-        }
-        break
-      }
     }
 
     return { props: {} }
@@ -196,7 +353,7 @@ export class TypeResolver {
   private typeElementsToMap(
     elements: TSTypeElement[],
     scope = this.scope,
-    typeParameters?: Record<string, Node>,
+    typeParameters?: TSTypeParameterDeclaration | null,
   ): ResolvedElements {
     const res: ResolvedElements = { props: {} }
 
@@ -233,7 +390,7 @@ export class TypeResolver {
   private resolveInterfaceMembers(
     node: TSInterfaceDeclaration, // 直接使用具体类型
     scope: TypeScope,
-    typeParameters?: Record<string, Node>,
+    typeParameters?: TSTypeParameterDeclaration | null,
   ): ResolvedElements {
     const elements: ResolvedElements[] = []
 
@@ -256,7 +413,10 @@ export class TypeResolver {
       this.typeElementsToMap(node.body.body, scope, typeParameters),
     )
 
-    return this.mergeElements(elements, 'intersection')
+    return this.mergeElements(
+      elements,
+      'TSIntersectionType',
+    )
   }
 
   /**
@@ -264,47 +424,33 @@ export class TypeResolver {
    */
   private mergeElements(
     elements: ResolvedElements[],
-    mode: 'union' | 'intersection' = 'intersection',
+    type: 'TSUnionType' | 'TSIntersectionType',
   ): ResolvedElements {
-    const result: ResolvedElements = { props: {} }
-
-    // For unions, we need to collect all possible props
-    // For intersections, we only keep props that appear in all elements
-    const propNames = new Set<string>()
-    elements.forEach((el) => {
-      Object.keys(el.props).forEach(key => propNames.add(key))
-    })
-
-    for (const key of propNames) {
-      const props = elements
-        .map(e => e.props[key])
-        .filter(Boolean)
-
-      if (mode === 'intersection') {
-        // For intersections, we merge all props
-        if (props.length > 0) {
-          result.props[key] = {
-            ...props[0],
-            // If this prop is required in any of the types,
-            // it's required in the intersection
-            optional: props.every(p => p.optional),
-          }
+    if (elements.length === 1)
+      return elements[0]
+    const res: ResolvedElements = { props: {} }
+    const { props: baseProps } = res
+    for (const { props } of elements) {
+      for (const key in props) {
+        if (!hasOwn(baseProps, key)) {
+          baseProps[key] = props[key]
         }
-      }
-      else if (mode === 'union') {
-        // For unions, we only keep props that appear in all elements
-        if (props.length === elements.length) {
-          result.props[key] = {
-            ...props[0],
-            // If this prop is optional in any of the types,
-            // it's optional in the union
-            optional: props.some(p => p.optional),
-          }
+        else {
+          baseProps[key] = createProperty(
+            baseProps[key].key,
+            {
+              type,
+              // @ts-expect-error - Merging by union/intersection
+              types: [baseProps[key], props[key]],
+            },
+            baseProps[key]._ownerScope,
+            baseProps[key].optional || props[key].optional,
+          )
         }
       }
     }
 
-    return result
+    return res
   }
 
   /**
@@ -313,13 +459,92 @@ export class TypeResolver {
   private resolveMappedType(
     node: TSMappedType,
     scope: TypeScope,
-    typeParameters?: Record<string, Node>,
+    typeParameters?: TSTypeParameterDeclaration | null,
   ): ResolvedElements {
     const typeParam = node.typeParameter
-    const sourceType = this.resolveTypeReference(
-      typeParam.constraint!,
-      scope,
-    )
+    const constraint = typeParam.constraint!
+
+    // Handle literal type directly
+    if (constraint.type === 'TSLiteralType') {
+      if (constraint.literal.type === 'StringLiteral') {
+        const value = constraint.literal.value
+        return {
+          props: {
+            [value]: createProperty(
+              { type: 'Identifier', name: value },
+              node.typeAnnotation || { type: 'TSAnyKeyword' },
+              scope,
+              node.optional === '+' || node.optional === true,
+            ),
+          },
+        }
+      }
+      // Handle template literal type
+      else if (constraint.literal.type === 'TemplateLiteral') {
+        const keys = this.resolveTemplateKeys(constraint.literal, scope)
+        const res: ResolvedElements = { props: {} }
+        for (const key of keys) {
+          res.props[key] = createProperty(
+            { type: 'Identifier', name: key },
+            node.typeAnnotation || { type: 'TSAnyKeyword' },
+            scope,
+            node.optional === '+' || node.optional === true,
+          )
+        }
+        return res
+      }
+    }
+
+    // Handle different constraint types for mapped types
+    switch (constraint.type) {
+      case 'TSTypeOperator':
+        // Handle keyof operator
+        if (constraint.operator === 'keyof') {
+          const targetType = this.resolveTypeReference(constraint.typeAnnotation, scope)
+          if (!targetType) {
+            return { props: {} }
+          }
+          const elements = this.resolveTypeElements(targetType, targetType._ownerScope)
+          const res: ResolvedElements = { props: {} }
+          for (const key in elements.props) {
+            res.props[key] = createProperty(
+              { type: 'Identifier', name: key },
+              node.typeAnnotation || { type: 'TSAnyKeyword' },
+              scope,
+              node.optional === '+' || node.optional === true,
+            )
+          }
+          return res
+        }
+        break
+
+      case 'TSIntersectionType':
+        // Handle intersection types like [K in A & B]
+        return this.mergeElements(
+          constraint.types.map(t =>
+            this.resolveMappedType(
+              { ...node, typeParameter: { ...typeParam, constraint: t } },
+              scope,
+            ),
+          ),
+          'TSIntersectionType',
+        )
+
+      case 'TSUnionType':
+        // Handle union types like [K in A | B]
+        return this.mergeElements(
+          constraint.types.map(t =>
+            this.resolveMappedType(
+              { ...node, typeParameter: { ...typeParam, constraint: t } },
+              scope,
+            ),
+          ),
+          'TSUnionType',
+        )
+    }
+
+    // Fallback to default resolution
+    const sourceType = this.resolveTypeReference(constraint, scope)
     if (!sourceType) {
       return { props: {} }
     }
@@ -334,7 +559,6 @@ export class TypeResolver {
     for (const key in elements.props) {
       res.props[key] = {
         ...elements.props[key],
-        // node.optional may be: true, false, '+', '-'
         optional: node.optional === '+' || node.optional === true,
       }
     }
@@ -359,14 +583,16 @@ export class TypeResolver {
     if (indexType.type === 'TSLiteralType') {
       const key = getId(indexType.literal)
       const elements = this.resolveTypeElements(objType, objType._ownerScope)
-      return key && elements.props[key] ? [elements.props[key]] : []
+      return (key && elements.props[key] ? [elements.props[key]] : []) as ScopeTypeNode[]
     }
 
     const indexElements = this.resolveTypeElements(indexType, indexType._ownerScope)
     const objElements = this.resolveTypeElements(objType, objType._ownerScope)
-    return Object.keys(indexElements.props)
-      .map(key => objElements.props[key])
-      .filter(Boolean)
+    return (
+      Object.keys(indexElements.props)
+        .map(key => objElements.props[key])
+        .filter(Boolean)
+    ) as ScopeTypeNode[]
   }
 
   /**
@@ -376,59 +602,83 @@ export class TypeResolver {
     node: Node,
     scope: TypeScope,
   ): ScopeTypeNode | undefined {
-    if (node.type === 'TSTypeReference') {
-      const typeName = getId(node.typeName)
-      if (!typeName)
-        return
+    switch (node.type) {
+      case 'TSTypeReference': {
+        const typeName = getId(node.typeName)
+        if (!typeName)
+          return
 
-      // Handle built-in utility types
-      if (this.isBuiltInType(typeName)) {
-        return this.resolveBuiltInType(node, scope)
+        // Handle built-in utility types
+        if (this.isBuiltInType(typeName)) {
+          return {
+            ...node,
+            _ownerScope: scope,
+          }
+        }
+
+        // Check local scope first
+        const local = scope.types[typeName]
+        if (local) {
+          return local
+        }
+
+        // Check imported types
+        const imported = scope.imports[typeName]
+        if (imported) {
+          return this.resolveImportedType(imported, typeName, scope)
+        }
+
+        break
       }
+      case 'TSExpressionWithTypeArguments': {
+        const typeName = getId(node.expression)
+        if (!typeName)
+          return
 
-      // Check local scope first
-      const local = scope.types[typeName]
-      if (local)
-        return local
+        const local = scope.types[typeName]
+        if (local)
+          return local
 
-      // Check imported types
-      const imported = scope.imports[typeName]
-      if (imported) {
-        return this.resolveImportedType(imported, typeName, scope)
+        const imported = scope.imports[typeName]
+        if (imported) {
+          return this.resolveImportedType(imported, typeName, scope)
+        }
+
+        break
+      }
+      case 'TSTypeQuery': {
+        const target = node.exprName
+        if (target.type !== 'Identifier')
+          return
+
+        const local = scope.types[target.name]
+        if (local)
+          return local
+
+        const imported = scope.imports[target.name]
+        if (imported) {
+          return this.resolveImportedType(imported, target.name, scope)
+        }
+
+        break
+      }
+      case 'TSIntersectionType':
+      case 'TSUnionType': {
+        // If scope.isGenericScope = true, try resolve types in union/intersection
+        if (scope.isGenericScope) {
+          node.types.forEach((t, i) => {
+            const resolved = this.resolveTypeReference(t, scope)
+            if (resolved) {
+              node.types[i] = resolved as TSType
+            }
+          })
+        }
+
+        break
       }
     }
 
-    if (node.type === 'TSExpressionWithTypeArguments') {
-      const typeName = getId(node.expression)
-      if (!typeName)
-        return
-
-      const local = scope.types[typeName]
-      if (local)
-        return local
-
-      const imported = scope.imports[typeName]
-      if (imported) {
-        return this.resolveImportedType(imported, typeName, scope)
-      }
-    }
-
-    if (node.type === 'TSTypeQuery') {
-      const target = node.exprName
-      if (target.type !== 'Identifier')
-        return
-
-      const local = scope.types[target.name] || scope.declares[target.name]
-      if (local)
-        return local
-
-      const imported = scope.imports[target.name]
-      if (imported) {
-        return this.resolveImportedType(imported, target.name, scope)
-      }
-    }
-
-    return undefined
+    return (void 0)
   }
 
   /**
@@ -438,37 +688,58 @@ export class TypeResolver {
     node: TemplateLiteral,
     scope: TypeScope,
   ): string[] {
-    const results: string[] = []
-
     if (node.expressions.length === 0) {
-      results.push(node.quasis[0].value.raw)
-      return results
+      return [node.quasis[0].value.raw]
     }
 
-    // For now, we only handle simple string unions in template expressions
+    const expValues: string[][] = []
+
     for (const exp of node.expressions) {
       const type = this.resolveTypeReference(exp as Node, scope)
-      if (!type || type.type !== 'TSUnionType')
+      if (!type)
         return []
 
-      const strings = type.types.filter(t =>
-        t.type === 'TSLiteralType'
-        && t.literal.type !== 'TemplateLiteral'
-        && t.literal.type !== 'UnaryExpression'
-        && typeof t.literal.value === 'string',
-      ) as TSLiteralType[]
+      const values: string[] = []
+      if (type.type === 'TSUnionType') {
+        // e.g. `${string | number}`
+        for (const t of type.types) {
+          if (t.type === 'TSLiteralType' && typeof (t.literal as any).value === 'string') {
+            values.push((t.literal as any).value)
+          }
+        }
+      }
+      else if (type.type === 'TSLiteralType' && typeof (type.literal as any).value === 'string') {
+        //  e.g. `${'foo'}`
+        values.push((type.literal as any).value)
+      }
+      else if (type.type === 'TSTypeReference') {
+        // Handle type references, including built-in utility types
+        const typeName = getId(type.typeName)
+        if (this.isBuiltInType(typeName)) {
+          const resolvedType = this.resolveBuiltInType(type, scope)
+          values.push(...Object.keys(resolvedType.props))
+        }
+      }
 
-      if (strings.length !== type.types.length)
+      if (values.length === 0)
         return []
-
-      // Combine all possible values
-      const values = strings.map(t => (t.literal as any).value as string)
-      const prefix = node.quasis[0].value.raw
-      const suffix = node.quasis[1].value.raw
-      values.forEach(v => results.push(prefix + v + suffix))
+      expValues.push(values)
     }
 
-    return results
+    // Generate all possible combinations
+    let results: string[] = ['']
+    for (let i = 0; i < expValues.length; i++) {
+      const current = expValues[i]
+      const newResults: string[] = []
+      for (const prev of results) {
+        for (const value of current) {
+          newResults.push(prev + node.quasis[i].value.raw + value)
+        }
+      }
+      results = newResults
+    }
+
+    return results.map(r => r + node.quasis[node.quasis.length - 1].value.raw)
   }
 
   /**
@@ -484,6 +755,10 @@ export class TypeResolver {
       'Record',
       'Extract',
       'Exclude',
+      'Capitalize',
+      'Uppercase',
+      'Lowercase',
+      'Uncapitalize',
     ].includes(name)
   }
 
@@ -493,9 +768,10 @@ export class TypeResolver {
   private resolveBuiltInType(
     node: TSTypeReference | TSExpressionWithTypeArguments,
     scope: TypeScope,
-  ): ScopeTypeNode | undefined {
+  ): ResolvedElements {
+    const result: ResolvedElements = { props: {} }
     if (!node.typeParameters?.params.length)
-      return
+      return result
 
     const typeName = node.type === 'TSTypeReference'
       ? getId(node.typeName)
@@ -505,22 +781,33 @@ export class TypeResolver {
     const sourceType = this.resolveTypeReference(firstArg, scope)
 
     if (!sourceType)
-      return
+      return result
 
     const elements = this.resolveTypeElements(sourceType, sourceType._ownerScope)
-    const result: ResolvedElements = { props: {} }
 
     switch (typeName) {
       case 'Pick':
       case 'Omit': {
         if (!secondArg)
-          return
+          return result
         const keys = this.getKeysFromType(secondArg, scope)
-        for (const key of keys) {
-          if (typeName === 'Pick' ? elements.props[key] : !elements.props[key]) {
-            result.props[key] = elements.props[key]
+
+        if (typeName === 'Pick') {
+          for (const key of keys) {
+            const prop = elements.props[key]
+            if (prop) {
+              result.props[key] = prop
+            }
           }
         }
+        else {
+          for (const key in elements.props) {
+            if (!keys.includes(key)) {
+              result.props[key] = elements.props[key]
+            }
+          }
+        }
+
         break
       }
 
@@ -528,16 +815,21 @@ export class TypeResolver {
       case 'Required':
       case 'Readonly':
         Object.keys(elements.props).forEach((key) => {
+          const original = elements.props[key]
           result.props[key] = {
-            ...elements.props[key],
-            optional: typeName === 'Partial',
+            ...original,
+            optional: (
+              typeName === 'Readonly'
+                ? original.optional
+                : typeName === 'Partial'
+            ),
           }
         })
         break
 
       case 'Record': {
         if (!secondArg)
-          return
+          return result
         const keys = this.getKeysFromType(firstArg, scope)
         for (const key of keys) {
           const prop: TSPropertySignature & { _ownerScope: TypeScope } = {
@@ -563,21 +855,60 @@ export class TypeResolver {
       case 'Extract':
       case 'Exclude': {
         if (!secondArg)
-          return
+          return result
 
         // Implement Extract/Exclude utility types
         const keys = this.getKeysFromType(secondArg, scope)
         for (const key in elements.props) {
-          if (typeName === 'Extract' ? keys.includes(key) : !keys.includes(key)) {
-            result.props[key] = elements.props[key]
+          const prop = elements.props[key]
+          if (
+            (typeName === 'Extract' && keys.includes(key))
+            || (typeName === 'Exclude' && !keys.includes(key))
+          ) {
+            result.props[key] = prop
           }
         }
 
         break
       }
+
+      case 'Capitalize':
+      case 'Uppercase':
+      case 'Lowercase':
+      case 'Uncapitalize': {
+        const sourceElements = this.resolveTypeElements(firstArg, scope)
+        const res: ResolvedElements = { props: {} }
+
+        // Recursively process each property name
+        for (const key of Object.keys(sourceElements.props)) {
+          let transformedKey = key
+          switch (typeName) {
+            case 'Capitalize':
+              transformedKey = key.charAt(0).toUpperCase() + key.slice(1)
+              break
+            case 'Uppercase':
+              transformedKey = key.toUpperCase()
+              break
+            case 'Lowercase':
+              transformedKey = key.toLowerCase()
+              break
+            case 'Uncapitalize':
+              transformedKey = key.charAt(0).toLowerCase() + key.slice(1)
+              break
+          }
+          res.props[transformedKey] = {
+            ...sourceElements.props[key],
+            key: {
+              type: 'Identifier',
+              name: transformedKey,
+            },
+          }
+        }
+        return res
+      }
     }
 
-    return result as unknown as ScopeTypeNode
+    return result
   }
 
   /**
@@ -679,7 +1010,6 @@ export class TypeResolver {
         0,
         Object.create(null), // imports
         Object.create(null), // types
-        Object.create(null), // declares
       )
       fileToScope.set(filename, scope)
 
