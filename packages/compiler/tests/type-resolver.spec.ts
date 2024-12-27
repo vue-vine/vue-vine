@@ -257,6 +257,21 @@ export function MyComp(props: P) {
     ])
   })
 
+  it('should resolve interface extends', () => {
+    const code = `
+type A = { foo: string }
+interface B extends A {
+  bar: number
+}
+
+export function MyComp(props: B) {
+  return vine\`<div> Test interface extends </div>\`
+}
+    `
+    const { props } = resolve(code)
+    expect(getPropsResolved(props)).toStrictEqual(['foo', 'bar'])
+  })
+
   // https://alexop.dev/posts/vue-typescript-variant-props-type-safe-props/
   it('should resolve complex type - case 1', () => {
     const code = `
