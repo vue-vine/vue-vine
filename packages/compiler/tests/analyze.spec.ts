@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { VineBindingTypes } from '../src/constants'
 import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
-import { createMockTransformCtx } from './shared-utils'
+import { createMockTransformCtx } from './test-utils'
 
 // implement a function for excluding fields of an object
 function excludeFields<T extends Record<string, any>, K extends keyof T>(

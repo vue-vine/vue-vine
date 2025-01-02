@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
-import { createMockTransformCtx } from './shared-utils'
+import { createMockTransformCtx } from './test-utils'
 
 describe('test Vine compiler validate', () => {
   it('validate no outside macro calls', () => {
@@ -235,11 +235,11 @@ function App() {
           "\`vineProp\` macro call must be inside a \`const\` declaration",
           "\`vineProp\` macro call must be inside a \`const\` variable declaration",
           "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
-          "Vine component function's props type annotation must be an object literal",
-          "Vine component function's props type annotation must be an object literal",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
+          "Failed to resolve props type 'SomeExternalType1'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
+          "Failed to resolve props type 'SomeExternalType2'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
         ]
       `)
   })

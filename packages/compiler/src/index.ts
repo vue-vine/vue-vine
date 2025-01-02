@@ -25,6 +25,10 @@ export {
   walkVueTemplateAst,
 } from './template/walk'
 
+export {
+  createTsMorph,
+} from './ts-morph/create'
+
 export type {
   HMRCompFnsName,
   VineCompFnCtx as VineFnCompCtx,

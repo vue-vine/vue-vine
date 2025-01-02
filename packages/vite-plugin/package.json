@@ -28,7 +28,9 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@vue-vine/compiler": "workspace:*"
+    "@vue-vine/compiler": "workspace:*",
+    "ts-morph": "^25.0.0",
+    "typescript": "^5.6.3"
   },
   "devDependencies": {
     "@types/hash-sum": "^1.0.2",

@@ -13,11 +13,14 @@ import {
   compileVineStyle,
   compileVineTypeScriptFile,
   createCompilerCtx,
+  createTsMorph,
 } from '@vue-vine/compiler'
 import { createLogger } from 'vite'
 import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
 import { vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
+
+type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
 
 function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   const compilerCtx = createCompilerCtx({
@@ -37,9 +40,11 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   }
 
   let transformPluginContext: TransformPluginContext
+  let tsMorphCache: TsMorphCache
 
   const compilerHooks: VineCompilerHooks = {
     getCompilerCtx: () => compilerCtx,
+    getTsMorph: () => tsMorphCache,
     onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
     onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
     onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
@@ -154,6 +159,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
       // eslint-disable-next-line ts/no-this-alias
       transformPluginContext = this
+
+      if (!tsMorphCache) {
+        tsMorphCache = createTsMorph(id)
+      }
 
       return runCompileScript(code, id, ssr)
     },
