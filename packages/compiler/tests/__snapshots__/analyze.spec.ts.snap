@@ -249,7 +249,10 @@ Node {
 exports[`test Vine compiler analyze > analyze vine component props by macro calls 1`] = `
 {
   "disabled": {
-    "declaredIdentifier": Node {
+    "isBool": true,
+    "isFromMacroDefine": true,
+    "isRequired": false,
+    "macroDeclaredIdentifier": Node {
       "end": 74,
       "loc": SourceLocation {
         "end": Position {
@@ -269,14 +272,14 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
       "start": 66,
       "type": "Identifier",
     },
-    "isBool": true,
-    "isFromMacroDefine": true,
-    "isRequired": false,
     "typeAnnotationRaw": "boolean",
     "validator": undefined,
   },
   "name": {
-    "declaredIdentifier": Node {
+    "isBool": false,
+    "isFromMacroDefine": true,
+    "isRequired": true,
+    "macroDeclaredIdentifier": Node {
       "end": 36,
       "loc": SourceLocation {
         "end": Position {
@@ -296,33 +299,10 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
       "start": 32,
       "type": "Identifier",
     },
-    "isBool": false,
-    "isFromMacroDefine": true,
-    "isRequired": true,
     "typeAnnotationRaw": "string",
     "validator": undefined,
   },
   "title": {
-    "declaredIdentifier": Node {
-      "end": 119,
-      "loc": SourceLocation {
-        "end": Position {
-          "column": 13,
-          "index": 119,
-          "line": 5,
-        },
-        "filename": undefined,
-        "identifierName": "title",
-        "start": Position {
-          "column": 8,
-          "index": 114,
-          "line": 5,
-        },
-      },
-      "name": "title",
-      "start": 114,
-      "type": "Identifier",
-    },
     "default": Node {
       "end": 152,
       "extra": {
@@ -350,6 +330,26 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "isBool": false,
     "isFromMacroDefine": true,
     "isRequired": false,
+    "macroDeclaredIdentifier": Node {
+      "end": 119,
+      "loc": SourceLocation {
+        "end": Position {
+          "column": 13,
+          "index": 119,
+          "line": 5,
+        },
+        "filename": undefined,
+        "identifierName": "title",
+        "start": Position {
+          "column": 8,
+          "index": 114,
+          "line": 5,
+        },
+      },
+      "name": "title",
+      "start": 114,
+      "type": "Identifier",
+    },
     "typeAnnotationRaw": "string",
     "validator": Node {
       "async": false,

@@ -146,7 +146,7 @@ function buildMappings(chunks: Segment<VineCodeInformation>[]) {
 
 export function createVueVineCode(
   ts: typeof import('typescript'),
-  sourceFileName: string,
+  fileId: string,
   snapshotContent: string,
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
@@ -159,7 +159,7 @@ export function createVueVineCode(
     vineCompileErrs,
     vineCompileWarns,
     vineFileCtx,
-  } = compileVineForVirtualCode(sourceFileName, snapshotContent)
+  } = compileVineForVirtualCode(fileId, snapshotContent)
   const compileTime = (performance.now() - compileStartTime).toFixed(2)
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
@@ -336,7 +336,7 @@ export function createVueVineCode(
     },
 
     get fileName() {
-      return sourceFileName
+      return fileId
     },
     get compileTime() {
       return compileTime
@@ -537,7 +537,7 @@ export function createVueVineCode(
     if (vineCompFn.propsDefinitionBy !== 'macro') {
       return
     }
-    const propsVarIdAstNode = vinePropMeta.declaredIdentifier
+    const propsVarIdAstNode = vinePropMeta.macroDeclaredIdentifier
     if (!propsVarIdAstNode) {
       return
     }

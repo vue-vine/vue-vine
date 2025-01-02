@@ -43,7 +43,9 @@
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13",
     "prettier": "^3.3.2",
-    "source-map-js": "^1.0.2"
+    "source-map-js": "^1.0.2",
+    "ts-morph": "^25.0.0",
+    "typescript": "^5.6.3"
   },
   "devDependencies": {
     "@types/hash-sum": "^1.0.0",

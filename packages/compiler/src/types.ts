@@ -12,6 +12,7 @@ import type {
   StringLiteral,
   TaggedTemplateExpression,
   TemplateLiteral,
+  TSType,
   TSTypeLiteral,
 } from '@babel/types'
 import type {
@@ -21,6 +22,7 @@ import type {
   SourceLocation as VueSourceLocation,
 } from '@vue/compiler-dom'
 import type MagicString from 'magic-string'
+import type { Project, TypeChecker } from 'ts-morph'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 
 // Types:
@@ -53,9 +55,14 @@ export type BabelFunctionNodeTypes =
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
 export declare type HMRCompFnsName = string | null
+export interface TsMorphCache {
+  project: Project
+  typeChecker: TypeChecker
+}
 
 export interface VineCompilerHooks {
   getCompilerCtx: () => VineCompilerCtx
+  getTsMorph: () => TsMorphCache
   onError: (err: VineDiagnostic) => void
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
@@ -71,6 +78,7 @@ export interface VineCompilerOptions {
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]
+  disableTsMorph?: boolean
 }
 
 export interface VineStyleMeta {
@@ -84,7 +92,7 @@ export interface VineStyleMeta {
 }
 
 export interface VinePropMeta {
-  typeAnnotationRaw: string
+  typeAnnotationRaw?: string
   isFromMacroDefine: boolean
   isBool: boolean
   isRequired: boolean
@@ -93,7 +101,7 @@ export interface VinePropMeta {
   /** Source code node of given default value */
   default?: Node
   /** Declared identifier AST Node by vineProp */
-  declaredIdentifier?: Identifier
+  macroDeclaredIdentifier?: Identifier
 }
 
 export interface VineCompilerCtx {
@@ -183,7 +191,7 @@ export interface VineCompFnCtx {
   propsAlias: string
   props: Record<string, VinePropMeta>
   propsDefinitionBy: 'annotaion' | 'macro'
-  propsFormalParam?: TSTypeLiteral
+  propsFormalParam?: TSType
   emitsAlias: string
   emits: string[]
   emitsTypeParam?: TSTypeLiteral

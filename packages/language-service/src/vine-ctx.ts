@@ -2,10 +2,12 @@ import type { VineCompilerHooks, VineDiagnostic } from '@vue-vine/compiler'
 import {
   compileVineTypeScriptFile,
   createCompilerCtx,
+  createTsMorph,
 } from '@vue-vine/compiler'
 
-export function compileVineForVirtualCode(sourceFileName: string, source: string) {
+export function compileVineForVirtualCode(fileId: string, source: string) {
   const compilerCtx = createCompilerCtx({
+    disableTsMorph: true, // No need ts-morph to analyze props
     envMode: 'module',
     vueCompilerOptions: {
       // 'module' will break Volar virtual code's mapping
@@ -23,10 +25,11 @@ export function compileVineForVirtualCode(sourceFileName: string, source: string
     onError: err => vineCompileErrs.push(err),
     onWarn: warn => vineCompileWarns.push(warn),
     getCompilerCtx: () => compilerCtx,
+    getTsMorph: () => createTsMorph(fileId),
   }
   const vineFileCtx = compileVineTypeScriptFile(
     source,
-    sourceFileName,
+    fileId,
     {
       compilerHooks,
       babelParseOptions: {

@@ -50,6 +50,7 @@ import {
   isTemplateLiteral,
   isTSMethodSignature,
   isTSPropertySignature,
+  isTSTypeAnnotation,
   isTSTypeLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
@@ -84,6 +85,7 @@ import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTyp
 import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/import-usage-check'
+import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
 import { _breakableTraverse, exitTraverse } from './utils'
 
 interface AnalyzeCtx {
@@ -374,35 +376,60 @@ const analyzeVineProps: AnalyzeRunner = (
     // its type is `identifier`, and it must have an object literal type annotation.
     // Save this parameter's name as `propsAlias`
     const propsFormalParam = formalParams[0] as Identifier
-    const propsTypeAnnotation = (propsFormalParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation as TSTypeLiteral | undefined
-    if (!propsTypeAnnotation) {
+    const propsTypeAnnotation = propsFormalParam.typeAnnotation
+    if (!isTSTypeAnnotation(propsTypeAnnotation)) {
       return
     }
 
-    vineCompFnCtx.propsFormalParam = propsTypeAnnotation
-    vineCompFnCtx.propsAlias = propsFormalParam.name;
-    // Analyze the object literal type annotation
-    // and save the props info into `vineCompFnCtx.props`
-    (propsTypeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
-      if (!isIdentifier(member.key) || !member.typeAnnotation) {
+    const { typeAnnotation } = propsTypeAnnotation
+    vineCompFnCtx.propsFormalParam = typeAnnotation
+
+    if (isTSTypeLiteral(typeAnnotation)) {
+      vineCompFnCtx.propsAlias = propsFormalParam.name;
+      // Analyze the object literal type annotation
+      // and save the props info into `vineCompFnCtx.props`
+      (typeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
+        if (!isIdentifier(member.key) || !member.typeAnnotation) {
+          return
+        }
+        const propName = member.key.name
+        const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation.typeAnnotation)
+        const propMeta: VinePropMeta = {
+          isFromMacroDefine: false,
+          isRequired: member.optional === undefined ? true : !member.optional,
+          isBool: [
+            'boolean',
+            'Boolean',
+            'true',
+            'false',
+          ].includes(propType),
+          typeAnnotationRaw: propType,
+        }
+        vineCompFnCtx.props[propName] = propMeta
+        vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
+      })
+    }
+    else {
+      if (vineCompilerHooks.getCompilerCtx().options.disableTsMorph) {
         return
       }
-      const propName = member.key.name
-      const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation.typeAnnotation)
-      const propMeta: VinePropMeta = {
-        isFromMacroDefine: false,
-        isRequired: member.optional === undefined ? true : !member.optional,
-        isBool: [
-          'boolean',
-          'Boolean',
-          'true',
-          'false',
-        ].includes(propType),
-        typeAnnotationRaw: propType,
-      }
-      vineCompFnCtx.props[propName] = propMeta
-      vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
-    })
+
+      // Use ts-morph to analyze props info
+      const { project, typeChecker } = vineCompilerHooks.getTsMorph()
+      const sourceFile = project.createSourceFile(
+        vineFileCtx.fileId,
+        vineFileCtx.originCode,
+        { overwrite: true },
+      )
+      const propsInfo = resolveVineCompFnProps({
+        typeChecker,
+        sourceFile,
+        vineFileCtx,
+        vineCompFnCtx,
+        compilerHooks: vineCompilerHooks,
+      })
+      vineCompFnCtx.props = propsInfo
+    }
   }
   else if (formalParams.length === 0) {
     vineCompFnCtx.propsDefinitionBy = 'macro'
@@ -417,7 +444,7 @@ const analyzeVineProps: AnalyzeRunner = (
         isRequired: macroCalleeName !== 'vineProp.optional',
         isBool: false,
         typeAnnotationRaw: 'any',
-        declaredIdentifier: propVarIdentifier,
+        macroDeclaredIdentifier: propVarIdentifier,
       }
 
       if (macroCalleeName === 'vineProp.withDefault') {
@@ -1012,7 +1039,7 @@ function buildVineCompFnCtx(
             ) + (
               propMeta.isRequired ? '' : '?'
             )
-          }: ${propMeta.typeAnnotationRaw}`,
+          }: ${propMeta.typeAnnotationRaw ?? 'any'}`,
         )
         .filter(Boolean)
         .join(joinStr)

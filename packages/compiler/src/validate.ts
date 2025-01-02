@@ -981,7 +981,6 @@ function validatePropsForSingelFC(
 ) {
   const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
-  let vinePropMacroCallCount = 0
 
   const isCheckVinePropMacroCallPass = () => {
     // Check vineProp macro call,
@@ -993,7 +992,6 @@ function validatePropsForSingelFC(
         if (!isVineProp(node)) {
           return
         }
-        vinePropMacroCallCount += 1
         const macroCalleeName = getVineMacroCalleeName(node)
         if (!macroCalleeName) {
           return
@@ -1154,31 +1152,6 @@ function validatePropsForSingelFC(
         )
         isCheckFormalParamsPropPass = false
       }
-    }
-    else {
-      vineCompilerHooks.onError(
-        vineErr(
-          { vineFileCtx },
-          {
-            msg: 'Vine component function\'s props type annotation must be an object literal',
-            location: theOnlyFormalParamTypeAnnotation?.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
-    }
-
-    if (vinePropMacroCallCount > 0) {
-      vineCompilerHooks.onError(
-        vineErr(
-          { vineFileCtx },
-          {
-            msg: 'Vine component function\'s props can only be defined with formal parameter or `vineProp` macro calls, not both',
-            location: theOnlyFormalParam.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
     }
 
     // Still check if there're maybe some invalid `vineProp` macro call
