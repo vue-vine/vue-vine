@@ -172,6 +172,7 @@ function MyComp() {
     const vineFnComp = fileCtx?.vineCompFns[0]
     expect(vineFnComp?.emitsAlias).toBe('myEmits')
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
+    expect(vineFnComp?.emitsDefinitionByNames).toBe(true)
   })
 
   it('analyze vine slots definition', () => {

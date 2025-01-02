@@ -195,6 +195,7 @@ export interface VineCompFnCtx {
   emitsAlias: string
   emits: string[]
   emitsTypeParam?: TSTypeLiteral
+  emitsDefinitionByNames?: boolean
   /** Store the `defineExpose`'s argument in source code */
   expose?: Node
   /** Store the `defineOptions`'s argument in source code */

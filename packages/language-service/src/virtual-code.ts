@@ -395,7 +395,10 @@ export function createVueVineCode(
         // Convert `emit` to a camelCase Name
         const camelCaseEmit = emit.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
         const onEmit = `on${camelCaseEmit.charAt(0).toUpperCase()}${camelCaseEmit.slice(1)}`
-        const isOptional = emitsOptionalKeys.length && emitsOptionalKeys.includes(emit)
+        const isOptional = (
+          vineCompFn.emitsDefinitionByNames
+          || (emitsOptionalKeys.length && emitsOptionalKeys.includes(emit))
+        )
 
         return `\n${' '.repeat(tabNum + 2)}${
           // '/* left linkCodeTag here ... */'
