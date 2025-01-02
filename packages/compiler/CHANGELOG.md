@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.2.1
+
+### Patch Changes
+
+- Emits defined by names should be optional
+
 ## 0.2.0
 
 ### Minor Changes
