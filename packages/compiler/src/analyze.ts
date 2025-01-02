@@ -414,21 +414,30 @@ const analyzeVineProps: AnalyzeRunner = (
         return
       }
 
-      // Use ts-morph to analyze props info
-      const { project, typeChecker } = vineCompilerHooks.getTsMorph()
-      const sourceFile = project.createSourceFile(
-        vineFileCtx.fileId,
-        vineFileCtx.originCode,
-        { overwrite: true },
-      )
-      const propsInfo = resolveVineCompFnProps({
-        typeChecker,
-        sourceFile,
-        vineFileCtx,
-        vineCompFnCtx,
-        compilerHooks: vineCompilerHooks,
-      })
-      vineCompFnCtx.props = propsInfo
+      try {
+        // Use ts-morph to analyze props info
+        const { project, typeChecker } = vineCompilerHooks.getTsMorph()
+        const sourceFile = project.getSourceFileOrThrow(
+          vineFileCtx.fileId,
+        )
+        const propsInfo = resolveVineCompFnProps({
+          typeChecker,
+          sourceFile,
+          vineCompFnCtx,
+        })
+        vineCompFnCtx.props = propsInfo
+      }
+      catch (err) {
+        vineCompilerHooks.onError(
+          vineErr(
+            { vineFileCtx, vineCompFnCtx },
+            {
+              msg: `Failed to resolve props type, err: ${err}`,
+              location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
+            },
+          ),
+        )
+      }
     }
   }
   else if (formalParams.length === 0) {
