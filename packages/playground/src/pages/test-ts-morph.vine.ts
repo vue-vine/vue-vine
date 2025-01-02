@@ -5,8 +5,8 @@ export function TestTsMorphChild(props: TestProps) {
     <div class="p-2 bg-black text-white rounded-lg my-2">
       <h3>Title: {{ title }}</h3>
       <h4>Variant: {{ variant }}</h4>
-      <p>message: {{ message }}</p>
-      <p>err code: {{ errorCode }}</p>
+      <p v-if="message">message: {{ message }}</p>
+      <p v-if="errorCode">err code: {{ errorCode }}</p>
     </div>
   `
 }
@@ -25,5 +25,5 @@ export function TestTsMorph() {
         <TestTsMorphChild variant="error" title="error" errorCode="404" />
       </div>
     </div>
-`
+  `
 }

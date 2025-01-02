@@ -546,6 +546,7 @@ const analyzeVineEmits: AnalyzeRunner = (
   else if (isArrayExpression(callArg)) {
     // Save all the string elements of the array expression
     // as `vineCompFn.emits`
+    vineCompFnCtx.emitsDefinitionByNames = true
     callArg.elements.forEach((el) => {
       if (isStringLiteral(el)) {
         vineCompFnCtx.emits.push((el as StringLiteral).value)
