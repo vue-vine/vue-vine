@@ -226,7 +226,7 @@ function App() {
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`8`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`10`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
@@ -238,6 +238,8 @@ function App() {
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
           "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
+          "Failed to resolve props type 'SomeExternalType1'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
+          "Failed to resolve props type 'SomeExternalType2'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
         ]
       `)
   })

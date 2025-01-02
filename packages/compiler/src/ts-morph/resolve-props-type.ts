@@ -1,7 +1,6 @@
 import type { ArrowFunction, FunctionDeclaration, FunctionExpression, SourceFile, TaggedTemplateExpression, Type, TypeChecker, VariableDeclaration } from 'ts-morph'
-import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx, VinePropMeta } from '../types'
+import type { VineCompFnCtx, VinePropMeta } from '../types'
 import { Node } from 'ts-morph'
-import { vineErr } from '../diagnostics'
 
 function isBooleanType(
   typeChecker: TypeChecker,

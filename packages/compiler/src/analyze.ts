@@ -382,7 +382,7 @@ const analyzeVineProps: AnalyzeRunner = (
     }
 
     const { typeAnnotation } = propsTypeAnnotation
-    vineCompFnCtx.propsFormalParam = typeAnnotation
+    vineCompFnCtx.propsFormalParamType = typeAnnotation
 
     if (isTSTypeLiteral(typeAnnotation)) {
       vineCompFnCtx.propsAlias = propsFormalParam.name;
@@ -417,9 +417,7 @@ const analyzeVineProps: AnalyzeRunner = (
       try {
         // Use ts-morph to analyze props info
         const { project, typeChecker } = vineCompilerHooks.getTsMorph()
-        const sourceFile = project.getSourceFileOrThrow(
-          vineFileCtx.fileId,
-        )
+        const sourceFile = project.getSourceFileOrThrow(vineFileCtx.fileId)
         const propsInfo = resolveVineCompFnProps({
           typeChecker,
           sourceFile,
@@ -432,7 +430,7 @@ const analyzeVineProps: AnalyzeRunner = (
           vineErr(
             { vineFileCtx, vineCompFnCtx },
             {
-              msg: `Failed to resolve props type, err: ${err}`,
+              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. Error: ${err}`,
               location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
             },
           ),
