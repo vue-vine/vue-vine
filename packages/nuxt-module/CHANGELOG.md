@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.1.0
+
+### Minor Changes
+
+- Support resolve props from external type with ts-morph
+
 ## 0.0.11
 
 ### Patch Changes

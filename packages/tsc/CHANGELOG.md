@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.0
+
+### Minor Changes
+
+- Support resolve props from external type with ts-morph
+
 ## 0.0.13
 
 ### Patch Changes

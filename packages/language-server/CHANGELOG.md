@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.2.0
+
+### Minor Changes
+
+- Support resolve props from external type with ts-morph
+
 ## 0.1.42
 
 ### Patch Changes
