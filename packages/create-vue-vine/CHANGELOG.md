@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.0.5
+
+### Patch Changes
+
+- Bump Vue/Vite/Vine version in template.
+
 ## 0.0.4
 
 ### Patch Changes

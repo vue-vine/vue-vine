@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
-    "vite": "^5.4.11",
-    "vue-vine": "^0.1.33"
+    "vite": "^6.0.0",
+    "vue-vine": "^0.2.0"
   }
 }
