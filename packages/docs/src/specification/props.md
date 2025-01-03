@@ -2,7 +2,7 @@
 
 Maybe you started to learn how to define props type in Vue by using type constructors like `String`, `Number`, `Boolean`, etc, this is used for Vue's runtime type checking. In fact, Vue only cares about what the props' name is, to better distinguish from normal attributes. Even you provide types for runtime to check, it will only report a warning instead of throwing an exception to interrupt the program.
 
-But since Vue 3 the type checking process is more expected to be done by TypeScript and IDE side, so we decide to drop support for props' `type` field, because we hold the opinion that it's not quite useful when we already all-in TypeScript.
+But since Vue 3 the type checking process is more expected to be done by TypeScript and IDE side, so we decide to drop support for props' `type` field in runtime, because we hold the opinion that it's not quite useful when we're already all-in TypeScript.
 
 ::: warning 💡 Mention
 
@@ -21,7 +21,7 @@ If you want to define props on a VCF parameter, it should be the first one, and 
 In this style, Vine will treat all props as **required** in default, you can use `?` to mark it optional.
 
 ```vue-vine
-import { SomeExternalType } from './path/to/somewhere'
+import { SomeExternalType } from '../path/to/somewhere'
 
 function MyComponent(props: {
   foo: SomeExternalType
@@ -30,9 +30,22 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-In this props type annotation, you can use any TypeScript type, even it's imported from another module or file.
+### Using more complex type <code version>v0.2.0+</code>
 
-But there's a special case for boolean props, see below:
+Since Vue Vine v0.2.0, we introduced ts-morph to resolve props type annotation, so you're able to use any type instead of only `TSTypeLiteral`.
+
+```vue-vine
+import type { SomeExternalType } from '../path/to/somewhere'
+
+function MyComponent(props: SomeExternalType) {
+  // ...
+  return vine`...`
+}
+```
+
+If you found any bad case, [please raise an issue for us](https://github.com/vue-vine/vue-vine/issues/new).
+
+Additionally, there's one special case for boolean props, see below:
 
 ### Boolean cast mechanism
 
@@ -47,6 +60,12 @@ function MyComponent(props: {
   isBackEnd: OtherTypeButActuallyBoolean
 }) { ... }
 ```
+
+::: info 💡 Suggestion
+
+To make our resolution more easier, we highly recommend you to write a prop's type as simple as possible, avoid using very complicated type gymnastics.
+
+:::
 
 ## `vineProp`
 

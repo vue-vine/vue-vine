@@ -71,3 +71,12 @@ img[alt="npm"] {
 .VPHome .container {
   --uno: 'max-w-1350px!';
 }
+
+h1 > code[version],
+h2 > code[version],
+h3 > code[version],
+h4 > code[version],
+h5 > code[version],
+h6 > code[version] {
+  background-color: #027803 !important;
+}

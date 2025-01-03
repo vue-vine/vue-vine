@@ -12,13 +12,13 @@ Vine 会在生成组件对象的 `props` 字段时会删除所有类型信息，
 
 在 VCF 中定义 props 有两种方式，第一种是为函数的第一个形参提供 TypeScript 类型注解，另一种是使用 [`vineProp` 宏](./macros.md#宏)。
 
-如果您没有为 VCF 提供形参，并且在 VCF 内部也没有 `vineProp` 宏的调用，组件的 `props` 字段将为 `{}`。
+如果您没有为 VCF 提供形参，并且在 VCF 内部也没有 `vineProp` 宏的调用，Vue Vine 将默认组件没有 props，组件的 `props` 字段将为 `{}`。
 
 ## 用类型注解声明 {#using-type-annotation-to-define}
 
 如果你想在 VCF 参数上定义 props，它应该是第一个参数，并为其编写一个 TypeScript 对象字面量类型注解，其中包含您想要定义的所有 props。
 
-我们决定不再支持属性的 `type` 字段，因为我们认为当我们已经使用 TypeScript 时，它并不是非常有用。
+我们决定不再支持 props 的运行时 `type` 字段，因为我们认为当我们已经使用 TypeScript 时，它并不是非常有用。
 
 在这种定义方式下，Vine 默认将所有 prop 视为**必需的**，您可以使用 `?` 标记其为可选 prop。
 
@@ -31,6 +31,23 @@ function MyComponent(props: {
   baz: boolean
 }) { ... }
 ```
+
+### 使用更复杂类型 <code version>v0.2.0+</code> {#using-complex-type-v0-2-0}
+
+从 Vu Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
+
+```vue-vine
+import type { SomeExternalType } from '../path/to/somewhere'
+
+function MyComponent(props: SomeExternalType) {
+  // ...
+  return vine`...`
+}
+```
+
+如果您发现任何异常情况，[请在 Github 上向我们提交问题](https://github.com/vue-vine/vue-vine/issues/new)。
+
+另外，在定义 props 的类型注解时，有一些特殊情况需要注意，比如布尔型的 props，见下文：
 
 ### 布尔型转换机制 {#boolean-cast-mechanism}
 
@@ -45,6 +62,12 @@ function MyComponent(props: {
   isBackEnd: OtherTypeButActuallyBoolean
 }) { ... }
 ```
+
+::: info 💡 建议
+
+为了使我们的解析更加简单和准确，我们强烈建议您将 prop 的类型尽可能简单化，避免使用非常复杂的类型体操。
+
+:::
 
 ## `vineProp` {#vineprop}
 
