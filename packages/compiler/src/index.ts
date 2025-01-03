@@ -31,12 +31,12 @@ export {
 
 export type {
   HMRCompFnsName,
+  VineCompFnCtx as VineFnCompCtx,
   VineCompilerCtx,
   VineCompilerHooks,
   VineCompilerOptions,
   VineDiagnostic,
   VineFileCtx,
-  VineCompFnCtx as VineFnCompCtx,
   VineProcessorLang,
   VinePropMeta,
 } from './types'
@@ -45,6 +45,14 @@ export {
   _breakableTraverse,
   exitTraverse,
 } from './utils'
+
+export {
+  topoSort,
+} from './utils/topo-sort'
+
+export type {
+  ComponentRelationsMap,
+} from './utils/topo-sort'
 
 export function createCompilerCtx(
   options: VineCompilerOptions = {},

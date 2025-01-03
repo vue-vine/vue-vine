@@ -1,4 +1,5 @@
 import type {
+  ComponentRelationsMap,
   HMRCompFnsName,
   VineCompilerCtx,
   VineCompilerHooks,
@@ -10,6 +11,7 @@ import {
   doAnalyzeVine,
   doValidateVine,
   findVineCompFnDecls,
+  topoSort,
 } from '@vue-vine/compiler'
 import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
@@ -231,13 +233,40 @@ export async function vineHMR(
       fileContent,
     )
   }
-  else {
-    // Maybe not .vine.ts module,
-    // find `.vine.ts` module in `modules`
-    for (const mod of modules) {
-      if (mod.id?.endsWith('.vine.ts')) {
-        // ...
+
+  // Maybe current changed modules are not `.vine.ts`,
+  // but maybe they are imported by `.vine.ts` modules
+  for (const mod of modules) {
+    const vineImporters = [...mod.importers].filter(im => im.id?.endsWith('.vine.ts'))
+    if (!vineImporters.length) {
+      return
+    }
+
+    for (const importer of vineImporters) {
+      const importerVineFileCtx = compilerCtx.fileCtxMap.get(importer.id!)
+      if (!importerVineFileCtx) {
+        continue
       }
+
+      // Topo sort all components in this vineFileCtx,
+      // but components in this file may be depended by each other,
+      // and __VUE_HMR_RUNTIME__.rerender() can just re-render one component at a time,
+      // so we need to use topo sort, it calculates the dependency relationship,
+      // the last item means it depends on other components,
+      const { vineCompFns } = importerVineFileCtx
+      const relationsMap: ComponentRelationsMap = Object.fromEntries(
+        vineCompFns.map(
+          compFnCtx => [compFnCtx.fnName, new Set<string>()],
+        ),
+      )
+      const sorted = topoSort(relationsMap)
+      if (!sorted) {
+        continue
+      }
+
+      importerVineFileCtx.hmrCompFnsName = sorted[sorted.length - 1]!
+      compilerCtx.isRunningHMR = true
+      return [...modules, importer]
     }
   }
 }
