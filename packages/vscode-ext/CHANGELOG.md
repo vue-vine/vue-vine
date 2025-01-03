@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.2
+
+### Patch Changes
+
+- Decrease extension package size by bundling strategy.
+
 ## 0.2.1
 
 ### Patch Changes

@@ -46,6 +46,14 @@ export {
   exitTraverse,
 } from './utils'
 
+export {
+  topoSort,
+} from './utils/topo-sort'
+
+export type {
+  ComponentRelationsMap,
+} from './utils/topo-sort'
+
 export function createCompilerCtx(
   options: VineCompilerOptions = {},
 ): VineCompilerCtx {

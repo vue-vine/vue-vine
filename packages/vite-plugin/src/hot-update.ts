@@ -1,4 +1,5 @@
 import type {
+  ComponentRelationsMap,
   HMRCompFnsName,
   VineCompilerCtx,
   VineCompilerHooks,
@@ -10,6 +11,7 @@ import {
   doAnalyzeVine,
   doValidateVine,
   findVineCompFnDecls,
+  topoSort,
 } from '@vue-vine/compiler'
 import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
@@ -60,65 +62,65 @@ function patchModule(
   const nOriginCode = normalizeLineEndings(newVFCtx.originCode)
   const oOriginCode = normalizeLineEndings(oldVFCtx.originCode)
   for (let i = 0; i < nVineCompFns.length; i++) {
-    const nCompFns = nVineCompFns[i]
-    const oCompFns = oVineCompFns[i]
+    const nCompFn = nVineCompFns[i]
+    const oCompFn = oVineCompFns[i]
     if (
-      (!oCompFns || !nCompFns)
-      || (!oCompFns.fnItselfNode || !nCompFns.fnItselfNode)
+      (!oCompFn || !nCompFn)
+      || (!oCompFn.fnItselfNode || !nCompFn.fnItselfNode)
     ) {
       continue
     }
 
-    const nCompFnsTemplate = normalizeLineEndings(nCompFns.templateSource)
-    const oCompFnsTemplate = normalizeLineEndings(oCompFns.templateSource)
-    const nCompFnsStyles = nStyleDefine[nCompFns.scopeId]?.map(style => style.source ?? '')
-    const oCompFnsStyles = oStyleDefine[oCompFns.scopeId]?.map(style => style.source ?? '')
+    const nCompFnTemplate = normalizeLineEndings(nCompFn.templateSource)
+    const oCompFnTemplate = normalizeLineEndings(oCompFn.templateSource)
+    const nCompFnStyles = nStyleDefine[nCompFn.scopeId]?.map(style => style.source ?? '')
+    const oCompFnStyles = oStyleDefine[oCompFn.scopeId]?.map(style => style.source ?? '')
     // 1. Get component function AST Node range for its code content
-    const nCompFnCode = nOriginCode.substring(Number(nCompFns.fnItselfNode.start), Number((nCompFns.fnItselfNode!.end)))
-    const oCompFnCode = oOriginCode.substring(Number(oCompFns.fnItselfNode.start), Number((oCompFns.fnItselfNode!.end)))
+    const nCompFnCode = nOriginCode.substring(Number(nCompFn.fnItselfNode.start), Number((nCompFn.fnItselfNode!.end)))
+    const oCompFnCode = oOriginCode.substring(Number(oCompFn.fnItselfNode.start), Number((oCompFn.fnItselfNode!.end)))
     // 2. Clean template content
-    const nCompFnCodeNonTemplate = nCompFnCode.replace(nCompFnsTemplate, '')
-    const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnsTemplate, '')
+    const nCompFnCodeNonTemplate = nCompFnCode.replace(nCompFnTemplate, '')
+    const oCompFnCodeNonTemplate = oCompFnCode.replace(oCompFnTemplate, '')
     // 3. Clean style content
     let nCompFnCodePure = nCompFnCodeNonTemplate
-    nCompFnsStyles?.forEach((style) => {
+    nCompFnStyles?.forEach((style) => {
       nCompFnCodePure = nCompFnCodePure.replace(style, '')
     })
     let oCompFnCodePure = oCompFnCodeNonTemplate
-    oCompFnsStyles?.forEach((style) => {
+    oCompFnStyles?.forEach((style) => {
       oCompFnCodePure = oCompFnCodePure.replace(style, '')
     })
 
     // Compare with the remaining characters without style and template interference
     // 4. If not equal, it means that the script has changed
     if (nCompFnCodePure !== oCompFnCodePure) {
-      patchRes.hmrCompFnsName = nCompFns.fnName
+      patchRes.hmrCompFnsName = nCompFn.fnName
       newVFCtx.renderOnly = false
     }
-    else if (nCompFnsTemplate !== oCompFnsTemplate) {
+    else if (nCompFnTemplate !== oCompFnTemplate) {
       // script equal, then compare template
-      patchRes.hmrCompFnsName = nCompFns.fnName
+      patchRes.hmrCompFnsName = nCompFn.fnName
       newVFCtx.renderOnly = true
     }
-    else if (!areStrArraysEqual(nCompFnsStyles, oCompFnsStyles)) {
+    else if (!areStrArraysEqual(nCompFnStyles, oCompFnStyles)) {
       // script and template equal, then compare style
-      const oCssBindingsVariables = Object.keys(oCompFns.cssBindings)
-      const nCssBindingsVariables = Object.keys(nCompFns.cssBindings)
+      const oCssBindingsVariables = Object.keys(oCompFn.cssBindings)
+      const nCssBindingsVariables = Object.keys(nCompFn.cssBindings)
       // No v-bind() before and after the change
       if (oCssBindingsVariables.length === 0 && nCssBindingsVariables.length === 0) {
         patchRes.type = 'style'
-        patchRes.scopeId = nCompFns.scopeId
+        patchRes.scopeId = nCompFn.scopeId
       }
       // The variables of v-bind() before and after the change are equal
       else if (areStrArraysEqual(oCssBindingsVariables, nCssBindingsVariables)) {
         patchRes.type = 'style'
-        patchRes.scopeId = nCompFns.scopeId
+        patchRes.scopeId = nCompFn.scopeId
       }
       else {
         patchRes.type = 'module'
       }
-      patchRes.hmrCompFnsName = nCompFns.fnName
-      patchRes.scopeId = nCompFns.scopeId
+      patchRes.hmrCompFnsName = nCompFn.fnName
+      patchRes.scopeId = nCompFn.scopeId
       newVFCtx.renderOnly = false
     }
   }
@@ -141,7 +143,7 @@ function patchVineFile(
   fileId: string,
   fileContent: string,
 ) {
-  // file changed !
+  // Nothing changed!
   if (fileContent === originVineFileCtx.originCode) {
     return
   }
@@ -230,5 +232,41 @@ export async function vineHMR(
       fileId,
       fileContent,
     )
+  }
+
+  // Maybe current changed modules are not `.vine.ts`,
+  // but maybe they are imported by `.vine.ts` modules
+  for (const mod of modules) {
+    const vineImporters = [...mod.importers].filter(im => im.id?.endsWith('.vine.ts'))
+    if (!vineImporters.length) {
+      return
+    }
+
+    for (const importer of vineImporters) {
+      const importerVineFileCtx = compilerCtx.fileCtxMap.get(importer.id!)
+      if (!importerVineFileCtx) {
+        continue
+      }
+
+      // Topo sort all components in this vineFileCtx,
+      // but components in this file may be depended by each other,
+      // and __VUE_HMR_RUNTIME__.rerender() can just re-render one component at a time,
+      // so we need to use topo sort, it calculates the dependency relationship,
+      // the last item means it depends on other components,
+      const { vineCompFns } = importerVineFileCtx
+      const relationsMap: ComponentRelationsMap = Object.fromEntries(
+        vineCompFns.map(
+          compFnCtx => [compFnCtx.fnName, new Set<string>()],
+        ),
+      )
+      const sorted = topoSort(relationsMap)
+      if (!sorted) {
+        continue
+      }
+
+      importerVineFileCtx.hmrCompFnsName = sorted[sorted.length - 1]!
+      compilerCtx.isRunningHMR = true
+      return [...modules, importer]
+    }
   }
 }
