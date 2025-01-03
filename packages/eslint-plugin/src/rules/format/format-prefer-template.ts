@@ -90,8 +90,13 @@ export default createEslintRule<Options, MessageIds>({
         })
       },
       'BinaryExpression:not(VTemplateRoot BinaryExpression) ': (node: TSESTree.BinaryExpression) => {
-        if (node.operator !== '+' || !isConcatingString(node))
+        if (
+          node.operator !== '+'
+          || !isConcatingString(node)
+          || (node.parent as any)?._isReportedPreferTemplate
+        ) {
           return
+        }
 
         context.report({
           node,
@@ -111,6 +116,7 @@ export default createEslintRule<Options, MessageIds>({
             return fixer.replaceText(node, `\`${result}\``)
           },
         })
+        ;(node as any)._isReportedPreferTemplate = true
       },
     }
   },

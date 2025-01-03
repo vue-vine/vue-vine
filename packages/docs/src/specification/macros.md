@@ -22,6 +22,14 @@ const myEmit = vineEmits<{
 myEmit('update', 'foo', 1)
 ```
 
+Also, you can just use an array of event names to define emits.
+
+```vue-vine
+const myEmit = vineEmits(['update', 'delete'])
+```
+
+Vue Vine will treat all events as **required** as default, but if you define with `?` suffix in type or names array, it will be treated as optional.
+
 ## `vineExpose`
 
 This macro's usage is just the same with the official `defineExpose` macro.

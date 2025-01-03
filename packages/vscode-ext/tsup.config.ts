@@ -30,7 +30,7 @@ const esbuildPlugins: Options['esbuildPlugins'] = [
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
   external: ['vscode'],
-  minify: false,
+  minify: !isDev,
   bundle: true,
   sourcemap: isDev,
   define: { 'process.env.NODE_ENV': '"production"' },

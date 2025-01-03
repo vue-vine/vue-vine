@@ -22,6 +22,14 @@ const myEmit = vineEmits<{
 myEmit('update', 'foo', 1)
 ```
 
+另外，您也可以使用事件名称数组来定义 emits。
+
+```vue-vine
+const myEmit = vineEmits(['update', 'delete'])
+```
+
+Vue Vine 将会默认将所有事件视为 **必需** 的，但如果您在类型中使用 `?` 后缀或使用事件名称数组定义，它将被视为可选。
+
 ## `vineExpose` {#vineexpose}
 
 这个宏的使用方法与官方 `defineExpose` 宏完全一致。
