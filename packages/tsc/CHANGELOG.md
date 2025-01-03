@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix hot-updated module which are not .vine.ts should trigger Vine importer module updates
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.3
+
+### Patch Changes
+
+- Fix hot-updated module which are not .vine.ts should trigger Vine importer module updates
+
 ## 0.2.2
 
 ### Patch Changes
