@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.3
+
+### Patch Changes
+
+- Decrease vscode extension bundle size.
+
 ## 0.1.2
 
 ### Patch Changes

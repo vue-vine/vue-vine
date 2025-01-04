@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.4
+
+### Patch Changes
+
+- Decrease vscode extension bundle size.
+
 ## 0.2.3
 
 ### Patch Changes

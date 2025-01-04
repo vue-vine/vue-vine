@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.2.3
+
+### Patch Changes
+
+- Decrease vscode extension bundle size.
+
 ## 0.2.2
 
 ### Patch Changes
