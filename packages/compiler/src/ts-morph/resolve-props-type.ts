@@ -91,14 +91,16 @@ export function resolveVineCompFnProps(params: {
       ? targetFn.getParameters()
       : (targetFn.getInitializer() as FunctionExpression | ArrowFunction).getParameters()
   )[0]
-  const propsTypeAnnotation = propsParams.getTypeNode()!
-  const propsType = typeChecker.getTypeAtLocation(propsTypeAnnotation)
+  const propsIdentifier = propsParams.getNameNode()
+  const propsType = propsIdentifier.getType()
 
   for (const prop of propsType.getProperties()) {
+    const propType = typeChecker.getTypeOfSymbolAtLocation(prop, propsIdentifier)
+
     propsInfo[prop.getName()] = {
       isFromMacroDefine: false,
-      isBool: isBooleanType(typeChecker, propsType),
       isRequired: !prop.isOptional(),
+      isBool: isBooleanType(typeChecker, propType),
     }
   }
 

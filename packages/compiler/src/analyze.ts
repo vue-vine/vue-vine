@@ -458,6 +458,10 @@ const analyzeVineProps: AnalyzeRunner = (
         // in `vineProp.withDefault`, type info comes from type inference by default value
         // TypeScript will report but it's not guranteed that there's a default value.
         propMeta.default = macroCall.arguments[0]
+        if (!propMeta.default) {
+          return
+        }
+
         propMeta.validator = macroCall.arguments[1]
         propMeta.isBool = isBooleanLiteral(propMeta.default)
         propMeta.isRequired = false // prop with default value is optional

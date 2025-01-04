@@ -18,6 +18,9 @@ export function createTsMorph(fileId?: string): TsMorphCache {
 
     project = new Project({
       tsConfigFilePath,
+      compilerOptions: {
+        strict: true, // Ensure more accurate type analysis
+      },
     })
   }
   else {

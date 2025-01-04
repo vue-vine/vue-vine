@@ -209,24 +209,25 @@ function App() {
     vineProp.withDefault(1)
     return vine\`<div>Macro</div>\`
   }
-  function Box({ a, b }: SomeExternalType1) {
+  function Box({ a, b }: { a: string, b: number }) {
     return vine\`<div>Test Box</div>\`
   }
-  function App(props: SomeExternalType2) {
+  function App() {
     const noTypeProp = vineProp()
     const invalidDefault = vineProp.withDefault()
     const emptyValidator = vineProp.optional()
 
-  return vine\`
-    <div>
-      Hello app
-      <Box />
-    </div>
-  \`
-}`
+    return vine\`
+      <div>
+        Hello app
+        <Box />
+      </div>
+    \`
+  }
+  `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`10`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`8`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
@@ -235,11 +236,9 @@ function App() {
           "\`vineProp\` macro call must be inside a \`const\` declaration",
           "\`vineProp\` macro call must be inside a \`const\` variable declaration",
           "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
-          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
-          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
-          "\`vineProp\` macro calls is not allowed when props with props formal parameter defined",
-          "Failed to resolve props type 'SomeExternalType1'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
-          "Failed to resolve props type 'SomeExternalType2'. Error: Error: Could not find source file in project with the provided file name: testVineComponentFunctionProps",
+          "\`vineProp\` macro call must have a type parameter to specify the prop's type",
+          "\`vineProp.withDefault\` macro call must have at least 1 argument",
+          "\`vineProp.optional\` macro call must have a type parameter to specify the prop's type",
         ]
       `)
   })
