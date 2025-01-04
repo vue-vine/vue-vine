@@ -413,6 +413,9 @@ const analyzeVineProps: AnalyzeRunner = (
       if (vineCompilerHooks.getCompilerCtx().options.disableTsMorph) {
         return
       }
+      if (!vineCompilerHooks.getTsMorph) {
+        throw new Error('ts-morph is not initialized')
+      }
 
       try {
         // Use ts-morph to analyze props info
