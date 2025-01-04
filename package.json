@@ -72,11 +72,6 @@
     "vitest": "catalog:",
     "vue": "catalog:"
   },
-  "pnpm": {
-    "overrides": {
-      "vscode-uri": "catalog:"
-    }
-  },
   "simple-git-hooks": {
     "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm esno scripts/pre-commit.js"
   },
