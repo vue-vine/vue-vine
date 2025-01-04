@@ -36,12 +36,12 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-server": "~2.4.8",
-    "@volar/language-service": "~2.4.8",
+    "@volar/language-server": "catalog:",
+    "@volar/language-service": "catalog:",
     "@vue-vine/compiler": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.1.10",
-    "@vue/language-service": "~2.1.10",
+    "@vue/language-core": "catalog:",
+    "@vue/language-service": "catalog:",
     "volar-service-css": "0.0.62",
     "volar-service-emmet": "0.0.62",
     "volar-service-html": "0.0.62",
@@ -50,9 +50,9 @@
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
-    "@types/node": "^20.11.25",
-    "@vue/shared": "^3.5.0",
+    "@types/node": "catalog:",
+    "@vue/shared": "catalog:",
     "vscode-html-languageservice": "^5.3.0",
-    "vscode-uri": "^3.0.8"
+    "vscode-uri": "catalog:"
   }
 }

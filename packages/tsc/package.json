@@ -21,9 +21,9 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-core": "~2.4.8",
-    "@volar/typescript": "~2.4.8",
+    "@volar/language-core": "catalog:",
+    "@volar/typescript": "catalog:",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.1.10"
+    "@vue/language-core": "catalog:"
   }
 }

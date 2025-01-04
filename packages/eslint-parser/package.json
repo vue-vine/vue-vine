@@ -31,21 +31,21 @@
   "dependencies": {
     "@typescript-eslint/parser": "^8.15.0",
     "@typescript-eslint/scope-manager": "^8.15.0",
-    "@typescript-eslint/typescript-estree": "^8.15.0",
+    "@typescript-eslint/typescript-estree": "catalog:",
     "debug": "^4.3.4",
     "eslint-scope": "^8.2.0",
     "espree": "^9.6.1",
-    "line-column": "^1.0.2",
+    "line-column": "catalog:",
     "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/eslint-scope": "^3.7.7",
-    "@types/line-column": "^1.0.2",
+    "@types/line-column": "catalog:",
     "@types/lodash": "^4.14.201",
-    "@types/node": "^20.9.2",
+    "@types/node": "catalog:",
     "@types/semver": "^7.5.5",
-    "eslint": "~9.6.0",
+    "eslint": "catalog:",
     "lodash": "^4.17.21"
   }
 }

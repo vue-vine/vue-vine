@@ -29,27 +29,27 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.0",
-    "@babel/types": "^7.24.0",
-    "@vue/compiler-dom": "^3.4.38",
-    "@vue/compiler-ssr": "^3.4.38",
-    "@vue/shared": "^3.5.13",
+    "@babel/parser": "catalog:",
+    "@babel/types": "catalog:",
+    "@vue/compiler-dom": "catalog:",
+    "@vue/compiler-ssr": "catalog:",
+    "@vue/shared": "catalog:",
     "estree-walker": "^2.0.2",
     "hash-sum": "^2.0.0",
-    "line-column": "^1.0.2",
+    "line-column": "catalog:",
     "lru-cache": "^11.0.2",
     "magic-string": "^0.30.10",
     "merge-source-map": "^1.1.0",
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13",
-    "prettier": "^3.3.2",
+    "prettier": "catalog:",
     "source-map-js": "^1.0.2",
-    "ts-morph": "^25.0.0",
-    "typescript": "^5.6.3"
+    "ts-morph": "catalog:",
+    "typescript": "catalog:"
   },
   "devDependencies": {
-    "@types/hash-sum": "^1.0.0",
-    "@types/line-column": "^1.0.0"
+    "@types/hash-sum": "catalog:",
+    "@types/line-column": "catalog:"
   },
   "publishConfig": {
     "access": "public",
