@@ -62,7 +62,7 @@ export interface TsMorphCache {
 
 export interface VineCompilerHooks {
   getCompilerCtx: () => VineCompilerCtx
-  getTsMorph: () => TsMorphCache
+  getTsMorph?: () => TsMorphCache
   onError: (err: VineDiagnostic) => void
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void

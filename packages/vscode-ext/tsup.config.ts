@@ -26,14 +26,37 @@ const esbuildPlugins: Options['esbuildPlugins'] = [
       })
     },
   },
+
+  // Mock ts-morph dependency for '@vue-vine/compiler',
+  // in order to decrease the bundle size, because VSCode extension
+  // doesn't need ts-morph to analyze props
+  {
+    name: 'mock-ts-morph',
+    setup(build) {
+      build.onResolve({ filter: /^ts-morph$/ }, () => {
+        return {
+          path: 'ts-morph',
+          namespace: 'mock-ts-morph',
+        }
+      })
+      build.onLoad({ filter: /.*/, namespace: 'mock-ts-morph' }, () => {
+        return {
+          contents: 'export default {}',
+          loader: 'js',
+        }
+      })
+    },
+  },
 ]
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
-  external: ['vscode'],
+  external: ['vscode', 'typescript'],
   minify: !isDev,
   bundle: true,
   sourcemap: isDev,
-  define: { 'process.env.NODE_ENV': '"production"' },
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
   esbuildPlugins,
 }
 
