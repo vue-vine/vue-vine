@@ -44,7 +44,7 @@
     "@nuxt/schema": "^3.14.1592",
     "@nuxt/test-utils": "^3.14.4",
     "changelogen": "^0.5.7",
-    "nuxt": "^3.14.1592",
-    "vue-tsc": "^2.1.10"
+    "nuxt": "catalog:",
+    "vue-tsc": "catalog:"
   }
 }

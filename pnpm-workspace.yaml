@@ -1,2 +1,36 @@
 packages:
   - 'packages/*'
+
+catalog:
+  '@babel/parser': ^7.24.0
+  '@babel/types': ^7.24.0
+  '@changesets/cli': ^2.27.7
+  '@vue/shared': ^3.5.13
+  '@vue/compiler-dom': ^3.4.38
+  '@vue/compiler-ssr': ^3.4.38
+  '@vue/language-core': ~2.1.10
+  '@vue/language-service': ~2.1.10
+  '@vueuse/core': ^10.4.1
+  '@volar/language-core': ~2.4.8
+  '@volar/language-server': ~2.4.8
+  '@volar/language-service': ~2.4.8
+  '@volar/typescript': ~2.4.8
+  '@volar/vscode': ~2.4.8
+  '@types/node': ^20.11.27
+  '@types/hash-sum': ^1.0.0
+  '@types/line-column': ^1.0.0
+  '@typescript-eslint/typescript-estree': ^8.15.0
+  eslint: ~9.10.0
+  typescript: ^5.6.3
+  vite: ^5.2.8
+  vitest: ^2.1.5
+  vue: ^3.5.13
+  line-column: ^1.0.2
+  prettier: ^3.3.2
+  ts-morph: ^25.0.0
+  unocss: ^0.64.1
+  vite-plugin-inspect: ^0.8.8
+  unplugin-auto-import: ^0.18.5
+  vue-tsc: ~2.1.10
+  vscode-uri: ^3.0.8
+  nuxt: ^3.14.1592

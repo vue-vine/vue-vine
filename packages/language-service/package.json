@@ -46,16 +46,16 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@volar/language-server": "~2.4.8",
-    "@volar/typescript": "~2.4.8",
+    "@volar/language-server": "catalog:",
+    "@volar/typescript": "catalog:",
     "@vue-vine/compiler": "workspace:*",
-    "@vue/language-core": "~2.1.10",
-    "@vue/shared": "^3.4.31",
+    "@vue/language-core": "catalog:",
+    "@vue/shared": "catalog:",
     "muggle-string": "^0.4.1"
   },
   "devDependencies": {
-    "@babel/types": "^7.24.0",
-    "@types/node": "^20.11.25",
-    "vscode-uri": "^3.0.8"
+    "@babel/types": "catalog:",
+    "@types/node": "catalog:",
+    "vscode-uri": "catalog:"
   }
 }

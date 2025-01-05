@@ -12,23 +12,23 @@
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.2.1",
-    "@vueuse/core": "^9.13.0",
+    "@vueuse/core": "catalog:",
     "pinia": "^2.2.4",
     "sass": "^1.66.1",
-    "vue": "^3.5.13",
+    "vue": "catalog:",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.20",
-    "@types/node": "^20.5.7",
+    "@types/node": "catalog:",
     "@vue-vine/eslint-config": "workspace:*",
-    "eslint": "~9.6.0",
+    "eslint": "catalog:",
     "less": "^4.2.0",
-    "typescript": "^5.6.3",
-    "unocss": "^0.55.3",
-    "unplugin-auto-import": "^0.16.6",
-    "vite": "^4.4.9",
-    "vite-plugin-inspect": "^0.7.38",
+    "typescript": "catalog:",
+    "unocss": "catalog:",
+    "unplugin-auto-import": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-inspect": "catalog:",
     "vue-vine": "workspace:*"
   }
 }
