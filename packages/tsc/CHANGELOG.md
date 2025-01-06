@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.4
+
+### Patch Changes
+
+- Fix virtual code VLS context binding names to be PascalCase.
+
 ## 0.1.3
 
 ### Patch Changes

@@ -5,6 +5,23 @@ import { defineConfig, type Options } from 'tsup'
 const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'
 
+function mockDependency(name: string) {
+  return {
+    name: `mock-${name}`,
+    setup(build) {
+      build.onResolve({ filter: new RegExp(`^${name}$`) }, () => {
+        return { path: name, namespace: `mock-${name}` }
+      })
+      build.onLoad({ filter: /.*/, namespace: `mock-${name}` }, () => {
+        return {
+          contents: 'export default {}',
+          loader: 'js',
+        }
+      })
+    },
+  }
+}
+
 const esbuildPlugins: Options['esbuildPlugins'] = [
   {
     name: 'umd2esm',
@@ -30,27 +47,12 @@ const esbuildPlugins: Options['esbuildPlugins'] = [
   // Mock ts-morph dependency for '@vue-vine/compiler',
   // in order to decrease the bundle size, because VSCode extension
   // doesn't need ts-morph to analyze props
-  {
-    name: 'mock-ts-morph',
-    setup(build) {
-      build.onResolve({ filter: /^ts-morph$/ }, () => {
-        return {
-          path: 'ts-morph',
-          namespace: 'mock-ts-morph',
-        }
-      })
-      build.onLoad({ filter: /.*/, namespace: 'mock-ts-morph' }, () => {
-        return {
-          contents: 'export default {}',
-          loader: 'js',
-        }
-      })
-    },
-  },
+  mockDependency('ts-morph'),
+  mockDependency('typescript'),
 ]
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
-  external: ['vscode', 'typescript'],
+  external: ['vscode'],
   minify: !isDev,
   bundle: true,
   sourcemap: isDev,

@@ -289,7 +289,7 @@ export function createVueVineCode(
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
     // clear the template string
-    tsCodeSegments.push('`` as any as VueVineComponent')
+    tsCodeSegments.push('`` as any as VueVineComponent;\n')
     currentOffset = vineCompFn.templateStringNode.quasi.end!
 
     generateScriptUntil(vineCompFn.fnDeclNode!.end!)

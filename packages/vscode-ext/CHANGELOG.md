@@ -1,5 +1,17 @@
 # vue-vine-extension
 
+## 0.2.7
+
+### Patch Changes
+
+- Fix virtual code VLS context binding names to be PascalCase.
+
+## 0.2.6
+
+### Patch Changes
+
+- Fix extension bundle config to resolve typescript dep issue.
+
 ## 0.2.4
 
 ### Patch Changes

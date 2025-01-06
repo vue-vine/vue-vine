@@ -115,11 +115,21 @@ type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
   })
 };
 const __VLS_ctx = __createVineVLSCtx({
-${notPropsBindings.map(([name]) => `  ${
-  createLinkedCodeTag('left', name.length)
-}${name}: ${
-  createLinkedCodeTag('right', name.length)
-}${name},`).join('\n')}
+${notPropsBindings.map(([name]) => {
+  // `name` maybe 'router-view' format,
+  // so we need to convert it to PascalCase: `RouterView`
+  if (name.includes('-')) {
+    name = name.split('-').map(
+      part => part[0].toUpperCase() + part.slice(1),
+    ).join('')
+  }
+
+  return `  ${
+    createLinkedCodeTag('left', name.length)
+  }${name}: ${
+    createLinkedCodeTag('right', name.length)
+  }${name},`
+}).join('\n')}
   ${
     vineCompFn.propsDefinitionBy === 'annotaion'
       ? '...props,'
