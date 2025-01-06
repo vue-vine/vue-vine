@@ -12,13 +12,13 @@ async function buildESLintParser() {
     return
   }
 
-  const eslintParserDistDir = resolve(__dirname, '../packages/eslint-parser/dist')
+  const eslintParserDistDir = resolve(__dirname, '..', 'packages', 'eslint-parser', 'dist')
   const isESLintParserDistDirExists = await fs.stat(eslintParserDistDir).then(() => true).catch(() => false)
 
-  const eslintPluginDistDir = resolve(__dirname, '../packages/eslint-plugin/dist')
+  const eslintPluginDistDir = resolve(__dirname, '..', 'packages', 'eslint-plugin', 'dist')
   const isESLintPluginDistDirExists = await fs.stat(eslintPluginDistDir).then(() => true).catch(() => false)
 
-  const eslintConfigDistDir = resolve(__dirname, '../packages/eslint-config/dist')
+  const eslintConfigDistDir = resolve(__dirname, '..', 'packages', 'eslint-config', 'dist')
   const isESLintConfigDistDirExists = await fs.stat(eslintConfigDistDir).then(() => true).catch(() => false)
 
   if (
