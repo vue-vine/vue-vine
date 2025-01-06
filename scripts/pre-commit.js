@@ -3,7 +3,7 @@ import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 import { r } from './utils'
 
-const msgPath = r('../.git/COMMIT_EDITMSG')
+const msgPath = r('..', '.git', 'COMMIT_EDITMSG')
 const commitRE
       // eslint-disable-next-line regexp/no-unused-capturing-group
       = /^(revert: )?(feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?: .{1,50}/
