@@ -32,9 +32,9 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-### 使用更复杂类型 <code version>v0.2.0+</code> {#using-complex-type-v0-2-0}
+### 使用更复杂的类型 <code version>v0.2.0+</code> {#using-complex-type-v0-2-0}
 
-从 Vu Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
+从 Vue Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
 
 ```vue-vine
 import type { SomeExternalType } from '../path/to/somewhere'
