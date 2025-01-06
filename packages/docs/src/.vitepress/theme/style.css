@@ -79,4 +79,5 @@ h4 > code[version],
 h5 > code[version],
 h6 > code[version] {
   background-color: #027803 !important;
+  color: #fff !important;
 }
