@@ -23,7 +23,7 @@ export async function runCommand(command, options = {}) {
         ...process.env,
         FORCE_COLOR: 'true',
       },
-      cwd: r('../'),
+      cwd: r('..'),
       shell: true,
     })
     proc.stdout.pipe(process.stdout)
