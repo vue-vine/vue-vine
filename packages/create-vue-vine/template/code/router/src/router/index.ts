@@ -1,10 +1,10 @@
+import { Home } from '@/pages/home.vine'
+
 import { createRouter, createWebHistory } from 'vue-router'
-import { About } from './pages/about.vine'
-import { Home } from './pages/home.vine'
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/about', component: About },
+  { path: '/about', component: () => import('@/pages/about.vine') },
 ]
 
 const router = createRouter({

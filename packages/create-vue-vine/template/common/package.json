@@ -5,7 +5,10 @@
   "description": "A vue-vine app created with create-vue-vine",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --cache",
+    "lint:fix": "eslint src --cache --fix"
   },
   "dependencies": {
     "vue": "^3.5.13"
