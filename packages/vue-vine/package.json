@@ -30,9 +30,14 @@
     "build": "tsup",
     "prepublish": "pnpm run build"
   },
+  "peerDependencies": {
+    "vue": ">=3"
+  },
   "dependencies": {
-    "@vue-vine/vite-plugin": "workspace:*",
-    "@vueuse/core": "catalog:"
+    "@vue-vine/vite-plugin": "workspace:^"
+  },
+  "devDependencies": {
+    "vue": "^3"
   },
   "publishConfig": {
     "access": "public",
