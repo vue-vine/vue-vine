@@ -1,5 +1,5 @@
 {
-  "": {
+  "scripts": {
     "build": "run-p type-check only-build",
     "type-check": "vue-vine-tsc --noEmit --composite false",
     "only-build": "vite build"

@@ -4,15 +4,23 @@
   box-sizing: border-box;
 }
 
-html.dark {
-  background: #121212;
-  color: #fff;
+html {
+  background-color: light-dark(#fff, #121212);
+  color: light-dark(#121212, #efefef);
+  color-scheme: light dark;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+}
+
+html,
+body,
 #app {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  height: 100%;
 }
