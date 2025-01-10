@@ -9,6 +9,6 @@ export default defineConfig({
   },
   external: [
     '@vue-vine/vite-plugin',
-    '@vueuse/core',
+    'vue',
   ],
 })

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.2.1",
-    "@vueuse/core": "catalog:",
+    "@vueuse/core": "^12.3.0",
     "pinia": "^2.2.4",
     "sass": "^1.66.1",
     "vue": "catalog:",
