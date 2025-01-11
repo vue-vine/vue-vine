@@ -35,7 +35,8 @@ export async function createProject(options: ProjectOptions) {
 
   const splitName = options.name.startsWith('@')
     ? options.name
-    : options.name.replace('/', '-')
+    // ../foo/ -> foo
+    : options.name.replace('/', '-').replace(/^[./]+|-+$/, '')
 
   await writeFile(
     join(options.path, 'package.json'),
