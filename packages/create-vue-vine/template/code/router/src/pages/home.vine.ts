@@ -8,51 +8,32 @@ function Counter(props: CounterProps) {
   const count = ref(0)
 
   vineStyle.scoped(`
-    .counter {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      margin: 0 0 1rem;
-    }
-
-    button {
+    .action-btn {
       padding: .413rem 1rem;
-      border-radius: .25rem;
       border: 1px solid #88888850;
       background-color: transparent;
-      transition: background-color .2s ease-in-out;
       user-select: none;
       cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #88888820;
-    }
-
-    button:active {
-      background-color: #88888850;
-    }
-
-    .title {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: .5rem;
     }
   `)
 
   return vine`
-    <div class="counter">
-      <p class="title">Count: {{ count }}</p>
+    <div class="counter h-full flex flex-col justify-center items-center mb-4">
+      <p class="title text-lg mb-4">Count: {{ count }}</p>
 
-      <div class="actions">
-        <button @click="count += step">Increment</button>
-        <button @click="count -= step">Decrement</button>
+      <div class="actions flex gap-2">
+        <button
+          class="action-btn rounded-md transition-colors hover:bg-[#88888828] active:bg-[#88888850]"
+          @click="count += step"
+        >
+          Increment(+{{ step }})
+        </button>
+        <button
+          class="action-btn rounded-md transition-colors hover:bg-[#88888828] active:bg-[#88888850]"
+          @click="count -= step"
+        >
+          Decrement(-{{ step }})
+        </button>
       </div>
     </div>
   `

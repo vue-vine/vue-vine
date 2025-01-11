@@ -23,6 +23,16 @@ const metas = {
     } as const,
     initialValue: true,
   }),
+  css: defineFlagMeta({
+    name: 'css',
+    message: 'Use Tailwind CSS?',
+    flag: {
+      type: Boolean,
+      description: 'Add TailwindCSS',
+      default: true,
+    } as const,
+    initialValue: true,
+  }),
   install: defineFlagMeta({
     name: 'install',
     message: 'Install all dependencies for the project now?',
@@ -74,14 +84,21 @@ export function useFlags() {
       }
 
       if (flags.store) {
-        context.template('code/store-common', 'config/pinia')
+        context.template('code/store/common', 'config/pinia')
 
         if (flags.router) {
-          context.template('code/store-with-router')
+          context.template('code/store/with-router')
         }
         else {
-          context.template('code/store')
+          context.template('code/store/base')
         }
+      }
+
+      if (flags.css) {
+        context.template('code/css/tailwind')
+      }
+      else {
+        context.template('code/css/base')
       }
     },
   }

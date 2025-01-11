@@ -2,98 +2,49 @@ import VineLogo from '@/assets/vine-logo.png'
 
 export function App() {
   vineStyle.scoped(`
-    .container {
-      padding: 3rem 6rem;
-      height: 100%;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1rem;
-    }
-
-    .header h1 {
-      font-weight: 500;
-      font-size: 1.25rem;
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: .5rem;
-      font-weight: 500;
-      font-family: sans-serif;
-      font-size: .875rem;
-      letter-spacing: .025em;
-    }
-
-    .nav-menu a {
-      padding: .413rem 1rem;
-    }
-
-    .nav-menu a:hover {
-      border-radius: .25rem;
-      background-color: #f2f3fa;
-      color: #5672cd;
-    }
-
-    .nav-menu a:active {
-      background-color: #e6e7f5;
-    }
-
-    a.router-link-exact-active {
-      color: #3451b2;
-    }
-
-    .main {
-      display: flex;
-      height: 100%;
-    }
-
     .slogan {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding-inline: 4rem;
-      padding-bottom: 4rem;
-      font-size: 1.68em;
       text-wrap: pretty;
-    }
-
-    .slogan h2 {
-      font-weight: 500;
-      margin-block: .5rem;
-    }
-
-    .slogan p {
-      font-size: .875em;
     }
   `)
 
   return vine`
-    <div class="container">
-      <header class="header">
-        <h1>Vue Vine</h1>
+  <div class="max-w-screen-lg mx-auto h-full px-12 py-24">
+    <header class="header flex justify-between items-center pb-4">
+      <h1 class="font-medium text-lg">Vue Vine</h1>
 
-        <nav class="nav-menu">
-          <router-link to="/">Home</router-link>
-          <router-link to="/about">About</router-link>
+      <nav
+        class="nav-menu flex gap-2 font-medium font-sans text-sm tracking-tight"
+      >
+          <router-link
+            class="px-4 py-1 transition-colors rounded-md hover:bg-[#88888828] active:bg-[#88888850]"
+            active-class="text-[#3451b2] dark:text-[#5777e2]"
+            to="/"
+          >
+            Home
+          </router-link>
+          <router-link
+            class="px-4 py-1 transition-colors rounded-md hover:bg-[#88888828] active:bg-[#88888850]"
+            active-class="text-[#3451b2] dark:text-[#5777e2]"
+            to="/about"
+          >
+            About
+          </router-link>
         </nav>
       </header>
 
-      <main class="main">
-        <div class="slogan">
+      <main class="main flex h-full">
+        <div
+          class="slogan flex items-center justify-center flex-col px-4 pb-4 text-lg mx-auto max-w-content"
+        >
           <div class="slogan-logo">
             <img :src="VineLogo" alt="Vine Logo" width="128" height="128" />
           </div>
-
-          <h2>Another style to write Vue</h2>
-          <p>Provide more flexibility for writing Vue components.</p>
+          <h2 class="font-medium my-2">Another style to write Vue</h2>
+          <p class="text-sm">
+            Provide more flexibility for writing Vue components.
+          </p>
         </div>
       </main>
     </div>
-  `
+`
 }

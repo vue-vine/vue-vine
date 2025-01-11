@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { App as VineApp } from './app.vine'
 import router from './router'
 
-import './styles/main.css'
+import './styles'
 
 const app = createApp(VineApp)
 
