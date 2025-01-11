@@ -91,6 +91,9 @@ You may seen the following output:
 ◇  Use Pinia as state management?
 │  Yes
 │
+◇  Use Tailwind CSS?
+│  Yes
+│
 ◇  Install all dependencies for the project now?
 │  Yes
 │

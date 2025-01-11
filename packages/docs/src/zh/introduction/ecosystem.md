@@ -91,6 +91,9 @@ create-vue-vine my-vine-project
 ◇  Use Pinia as state management?
 │  Yes
 │
+◇  Use Tailwind CSS?
+│  Yes
+│
 ◇  Install all dependencies for the project now?
 │  Yes
 │
