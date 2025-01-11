@@ -10,6 +10,6 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export async function getTemplateDirectory() {
-  const templateRoot = resolve(__dirname, '../template')
+  const templateRoot = resolve(__dirname, '..', 'template')
   return await exists(templateRoot) ? templateRoot : undefined
 }

@@ -1,5 +1,5 @@
 import { rm } from 'node:fs/promises'
-import { join, relative } from 'node:path'
+import { join } from 'node:path'
 import process from 'node:process'
 import { createProject, createProjectOptions } from '@/create'
 import { useFlags } from '@/flags'
@@ -25,19 +25,23 @@ export const createCommand = defineCommand({
       alias: 'f',
       default: false,
     },
-    install: {
-      type: Boolean,
-      description: 'Install dependencies',
-      alias: 'i',
-    },
     ...flags,
   },
   alias: 'create',
 }, async (ctx) => {
   intro(gradientBanner)
-  const cwd = process.cwd()
+
+  // Check whether the template exists first,
+  // otherwise everything is meaningless.
+  const templateDir = await getTemplateDirectory()
+  if (!templateDir) {
+    cancel('Unable to find template directory')
+  }
+
+  let projectName = ctx.parameters.projectName || defaultProjectName
+
   if (!ctx.parameters.projectName) {
-    ctx.parameters.projectName = await text({
+    projectName = await text({
       message: 'Project name:',
       placeholder: defaultProjectName,
       defaultValue: defaultProjectName,
@@ -48,61 +52,57 @@ export const createCommand = defineCommand({
       },
     })
   }
-  const projectPath = join(cwd, ctx.parameters.projectName)
-  if (await exists(projectPath)) {
+
+  const cwd = process.cwd()
+  const projectPath = join(cwd, projectName)
+
+  const isSameProjectExists = await exists(projectPath)
+  if (isSameProjectExists) {
     if (!ctx.flags.force) {
       ctx.flags.force = await confirm({
-        message: `Folder ${ctx.parameters.projectName} already exists. Delete?`,
+        message: `Folder ${projectName} already exists. Delete?`,
         initialValue: false,
       })
     }
+
     if (!ctx.flags.force) {
-      cancel(`Folder ${ctx.parameters.projectName} already exists. Goodbye!`)
+      cancel(`Folder ${projectName} already exists. Goodbye!`)
     }
     else {
-      log.info(`Folder ${ctx.parameters.projectName} will be deleted.`)
+      log.info(`Folder ${projectName} will be deleted.`)
       await rm(projectPath, { recursive: true })
     }
-  }
-  const templateDir = await getTemplateDirectory()
-  if (!templateDir) {
-    cancel('Unable to find template directory')
   }
 
   const projectOptions = createProjectOptions({
     path: projectPath,
-    name: ctx.parameters.projectName,
+    name: projectName,
     templateDir,
   })
 
   await executeFlags(ctx.flags, projectOptions)
 
   const s = spinner()
-  s.start(`Creating project ${ctx.parameters.projectName}`)
+  s.start(`Creating project ${projectName}`)
   await createProject(projectOptions)
   s.stop(`Project created at: ${projectPath}`)
-  if (ctx.flags.install === undefined) {
-    ctx.flags.install = await confirm({
-      message: 'Install dependencies?',
-      initialValue: true,
-    })
-  }
 
   if (ctx.flags.install) {
     s.start('Installing dependencies')
     await runPmCommand('install', projectPath)
     s.stop('Dependencies installed!')
   }
-  const cdProjectPath = relative(cwd, projectPath)
+
   const helpText = [
     'You\'re all set! Now run:',
     '',
-    `  cd ${bold(green(cdProjectPath.includes(' ') ? `"${cdProjectPath}"` : cdProjectPath))}`,
+    `  cd ${bold(green(projectName.includes(' ') ? `"${projectName}"` : projectName))}`,
     ctx.flags.install ? undefined : `  ${bold(green(formatPmCommand(getPmCommand('install'))))}`,
     `  ${bold(green(formatPmCommand(getPmCommand('dev'))))}`,
     '',
     '  Happy hacking!',
   ].filter(s => s !== undefined).join('\n')
+
   outro(helpText)
   process.exit() // Ugh, why
 })

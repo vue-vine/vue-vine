@@ -9,21 +9,44 @@ const metas = {
     flag: {
       type: Boolean,
       description: 'Add Vue Router',
-      default: false,
+      default: true,
     } as const,
+    initialValue: true,
+  }),
+  store: defineFlagMeta({
+    name: 'store',
+    message: 'Use Pinia as state management?',
+    flag: {
+      type: Boolean,
+      description: 'Add Pinia',
+      default: true,
+    } as const,
+    initialValue: true,
+  }),
+  install: defineFlagMeta({
+    name: 'install',
+    message: 'Install all dependencies for the project now?',
+    flag: {
+      type: Boolean,
+      description: 'Install dependencies',
+      alias: 'i',
+      default: false,
+    },
     initialValue: false,
   }),
-}
+} as const
 
 const flags = Object.entries(metas).reduce((acc, [key, value]) => {
   Reflect.set(acc, key, value.flag)
   return acc
 }, {} as {
-  [K in keyof typeof metas]: typeof metas[K]['flag']
+  [K in MetaKeys]: typeof metas[K]['flag']
 })
 
+type MetaKeys = keyof typeof metas
+
 export type ParsedFlags = {
-  [K in keyof typeof metas]: boolean
+  [K in MetaKeys]: boolean
 }
 
 export function useFlags() {
@@ -36,18 +59,29 @@ export function useFlags() {
         },
       }
 
-      // Confirm flags, order is sensitive
-      for (const item of [metas.router.name]) {
-        if (!flags[item]) {
-          const { initialValue, message } = metas[item]
-          flags[item] = await confirm({
-            message,
-            initialValue,
-          })
-        }
+      for (const key in metas) {
+        const metaKey = key as MetaKeys
+        const { initialValue, message } = metas[metaKey]
+
+        flags[metaKey] = await confirm({
+          message,
+          initialValue,
+        })
       }
+
       if (flags.router) {
         context.template('code/router', 'config/router')
+      }
+
+      if (flags.store) {
+        context.template('code/store-common', 'config/pinia')
+
+        if (flags.router) {
+          context.template('code/store-with-router')
+        }
+        else {
+          context.template('code/store')
+        }
       }
     },
   }
