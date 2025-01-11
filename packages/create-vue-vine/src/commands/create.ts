@@ -96,11 +96,11 @@ export const createCommand = defineCommand({
   const helpText = [
     'You\'re all set! Now run:',
     '',
-    `  cd ${bold(green(projectName.includes(' ') ? `"${projectName}"` : projectName))}`,
+    `   cd ${bold(green(projectName.includes(' ') ? `"${projectName}"` : projectName))}`,
     ctx.flags.install ? undefined : `  ${bold(green(formatPmCommand(getPmCommand('install'))))}`,
-    `  ${bold(green(formatPmCommand(getPmCommand('dev'))))}`,
+    `   ${bold(green(formatPmCommand(getPmCommand('dev'))))}`,
     '',
-    '  Happy hacking!',
+    '   Happy hacking!',
   ].filter(s => s !== undefined).join('\n')
 
   outro(helpText)

@@ -88,10 +88,13 @@ create-vue-vine my-vine-project
 ◇  Use Vue Router?
 │  Yes
 │
-◇  Project created at: /path/to/my-vine-project
-│
-◇  Install dependencies?
+◇  Use Pinia as state management?
 │  Yes
+│
+◇  Install all dependencies for the project now?
+│  Yes
+│
+◇  Project created at: /path/to/my-vine-project
 │
 
 ...
@@ -100,8 +103,8 @@ create-vue-vine my-vine-project
 │
 └  You're all set! Now run:
 
-  cd my-vine-project
-  pnpm dev
+   cd my-vine-project
+   pnpm dev
 
-  Happy hacking!
+   Happy hacking!
 ```
