@@ -4,34 +4,25 @@ import { execa, execaSync } from 'execa'
 const userAgentEnv = process.env.npm_config_user_agent ?? ''
 
 function detectPackageManager() {
-  const fromUserAgent = /pnpm/.test(userAgentEnv)
-    ? 'pnpm'
-    : /yarn/.test(userAgentEnv)
-      ? /bun/.test(userAgentEnv)
-        ? 'bun'
-        : 'yarn'
-      : undefined
+  const [fromUserAgent] = userAgentEnv.match(/pnpm|yarn|bun/) || []
 
   if (fromUserAgent)
     return fromUserAgent
 
-  let pnpmVersionExitCode: number,
-    yarnVersionExitCode: number
+  let pnpmVersionExitCode: number = -1
+  let yarnVersionExitCode: number = -1
 
   // Run 'pnpm --version' to check if pnpm is installed
   try {
-    pnpmVersionExitCode = execaSync('pnpm', ['--version'], { stdio: 'ignore' }).exitCode
+    pnpmVersionExitCode = execaSync('pnpm', ['--version'], { stdio: 'ignore' }).exitCode!
   }
-  catch {
-    pnpmVersionExitCode = -1
-  }
+  catch { }
+
   // Run 'yarn --version' to check if yarn is installed
   try {
-    yarnVersionExitCode = execaSync('yarn', ['--version'], { stdio: 'ignore' }).exitCode
+    yarnVersionExitCode = execaSync('yarn', ['--version'], { stdio: 'ignore' }).exitCode!
   }
-  catch {
-    yarnVersionExitCode = -1
-  }
+  catch {}
 
   if (pnpmVersionExitCode === 0) {
     return 'pnpm'

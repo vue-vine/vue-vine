@@ -88,10 +88,16 @@ You may seen the following output:
 ◇  Use Vue Router?
 │  Yes
 │
-◇  Project created at: /path/to/my-vine-project
-│
-◇  Install dependencies?
+◇  Use Pinia as state management?
 │  Yes
+│
+◇  Use Tailwind CSS?
+│  Yes
+│
+◇  Install all dependencies for the project now?
+│  Yes
+│
+◇  Project created at: /path/to/my-vine-project
 │
 
 ...
@@ -100,8 +106,8 @@ You may seen the following output:
 │
 └  You're all set! Now run:
 
-  cd my-vine-project
-  pnpm dev
+   cd my-vine-project
+   pnpm dev
 
-  Happy hacking!
+   Happy hacking!
 ```

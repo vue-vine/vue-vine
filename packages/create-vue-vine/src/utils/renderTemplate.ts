@@ -9,9 +9,15 @@ export async function renderTemplate(src: string, dest: string) {
 
   if (stats.isDirectory()) {
     await mkdir(dest, { recursive: true })
-    for (const file of await readdir(src)) {
-      renderTemplate(path.resolve(src, file), path.resolve(dest, file))
-    }
+    const files = await readdir(src)
+    await Promise.all(
+      files.map(file =>
+        renderTemplate(
+          path.resolve(src, file),
+          path.resolve(dest, file),
+        ),
+      ),
+    )
     return
   }
 
