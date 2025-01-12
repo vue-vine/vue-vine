@@ -1,6 +1,6 @@
 {
   "name": "create-vue-vine",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official CLI for creating Vue Vine project.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build && node scripts/preprocess-template.mjs"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.1",
