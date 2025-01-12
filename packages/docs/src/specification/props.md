@@ -51,7 +51,9 @@ Additionally, there's one special case for boolean props, see below:
 
 In compile time, we must know whether a prop is a boolean or not, in order to determine how to handle a prop passing like this: `<MyComponent foo />`. In Web standard HTML, the value of attribute `foo` is actually an empty string.
 
-So you must specify any boolean props with a **literal** `boolean` annotation, it's not allowed to use other named type here even it's finally computed to a boolean.
+So when you're using object literal type annotation for props, you must specify any boolean props with a **literal** `boolean` annotation, it's not allowed to use other named type here even it's finally computed to a boolean.
+
+<code version-tip style="font-size: 14px">v0.2.0+</code> For ts-morph analysis case i.e. `props: SomeTypeName`, it'll automatically infer if some prop is boolean or not, but we can't guarantee the correctness, if you found any bad case, [please raise an issue for us too](https://github.com/vue-vine/vue-vine/issues/new).
 
 ```vue-vine
 function MyComponent(props: {
