@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.13
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.2.12
 
 ### Patch Changes

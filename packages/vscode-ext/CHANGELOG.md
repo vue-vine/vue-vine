@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.8
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.2.7
 
 ### Patch Changes

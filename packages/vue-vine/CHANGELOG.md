@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.2.5
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.2.4
 
 ### Patch Changes

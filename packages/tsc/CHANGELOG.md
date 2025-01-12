@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.5
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.1.4
 
 ### Patch Changes

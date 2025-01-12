@@ -1,5 +1,11 @@
 # @vue-vine/eslint-plugin
 
+## 0.2.13
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.2.11
 
 ### Patch Changes

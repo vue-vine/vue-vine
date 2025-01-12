@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.1.5
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.1.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.0
+
+### Major Changes
+
+- Add `pinia`, `tailwindcss` template and make pages more prettier.
+
 ## 0.0.5
 
 ### Patch Changes

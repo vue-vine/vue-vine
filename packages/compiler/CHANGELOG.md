@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.2.5
+
+### Patch Changes
+
+- Bump package version due to pnpm catalog config incorrectly in previous version.
+
 ## 0.2.3
 
 ### Patch Changes
