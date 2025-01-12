@@ -1,6 +1,6 @@
 # create-vue-vine
 
-## 0.1.2
+## 0.1.3
 
 ### Major Changes
 
