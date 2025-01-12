@@ -1,10 +1,11 @@
 # create-vue-vine
 
-## 0.1.0
+## 0.1.1
 
 ### Major Changes
 
 - Add `pinia`, `tailwindcss` template and make pages more prettier.
+- Bump package version due to pnpm catalog config incorrectly in previous version.
 
 ## 0.0.5
 
