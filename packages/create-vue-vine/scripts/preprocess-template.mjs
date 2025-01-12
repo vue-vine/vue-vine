@@ -16,7 +16,7 @@ const mainPkgReplacement = `^${vueVineVersion}`
 templateCommonPackageJson.devDependencies['vue-vine'] = mainPkgReplacement
 writeFileSync(
   resolve(__dirname, '../template/common/package.json'),
-  JSON.stringify(templateCommonPackageJson, null, 2),
+  `${JSON.stringify(templateCommonPackageJson, null, 2)}\n`,
 )
 console.log(
   `\x1B[32m%s\x1B[0m`,
@@ -31,7 +31,7 @@ const tscPkgReplacement = `^${vineTscVersion}`
 templateConfigPackageJson.devDependencies['vue-vine-tsc'] = tscPkgReplacement
 writeFileSync(
   resolve(__dirname, '../template/config/ts/package.json'),
-  JSON.stringify(templateConfigPackageJson, null, 2),
+  `${JSON.stringify(templateConfigPackageJson, null, 2)}\n`,
 )
 console.log(
   `\x1B[32m%s\x1B[0m`,
@@ -46,7 +46,7 @@ const eslintPkgReplacement = `^${vineEslintVersion}`
 templateConfigEslintPackageJson.devDependencies['@vue-vine/eslint-config'] = eslintPkgReplacement
 writeFileSync(
   resolve(__dirname, '../template/config/eslint/package.json'),
-  JSON.stringify(templateConfigEslintPackageJson, null, 2),
+  `${JSON.stringify(templateConfigEslintPackageJson, null, 2)}\n`,
 )
 console.log(
   `\x1B[32m%s\x1B[0m`,
