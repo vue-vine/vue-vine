@@ -99,28 +99,6 @@ Finally, install the VSCode extension, search `Vue Vine` in the marketplace.
 
 ## Try the demo
 
-You can try the demo by following steps:
+Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/ecosystem.html#project-starter-template)
 
-For development environment setup, first you need to get the VSCode extension bundle ouput.
-
-```bash
-git clone https://github.com/vue-vine/vue-vine.git
-cd vue-vine
-pnpm install
-
-# Build all packages
-pnpm run build
-```
-
-After building the VSCode extension, you can open the 'Debug' tab in VSCode, and start the **'Run Vine Extension'** debug session.
-
-<img width="385" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/374b77a4-9d49-4eb6-a84b-f7ab64b99bdf">
-
-Then start the Playground's dev server in another terminal session.
-
-```bash
-pnpm run play
-```
-
-1. You can see the demo in `http://localhost:3333/`.
-2. You can inspect the transforming process in `http://localhost:3333/__inspect/`
+Or you can try it online: [Vue Vine Playground](https://stackblitz.com/)
