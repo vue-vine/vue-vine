@@ -7,7 +7,7 @@ Another style of writing Vue components.
 
 - NPM version: &nbsp; [![NPM Version](https://img.shields.io/npm/v/vue-vine)](https://www.npmjs.com/package/vue-vine)
 - VSCode extension: &nbsp; [![VSCode ext version](https://img.shields.io/visual-studio-marketplace/v/shenqingchuan.vue-vine-extension)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
-- Check more details in docs: &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+- Check more details in [Vue Vine docs](https://vue-vine.dev): &nbsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
 <details>
   <summary>
@@ -24,6 +24,12 @@ Another style of writing Vue components.
   ![Quick view](./packages/docs/src/public/highlight-demo.png)
 
 </details>
+
+## Try the demo
+
+Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/ecosystem.html#project-starter-template)
+
+Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
 
 ## Relavant packages
 
@@ -96,9 +102,3 @@ export default antfu(
 Finally, install the VSCode extension, search `Vue Vine` in the marketplace.
 
 <img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
-
-## Try the demo
-
-Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/ecosystem.html#project-starter-template)
-
-Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.com/libondev/vue-vine-playground)
