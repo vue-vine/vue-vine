@@ -7,7 +7,7 @@
 
 - NPM 版本：&nbsp; [![NPM Version](https://img.shields.io/npm/v/vue-vine)](https://www.npmjs.com/package/vue-vine)
 - VSCode 插件版本：&nbsp; [![VSCode ext version](https://img.shields.io/visual-studio-marketplace/v/shenqingchuan.vue-vine-extension)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
-- 要了解更多细节，请查看文档站：&nbsp;[![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+- 要了解更多细节，请查看 [官方文档](https://vue-vine.dev)：&nbsp;[![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
 <details>
   <summary>
@@ -24,6 +24,12 @@
   ![示例预览](./packages/docs/src/public/highlight-demo.png)
 
 </details>
+
+## 尝试示例
+
+使用交互式命令(`create-vue-vine`)创建您的第一个项目。看这里: [项目启动模板](https://vue-vine.dev/zh/introduction/ecosystem.html#project-starter-template)
+
+或者你可以在线上尝试: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
 
 ## 项目 NPM 包总览
 
@@ -96,31 +102,3 @@ export default antfu(
 最后，安装 VSCode 插件，在市场中搜索 `Vue Vine`。
 
 <img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
-
-## 尝试示例
-
-你可以按照下面的步骤操作，启动示例项目来预览：
-
-首先，你需要获取 VSCode 插件的构建输出。
-
-```bash
-git clone https://github.com/vue-vine/vue-vine.git
-cd vue-vine
-pnpm install
-
-# 构建所有包
-pnpm run build
-```
-
-在构建完 VSCode 插件后，你可以在 VSCode 的 'Debug' 选项卡中找到 'Rune Vine Extension' 的配置项，然后点击运行。
-
-<img width="356" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/e12e2de6-666f-45d5-8607-c59168684bc1">
-
-然后，在另一个终端会话中开启 Playground 的 Vite 开发服务器。
-
-```bash
-pnpm run play
-```
-
-1. 接下来可以在 `http://localhost:3333/` 中看到示例。
-2. 你可以在 `http://localhost:3333/__inspect/` 中查看源代码在 Vite 处理管道的转换过程。
