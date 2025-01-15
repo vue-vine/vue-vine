@@ -101,4 +101,4 @@ Finally, install the VSCode extension, search `Vue Vine` in the marketplace.
 
 Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/ecosystem.html#project-starter-template)
 
-Or you can try it online: [Vue Vine Playground](https://stackblitz.com/)
+Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.com/libondev/vue-vine-playground)
