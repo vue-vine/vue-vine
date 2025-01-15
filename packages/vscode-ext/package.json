@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -15,7 +15,7 @@
   "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.84.0"
   },
   "activationEvents": [
     "onLanguage:typescript"
@@ -100,7 +100,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "catalog:",
-    "@types/vscode": "1.85.0",
+    "@types/vscode": "1.84.0",
     "@volar/language-server": "catalog:",
     "@volar/vscode": "catalog:",
     "@vscode/vsce": "latest",

@@ -649,8 +649,8 @@ importers:
         specifier: 'catalog:'
         version: 2.27.10
       '@types/vscode':
-        specifier: 1.85.0
-        version: 1.85.0
+        specifier: 1.84.0
+        version: 1.84.0
       '@volar/language-server':
         specifier: 'catalog:'
         version: 2.4.10
@@ -2411,8 +2411,8 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@types/vscode@1.85.0':
-    resolution: {integrity: sha512-CF/RBon/GXwdfmnjZj0WTUMZN5H6YITOfBCP4iEZlOtVQXuzw6t7Le7+cR+7JzdMrnlm7Mfp49Oj2TuSXIWo3g==}
+  '@types/vscode@1.84.0':
+    resolution: {integrity: sha512-lCGOSrhT3cL+foUEqc8G1PVZxoDbiMmxgnUZZTEnHF4mC47eKAUtBGAuMLY6o6Ua8PAuNCoKXbqPmJd1JYnQfg==}
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
@@ -9278,7 +9278,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@types/vscode@1.85.0': {}
+  '@types/vscode@1.84.0': {}
 
   '@types/web-bluetooth@0.0.20': {}
 

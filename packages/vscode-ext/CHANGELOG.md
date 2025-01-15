@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.9
+
+### Patch Changes
+
+- Downgrade VSCode dependencies to 1.84.0 to compat with Stackblitz and published on OpenVSX.
+
 ## 0.2.8
 
 ### Patch Changes
