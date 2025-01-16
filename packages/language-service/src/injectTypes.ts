@@ -133,7 +133,7 @@ ${notPropsBindings.map(([name]) => {
   ${
     vineCompFn.propsDefinitionBy === 'annotaion'
       ? '...props,'
-      : '...{ /* No need append `props` due to vineProp */ }'
+      : '/* No props formal params */'
   }
 });
 const __VLS_localComponents = __VLS_ctx;

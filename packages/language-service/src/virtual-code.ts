@@ -257,6 +257,10 @@ export function createVueVineCode(
         inheritAttrs: false,
         templateRefNames: new Set(),
         destructuredPropNames: new Set(),
+
+        // Slots type virtual code helper
+        hasDefineSlots: Object.keys(vineCompFn.slots).length > 0,
+        slotsAssignName: 'context.slots',
       })
 
       for (const segment of generatedTemplate) {
