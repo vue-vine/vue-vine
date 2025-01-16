@@ -95,7 +95,8 @@
     "lint": "eslint src --ext ts",
     "pack": "vsce package",
     "prepack": "pnpm run build",
-    "publish:ext": "vsce publish"
+    "publish:ext": "vsce publish",
+    "publish:osvx": "ovsx publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
@@ -105,6 +106,7 @@
     "@volar/vscode": "catalog:",
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
-    "@vue-vine/language-service": "workspace:*"
+    "@vue-vine/language-service": "workspace:*",
+    "ovsx": "latest"
   }
 }
