@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.10
+
+### Patch Changes
+
+- Fix type checking while passing props on `<slots />`
+
 ## 0.2.9
 
 ### Patch Changes

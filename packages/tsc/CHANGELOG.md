@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.6
+
+### Patch Changes
+
+- Fix type checking while passing props on `<slots />`
+
 ## 0.1.5
 
 ### Patch Changes
