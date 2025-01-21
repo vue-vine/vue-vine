@@ -10,7 +10,7 @@ export function createTsMorph(fileId?: string): TsMorphCache {
   if (fileId) {
     const tsConfigFilePath = findConfigFile(
       dirname(fileId),
-      f => existsSync(f),
+      existsSync,
     )
     if (!tsConfigFilePath) {
       throw new Error('Cannot locate project\'s tsconfig.json')

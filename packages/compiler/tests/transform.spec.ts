@@ -252,21 +252,23 @@ export function MyComp() {
         __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
       export const _rerender_only = false;
       export const _rerender_vcf_fn_name = "";
-      import.meta.hot?.accept((mod) => {
-        if (!mod) {
-          return;
-        }
-        const { _rerender_only, _rerender_vcf_fn_name } = mod;
-        if (!_rerender_vcf_fn_name) {
-          return;
-        }
-        const component = mod[_rerender_vcf_fn_name];
-        if (_rerender_only) {
-          __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-        } else {
-          __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-        }
-      });
+      if (import.meta.hot) {
+        import.meta.hot.accept((mod) => {
+          if (!mod) {
+            return;
+          }
+          const { _rerender_only, _rerender_vcf_fn_name } = mod;
+          if (!_rerender_vcf_fn_name) {
+            return;
+          }
+          const component = mod[_rerender_vcf_fn_name];
+          if (_rerender_only) {
+            __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+          } else {
+            __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+          }
+        });
+      }
       "
     `)
   })
