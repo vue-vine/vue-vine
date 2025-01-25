@@ -543,7 +543,7 @@ export class IntermediateTokenizer {
     }
     const separated
             = this.currentToken != null
-            && this.currentToken.range[1] !== token.range[0]
+              && this.currentToken.range[1] !== token.range[0]
     const result = separated ? this.commit() : null
 
     this.tokens.push(token)

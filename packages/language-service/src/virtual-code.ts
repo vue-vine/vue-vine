@@ -1,6 +1,6 @@
 import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
-import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '@vue/language-core'
 import type { VinePropMeta } from '@vue-vine/compiler'
+import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelToken, SpawnLogger, VueVineCode } from './shared'

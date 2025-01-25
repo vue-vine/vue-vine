@@ -156,9 +156,9 @@ function propsOptionsCodeGeneration(
         `${modelName}: ${
           modelOptions
             ? vineFileCtx.originCode.slice(
-              modelOptions.start!,
-              modelOptions.end!,
-            )
+                modelOptions.start!,
+                modelOptions.end!,
+              )
             : '{}'
         },`,
       )
@@ -516,12 +516,6 @@ export function transformFile(
           .get(vineCompFnCtx)
           ?.join('\n') ?? ''
       }\n`)
-      if (vineCompFnCtx.isExportDefault) {
-        ms.appendRight(
-          ms.length(),
-          `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
-        )
-      }
 
       ms.appendRight(lastStmt.end!, `\n${
         inline
@@ -542,6 +536,13 @@ export function transformFile(
         Boolean(vineCompFnCtx.isCustomElement),
         `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
       )}\nreturn __vine\n})();`)
+
+      if (vineCompFnCtx.isExportDefault) {
+        ms.appendRight(
+          ms.length(),
+          `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
+        )
+      }
 
       // Record component function to HMR
       if (isDev) {

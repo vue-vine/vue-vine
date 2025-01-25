@@ -7,8 +7,8 @@ import {
   createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
-import { resolveVueCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
+import { resolveVueCompilerOptions } from '@vue/language-core'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'

@@ -1,9 +1,9 @@
-function Welcome() {
+export default function Welcome() {
   const content = vineProp<string>()
   const counter = ref(0)
   const contentColor = ref('red')
 
-  vineStyle.scoped(scss`
+  vineStyle.scoped(`
     .content-view {
       margin: 1rem 0;
       color: v-bind(contentColor);
@@ -26,5 +26,3 @@ function Welcome() {
     </div>
   `
 }
-
-export default Welcome

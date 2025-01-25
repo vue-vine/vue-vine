@@ -273,7 +273,7 @@ export function MyComp() {
     `)
   })
 
-  // issue#
+  // issue#174
   it('should transform top-level await expressions', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'development',
@@ -296,6 +296,29 @@ export async function MyComp() {
     compileVineTypeScriptFile(specContent, 'testTransformTopLevelAwait', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformTopLevelAwait')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
+
+  // issue#192
+  it('should generate export default in correct position', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export default function MyComp() {
+  return vine\`
+    <div>Test</div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testExportDefaultInCorrectPosition', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultInCorrectPosition')
     const transformed = fileCtx?.fileMagicCode.toString() ?? ''
     const formated = await format(
       transformed,

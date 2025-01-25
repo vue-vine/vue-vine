@@ -12,13 +12,12 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
     }
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "files": [
     "dist"
   ],
@@ -34,14 +33,14 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.14.1592",
+    "@nuxt/kit": "catalog:",
     "vue-vine": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.6.1",
     "@nuxt/eslint-config": "^0.7.1",
-    "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^3.14.1592",
+    "@nuxt/module-builder": "catalog:",
+    "@nuxt/schema": "catalog:",
     "@nuxt/test-utils": "^3.14.4",
     "changelogen": "^0.5.7",
     "nuxt": "catalog:",
