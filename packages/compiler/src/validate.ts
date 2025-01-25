@@ -68,16 +68,16 @@ type VineValidator = (
 function wrapVineValidatorWithLog(validators: VineValidator[]) {
   return process.env.VINE_DEV_VITEST === 'true'
     ? validators.map(validator => (...args: Parameters<VineValidator>) => {
-      const isPass = validator(...args)
-      // Bypass this ESLint is for local development to find out which test case is failed,
-      // eslint-disable-next-line no-console
-      console.log(`${
-        colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
-      } ${validator.name} => ${
-        colorful(isPass ? 'PASS' : 'FAIL', [isPass ? 'green' : 'red'])
-      }`)
-      return isPass
-    })
+        const isPass = validator(...args)
+        // Bypass this ESLint is for local development to find out which test case is failed,
+        // eslint-disable-next-line no-console
+        console.log(`${
+          colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
+        } ${validator.name} => ${
+          colorful(isPass ? 'PASS' : 'FAIL', [isPass ? 'green' : 'red'])
+        }`)
+        return isPass
+      })
     : validators
 }
 

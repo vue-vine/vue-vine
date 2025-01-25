@@ -33,12 +33,12 @@ export function compileVineTemplate(
       templateParsedAst: (
         getParsedAst
           ? parse(source, {
-            parseMode: 'base',
-            prefixIdentifiers: true,
-            expressionPlugins: [
-              'typescript',
-            ],
-          })
+              parseMode: 'base',
+              prefixIdentifiers: true,
+              expressionPlugins: [
+                'typescript',
+              ],
+            })
           : (void 0)
       ),
     }

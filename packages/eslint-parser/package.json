@@ -29,8 +29,8 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^8.15.0",
-    "@typescript-eslint/scope-manager": "^8.15.0",
+    "@typescript-eslint/parser": "catalog:",
+    "@typescript-eslint/scope-manager": "catalog:",
     "@typescript-eslint/typescript-estree": "catalog:",
     "debug": "^4.3.4",
     "eslint-scope": "^8.2.0",

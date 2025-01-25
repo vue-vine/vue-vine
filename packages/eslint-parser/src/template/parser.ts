@@ -275,7 +275,7 @@ export class VineTemplateParser {
     const attrName = node.key.rawName
     const expressionEnabled
         = this.expressionEnabled
-        || (attrName === 'v-pre' && !this.isInVPreElement)
+          || (attrName === 'v-pre' && !this.isInVPreElement)
 
     if (!expressionEnabled) {
       return false
@@ -459,7 +459,7 @@ export class VineTemplateParser {
     }
     const hasVPre
       = !this.isInVPreElement
-      && token.attributes.some(a => a.key.rawName === 'v-pre')
+        && token.attributes.some(a => a.key.rawName === 'v-pre')
 
     // Disable expression if v-pre
     if (hasVPre) {
@@ -494,7 +494,7 @@ export class VineTemplateParser {
     // Check whether the self-closing is valid.
     const isVoid
       = namespace === NS.HTML
-      && HTML_VOID_ELEMENT_TAGS.has(element.rawName)
+        && HTML_VOID_ELEMENT_TAGS.has(element.rawName)
     if (token.selfClosing && !isVoid && namespace === NS.HTML) {
       this.reportParseError(
         token,

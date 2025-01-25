@@ -229,9 +229,9 @@ function MyComp() {
         ),
         modelOptions: vineFnComp!.vineModels[name].modelOptions
           ? content.slice(
-            vineFnComp!.vineModels[name].modelOptions!.start!,
-            vineFnComp!.vineModels[name].modelOptions!.end!,
-          )
+              vineFnComp!.vineModels[name].modelOptions!.start!,
+              vineFnComp!.vineModels[name].modelOptions!.end!,
+            )
           : undefined,
       }
     }

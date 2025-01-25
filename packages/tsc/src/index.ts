@@ -4,12 +4,12 @@ import type {
 } from '@vue/language-core'
 import { posix as path } from 'node:path'
 import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
+import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import {
   createParsedCommandLine,
   createVueLanguagePlugin,
   resolveVueCompilerOptions,
 } from '@vue/language-core'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 
 const windowsPathReg = /\\/g
 

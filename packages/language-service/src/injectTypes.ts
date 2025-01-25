@@ -1,8 +1,8 @@
-import type { VueCompilerOptions } from '@vue/language-core'
 import type { VineFnCompCtx } from '@vue-vine/compiler'
+import type { VueCompilerOptions } from '@vue/language-core'
 import { posix as path } from 'node:path'
-import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 import { VineBindingTypes } from '@vue-vine/compiler'
+import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 
 export function setupGlobalTypes(
   rootDir: string,
