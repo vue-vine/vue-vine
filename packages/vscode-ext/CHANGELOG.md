@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.11
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+
 ## 0.2.10
 
 ### Patch Changes

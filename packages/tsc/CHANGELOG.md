@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.1.7
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+
 ## 0.1.6
 
 ### Patch Changes

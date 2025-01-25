@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.2.7
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+
 ## 0.2.5
 
 ### Patch Changes

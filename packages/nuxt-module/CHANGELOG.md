@@ -1,5 +1,12 @@
 # @vue-vine/nuxt
 
+## 0.1.7
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+- Upgrade to Nuxt module builder v1.
+
 ## 0.1.5
 
 ### Patch Changes

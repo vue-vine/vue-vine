@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.2.7
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+
 ## 0.2.6
 
 ### Patch Changes

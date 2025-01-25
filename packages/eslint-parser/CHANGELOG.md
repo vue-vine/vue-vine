@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.14
+
+### Patch Changes
+
+- Fix incorrect position of 'export default' statement generation in Vine compiler.
+
 ## 0.2.13
 
 ### Patch Changes
