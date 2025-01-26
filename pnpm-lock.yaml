@@ -694,6 +694,9 @@ importers:
         specifier: workspace:^
         version: link:../vite-plugin
     devDependencies:
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
       vue:
         specifier: ^3
         version: 3.5.13(typescript@5.6.3)
