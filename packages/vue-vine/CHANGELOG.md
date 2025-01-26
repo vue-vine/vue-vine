@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.2.8
+
+### Patch Changes
+
+- Add defineVibe feature into Vue Vine.
+
 ## 0.2.7
 
 ### Patch Changes
