@@ -2,7 +2,7 @@
 
 ## Create Data Store
 
-The English word "Vibe" means "wave". We choose this name to create a data store that can be shared between multiple components, like waves that can be passed freely between components.
+Vibe is for creating a data store that can be shared between multiple components, like waves that can be passed freely between components.
 
 You can import the `defineVibe` function from `'vue-vine'` and use it to define a data store.
 
