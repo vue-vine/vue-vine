@@ -7,7 +7,7 @@
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShenQingchuan/vue-vine-extension.git"
+    "url": "https://github.com/vue-vine/vue-vine.git"
   },
   "categories": [
     "Programming Languages"
