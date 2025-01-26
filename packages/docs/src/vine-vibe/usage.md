@@ -4,9 +4,34 @@
 
 Vibe is for creating a data store that can be shared between multiple components, like waves that can be passed freely between components.
 
-You can import the `defineVibe` function from `'vue-vine'` and use it to define a data store.
+You can import the `defineVibe` function from `vue-vine` to define a data store.
+
+::: tip
+
+You can configure in `unplugin-auto-import` to automatically import the `defineVibe` function.
+
+```ts
+// vite.config.ts
+import AutoImport from 'unplugin-auto-import/vite'
+
+export default defineConfig({
+  plugins: [
+    AutoImport({
+      imports: [
+        {
+          'vue-vine': ['defineVibe'],
+        }
+      ],
+    }),
+  ],
+})
+```
+
+:::
 
 ```vue-vine
+import { defineVibe } from 'vue-vine'
+
 const [useCounterStore, initCounterStore] = defineVibe('counter', () => {
   const count = ref(0)
   const increment = () => {

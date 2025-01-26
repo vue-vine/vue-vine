@@ -6,7 +6,30 @@ Vibe 的英语单词意思是 “波纹”，选择这个名字我们希望创�
 
 你可以从 `'vue-vine'` 中导入 `defineVibe` 函数，使用它来定义一个数据仓库。
 
+::: tip
+
+你可以配置 `unplugin-auto-import` 来自动导入 `defineVibe` 函数。
+
+```ts
+// vite.config.ts
+import AutoImport from 'unplugin-auto-import/vite'
+
+export default defineConfig({
+  plugins: [
+    AutoImport({
+      imports: [
+        {
+          'vue-vine': ['defineVibe'],
+        }
+      ],
+    }),
+  ],
+})
+```
+
 ```vue-vine
+import { defineVibe } from 'vue-vine'
+
 const [useCounterStore, initCounterStore] = defineVibe('counter', () => {
   const count = ref(0)
   const increment = () => {
