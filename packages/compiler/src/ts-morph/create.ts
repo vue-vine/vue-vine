@@ -1,6 +1,6 @@
 import type { TsMorphCache } from '../types'
-import { existsSync } from 'node:fs'
-import { dirname } from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { Project } from 'ts-morph'
 import { findConfigFile } from 'typescript'
 
@@ -22,6 +22,16 @@ export function createTsMorph(fileId?: string): TsMorphCache {
         strict: true, // Ensure more accurate type analysis
       },
     })
+
+    // Read the reference configurations
+    const tsconfigJsonData = JSON.parse(
+      readFileSync(tsConfigFilePath, { encoding: 'utf-8' }),
+    )
+    const tsconfigDir = dirname(tsConfigFilePath)
+    const references = (tsconfigJsonData.references ?? []) as Array<{ path: string }>
+    for (const ref of references) {
+      project.addSourceFilesFromTsConfig(resolve(tsconfigDir, ref.path))
+    }
   }
   else {
     fileId ??= 'vine.ts'

@@ -48,7 +48,8 @@
     "publish:all": "pnpm publish:main && pnpm publish:eslint && pnpm publish:tsc && pnpm publish:nuxt",
     "bump": "pnpm changeset add",
     "changeset:core": "pnpm changeset version --ignore \"vue-vine-extension\" --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
-    "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json"
+    "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
+    "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/vscode-ext' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
