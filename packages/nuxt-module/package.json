@@ -24,7 +24,6 @@
   "scripts": {
     "prepack": "nuxt-module-build prepare && nuxt-module-build build",
     "build": "pnpm run prepack",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare",
     "prepublish": "pnpm run lint && pnpm run test --run && pnpm run prepack",
     "lint": "eslint .",
     "test": "vitest"
