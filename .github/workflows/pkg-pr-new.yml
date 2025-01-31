@@ -21,4 +21,8 @@ jobs:
       - name: Install
         run: nci
 
-      - run: pnpm run pkg-new:publish
+      - name: Build
+        run: nr build
+
+      - name: pkg-new:publish
+        run: pnpm run pkg-new:publish
