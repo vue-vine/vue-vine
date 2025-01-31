@@ -16,7 +16,7 @@ jobs:
           cache: pnpm
 
       - name: Setup
-        run: pnpm i -g @antfu/ni
+        run: npm i -g @antfu/ni
 
       - name: Install
         run: nci
