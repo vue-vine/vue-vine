@@ -15,7 +15,10 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Setup
+        run: pnpm i -g @antfu/ni
+
+      - name: Install
+        run: nci
 
       - run: pnpm run pkg-new:publish
