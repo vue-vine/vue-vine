@@ -1,0 +1,12 @@
+{
+  "name": "@vue-vine/nuxt-playground",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate"
+  },
+  "dependencies": {
+    "nuxt": "catalog:"
+  }
+}
