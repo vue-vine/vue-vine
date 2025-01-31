@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.2.13
+
+### Patch Changes
+
+- Fix ts-morph can't automatically handle tsconfig references child projects.
+
 ## 0.2.11
 
 ### Patch Changes

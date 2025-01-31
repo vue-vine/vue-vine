@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.2.9
+
+### Patch Changes
+
+- Fix ts-morph can't automatically handle tsconfig references child projects.
+
 ## 0.2.7
 
 ### Patch Changes
