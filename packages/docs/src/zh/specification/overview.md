@@ -29,7 +29,7 @@ const AnotherComponent = () => vine`<div>Hello World</div>`
 
 Vine 编译器将在底层将这种函数转换为 Vue 组件对象。
 
-而这个标记模板字符串表达式最终的值只是 `undefined`，没有任何运行时的意义。
+而这个标记模板字符串表达式最终没有任何运行时的意义。
 
 在 TypeScript 源码上下文中，这虽然确实是一个语法上合法的函数，<b class="text-rose-400">但在别处调用它没有任何作用，为避免未定义行为，也请不要这样做。</b>
 
@@ -37,23 +37,33 @@ Vine 编译器将在底层将这种函数转换为 Vue 组件对象。
 
 **在 `vine`模板字符串中是禁止使用表达式插值的。**
 
-因为整个标记模板字符串是一个原始的 Vue 模板。Vine 编译器将其传递给 `@vue/compiler-dom` 进行编译，最终编译为渲染函数。
+因为整个标记模板字符串就是你所熟悉的 Vue 模板。Vine 编译器将其传递给 `@vue/compiler-dom` 进行编译，最终编译为渲染函数。
 
 ```vue-vine
-function MyComponent() {
+function ValidComponent() {
+  const count = ref(0)
+
+  return vine`
+    <div>
+      <button @click="count++">Increment</button>
+      <div>Count: {{ count }}</div>
+    </div>
+  `
+}
+
+function InvalidComponent() {
   const name = 'World'
 
   return vine`<div>Hello ${name}</div>` // 这将报错
 }
 ```
 
-值得一提的是，Vue 的模板上可能在 v-bind 或是双花括号之间中存在 JS 表达式，因而也有可能出现带插值表达式的模板字符串，但在 Vine 中，这是不被允许的。
-
 ```ts
 function MyComponent() {
   const userName = ref('Vine')
 
-  // IDE 中无法正常显示模板部分的高亮
+  // 如你在当前这个文档站里展示的效果一样，
+  // IDE 中也无法正常对这样的模板部分显示高亮
   return vine`
     <a :href="/user/\`\${userName}\`">
       Profile
