@@ -34,7 +34,6 @@ export function createTsMorph(fileId?: string): TsMorphCache {
     }
   }
   else {
-    fileId ??= 'vine.ts'
     project = new Project()
   }
 

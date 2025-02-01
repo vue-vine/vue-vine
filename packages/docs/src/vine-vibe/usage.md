@@ -30,8 +30,6 @@ export default defineConfig({
 :::
 
 ```vue-vine
-import { defineVibe } from 'vue-vine'
-
 const [useCounterStore, initCounterStore] = defineVibe('counter', () => {
   const count = ref(0)
   const increment = () => {
