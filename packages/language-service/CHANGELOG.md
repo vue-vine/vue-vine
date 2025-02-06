@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.3.0
+
+### Minor Changes
+
+- New feature: support props destructure, same as Vue 3.5
+
 ## 0.2.9
 
 ### Patch Changes

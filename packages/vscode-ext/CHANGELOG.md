@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.0
+
+### Minor Changes
+
+- New feature: support props destructure, same as Vue 3.5
+
 ## 0.2.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.2.0
+
+### Minor Changes
+
+- New feature: support props destructure, same as Vue 3.5
+
 ## 0.1.9
 
 ### Patch Changes
