@@ -10,6 +10,7 @@ export const UN_REF_HELPER = 'unref'
 export const DEFAULT_MODEL_NAME = 'modelValue'
 export const DEFAULT_MODEL_MODIFIERS_NAME = 'modelModifiers'
 export const WITH_ASYNC_CONTEXT_HELPER = 'withAsyncContext'
+export const CREATE_PROPS_REST_PROXY_HELPER = 'createPropsRestProxy'
 
 /**
  * These macros can't be inside other expressions but just called directly.

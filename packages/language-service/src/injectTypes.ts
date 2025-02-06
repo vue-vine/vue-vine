@@ -84,6 +84,21 @@ export function createLinkedCodeTag(
   return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
 }
 
+function maybeDestructuredPropsToStr(vineCompFn: VineFnCompCtx) {
+  const { propsDestructuredNames } = vineCompFn
+  if (Object.keys(propsDestructuredNames).length === 0) {
+    return 'props'
+  }
+
+  const result = Object.entries(propsDestructuredNames).reduce((acc, [name, meta]) => {
+    const key = meta.alias ?? name
+    acc.push(`/* __LINKED_CODE_LEFT__#${key.length} */${key}: /* __LINKED_CODE_RIGHT__#${key.length} */${key}`)
+    return acc
+  }, [] as string[])
+
+  return `{ ${result.join(', ')} }`
+}
+
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
 ): string {
@@ -100,7 +115,6 @@ export function generateVLSContext(
       ],
     ), // Deduplicate same binding keys
   )
-  // const bindingEntries = Object.entries(vineCompFn.bindings)
   const notPropsBindings = bindingEntries.filter(
     ([, bindingType]) => (
       bindingType !== VineBindingTypes.PROPS
@@ -132,7 +146,9 @@ ${notPropsBindings.map(([name]) => {
 }).join('\n')}
   ${
     vineCompFn.propsDefinitionBy === 'annotaion'
-      ? '...props,'
+      ? `...${
+        maybeDestructuredPropsToStr(vineCompFn)
+      },`
       : '/* No props formal params */'
   }
 });
@@ -141,6 +157,7 @@ const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
   ...__VLS_localComponents,
 };
+type __VLS_LocalComponents = typeof __VLS_localComponents;
 `
 
   return __VINE_CONTEXT_TYPES

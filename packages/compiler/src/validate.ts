@@ -17,7 +17,9 @@ import {
   isArrayExpression,
   isIdentifier,
   isObjectExpression,
+  isObjectPattern,
   isObjectProperty,
+  isRestElement,
   isStringLiteral,
   isTaggedTemplateExpression,
   isTemplateLiteral,
@@ -1095,21 +1097,50 @@ function validatePropsForSingelFC(
   }
   else if (vineCompFnParamsLength === 1) {
     // Check Vine component function's formal parameter first,
-    // it can only have one parameter, and its type annotation must be object literal
+    // it can only have one parameter, and it must have a type annotation
     const theOnlyFormalParam = vineCompFnParams[0]
     let isCheckFormalParamsPropPass = true
-    if (!isIdentifier(theOnlyFormalParam)) {
-      vineCompilerHooks.onError(
-        vineErr(
-          { vineFileCtx },
-          {
-            msg: 'If you\'re defining a Vine component function\'s props with formal parameter, it must be one and only identifier',
-            location: theOnlyFormalParam.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
+
+    if (isObjectPattern(theOnlyFormalParam)) {
+      // Make sure every destructured property is an identifier
+      for (const property of theOnlyFormalParam.properties) {
+        const isValidKey = (
+          (isRestElement(property) && isIdentifier(property.argument))
+          || (isObjectProperty(property) && (isIdentifier(property.key) || isStringLiteral(property.key)))
+        )
+        if (!isValidKey) {
+          isCheckFormalParamsPropPass = false
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: `Invalid property name when defining props with formal parameter!`,
+                location: theOnlyFormalParam.loc,
+              },
+            ),
+          )
+        }
+
+        // Error on nested destructuring
+        if (
+          isObjectProperty(property)
+          && property.value.type.endsWith('Pattern')
+          && property.value.type !== 'AssignmentPattern'
+        ) {
+          isCheckFormalParamsPropPass = false
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: 'When destructuring props on formal parameter, nested destructuring is not allowed',
+                location: property.loc,
+              },
+            ),
+          )
+        }
+      }
     }
+
     const theOnlyFormalParamTypeAnnotation = theOnlyFormalParam.typeAnnotation
     if (!theOnlyFormalParamTypeAnnotation) {
       vineCompilerHooks.onError(
@@ -1144,8 +1175,8 @@ function validatePropsForSingelFC(
           vineErr(
             { vineFileCtx },
             {
-              msg: 'Vine component function\'s props type annotation must be an object literal, '
-                + 'only contains properties signature, and all properties\' key must be string literal or identifier',
+              msg: 'When Vine component function\'s props type annotation is an object literal, '
+                + 'properties\' key must be an identifier or a string literal',
               location: propsTypeAnnotation.loc,
             },
           ),

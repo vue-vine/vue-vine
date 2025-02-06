@@ -7,6 +7,7 @@ import type {
   FunctionExpression,
   Identifier,
   Node,
+  ObjectProperty,
   ReturnStatement,
   SourceLocation,
   StringLiteral,
@@ -102,6 +103,8 @@ export interface VinePropMeta {
   default?: Node
   /** Declared identifier AST Node by vineProp */
   macroDeclaredIdentifier?: Identifier
+  /** Whether the prop name needs to be quoted */
+  nameNeedQuoted?: boolean
 }
 
 export interface VineCompilerCtx {
@@ -171,6 +174,13 @@ export interface VineExternalStyleFileCtx {
   sourceCode: string
 }
 
+export interface VineDestructuredProp {
+  node: ObjectProperty['key']
+  isRest: boolean
+  alias?: string
+  default?: Node
+}
+
 export interface VineCompFnCtx {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
@@ -190,6 +200,7 @@ export interface VineCompFnCtx {
   linkedMacroCalls: LinkedMacroInfo[]
   propsAlias: string
   props: Record<string, VinePropMeta>
+  propsDestructuredNames: Record<string, VineDestructuredProp>
   propsDefinitionBy: 'annotaion' | 'macro'
   propsFormalParamType?: TSType
   emitsAlias: string
