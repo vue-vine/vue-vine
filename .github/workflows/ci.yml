@@ -11,20 +11,17 @@ on:
 
 jobs:
   lint:
-    env:
-      RUN_ENV: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Set node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: lts/*
 
       - name: Setup
         run: npm i -g @antfu/ni
@@ -35,35 +32,34 @@ jobs:
       - name: Lint
         run: nr lint
 
+      - name: Typecheck
+        run: nr typecheck
+
   test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node: [18.x]
+        node: [lts/*]
         os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Set node
+      - name: Set node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: ${{ matrix.node }}
 
       - name: Setup
         run: npm i -g @antfu/ni
 
       - name: Install
         run: nci
-
-      - name: Playwright install
-        run: npx playwright install
 
       - name: Build
         run: nr build
