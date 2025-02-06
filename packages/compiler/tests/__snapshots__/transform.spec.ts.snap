@@ -65,7 +65,7 @@ export const MyProfile = (() => {
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -274,7 +274,7 @@ export const MyProfile = (() => {
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -455,7 +455,7 @@ export const MyProfile = (() => {
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -677,7 +677,7 @@ export const MyProfile = (() => {
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 

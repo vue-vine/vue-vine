@@ -326,4 +326,53 @@ export default function MyComp() {
     )
     expect(formated).toMatchSnapshot()
   })
+
+  // discussion#199
+  it('should transform destructured props', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+import { ref, watch } from 'vue'
+
+export function MyComp({
+  'foo:zee': fooZee,
+  bar = 1,
+  arr,
+  ...rest
+}: {
+  'foo:zee': string,
+  bar?: number,
+  arr: boolean[],
+  other1: string,
+  other2: number,
+}) {
+
+  const test1 = ref(fooZee)
+
+  const test2 = watch(() => bar, (newVal) => {
+    console.log(newVal)
+  })
+
+  return vine\`
+    <div>{{ name }}</div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformDestructuredProps', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformDestructuredProps')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    expect(formated).toMatch('const test1 = ref(__props["foo:zee"])')
+    expect(formated).toMatch('() => __props.bar')
+    expect(formated).toMatch(
+      /const __propsRestProxy = _createPropsRestProxy\(__props, \[\s*"foo:zee",\s*"bar",\s*"arr",\s*\]\);/,
+    )
+  })
 })

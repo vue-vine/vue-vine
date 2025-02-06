@@ -227,15 +227,14 @@ function App() {
   `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`8`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`7`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
-          "Vine component function's props type annotation must be an object literal, only contains properties signature, and all properties' key must be string literal or identifier",
+          "When Vine component function's props type annotation is an object literal, properties' key must be an identifier or a string literal",
           "the declaration of \`vineProp\` macro call must be an identifier",
           "\`vineProp\` macro call must be inside a \`const\` declaration",
           "\`vineProp\` macro call must be inside a \`const\` variable declaration",
-          "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
           "\`vineProp\` macro call must have a type parameter to specify the prop's type",
           "\`vineProp.withDefault\` macro call must have at least 1 argument",
           "\`vineProp.optional\` macro call must have a type parameter to specify the prop's type",
@@ -280,5 +279,39 @@ function TestComp() {
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates."')
+  })
+
+  it('should report props destructuring errors', () => {
+    const content = `
+import { watch } from 'vue'
+
+export function MyComp({
+  arr: [a, b, ...c],
+  foo = 1,
+}: {
+  arr: boolean[],
+  foo?: number,
+}) {
+
+  const testFoo = watch(foo, (newVal) => {
+    console.log(newVal)
+  })
+
+  return vine\`
+    <div> foo: {{ foo }} </div>
+  \`
+}
+    `
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testPropsDestructuringErrors', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
+      .toMatchInlineSnapshot(`
+        [
+          "When destructuring props on formal parameter, nested destructuring is not allowed",
+          ""foo" is a destructured prop and should not be passed directly to watch(). Pass a getter () => foo instead.",
+        ]
+      `)
   })
 })

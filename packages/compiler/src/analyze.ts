@@ -23,6 +23,7 @@ import type {
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
+  VineDestructuredProp,
   VineFileCtx,
   VineFnPickedInfo,
   VinePropMeta,
@@ -34,6 +35,7 @@ import type {
 import {
   isArrayExpression,
   isArrayPattern,
+  isAssignmentPattern,
   isBlockStatement,
   isBooleanLiteral,
   isClassDeclaration,
@@ -45,6 +47,8 @@ import {
   isImportNamespaceSpecifier,
   isImportSpecifier,
   isObjectPattern,
+  isObjectProperty,
+  isRestElement,
   isStringLiteral,
   isTaggedTemplateExpression,
   isTemplateLiteral,
@@ -375,7 +379,47 @@ const analyzeVineProps: AnalyzeRunner = (
     // The Vine validator has guranateed there's only one formal params,
     // its type is `identifier`, and it must have an object literal type annotation.
     // Save this parameter's name as `propsAlias`
-    const propsFormalParam = formalParams[0] as Identifier
+    const propsFormalParam = formalParams[0] as (Identifier | ObjectPattern)
+    const defaultsFromDestructuredProps: Record<string, Node> = {}
+
+    // If this formal parameter has destructuring,
+    // we need to record these destructed names as `desctructedPropNames`
+    if (isObjectPattern(propsFormalParam)) {
+      for (const property of propsFormalParam.properties) {
+        if (isRestElement(property)) {
+          const restProp = property.argument as Identifier
+          vineCompFnCtx.propsDestructuredNames[restProp.name] = {
+            node: restProp,
+            isRest: true,
+          }
+        }
+        else if (isObjectProperty(property)) {
+          const propItemKey = property.key as (Identifier | StringLiteral)
+          const propItemName = (
+            isIdentifier(propItemKey)
+              ? propItemKey.name
+              : propItemKey.value
+          )
+          const data: VineDestructuredProp = {
+            node: propItemKey,
+            isRest: false,
+          }
+          if (isIdentifier(property.value)) {
+            data.alias = property.value.name
+            vineCompFnCtx.bindings[propItemName] = VineBindingTypes.PROPS_ALIASED
+          }
+          if (isAssignmentPattern(property.value)) {
+            data.default = property.value.right
+            defaultsFromDestructuredProps[propItemName] = property.value.right
+          }
+          vineCompFnCtx.propsDestructuredNames[propItemName] = data
+        }
+      }
+    }
+    else {
+      vineCompFnCtx.propsAlias = propsFormalParam.name
+    }
+
     const propsTypeAnnotation = propsFormalParam.typeAnnotation
     if (!isTSTypeAnnotation(propsTypeAnnotation)) {
       return
@@ -385,14 +429,20 @@ const analyzeVineProps: AnalyzeRunner = (
     vineCompFnCtx.propsFormalParamType = typeAnnotation
 
     if (isTSTypeLiteral(typeAnnotation)) {
-      vineCompFnCtx.propsAlias = propsFormalParam.name;
       // Analyze the object literal type annotation
       // and save the props info into `vineCompFnCtx.props`
       (typeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
-        if (!isIdentifier(member.key) || !member.typeAnnotation) {
+        if (
+          (!isIdentifier(member.key) && !isStringLiteral(member.key))
+          || !member.typeAnnotation
+        ) {
           return
         }
-        const propName = member.key.name
+        const propName = (
+          isIdentifier(member.key)
+            ? member.key.name
+            : member.key.value
+        )
         const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation.typeAnnotation)
         const propMeta: VinePropMeta = {
           isFromMacroDefine: false,
@@ -407,6 +457,13 @@ const analyzeVineProps: AnalyzeRunner = (
         }
         vineCompFnCtx.props[propName] = propMeta
         vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
+
+        if (defaultsFromDestructuredProps[propName]) {
+          vineCompFnCtx.props[propName].default = defaultsFromDestructuredProps[propName]
+        }
+        if (!isIdentifier(member.key)) {
+          vineCompFnCtx.props[propName].nameNeedQuoted = true
+        }
       })
     }
     else {
@@ -1025,6 +1082,7 @@ function buildVineCompFnCtx(
     templateSource,
     templateComponentNames: new Set<string>(),
     linkedMacroCalls: [],
+    propsDestructuredNames: {},
     propsDefinitionBy: 'annotaion',
     propsAlias: 'props',
     emitsAlias: 'emits',

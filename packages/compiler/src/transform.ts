@@ -1,4 +1,4 @@
-import type { AwaitExpression, Node } from '@babel/types'
+import type { AwaitExpression, BlockStatement, Identifier, Node, VariableDeclaration } from '@babel/types'
 import type { MergedImportsMap, NamedImportSpecifierMeta } from './template/compose'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from './types'
 import {
@@ -9,8 +9,12 @@ import {
   isVariableDeclaration,
   traverse,
 } from '@babel/types'
-import { isStatementContainsVineMacroCall } from './babel-helpers/ast'
+import { extractIdentifiers, isFunctionType, isInDestructureAssignment, isReferencedIdentifier, isStaticProperty, TS_NODE_TYPES, unwrapTSNode, walkFunctionParams } from '@vue/compiler-dom'
+import { genPropsAccessExp } from '@vue/shared'
+import { walk } from 'estree-walker'
+import { isCallOf, isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import {
+  CREATE_PROPS_REST_PROXY_HELPER,
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
   EXPECTED_ERROR,
@@ -21,6 +25,7 @@ import {
   USE_SLOT_HELPER,
   WITH_ASYNC_CONTEXT_HELPER,
 } from './constants'
+import { vineErr } from './diagnostics'
 import { sortStyleImport } from './style/order'
 import { compileCSSVars } from './style/transform-css-var'
 import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
@@ -139,7 +144,11 @@ function propsOptionsCodeGeneration(
         )
       }`)
     }
-    return `${propName}: { ${
+    return `${
+      propMeta.nameNeedQuoted
+        ? `'${propName}'`
+        : propName
+    }: { ${
       showIf(
         metaFields.filter(Boolean).length > 0,
         filterJoin(metaFields, ', '),
@@ -191,6 +200,218 @@ function postProcessForRenderCodegen(codegen: string) {
         return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName})`
       },
     )
+}
+
+function rewriteDestructuredPropAccess(
+  compilerHooks: VineCompilerHooks,
+  vineFileCtx: VineFileCtx,
+  vineCompFnCtx: VineCompFnCtx,
+  vineCompFnBody: BlockStatement,
+) {
+  type Scope = Record<string, boolean>
+  const rootScope: Scope = Object.create(null)
+  const scopeStack: Scope[] = [rootScope]
+  const excludedIds = new WeakSet<Identifier>()
+  const parentStack: Node[] = []
+  const propsLocalToPublicMap: Record<string, string> = Object.create(null)
+  let currentScope = rootScope
+
+  for (const [destructName, destructMeta] of Object.entries(vineCompFnCtx.propsDestructuredNames)) {
+    const local = destructMeta.alias ?? destructName
+    rootScope[local] = true
+    propsLocalToPublicMap[local] = destructName
+  }
+
+  function pushScope() {
+    currentScope = Object.create(currentScope)
+    scopeStack.push(currentScope)
+  }
+  function popScope() {
+    scopeStack.pop()
+    currentScope = scopeStack[scopeStack.length - 1]
+  }
+  function registerLocalBinding(id: Identifier) {
+    excludedIds.add(id)
+    if (currentScope) {
+      currentScope[id.name] = false
+    }
+  }
+  function walkScope(node: BlockStatement, isRoot = false) {
+    for (const stmt of node.body) {
+      if (stmt.type === 'VariableDeclaration') {
+        walkVariableDeclaration(stmt, isRoot)
+      }
+      else if (
+        stmt.type === 'FunctionDeclaration'
+        || stmt.type === 'ClassDeclaration'
+      ) {
+        if (stmt.declare || !stmt.id)
+          continue
+        registerLocalBinding(stmt.id)
+      }
+      else if (
+        (stmt.type === 'ForOfStatement' || stmt.type === 'ForInStatement')
+        && stmt.left.type === 'VariableDeclaration'
+      ) {
+        walkVariableDeclaration(stmt.left)
+      }
+      else if (
+        stmt.type === 'ExportNamedDeclaration'
+        && stmt.declaration
+        && stmt.declaration.type === 'VariableDeclaration'
+      ) {
+        walkVariableDeclaration(stmt.declaration, isRoot)
+      }
+      else if (
+        stmt.type === 'LabeledStatement'
+        && stmt.body.type === 'VariableDeclaration'
+      ) {
+        walkVariableDeclaration(stmt.body, isRoot)
+      }
+    }
+  }
+  function walkVariableDeclaration(stmt: VariableDeclaration, isRoot = false) {
+    if (stmt.declare) {
+      return
+    }
+    for (const decl of stmt.declarations) {
+      const isDefineProps
+        = isRoot && decl.init && isCallOf(unwrapTSNode(decl.init), 'defineProps')
+      for (const id of extractIdentifiers(decl.id)) {
+        if (isDefineProps) {
+          // for defineProps destructure, only exclude them since they
+          // are already passed in as knownProps
+          excludedIds.add(id)
+        }
+        else {
+          registerLocalBinding(id)
+        }
+      }
+    }
+  }
+  function checkUsage(node: Node, method: string, alias = method) {
+    if (isCallOf(node, alias)) {
+      const arg = unwrapTSNode(node.arguments[0])
+      if (arg.type === 'Identifier' && currentScope[arg.name]) {
+        compilerHooks.onError(
+          vineErr(
+            { vineFileCtx, vineCompFnCtx },
+            {
+              msg: `"${arg.name}" is a destructured prop and should not be passed directly to ${method}(). `
+                + `Pass a getter () => ${arg.name} instead.`,
+              location: arg.loc,
+            },
+          ),
+        )
+      }
+    }
+  }
+  function rewriteId(id: Identifier, parent: Node, parentStack: Node[]) {
+    if (
+      (parent.type === 'AssignmentExpression' && id === parent.left)
+      || parent.type === 'UpdateExpression'
+    ) {
+      compilerHooks.onError(
+        vineErr(
+          { vineFileCtx, vineCompFnCtx },
+          {
+            msg: `Cannot assign to destructured props as they are readonly.`,
+            location: id.loc,
+          },
+        ),
+      )
+    }
+
+    if (isStaticProperty(parent) && parent.shorthand) {
+      // let binding used in a property shorthand
+      // skip for destructure patterns
+      if (
+        !(parent as any).inPattern
+        || isInDestructureAssignment(parent, parentStack)
+      ) {
+        // const x = { prop } -> const x = { prop: __props.prop }
+        vineFileCtx.fileMagicCode.appendLeft(
+          id.end!,
+          `: ${genPropsAccessExp(propsLocalToPublicMap[id.name])}`,
+        )
+      }
+    }
+    else {
+      // x --> __props.x
+      vineFileCtx.fileMagicCode.overwrite(
+        id.start!,
+        id.end!,
+        genPropsAccessExp(propsLocalToPublicMap[id.name]),
+      )
+    }
+  }
+
+  walkScope(vineCompFnBody)
+
+  walk(vineCompFnBody, {
+    enter(node: Node, parent: Node | null) {
+      parent && parentStack.push(parent)
+
+      // skip type nodes
+      if (
+        parent
+        && parent.type.startsWith('TS')
+        && !TS_NODE_TYPES.includes(parent.type)
+      ) {
+        return this.skip()
+      }
+
+      checkUsage(node, 'watch', vineFileCtx.vueImportAliases.watch)
+      checkUsage(node, 'toRef', vineFileCtx.vueImportAliases.toRef)
+
+      // function scopes
+      if (isFunctionType(node)) {
+        pushScope()
+        walkFunctionParams(node, registerLocalBinding)
+        if (node.body.type === 'BlockStatement') {
+          walkScope(node.body)
+        }
+        return
+      }
+
+      // catch param
+      if (node.type === 'CatchClause') {
+        pushScope()
+        if (node.param && node.param.type === 'Identifier') {
+          registerLocalBinding(node.param)
+        }
+        walkScope(node.body)
+        return
+      }
+
+      // non-function block scopes
+      if (node.type === 'BlockStatement' && parent && !isFunctionType(parent)) {
+        pushScope()
+        walkScope(node)
+        return
+      }
+
+      if (node.type === 'Identifier') {
+        if (
+          isReferencedIdentifier(node, parent!, parentStack)
+          && !excludedIds.has(node)
+        ) {
+          if (currentScope[node.name]) {
+            rewriteId(node, parent!, parentStack)
+          }
+        }
+      }
+    },
+    leave(node: Node, parent: Node | null) {
+      parent && parentStack.pop()
+      if (
+        (node.type === 'BlockStatement' && parent && !isFunctionType(parent))
+        || isFunctionType(node)
+      ) {
+        popScope()
+      }
+    },
+  })
 }
 
 /**
@@ -268,289 +489,319 @@ export function transformFile(
     if (Object.entries(vineCompFnCtx.slots).length > 0) {
       vueImportsSpecs.set(USE_SLOT_HELPER, `_${USE_SLOT_HELPER}`)
     }
+    // add createPropsRestProxy
+    const isNeedCreatePropsRestProxy = Object.values(vineCompFnCtx.propsDestructuredNames).some(prop => prop.isRest)
+    if (isNeedCreatePropsRestProxy) {
+      vueImportsSpecs.set(CREATE_PROPS_REST_PROXY_HELPER, `_${CREATE_PROPS_REST_PROXY_HELPER}`)
+    }
 
     const vineCompFnStart = vineCompFnCtx.fnDeclNode.start!
     const vineCompFnEnd = vineCompFnCtx.fnDeclNode.end!
     const vineCompFnBody = vineCompFnCtx.fnItselfNode?.body
-    if (isBlockStatement(vineCompFnBody)) {
-      let hasAwait = false
 
-      for (const vineFnBodyStmt of vineCompFnBody.body) {
-        const mayContain = mayContainAwaitExpr(vineFnBodyStmt)
-        if (!mayContain || !mayContain.awaitExpr) {
-          continue
-        }
+    if (!isBlockStatement(vineCompFnBody)) {
+      return
+    }
 
-        // has await expression in function body root level statements,
-        // we need to add 'withAsyncContext' helper, imported from 'vue'
-        vueImportsSpecs.set(WITH_ASYNC_CONTEXT_HELPER, `_${WITH_ASYNC_CONTEXT_HELPER}`)
+    let hasAwait = false
 
-        const { awaitExpr, isNeedResult } = mayContain
-        hasAwait = true
-        ms.update(
-          awaitExpr.start!,
-          awaitExpr.end!,
-          wrapWithAsyncContext(
-            isNeedResult,
-            ms.original.slice(
-              awaitExpr.argument.start!,
-              awaitExpr.argument.end!,
-            ),
+    // Handle component's setup logic from function body
+    for (const vineFnBodyStmt of vineCompFnBody.body) {
+      const mayContain = mayContainAwaitExpr(vineFnBodyStmt)
+      if (!mayContain || !mayContain.awaitExpr) {
+        continue
+      }
+
+      // has await expression in function body root level statements,
+      // we need to add 'withAsyncContext' helper, imported from 'vue'
+      vueImportsSpecs.set(WITH_ASYNC_CONTEXT_HELPER, `_${WITH_ASYNC_CONTEXT_HELPER}`)
+
+      const { awaitExpr, isNeedResult } = mayContain
+      hasAwait = true
+      ms.update(
+        awaitExpr.start!,
+        awaitExpr.end!,
+        wrapWithAsyncContext(
+          isNeedResult,
+          ms.original.slice(
+            awaitExpr.argument.start!,
+            awaitExpr.argument.end!,
           ),
-        )
+        ),
+      )
+    }
+
+    const firstStmt = vineCompFnBody.body[0]
+    const lastStmt = vineCompFnBody.body[vineCompFnBody.body.length - 1]
+
+    // Replace the original function delcaration start to its body's first statement's start,
+    // and the last statement's end to the function declaration end.
+    // Wrap all body statements into a `setup(...) { ... }`
+    ms.remove(vineCompFnStart, firstStmt.start!)
+    ms.remove(lastStmt.end!, vineCompFnEnd)
+
+    // Remove all statements that contain macro calls
+    vineCompFnBody.body.forEach((stmt) => {
+      if (
+        isStatementContainsVineMacroCall(stmt)
+        || isReturnStatement(stmt)
+      ) {
+        ms.remove(stmt.start!, stmt.end!)
       }
+    })
 
-      const firstStmt = vineCompFnBody.body[0]
-      const lastStmt = vineCompFnBody.body[vineCompFnBody.body.length - 1]
-
-      // Replace the original function delcaration start to its body's first statement's start,
-      // and the last statement's end to the function declaration end.
-      // Wrap all body statements into a `setup(...) { ... }`
-      ms.remove(vineCompFnStart, firstStmt.start!)
-      ms.remove(lastStmt.end!, vineCompFnEnd)
-
-      // Remove all statements that contain macro calls
-      vineCompFnBody.body.forEach((stmt) => {
-        if (
-          isStatementContainsVineMacroCall(stmt)
-          || isReturnStatement(stmt)
-        ) {
-          ms.remove(stmt.start!, stmt.end!)
-        }
-      })
-
-      // Build formal parameters of `setup` function
-      const setupCtxDestructFormalParams: {
-        field: string
-        alias?: string
-      }[] = []
-      if (vineCompFnCtx.emits.length > 0) {
-        setupCtxDestructFormalParams.push({
-          field: 'emit',
-          alias: '__emit',
-        })
-        ms.prependLeft(
-          firstStmt.start!,
-          `const ${vineCompFnCtx.emitsAlias} = __emit;\n`,
-        )
-      }
-
-      // Always add `expose` to the setup context destructuring
+    // Build formal parameters of `setup` function
+    const setupCtxDestructFormalParams: {
+      field: string
+      alias?: string
+    }[] = []
+    if (vineCompFnCtx.emits.length > 0) {
       setupCtxDestructFormalParams.push({
-        field: 'expose',
-        alias: '__expose',
+        field: 'emit',
+        alias: '__emit',
       })
-
-      let setupFormalParams = `__props${
-        setupCtxDestructFormalParams.length > 0
-          ? `, { ${
-            setupCtxDestructFormalParams.map(
-              ({ field, alias }) => `${field}${showIf(Boolean(alias), `: ${alias}`)}`,
-            ).join(', ')
-          } }`
-          : ' /* No setup ctx destructuring */'
-      }`
-
-      // Code generation for vineSlots
-      if (Object.entries(vineCompFnCtx.slots).length > 0) {
-        ms.prependLeft(
-          firstStmt.start!,
-          `const ${vineCompFnCtx.slotsAlias} = _${USE_SLOT_HELPER}();\n`,
-        )
-      }
-
-      // Code generation for vineModel
-      if (Object.entries(vineCompFnCtx.vineModels).length > 0) {
-        registerImport(
-          mergedImportsMap,
-          'vue',
-          USE_MODEL_HELPER,
-          `_${USE_MODEL_HELPER}`,
-        )
-        ms.prependLeft(
-          firstStmt.start!,
-          setupCodeGenerationForVineModel(vineCompFnCtx),
-        )
-      }
-
-      // Insert `useCssVars` helper function call
-      if (
-        Array.from(
-          Object.entries(vineCompFnCtx.cssBindings),
-        ).length > 0
-      ) {
-        ms.prependLeft(
-          firstStmt.start!,
-          `\n${compileCSSVars(vineCompFnCtx, inline)}\n`,
-        )
-      }
-
-      // If there's any prop that is from macro define,
-      // we need to import `toRefs`
-      if (
-        Object
-          .values(vineCompFnCtx.props)
-          .some(meta => Boolean(meta.isFromMacroDefine))
-      ) {
-        registerImport(
-          mergedImportsMap,
-          'vue',
-          TO_REFS_HELPER,
-          `_${TO_REFS_HELPER}`,
-        )
-        const propsFromMacro = Object.entries(vineCompFnCtx.props)
-          .filter(([_, meta]) => Boolean(meta.isFromMacroDefine))
-          .map(([propName, _]) => propName)
-        ms.prependLeft(
-          firstStmt.start!,
-          `const { ${propsFromMacro.join(', ')} } = _toRefs(${vineCompFnCtx.propsAlias});\n`,
-        )
-      }
-
-      // Insert `useDefaults` helper function import specifier.
-      // And prepend `const __props = useDefaults(...)` before the first statement.
-      let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;\n`
-      if (
-        isNeedUseDefaults
-        && !isPrependedUseDefaults
-      ) {
-        isPrependedUseDefaults = true
-        registerImport(
-          mergedImportsMap,
-          'vue-vine',
-          USE_DEFAULTS_HELPER,
-          `_${USE_DEFAULTS_HELPER}`,
-        )
-        propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _${USE_DEFAULTS_HELPER}(__props, {\n${
-          Object.entries(vineCompFnCtx.props)
-            .filter(([_, propMeta]) => Boolean(propMeta.default))
-            .map(([propName, propMeta]) => `  ${propName}: ${
-              ms.original.slice(
-                propMeta.default!.start!,
-                propMeta.default!.end!,
-              )
-            }`)
-            .join(',\n')
-        }\n})\n`
-      }
       ms.prependLeft(
         firstStmt.start!,
-        propsDeclarationStmt,
+        `const ${vineCompFnCtx.emitsAlias} = __emit;\n`,
       )
+    }
 
-      // Insert variables that required by async context generated code
-      if (hasAwait) {
-        ms.prependLeft(
-          firstStmt.start!,
-          'let __temp, __restore;\n',
-        )
-      }
+    // Always add `expose` to the setup context destructuring
+    setupCtxDestructFormalParams.push({
+      field: 'expose',
+      alias: '__expose',
+    })
 
-      // vineExpose
-      if (vineCompFnCtx.expose) {
-        ms.appendRight(
-          lastStmt.end!,
-          `\n__expose(${
+    let setupFormalParams = `__props${
+      setupCtxDestructFormalParams.length > 0
+        ? `, { ${
+          setupCtxDestructFormalParams.map(
+            ({ field, alias }) => `${field}${showIf(Boolean(alias), `: ${alias}`)}`,
+          ).join(', ')
+        } }`
+        : ' /* No setup ctx destructuring */'
+    }`
+
+    // Code generation for vineSlots
+    if (Object.entries(vineCompFnCtx.slots).length > 0) {
+      ms.prependLeft(
+        firstStmt.start!,
+        `const ${vineCompFnCtx.slotsAlias} = _${USE_SLOT_HELPER}();\n`,
+      )
+    }
+
+    // Code generation for vineModel
+    if (Object.entries(vineCompFnCtx.vineModels).length > 0) {
+      registerImport(
+        mergedImportsMap,
+        'vue',
+        USE_MODEL_HELPER,
+        `_${USE_MODEL_HELPER}`,
+      )
+      ms.prependLeft(
+        firstStmt.start!,
+        setupCodeGenerationForVineModel(vineCompFnCtx),
+      )
+    }
+
+    // Insert `useCssVars` helper function call
+    if (
+      Array.from(
+        Object.entries(vineCompFnCtx.cssBindings),
+      ).length > 0
+    ) {
+      ms.prependLeft(
+        firstStmt.start!,
+        `\n${compileCSSVars(vineCompFnCtx, inline)}\n`,
+      )
+    }
+
+    // If there's any prop that is from macro define,
+    // we need to import `toRefs`
+    if (
+      Object
+        .values(vineCompFnCtx.props)
+        .some(meta => Boolean(meta.isFromMacroDefine))
+    ) {
+      registerImport(
+        mergedImportsMap,
+        'vue',
+        TO_REFS_HELPER,
+        `_${TO_REFS_HELPER}`,
+      )
+      const propsFromMacro = Object.entries(vineCompFnCtx.props)
+        .filter(([_, meta]) => Boolean(meta.isFromMacroDefine))
+        .map(([propName, _]) => propName)
+      ms.prependLeft(
+        firstStmt.start!,
+        `const { ${propsFromMacro.join(', ')} } = _toRefs(${vineCompFnCtx.propsAlias});\n`,
+      )
+    }
+
+    // Insert `useDefaults` helper function import specifier.
+    // And prepend `const __props = useDefaults(...)` before the first statement.
+    let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;\n`
+    if (
+      isNeedUseDefaults
+      && !isPrependedUseDefaults
+    ) {
+      isPrependedUseDefaults = true
+      registerImport(
+        mergedImportsMap,
+        'vue-vine',
+        USE_DEFAULTS_HELPER,
+        `_${USE_DEFAULTS_HELPER}`,
+      )
+      propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _${USE_DEFAULTS_HELPER}(__props, {\n${
+        Object.entries(vineCompFnCtx.props)
+          .filter(([_, propMeta]) => Boolean(propMeta.default))
+          .map(([propName, propMeta]) => `  ${propName}: () => (${
             ms.original.slice(
-              vineCompFnCtx.expose.start!,
-              vineCompFnCtx.expose.end!,
+              propMeta.default!.start!,
+              propMeta.default!.end!,
             )
-          });\n`,
-        )
-      }
-      else {
-        ms.prependLeft(
-          firstStmt.start!,
-          '\n__expose();\n',
-        )
-      }
+          })`)
+          .join(',\n')
+      }\n})\n`
+    }
+    ms.prependLeft(
+      firstStmt.start!,
+      propsDeclarationStmt,
+    )
 
-      // Insert setup function's return statement
-      ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
-
-      ms.prependLeft(firstStmt.start!, `${vineCompFnCtx.isAsync ? 'async ' : ''}setup(${setupFormalParams}) {\n`)
-      ms.appendRight(lastStmt.end!, '\n}')
-
-      const emitsKeys = [
-        ...vineCompFnCtx.emits.map(emit => `'${emit}'`),
-        ...Object.keys(vineCompFnCtx.vineModels).map(modelName => `'update:${modelName}'`),
-      ]
-      const propsOptionFields = propsOptionsCodeGeneration(
-        vineFileCtx,
-        vineCompFnCtx,
+    if (isNeedCreatePropsRestProxy) {
+      ms.prependLeft(
+        firstStmt.start!,
+        `const __propsRestProxy = _${CREATE_PROPS_REST_PROXY_HELPER}(__props, [${
+          Object.entries(vineCompFnCtx.propsDestructuredNames)
+            .filter(([_, propMeta]) => !propMeta.isRest)
+            .map(([propName, _]) => `'${propName}'`)
+            .join(', ')
+        }]);\n`,
       )
+    }
 
-      ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
-        // Some basic component options
-        vineCompFnCtx.options
-          ? `...${ms.original.slice(
-            vineCompFnCtx.options.start!,
-            vineCompFnCtx.options.end!,
-          )},`
-          : `name: '${vineCompFnCtx.fnName}',`
-      }\n${
-        propsOptionFields.length > 0
-          ? `props: {\n${
-            propsOptionsCodeGeneration(
-              vineFileCtx,
-              vineCompFnCtx,
-            ).join('\n')
-          }\n},`
-          : '/* No props */'
-      }\n${
-        emitsKeys.length > 0
-          ? `emits: [${
-            emitsKeys.join(', ')
-          }],`
-          : '/* No emits */'
-      }\n`)
-      ms.appendRight(lastStmt.end!, '\n})')
+    // Replace references to destructured prop identifiers
+    // with access expressions like `x` to `props.x`
+    rewriteDestructuredPropAccess(
+      compilerHooks,
+      vineFileCtx,
+      vineCompFnCtx,
+      vineCompFnBody,
+    )
 
-      // Defaultly set `export` for all component functions
-      // because it's required by HMR context.
-      ms.prependLeft(firstStmt.start!, `\nexport const ${
-        vineCompFnCtx.fnName
-      } = (() => {\n${
-        // Prepend all generated preamble statements
-        generatedPreambleStmts
-          .get(vineCompFnCtx)
-          ?.join('\n') ?? ''
-      }\n`)
+    // Insert variables that required by async context generated code
+    if (hasAwait) {
+      ms.prependLeft(
+        firstStmt.start!,
+        'let __temp, __restore;\n',
+      )
+    }
 
-      ms.appendRight(lastStmt.end!, `\n${
-        inline
-          ? ''
-          // Not-inline mode, we need manually add the
-          // render function to the component object.
-          : `${
-            postProcessForRenderCodegen(templateCompileResults.get(vineCompFnCtx) ?? '')
-          }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
-      }\n${
-        showIf(
-          Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
-          `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';`,
-        )}\n${
-        isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
-      }\n${showIf(
-        // handle Web Component styles
-        Boolean(vineCompFnCtx.isCustomElement),
-        `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
-      )}\nreturn __vine\n})();`)
+    // vineExpose
+    if (vineCompFnCtx.expose) {
+      ms.appendRight(
+        lastStmt.end!,
+        `\n__expose(${
+          ms.original.slice(
+            vineCompFnCtx.expose.start!,
+            vineCompFnCtx.expose.end!,
+          )
+        });\n`,
+      )
+    }
+    else {
+      ms.prependLeft(
+        firstStmt.start!,
+        '\n__expose();\n',
+      )
+    }
 
-      if (vineCompFnCtx.isExportDefault) {
-        ms.appendRight(
-          ms.length(),
-          `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
-        )
-      }
+    // Insert setup function's return statement
+    ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
 
-      // Record component function to HMR
-      if (isDev) {
-        ms.appendRight(
-          ms.length(),
-          `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
-        )
-      }
+    ms.prependLeft(firstStmt.start!, `${vineCompFnCtx.isAsync ? 'async ' : ''}setup(${setupFormalParams}) {\n`)
+    ms.appendRight(lastStmt.end!, '\n}')
+
+    const emitsKeys = [
+      ...vineCompFnCtx.emits.map(emit => `'${emit}'`),
+      ...Object.keys(vineCompFnCtx.vineModels).map(modelName => `'update:${modelName}'`),
+    ]
+    const propsOptionFields = propsOptionsCodeGeneration(
+      vineFileCtx,
+      vineCompFnCtx,
+    )
+
+    ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
+      // Some basic component options
+      vineCompFnCtx.options
+        ? `...${ms.original.slice(
+          vineCompFnCtx.options.start!,
+          vineCompFnCtx.options.end!,
+        )},`
+        : `name: '${vineCompFnCtx.fnName}',`
+    }\n${
+      propsOptionFields.length > 0
+        ? `props: {\n${
+          propsOptionsCodeGeneration(
+            vineFileCtx,
+            vineCompFnCtx,
+          ).join('\n')
+        }\n},`
+        : '/* No props */'
+    }\n${
+      emitsKeys.length > 0
+        ? `emits: [${
+          emitsKeys.join(', ')
+        }],`
+        : '/* No emits */'
+    }\n`)
+    ms.appendRight(lastStmt.end!, '\n})')
+
+    // Defaultly set `export` for all component functions
+    // because it's required by HMR context.
+    ms.prependLeft(firstStmt.start!, `\nexport const ${
+      vineCompFnCtx.fnName
+    } = (() => {\n${
+      // Prepend all generated preamble statements
+      generatedPreambleStmts
+        .get(vineCompFnCtx)
+        ?.join('\n') ?? ''
+    }\n`)
+
+    ms.appendRight(lastStmt.end!, `\n${
+      inline
+        ? ''
+      // Not-inline mode, we need manually add the
+      // render function to the component object.
+        : `${
+          postProcessForRenderCodegen(templateCompileResults.get(vineCompFnCtx) ?? '')
+        }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
+    }\n${
+      showIf(
+        Boolean(vineFileCtx.styleDefine[vineCompFnCtx.scopeId]),
+        `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';`,
+      )}\n${
+      isDev ? `__vine.__hmrId = '${vineCompFnCtx.scopeId}';` : ''
+    }\n${showIf(
+      // handle Web Component styles
+      Boolean(vineCompFnCtx.isCustomElement),
+      `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`,
+    )}\nreturn __vine\n})();`)
+
+    if (vineCompFnCtx.isExportDefault) {
+      ms.appendRight(
+        ms.length(),
+        `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
+      )
+    }
+
+    // Record component function to HMR
+    if (isDev) {
+      ms.appendRight(
+        ms.length(),
+        `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
+      )
     }
   }
 
