@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.3.2
+
+### Patch Changes
+
+- Supplement some important feature support of vineModel.
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.2.2
+
+### Patch Changes
+
+- Supplement some important feature support of vineModel.
+
 ## 0.2.1
 
 ### Patch Changes
