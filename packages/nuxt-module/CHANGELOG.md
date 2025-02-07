@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix props destructure incompatible with useDefaults.
+
 ## 0.2.0
 
 ### Minor Changes

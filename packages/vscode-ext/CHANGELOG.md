@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.1
+
+### Patch Changes
+
+- Fix props destructure incompatible with useDefaults.
+
 ## 0.3.0
 
 ### Minor Changes
