@@ -10,7 +10,6 @@ import {
   traverse,
 } from '@babel/types'
 import { extractIdentifiers, isFunctionType, isInDestructureAssignment, isReferencedIdentifier, isStaticProperty, TS_NODE_TYPES, unwrapTSNode, walkFunctionParams } from '@vue/compiler-dom'
-import { genPropsAccessExp } from '@vue/shared'
 import { walk } from 'estree-walker'
 import { isCallOf, isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import {
@@ -30,6 +29,8 @@ import { sortStyleImport } from './style/order'
 import { compileCSSVars } from './style/transform-css-var'
 import { createInlineTemplateComposer, createSeparatedTemplateComposer } from './template/compose'
 import { filterJoin, showIf } from './utils'
+
+const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
 
 function wrapWithAsyncContext(
   isNeedResult: boolean,
@@ -306,6 +307,11 @@ function rewriteDestructuredPropAccess(
       }
     }
   }
+  function genPropsAccessExp(name: string, propsAlias: string): string {
+    return identRE.test(name)
+      ? `${propsAlias}.${name}`
+      : `${propsAlias}[${JSON.stringify(name)}]`
+  }
   function rewriteId(id: Identifier, parent: Node, parentStack: Node[]) {
     if (
       (parent.type === 'AssignmentExpression' && id === parent.left)
@@ -329,19 +335,19 @@ function rewriteDestructuredPropAccess(
         !(parent as any).inPattern
         || isInDestructureAssignment(parent, parentStack)
       ) {
-        // const x = { prop } -> const x = { prop: __props.prop }
+        // const x = { prop } -> const x = { prop: propsAlias.prop }
         vineFileCtx.fileMagicCode.appendLeft(
           id.end!,
-          `: ${genPropsAccessExp(propsLocalToPublicMap[id.name])}`,
+          `: ${genPropsAccessExp(propsLocalToPublicMap[id.name], vineCompFnCtx.propsAlias)}`,
         )
       }
     }
     else {
-      // x --> __props.x
+      // x --> propsAlias.x
       vineFileCtx.fileMagicCode.overwrite(
         id.start!,
         id.end!,
-        genPropsAccessExp(propsLocalToPublicMap[id.name]),
+        genPropsAccessExp(propsLocalToPublicMap[id.name], vineCompFnCtx.propsAlias),
       )
     }
   }
@@ -638,8 +644,52 @@ export function transformFile(
       )
     }
 
+    // Replace references to destructured prop identifiers
+    // with access expressions like `x` to `props.x`
+    rewriteDestructuredPropAccess(
+      compilerHooks,
+      vineFileCtx,
+      vineCompFnCtx,
+      vineCompFnBody,
+    )
+    if (Object.keys(vineCompFnCtx.propsDestructuredNames).length > 0) {
+      // Add `const { ...< destructured names >... } = propsAlias` to the top of the function
+      const destructuredNames = Object.entries(vineCompFnCtx.propsDestructuredNames)
+        .reduce((acc, [name, data]) => {
+          if (data.isRest) {
+            acc.push(`...${name}`)
+          }
+          else if (data.alias) {
+            acc.push(`'${name}': ${data.alias}`)
+          }
+          else {
+            acc.push(name)
+          }
+          return acc
+        }, [] as string[])
+
+      vineFileCtx.fileMagicCode.prependLeft(
+        vineCompFnBody.body[0].start!,
+        `const { ${destructuredNames.join(', ')} } = _${TO_REFS_HELPER}(${vineCompFnCtx.propsAlias});\n`,
+      )
+      // Add `toRefs` import specifier
+      registerImport(mergedImportsMap, 'vue', TO_REFS_HELPER, `_${TO_REFS_HELPER}`)
+    }
+
+    if (isNeedCreatePropsRestProxy) {
+      ms.prependLeft(
+        firstStmt.start!,
+        `const __propsRestProxy = _${CREATE_PROPS_REST_PROXY_HELPER}(__props, [${
+          Object.entries(vineCompFnCtx.propsDestructuredNames)
+            .filter(([_, propMeta]) => !propMeta.isRest)
+            .map(([propName, _]) => `'${propName}'`)
+            .join(', ')
+        }]);\n`,
+      )
+    }
+
     // Insert `useDefaults` helper function import specifier.
-    // And prepend `const __props = useDefaults(...)` before the first statement.
+    // And prepend `const propsAlias = useDefaults(...)` before the first statement.
     let propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = __props;\n`
     if (
       isNeedUseDefaults
@@ -667,27 +717,6 @@ export function transformFile(
     ms.prependLeft(
       firstStmt.start!,
       propsDeclarationStmt,
-    )
-
-    if (isNeedCreatePropsRestProxy) {
-      ms.prependLeft(
-        firstStmt.start!,
-        `const __propsRestProxy = _${CREATE_PROPS_REST_PROXY_HELPER}(__props, [${
-          Object.entries(vineCompFnCtx.propsDestructuredNames)
-            .filter(([_, propMeta]) => !propMeta.isRest)
-            .map(([propName, _]) => `'${propName}'`)
-            .join(', ')
-        }]);\n`,
-      )
-    }
-
-    // Replace references to destructured prop identifiers
-    // with access expressions like `x` to `props.x`
-    rewriteDestructuredPropAccess(
-      compilerHooks,
-      vineFileCtx,
-      vineCompFnCtx,
-      vineCompFnBody,
     )
 
     // Insert variables that required by async context generated code

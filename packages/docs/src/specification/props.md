@@ -30,6 +30,59 @@ function MyComponent(props: {
 }) { ... }
 ```
 
+### Destructure `props` parameter <code version>v0.3.0+</code>
+
+Since Vue Vine v0.3.0, you can destructure the `props` parameter, and use the destructured variables to access a single prop or a subset of props.
+
+```vue-vine
+function MyComponent({ foo, bar, ...rest }: {
+  foo: string,
+  bar?: number,
+  other1: boolean,
+  other2: string
+}) {
+
+  watchEffect(() => {
+    console.log('foo: ', foo, ', bar: ', bar, rest: ', rest)
+  })
+
+  return vine`...`
+}
+```
+
+The code above will be transformed to the following equivalent code:
+
+```vue-vine
+import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
+
+function MyComponent(props: {
+  foo: string,
+  bar?: number,
+  other1: boolean,
+  other2: string
+}) {
+  const rest = _createPropsRestProxy(props, ['foo', 'bar'])
+  watchEffect(() => {
+    console.log('foo: ', props.foo, ', bar: ', props.bar, ', rest: ', rest)
+  })
+
+  return vine`...`
+}
+```
+
+Such destructuring syntax is equivalent to Vue 3.5's [Reactive Props Destructure](https://vuejs.org/api/sfc-script-setup.html#reactive-props-destructure).
+
+Also, you can use the destructured variables to define props' default values, like this:
+
+```vue-vine
+function MyComponent({
+  foo = 'foo',
+  bar = 1
+}: SomeType) {
+  // ...
+}
+```
+
 ### Using more complex type <code version>v0.2.0+</code>
 
 Since Vue Vine v0.2.0, we introduced ts-morph to resolve props type annotation, so you're able to use any type instead of only `TSTypeLiteral`.

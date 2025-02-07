@@ -404,14 +404,18 @@ const analyzeVineProps: AnalyzeRunner = (
             node: propItemKey,
             isRest: false,
           }
-          if (isIdentifier(property.value)) {
+          if (isIdentifier(property.value) && property.value.name !== propItemName) {
             data.alias = property.value.name
-            vineCompFnCtx.bindings[propItemName] = VineBindingTypes.PROPS_ALIASED
           }
-          if (isAssignmentPattern(property.value)) {
+          else if (isAssignmentPattern(property.value)) {
             data.default = property.value.right
             defaultsFromDestructuredProps[propItemName] = property.value.right
           }
+
+          // Why we mark it as `SETUP_REF` instead of `PROPS_ALIASED`?
+          // Because we will actually destructure from our user-land, customized `props`
+          // which may come from `useDefaults`
+          vineCompFnCtx.bindings[propItemName] = VineBindingTypes.SETUP_REF
           vineCompFnCtx.propsDestructuredNames[propItemName] = data
         }
       }
@@ -456,7 +460,10 @@ const analyzeVineProps: AnalyzeRunner = (
           typeAnnotationRaw: propType,
         }
         vineCompFnCtx.props[propName] = propMeta
-        vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
+
+        // If the prop is already defined as a binding at destructure,
+        // we should skip defining it as a PROPS binding.
+        vineCompFnCtx.bindings[propName] ??= VineBindingTypes.PROPS
 
         if (defaultsFromDestructuredProps[propName]) {
           vineCompFnCtx.props[propName].default = defaultsFromDestructuredProps[propName]

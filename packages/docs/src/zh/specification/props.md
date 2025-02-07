@@ -18,8 +18,6 @@ Vine 会在生成组件对象的 `props` 字段时会删除所有类型信息，
 
 如果你想在 VCF 参数上定义 props，它应该是第一个参数，并为其编写一个 TypeScript 对象字面量类型注解，其中包含您想要定义的所有 props。
 
-我们决定不再支持 props 的运行时 `type` 字段，因为我们认为当我们已经使用 TypeScript 时，它并不是非常有用。
-
 在这种定义方式下，Vine 默认将所有 prop 视为**必需的**，您可以使用 `?` 标记其为可选 prop。
 
 ```vue-vine
@@ -30,6 +28,59 @@ function MyComponent(props: {
   bar?: number // 可选属性
   baz: boolean
 }) { ... }
+```
+
+### 解构 `props` 形参 <code version>v0.3.0+</code> {#destructure-props-parameter}
+
+从 Vue Vine v0.3.0 版本开始，您可以解构 `props` 形参，并使用解构后的变量来访问 props 的属性。
+
+```vue-vine
+function MyComponent({ foo, bar, ...rest }: {
+  foo: string,
+  bar?: number,
+  other1: boolean,
+  other2: string
+}) {
+
+  watchEffect(() => {
+    console.log('foo: ', foo, ', bar: ', bar, ', rest: ', rest)
+  })
+
+  return vine`...`
+}
+```
+
+以上将先被转换成以下等效内容再进行之后的编译：
+
+```vue-vine
+import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
+
+function MyComponent(props: {
+  foo: string,
+  bar?: number,
+  other1: boolean,
+  other2: string
+}) {
+  const rest = _createPropsRestProxy(props, ['foo', 'bar'])
+  watchEffect(() => {
+    console.log('foo: ', props.foo, ', bar: ', props.bar, ', rest: ', rest)
+  })
+
+  return vine`...`
+}
+```
+
+这样的解构写法和 Vue 3.5 当中的 [响应式 Props 解构](https://cn.vuejs.org/api/sfc-script-setup.html#reactive-props-destructure) 是等价的。本质是一个方便你使用单个 prop 的语法糖。
+
+同时你也可以利用解构时的赋值来定义 props 的默认值，示例如下：
+
+```vue-vine
+function MyComponent({
+  foo = 'foo',
+  bar = 1
+}: SomeType) {
+  // ...
+}
 ```
 
 ### 使用更复杂的类型 <code version>v0.2.0+</code> {#using-complex-type-v0-2-0}

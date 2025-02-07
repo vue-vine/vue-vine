@@ -369,10 +369,12 @@ export function MyComp({
       { parser: 'babel-ts' },
     )
 
-    expect(formated).toMatch('const test1 = ref(__props["foo:zee"])')
-    expect(formated).toMatch('() => __props.bar')
+    expect(formated).toMatch('const test1 = ref(props["foo:zee"])')
+    expect(formated).toMatch('() => props.bar')
     expect(formated).toMatch(
       /const __propsRestProxy = _createPropsRestProxy\(__props, \[\s*"foo:zee",\s*"bar",\s*"arr",\s*\]\);/,
     )
+
+    expect(formated).toMatchSnapshot()
   })
 })

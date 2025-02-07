@@ -131,6 +131,11 @@ export const VineBindingTypes = {
    * a literal constant, e.g. 'foo', 1, true
    */
   LITERAL_CONST: 'literal-const' as VueBindingTypes.LITERAL_CONST,
+
+  /**
+   * a destructured prop
+   */
+  DESTRUCTURED_PROP: 'destructured-prop' as const,
 } as const
 
 export const EXPECTED_ERROR = 'expected_error'
