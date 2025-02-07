@@ -92,7 +92,7 @@ export function HomePage() {
   const randomState = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
-  const userInputText = vineModel<string>()
+  const userInputText = ref('')
 
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 

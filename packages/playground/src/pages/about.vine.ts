@@ -13,13 +13,22 @@ function TestSlotContainer({ fizz, bar = 1 }: {
   vineSlots<{ slotCamel(props: { foo: number }): any }>()
 
   const num = ref(1)
+  const text = vineModel<string>({ default: '' })
 
   watch(() => bar, (newVal) => {
     console.log('bar changed', newVal)
   })
 
   return vine`
-    <div class="test-slot-container mt-6">
+    <div
+      class="test-slot-container mt-6 cursor-pointer select-none"
+      @click="num++"
+    >
+      <input
+        class="h-10 w-60 border-none bg-zinc-100 rounded-md p-2 outline-none mb-4"
+        type="text"
+        v-model="text"
+      />
       <p>fizz: "{{ fizz }}", bar: "{{ bar }}"</p>
       <slot name="slotCamel" :foo="num"></slot>
     </div>
@@ -30,15 +39,25 @@ export function AboutPage() {
   const handleEmitCamel = (bar: string) => {
     console.log(bar)
   }
+  const testSlotContainerText = ref('')
+
   return vine`
     <PageHeader />
     <div>
       <h2>About page</h2>
     </div>
-    <TestSlotContainer fizz="bass" :bar="10" @emit-camel="handleEmitCamel">
+    <p class="my-4">
+      TestSlotContainer text: {{ testSlotContainerText ?? "__Empty__" }}
+    </p>
+    <TestSlotContainer
+      fizz="bass"
+      :bar="10"
+      @emit-camel="handleEmitCamel"
+      v-model="testSlotContainerText"
+    >
       <template #slotCamel="{ foo }">
-        <p>in slot: {{ foo }}</p>
-      </template>
-    </TestSlotContainer>
-  `
+      <p>in slot: {{ foo }}</p>
+    </template>
+  </TestSlotContainer>
+`
 }

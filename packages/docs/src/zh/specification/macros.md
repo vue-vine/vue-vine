@@ -92,3 +92,33 @@ vineStyle.import('~/styles/some-style.less').scoped()
 ```vue
 <style scoped src="~/styles/some-style.less"></style>
 ```
+
+## `vineModel` {#vinemodel}
+
+`vineModel` 可以非常便捷地为组件定义双向绑定。用法和 Vue 3.4 之后支持的 [`defineModel`](https://cn.vuejs.org/api/sfc-script-setup.html#definemodel) 基本一致。
+
+```ts
+// ✅ 正确用法：
+const model = vineModel<string>() // 显式给出类型
+const count = vineModel('count', { default: 0 }) // 通过默认值隐式推断类型
+
+// ❌ 错误用法：
+vineModel() // vineModel 不可以直接裸调用而不定义变量
+const model = vineModel() // 没有类型参数，得到的 model 的类型是 Ref<unknown>
+const model = vineModel<number>(someStringAsName) // 若要为 model 取名，不可以使用变量而必须是字符串字面量
+// 其他错误可由 TypeScript 检查得到
+```
+
+为了更明确地解释 `vineModel` 的工作原理，请看下面这段代码：
+
+```ts
+// 声明 "modelValue" prop，由父组件通过 v-model 使用
+const myModel = vineModel<string>() // myModel 的类型是 Ref<string>
+// 在被修改时，触发 "update:modelValue" 事件
+myModel.value = 'hello'
+
+// 声明 "count" prop，由父组件通过 v-model:count 使用
+const count = vineModel('count', { default: 0 }) // count 的类型是 Ref<number>
+// 在被修改时，触发 "update:count" 事件
+count.value++
+```

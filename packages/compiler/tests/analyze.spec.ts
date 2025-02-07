@@ -242,6 +242,7 @@ function MyComp() {
       {
         "modelModifiersName": "modelModifiers",
         "modelOptions": "{ default: 'test' }",
+        "typeParameter": undefined,
         "varName": "defaultModelWithValue",
       }
     `)
@@ -260,6 +261,25 @@ function MyComp() {
       {
         "modelModifiersName": "countModifiers",
         "modelOptions": undefined,
+        "typeParameter": Node {
+          "end": 168,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 32,
+              "index": 168,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 26,
+              "index": 162,
+              "line": 5,
+            },
+          },
+          "start": 162,
+          "type": "TSNumberKeyword",
+        },
         "varName": "count",
       }
     `)
