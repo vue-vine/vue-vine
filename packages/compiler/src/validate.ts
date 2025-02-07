@@ -48,7 +48,7 @@ import {
   CAN_BE_CALLED_MULTI_TIMES_MACROS,
   SUPPORTED_CSS_LANGS,
 } from './constants'
-import { vineErr } from './diagnostics'
+import { vineErr, vineWarn } from './diagnostics'
 import { _breakableTraverse } from './utils'
 import { colorful } from './utils/color-string'
 
@@ -710,35 +710,56 @@ function assertVineModelUsage(
 
   const typeParams = macroCallNode.typeParameters?.params
   const macroCallArgs = macroCallNode.arguments
+  const firstArg = macroCallArgs?.[0]
   const lastArg = macroCallArgs?.[macroCallArgs.length - 1]
+
+  if (firstArg) {
+    if (isObjectExpression(firstArg)) {
+      // PASS for this check
+    }
+    else if (!isStringLiteral(firstArg)) {
+      vineCompilerHooks.onError(
+        vineErr(
+          { vineFileCtx },
+          {
+            msg: 'The given vineModel name must be a string literal',
+            location: firstArg.loc,
+          },
+        ),
+      )
+    }
+  }
 
   if (typeParams?.length === 0) {
     // vineModel can be called without type parameter and argument,
     // if so, it's a `Ref<unknown>` type and user will notice that during reference it.
+    // But we can give a warning here.
     if (macroCallArgs?.length === 0) {
-      // PASS! Very simple case
+      vineCompilerHooks.onWarn(
+        vineWarn(
+          { vineFileCtx },
+          {
+            msg: '`vineModel` without type parameter will receive a `Ref<unknown>`.',
+            location: macroCallNode.loc,
+          },
+        ),
+      )
     }
     // Check the last argument, i.e. the options object literal
     // if there's not a 'default' field, report an error for no type parameter defined
     else if (
       isObjectExpression(lastArg)
-      && !lastArg.properties.some((prop) => {
-        if (
-          isObjectProperty(prop)
-          && isIdentifier(prop.key)
-          && prop.key.name === 'default'
-        ) {
-          return true
-        }
-
-        return false
-      })
+      && !lastArg.properties.some(prop => (
+        isObjectProperty(prop)
+        && isIdentifier(prop.key)
+        && prop.key.name === 'default'
+      ))
     ) {
       vineCompilerHooks.onError(
         vineErr(
           { vineFileCtx },
           {
-            msg: 'If `vineModel` macro call doesn\'t have type parameter, it must have a `default` field in the options object literal',
+            msg: 'If `vineModel` macro call doesn\'t have type parameter, it must have a `default` field in options',
             location: lastArg.loc,
           },
         ),

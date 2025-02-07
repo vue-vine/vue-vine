@@ -418,6 +418,19 @@ export function createVueVineCode(
     return emitParam
   }
 
+  function generateModelProps(
+    vineCompFn: VineCompFn,
+    tabNum = 2,
+  ) {
+    const modelProps = `{${
+      Object.entries(vineCompFn.vineModels).map(([modelName, model]) => {
+        const { typeParameter } = model
+        return `\n${' '.repeat(tabNum + 2)}${modelName}: ${typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'}`
+      }).join(', ')
+    }\n}`
+    return modelProps
+  }
+
   function generateContextFormalParam(
     vineCompFn: VineCompFn,
     {
@@ -494,7 +507,9 @@ export function createVueVineCode(
 
       // Generate `context: { ... }` after `props: ...`
       tsCodeSegments.push(` & ${
-        generateEmitProps(vineCompFn, 2)
+        generateEmitProps(vineCompFn, 0)
+      } & ${
+        generateModelProps(vineCompFn, 0)
       }, ${generateContextFormalParam(vineCompFn, {
         tabNum: 2,
         lineWrapAtStart: false,

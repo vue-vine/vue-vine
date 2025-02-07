@@ -147,7 +147,7 @@ function App() {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`16`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`17`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
@@ -157,6 +157,7 @@ function App() {
           "Function signature of \`vineSlots\` definition can only have one parameter named \`props\`, and its parameter name must be \`props\`, but got \`yyy\`",
           "Properties of \`vineSlots\` can only have function type annotation",
           "the declaration of \`vineModel\` macro call must be inside a variable declaration",
+          "The given vineModel name must be a string literal",
           "the declaration of macro \`vineModel\` call must be an identifier",
           "Vue Vine component function can only have one default model",
           "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",

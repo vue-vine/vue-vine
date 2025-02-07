@@ -628,7 +628,10 @@ const analyzeVineEmits: AnalyzeRunner = (
   // If `vineEmits` is inside a variable declaration,
   // save the variable name to `vineCompFn.emitsAlias`
   if (parentVarDecl) {
-    vineCompFnCtx.emitsAlias = (parentVarDecl.id as Identifier).name
+    const emitsAlias = (parentVarDecl.id as Identifier).name
+    vineCompFnCtx.emitsAlias = emitsAlias
+    // vineEmits is treated as `setup-const` bindings #89
+    vineCompFnCtx.bindings[emitsAlias] = VineBindingTypes.SETUP_CONST
   }
 }
 
@@ -905,6 +908,7 @@ const analyzeVineModel: AnalyzeRunner = (
     }
 
     const varName = parentVarDecl.id.name
+    const typeParameter = macroCall.typeParameters?.params[0]
 
     // If the macro call has no argument,
     // - its model name is 'modelValue' as default
@@ -915,6 +919,7 @@ const analyzeVineModel: AnalyzeRunner = (
         varName,
         modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
         modelOptions: null,
+        typeParameter,
       }
       continue
     }
@@ -931,6 +936,7 @@ const analyzeVineModel: AnalyzeRunner = (
           varName,
           modelModifiersName: `${modelName}Modifiers`,
           modelOptions: null,
+          typeParameter,
         }
       }
       // If this argument is a object literal,
@@ -942,6 +948,7 @@ const analyzeVineModel: AnalyzeRunner = (
           varName,
           modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
           modelOptions: macroCall.arguments[0],
+          typeParameter,
         }
       }
     }
@@ -964,11 +971,6 @@ const analyzeVineModel: AnalyzeRunner = (
     vineCompFnCtx.bindings[modelName] = VineBindingTypes.PROPS
     // If `varName` is equal to `modelName`, it would be overrided to `setup-ref`
     vineCompFnCtx.bindings[modelDef.varName] = VineBindingTypes.SETUP_REF
-  }
-
-  // vineEmits is treated as `setup-const` bindings #89
-  if (vineCompFnCtx.emitsAlias && vineCompFnCtx.emits.length) {
-    vineCompFnCtx.bindings[vineCompFnCtx.emitsAlias] = VineBindingTypes.SETUP_CONST
   }
 }
 

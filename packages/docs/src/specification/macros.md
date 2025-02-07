@@ -93,3 +93,33 @@ it's equivalent to write the following code in Vue SFC.
 ```vue
 <style scoped src="~/styles/some-style.less"></style>
 ```
+
+## `vineModel`
+
+`vineModel` can be used to define two-way binding for components. The usage is quite similar to the official [`defineModel`](https://vuejs.org/api/sfc-script-setup.html#definemodel).
+
+```ts
+// ✅ Correct usage:
+const model = vineModel<string>() // explicitly give its type
+const count = vineModel('count', { default: 0 }) // implicitly inferred type by default value
+
+// ❌ Incorrect usage:
+vineModel() // vineModel cannot be called directly without defining a variable
+const model = vineModel() // No type parameter, the type of model is Ref<unknown>
+const model = vineModel<number>(someStringAsName) // If you want to name the model, no variable! it must be a string literal.
+// Other errors can be checked by TypeScript
+```
+
+To explain the working principle of `vineModel` more clearly, please see the following code:
+
+```ts
+// Declare "modelValue" prop, used by parent component with v-model
+const myModel = vineModel<string>() // myModel's type is Ref<string>
+// When it's modified, the "update:modelValue" event is triggered
+myModel.value = 'hello'
+
+// Declare "count" prop, used by parent component with v-model:count
+const count = vineModel('count', { default: 0 }) // count's type is Ref<number>
+// When it's modified, the "update:count" event is triggered
+count.value++
+```

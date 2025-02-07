@@ -219,6 +219,7 @@ export interface VineCompFnCtx {
   /** Store `vineModel` defines */
   vineModels: Record<string, {
     varName: string
+    typeParameter?: TSType
     modelModifiersName: string
     modelOptions: Node | null
   }>
