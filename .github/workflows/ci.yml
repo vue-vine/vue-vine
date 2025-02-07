@@ -32,7 +32,6 @@ jobs:
       - name: Lint
         run: nr lint
 
-
   test:
     runs-on: ${{ matrix.os }}
 
