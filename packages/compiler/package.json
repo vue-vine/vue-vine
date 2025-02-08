@@ -35,6 +35,7 @@
     "@vue/compiler-ssr": "catalog:",
     "@vue/shared": "catalog:",
     "estree-walker": "^2.0.2",
+    "get-tsconfig": "^4.10.0",
     "hash-sum": "^2.0.0",
     "line-column": "catalog:",
     "lru-cache": "^11.0.2",
