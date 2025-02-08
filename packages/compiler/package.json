@@ -43,14 +43,13 @@
     "merge-source-map": "^1.1.0",
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13",
-    "prettier": "catalog:",
-    "source-map-js": "^1.0.2",
-    "ts-morph": "catalog:",
-    "typescript": "catalog:"
+    "ts-morph": "catalog:"
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:",
-    "@types/line-column": "catalog:"
+    "@types/line-column": "catalog:",
+    "prettier": "catalog:",
+    "source-map-js": "^1.2.1"
   },
   "publishConfig": {
     "access": "public",

@@ -13,6 +13,5 @@ export default defineConfig({
     'merge-source-map',
     'postcss',
     'postcss-selector-parser',
-    'source-map-js',
   ],
 })
