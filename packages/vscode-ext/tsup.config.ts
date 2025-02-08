@@ -1,3 +1,4 @@
+import type { PluginBuild } from 'esbuild'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { defineConfig, type Options } from 'tsup'
@@ -8,7 +9,7 @@ const isDev = process.env.NODE_ENV === 'development'
 function mockDependency(name: string) {
   return {
     name: `mock-${name}`,
-    setup(build) {
+    setup(build: PluginBuild) {
       build.onResolve({ filter: new RegExp(`^${name}$`) }, () => {
         return { path: name, namespace: `mock-${name}` }
       })
@@ -48,7 +49,6 @@ const esbuildPlugins: Options['esbuildPlugins'] = [
   // in order to decrease the bundle size, because VSCode extension
   // doesn't need ts-morph to analyze props
   mockDependency('ts-morph'),
-  mockDependency('typescript'),
 ]
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
