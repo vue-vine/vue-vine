@@ -69,18 +69,12 @@ export default defineConfig({
           ],
         },
         {
-          text: '定义说明',
+          text: '说明书',
           items: [
             { text: '总览', link: '/zh/specification/overview' },
             { text: 'Props', link: '/zh/specification/props' },
             { text: '宏函数', link: '/zh/specification/macros' },
-          ],
-        },
-        {
-          text: 'Vibe',
-          items: [
-            { text: '背景', link: '/zh/vine-vibe/why' },
-            { text: '用法', link: '/zh/vine-vibe/usage' },
+            { text: 'Vibe', link: '/zh/specification/vibe' },
           ],
         },
       ],
@@ -99,13 +93,6 @@ export default defineConfig({
             { text: 'Overview', link: '/specification/overview' },
             { text: 'Props', link: '/specification/props' },
             { text: 'Macros', link: '/specification/macros' },
-          ],
-        },
-        {
-          text: 'Vibe',
-          items: [
-            { text: 'Why', link: '/vine-vibe/why' },
-            { text: 'Usage', link: '/vine-vibe/usage' },
           ],
         },
       ],

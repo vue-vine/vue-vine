@@ -1,6 +1,30 @@
-# 用法
+# 什么是 Vibe
 
-## 创建数据仓库
+Vibe 是一种在 Vue Vine 中所推荐的状态管理代码组织方式。在此之前，你或许已经知道了几种 SFC 语境下的状态管理方案，比如 Pinia、可组合函数（Composbles）、Provide/Inject 等。
+
+这篇来自 `@alexanderOpalic` 的博客 [Solving Prop Drilling in Vue: Modern State Management Strategies](https://alexop.dev/posts/solving-prop-drilling-in-vue) 详细对比了这几种方案的优缺点，非常值得一读。
+
+在 Vine 当中，由于我们拥有了在一个文件中管理多个组件的能力，那为了让编辑体验更简单、不需要总是新增和切换文件，我们希望能有一种方案综合一下上述几种方案的优点，更好地适配 Vine 横跨多个相关组件之间的状态管理。
+
+## Vibe 的优势
+
+我们通过以下几个功能需求来横向对比一下几种方案：
+
+> ✅ 表示没有问题或支持该功能。
+>
+> ❌ 表示存在缺陷或不支持该功能
+
+| 功能需求 | Pinia | 可组合函数 | Provide/Inject | Vibe |
+| -------- | ----- | ------------ | -------------- | ---- |
+| DevTools | ✅ | ❌ | ❌ | ❌ |
+| 可以直接解构 | ❌ | ✅ | ✅ | ✅ |
+| SSR 内存泄漏 | ✅ | ❌ | ✅ | ✅ |
+| SSR 状态污染 | ✅ | ❌ | ✅ | ✅ |
+| 隐式依赖 | ✅ | ✅ | ❌ | ✅ |
+
+## 用法
+
+### 创建数据仓库
 
 Vibe 的英语单词意思是 “氛围”，选择这个名字我们希望创建一个在多个组件之间共享的数据仓库，在多个组件之间自由传递。
 
@@ -52,7 +76,7 @@ const [useCounterStore, initCounterStore] = defineVibe('counter', () => {
 
 `defineVibe` 的返回值是一对方法，第一个是 `useVibe` 方法，第二个是 `initVibe` 方法。之所以采用数组形式返回，是为了方便你在取用时可以直接命名，而不用像 `{ useVibe: useMyVibe, initVibe: initMyVibe }` 这样麻烦。
 
-## 在顶层组件中初始化
+### 在顶层组件中初始化
 
 Vibe 适用于状态需要在多层相关组件中共享传递数据的场景，因此你应该在最顶层组件中使用 `initVibe` 方法来初始化数据仓库。
 
@@ -91,7 +115,7 @@ function App() {
 
 :::
 
-## 在下层组件中使用
+### 在下层组件中使用
 
 使用 `useVibe` 方法获取数据仓库对象，你可以自由地解构出你需要的状态值。
 
