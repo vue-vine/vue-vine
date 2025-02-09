@@ -93,6 +93,7 @@ export default defineConfig({
             { text: 'Overview', link: '/specification/overview' },
             { text: 'Props', link: '/specification/props' },
             { text: 'Macros', link: '/specification/macros' },
+            { text: 'Vibe', link: '/specification/vibe' },
           ],
         },
       ],
