@@ -28,14 +28,11 @@
     "prepublish": "pnpm run build"
   },
   "dependencies": {
-    "@vue-vine/compiler": "workspace:*",
-    "ts-morph": "catalog:",
-    "typescript": "catalog:"
+    "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:",
-    "rollup": "^4.27.3",
-    "vite": "catalog:"
+    "rollup": "^4.27.3"
   },
   "publishConfig": {
     "access": "public",

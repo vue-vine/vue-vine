@@ -93,7 +93,7 @@
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
     "lint": "eslint src --ext ts",
-    "pack": "vsce package",
+    "pack": "vsce package --no-dependencies",
     "prepack": "pnpm run build",
     "publish:ext": "vsce publish",
     "publish:osvx": "ovsx publish"

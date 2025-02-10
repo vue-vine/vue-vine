@@ -1,40 +1,29 @@
 import type { TsMorphCache } from '../types'
-import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import { getTsconfig } from 'get-tsconfig'
 import { Project } from 'ts-morph'
-import { findConfigFile } from 'typescript'
 
-export function createTsMorph(fileId?: string): TsMorphCache {
-  let project: Project
+export function createTsMorph(fileId: string): TsMorphCache {
+  let project = new Project()
 
   if (fileId) {
-    const tsConfigFilePath = findConfigFile(
-      dirname(fileId),
-      existsSync,
-    )
-    if (!tsConfigFilePath) {
+    const tsconfig = getTsconfig(dirname(fileId))
+
+    if (!tsconfig) {
       throw new Error('Cannot locate project\'s tsconfig.json')
     }
 
     project = new Project({
-      tsConfigFilePath,
+      tsConfigFilePath: tsconfig.path,
       compilerOptions: {
         strict: true, // Ensure more accurate type analysis
       },
     })
 
     // Read the reference configurations
-    const tsconfigJsonData = JSON.parse(
-      readFileSync(tsConfigFilePath, { encoding: 'utf-8' }),
-    )
-    const tsconfigDir = dirname(tsConfigFilePath)
-    const references = (tsconfigJsonData.references ?? []) as Array<{ path: string }>
-    for (const ref of references) {
-      project.addSourceFilesFromTsConfig(resolve(tsconfigDir, ref.path))
-    }
-  }
-  else {
-    project = new Project()
+    tsconfig.config.references?.forEach((ref) => {
+      project.addSourceFilesFromTsConfig(resolve(tsconfig.path, '..', ref.path))
+    })
   }
 
   const typeChecker = project.getTypeChecker()

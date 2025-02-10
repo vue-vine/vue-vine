@@ -35,6 +35,7 @@
     "@vue/compiler-ssr": "catalog:",
     "@vue/shared": "catalog:",
     "estree-walker": "^2.0.2",
+    "get-tsconfig": "^4.10.0",
     "hash-sum": "^2.0.0",
     "line-column": "catalog:",
     "lru-cache": "^11.0.2",
@@ -42,14 +43,13 @@
     "merge-source-map": "^1.1.0",
     "postcss": "^8.4.29",
     "postcss-selector-parser": "^6.0.13",
-    "prettier": "catalog:",
-    "source-map-js": "^1.0.2",
-    "ts-morph": "catalog:",
-    "typescript": "catalog:"
+    "ts-morph": "catalog:"
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:",
-    "@types/line-column": "catalog:"
+    "@types/line-column": "catalog:",
+    "prettier": "catalog:",
+    "source-map-js": "^1.2.1"
   },
   "publishConfig": {
     "access": "public",

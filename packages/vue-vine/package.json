@@ -32,14 +32,13 @@
     "test": "vitest"
   },
   "peerDependencies": {
-    "vue": ">=3"
+    "vue": ">=3.2"
   },
   "dependencies": {
     "@vue-vine/vite-plugin": "workspace:^"
   },
   "devDependencies": {
-    "@vue/test-utils": "^2.4.6",
-    "vue": "^3"
+    "@vue/test-utils": "^2.4.6"
   },
   "publishConfig": {
     "access": "public",
