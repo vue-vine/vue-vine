@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.3.3
+
+### Patch Changes
+
+- Re-implement the way of obtaining tsconfig and remove useless dependencies
+
 ## 0.3.2
 
 ### Patch Changes
