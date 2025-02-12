@@ -33,6 +33,7 @@
     "@babel/types": "catalog:",
     "@vue/compiler-dom": "catalog:",
     "@vue/compiler-ssr": "catalog:",
+    "@vue/compiler-vapor": "catalog:",
     "@vue/shared": "catalog:",
     "estree-walker": "^2.0.2",
     "get-tsconfig": "^4.10.0",

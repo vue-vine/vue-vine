@@ -747,7 +747,14 @@ export function transformFile(
     }
 
     // Insert setup function's return statement
-    ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
+    if (vineCompFnCtx.compileMode === 'vapor' && inline) {
+      // Inline mode in vapor mode, compiler generates a few statements,
+      // including return statement, so we just need to append them here.
+      ms.appendRight(lastStmt.end!, `\n${setupFnReturns}`)
+    }
+    else {
+      ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
+    }
 
     ms.prependLeft(firstStmt.start!, `${vineCompFnCtx.isAsync ? 'async ' : ''}setup(${setupFormalParams}) {\n`)
     ms.appendRight(lastStmt.end!, '\n}')

@@ -22,6 +22,7 @@ import type {
   BindingTypes as VueBindingTypes,
   SourceLocation as VueSourceLocation,
 } from '@vue/compiler-dom'
+import type { RootIRNode } from '@vue/compiler-vapor'
 import type MagicString from 'magic-string'
 import type { Project, TypeChecker } from 'ts-morph'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
@@ -80,6 +81,7 @@ export interface VineCompilerOptions {
   postcssOptions?: any
   postcssPlugins?: any[]
   disableTsMorph?: boolean
+  enableVapor?: boolean
 }
 
 export interface VineStyleMeta {
@@ -182,6 +184,7 @@ export interface VineDestructuredProp {
 }
 
 export interface VineCompFnCtx {
+  compileMode: 'vdom' | 'vapor'
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
   templateSource: string

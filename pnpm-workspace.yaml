@@ -5,9 +5,10 @@ catalog:
   '@babel/parser': ^7.24.0
   '@babel/types': ^7.24.0
   '@changesets/cli': ^2.27.7
-  '@vue/shared': ^3.5.13
-  '@vue/compiler-dom': ^3.4.38
-  '@vue/compiler-ssr': ^3.4.38
+  '@vue/shared': https://pkg.pr.new/@vue/shared@c6fe9f9
+  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@c6fe9f9
+  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@c6fe9f9
+  '@vue/compiler-ssr': https://pkg.pr.new/@vue/compiler-ssr@c6fe9f9
   '@vue/language-core': ~2.2.0
   '@vue/language-service': ~2.2.0
   '@volar/language-core': ~2.4.8
@@ -28,7 +29,7 @@ catalog:
   typescript: ~5.6.3
   vite: ^6.0.0
   vitest: ^3.0.0
-  vue: ^3.5.13
+  vue: https://pkg.pr.new/vue@c6fe9f9
   line-column: ^1.0.2
   prettier: ^3.3.2
   ts-morph: ^25.0.0

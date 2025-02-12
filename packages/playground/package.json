@@ -15,7 +15,8 @@
     "@vueuse/core": "^12.3.0",
     "pinia": "^2.2.4",
     "sass": "^1.66.1",
-    "vue-router": "^4.2.4"
+    "vue": "catalog:",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.20",

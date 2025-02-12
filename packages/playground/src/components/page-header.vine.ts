@@ -20,7 +20,7 @@ export function PageHeader() {
     >
       <h2>Vine playground</h2>
       <div
-        class="ml-2 px-4 py-2 rounded bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
+        class="ml-2 px-4 py-2 rounded whitespace-nowrap bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
         @click="handleNavBtnClick('/style-order')"
       >
         <span>
@@ -29,7 +29,7 @@ export function PageHeader() {
       </div>
 
       <div
-        class="ml-2 px-4 py-2 rounded bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
+        class="ml-2 px-4 py-2 rounded whitespace-nowrap bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
         @click="handleNavBtnClick('/about')"
       >
         <span>
@@ -37,16 +37,22 @@ export function PageHeader() {
         </span>
       </div>
       <div
-        class="ml-2 px-4 py-2 rounded bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
+        class="ml-2 px-4 py-2 rounded whitespace-nowrap bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
         @click="handleNavBtnClick('/todolist')"
       >
         <span> TodoList </span>
       </div>
       <div
-        class="ml-2 px-4 py-2 rounded bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
+        class="ml-2 px-4 py-2 rounded whitespace-nowrap bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
         @click="handleNavBtnClick('/test-ts-morph')"
       >
         <span> ts morph </span>
+      </div>
+      <div
+        class="ml-2 px-4 py-2 rounded whitespace-nowrap bg-teal-700:20 dark:bg-coolgray-100:20 cursor-pointer"
+        @click="handleNavBtnClick('/vapor')"
+      >
+        <span> Vapor </span>
       </div>
     </div>
   `

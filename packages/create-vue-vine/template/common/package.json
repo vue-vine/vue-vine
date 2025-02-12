@@ -11,7 +11,7 @@
     "lint:fix": "eslint src --cache --fix"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",

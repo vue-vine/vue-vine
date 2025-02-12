@@ -40,6 +40,7 @@ import {
   isBooleanLiteral,
   isClassDeclaration,
   isDeclaration,
+  isDirective,
   isExportDefaultDeclaration,
   isFunctionDeclaration,
   isIdentifier,
@@ -974,9 +975,34 @@ const analyzeVineModel: AnalyzeRunner = (
   }
 }
 
+const analyzeVineVaporDirective: AnalyzeRunner = (
+  { vineCompFnCtx, vineCompilerHooks },
+  fnItselfNode,
+) => {
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isDirective(node)) {
+      const directiveValue = node.value.value
+      const isGlobalVapor = Boolean(vineCompilerHooks.getCompilerCtx().options.enableVapor)
+      if (isGlobalVapor) {
+        vineCompFnCtx.compileMode = (directiveValue === 'use vdom')
+          ? 'vdom'
+          : 'vapor'
+      }
+      else {
+        vineCompFnCtx.compileMode = (directiveValue === 'use vapor')
+          ? 'vapor'
+          : 'vdom'
+      }
+
+      throw exitTraverse
+    }
+  })
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineEmits,
+  analyzeVineVaporDirective,
   analyzeVineExpose,
   analyzeVineSlots,
   analyzeVineModel,
@@ -1105,6 +1131,7 @@ function buildVineCompFnCtx(
     cssBindings: {},
     externalStyleFilePaths: [],
     hoistSetupStmts: [],
+    compileMode: vineCompilerHooks.getCompilerCtx().options.enableVapor ? 'vapor' : 'vdom',
 
     getPropsTypeRecordStr({
       joinStr = ', ',

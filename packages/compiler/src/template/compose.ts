@@ -1,9 +1,11 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { AttributeNode, BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
-import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
+import type { AttributeNode, BindingTypes, CompilerOptions, RootNode, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { RootIRNode } from '@vue/compiler-vapor'
+import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
+import { compile as vaporCompile } from '@vue/compiler-vapor'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
@@ -14,22 +16,31 @@ import { walkVueTemplateAst } from './walk'
 export function compileVineTemplate(
   source: string,
   params: Partial<CompilerOptions>,
-  { ssr, getParsedAst = false }: {
+  { vapor, ssr, getParsedAst = false }: {
+    vapor: boolean
     ssr: boolean
     getParsedAst?: boolean
   },
 ) {
-  const _compile = ssr ? ssrCompile : compile
+  const _compile = (
+    ssr
+      ? ssrCompile
+      : vapor
+        ? vaporCompile
+        : compile
+  )
   try {
+    const compileOptions = {
+      mode: 'module',
+      hoistStatic: true,
+      cacheHandlers: true,
+      prefixIdentifiers: true,
+      inline: true,
+      ...params,
+    } as any // Todo: Bypass type check due to vapor mode is not published yet
+
     return {
-      ..._compile(source, {
-        mode: 'module',
-        hoistStatic: true,
-        cacheHandlers: true,
-        prefixIdentifiers: true,
-        inline: true,
-        ...params,
-      }),
+      ..._compile(source, compileOptions),
       templateParsedAst: (
         getParsedAst
           ? parse(source, {
@@ -190,9 +201,14 @@ function computeTemplateErrLocation(
 function setVineTemplateAst(
   vineCompFnCtx: VineCompFnCtx,
   compileResult: ReturnType<typeof compileVineTemplate>,
+  isVapor = false,
 ) {
   const { ast, templateParsedAst } = compileResult!
-  vineCompFnCtx.templateAst = ast
+  vineCompFnCtx.templateAst = (
+    isVapor
+      ? (ast as RootIRNode).node
+      : (ast as RootNode)
+  )
   vineCompFnCtx.templateParsedAst = templateParsedAst
 
   // Walk the template AST to collect information
@@ -203,7 +219,7 @@ function setVineTemplateAst(
 
   // Collect all `<slot name="...">`
   // for user defined slot names
-  walkVueTemplateAst(ast, {
+  walkVueTemplateAst(vineCompFnCtx.templateAst, {
     enter(node) {
       if (node.type !== NodeTypes.ELEMENT) {
         return
@@ -245,13 +261,18 @@ export function createSeparatedTemplateComposer(
       bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
+      const compilerOptions: VineCompilerOptions = (
+        compilerHooks.getCompilerCtx()?.options ?? {}
+      )
+      const isVapor = vineCompFnCtx.compileMode === 'vapor'
+
       const compileResult = compileVineTemplate(
         templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           inline: false,
           bindingMetadata,
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
+          ...compilerOptions.vueCompilerOptions ?? {},
           onError: (e) => {
             hasTemplateCompileErr = true
             compilerHooks.onError(
@@ -280,6 +301,7 @@ export function createSeparatedTemplateComposer(
         },
         {
           ssr,
+          vapor: isVapor,
           // Separate mode needs template's original AST,
           // avoid expressions in template to be compiled as '$setup.foo()'
           getParsedAst: true,
@@ -290,7 +312,7 @@ export function createSeparatedTemplateComposer(
       }
 
       // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, compileResult)
+      setVineTemplateAst(vineCompFnCtx, compileResult, isVapor)
 
       if (hasTemplateCompileErr) {
         return ''
@@ -415,12 +437,17 @@ export function createInlineTemplateComposer(
       bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
+      const compilerOptions: VineCompilerOptions = (
+        compilerHooks.getCompilerCtx()?.options ?? {}
+      )
+      const isVapor = vineCompFnCtx.compileMode === 'vapor'
+
       const compileResult = compileVineTemplate(
         templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           bindingMetadata,
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
+          ...compilerOptions.vueCompilerOptions ?? {},
           onError: (e) => {
             if (hasTemplateCompileErr) {
               return
@@ -450,7 +477,7 @@ export function createInlineTemplateComposer(
             )
           },
         },
-        { ssr },
+        { ssr, vapor: isVapor },
       )
       if (!compileResult) {
         return ''
@@ -459,7 +486,7 @@ export function createInlineTemplateComposer(
       const { preamble, code } = compileResult
 
       // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, compileResult)
+      setVineTemplateAst(vineCompFnCtx, compileResult, isVapor)
 
       if (hasTemplateCompileErr) {
         return ''
