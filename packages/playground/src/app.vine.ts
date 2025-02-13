@@ -19,14 +19,8 @@ export function VaporPage() {
 }
 
 
-// export function App() {
-//   return vine`
-//     <router-view></router-view>
-//   `
-// }
-
 export function App() {
   return vine`
-    <VaporPage />
+    <router-view></router-view>
   `
 }

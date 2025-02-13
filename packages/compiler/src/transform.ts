@@ -16,6 +16,7 @@ import {
   CREATE_PROPS_REST_PROXY_HELPER,
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
+  DEFINE_VAPOR_COMPONENT_HELPER,
   EXPECTED_ERROR,
   TO_REFS_HELPER,
   UN_REF_HELPER,
@@ -484,6 +485,9 @@ export function transformFile(
     if (!vueImportsSpecs.has(DEFINE_COMPONENT_HELPER)) {
       vueImportsSpecs.set(DEFINE_COMPONENT_HELPER, `_${DEFINE_COMPONENT_HELPER}`)
     }
+    if (vineFileCtx.vineCompFns.some(fn => fn.compileMode === 'vapor')) {
+      vueImportsSpecs.set(DEFINE_VAPOR_COMPONENT_HELPER, `_${DEFINE_VAPOR_COMPONENT_HELPER}`)
+    }
     // add useCssVars
     if (!vueImportsSpecs.has(CSS_VARS_HELPER) && vineCompFnCtx.cssBindings) {
       vueImportsSpecs.set(CSS_VARS_HELPER, `_${CSS_VARS_HELPER}`)
@@ -768,7 +772,11 @@ export function transformFile(
       vineCompFnCtx,
     )
 
-    ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n${
+    ms.prependLeft(firstStmt.start!, `const __vine = ${
+      vineCompFnCtx.compileMode === 'vapor'
+        ? `_${DEFINE_VAPOR_COMPONENT_HELPER}`
+        : `_${DEFINE_COMPONENT_HELPER}`
+    }({\n${
       // Some basic component options
       vineCompFnCtx.options
         ? `...${ms.original.slice(

@@ -5,8 +5,10 @@ function VaporExample() {
   return vine`
     <div class="mb-8">
       <h2>Vapor Example</h2>
-      <p>Count: {{ count }}</p>
-      <button @click="count++">+1</button>
+      <p class="my-2">Count: {{ count }}</p>
+      <button class="px-4 py-2 rounded cursor-pointer" @click="count++">
+        +1
+      </button>
     </div>
   `
 }
