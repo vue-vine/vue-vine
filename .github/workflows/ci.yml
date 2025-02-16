@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  lint:
+  lint_and_typecheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,6 +27,9 @@ jobs:
 
       - name: Install
         run: pnpm i
+
+      - name: Build
+        run: pnpm run build
 
       - name: Lint
         run: pnpm lint
@@ -60,6 +63,9 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Install playwright
+        run: pnpm exec playwright install
 
       - name: Test
         run: pnpm run test
