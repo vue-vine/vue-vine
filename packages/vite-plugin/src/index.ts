@@ -3,10 +3,10 @@ import type {
   VineCompilerOptions,
   VineFileCtx,
   VineProcessorLang,
+  VineQuery,
 } from '@vue-vine/compiler'
 import type { TransformPluginContext } from 'rollup'
 import type { HmrContext, PluginOption, TransformResult } from 'vite'
-import type { VineQuery } from '../../compiler/src/types'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 import {

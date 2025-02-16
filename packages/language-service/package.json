@@ -43,7 +43,8 @@
   "scripts": {
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@volar/language-server": "catalog:",

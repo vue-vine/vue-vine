@@ -24,7 +24,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
 
   function onPluginWarn(params: DiagnosticParams) {
     compilerCtx?.vineCompileWarnings.push(
-      vineWarn(fileCtx!, params),
+      vineWarn({ vineFileCtx: fileCtx! }, params),
     )
   }
 

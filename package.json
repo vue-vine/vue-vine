@@ -48,7 +48,8 @@
     "bump": "pnpm changeset add",
     "changeset:core": "pnpm changeset version --ignore \"vue-vine-extension\" --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
     "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
-    "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/vscode-ext' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'"
+    "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/vscode-ext' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
+    "typecheck": "pnpm --parallel -r typecheck"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
@@ -73,7 +74,7 @@
     "onlyBuiltDependencies": ["playwright-chromium"]
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm esno scripts/pre-commit.js"
+    "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck && pnpm esno scripts/pre-commit.js"
   },
   "lint-staged": {
     "*": "eslint . --fix --cache"

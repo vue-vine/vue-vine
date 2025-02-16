@@ -26,7 +26,8 @@
     "build": "NODE_ENV=production tsup",
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/parser": "catalog:",

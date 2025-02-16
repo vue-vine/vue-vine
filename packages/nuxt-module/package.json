@@ -30,7 +30,8 @@
     "prepublish": "pnpm run lint && pnpm run test --run && pnpm run prepack",
     "lint": "eslint .",
     "test": "vitest",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",

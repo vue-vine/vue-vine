@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "eslint-scope": ["./typings/eslint-scope/index.d.ts"]
+      "eslint-scope": ["../../types/eslint-scope/index.d.ts"]
     }
   },
   "include": ["src"]

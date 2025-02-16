@@ -29,7 +29,8 @@
     "build": "tsup",
     "test": "vitest",
     "test:dev": "vitest",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vue-vine/eslint-plugin": "workspace:*",

@@ -25,7 +25,8 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "vitest",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vue-vine/compiler": "workspace:*"

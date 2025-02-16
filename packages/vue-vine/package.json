@@ -29,7 +29,8 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "prepublish": "pnpm run build",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "vue": ">=3.2"

@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@volar/language-core": "catalog:",
