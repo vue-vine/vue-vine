@@ -53,7 +53,9 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Setup
-        run: npm i -g @antfu/ni
+        run: |
+          npm i -g @antfu/ni corepack@latest
+          corepack enable
 
       - name: Install
         run: nci
