@@ -32,7 +32,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
-    "typecheck": "pnpm run prepare && tsc --noEmit"
+    "typecheck": "pnpm run setup && tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
