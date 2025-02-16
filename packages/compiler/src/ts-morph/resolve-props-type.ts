@@ -7,11 +7,11 @@ function isBooleanType(
   typeChecker: TypeChecker,
   type: Type,
 ) {
-  // 直接 boolean
+  // Boolean cast
   if (type.isBoolean())
     return true
 
-  // 联合类型 (true | false 或 boolean | undefined 等)
+  // Union types like: (true | false or boolean | undefined ...)
   if (type.isUnion()) {
     return type.getUnionTypes().every(t =>
       t.isBoolean()
@@ -19,12 +19,12 @@ function isBooleanType(
     )
   }
 
-  // 交叉类型
+  // Intersection types like: (boolean & T1 & T2)
   if (type.isIntersection()) {
     return type.getIntersectionTypes().some(t => t.isBoolean())
   }
 
-  // 别名类型，需要获取其实际类型
+  // Alias types, need to get the actual type
   const aliasSymbol = type.getAliasSymbol()
   if (aliasSymbol) {
     const aliasType = typeChecker.getDeclaredTypeOfSymbol(aliasSymbol)
