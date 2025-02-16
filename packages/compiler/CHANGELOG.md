@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.5
+
+### Patch Changes
+
+- Fix undefined handling in HMR when ts-morph resolving.
+
 ## 0.3.4
 
 ### Patch Changes

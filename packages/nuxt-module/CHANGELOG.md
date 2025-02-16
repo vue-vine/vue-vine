@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.2.5
+
+### Patch Changes
+
+- Fix undefined handling in HMR when ts-morph resolving.
+
 ## 0.2.4
 
 ### Patch Changes
