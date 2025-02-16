@@ -24,14 +24,15 @@
   "scripts": {
     "prepack": "nuxt-module-build prepare && nuxt-module-build build",
     "build": "pnpm run prepack",
+    "prepare": "nuxt-module-build prepare && nuxi prepare playground",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && pnpm run prepare",
     "prepublish": "pnpm run lint && pnpm run test --run && pnpm run prepack",
     "lint": "eslint .",
     "test": "vitest",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
-    "typecheck": "pnpm run dev:prepare && tsc --noEmit"
+    "typecheck": "pnpm run prepare && tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",

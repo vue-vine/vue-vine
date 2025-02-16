@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  lint:
+  lint_and_typecheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
