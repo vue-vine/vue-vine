@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.15
+
+### Patch Changes
+
+- Fix dependencies for Vue Vine ESLint packages.
+
 ## 0.2.14
 
 ### Patch Changes
