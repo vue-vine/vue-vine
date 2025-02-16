@@ -24,10 +24,10 @@
   "scripts": {
     "prepack": "nuxt-module-build prepare && nuxt-module-build build",
     "build": "pnpm run prepack",
-    "prepare": "nuxt-module-build prepare && nuxi prepare playground",
+    "prepare": "nuxt-module-build prepare",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && pnpm run prepare",
+    "dev:prepare": "nuxt-module-build build --stub && pnpm run prepare && nuxi prepare playground",
     "prepublish": "pnpm run lint && pnpm run test --run && pnpm run prepack",
     "lint": "eslint .",
     "test": "vitest",
