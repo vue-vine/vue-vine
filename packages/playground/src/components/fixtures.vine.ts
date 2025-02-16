@@ -36,7 +36,7 @@ export function SampleOne() {
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo() {
-  let count = ref('0x' + Foo + 'CAFE')
+  let count = ref(`0x${Foo}CAFE`)
   let type = ref('primary')
 
   return vine`
@@ -56,6 +56,15 @@ export function TestPlainTextTemplate() {
     hello
   `
 }
+
+export function TestUnoCssAttributeMode() {
+  return vine`
+    <div border="1px solid red">
+      <span>foo</span>
+    </div>
+  `
+}
+
 // #endregion
 
 

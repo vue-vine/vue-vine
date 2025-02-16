@@ -111,3 +111,17 @@ You may seen the following output:
 
    Happy hacking!
 ```
+
+## Common issues
+
+### Conflict with UnoCSS Attribute Mode
+
+Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode. To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
+
+```ts
+declare module 'vue' {
+  interface HTMLAttributes {
+    [key: string]: any
+  }
+}
+```
