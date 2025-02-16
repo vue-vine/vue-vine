@@ -54,7 +54,6 @@ jobs:
 
       - name: Setup
         run: |
-          npm i -g corepack@latest
           corepack enable
           npm i -g @antfu/ni
 
