@@ -8,7 +8,7 @@ import {
   loadTsdkByPath,
 } from '@volar/language-server/node'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
-import { resolveVueCompilerOptions } from '@vue/language-core'
+import { getDefaultCompilerOptions } from '@vue/language-core'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
@@ -61,10 +61,11 @@ connection.onInitialize(async (params) => {
 
   function getLanguagePlugins(configFileName: string | undefined) {
     const compilerOptions: ts.CompilerOptions = {}
-    const vueCompilerOptions: VueCompilerOptions = resolveVueCompilerOptions({
-      // enable strict templates by default
-      strictTemplates: true,
-    })
+    const vueCompilerOptions: VueCompilerOptions = getDefaultCompilerOptions(
+      (void 0),
+      (void 0),
+      true, // enable strict templates by default
+    )
 
     if (configFileName) {
       const vineGlobalTypesPath = setupGlobalTypes(

@@ -1,6 +1,14 @@
+import type { VueCompilerOptions } from '@vue/language-core'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
-import { createParsedCommandLine, resolveVueCompilerOptions } from '@vue/language-core'
+import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
+
+function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
+  vueOptions.checkUnknownComponents = true
+  vueOptions.checkUnknownDirectives = true
+  vueOptions.checkUnknownEvents = true
+  vueOptions.checkUnknownProps = true
+}
 
 export function createVueVineTypeScriptPlugin() {
   const plugin = createLanguageServicePlugin((ts, info) => {
@@ -9,11 +17,14 @@ export function createVueVineTypeScriptPlugin() {
     const vueOptions = (
       isConfiguredTsProject
         ? createParsedCommandLine(ts, ts.sys, configFileName).vueOptions
-        : resolveVueCompilerOptions({
-          // enable strict templates by default
-            strictTemplates: true,
-          })
+        : getDefaultCompilerOptions(
+            (void 0),
+            (void 0),
+            true,
+          )
     )
+    // enable strict templates check by default in Vue Vine
+    ensureStrictTemplatesCheck(vueOptions)
 
     if (isConfiguredTsProject) {
       const globalTypesFilePath = setupGlobalTypes(

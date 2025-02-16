@@ -25,7 +25,7 @@ export function setupGlobalTypes(
       dir = parentDir
     }
     const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
-    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions.lib, vueOptions.target, true)}`
+    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions)}`
     host.writeFile(globalTypesPath, globalTypesContents)
     return globalTypesPath
   }
@@ -34,12 +34,8 @@ export function setupGlobalTypes(
   }
 }
 
-export function generateGlobalTypes(
-  lib: string,
-  target: number,
-  strictTemplates: boolean,
-) {
-  let globalTypes = _generateGlobalTypes(lib, target, strictTemplates)
+export function generateGlobalTypes(vueOptions: VueCompilerOptions) {
+  let globalTypes = _generateGlobalTypes(vueOptions)
 
   // Replace __VLS_Element
   globalTypes = globalTypes

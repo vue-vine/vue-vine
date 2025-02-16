@@ -8,8 +8,8 @@ catalog:
   '@vue/shared': ^3.5.13
   '@vue/compiler-dom': ^3.4.38
   '@vue/compiler-ssr': ^3.4.38
-  '@vue/language-core': ~2.2.0
-  '@vue/language-service': ~2.2.0
+  '@vue/language-core': ~2.2.2
+  '@vue/language-service': ~2.2.2
   '@volar/language-core': ~2.4.8
   '@volar/language-server': ~2.4.8
   '@volar/language-service': ~2.4.8

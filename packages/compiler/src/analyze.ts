@@ -489,6 +489,7 @@ const analyzeVineProps: AnalyzeRunner = (
           typeChecker,
           sourceFile,
           vineCompFnCtx,
+          defaultsFromDestructuredProps,
         })
         vineCompFnCtx.props = propsInfo
       }

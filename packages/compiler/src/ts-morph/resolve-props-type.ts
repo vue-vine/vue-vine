@@ -1,3 +1,4 @@
+import type { Node as BabelNode } from '@babel/types'
 import type { ArrowFunction, FunctionDeclaration, FunctionExpression, SourceFile, TaggedTemplateExpression, Type, TypeChecker, VariableDeclaration } from 'ts-morph'
 import type { VineCompFnCtx, VinePropMeta } from '../types'
 import { Node } from 'ts-morph'
@@ -37,8 +38,9 @@ export function resolveVineCompFnProps(params: {
   typeChecker: TypeChecker
   sourceFile: SourceFile
   vineCompFnCtx: VineCompFnCtx
+  defaultsFromDestructuredProps: Record<string, BabelNode>
 }) {
-  const { typeChecker, sourceFile, vineCompFnCtx } = params
+  const { typeChecker, sourceFile, vineCompFnCtx, defaultsFromDestructuredProps } = params
   const propsInfo: Record<string, VinePropMeta> = {}
 
   const targetFn = sourceFile.getFirstDescendant(
@@ -97,10 +99,14 @@ export function resolveVineCompFnProps(params: {
   for (const prop of propsType.getProperties()) {
     const propType = typeChecker.getTypeOfSymbolAtLocation(prop, propsIdentifier)
 
-    propsInfo[prop.getName()] = {
+    const propName = prop.getName()
+    propsInfo[propName] = {
       isFromMacroDefine: false,
       isRequired: !prop.isOptional(),
       isBool: isBooleanType(typeChecker, propType),
+    }
+    if (defaultsFromDestructuredProps[propName]) {
+      propsInfo[propName].default = defaultsFromDestructuredProps[propName]
     }
   }
 
