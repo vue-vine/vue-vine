@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.2.4
+
+### Patch Changes
+
+- Bump vue language tool v2.2.2 and fix default value in ts-morph case.
+
 ## 0.2.3
 
 ### Patch Changes
