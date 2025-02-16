@@ -438,7 +438,7 @@ export function transformFile(
   compilerHooks: VineCompilerHooks,
   inline = true,
   ssr = false,
-) {
+): void {
   const isDev = compilerHooks.getCompilerCtx().options.envMode !== 'production'
   const ms = vineFileCtx.fileMagicCode
 

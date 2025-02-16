@@ -9,21 +9,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.1.0
+
+      - name: Set node
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
-      - name: Setup
-        run: |
-          npm i -g @antfu/ni corepack@latest
-          corepack enable
+          cache: pnpm
 
       - name: Install
-        run: nci
+        run: pnpm i
 
       - name: Build
-        run: nr build
+        run: pnpm run build
 
       - name: pkg-new:publish
         run: pnpm run pkg-new:publish

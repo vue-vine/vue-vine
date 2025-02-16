@@ -1151,7 +1151,7 @@ export function analyzeVine(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): void {
   // Analyze all import statements in this file
   // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
   // in order to create binding records
