@@ -93,6 +93,9 @@ export function resolveVineCompFnProps(params: {
       ? targetFn.getParameters()
       : (targetFn.getInitializer() as FunctionExpression | ArrowFunction).getParameters()
   )[0]
+  if (!propsParams) {
+    return propsInfo
+  }
   const propsIdentifier = propsParams.getNameNode()
   const propsType = propsIdentifier.getType()
 

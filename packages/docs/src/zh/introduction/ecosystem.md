@@ -111,3 +111,17 @@ create-vue-vine my-vine-project
 
    Happy hacking!
 ```
+
+## 可能遇到的问题 {#common-issues}
+
+### 与 UnoCSS Attribute Mode 冲突 {#conflict-with-unocss-attribute-mode}
+
+因为 Vue Vine 的模板类型检查开启了 Vue language tools 的严格模式，所以本身是不允许随便在模板的 HTML 标签上使用任意名称的属性的，而这会影响到使用 UnoCSS Attribute Mode 的场景。为了解决此类问题，请你在项目 `tsconfig.json` 所包含（`include`）的范围内，添加一个 `shims.d.ts` 文件，并写入以下内容：
+
+```ts
+declare module 'vue' {
+  interface HTMLAttributes {
+    [key: string]: any
+  }
+}
+```
