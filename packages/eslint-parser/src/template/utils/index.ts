@@ -1,4 +1,22 @@
-import type { ESLintExpression, Reference, Token, VAttribute, VDirective, VDirectiveKey, VElement, VExpressionContainer, VFilterSequenceExpression, VForExpression, VIdentifier, VLiteral, VNode, VOnExpression, VSlotScopeExpression } from '../../ast'
+import type {
+  ESLintExpression,
+  ESLintExtendedProgram,
+  ESLintIdentifier,
+  Reference,
+  Token,
+  VAttribute,
+  VDirective,
+  VDirectiveKey,
+  VElement,
+  VExpressionContainer,
+  VFilterSequenceExpression,
+  VForExpression,
+  VIdentifier,
+  VLiteral,
+  VNode,
+  VOnExpression,
+  VSlotScopeExpression,
+} from '../../ast'
 import type { LocationCalculatorForHtml } from '../../common/location-calculator'
 import type { ExpressionParseResult } from '../../script'
 import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
@@ -6,11 +24,20 @@ import { ParseError } from '../../ast'
 import { debug } from '../../common/debug'
 import { insertError } from '../../common/error-utils'
 import { createSimpleToken, insertComments, replaceTokens } from '../../common/token-utils'
-import { parseExpression, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
+import { parseExpression, parseScriptFragment, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
 
 const shorthandSign = /^[.:@#]/u
 const shorthandNameMap = { ':': 'bind', '.': 'bind', '@': 'on', '#': 'slot' }
 const invalidDynamicArgumentNextChar = /^[\s=/>]$/u
+
+/**
+ * `casing.camelCase()` converts the beginning to lowercase,
+ * but does not convert the case of the beginning character when converting with Vue3.
+ * @see https://github.com/vuejs/vue-next/blob/48de8a42b7fed7a03f7f1ff5d53d6a704252cafe/packages/shared/src/index.ts#L109
+ */
+export function camelize(str: string) {
+  return str.replace(/-(\w)/gu, (_, c) => (c ? c.toUpperCase() : ''))
+}
 
 /**
  * Information of a mustache.
@@ -556,6 +583,14 @@ export function convertToDirective(
   }
 
   if (node.value == null) {
+    if (directive.key.name.name === 'bind') {
+      // v-bind same-name shorthand (Vue 3.4+)
+      convertForVBindSameNameShorthandValue(
+        directive,
+        parserOptions,
+        locationCalculator,
+      )
+    }
     return
   }
 
@@ -702,4 +737,64 @@ export function resolveReferences(container: VExpressionContainer): void {
       resolveReference(reference, element)
     }
   }
+}
+
+export function convertForVBindSameNameShorthandValue(
+  directive: VDirective,
+  parserOptions: VineESLintParserOptions,
+  locationCalculator: LocationCalculatorForHtml,
+) {
+  if (
+    directive.key.name.name !== 'bind'
+    || directive.key.argument == null
+    || directive.key.argument.type !== 'VIdentifier'
+  ) {
+    return
+  }
+  // v-bind same-name shorthand (Vue 3.4+)
+  const vId = directive.key.argument
+  const camelName = camelize(vId.name)
+  let result: ESLintExtendedProgram | null = null
+  try {
+    result = parseScriptFragment(
+      camelName,
+      locationCalculator.getSubCalculatorAfter(vId.range[0]),
+      parserOptions,
+    )
+  }
+  catch (err) {
+    debug('[template] Parse error: %s', err)
+  }
+  if (
+    result == null
+    || result.ast.body.length !== 1
+    || result.ast.body[0].type !== 'ExpressionStatement'
+    || result.ast.body[0].expression.type !== 'Identifier'
+  ) {
+    return
+  }
+  const id: ESLintIdentifier = result.ast.body[0].expression
+  id.range[1] = vId.range[1]
+  id.loc.end = { ...vId.loc.end }
+  if (id.end != null) {
+    id.end = vId.end
+  }
+  directive.value = {
+    type: 'VExpressionContainer',
+    range: [...vId.range],
+    loc: {
+      start: { ...vId.loc.start },
+      end: { ...vId.loc.end },
+    },
+    parent: directive,
+    expression: id,
+    references: [
+      {
+        id,
+        mode: 'r',
+        variable: null,
+      },
+    ],
+  }
+  id.parent = directive.value
 }
