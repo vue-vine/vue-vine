@@ -71,10 +71,10 @@ export function resolveVineCompFnProps(params: {
 
       // Look for return statement with tagged template literal tagged with `vine`
       const returnStatement = body.getFirstDescendant(
-        node => (
-          Node.isReturnStatement(node)
-          && Node.isTaggedTemplateExpression(node.getExpression())
-          && (node.getExpression() as TaggedTemplateExpression | undefined)?.getTag().getText() === 'vine'
+        nodeInReturnStmt => (
+          Node.isReturnStatement(nodeInReturnStmt)
+          && Node.isTaggedTemplateExpression(nodeInReturnStmt.getExpression())
+          && (nodeInReturnStmt.getExpression() as TaggedTemplateExpression | undefined)?.getTag().getText() === 'vine'
         ),
       )
 
@@ -86,13 +86,16 @@ export function resolveVineCompFnProps(params: {
 
       return !!returnStatement && fnName === vineCompFnCtx.fnName
     },
-  ) as (FunctionDeclaration | VariableDeclaration)
+  ) as (FunctionDeclaration | VariableDeclaration | undefined)
 
+  if (!targetFn) {
+    return propsInfo
+  }
   const propsParams = (
     Node.isFunctionDeclaration(targetFn)
       ? targetFn.getParameters()
-      : (targetFn.getInitializer() as FunctionExpression | ArrowFunction).getParameters()
-  )[0]
+      : (targetFn.getInitializer() as FunctionExpression | ArrowFunction)?.getParameters()
+  )?.[0]
   if (!propsParams) {
     return propsInfo
   }
