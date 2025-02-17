@@ -1,5 +1,11 @@
 # @vue-vine/language-server
 
+## 0.3.6
+
+### Patch Changes
+
+- Fix HMR stability issue.
+
 ## 0.3.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.2.6
+
+### Patch Changes
+
+- Fix HMR stability issue.
+
 ## 0.2.5
 
 ### Patch Changes
