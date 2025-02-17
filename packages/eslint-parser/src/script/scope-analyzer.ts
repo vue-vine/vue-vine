@@ -16,6 +16,7 @@ import { getFallbackKeys, traverseNodes } from '../ast'
 import { getEslintScope } from '../common/eslint-scope'
 import { getEcmaVersionIfUseEspree } from '../common/espree'
 import { createVirtualVineFnPropsReference } from '../common/vine-specific'
+import { camelize } from '../template/utils'
 import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
 
 const BUILTIN_COMPONENTS = new Set([
@@ -103,15 +104,6 @@ function isUnique(
   return (
     index === 0 || reference.identifier !== references[index - 1].identifier
   )
-}
-
-/**
- * `casing.camelCase()` converts the beginning to lowercase,
- * but does not convert the case of the beginning character when converting with Vue3.
- * @see https://github.com/vuejs/vue-next/blob/48de8a42b7fed7a03f7f1ff5d53d6a704252cafe/packages/shared/src/index.ts#L109
- */
-function camelize(str: string) {
-  return str.replace(/-(\w)/gu, (_, c) => (c ? c.toUpperCase() : ''))
 }
 
 function capitalize(str: string) {

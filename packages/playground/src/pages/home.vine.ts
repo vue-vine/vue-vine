@@ -8,6 +8,7 @@ import { generateRandomString } from '~/utils'
 function OutsideExample(props: { id: string }) {
   const randomStr = ref('')
   const loading = ref(true)
+  const title = ref('Here is a title')
   const mockUpdate = () => {
   loading.value = true
     setTimeout(() => {
@@ -32,7 +33,7 @@ function OutsideExample(props: { id: string }) {
   return vine`
     <div class="state-container">
       <InsideExample
-        title="Here's a title"
+        :title
         author="ShenQingchuan"
         @metaBgColorChange="(color: string) => console.log(color)"
       />
