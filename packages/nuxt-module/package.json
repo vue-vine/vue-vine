@@ -36,7 +36,8 @@
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
-    "vue-vine": "workspace:*"
+    "vue-vine": "workspace:*",
+    "consola": "^3.4.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.6.1",
