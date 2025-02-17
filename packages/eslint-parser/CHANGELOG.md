@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.16
+
+### Patch Changes
+
+- Support vue 3.4 feature: v-bind shorthand
+
 ## 0.2.15
 
 ### Patch Changes
