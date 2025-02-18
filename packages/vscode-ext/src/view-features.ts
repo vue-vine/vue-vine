@@ -1,5 +1,5 @@
 import type * as lsp from '@volar/vscode/node'
-import { executeCommand, useCommand, useEvent, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
+import { executeCommand, useCommand, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
 import * as vscode from 'vscode'
 
 export function useVineExtensionViewFeatures(client: lsp.BaseLanguageClient) {
