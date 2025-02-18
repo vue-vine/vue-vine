@@ -5,7 +5,11 @@
   "description": "Nuxt module for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
-  "repository": "vue-vine/nuxt-module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/nuxt-module"
+  },
   "keywords": [
     "Vue",
     "Nuxt"
@@ -36,8 +40,8 @@
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
-    "vue-vine": "workspace:*",
-    "consola": "^3.4.0"
+    "consola": "^3.4.0",
+    "vue-vine": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.6.1",

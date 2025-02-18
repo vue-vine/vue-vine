@@ -6,6 +6,10 @@
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git"
+  },
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "build": "pnpm --filter=\"./packages/*\" --stream build",
