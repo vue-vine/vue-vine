@@ -1,5 +1,11 @@
 # @vue-vine/nuxt
 
+## 0.2.7
+
+### Patch Changes
+
+- Fix Nuxt pages mapping compatible issue with Vue Vine.
+
 ## 0.2.6
 
 ### Patch Changes
