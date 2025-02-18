@@ -1,5 +1,11 @@
 # vue-vine
 
+## 0.3.7
+
+### Patch Changes
+
+- Bump version to align with vscode extension.
+
 ## 0.3.6
 
 ### Patch Changes

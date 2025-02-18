@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.3.7
+
+### Patch Changes
+
+- Bump version to align with vscode extension.
+- Add feature for restart Vine language server.
+- Remove re-compile time in performance observability log.
+
 ## 0.3.6
 
 ### Patch Changes

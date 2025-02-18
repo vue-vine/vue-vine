@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.2.7
+
+### Patch Changes
+
+- Bump version to align with vscode extension.
+
 ## 0.2.6
 
 ### Patch Changes

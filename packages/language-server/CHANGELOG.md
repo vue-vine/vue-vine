@@ -1,5 +1,12 @@
 # @vue-vine/language-server
 
+## 0.3.7
+
+### Patch Changes
+
+- Bump version to align with vscode extension.
+- Add feature for restart Vine language server.
+
 ## 0.3.6
 
 ### Patch Changes
