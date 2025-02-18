@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.7
+
+### Patch Changes
+
+- Add feature for restart Vine language server.
+
 ## 0.3.6
 
 ### Patch Changes
