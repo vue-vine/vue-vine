@@ -4,6 +4,11 @@
   "description": "ESLint config for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/eslint-config"
+  },
   "keywords": [
     "Vue",
     "Vine",

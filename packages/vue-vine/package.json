@@ -4,6 +4,11 @@
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/vue-vine"
+  },
   "exports": {
     ".": {
       "dev": "./src/index.ts",
