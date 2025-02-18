@@ -7,7 +7,7 @@ import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
 import { URI } from 'vscode-uri'
-import { createSpawnLogger, VLS_ErrorLog } from './shared'
+import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
 
 export {
@@ -41,8 +41,6 @@ export function createVueVineLanguagePlugin(
     target = 'extension',
   } = options
 
-  // Observability
-  const vinePerfMonitorLogger = createSpawnLogger('(Perfomance Monitor)')
   let vineActiveModuleId: string | undefined
 
   return {
@@ -61,9 +59,7 @@ export function createVueVineLanguagePlugin(
         && langaugeId === 'typescript'
       ) {
         if (vineActiveModuleId !== moduleId) {
-          vinePerfMonitorLogger.reset()
           vineActiveModuleId = moduleId
-          vinePerfMonitorLogger.log(`Creating virtual code for ${vineActiveModuleId}`)
         }
 
         try {
@@ -75,7 +71,6 @@ export function createVueVineLanguagePlugin(
             compilerOptions,
             vueCompilerOptions,
             target,
-            vinePerfMonitorLogger,
           )
           return virtualCode
         }

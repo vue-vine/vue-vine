@@ -653,6 +653,9 @@ importers:
       ovsx:
         specifier: latest
         version: 0.10.1
+      reactive-vscode:
+        specifier: ^0.2.10
+        version: 0.2.10(@types/vscode@1.84.0)
 
   packages/vue-vine:
     dependencies:
@@ -2009,6 +2012,9 @@ packages:
 
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==, tarball: https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.28.tgz}
+
+  '@reactive-vscode/reactivity@0.2.10':
+    resolution: {integrity: sha512-OEo1s6ZQnjKGm9Kp8b/p8+zaFg3VV6gDw61vIZOx57J750m5pldZ6VT0kah4JYTIlqQMGaHMNsbVCKfSLLcBKg==, tarball: https://registry.npmjs.org/@reactive-vscode/reactivity/-/reactivity-0.2.10.tgz}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==, tarball: https://registry.npmjs.org/@redocly/ajv/-/ajv-8.11.2.tgz}
@@ -5909,6 +5915,11 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==, tarball: https://registry.npmjs.org/rc/-/rc-1.2.8.tgz}
     hasBin: true
 
+  reactive-vscode@0.2.10:
+    resolution: {integrity: sha512-u+nGLLdIS4fB7ksUk77N7pb21kmZ5W4zKPxmrNCycHmvvcsGEiuwj+uwRSMfzXYBC4Ss3M9dW2uRh2h/sQe4jg==, tarball: https://registry.npmjs.org/reactive-vscode/-/reactive-vscode-0.2.10.tgz}
+    peerDependencies:
+      '@types/vscode': ^1.89.0
+
   read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==, tarball: https://registry.npmjs.org/read-pkg-up/-/read-pkg-up-7.0.1.tgz}
     engines: {node: '>=8'}
@@ -9040,6 +9051,8 @@ snapshots:
   '@pkgr/core@0.1.1': {}
 
   '@polka/url@1.0.0-next.28': {}
+
+  '@reactive-vscode/reactivity@0.2.10': {}
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -13817,6 +13830,11 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
     optional: true
+
+  reactive-vscode@0.2.10(@types/vscode@1.84.0):
+    dependencies:
+      '@reactive-vscode/reactivity': 0.2.10
+      '@types/vscode': 1.84.0
 
   read-pkg-up@7.0.1:
     dependencies:

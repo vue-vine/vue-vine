@@ -151,7 +151,6 @@ export function createVueVineCode(
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
   target: 'extension' | 'tsc',
-  logger?: SpawnLogger,
 ): VueVineCode {
   // Compile `.vine.ts` with Vine's own compiler
   const compileStartTime = performance.now()
@@ -311,7 +310,6 @@ export function createVueVineCode(
   const tsCodeMappings = buildMappings(tsCodeSegments)
   const linkedCodeMappings: Mapping[] = getLinkedCodeMappings(tsCode)
 
-  logger?.log(`created in ${compileTime}ms.`)
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
     id: 'root',
