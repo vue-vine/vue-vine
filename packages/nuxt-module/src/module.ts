@@ -1,34 +1,36 @@
 import type { NuxtPage } from '@nuxt/schema'
 import type { PluginOption } from 'vite'
 import { defineNuxtModule } from '@nuxt/kit'
-import { VineVitePlugin } from 'vue-vine/vite'
 import { consola } from 'consola'
+import { colorize } from 'consola/utils'
+import { VineVitePlugin } from 'vue-vine/vite'
 
 // Module options TypeScript interface definition
-export interface ModuleOptions {}
-
-function endsWith(searchString: string | undefined, extension: string, suffix?: string) {
-  return searchString?.endsWith(`.${suffix ? `${suffix}.` : '' }${extension}`)
+export interface ModuleOptions {
+  // ...
 }
 
 function plur(count: number, plural: string, singular: string = '') {
-  return count === 1 ? singular : plural
+  return count <= 1 ? singular : plural
 }
 
 function addPages(pages: NuxtPage[]) {
-  const count = {sfc: 0, vine: 0} 
+  const count = { sfc: 0, vine: 0 }
   for (const page of pages) {
-    console.log(page.file)
-    if ( endsWith(page.file, 'ts', 'vine')) {
+    if (page.file?.endsWith('.vine.ts')) {
       page.path = page.path.replace('.vine', '')
       page.path = page.path === '/index' ? '/' : page.path
 
       count.vine += 1
-    } else if (endsWith(page.file, 'vue')) {
+    }
+    else if (page.file?.endsWith('.vue')) {
       count.sfc += 1
     }
   }
-  consola.success(`Added ${count.vine} Vue Vine page${plur(count.vine, 's')}, ${count.sfc} SFC page${plur(count.sfc, 's')}.`)
+  consola.success(`
+  Added ${count.vine} page${plur(count.vine, 's')} by ${colorize('blue', 'Vine (.vine.ts)')},
+  Added ${count.sfc} page${plur(count.sfc, 's')} by ${colorize('green', 'SFC (.vue)')}
+  `.trim())
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -56,6 +58,6 @@ export default defineNuxtModule<ModuleOptions>({
       config.plugins.unshift(VineVitePlugin() as PluginOption)
     })
 
-    _nuxt.hook('pages:extend', (pages) => addPages(pages))
+    _nuxt.hook('pages:extend', pages => addPages(pages))
   },
 })
