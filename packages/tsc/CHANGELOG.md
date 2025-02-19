@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.2.8
+
+### Patch Changes
+
+- Move compiler HMR inject code into Vite plugin for bundler agnostic.
+
 ## 0.2.7
 
 ### Patch Changes
