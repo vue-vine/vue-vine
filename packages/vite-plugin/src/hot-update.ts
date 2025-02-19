@@ -17,12 +17,6 @@ import { QUERY_TYPE_SCRIPT, QUERY_TYPE_STYLE } from './constants'
 import { parseQuery } from './parse-query'
 import { areStrArraysEqual, normalizeLineEndings } from './utils'
 
-// HMR Strategy:
-// 1. Only update style if just style changed
-// 2. Only re-render current component if just template changed
-// 3. Any other condition will re-render the whole module
-// 4. If v-bind changes will re-render the whole module
-
 function reAnalyzeVine(
   code: string,
   fileId: string,
@@ -269,4 +263,28 @@ export async function vineHMR(
       return [...modules, importer]
     }
   }
+}
+
+export function addHMRHelperCode(
+  vineFileCtx: VineFileCtx,
+) {
+  const ms = vineFileCtx.fileMagicCode
+  ms.appendRight(
+    ms.length(),
+    `export const _rerender_only = ${vineFileCtx.renderOnly}
+export const _rerender_vcf_fn_name = "${vineFileCtx.hmrCompFnsName ?? ''}"
+if (import.meta.hot) {
+  import.meta.hot.accept((mod) => {
+    if (!mod) { return; }
+    const { _rerender_only, _rerender_vcf_fn_name } = mod;
+    if (!_rerender_vcf_fn_name) { return; }
+    const component = mod[_rerender_vcf_fn_name];
+    if (_rerender_only) {
+      __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
+    } else {
+      __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
+    }
+  });
+}`,
+  )
 }
