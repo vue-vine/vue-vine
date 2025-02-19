@@ -17,7 +17,7 @@ import {
 } from '@vue-vine/compiler'
 import { createLogger } from 'vite'
 import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
-import { vineHMR } from './hot-update'
+import { addHMRHelperCode, vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
 
 type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
@@ -74,6 +74,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
+
+    // Inject `import.meta.hot.accept`
+    addHMRHelperCode(vineFileCtx)
 
     return {
       code: vineFileCtx.fileMagicCode.toString(),
