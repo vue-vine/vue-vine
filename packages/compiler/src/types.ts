@@ -55,7 +55,7 @@ export type BabelFunctionNodeTypes =
   | ArrowFunctionExpression
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
-export declare type HMRCompFnsName = string | null
+export type HMRCompFnsName = string | null
 export interface TsMorphCache {
   project: Project
   typeChecker: TypeChecker
