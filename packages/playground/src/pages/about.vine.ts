@@ -1,4 +1,5 @@
-import { ref, Ref } from 'vue'
+import type { Ref } from 'vue';
+import { ref } from 'vue'
 //           ^^^^ Deliberately import an extra useless type item here
 //                - For ESLint rules to catch it
 //                - Test if it broke compilation in JS runtime
@@ -35,11 +36,14 @@ function TestSlotContainer({ fizz, bar = 1 }: {
   `
 }
 
+declare const useRequest: <T = any>(url: string) => { data: Ref<T> }
+
 export function AboutPage() {
   const handleEmitCamel = (bar: string) => {
     console.log(bar)
   }
   const testSlotContainerText = ref('')
+  const { data: testDataRef } = useRequest('...')
 
   return vine`
     <PageHeader />
@@ -49,6 +53,7 @@ export function AboutPage() {
     <p class="my-4">
       TestSlotContainer text: {{ testSlotContainerText ?? "__Empty__" }}
     </p>
+    {{ testDataRef }}
     <TestSlotContainer
       fizz="bass"
       :bar="10"
@@ -56,8 +61,8 @@ export function AboutPage() {
       v-model="testSlotContainerText"
     >
       <template #slotCamel="{ foo }">
-      <p>in slot: {{ foo }}</p>
-    </template>
-  </TestSlotContainer>
-`
+        <p>in slot: {{ foo }}</p>
+      </template>
+    </TestSlotContainer>
+  `
 }
