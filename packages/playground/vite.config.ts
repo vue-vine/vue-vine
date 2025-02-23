@@ -1,3 +1,4 @@
+import type { SassPreprocessorOptions } from 'vite'
 import path from 'node:path'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -15,8 +16,8 @@ const configForSassAndScss = {
 export default defineConfig({
   css: {
     preprocessorOptions: {
-      sass: configForSassAndScss,
-      scss: configForSassAndScss,
+      sass: configForSassAndScss as SassPreprocessorOptions,
+      scss: configForSassAndScss as SassPreprocessorOptions,
     },
   },
   resolve: {

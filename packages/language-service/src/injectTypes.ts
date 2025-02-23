@@ -49,11 +49,14 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions) {
     /declare global\s*\{/,
     `declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  type StrictIsAny<T> = [unknown] extends [T]
+  type __StrictIsAny<T> = [unknown] extends [T]
     ? ([T] extends [unknown] ? true : false)
     : false;
+  type __OmitAny<T> = {
+    [K in keyof T as __StrictIsAny<T[K]> extends true ? never : K]: T[K]
+  }
   type MakeVLSCtx<T extends object> = {
-    [K in keyof T as StrictIsAny<T[K]> extends true ? never : K]: T[K]
+    [K in keyof T]: T[K]
   }
   const __createVineVLSCtx: <T>(ctx: T) => MakeVLSCtx<import('vue').UnwrapRef<T>>;
   type VueVineComponent = __VLS_Element;
@@ -149,11 +152,11 @@ ${notPropsBindings.map(([name]) => {
   }
 });
 const __VLS_localComponents = __VLS_ctx;
+type __VLS_LocalComponents = __OmitAny<typeof __VLS_localComponents>;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
-  ...__VLS_localComponents,
+  ...__VLS_localComponents as __VLS_LocalComponents,
 };
-type __VLS_LocalComponents = typeof __VLS_localComponents;
 `
 
   return __VINE_CONTEXT_TYPES
