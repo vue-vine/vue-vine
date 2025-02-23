@@ -1,5 +1,11 @@
 # @vue-vine/language-service
 
+## 0.3.9
+
+### Patch Changes
+
+- Fix language service types issue - conflicts with implicit any
+
 ## 0.3.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-tsc
 
+## 0.2.9
+
+### Patch Changes
+
+- Fix language service types issue - conflicts with implicit any
+
 ## 0.2.8
 
 ### Patch Changes
