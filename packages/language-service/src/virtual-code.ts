@@ -463,6 +463,13 @@ export function createVueVineCode(
     return contextFormalParam
   }
 
+  function generatePropsExtra(vineCompFn: VineCompFn) {
+    const commonProps = '__VINE_VLS_VineComponentCommonProps'
+    const emitProps = generateEmitProps(vineCompFn)
+    const modelProps = generateModelProps(vineCompFn)
+    return `& ${commonProps} & ${emitProps} & ${modelProps}`
+  }
+
   function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
     tsCodeSegments.push('\n')
     if (vineCompFn.propsDefinitionBy === 'macro') {
@@ -490,12 +497,14 @@ export function createVueVineCode(
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
       const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ & ${
-        generateEmitProps(vineCompFn, 2)
+        generatePropsExtra(vineCompFn)
       }, `
       tsCodeSegments.push(propsParam)
 
       // Generate `context: { ... }` after `props: ...`
-      tsCodeSegments.push(generateContextFormalParam(vineCompFn))
+      tsCodeSegments.push(
+        generateContextFormalParam(vineCompFn),
+      )
     }
     else {
       // User provide a `props` formal parameter in the component function,
@@ -504,10 +513,8 @@ export function createVueVineCode(
       generateScriptUntil(formalParamTypeNode.end!)
 
       // Generate `context: { ... }` after `props: ...`
-      tsCodeSegments.push(` & ${
-        generateEmitProps(vineCompFn, 0)
-      } & ${
-        generateModelProps(vineCompFn, 0)
+      tsCodeSegments.push(`${
+        generatePropsExtra(vineCompFn)
       }, ${generateContextFormalParam(vineCompFn, {
         tabNum: 2,
         lineWrapAtStart: false,
