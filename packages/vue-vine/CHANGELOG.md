@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.10
+
+### Patch Changes
+
+- Fix language service - add missing common props for component.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.10
+
 ## 0.3.9
 
 ### Patch Changes

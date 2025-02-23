@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {

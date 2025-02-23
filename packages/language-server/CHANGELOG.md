@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.10
+
+### Patch Changes
+
+- Fix language service - add missing common props for component.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.10
+  - @vue-vine/language-service@0.3.10
+
 ## 0.3.9
 
 ### Patch Changes

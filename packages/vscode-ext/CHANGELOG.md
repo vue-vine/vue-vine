@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.10
+
+### Patch Changes
+
+- Fix language service - add missing common props for component.
+
 ## 0.3.9
 
 ### Patch Changes

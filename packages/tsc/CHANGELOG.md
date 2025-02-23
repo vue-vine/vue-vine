@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.10
+
+### Patch Changes
+
+- Fix language service - add missing common props for component.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.10
+
 ## 0.2.9
 
 ### Patch Changes
