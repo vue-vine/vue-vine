@@ -29,6 +29,7 @@ const FULL_FEATURES = {
 } satisfies CodeInformation
 const LINKED_CODE_LEFT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_LEFT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
 const LINKED_CODE_RIGHT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_RIGHT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
+const EMPTY_OBJECT_TYPE_REGEXP = /\{\s*\}/
 
 function escapeStrForRegExp(str: string) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
@@ -494,10 +495,14 @@ export function createVueVineCode(
   }
 
   function generatePropsExtra(vineCompFn: VineCompFn) {
-    const commonProps = '__VINE_VLS_VineComponentCommonProps'
-    const emitProps = generateEmitProps(vineCompFn)
-    const modelProps = generateModelProps(vineCompFn)
-    return `& ${commonProps} & ${emitProps} & ${modelProps}`
+    const commonProps = '& __VINE_VLS_VineComponentCommonProps'
+    const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
+    const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
+    return [
+      commonProps,
+      emitProps,
+      modelProps,
+    ].filter(Boolean).join(' ')
   }
 
   function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
