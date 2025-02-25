@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.4
+
+### Patch Changes
+
+- Bump dependencies' version.
+
 ## 0.1.3
 
 ### Major Changes
