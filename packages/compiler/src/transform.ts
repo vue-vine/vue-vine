@@ -729,12 +729,13 @@ export function transformFile(
 
     // vineExpose
     if (vineCompFnCtx.expose) {
+      const { paramObj } = vineCompFnCtx.expose
       ms.appendRight(
         lastStmt.end!,
         `\n__expose(${
           ms.original.slice(
-            vineCompFnCtx.expose.start!,
-            vineCompFnCtx.expose.end!,
+            paramObj.start!,
+            paramObj.end!,
           )
         });\n`,
       )

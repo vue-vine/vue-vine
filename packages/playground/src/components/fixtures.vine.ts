@@ -93,3 +93,30 @@ function TestCompTwo() {
   `
 }
 // #endregion
+
+
+// #region Test vineExpose and component ref
+function TargetComp() {
+  const count = ref(0)
+  vineExpose({
+    count
+  })
+
+  return vine`
+    <div @click="count++">Hello I'm target</div>
+    <p>count: {{ count }}</p>
+  `
+}
+
+
+export function TestCompRef() {
+  const target = ref<ReturnType<typeof TargetComp>>()
+  console.log('target count: ', target.value?.count)
+
+  return vine`
+    <div>
+      <TargetComp ref="target" />
+    </div>
+  `
+}
+// #endregion

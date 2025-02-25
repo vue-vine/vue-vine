@@ -208,7 +208,10 @@ export interface VineCompFnCtx {
   emitsTypeParam?: TSTypeLiteral
   emitsDefinitionByNames?: boolean
   /** Store the `defineExpose`'s argument in source code */
-  expose?: Node
+  expose?: {
+    macroCall: CallExpression
+    paramObj: Node
+  }
   /** Store the `defineOptions`'s argument in source code */
   options?: Node
   /** Store every slot's props definition */
