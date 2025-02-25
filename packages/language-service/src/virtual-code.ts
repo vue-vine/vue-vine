@@ -1,6 +1,6 @@
 import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
 import type { VinePropMeta } from '@vue-vine/compiler'
-import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '@vue/language-core'
+import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelToken, VueVineCode } from './shared'
@@ -12,10 +12,7 @@ import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED
 import { getVineTempPropName, turnBackToCRLF } from './shared'
 import { compileVineForVirtualCode } from './vine-ctx'
 
-type VineCodeInformation = CodeInformation & {
-  __combineLastMapping?: boolean
-  __combineOffsetMapping?: number
-}
+type VineCodeInformation = VueCodeInformation
 type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
 type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
@@ -124,8 +121,8 @@ function buildMappings(chunks: Segment<VineCodeInformation>[]) {
 
       // Handling combine mapping
       const isNeedCombine = (
-        mapping.data.__combineLastMapping
-        || mapping.data.__combineOffsetMapping
+        mapping.data.__combineOffset
+        // ... maybe more conditions
       )
 
       if (isNeedCombine && lastValidMapping) {
