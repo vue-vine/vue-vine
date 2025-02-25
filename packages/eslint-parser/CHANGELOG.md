@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.17
+
+### Patch Changes
+
+- Add new rule for making vineExpose at function body tail.
+
 ## 0.2.16
 
 ### Patch Changes

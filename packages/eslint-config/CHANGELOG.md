@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 0.2.17
+
+### Patch Changes
+
+- Add new rule for making vineExpose at function body tail.
+- Updated dependencies
+  - @vue-vine/eslint-plugin@0.2.17
+
 ## 0.2.16
 
 ### Patch Changes
