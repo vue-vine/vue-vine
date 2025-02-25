@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.12
+
+### Patch Changes
+
+- Fix virtual code combining behavior aliging with Vue language tools.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.12
+  - @vue-vine/language-service@0.3.12
+
 ## 0.3.11
 
 ### Patch Changes

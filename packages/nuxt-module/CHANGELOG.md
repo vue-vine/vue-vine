@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.2.12
+
+### Patch Changes
+
+- Fix virtual code combining behavior aliging with Vue language tools.
+- Updated dependencies
+  - vue-vine@0.3.12
+
 ## 0.2.11
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.12
+
+### Patch Changes
+
+- Fix virtual code combining behavior aliging with Vue language tools.
+
 ## 0.3.11
 
 ### Patch Changes
