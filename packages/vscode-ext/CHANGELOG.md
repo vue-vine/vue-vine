@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.11
+
+### Patch Changes
+
+- Fix missing expose types in language service.
+
 ## 0.3.10
 
 ### Patch Changes

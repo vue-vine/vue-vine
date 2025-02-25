@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.11
+
+### Patch Changes
+
+- Fix missing expose types in language service.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.11
+
 ## 0.2.10
 
 ### Patch Changes
