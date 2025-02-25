@@ -24,6 +24,7 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
         'vue-vine/format-prefer-template': 'error',
         'vue-vine/format-vine-component-name': 'error',
         'vue-vine/format-vine-macros-leading': 'error',
+        'vue-vine/format-vine-expose-at-tail': 'error',
         'vue-vine/format-vine-style-indent': ['warn', { indent: 2 }],
         'vue-vine/format-vine-template': 'warn',
       },

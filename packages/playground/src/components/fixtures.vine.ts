@@ -36,7 +36,7 @@ export function SampleOne() {
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo() {
-  let count = ref(`0x${Foo}CAFE`)
+  let count = ref('0x' + Foo + 'CAFE')
   let type = ref('primary')
 
   return vine`
@@ -100,6 +100,10 @@ function TargetComp() {
   const count = ref(0)
   vineExpose({
     count
+  })
+
+  watchEffect(() => {
+    console.log('count: ', count.value)
   })
 
   return vine`
