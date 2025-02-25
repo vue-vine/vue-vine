@@ -1,70 +1,179 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\` macro calls 1`] = `
-Node {
-  "end": 64,
-  "loc": SourceLocation {
-    "end": Position {
-      "column": 22,
-      "index": 64,
-      "line": 4,
-    },
-    "filename": undefined,
-    "identifierName": undefined,
-    "start": Position {
-      "column": 13,
-      "index": 55,
-      "line": 4,
-    },
-  },
-  "properties": [
-    Node {
-      "computed": false,
-      "end": 62,
-      "extra": {
-        "shorthand": true,
-      },
-      "key": Node {
-        "end": 62,
+{
+  "macroCall": Node {
+    "arguments": [
+      Node {
+        "end": 64,
         "loc": SourceLocation {
           "end": Position {
-            "column": 20,
-            "index": 62,
+            "column": 22,
+            "index": 64,
             "line": 4,
           },
           "filename": undefined,
-          "identifierName": "count",
+          "identifierName": undefined,
           "start": Position {
-            "column": 15,
-            "index": 57,
+            "column": 13,
+            "index": 55,
             "line": 4,
           },
         },
-        "name": "count",
-        "start": 57,
-        "type": "Identifier",
+        "properties": [
+          Node {
+            "computed": false,
+            "end": 62,
+            "extra": {
+              "shorthand": true,
+            },
+            "key": Node {
+              "end": 62,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 20,
+                  "index": 62,
+                  "line": 4,
+                },
+                "filename": undefined,
+                "identifierName": "count",
+                "start": Position {
+                  "column": 15,
+                  "index": 57,
+                  "line": 4,
+                },
+              },
+              "name": "count",
+              "start": 57,
+              "type": "Identifier",
+            },
+            "loc": SourceLocation {
+              "end": Position {
+                "column": 20,
+                "index": 62,
+                "line": 4,
+              },
+              "filename": undefined,
+              "identifierName": undefined,
+              "start": Position {
+                "column": 15,
+                "index": 57,
+                "line": 4,
+              },
+            },
+            "method": false,
+            "shorthand": true,
+            "start": 57,
+            "type": "ObjectProperty",
+            "value": Node {
+              "end": 62,
+              "extra": undefined,
+              "loc": SourceLocation {
+                "end": Position {
+                  "column": 20,
+                  "index": 62,
+                  "line": 4,
+                },
+                "filename": undefined,
+                "identifierName": "count",
+                "start": Position {
+                  "column": 15,
+                  "index": 57,
+                  "line": 4,
+                },
+              },
+              "name": "count",
+              "range": undefined,
+              "start": 57,
+              "type": "Identifier",
+            },
+          },
+        ],
+        "start": 55,
+        "type": "ObjectExpression",
       },
+    ],
+    "callee": Node {
+      "end": 54,
       "loc": SourceLocation {
         "end": Position {
-          "column": 20,
-          "index": 62,
+          "column": 12,
+          "index": 54,
           "line": 4,
         },
         "filename": undefined,
-        "identifierName": undefined,
+        "identifierName": "vineExpose",
         "start": Position {
-          "column": 15,
-          "index": 57,
+          "column": 2,
+          "index": 44,
           "line": 4,
         },
       },
-      "method": false,
-      "shorthand": true,
-      "start": 57,
-      "type": "ObjectProperty",
-      "value": Node {
+      "name": "vineExpose",
+      "start": 44,
+      "type": "Identifier",
+    },
+    "end": 65,
+    "loc": SourceLocation {
+      "end": Position {
+        "column": 23,
+        "index": 65,
+        "line": 4,
+      },
+      "filename": undefined,
+      "identifierName": undefined,
+      "start": Position {
+        "column": 2,
+        "index": 44,
+        "line": 4,
+      },
+    },
+    "start": 44,
+    "type": "CallExpression",
+  },
+  "paramObj": Node {
+    "end": 64,
+    "loc": SourceLocation {
+      "end": Position {
+        "column": 22,
+        "index": 64,
+        "line": 4,
+      },
+      "filename": undefined,
+      "identifierName": undefined,
+      "start": Position {
+        "column": 13,
+        "index": 55,
+        "line": 4,
+      },
+    },
+    "properties": [
+      Node {
+        "computed": false,
         "end": 62,
-        "extra": undefined,
+        "extra": {
+          "shorthand": true,
+        },
+        "key": Node {
+          "end": 62,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 20,
+              "index": 62,
+              "line": 4,
+            },
+            "filename": undefined,
+            "identifierName": "count",
+            "start": Position {
+              "column": 15,
+              "index": 57,
+              "line": 4,
+            },
+          },
+          "name": "count",
+          "start": 57,
+          "type": "Identifier",
+        },
         "loc": SourceLocation {
           "end": Position {
             "column": 20,
@@ -72,22 +181,44 @@ Node {
             "line": 4,
           },
           "filename": undefined,
-          "identifierName": "count",
+          "identifierName": undefined,
           "start": Position {
             "column": 15,
             "index": 57,
             "line": 4,
           },
         },
-        "name": "count",
-        "range": undefined,
+        "method": false,
+        "shorthand": true,
         "start": 57,
-        "type": "Identifier",
+        "type": "ObjectProperty",
+        "value": Node {
+          "end": 62,
+          "extra": undefined,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 20,
+              "index": 62,
+              "line": 4,
+            },
+            "filename": undefined,
+            "identifierName": "count",
+            "start": Position {
+              "column": 15,
+              "index": 57,
+              "line": 4,
+            },
+          },
+          "name": "count",
+          "range": undefined,
+          "start": 57,
+          "type": "Identifier",
+        },
       },
-    },
-  ],
-  "start": 55,
-  "type": "ObjectExpression",
+    ],
+    "start": 55,
+    "type": "ObjectExpression",
+  },
 }
 `;
 

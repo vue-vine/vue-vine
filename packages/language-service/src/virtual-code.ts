@@ -218,6 +218,11 @@ export function createVueVineCode(
 
     generateLinkedCodeTagRightForMacros(vineCompFn)
 
+    // Generate the component expose types if needed
+    if (vineCompFn.expose) {
+      generateExposeHoist(vineCompFn)
+    }
+
     // Insert temp variables,
     // after all statements in the function body
     generateScriptUntil(vineCompFn.templateReturn.start!)
@@ -289,10 +294,15 @@ export function createVueVineCode(
       }
       tsCodeSegments.push('\n} // --- End: Template virtual code\n')
     }
+
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
     // clear the template string
-    tsCodeSegments.push('`` as any as VueVineComponent;\n')
+    tsCodeSegments.push(`\`\` as any as ${
+      vineCompFn.expose
+        ? `(import('vue').UnwrapRef<typeof __VLS_ComponentExpose__>)`
+        : 'VueVineComponent'
+    };\n`)
     currentOffset = vineCompFn.templateStringNode.quasi.end!
 
     generateScriptUntil(vineCompFn.fnDeclNode!.end!)
@@ -429,6 +439,26 @@ export function createVueVineCode(
     return modelProps
   }
 
+  function generateExposeHoist(vineCompFn: VineCompFn) {
+    const { macroCall, paramObj } = vineCompFn.expose!
+    generateScriptUntil(macroCall.start!)
+
+    // Build a new variable before use `vineExpose` macro
+    tsCodeSegments.push('const __VLS_ComponentExpose__ = ')
+    tsCodeSegments.push([
+      vineFileCtx.getAstNodeContent(paramObj),
+      undefined,
+      paramObj.start!,
+      FULL_FEATURES,
+    ])
+    tsCodeSegments.push(';\n')
+
+    generateScriptUntil(paramObj.start!)
+    tsCodeSegments.push('__VLS_ComponentExpose__')
+    currentOffset = paramObj.end!
+    generateScriptUntil(macroCall.end!)
+  }
+
   function generateContextFormalParam(
     vineCompFn: VineCompFn,
     {
@@ -496,7 +526,7 @@ export function createVueVineCode(
     if (vineCompFn.propsDefinitionBy === 'macro') {
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
-      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ & ${
+      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ ${
         generatePropsExtra(vineCompFn)
       }, `
       tsCodeSegments.push(propsParam)
