@@ -151,7 +151,7 @@ export async function TestNoLifecycleHookAfterAwait() {
   })
 
   return vine`
-    ...
+    <p>...</p>
   `
 }
 // #endregion
