@@ -40,6 +40,7 @@
     "postinstall": "simple-git-hooks && esno scripts/post-install.js",
     "clean": "esno scripts/clean.js",
     "clean:deps": "esno scripts/clean-deps.js && node scripts/clean-root-deps.js",
+    "pack:ext": "pnpm --filter vue-vine-extension pack:ext",
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:eslint": "pnpm --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config publish",
     "publish:ext": "pnpm --filter vue-vine-extension run publish:ext && pnpm --filter vue-vine-extension run publish:osvx",
