@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.13
+
+### Patch Changes
+
+- Fix missing used-in-template binding records for virtual code.
+
 ## 0.3.12
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.2.13
+
+### Patch Changes
+
+- Fix missing used-in-template binding records for virtual code.
+- Updated dependencies
+  - vue-vine@0.3.13
+
 ## 0.2.12
 
 ### Patch Changes
