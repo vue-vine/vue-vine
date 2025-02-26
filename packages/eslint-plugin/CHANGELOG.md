@@ -1,5 +1,13 @@
 # @vue-vine/eslint-plugin
 
+## 0.2.18
+
+### Patch Changes
+
+- Add rules for some essential restrictions.
+- Updated dependencies
+  - @vue-vine/eslint-parser@0.2.18
+
 ## 0.2.17
 
 ### Patch Changes

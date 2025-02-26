@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.18
+
+### Patch Changes
+
+- Add rules for some essential restrictions.
+
 ## 0.2.17
 
 ### Patch Changes
