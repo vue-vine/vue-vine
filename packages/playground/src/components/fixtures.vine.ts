@@ -36,7 +36,7 @@ export function SampleOne() {
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo() {
-  let count = ref('0x' + Foo + 'CAFE')
+  let count = ref(`0x${Foo}CAFE`)
   let type = ref('primary')
 
   return vine`
@@ -98,12 +98,13 @@ function TestCompTwo() {
 // #region Test vineExpose and component ref
 function TargetComp() {
   const count = ref(0)
-  vineExpose({
-    count
-  })
+
 
   watchEffect(() => {
     console.log('count: ', count.value)
+  })
+  vineExpose({
+    count
   })
 
   return vine`
@@ -111,7 +112,6 @@ function TargetComp() {
     <p>count: {{ count }}</p>
   `
 }
-
 
 export function TestCompRef() {
   const target = ref<ReturnType<typeof TargetComp>>()
@@ -121,6 +121,37 @@ export function TestCompRef() {
     <div>
       <TargetComp ref="target" />
     </div>
+  `
+}
+// #endregion
+
+// #region Test ESLint rule: no-v-for-key-on-child
+export function TestNoVforKeyOnChild() {
+  interface User { id: string; name: string }
+  const users = ref<User[]>([])
+  return vine`
+    <div class="user-list">
+      <template v-for="user in users">
+        <div :key="user.id">
+          {{ user.name }}
+        </div>
+      </template>
+    </div>
+  `
+}
+// #endregion
+
+// #region Test ESLint rule: no-lifecycle-hook-after-await
+declare const doSomethingAsync: () => Promise<void>
+export async function TestNoLifecycleHookAfterAwait() {
+  await doSomethingAsync()
+
+  onMounted(() => {
+    // ...
+  })
+
+  return vine`
+    ...
   `
 }
 // #endregion

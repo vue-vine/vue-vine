@@ -99,7 +99,7 @@ export type Options = []
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
-    type: 'layout',
+    type: 'problem',
     docs: {
       category: 'essentials',
       description: 'Disallow duplicate conditions in `v-if` / `v-else-if` chains',

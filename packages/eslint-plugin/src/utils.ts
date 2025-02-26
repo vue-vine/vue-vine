@@ -162,3 +162,13 @@ export function getDirective(node: VElement, name: string, argument?: string): V
     ) || null
   )
 }
+
+/* Checks whether the given node is VElement. */
+export function isVElement(node: Node): node is VElement {
+  return node.type === 'VElement'
+}
+
+/* Check whether the given start tag has specific directive. */
+export function hasDirective(node: VElement, name: string, argument?: string): boolean {
+  return Boolean(getDirective(node, name, argument))
+}

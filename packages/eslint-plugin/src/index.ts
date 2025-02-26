@@ -7,6 +7,8 @@ import { version } from '../package.json'
 import noChildContent from './rules/essentials/no-child-content'
 import noDupeAttributes from './rules/essentials/no-dupe-attributes'
 import noDupeElseIf from './rules/essentials/no-dupe-else-if'
+import noLifecycleHookAfterAwait from './rules/essentials/no-lifecycle-hook-after-await'
+import noVForKeyOnChild from './rules/essentials/no-v-for-key-on-child'
 
 // Formats:
 import preferTemplate from './rules/format/format-prefer-template'
@@ -25,7 +27,8 @@ const plugin = {
     'essentials-no-child-content': noChildContent,
     'essentials-no-dupe-else-if': noDupeElseIf,
     'essentials-no-dupe-attributes': noDupeAttributes,
-
+    'essentials-no-v-for-key-on-child': noVForKeyOnChild,
+    'essentials-no-lifecycle-hook-after-await': noLifecycleHookAfterAwait,
     'format-vine-template': vineTemplateFormat,
     'format-vine-style-indent': vineStyleIndent,
     'format-vine-macros-leading': vineMacrosLeading,

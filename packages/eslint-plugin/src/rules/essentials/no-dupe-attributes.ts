@@ -30,7 +30,7 @@ function getName(attribute: VAttribute | VDirective): string | null {
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
-    type: 'layout',
+    type: 'problem',
     docs: {
       category: 'essentials',
       description: 'Disallow duplication of attributes',

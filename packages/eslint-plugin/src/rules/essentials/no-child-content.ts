@@ -1,7 +1,7 @@
 import type { VDirective, Node as VineESLintNode } from '@vue-vine/eslint-parser'
 import { createEslintRule } from '../../utils'
 
-const RULE_NAME = 'no-child-content'
+const RULE_NAME = 'no-child-content' as const
 const SUGGEST_REMOVE_CHILD_CONTENT = 'remove-child-content'
 const DEFAULT_CATCH_NAMES = ['html', 'text']
 
@@ -19,7 +19,7 @@ function isWhiteSpaceTextNode(node: VineESLintNode) {
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
-    type: 'layout',
+    type: 'problem',
     docs: {
       category: 'essentials',
       description: 'Disallow element\'s child contents which would be overwritten by a directive like v-html or v-text',
