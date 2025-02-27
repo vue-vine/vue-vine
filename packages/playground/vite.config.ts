@@ -14,6 +14,9 @@ const configForSassAndScss = {
 }
 
 export default defineConfig({
+  build: {
+    minify: false,
+  },
   css: {
     preprocessorOptions: {
       sass: configForSassAndScss as SassPreprocessorOptions,

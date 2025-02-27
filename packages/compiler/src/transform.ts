@@ -185,24 +185,6 @@ function propsOptionsCodeGeneration(
   ]
 }
 
-function toPascalCase(str: string) {
-  return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
-}
-
-function postProcessForRenderCodegen(codegen: string) {
-  return codegen
-    // https://github.com/vue-vine/vue-vine/issues/171
-    // Replace all `= _resolveComponent('...')`, '...' is the component name,
-    // to `= (typeof <toPascalCase('...')> === 'undefined' ? _resolveComponent('...') : <toPascalCase('...')>)`
-    .replace(
-      /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
-      (match, componentName) => {
-        const pascalComponentName = toPascalCase(componentName)
-        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName})`
-      },
-    )
-}
-
 function rewriteDestructuredPropAccess(
   compilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
@@ -805,7 +787,7 @@ export function transformFile(
       // Not-inline mode, we need manually add the
       // render function to the component object.
         : `${
-          postProcessForRenderCodegen(templateCompileResults.get(vineCompFnCtx) ?? '')
+          templateCompileResults.get(vineCompFnCtx) ?? ''
         }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
     }\n${
       showIf(
