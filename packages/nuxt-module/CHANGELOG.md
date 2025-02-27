@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.2.15
+
+### Patch Changes
+
+- Fix compiler for auto-import components broken in inline-template mode.
+- Updated dependencies
+  - vue-vine@0.3.15
+
 ## 0.2.14
 
 ### Patch Changes

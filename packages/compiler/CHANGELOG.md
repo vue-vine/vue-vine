@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.15
+
+### Patch Changes
+
+- Fix compiler for auto-import components broken in inline-template mode.
+
 ## 0.3.14
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.15
+
+### Patch Changes
+
+- Fix compiler for auto-import components broken in inline-template mode.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.15
+  - @vue-vine/language-service@0.3.15
+
 ## 0.3.14
 
 ### Patch Changes

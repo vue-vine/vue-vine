@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.15
+
+### Patch Changes
+
+- Fix compiler for auto-import components broken in inline-template mode.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.15
+
 ## 0.3.14
 
 ### Patch Changes
