@@ -259,7 +259,10 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         const tagInfos = new Map<string, HtmlTagInfo>()
 
         updateCustomData([
-          newHTMLDataProvider('vine-vue-template-built-in', vueTemplateBuiltinData),
+          newHTMLDataProvider(
+            'vine-vue-template-built-in',
+            vueTemplateBuiltinData,
+          ),
           createVineTemplateDataProvider(
             vineVirtualCode,
             triggerAtVineCompFn,

@@ -273,10 +273,10 @@ export function createVueVineCode(
           if (
             typeof segment[3].completion === 'object'
             && segment[3].completion.isAdditional
-            && !segment[3].completion.onlyImport
           ) {
-            // fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
-            segment[3].completion.onlyImport = true
+            // - fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
+            // - fix https://github.com/vue-vine/vue-vine/issues/218
+            segment[3].completion.onlyImport = !segment[3].completion.onlyImport
           }
 
           tsCodeSegments.push([
