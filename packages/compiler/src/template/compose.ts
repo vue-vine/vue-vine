@@ -23,7 +23,7 @@ export function postProcessForRenderCodegen(codegen: string) {
       /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
       (match, componentName) => {
         const pascalComponentName = toPascalCase(componentName)
-        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName})`
+        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName});`
       },
     )
 }
