@@ -35,15 +35,11 @@ function TestSlotContainer({ fizz, bar = 1 }: {
   `
 }
 
-declare const useRequest: <T = any>(url: string) => { data: Ref<T> }
-
 export function AboutPage() {
   const handleEmitCamel = (bar: string) => {
     console.log(bar)
   }
   const testSlotContainerText = ref('')
-  const { data: testDataRef } = useRequest('...')
-
   const slotContainerRef = ref()
 
   return vine`
@@ -54,7 +50,6 @@ export function AboutPage() {
     <p class="my-4">
       TestSlotContainer text: {{ testSlotContainerText ?? "__Empty__" }}
     </p>
-    {{ testDataRef }}
     <TestSlotContainer
       ref="slotContainerRef"
       fizz="bass"
