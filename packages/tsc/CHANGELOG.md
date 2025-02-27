@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.14
+
+### Patch Changes
+
+- Fix completions for auto-import components.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.14
+
 ## 0.2.13
 
 ### Patch Changes

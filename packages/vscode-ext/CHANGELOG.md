@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.14
+
+### Patch Changes
+
+- Fix completions for auto-import components.
+
 ## 0.3.13
 
 ### Patch Changes

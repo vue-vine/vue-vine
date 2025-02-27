@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.14
+
+### Patch Changes
+
+- Fix completions for auto-import components.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.14
+
 ## 0.3.13
 
 ### Patch Changes

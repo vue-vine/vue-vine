@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.3.14
+
+### Patch Changes
+
+- Fix completions for auto-import components.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.14
+
 ## 0.3.13
 
 ### Patch Changes
