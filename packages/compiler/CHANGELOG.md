@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.16
+
+### Patch Changes
+
+- Fix language service navigation and upgrade TS to v5.7.3.
+
 ## 0.3.15
 
 ### Patch Changes

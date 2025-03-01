@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.16
+
+### Patch Changes
+
+- Fix language service navigation and upgrade TS to v5.7.3.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.16
+
 ## 0.3.15
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.16
+
+### Patch Changes
+
+- Fix language service navigation and upgrade TS to v5.7.3.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.16
+
 ## 0.2.15
 
 ### Patch Changes
