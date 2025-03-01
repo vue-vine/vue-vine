@@ -56,7 +56,9 @@ function getLinkedCodeMappings(tsCode: string): Mapping[] {
       sourceOffsets: [start],
       generatedOffsets: [end],
       lengths: [length],
-      data: undefined,
+      data: {
+        navigation: true,
+      },
     })
   }
 
