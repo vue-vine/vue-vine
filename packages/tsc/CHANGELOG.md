@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.17
+
+### Patch Changes
+
+- Fix language service for shallow unref VLS context.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.17
+
 ## 0.2.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.17
+
+### Patch Changes
+
+- Fix language service for shallow unref VLS context.
+
 ## 0.3.16
 
 ### Patch Changes
