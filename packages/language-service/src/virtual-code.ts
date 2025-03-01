@@ -301,7 +301,7 @@ export function createVueVineCode(
     // clear the template string
     tsCodeSegments.push(`\`\` as any as ${
       vineCompFn.expose
-        ? `(import('vue').UnwrapRef<typeof __VLS_ComponentExpose__>)`
+        ? `(import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>)`
         : 'VueVineComponent'
     };\n`)
     currentOffset = vineCompFn.templateStringNode.quasi.end!
