@@ -16,7 +16,7 @@ export {
 export {
   isVueVineVirtualCode,
   VLS_ErrorLog,
-  VLS_InfoLog,
+  vlsInfoLog,
 } from './shared'
 export type {
   VueVineCode,
@@ -87,7 +87,7 @@ export function createVueVineLanguagePlugin(
             return {
               code,
               extension: '.ts',
-              scriptKind: 3,
+              scriptKind: ts.ScriptKind.TS,
             }
           }
         }

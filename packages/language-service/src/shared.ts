@@ -34,7 +34,7 @@ export function turnBackToCRLF(code: string) {
   return code.replace(/\r?\n/g, '\r\n')
 }
 
-export function VLS_InfoLog(...msgs: any[]) {
+export function vlsInfoLog(...msgs: any[]) {
   console.log(
     msgs.map((msg, i) => (
       i === 0

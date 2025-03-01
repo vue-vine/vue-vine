@@ -275,8 +275,9 @@ export function createVueVineCode(
             && segment[3].completion.isAdditional
           ) {
             // - fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
-            // - fix https://github.com/vue-vine/vue-vine/issues/218
-            segment[3].completion.onlyImport = !segment[3].completion.onlyImport
+            if (!segment[3].completion.onlyImport) {
+              segment[3].completion.onlyImport = true
+            }
           }
 
           tsCodeSegments.push([

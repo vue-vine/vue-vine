@@ -2,7 +2,7 @@
   "name": "vue-vine-workspace",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.4.0",
+  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b",
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -75,7 +75,9 @@
     "vue": "catalog:"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["playwright-chromium"]
+    "onlyBuiltDependencies": [
+      "playwright-chromium"
+    ]
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck && pnpm esno scripts/pre-commit.js"

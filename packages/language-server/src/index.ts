@@ -26,6 +26,15 @@ connection.onInitialize(async (params) => {
     params.initializationOptions.typescript.tsdk,
     params.locale,
   )
+  const project = createTypeScriptProject(
+    tsdk.typescript,
+    tsdk.diagnosticMessages,
+    ({ configFileName }) => ({
+      languagePlugins: getLanguagePlugins(configFileName),
+      setup() {},
+    }),
+  )
+
   const plugins = [
     createCssService(),
     createEmmetService(),
@@ -42,14 +51,7 @@ connection.onInitialize(async (params) => {
 
   const result = await server.initialize(
     params,
-    createTypeScriptProject(
-      tsdk.typescript,
-      tsdk.diagnosticMessages,
-      ({ configFileName }) => ({
-        languagePlugins: getLanguagePlugins(configFileName),
-        setup() { },
-      }),
-    ),
+    project,
     plugins,
   )
 
