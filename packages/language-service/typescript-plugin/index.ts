@@ -1,7 +1,9 @@
 import type { VueCompilerOptions } from '@vue/language-core'
+import type { WebSocketServer } from 'ws'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
+import { createVueVinePipelineServer } from './pipeline'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownComponents = true
@@ -9,6 +11,16 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownEvents = true
   vueOptions.checkUnknownProps = true
 }
+
+const logger = {
+  info: (...msg: any[]) => {
+    console.log(`${new Date().toLocaleString()}: [INFO]`, ...msg)
+  },
+  error: (...msg: any[]) => {
+    console.error(`${new Date().toLocaleString()}: [ERROR]`, ...msg)
+  },
+}
+let pipelineServer: WebSocketServer | undefined
 
 export function createVueVineTypeScriptPlugin() {
   const plugin = createLanguageServicePlugin((ts, info) => {
@@ -50,6 +62,17 @@ export function createVueVineTypeScriptPlugin() {
 
     return {
       languagePlugins: [vueVinePlugin],
+      setup: (language) => {
+        if (isConfiguredTsProject && !pipelineServer) {
+          pipelineServer = createVueVinePipelineServer({
+            ts,
+            language,
+            tsPluginInfo: info,
+            tsPluginLogger: logger,
+          })
+          logger?.info(`Pipeline: WebSocket server created`)
+        }
+      },
     }
   })
 

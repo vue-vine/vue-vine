@@ -11,6 +11,18 @@ import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
 
 export {
+  VINE_PIPELINE_PORT,
+} from '../typescript-plugin/pipeline'
+export type {
+  PipelineRequest,
+  PipelineResponse,
+} from '../typescript-plugin/types'
+export {
+  pipelineRequest,
+  tryParsePipelineResponse,
+} from '../typescript-plugin/visitors'
+
+export {
   setupGlobalTypes,
 } from './injectTypes'
 export {
@@ -21,6 +33,7 @@ export {
 export type {
   VueVineCode,
 } from './shared'
+
 export {
   createVueVineCode,
 } from './virtual-code'

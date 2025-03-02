@@ -7,14 +7,17 @@ import type {
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import { isVueVineVirtualCode } from '@vue-vine/language-service'
+import type { PipelineStatus } from '../types'
+import { isVueVineVirtualCode, pipelineRequest, tryParsePipelineResponse, VINE_PIPELINE_PORT } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
+import { WebSocket } from 'ws'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
+const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
 
 interface HtmlTagInfo {
   events: string[]
@@ -66,6 +69,7 @@ export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vin
 
 export function createVineTemplatePlugin(): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
+  const tagInfosMap = new Map<string, Map<string, HtmlTagInfo>>()
 
   const onDidChangeCustomDataListeners = new Set<() => void>()
   const onDidChangeCustomData = (listener: () => void): Disposable => {
@@ -114,8 +118,8 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
           if (document.languageId !== 'html') {
             return
           }
-          const { docUri, vineVirtualCode } = getVueVineVirtualCode(document, context)
-          if (!vineVirtualCode || !isVueVineVirtualCode(vineVirtualCode)) {
+          const { docUri, sourceScriptId, vineVirtualCode } = getVueVineVirtualCode(document, context)
+          if (!sourceScriptId || !vineVirtualCode || !isVueVineVirtualCode(vineVirtualCode)) {
             return
           }
           const htmlEmbeddedId = docUri.authority.replace(EMBEDDED_TEMPLATE_SUFFIX, '')
@@ -126,14 +130,29 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             return
           }
 
+          let tagInfos: Map<string, HtmlTagInfo>
+          if (!tagInfosMap.has(vineVirtualCode.fileName)) {
+            tagInfos = new Map()
+            tagInfosMap.set(vineVirtualCode.fileName, tagInfos)
+          }
+          else {
+            tagInfos = tagInfosMap.get(vineVirtualCode.fileName)!
+          }
+
           // Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
           baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          provideHtmlData(
+          const { sync } = provideHtmlData(
+            tagInfos,
             vineVirtualCode,
             triggerAtVineCompFn,
           )
+          let isDataReady = await sync()
+          let htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+          // eslint-disable-next-line no-cond-assign, unused-imports/no-unused-vars
+          while (!(isDataReady = await sync())) {
+            htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+          }
 
-          const htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
           return htmlComplete
         },
         async provideDiagnostics(document) {
@@ -171,104 +190,163 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         },
       }
 
-      function createVineTemplateDataProvider(
-        vineVirtualCode: VueVineCode,
-        triggerAtVineCompFn: VineFnCompCtx,
-        tagInfos: Map<string, HtmlTagInfo>,
-      ): IHTMLDataProvider {
-        return {
-          getId: () => 'vine-vue-template',
-          isApplicable: () => true,
-          provideTags: () => {
-            const tags: ITagData[] = []
-
-            const { bindings } = triggerAtVineCompFn
-            Object.keys(bindings).forEach((bindingName) => {
-              tags.push({
-                name: bindingName,
-                attributes: [],
-              })
-            })
-
-            return tags
-          },
-          provideAttributes: (tag) => {
-            const tagAttrs: IAttributeData[] = []
-            let tagInfo = tagInfos.get(tag)
-
-            if (!tagInfo) {
-              const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
-                (compFn) => {
-                  return compFn.fnName === tag
-                },
-              )
-              if (!triggerAtVineCompFn) {
-                return tagAttrs
-              }
-
-              tagInfo = {
-                props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
-                events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
-              }
-              tagInfos.set(tag, tagInfo)
-            }
-
-            const { props, events } = tagInfo
-            const attributes: IAttributeData[] = []
-
-            for (const prop of props) {
-              const isEvent = prop.startsWith('on-')
-
-              if (isEvent) {
-                const propNameBase = prop.startsWith('on-')
-                  ? prop.slice('on-'.length)
-                  : (prop['on'.length].toLowerCase() + prop.slice('onX'.length))
-
-                attributes.push(
-                  { name: `v-on:${propNameBase}` },
-                  { name: `@${propNameBase}` },
-                )
-              }
-              else {
-                attributes.push(
-                  { name: prop },
-                  { name: `:${prop}` },
-                  { name: `v-bind:${prop}` },
-                )
-              }
-            }
-            for (const event of events) {
-              const name = hyphenateAttr(event)
-
-              attributes.push(
-                { name: `v-on:${name}` },
-                { name: `@${name}` },
-              )
-            }
-
-            return attributes
-          },
-          provideValues: () => [],
-        }
-      }
-
       function provideHtmlData(
+        tagInfos: Map<string, HtmlTagInfo>,
         vineVirtualCode: VueVineCode,
         triggerAtVineCompFn: VineFnCompCtx,
       ) {
-        const tagInfos = new Map<string, HtmlTagInfo>()
+        const templateBuiltIn = newHTMLDataProvider(
+          'vine-vue-template-built-in',
+          vueTemplateBuiltinData,
+        )
+        const vineVolarContextProvider = createVineTemplateDataProvider()
+
+        let pipelineStatus: PipelineStatus = {
+          isFetchDone: false,
+          pendingRequest: new Map(),
+        }
 
         updateCustomData([
-          newHTMLDataProvider(
-            'vine-vue-template-built-in',
-            vueTemplateBuiltinData,
-          ),
-          createVineTemplateDataProvider(
-            vineVirtualCode,
-            triggerAtVineCompFn,
-            tagInfos,
-          ),
+          templateBuiltIn,
+          vineVolarContextProvider,
         ])
+
+        return {
+          async sync() {
+            const promises = Array.from(pipelineStatus.pendingRequest.values())
+            await Promise.all(promises).then(() => {
+              pipelineStatus.isFetchDone = true
+            })
+            return pipelineStatus.isFetchDone
+          },
+        }
+
+        function createVineTemplateDataProvider(): IHTMLDataProvider {
+          return {
+            getId: () => 'vine-vue-template',
+            isApplicable: () => true,
+            provideTags: () => {
+              const tags: ITagData[] = []
+
+              const { bindings } = triggerAtVineCompFn
+              Object.keys(bindings).forEach((bindingName) => {
+                tags.push({
+                  name: bindingName,
+                  attributes: [],
+                })
+              })
+
+              return tags
+            },
+            provideAttributes: (tag) => {
+              const tagAttrs: IAttributeData[] = []
+              let tagInfo = tagInfos.get(tag)
+
+              if (!tagInfo) {
+                const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
+                  (compFn) => {
+                    return compFn.fnName === tag
+                  },
+                )
+                if (!triggerAtVineCompFn) {
+                  // Can't find component info in current file,
+                  // try to fetch info from pipeline
+
+                  // Create request if there's no pending one
+                  if (!pipelineStatus.pendingRequest.has('getComponentPropsRequest')) {
+                    const pipelineClient = new WebSocket(`ws://localhost:${VINE_PIPELINE_PORT}`)
+                    const requestPromise = (async () => {
+                      return new Promise<void>((resolve, reject) => {
+                        pipelineClient.on('open', () => {
+                          pipelineClient.on('message', (msgData) => {
+                            console.log(`Pipeline: Got message`, msgData.toString())
+                            const resp = tryParsePipelineResponse(msgData.toString(), (err) => {
+                              reject(err)
+                            })
+                            if (!resp) {
+                              const err = new Error(
+                                '[Vue Vine Pipeline] Invalid pipeline response data',
+                                { cause: msgData.toString() },
+                              )
+                              reject(err)
+                              return
+                            }
+
+                            if (resp.type === 'getComponentPropsResponse') {
+                              tagInfo = {
+                                props: [...resp.props],
+                                events: [],
+                              }
+                              tagInfos.set(tag, tagInfo)
+                              resolve()
+                            }
+                          })
+
+                          console.log(`Pipeline: Fetching component '${tag}' props`)
+                          pipelineClient.send(
+                            pipelineRequest({
+                              type: 'getComponentPropsRequest',
+                              componentName: tag,
+                              fileName: vineVirtualCode.fileName,
+                            }),
+                          )
+                        })
+                      }).finally(() => {
+                        pipelineClient.close()
+                        pipelineStatus.pendingRequest.delete('getComponentPropsRequest')
+                      })
+                    })()
+                    pipelineStatus.pendingRequest.set('getComponentPropsRequest', requestPromise)
+                  }
+
+                  return tagAttrs
+                }
+
+                tagInfo = {
+                  props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
+                  events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
+                }
+                tagInfos.set(tag, tagInfo)
+              }
+
+              const { props, events } = tagInfo
+              const attributes: IAttributeData[] = []
+
+              for (const prop of props) {
+                const isEvent = prop.startsWith('on-') || CAMEL_CASE_EVENT_PREFIX.test(prop)
+
+                if (isEvent) {
+                  const propNameBase = prop.startsWith('on-')
+                    ? prop.slice('on-'.length)
+                    : (prop['on'.length].toLowerCase() + prop.slice('onX'.length))
+
+                  attributes.push(
+                    { name: `v-on:${propNameBase}` },
+                    { name: `@${propNameBase}` },
+                  )
+                }
+                else {
+                  attributes.push(
+                    { name: prop },
+                    { name: `:${prop}` },
+                    { name: `v-bind:${prop}` },
+                  )
+                }
+              }
+              for (const event of events) {
+                const name = hyphenateAttr(event)
+
+                attributes.push(
+                  { name: `v-on:${name}` },
+                  { name: `@${name}` },
+                )
+              }
+
+              return attributes
+            },
+            provideValues: () => [],
+          }
+        }
       }
     },
   }

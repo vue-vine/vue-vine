@@ -53,11 +53,13 @@
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "catalog:",
     "@vue/shared": "catalog:",
-    "muggle-string": "^0.4.1"
+    "muggle-string": "^0.4.1",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@babel/types": "catalog:",
     "@types/node": "catalog:",
+    "@types/ws": "^8.5.14",
     "vscode-uri": "catalog:"
   }
 }

@@ -51,14 +51,12 @@ function getLinkedCodeMappings(tsCode: string): Mapping[] {
 
     const start = foundLeft.index + foundLeft.tagLength
     const end = foundRight.index + foundRight.tagLength
-    const length = foundLeft.tagLength
+    const length = foundLeft.itemLength
     linkedCodeMappings.push({
       sourceOffsets: [start],
       generatedOffsets: [end],
       lengths: [length],
-      data: {
-        navigation: true,
-      },
+      data: void 0,
     })
   }
 
@@ -309,6 +307,18 @@ export function createVueVineCode(
     generateScriptUntil(vineCompFn.fnDeclNode!.end!)
   }
   generateScriptUntil(snapshotContent.length)
+
+  // Generate all full collection of all used components in this file
+  const usedComponents = new Set<string>()
+  vineFileCtx.vineCompFns.forEach((vineCompFn) => {
+    usedComponents.add(vineCompFn.fnName)
+    vineCompFn.templateComponentNames.forEach((compName) => {
+      usedComponents.add(compName)
+    })
+  })
+  tsCodeSegments.push(`\nconst __VLS_ComponentsReferenceMap = {\n${
+    [...usedComponents].map(compName => `  ${compName}: ${compName}`).join(',\n')
+  }\n};\n`)
 
   // Add a 'VINE' prefix to all '__VLS_'
   replaceAll(

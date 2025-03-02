@@ -28,7 +28,7 @@ export function SampleOne() {
       }"
     >
       <p v-text="msg">Dida dida</p>
-      <comp foo="111" :foo="'222'" />
+      <Comp foo="111" :foo="'222'" />
     </div>
   `
 }

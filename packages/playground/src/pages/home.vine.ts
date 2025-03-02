@@ -34,7 +34,7 @@ function OutsideExample(props: { id: string }) {
     <div class="state-container">
       <InsideExample
         :title
-        author="ShenQingchuan"
+        author="Tom"
         @metaBgColorChange="(color: string) => console.log(color)"
       />
 
