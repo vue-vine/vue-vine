@@ -2,9 +2,8 @@ import type { Language } from '@volar/language-server'
 import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
 import { WebSocketServer } from 'ws'
 import { isVueVineVirtualCode } from '../src'
-import { getComponentProps, pipelineResponse } from './visitors'
-
-export const VINE_PIPELINE_PORT = 15193
+import { pipelineResponse } from './utils'
+import { getComponentProps } from './visitors'
 
 interface PipelineServerCreateParams {
   ts: TypeScriptSdk
@@ -12,13 +11,16 @@ interface PipelineServerCreateParams {
   language: Language
   tsPluginLogger: PipelineLogger
 }
-export function createVueVinePipelineServer({
-  ts,
-  tsPluginInfo,
-  language,
-  tsPluginLogger,
-}: PipelineServerCreateParams) {
-  const wss = new WebSocketServer({ port: VINE_PIPELINE_PORT })
+export function createVueVinePipelineServer(
+  port: number,
+  {
+    ts,
+    tsPluginInfo,
+    language,
+    tsPluginLogger,
+  }: PipelineServerCreateParams,
+) {
+  const wss = new WebSocketServer({ port })
 
   wss.on('error', (err) => {
     tsPluginLogger.error('Pipeline: Server error:', err)
@@ -51,7 +53,7 @@ export function createVueVinePipelineServer({
     })
   })
 
-  tsPluginLogger.info(`Pipeline: Server is running on port ${VINE_PIPELINE_PORT}`)
+  tsPluginLogger.info(`Pipeline: Server is running on port ${port}`)
   return wss
 }
 

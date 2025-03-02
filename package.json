@@ -27,6 +27,7 @@
     "build:ls": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter vue-vine-tsc run build",
     "build:eslint": "pnpm --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config run build",
     "build:ext": "pnpm run build:ls && pnpm --filter vue-vine-extension run build",
+    "debug:ext": "pnpm run build:ls && pnpm --filter vue-vine-extension run build:debug",
     "test": "NODE_ENV=test pnpm --parallel --filter @vue-vine/compiler --filter @vue-vine/e2e-test --filter @vue-vine/eslint-parser --filter @vue-vine/nuxt --filter vue-vine run test --run",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test --run",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test --run",

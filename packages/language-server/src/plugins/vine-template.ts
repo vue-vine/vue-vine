@@ -7,22 +7,17 @@ import type {
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import type { PipelineStatus } from '../types'
-import { isVueVineVirtualCode, pipelineRequest, tryParsePipelineResponse, VINE_PIPELINE_PORT } from '@vue-vine/language-service'
+import type { HtmlTagInfo, PipelineStatus } from '../types'
+import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
-import { WebSocket } from 'ws'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
+import { getComponentPropsFromPipeline } from '../pipeline/get-component-props'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
-
-interface HtmlTagInfo {
-  events: string[]
-  props: string[]
-}
 
 function getVueVineVirtualCode(
   document: TextDocument,
@@ -146,10 +141,10 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             vineVirtualCode,
             triggerAtVineCompFn,
           )
-          let isDataReady = await sync()
+          let isDataReady = false
           let htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          // eslint-disable-next-line no-cond-assign, unused-imports/no-unused-vars
-          while (!(isDataReady = await sync())) {
+          while (!isDataReady) {
+            isDataReady = await sync()
             htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
           }
 
@@ -254,49 +249,18 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
                   // Create request if there's no pending one
                   if (!pipelineStatus.pendingRequest.has('getComponentPropsRequest')) {
-                    const pipelineClient = new WebSocket(`ws://localhost:${VINE_PIPELINE_PORT}`)
-                    const requestPromise = (async () => {
-                      return new Promise<void>((resolve, reject) => {
-                        pipelineClient.on('open', () => {
-                          pipelineClient.on('message', (msgData) => {
-                            console.log(`Pipeline: Got message`, msgData.toString())
-                            const resp = tryParsePipelineResponse(msgData.toString(), (err) => {
-                              reject(err)
-                            })
-                            if (!resp) {
-                              const err = new Error(
-                                '[Vue Vine Pipeline] Invalid pipeline response data',
-                                { cause: msgData.toString() },
-                              )
-                              reject(err)
-                              return
-                            }
-
-                            if (resp.type === 'getComponentPropsResponse') {
-                              tagInfo = {
-                                props: [...resp.props],
-                                events: [],
-                              }
-                              tagInfos.set(tag, tagInfo)
-                              resolve()
-                            }
-                          })
-
-                          console.log(`Pipeline: Fetching component '${tag}' props`)
-                          pipelineClient.send(
-                            pipelineRequest({
-                              type: 'getComponentPropsRequest',
-                              componentName: tag,
-                              fileName: vineVirtualCode.fileName,
-                            }),
-                          )
-                        })
-                      }).finally(() => {
-                        pipelineClient.close()
-                        pipelineStatus.pendingRequest.delete('getComponentPropsRequest')
-                      })
-                    })()
-                    pipelineStatus.pendingRequest.set('getComponentPropsRequest', requestPromise)
+                    const tsConfigFileName = context.project.typescript!.configFileName!
+                    const tsHost = context.project.typescript!.sys
+                    getComponentPropsFromPipeline(
+                      tag,
+                      {
+                        tagInfos,
+                        vineVirtualCode,
+                        pipelineStatus,
+                        tsConfigFileName,
+                        tsHost,
+                      },
+                    )
                   }
 
                   return tagAttrs

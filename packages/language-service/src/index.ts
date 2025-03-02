@@ -10,9 +10,6 @@ import { URI } from 'vscode-uri'
 import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
 
-export {
-  VINE_PIPELINE_PORT,
-} from '../typescript-plugin/pipeline'
 export type {
   PipelineRequest,
   PipelineResponse,
@@ -20,7 +17,7 @@ export type {
 export {
   pipelineRequest,
   tryParsePipelineResponse,
-} from '../typescript-plugin/visitors'
+} from '../typescript-plugin/utils'
 
 export {
   setupGlobalTypes,

@@ -3,7 +3,6 @@ import { generateRandomString } from '~/utils'
 // No need to manually import the following components,
 // they will be automatically imported
 // - import { InsideExample } from '../components/inside-example.vine'
-// - import { PageHeader } from '../components/page-header.vine'
 
 function OutsideExample(props: { id: string }) {
   const randomStr = ref('')

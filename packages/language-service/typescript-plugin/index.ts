@@ -1,7 +1,10 @@
 import type { VueCompilerOptions } from '@vue/language-core'
+import type * as ts from 'typescript'
 import type { WebSocketServer } from 'ws'
+import { dirname, posix as path } from 'node:path'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
+import { detect } from 'detect-port'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
 import { createVueVinePipelineServer } from './pipeline'
 
@@ -12,6 +15,7 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownProps = true
 }
 
+const DEFAULT_PIPELINE_PORT = 15193
 const logger = {
   info: (...msg: any[]) => {
     console.log(`${new Date().toLocaleString()}: [INFO]`, ...msg)
@@ -20,6 +24,7 @@ const logger = {
     console.error(`${new Date().toLocaleString()}: [ERROR]`, ...msg)
   },
 }
+
 let pipelineServer: WebSocketServer | undefined
 
 export function createVueVineTypeScriptPlugin() {
@@ -40,7 +45,7 @@ export function createVueVineTypeScriptPlugin() {
 
     if (isConfiguredTsProject) {
       const globalTypesFilePath = setupGlobalTypes(
-        info.project.getProjectName(),
+        configFileName,
         vueOptions,
         ts.sys,
       )
@@ -64,17 +69,59 @@ export function createVueVineTypeScriptPlugin() {
       languagePlugins: [vueVinePlugin],
       setup: (language) => {
         if (isConfiguredTsProject && !pipelineServer) {
-          pipelineServer = createVueVinePipelineServer({
-            ts,
-            language,
-            tsPluginInfo: info,
-            tsPluginLogger: logger,
-          })
-          logger?.info(`Pipeline: WebSocket server created`)
+          detect(DEFAULT_PIPELINE_PORT)
+            .then((availablePort) => {
+              if (pipelineServer) {
+                return
+              }
+
+              pipelineServer = createVueVinePipelineServer(availablePort, {
+                ts,
+                language,
+                tsPluginInfo: info,
+                tsPluginLogger: logger,
+              })
+              logger?.info(`Pipeline: WebSocket server created`)
+
+              writePipelineServerPortToFile(
+                ts.sys,
+                configFileName,
+                availablePort,
+              )
+            })
+            .catch((err) => {
+              logger?.error(
+                `Pipeline: Failed to detect available port for pipeline server`,
+                err,
+              )
+            })
         }
       },
     }
   })
 
   return plugin
+}
+
+function writePipelineServerPortToFile(
+  host: ts.System,
+  tsConfigFilePath: string,
+  port: number,
+) {
+  const rootDir = dirname(tsConfigFilePath)
+
+  // Find the `node_modules` directory that contains `vue-vine`
+  let dir = rootDir
+  while (!host.fileExists(path.join(dir, 'node_modules', 'vue-vine', 'package.json'))) {
+    const parentDir = dirname(dir)
+    if (parentDir === dir) {
+      throw new Error('Failed to find `node_modules` directory that contains \'vue-vine\'')
+    }
+    dir = parentDir
+  }
+
+  host.writeFile(
+    path.join(dir, 'node_modules', '.vine-pipeline-port'),
+    port.toString(),
+  )
 }

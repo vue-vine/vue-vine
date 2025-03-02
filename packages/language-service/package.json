@@ -53,6 +53,7 @@
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "catalog:",
     "@vue/shared": "catalog:",
+    "detect-port": "^2.1.0",
     "muggle-string": "^0.4.1",
     "ws": "^8.18.1"
   },

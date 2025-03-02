@@ -99,6 +99,7 @@
     "vscode:prepublish": "pnpm run build",
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
+    "build:debug": "NODE_ENV=development tsup",
     "lint": "eslint src --ext ts",
     "pack:ext": "vsce pack",
     "prepack": "pnpm run build",

@@ -13,3 +13,8 @@ export interface PipelineStatus {
   isFetchDone: boolean
   pendingRequest: Map<PipelineRequest['type'], Promise<void>>
 }
+
+export interface HtmlTagInfo {
+  events: string[]
+  props: string[]
+}
