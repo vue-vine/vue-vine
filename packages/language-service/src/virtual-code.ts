@@ -278,6 +278,10 @@ export function createVueVineCode(
             if (!segment[3].completion.onlyImport) {
               segment[3].completion.onlyImport = true
             }
+            else {
+              // - fix https://github.com/vue-vine/vue-vine/issues/218
+              segment[3].completion = {}
+            }
           }
 
           tsCodeSegments.push([
