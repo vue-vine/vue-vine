@@ -3,7 +3,6 @@ import { generateRandomString } from '~/utils'
 // No need to manually import the following components,
 // they will be automatically imported
 // - import { InsideExample } from '../components/inside-example.vine'
-// - import { PageHeader } from '../components/page-header.vine'
 
 function OutsideExample(props: { id: string }) {
   const randomStr = ref('')
@@ -34,7 +33,7 @@ function OutsideExample(props: { id: string }) {
     <div class="state-container">
       <InsideExample
         :title
-        author="ShenQingchuan"
+        author="Tom"
         @metaBgColorChange="(color: string) => console.log(color)"
       />
 

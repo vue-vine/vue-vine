@@ -1,5 +1,6 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
+import type * as ts from 'typescript'
 import { posix as path } from 'node:path'
 import { VineBindingTypes } from '@vue-vine/compiler'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
@@ -7,10 +8,7 @@ import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 export function setupGlobalTypes(
   rootDir: string,
   vueOptions: VueCompilerOptions,
-  host: {
-    fileExists: (path: string) => boolean
-    writeFile?: (path: string, data: string) => void
-  },
+  host: ts.System,
 ) {
   if (!host.writeFile) {
     return ''

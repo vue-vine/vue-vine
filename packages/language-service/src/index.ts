@@ -10,6 +10,15 @@ import { URI } from 'vscode-uri'
 import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
 
+export type {
+  PipelineRequest,
+  PipelineResponse,
+} from '../typescript-plugin/types'
+export {
+  pipelineRequest,
+  tryParsePipelineResponse,
+} from '../typescript-plugin/utils'
+
 export {
   setupGlobalTypes,
 } from './injectTypes'
@@ -21,6 +30,7 @@ export {
 export type {
   VueVineCode,
 } from './shared'
+
 export {
   createVueVineCode,
 } from './virtual-code'
