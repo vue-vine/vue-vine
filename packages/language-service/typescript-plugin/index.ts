@@ -7,6 +7,7 @@ import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/languag
 import { detect } from 'detect-port'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
 import { createVueVinePipelineServer } from './pipeline'
+import { proxyLanguageServiceForVine } from './proxy-ts-lang-service'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownComponents = true
@@ -96,6 +97,12 @@ export function createVueVineTypeScriptPlugin() {
               )
             })
         }
+
+        info.languageService = proxyLanguageServiceForVine(
+          ts,
+          language,
+          info.languageService,
+        )
       },
     }
   })
