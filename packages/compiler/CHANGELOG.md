@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.19
+
+### Patch Changes
+
+- Implement TypeScript language service proxy.
+
 ## 0.3.18
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.19
+
+### Patch Changes
+
+- Implement TypeScript language service proxy.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.19
+  - @vue-vine/language-service@0.3.19
+
 ## 0.3.18
 
 ### Patch Changes

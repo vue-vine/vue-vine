@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.19
+
+### Patch Changes
+
+- Implement TypeScript language service proxy.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.19
+
 ## 0.2.18
 
 ### Patch Changes
