@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.18
+
+### Patch Changes
+
+- Fix language service and implement pipeline server to fetch component info.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.18
+
 ## 0.3.17
 
 ### Patch Changes

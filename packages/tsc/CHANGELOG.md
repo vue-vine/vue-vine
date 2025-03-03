@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.18
+
+### Patch Changes
+
+- Fix language service and implement pipeline server to fetch component info.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.18
+
 ## 0.2.17
 
 ### Patch Changes
