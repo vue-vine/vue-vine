@@ -36,6 +36,28 @@ This macro's usage is just the same with the official `defineExpose` macro.
 
 Check the description in [corresponding secion](https://vuejs.org/api/sfc-script-setup.html#defineexpose) on Vue.js official documentaion.
 
+### How to get component exposed type {#how-to-get-component-exposed-type}
+
+If you get a component instance by `ref` in another component, and want to get the type of the exposed properties, you can do this:
+
+```ts
+// a.vine.ts
+function TargetComp() {
+  const count = ref(0)
+  vineExpose({
+    count
+  })
+
+  return vine`...`
+}
+
+// b.vine.ts
+const target = ref<ReturnType<typeof TargetComp>>()
+console.log('target count: ', target.value?.count)
+```
+
+For components that use the `vineExpose` macro to expose properties, its function return type is the type of the exposed properties, while the function without `vineExpose` does not have this feature.
+
 ## `vineSlots`
 
 This macro's usage is just the same with the official `defineSlots` macro.

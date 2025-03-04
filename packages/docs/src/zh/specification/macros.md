@@ -35,6 +35,29 @@ Vue Vine 将会默认将所有事件视为 **必需** 的，但如果您在类�
 
 请在 Vue.js 官方文档的[相应部分](https://cn.vuejs.org/api/sfc-script-setup.html#defineexpose)中查看描述。
 
+### 如何获得组件暴露的属性类型 {#how-to-get-component-exposed-type}
+
+若你在其他组件中通过 `ref` 获取到了一个组件实例，并想要获得该组件暴露的属性类型，可以这样做：
+
+```ts
+// a.vine.ts
+function TargetComp() {
+  const count = ref(0)
+  vineExpose({
+    count
+  })
+
+  return vine`...`
+}
+
+// b.vine.ts
+const target = ref<ReturnType<typeof TargetComp>>()
+console.log('target count: ', target.value?.count)
+```
+
+对于使用了 `vineExpose` 暴露属性的组件，其函数返回值类型就是所暴露的类型，而没有使用这个宏的函数则不具有此特性。
+
+
 ## `vineSlots` {#vineslots}
 
 这个宏的使用方法与官方 `defineSlots` 宏完全一致。
