@@ -52,8 +52,14 @@ function TargetComp() {
 }
 
 // b.vine.ts
-const target = ref<ReturnType<typeof TargetComp>>()
-console.log('target count: ', target.value?.count)
+function TestComp() {
+  const target = ref<ReturnType<typeof TargetComp>>()
+  console.log('target count: ', target.value?.count)
+
+  return vine`
+    <TargetComp ref="target" />
+  `
+}
 ```
 
 For components that use the `vineExpose` macro to expose properties, its function return type is the type of the exposed properties, while the function without `vineExpose` does not have this feature.

@@ -51,12 +51,17 @@ function TargetComp() {
 }
 
 // b.vine.ts
-const target = ref<ReturnType<typeof TargetComp>>()
-console.log('target count: ', target.value?.count)
+function TestComp() {
+  const target = ref<ReturnType<typeof TargetComp>>()
+  console.log('target count: ', target.value?.count)
+
+  return vine`
+    <TargetComp ref="target" />
+  `
+}
 ```
 
 对于使用了 `vineExpose` 暴露属性的组件，其函数返回值类型就是所暴露的类型，而没有使用这个宏的函数则不具有此特性。
-
 
 ## `vineSlots` {#vineslots}
 
