@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 0.2.19
+
+### Patch Changes
+
+- Add auto-fix for component/HTML tag self-closing.
+
 ## 0.2.18
 
 ### Patch Changes
