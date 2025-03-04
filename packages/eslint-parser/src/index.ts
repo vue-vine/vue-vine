@@ -4,7 +4,7 @@ import type {
 } from './types'
 import { runParse } from './parse'
 
-export type * from './ast'
+export * from './ast'
 
 export function parse(
   code: string,

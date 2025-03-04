@@ -11,6 +11,7 @@ import noLifecycleHookAfterAwait from './rules/essentials/no-lifecycle-hook-afte
 import noVForKeyOnChild from './rules/essentials/no-v-for-key-on-child'
 
 // Formats:
+import formatHtmlSelfClosing from './rules/format/format-html-self-closing'
 import preferTemplate from './rules/format/format-prefer-template'
 import vineComponentNameFormat from './rules/format/format-vine-component-name'
 import vineExposeAtTail from './rules/format/format-vine-expose-at-tail'
@@ -35,6 +36,7 @@ const plugin = {
     'format-vine-component-name': vineComponentNameFormat,
     'format-prefer-template': preferTemplate,
     'format-vine-expose-at-tail': vineExposeAtTail,
+    'format-html-self-closing': formatHtmlSelfClosing,
   },
 } satisfies ESLint.Plugin
 

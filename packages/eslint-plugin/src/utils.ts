@@ -1,8 +1,13 @@
 import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils'
 import type { RuleContext, SourceCode } from '@typescript-eslint/utils/ts-eslint'
-import type { Node, VDirective, VElement } from '@vue-vine/eslint-parser'
+import type { Node, VAttribute, VDirective, VElement } from '@vue-vine/eslint-parser'
 import type { Rule } from 'eslint'
 import type { VineESLintDocs } from './types'
+import { NS } from '@vue-vine/eslint-parser'
+import HTML_ELEMENTS from './data/html-elements.json'
+import MATH_ELEMENTS from './data/math-elements.json'
+import SVG_ELEMENTS from './data/svg-elements.json'
+import VOID_ELEMENTS from './data/void-elements.json'
 
 export interface RuleModule<
   T extends readonly unknown[],
@@ -168,7 +173,75 @@ export function isVElement(node: Node): node is VElement {
   return node.type === 'VElement'
 }
 
+function hasAttribute(node: VElement, name: string, value?: string): boolean {
+  return Boolean(getAttribute(node, name, value))
+}
+
 /* Check whether the given start tag has specific directive. */
 export function hasDirective(node: VElement, name: string, argument?: string): boolean {
   return Boolean(getDirective(node, name, argument))
+}
+
+/**
+ * Get the attribute which has the given name.
+ */
+function getAttribute(node: VElement, name: string, value?: string): VAttribute | null {
+  return (
+    node.startTag.attributes.find(
+      (node): node is VAttribute =>
+        !node.directive
+        && node.key.name === name
+        && (value === undefined
+          || (node.value != null && node.value.value === value)),
+    ) || null
+  )
+}
+
+export function isHtmlElementNode(node: VElement): boolean {
+  return node.namespace === NS.HTML
+}
+
+export function isSvgElementNode(node: VElement): boolean {
+  return node.namespace === NS.SVG
+}
+
+export function isMathElementNode(node: VElement): boolean {
+  return node.namespace === NS.MathML
+}
+
+export function isHtmlVoidElementName(name: string): boolean {
+  return VOID_ELEMENTS.includes(name)
+}
+
+function isHtmlWellKnownElementName(name: string): boolean {
+  return HTML_ELEMENTS.includes(name)
+}
+function isSvgWellKnownElementName(name: string): boolean {
+  return SVG_ELEMENTS.includes(name)
+}
+function isMathWellKnownElementName(name: string): boolean {
+  return MATH_ELEMENTS.includes(name)
+}
+export function isCustomComponent(node: VElement, ignoreElementNamespaces = false): boolean {
+  if (
+    hasAttribute(node, 'is')
+    || hasDirective(node, 'bind', 'is')
+    || hasDirective(node, 'is')
+  ) {
+    return true
+  }
+
+  const isHtmlName = isHtmlWellKnownElementName(node.rawName)
+  const isSvgName = isSvgWellKnownElementName(node.rawName)
+  const isMathName = isMathWellKnownElementName(node.rawName)
+
+  if (ignoreElementNamespaces) {
+    return !isHtmlName && !isSvgName && !isMathName
+  }
+
+  return (
+    (isHtmlElementNode(node) && !isHtmlName)
+    || (isSvgElementNode(node) && !isSvgName)
+    || (isMathElementNode(node) && !isMathName)
+  )
 }
