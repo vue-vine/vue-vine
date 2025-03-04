@@ -40,7 +40,7 @@ Check the description in [corresponding secion](https://vuejs.org/api/sfc-script
 
 If you get a component instance by `ref` in another component, and want to get the type of the exposed properties, you can do this:
 
-```ts
+```vue-vine
 // a.vine.ts
 function TargetComp() {
   const count = ref(0)

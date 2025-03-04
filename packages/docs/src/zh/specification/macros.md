@@ -39,7 +39,7 @@ Vue Vine 将会默认将所有事件视为 **必需** 的，但如果您在类�
 
 若你在其他组件中通过 `ref` 获取到了一个组件实例，并想要获得该组件暴露的属性类型，可以这样做：
 
-```ts
+```vue-vine
 // a.vine.ts
 function TargetComp() {
   const count = ref(0)
