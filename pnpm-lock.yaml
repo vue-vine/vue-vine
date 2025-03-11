@@ -362,6 +362,9 @@ importers:
       '@types/eslint-scope':
         specifier: ^3.7.7
         version: 3.7.7
+      '@types/estree':
+        specifier: ^1.0.6
+        version: 1.0.6
       '@types/line-column':
         specifier: 'catalog:'
         version: 1.0.2

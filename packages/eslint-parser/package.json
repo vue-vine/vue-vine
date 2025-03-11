@@ -47,6 +47,7 @@
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/eslint-scope": "^3.7.7",
+    "@types/estree": "^1.0.6",
     "@types/line-column": "catalog:",
     "@types/lodash": "^4.14.201",
     "@types/node": "catalog:",
