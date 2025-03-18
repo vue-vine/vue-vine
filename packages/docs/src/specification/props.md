@@ -146,7 +146,7 @@ const title = vineProp<string>(value => value.startsWith('#'))
 
 As we said in the "Boolean cast mechanism" section above, you should also notice that when you do need a boolean prop, the type parameter should be a literal `boolean`, and you should not pass a variable as default value, but only `true` or `false` literals. Although TypeScript can infer from the variable, but Vine compiler doesn't embed TypeScript compiler to know this prop is boolean.
 
-This restriction still exists in Vue Vine v0.2.0, because we didn't enable ts-morph to parse types in `vineProp` definition, according to the design, this restriction won't affect the daily usage much, we recommend you to explicitly annotate the type of boolean prop.
+This restriction still exists after Vue Vine v0.2.0, because we didn't enable ts-morph to parse types in `vineProp` definition, according to the design, this restriction won't affect the daily usage much, we recommend you to explicitly annotate the type of boolean prop.
 
 ```vue-vine
 // Correct examples
