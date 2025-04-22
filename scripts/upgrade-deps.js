@@ -57,7 +57,7 @@ function commitChanges() {
 
   const commitMessage = 'chore(create-vue-vine): upgrade template dep version'
 
-  const commitResult = spawnSync('git', ['commit', '-m', commitMessage])
+  const commitResult = spawnSync('git', ['commit', '-m', commitMessage, '--no-verify'])
 
   if (commitResult.status !== 0) {
     throw new Error(`Git commit failed: ${commitResult.stderr.toString()}`)
