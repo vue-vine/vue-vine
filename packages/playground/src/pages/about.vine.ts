@@ -30,7 +30,7 @@ function TestSlotContainer({ fizz, bar = 1 }: {
         v-model="text"
       />
       <p>fizz: "{{ fizz }}", bar: "{{ bar }}"</p>
-      <slot name="slotCamel" :foo="num"></slot>
+      <slot name="slotCamel" :foo="num" />
     </div>
   `
 }
