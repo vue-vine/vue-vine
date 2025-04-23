@@ -38,7 +38,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "vue": ">=3.2"
+    "vue": "catalog:"
   },
   "dependencies": {
     "@vue-vine/vite-plugin": "workspace:^"

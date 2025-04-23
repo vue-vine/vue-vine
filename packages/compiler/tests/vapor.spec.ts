@@ -36,6 +36,7 @@ function VaporExample() {
         delegateEvents as _delegateEvents,
         template as _template,
         defineComponent as _defineComponent,
+        defineVaporComponent as _defineVaporComponent,
         useCssVars as _useCssVars,
         unref as _unref,
       } from "vue";
@@ -46,7 +47,7 @@ function VaporExample() {
           true,
         );
         _delegateEvents("click");
-        const __vine = _defineComponent({
+        const __vine = _defineVaporComponent({
           name: "VaporExample",
           /* No props */
           /* No emits */
@@ -73,25 +74,6 @@ function VaporExample() {
 
       typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
         __VUE_HMR_RUNTIME__.createRecord(VaporExample.__hmrId, VaporExample);
-      export const _rerender_only = false;
-      export const _rerender_vcf_fn_name = "";
-      if (import.meta.hot) {
-        import.meta.hot.accept((mod) => {
-          if (!mod) {
-            return;
-          }
-          const { _rerender_only, _rerender_vcf_fn_name } = mod;
-          if (!_rerender_vcf_fn_name) {
-            return;
-          }
-          const component = mod[_rerender_vcf_fn_name];
-          if (_rerender_only) {
-            __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-          } else {
-            __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-          }
-        });
-      }
       "
     `)
   })

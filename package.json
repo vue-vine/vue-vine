@@ -84,6 +84,7 @@
       "keytar",
       "playwright-chromium",
       "simple-git-hooks",
+      "unrs-resolver",
       "vue-demi"
     ]
   },

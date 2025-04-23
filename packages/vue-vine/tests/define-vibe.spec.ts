@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { defineVibe } from '../src/defineVibe'
 
 async function mockDataFetch() {
@@ -21,7 +21,7 @@ describe('defineVibe', () => {
       return { count, increment }
     })
 
-    const Counter = {
+    const Counter = defineComponent({
       setup() {
         const { count, increment } = useCounter()
         return { count, increment }
@@ -32,8 +32,8 @@ describe('defineVibe', () => {
           <p>Count: {{ count }}</p>
         </div>
       `,
-    }
-    const App = {
+    })
+    const App = defineComponent({
       components: { Counter },
       setup() {
         initCounter()
@@ -43,7 +43,7 @@ describe('defineVibe', () => {
           <Counter />
         </div>
       `,
-    }
+    })
 
     const mounted = mount(App)
     expect(mounted.find('p').text()).toBe('Count: 0')
@@ -57,7 +57,7 @@ describe('defineVibe', () => {
       return { data }
     })
 
-    const Counter = {
+    const Counter = defineComponent({
       setup() {
         const { data } = useCounter()
         return { data }
@@ -68,9 +68,9 @@ describe('defineVibe', () => {
           <p v-else>Data: {{ data }}</p>
         </div>
       `,
-    }
+    })
 
-    const App = {
+    const App = defineComponent({
       components: { Counter },
       setup() {
         initCounter(async ({ data }) => {
@@ -81,7 +81,7 @@ describe('defineVibe', () => {
       template: `
         <Counter />
       `,
-    }
+    })
 
     const mounted = mount(App)
     expect(mounted.find('p').text()).toBe('Loading...')
