@@ -40,7 +40,7 @@ export function AboutPage() {
     console.log(bar)
   }
   const testSlotContainerText = ref('')
-  const slotContainerRef = ref()
+  const slotContainerRef = useTemplateRef('slotContainerRef')
 
   return vine`
     <PageHeader />

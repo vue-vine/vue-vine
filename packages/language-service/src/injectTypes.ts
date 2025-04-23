@@ -86,24 +86,25 @@ export function createLinkedCodeTag(
   return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
 }
 
-function maybeDestructuredPropsToStr(vineCompFn: VineFnCompCtx) {
+function mayNeedPropsAlias(vineCompFn: VineFnCompCtx) {
   const { propsDestructuredNames } = vineCompFn
   if (Object.keys(propsDestructuredNames).length === 0) {
-    return 'props'
+    return `...${vineCompFn.propsAlias},`
   }
 
-  const result = Object.entries(propsDestructuredNames).reduce((acc, [name, meta]) => {
-    const key = meta.alias ?? name
-    acc.push(`/* __LINKED_CODE_LEFT__#${key.length} */${key}: /* __LINKED_CODE_RIGHT__#${key.length} */${key}`)
-    return acc
-  }, [] as string[])
-
-  return `{ ${result.join(', ')} }`
+  return `/* No need to list destructured props here */`
 }
 
+interface GenerateVLSContextOptions {
+  excludeBindings?: Set<string>
+}
 export function generateVLSContext(
   vineCompFn: VineFnCompCtx,
+  {
+    excludeBindings = new Set(),
+  }: GenerateVLSContextOptions,
 ): string {
+  // Deduplicate same binding keys
   const bindingEntries = Object.entries(
     Object.fromEntries(
       [
@@ -114,8 +115,9 @@ export function generateVLSContext(
           compName => [compName, VineBindingTypes.SETUP_CONST] as const,
         ),
         ...Object.entries(vineCompFn.bindings),
-      ],
-    ), // Deduplicate same binding keys
+      ]
+        .filter(([bindingName]) => !excludeBindings.has(bindingName)),
+    ),
   )
   const notPropsBindings = bindingEntries.filter(
     ([, bindingType]) => (
@@ -148,9 +150,7 @@ ${notPropsBindings.map(([name]) => {
 }).join('\n')}
   ${
     vineCompFn.propsDefinitionBy === 'annotaion'
-      ? `...${
-        maybeDestructuredPropsToStr(vineCompFn)
-      },`
+      ? mayNeedPropsAlias(vineCompFn)
       : '/* No props formal params */'
   }
 });
