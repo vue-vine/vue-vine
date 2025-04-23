@@ -24,8 +24,8 @@ async function runCommitMsgHook() {
 Error: Commit message format does not meet the requirements.
 
 Please follow the commitlint format, for example:
-  feat(module): add new feature
-  fix: fix a bug
+  feat(module): message less than 50 characters
+  fix: message less than 50 characters
 `)
     process.exit(1)
   }

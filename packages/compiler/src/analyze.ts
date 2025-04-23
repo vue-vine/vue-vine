@@ -1094,6 +1094,7 @@ function buildVineCompFnCtx(
     templateReturn,
     templateSource,
     templateComponentNames: new Set<string>(),
+    templateRefNames: new Set<string>(),
     linkedMacroCalls: [],
     propsDestructuredNames: {},
     propsDefinitionBy: 'annotaion',

@@ -226,6 +226,18 @@ function setVineTemplateAst(
         return
       }
 
+      // Collect all template ref literal names
+      const maybeRef = node.props.find(
+        prop => (
+          prop.type === NodeTypes.ATTRIBUTE
+          && prop.name === 'ref'
+          && prop.value?.type === NodeTypes.TEXT
+        ),
+      ) as (AttributeNode | undefined)
+      if (maybeRef?.value) {
+        vineCompFnCtx.templateRefNames.add(maybeRef.value.content)
+      }
+
       if (node.tagType === ElementTypes.COMPONENT) {
         vineCompFnCtx.templateComponentNames.add(node.tag)
       }
