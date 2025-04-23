@@ -1,11 +1,11 @@
 import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
-import type { VinePropMeta } from '@vue-vine/compiler'
 import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelToken, VueVineCode } from './shared'
 import path from 'node:path/posix'
-import { isIdentifier, isTSTypeLiteral } from '@babel/types'
+import { isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral } from '@babel/types'
+import { _breakableTraverse, type VinePropMeta } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
@@ -215,13 +215,12 @@ export function createVueVineCode(
     }
 
     generateLinkedCodeTagRightForMacros(vineCompFn)
+    generateUseTemplateRefTypeParams(vineCompFn)
 
     // Generate the component expose types if needed
     if (vineCompFn.expose) {
       generateExposeHoist(vineCompFn)
     }
-
-    // Insert temp variables,
     // after all statements in the function body
     generateScriptUntil(vineCompFn.templateReturn.start!)
     if (isVineCompHasFnBlock && tempVarDecls.length > 0) {
@@ -229,9 +228,12 @@ export function createVueVineCode(
       tsCodeSegments.push('\n\n')
     }
 
+    const templateRefNames = vineCompFn.templateRefNames
+    const destructuredPropNames = new Set(Object.keys(vineCompFn.propsDestructuredNames))
+
     // Generate the template virtual code
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
-      tsCodeSegments.push('\n{ // --- Start: Template virtual code\n')
+      tsCodeSegments.push('\n// --- Start: Template virtual code\n')
 
       // Insert all component bindings to __VLS_ctx
       tsCodeSegments.push(generateVLSContext(vineCompFn))
@@ -257,8 +259,8 @@ export function createVueVineCode(
         scriptSetupImportComponentNames: new Set(),
         edited: target === 'extension',
         inheritAttrs: false,
-        templateRefNames: new Set(),
-        destructuredPropNames: new Set(),
+        templateRefNames,
+        destructuredPropNames,
 
         // Slots type virtual code helper
         hasDefineSlots: Object.keys(vineCompFn.slots).length > 0,
@@ -295,7 +297,7 @@ export function createVueVineCode(
           tsCodeSegments.push(segment[0])
         }
       }
-      tsCodeSegments.push('\n} // --- End: Template virtual code\n')
+      tsCodeSegments.push('\n// --- End: Template virtual code\n\n')
     }
 
     generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
@@ -671,6 +673,52 @@ export function createVueVineCode(
       generateScriptUntil(member.key.start!)
       tsCodeSegments.push(createLinkedCodeTag('right', member.key.name.length))
     })
+  }
+
+  function generateUseTemplateRefTypeParams(vineCompFn: VineCompFn) {
+    const fnBody = vineCompFn.fnItselfNode?.body
+    if (!fnBody) {
+      return
+    }
+
+    const useTemplateRefCalls: CallExpression[] = []
+    _breakableTraverse(
+      fnBody,
+      (node) => {
+        if (
+          isCallExpression(node)
+          && isIdentifier(node.callee)
+          && node.callee.name === 'useTemplateRef'
+        ) {
+          useTemplateRefCalls.push(node)
+        }
+      },
+    )
+
+    for (const call of useTemplateRefCalls) {
+      const templateRefName = call.arguments[0]
+      if (!isStringLiteral(templateRefName)) {
+        continue
+      }
+      const refName = templateRefName.value
+
+      let genCursor = call.callee.end!
+      generateScriptUntil(genCursor)
+
+      // Ignore the original type parameters,
+      // because we will generate a new type later.
+      if (call.typeParameters) {
+        genCursor = call.typeParameters.end!
+      }
+      tsCodeSegments.push(`<__VLS_TemplateRefs[`)
+      tsCodeSegments.push([
+        `'${refName}'`,
+        undefined,
+        genCursor + 1, // after '('
+        FULL_FEATURES,
+      ])
+      tsCodeSegments.push(`], keyof __VLS_TemplateRefs>`)
+    }
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {

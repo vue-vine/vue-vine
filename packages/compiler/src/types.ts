@@ -190,6 +190,7 @@ export interface VineCompFnCtx {
   templateAst?: RootNode
   templateParsedAst?: RootNode
   templateComponentNames: Set<string>
+  templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
   /** is web component (customElement) */
