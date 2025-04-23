@@ -28,7 +28,7 @@ catalog:
   '@nuxt/schema': ^3.15.0
   '@nuxt/module-builder': ^1.0.0-alpha.1
   eslint: ~9.10.0
-  typescript: ~5.7.3
+  typescript: ~5.8.3
   vite: ^6.0.0
   vitest: ^3.0.0
   vue: https://pkg.pr.new/vue@9ab8e4c

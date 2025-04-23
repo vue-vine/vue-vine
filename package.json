@@ -12,7 +12,7 @@
   },
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
-    "build": "pnpm --filter=\"./packages/*\" --stream build",
+    "build": "pnpm --filter=\"./packages/*\" --filter=\"!./packages/docs\" --stream build",
     "dev:compiler": "NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
     "dev:vite": "NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
     "dev:main": "NODE_ENV=development pnpm --filter vue-vine run dev",
