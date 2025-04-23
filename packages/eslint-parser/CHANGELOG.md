@@ -1,5 +1,35 @@
 # @vue-vine/eslint-parser
 
+## 0.2.19
+
+### Patch Changes
+
+- Add auto-fix for component/HTML tag self-closing.
+
+## 0.2.18
+
+### Patch Changes
+
+- Add rules for some essential restrictions.
+
+## 0.2.17
+
+### Patch Changes
+
+- Add new rule for making vineExpose at function body tail.
+
+## 0.2.16
+
+### Patch Changes
+
+- Support vue 3.4 feature: v-bind shorthand
+
+## 0.2.15
+
+### Patch Changes
+
+- Fix dependencies for Vue Vine ESLint packages.
+
 ## 0.2.14
 
 ### Patch Changes

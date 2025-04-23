@@ -1,4 +1,3 @@
-import type { PluginBuild } from 'esbuild'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { defineConfig, type Options } from 'tsup'
@@ -6,10 +5,11 @@ import { defineConfig, type Options } from 'tsup'
 const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'
 
+type SetupBuild = Parameters<Exclude<Options['esbuildPlugins'], undefined>[number]['setup']>[0]
 function mockDependency(name: string) {
   return {
     name: `mock-${name}`,
-    setup(build: PluginBuild) {
+    setup(build: SetupBuild) {
       build.onResolve({ filter: new RegExp(`^${name}$`) }, () => {
         return { path: name, namespace: `mock-${name}` }
       })

@@ -28,7 +28,7 @@ export function SampleOne() {
       }"
     >
       <p v-text="msg">Dida dida</p>
-      <comp foo="111" :foo="'222'" />
+      <Comp foo="111" :foo="'222'" />
     </div>
   `
 }
@@ -56,6 +56,15 @@ export function TestPlainTextTemplate() {
     hello
   `
 }
+
+export function TestUnoCssAttributeMode() {
+  return vine`
+    <div border="1px solid red">
+      <span>foo</span>
+    </div>
+  `
+}
+
 // #endregion
 
 
@@ -81,6 +90,68 @@ function TestCompTwo() {
     <TestCompOne />
     <!--     ^^^ It should reports error here -->
     <!-- due to missing required prop 'zee' but not for 'foo' -->
+  `
+}
+// #endregion
+
+
+// #region Test vineExpose and component ref
+function TargetComp() {
+  const count = ref(0)
+
+
+  watchEffect(() => {
+    console.log('count: ', count.value)
+  })
+  vineExpose({
+    count
+  })
+
+  return vine`
+    <div @click="count++">Hello I'm target</div>
+    <p>count: {{ count }}</p>
+  `
+}
+
+export function TestCompRef() {
+  const target = ref<ReturnType<typeof TargetComp>>()
+  console.log('target count: ', target.value?.count)
+
+  return vine`
+    <div>
+      <TargetComp ref="target" />
+    </div>
+  `
+}
+// #endregion
+
+// #region Test ESLint rule: no-v-for-key-on-child
+export function TestNoVforKeyOnChild() {
+  interface User { id: string; name: string }
+  const users = ref<User[]>([])
+  return vine`
+    <div class="user-list">
+      <template v-for="user in users">
+        <div :key="user.id">
+          {{ user.name }}
+        </div>
+      </template>
+    </div>
+  `
+}
+// #endregion
+
+// #region Test ESLint rule: no-lifecycle-hook-after-await
+declare const doSomethingAsync: () => Promise<void>
+export async function TestNoLifecycleHookAfterAwait() {
+  await doSomethingAsync()
+
+  onMounted(() => {
+    // ...
+  })
+
+  return vine`
+    <p>...</p>
   `
 }
 // #endregion

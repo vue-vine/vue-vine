@@ -7,8 +7,17 @@ import {
   forEachEmbeddedCode,
 } from '@vue/language-core'
 import { URI } from 'vscode-uri'
-import { createSpawnLogger, VLS_ErrorLog } from './shared'
+import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
+
+export type {
+  PipelineRequest,
+  PipelineResponse,
+} from '../typescript-plugin/types'
+export {
+  pipelineRequest,
+  tryParsePipelineResponse,
+} from '../typescript-plugin/utils'
 
 export {
   setupGlobalTypes,
@@ -16,11 +25,12 @@ export {
 export {
   isVueVineVirtualCode,
   VLS_ErrorLog,
-  VLS_InfoLog,
+  vlsInfoLog,
 } from './shared'
 export type {
   VueVineCode,
 } from './shared'
+
 export {
   createVueVineCode,
 } from './virtual-code'
@@ -41,8 +51,6 @@ export function createVueVineLanguagePlugin(
     target = 'extension',
   } = options
 
-  // Observability
-  const vinePerfMonitorLogger = createSpawnLogger('(Perfomance Monitor)')
   let vineActiveModuleId: string | undefined
 
   return {
@@ -61,9 +69,7 @@ export function createVueVineLanguagePlugin(
         && langaugeId === 'typescript'
       ) {
         if (vineActiveModuleId !== moduleId) {
-          vinePerfMonitorLogger.reset()
           vineActiveModuleId = moduleId
-          vinePerfMonitorLogger.log(`Creating virtual code for ${vineActiveModuleId}`)
         }
 
         try {
@@ -75,7 +81,6 @@ export function createVueVineLanguagePlugin(
             compilerOptions,
             vueCompilerOptions,
             target,
-            vinePerfMonitorLogger,
           )
           return virtualCode
         }
@@ -92,7 +97,7 @@ export function createVueVineLanguagePlugin(
             return {
               code,
               extension: '.ts',
-              scriptKind: 3,
+              scriptKind: ts.ScriptKind.TS,
             }
           }
         }

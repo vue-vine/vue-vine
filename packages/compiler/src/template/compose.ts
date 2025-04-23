@@ -13,6 +13,23 @@ import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
 import { walkVueTemplateAst } from './walk'
 
+function toPascalCase(str: string) {
+  return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
+}
+export function postProcessForRenderCodegen(codegen: string) {
+  return codegen
+    // https://github.com/vue-vine/vue-vine/issues/171
+    // Replace all `= _resolveComponent('...')`, '...' is the component name,
+    // to `= (typeof <toPascalCase('...')> === 'undefined' ? _resolveComponent('...') : <toPascalCase('...')>)`
+    .replace(
+      /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
+      (match, componentName) => {
+        const pascalComponentName = toPascalCase(componentName)
+        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName});`
+      },
+    )
+}
+
 export function compileVineTemplate(
   source: string,
   params: Partial<CompilerOptions>,
@@ -225,6 +242,18 @@ function setVineTemplateAst(
         return
       }
 
+      // Collect all template ref literal names
+      const maybeRef = node.props.find(
+        prop => (
+          prop.type === NodeTypes.ATTRIBUTE
+          && prop.name === 'ref'
+          && prop.value?.type === NodeTypes.TEXT
+        ),
+      ) as (AttributeNode | undefined)
+      if (maybeRef?.value) {
+        vineCompFnCtx.templateRefNames.add(maybeRef.value.content)
+      }
+
       if (node.tagType === ElementTypes.COMPONENT) {
         vineCompFnCtx.templateComponentNames.add(node.tag)
       }
@@ -357,12 +386,14 @@ export function createSeparatedTemplateComposer(
       }
       templateCompileResults.set(
         vineCompFnCtx,
-        code.slice(
-          exportRenderFnNode.start!,
-          exportRenderFnNode.end!,
-        ).replace(
-          ssr ? 'export function ssrRender' : 'export function render',
-          ssr ? 'function __sfc_ssr_render' : 'function __sfc_render',
+        postProcessForRenderCodegen(
+          code.slice(
+            exportRenderFnNode.start!,
+            exportRenderFnNode.end!,
+          ).replace(
+            ssr ? 'export function ssrRender' : 'export function render',
+            ssr ? 'function __sfc_ssr_render' : 'function __sfc_render',
+          ),
         ),
       )
 
@@ -515,10 +546,11 @@ export function createInlineTemplateComposer(
 
       // For inline mode, we can directly store the generated code,
       // it's an inline render function
-      templateCompileResults.set(vineCompFnCtx, code)
+      const finalCode = postProcessForRenderCodegen(code)
+      templateCompileResults.set(vineCompFnCtx, finalCode)
 
       // For inline mode, the setup function's return expression is the render function
-      return code
+      return finalCode
     },
   }
 }

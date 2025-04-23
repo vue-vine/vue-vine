@@ -1,5 +1,129 @@
 # vue-vine-tsc
 
+## 0.2.20
+
+### Patch Changes
+
+- Support intellisense and navigation in useTemplateRef.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.20
+
+## 0.2.19
+
+### Patch Changes
+
+- Implement TypeScript language service proxy.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.19
+
+## 0.2.18
+
+### Patch Changes
+
+- Fix language service and implement pipeline server to fetch component info.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.18
+
+## 0.2.17
+
+### Patch Changes
+
+- Fix language service for shallow unref VLS context.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.17
+
+## 0.2.16
+
+### Patch Changes
+
+- Fix language service navigation and upgrade TS to v5.7.3.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.16
+
+## 0.2.15
+
+### Patch Changes
+
+- Fix compiler for auto-import components broken in inline-template mode.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.15
+
+## 0.2.14
+
+### Patch Changes
+
+- Fix completions for auto-import components.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.14
+
+## 0.2.13
+
+### Patch Changes
+
+- Fix missing used-in-template binding records for virtual code.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.13
+
+## 0.2.12
+
+### Patch Changes
+
+- Fix virtual code combining behavior aliging with Vue language tools.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.12
+
+## 0.2.11
+
+### Patch Changes
+
+- Fix missing expose types in language service.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.11
+
+## 0.2.10
+
+### Patch Changes
+
+- Fix language service - add missing common props for component.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.10
+
+## 0.2.9
+
+### Patch Changes
+
+- Fix language service types issue - conflicts with implicit any
+
+## 0.2.8
+
+### Patch Changes
+
+- Move compiler HMR inject code into Vite plugin for bundler agnostic.
+
+## 0.2.7
+
+### Patch Changes
+
+- Bump version to align with vscode extension.
+
+## 0.2.6
+
+### Patch Changes
+
+- Fix HMR stability issue.
+
+## 0.2.5
+
+### Patch Changes
+
+- Fix undefined handling in HMR when ts-morph resolving.
+
+## 0.2.4
+
+### Patch Changes
+
+- Bump vue language tool v2.2.2 and fix default value in ts-morph case.
+
 ## 0.2.3
 
 ### Patch Changes

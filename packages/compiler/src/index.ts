@@ -39,6 +39,7 @@ export type {
   VineCompFnCtx as VineFnCompCtx,
   VineProcessorLang,
   VinePropMeta,
+  VineQuery,
 } from './types'
 
 export {

@@ -1,4 +1,4 @@
-# format-prefer-template ![](https://img.shields.io/badge/vue_vine-format-prefer-template)
+# format-prefer-template ![](https://img.shields.io/badge/vue_vine-format-emerald)
 
 This rule is a fork of ESLint built-in rule [prefer-template](https://eslint.org/docs/latest/rules/prefer-template#resources).
 

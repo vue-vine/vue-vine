@@ -1,9 +1,14 @@
 {
   "name": "@vue-vine/eslint-config",
-  "version": "0.2.14",
+  "version": "0.2.19",
   "description": "ESLint config for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/eslint-config"
+  },
   "keywords": [
     "Vue",
     "Vine",
@@ -29,7 +34,8 @@
     "build": "tsup",
     "test": "vitest",
     "test:dev": "vitest",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vue-vine/eslint-plugin": "workspace:*",

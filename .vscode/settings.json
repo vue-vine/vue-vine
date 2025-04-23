@@ -60,5 +60,6 @@
   ],
   "cSpell.words": [
     "todolist"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

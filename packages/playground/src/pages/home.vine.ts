@@ -3,11 +3,11 @@ import { generateRandomString } from '~/utils'
 // No need to manually import the following components,
 // they will be automatically imported
 // - import { InsideExample } from '../components/inside-example.vine'
-// - import { PageHeader } from '../components/page-header.vine'
 
 function OutsideExample(props: { id: string }) {
   const randomStr = ref('')
   const loading = ref(true)
+  const title = ref('Here is a title')
   const mockUpdate = () => {
   loading.value = true
     setTimeout(() => {
@@ -32,8 +32,8 @@ function OutsideExample(props: { id: string }) {
   return vine`
     <div class="state-container">
       <InsideExample
-        title="Here's a title"
-        author="ShenQingchuan"
+        :title
+        author="Tom"
         @metaBgColorChange="(color: string) => console.log(color)"
       />
 
@@ -97,7 +97,6 @@ export function HomePage() {
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 
   return vine`
-    <PageHeader />
     <OutsideExample :id="id" />
     <div class="flex flex-row items-center justify-center my-4">
       <div

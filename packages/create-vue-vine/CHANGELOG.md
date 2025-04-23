@@ -1,5 +1,17 @@
 # create-vue-vine
 
+## 0.1.5
+
+### Patch Changes
+
+- Support intellisense and navigation in useTemplateRef.
+
+## 0.1.4
+
+### Patch Changes
+
+- Bump dependencies' version.
+
 ## 0.1.3
 
 ### Major Changes

@@ -1,3 +1,4 @@
+import type { Node as BabelNode } from '@babel/types'
 import type { ArrowFunction, FunctionDeclaration, FunctionExpression, SourceFile, TaggedTemplateExpression, Type, TypeChecker, VariableDeclaration } from 'ts-morph'
 import type { VineCompFnCtx, VinePropMeta } from '../types'
 import { Node } from 'ts-morph'
@@ -6,11 +7,11 @@ function isBooleanType(
   typeChecker: TypeChecker,
   type: Type,
 ) {
-  // 直接 boolean
+  // Boolean cast
   if (type.isBoolean())
     return true
 
-  // 联合类型 (true | false 或 boolean | undefined 等)
+  // Union types like: (true | false or boolean | undefined ...)
   if (type.isUnion()) {
     return type.getUnionTypes().every(t =>
       t.isBoolean()
@@ -18,12 +19,12 @@ function isBooleanType(
     )
   }
 
-  // 交叉类型
+  // Intersection types like: (boolean & T1 & T2)
   if (type.isIntersection()) {
     return type.getIntersectionTypes().some(t => t.isBoolean())
   }
 
-  // 别名类型，需要获取其实际类型
+  // Alias types, need to get the actual type
   const aliasSymbol = type.getAliasSymbol()
   if (aliasSymbol) {
     const aliasType = typeChecker.getDeclaredTypeOfSymbol(aliasSymbol)
@@ -37,8 +38,9 @@ export function resolveVineCompFnProps(params: {
   typeChecker: TypeChecker
   sourceFile: SourceFile
   vineCompFnCtx: VineCompFnCtx
+  defaultsFromDestructuredProps: Record<string, BabelNode>
 }) {
-  const { typeChecker, sourceFile, vineCompFnCtx } = params
+  const { typeChecker, sourceFile, vineCompFnCtx, defaultsFromDestructuredProps } = params
   const propsInfo: Record<string, VinePropMeta> = {}
 
   const targetFn = sourceFile.getFirstDescendant(
@@ -69,10 +71,10 @@ export function resolveVineCompFnProps(params: {
 
       // Look for return statement with tagged template literal tagged with `vine`
       const returnStatement = body.getFirstDescendant(
-        node => (
-          Node.isReturnStatement(node)
-          && Node.isTaggedTemplateExpression(node.getExpression())
-          && (node.getExpression() as TaggedTemplateExpression | undefined)?.getTag().getText() === 'vine'
+        nodeInReturnStmt => (
+          Node.isReturnStatement(nodeInReturnStmt)
+          && Node.isTaggedTemplateExpression(nodeInReturnStmt.getExpression())
+          && (nodeInReturnStmt.getExpression() as TaggedTemplateExpression | undefined)?.getTag().getText() === 'vine'
         ),
       )
 
@@ -84,23 +86,33 @@ export function resolveVineCompFnProps(params: {
 
       return !!returnStatement && fnName === vineCompFnCtx.fnName
     },
-  ) as (FunctionDeclaration | VariableDeclaration)
+  ) as (FunctionDeclaration | VariableDeclaration | undefined)
 
+  if (!targetFn) {
+    return propsInfo
+  }
   const propsParams = (
     Node.isFunctionDeclaration(targetFn)
       ? targetFn.getParameters()
-      : (targetFn.getInitializer() as FunctionExpression | ArrowFunction).getParameters()
-  )[0]
+      : (targetFn.getInitializer() as FunctionExpression | ArrowFunction)?.getParameters()
+  )?.[0]
+  if (!propsParams) {
+    return propsInfo
+  }
   const propsIdentifier = propsParams.getNameNode()
   const propsType = propsIdentifier.getType()
 
   for (const prop of propsType.getProperties()) {
     const propType = typeChecker.getTypeOfSymbolAtLocation(prop, propsIdentifier)
 
-    propsInfo[prop.getName()] = {
+    const propName = prop.getName()
+    propsInfo[propName] = {
       isFromMacroDefine: false,
       isRequired: !prop.isOptional(),
       isBool: isBooleanType(typeChecker, propType),
+    }
+    if (defaultsFromDestructuredProps[propName]) {
+      propsInfo[propName].default = defaultsFromDestructuredProps[propName]
     }
   }
 

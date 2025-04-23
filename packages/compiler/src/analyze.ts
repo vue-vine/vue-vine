@@ -106,7 +106,7 @@ type AnalyzeRunner = (
 
 function storeTheOnlyMacroCallArg(
   macroName: VINE_MACRO_NAMES,
-  callback: (analyzeCtx: AnalyzeCtx, macroCallArg: Node) => void,
+  callback: (analyzeCtx: AnalyzeCtx, macroCall: CallExpression, macroCallArg: Node) => void,
 ): AnalyzeRunner {
   const findMacroCallNode: (fnItselfNode: BabelFunctionNodeTypes) => CallExpression | undefined = (
     fnItselfNode,
@@ -132,20 +132,23 @@ function storeTheOnlyMacroCallArg(
     if (!macroCallArg) {
       return
     }
-    callback(analyzeCtx, macroCallArg)
+    callback(analyzeCtx, macroCall, macroCallArg)
   }
 }
 
 const analyzeVineExpose = storeTheOnlyMacroCallArg(
   'vineExpose',
-  ({ vineCompFnCtx }, macroCallArg) => {
-    vineCompFnCtx.expose = macroCallArg
+  ({ vineCompFnCtx }, macroCall, macroCallArg) => {
+    vineCompFnCtx.expose = {
+      macroCall,
+      paramObj: macroCallArg,
+    }
   },
 )
 
 const analyzeVineOptions = storeTheOnlyMacroCallArg(
   'vineOptions',
-  ({ vineCompFnCtx }, macroCallArg) => {
+  ({ vineCompFnCtx }, _, macroCallArg) => {
     vineCompFnCtx.options = macroCallArg
   },
 )
@@ -490,6 +493,7 @@ const analyzeVineProps: AnalyzeRunner = (
           typeChecker,
           sourceFile,
           vineCompFnCtx,
+          defaultsFromDestructuredProps,
         })
         vineCompFnCtx.props = propsInfo
       }
@@ -1116,6 +1120,7 @@ function buildVineCompFnCtx(
     templateReturn,
     templateSource,
     templateComponentNames: new Set<string>(),
+    templateRefNames: new Set<string>(),
     linkedMacroCalls: [],
     propsDestructuredNames: {},
     propsDefinitionBy: 'annotaion',
@@ -1177,7 +1182,7 @@ export function analyzeVine(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): void {
   // Analyze all import statements in this file
   // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
   // in order to create binding records

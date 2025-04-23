@@ -1,11 +1,15 @@
 {
   "name": "@vue-vine/nuxt",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.2.20",
   "description": "Nuxt module for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
-  "repository": "vue-vine/nuxt-module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/nuxt-module"
+  },
   "keywords": [
     "Vue",
     "Nuxt"
@@ -24,16 +28,19 @@
   "scripts": {
     "prepack": "nuxt-module-build prepare && nuxt-module-build build",
     "build": "pnpm run prepack",
+    "setup": "nuxt-module-build prepare",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && pnpm run setup && nuxi prepare playground",
     "prepublish": "pnpm run lint && pnpm run test --run && pnpm run prepack",
     "lint": "eslint .",
     "test": "vitest",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "typecheck": "pnpm run setup && tsc --noEmit"
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
+    "consola": "^3.4.0",
     "vue-vine": "workspace:*"
   },
   "devDependencies": {

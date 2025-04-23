@@ -8,7 +8,7 @@ import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/languag
 import {
   createParsedCommandLine,
   createVueLanguagePlugin,
-  resolveVueCompilerOptions,
+  getDefaultCompilerOptions,
 } from '@vue/language-core'
 
 const windowsPathReg = /\\/g
@@ -34,10 +34,11 @@ export function run() {
           }
         }
         else {
-          vueOptions = resolveVueCompilerOptions({
-            // enable strict templates by default
-            strictTemplates: true,
-          })
+          vueOptions = getDefaultCompilerOptions(
+            (void 0),
+            (void 0),
+            true,
+          )
         }
 
         languagePlugins.push(

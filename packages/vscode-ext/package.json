@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.3.3",
+  "version": "0.3.20",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -86,17 +86,26 @@
         "uiTheme": "vs-dark",
         "path": "./themes/rocking-vine.json"
       }
+    ],
+    "commands": [
+      {
+        "command": "vine.action.restartServer",
+        "title": "Restart Vue Vine and TS servers",
+        "category": "Vue Vine"
+      }
     ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "dev": "NODE_ENV=development tsup --watch",
     "build": "NODE_ENV=production tsup",
+    "build:debug": "NODE_ENV=development tsup",
     "lint": "eslint src --ext ts",
-    "pack": "vsce package --no-dependencies",
+    "pack:ext": "vsce pack",
     "prepack": "pnpm run build",
     "publish:ext": "vsce publish",
-    "publish:osvx": "ovsx publish"
+    "publish:osvx": "ovsx publish",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
@@ -107,6 +116,7 @@
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "ovsx": "latest"
+    "ovsx": "latest",
+    "reactive-vscode": "^0.2.10"
   }
 }

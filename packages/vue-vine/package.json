@@ -1,9 +1,14 @@
 {
   "name": "vue-vine",
-  "version": "0.3.3",
+  "version": "0.3.20",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/vue-vine"
+  },
   "exports": {
     ".": {
       "dev": "./src/index.ts",
@@ -29,7 +34,8 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "prepublish": "pnpm run build",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "vue": ">=3.2"

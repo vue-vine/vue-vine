@@ -186,24 +186,6 @@ function propsOptionsCodeGeneration(
   ]
 }
 
-function toPascalCase(str: string) {
-  return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
-}
-
-function postProcessForRenderCodegen(codegen: string) {
-  return codegen
-    // https://github.com/vue-vine/vue-vine/issues/171
-    // Replace all `= _resolveComponent('...')`, '...' is the component name,
-    // to `= (typeof <toPascalCase('...')> === 'undefined' ? _resolveComponent('...') : <toPascalCase('...')>)`
-    .replace(
-      /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
-      (match, componentName) => {
-        const pascalComponentName = toPascalCase(componentName)
-        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName})`
-      },
-    )
-}
-
 function rewriteDestructuredPropAccess(
   compilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
@@ -439,7 +421,7 @@ export function transformFile(
   compilerHooks: VineCompilerHooks,
   inline = true,
   ssr = false,
-) {
+): void {
   const isDev = compilerHooks.getCompilerCtx().options.envMode !== 'production'
   const ms = vineFileCtx.fileMagicCode
 
@@ -733,12 +715,13 @@ export function transformFile(
 
     // vineExpose
     if (vineCompFnCtx.expose) {
+      const { paramObj } = vineCompFnCtx.expose
       ms.appendRight(
         lastStmt.end!,
         `\n__expose(${
           ms.original.slice(
-            vineCompFnCtx.expose.start!,
-            vineCompFnCtx.expose.end!,
+            paramObj.start!,
+            paramObj.end!,
           )
         });\n`,
       )
@@ -819,7 +802,7 @@ export function transformFile(
       // Not-inline mode, we need manually add the
       // render function to the component object.
         : `${
-          postProcessForRenderCodegen(templateCompileResults.get(vineCompFnCtx) ?? '')
+          templateCompileResults.get(vineCompFnCtx) ?? ''
         }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
     }\n${
       showIf(
@@ -847,28 +830,6 @@ export function transformFile(
         `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
       )
     }
-  }
-
-  // HMR helper code
-  if (isDev) {
-    ms.appendRight(
-      ms.length(),
-      /* js */`export const _rerender_only = ${vineFileCtx.renderOnly}
-export const _rerender_vcf_fn_name = "${vineFileCtx.hmrCompFnsName ?? ''}"
-if (import.meta.hot) {
-  import.meta.hot.accept((mod) => {
-    if (!mod) { return; }
-    const { _rerender_only, _rerender_vcf_fn_name } = mod;
-    if (!_rerender_vcf_fn_name) { return; }
-    const component = mod[_rerender_vcf_fn_name];
-    if (_rerender_only) {
-      __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-    } else {
-      __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-    }
-  });
-}`,
-    )
   }
 
   // Prepend all style import statements

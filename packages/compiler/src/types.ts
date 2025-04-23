@@ -56,7 +56,7 @@ export type BabelFunctionNodeTypes =
   | ArrowFunctionExpression
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
-export declare type HMRCompFnsName = string | null
+export type HMRCompFnsName = string | null
 export interface TsMorphCache {
   project: Project
   typeChecker: TypeChecker
@@ -193,6 +193,7 @@ export interface VineCompFnCtx {
   templateAst?: RootNode
   templateParsedAst?: RootNode
   templateComponentNames: Set<string>
+  templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
   /** is web component (customElement) */
@@ -211,7 +212,10 @@ export interface VineCompFnCtx {
   emitsTypeParam?: TSTypeLiteral
   emitsDefinitionByNames?: boolean
   /** Store the `defineExpose`'s argument in source code */
-  expose?: Node
+  expose?: {
+    macroCall: CallExpression
+    paramObj: Node
+  }
   /** Store the `defineOptions`'s argument in source code */
   options?: Node
   /** Store every slot's props definition */

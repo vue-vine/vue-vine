@@ -1,9 +1,14 @@
 {
   "name": "@vue-vine/compiler",
-  "version": "0.3.3",
+  "version": "0.3.20",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/compiler"
+  },
   "keywords": [
     "Vue",
     "Vine"
@@ -26,7 +31,8 @@
     "build": "NODE_ENV=production tsup",
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/parser": "catalog:",

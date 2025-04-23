@@ -54,10 +54,10 @@ export default createEslintRule<Options, MessageIds>({
       'FunctionDeclaration, FunctionExpression, ArrowFunctionExpression': (
         node: TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression,
       ) => {
-        if (notVineCompFn(node)) {
-          return
-        }
-        if (node.body.type !== 'BlockStatement') {
+        if (
+          notVineCompFn(node)
+          || node.body.type !== 'BlockStatement'
+        ) {
           return
         }
 

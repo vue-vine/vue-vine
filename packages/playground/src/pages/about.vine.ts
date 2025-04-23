@@ -30,7 +30,7 @@ function TestSlotContainer({ fizz, bar = 1 }: {
         v-model="text"
       />
       <p>fizz: "{{ fizz }}", bar: "{{ bar }}"</p>
-      <slot name="slotCamel" :foo="num"></slot>
+      <slot name="slotCamel" :foo="num" />
     </div>
   `
 }
@@ -40,6 +40,7 @@ export function AboutPage() {
     console.log(bar)
   }
   const testSlotContainerText = ref('')
+  const slotContainerRef = ref()
 
   return vine`
     <PageHeader />
@@ -50,14 +51,15 @@ export function AboutPage() {
       TestSlotContainer text: {{ testSlotContainerText ?? "__Empty__" }}
     </p>
     <TestSlotContainer
+      ref="slotContainerRef"
       fizz="bass"
       :bar="10"
       @emit-camel="handleEmitCamel"
       v-model="testSlotContainerText"
     >
       <template #slotCamel="{ foo }">
-      <p>in slot: {{ foo }}</p>
-    </template>
-  </TestSlotContainer>
-`
+        <p>in slot: {{ foo }}</p>
+      </template>
+    </TestSlotContainer>
+  `
 }

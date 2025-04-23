@@ -1,4 +1,4 @@
-import type { ComponentNode, ElementNode, TemplateChildNode } from '@vue/compiler-dom'
+import type { ComponentNode, ElementNode, ForNode, IfBranchNode, IfNode, RootNode, TemplateChildNode } from '@vue/compiler-dom'
 import { ElementTypes, NodeTypes } from '@vue/compiler-dom'
 
 type WalkAction = (
@@ -10,23 +10,26 @@ interface WalkActions {
   enter?: WalkAction
   leave?: WalkAction
 }
-interface Walkable {
-  type: number
-  children: TemplateChildNode[]
-}
 
+type Walkable = RootNode | ElementNode | IfNode | IfBranchNode | ForNode
+const WALKABLE_TYPES: NodeTypes[] = [
+  NodeTypes.ROOT,
+  NodeTypes.ELEMENT,
+  NodeTypes.IF,
+  NodeTypes.IF_BRANCH,
+  NodeTypes.FOR,
+]
 function isWalkable(item: any): item is Walkable {
   return (
     item
     && typeof item === 'object'
     && 'type' in item
-    && 'children' in item
-    && Array.isArray(item.children)
+    && WALKABLE_TYPES.includes(item.type)
   )
 }
 
 export function walkVueTemplateAst(
-  root: Walkable | undefined,
+  root: RootNode | undefined,
   walkActions: WalkActions,
 ) {
   if (!root) {
@@ -45,8 +48,12 @@ export function walkVueTemplateAst(
     }
 
     parents.push(node)
-    walkActions.enter?.(node, parents, breakWalk)
-    node.children.forEach(child => walk(child))
+    walkActions.enter?.(node, parents, breakWalk);
+    (
+      node.type === NodeTypes.IF
+        ? node.branches
+        : node.children
+    ).forEach(child => walk(child))
     walkActions.leave?.(node, parents, breakWalk)
     parents.pop()
   }

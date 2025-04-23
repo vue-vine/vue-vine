@@ -7,6 +7,7 @@ import {
 } from '@volar/vscode'
 import * as lsp from '@volar/vscode/node'
 import * as vscode from 'vscode'
+import { useVineExtensionViewFeatures } from './view-features'
 
 let client: lsp.BaseLanguageClient
 
@@ -35,9 +36,10 @@ export async function activate(context: vscode.ExtensionContext) {
     documentSelector: [{ language: 'typescript' }],
     initializationOptions,
   }
+  const outputChannelName = 'Vine Language Server'
   client = new lsp.LanguageClient(
     'vine-language-server',
-    'Vine Language Server',
+    outputChannelName,
     serverOptions,
     clientOptions,
   )
@@ -49,6 +51,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const labsInfo = createLabsInfo(serverProtocol)
   labsInfo.addLanguageClient(client)
+
+  useVineExtensionViewFeatures(client)
 
   return labsInfo.extensionExports
 }
