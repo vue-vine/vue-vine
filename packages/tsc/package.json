@@ -1,6 +1,6 @@
 {
   "name": "vue-vine-tsc",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "description": "Command line typescript checker for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",

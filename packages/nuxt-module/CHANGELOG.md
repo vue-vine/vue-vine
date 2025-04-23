@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.2.20
+
+### Patch Changes
+
+- Support intellisense and navigation in useTemplateRef.
+- Updated dependencies
+  - vue-vine@0.3.20
+
 ## 0.2.19
 
 ### Patch Changes

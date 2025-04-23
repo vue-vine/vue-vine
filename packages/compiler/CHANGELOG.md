@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.20
+
+### Patch Changes
+
+- Support intellisense and navigation in useTemplateRef.
+
 ## 0.3.19
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.3.20
+
+### Patch Changes
+
+- Support intellisense and navigation in useTemplateRef.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.20
+
 ## 0.3.19
 
 ### Patch Changes
