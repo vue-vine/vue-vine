@@ -1,10 +1,10 @@
-import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
+import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression, Identifier, VariableDeclaration } from '@babel/types'
 import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelToken, VueVineCode } from './shared'
 import path from 'node:path/posix'
-import { isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral } from '@babel/types'
+import { isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
 import { _breakableTraverse, type VinePropMeta } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
@@ -190,6 +190,8 @@ export function createVueVineCode(
       continue
     }
 
+    const excludeBindings = new Set<string>()
+
     // Write out the component function's formal parameters
     generateComponentPropsAndContext(vineCompFn)
 
@@ -215,7 +217,7 @@ export function createVueVineCode(
     }
 
     generateLinkedCodeTagRightForMacros(vineCompFn)
-    generateUseTemplateRefTypeParams(vineCompFn)
+    generateUseTemplateRefTypeParams(vineCompFn, excludeBindings)
 
     // Generate the component expose types if needed
     if (vineCompFn.expose) {
@@ -236,7 +238,9 @@ export function createVueVineCode(
       tsCodeSegments.push('\n// --- Start: Template virtual code\n')
 
       // Insert all component bindings to __VLS_ctx
-      tsCodeSegments.push(generateVLSContext(vineCompFn))
+      tsCodeSegments.push(generateVLSContext(vineCompFn, {
+        excludeBindings,
+      }))
 
       const generatedTemplate = generateTemplate({
         ts,
@@ -501,6 +505,14 @@ export function createVueVineCode(
         },
       )
 
+    // Generate `expose: (exposed: ExposedType) => void`
+    const exposeField = `expose: (exposed: ${
+      vineCompFn.expose
+        ? `ReturnType<typeof ${vineCompFn.fnName}>`
+        : '{}'
+    }) => void,`
+    contextProperties.push(exposeField)
+
     const contextFieldsStr = (
       contextProperties.length > 0
         ? `\n${' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)}${lineWrapAtStart ? `\n  \n` : '\n'}`
@@ -675,7 +687,10 @@ export function createVueVineCode(
     })
   }
 
-  function generateUseTemplateRefTypeParams(vineCompFn: VineCompFn) {
+  function generateUseTemplateRefTypeParams(
+    vineCompFn: VineCompFn,
+    excludeBindings: Set<string>,
+  ) {
     const fnBody = vineCompFn.fnItselfNode?.body
     if (!fnBody) {
       return
@@ -684,13 +699,26 @@ export function createVueVineCode(
     const useTemplateRefCalls: CallExpression[] = []
     _breakableTraverse(
       fnBody,
-      (node) => {
+      (node, ancestors) => {
         if (
           isCallExpression(node)
           && isIdentifier(node.callee)
           && node.callee.name === 'useTemplateRef'
         ) {
           useTemplateRefCalls.push(node)
+
+          const varDecl = ancestors.find(
+            item => (
+              isVariableDeclaration(item.node)
+              && item.node.declarations.length === 1
+              && isIdentifier(item.node.declarations[0].id)
+            ),
+          )?.node as (VariableDeclaration | undefined)
+          if (varDecl) {
+            excludeBindings.add(
+              (varDecl.declarations[0].id as Identifier).name,
+            )
+          }
         }
       },
     )
