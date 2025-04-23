@@ -1,12 +1,12 @@
 import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import process from 'node:process'
-import { createProject, createProjectOptions } from '@/create'
-import { useFlags } from '@/flags'
-import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '@/utils'
 import { intro, log, outro, spinner } from '@clack/prompts'
 import { defineCommand, Root } from 'clerc'
 import { bold, green } from 'yoctocolors'
+import { createProject, createProjectOptions } from '../create'
+import { useFlags } from '../flags'
+import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDirectory, gradientBanner, runPmCommand, text, validateProjectName } from '../utils'
 
 const defaultProjectName = 'vue-vine-project'
 

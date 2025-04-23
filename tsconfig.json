@@ -1,18 +1,6 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "customConditions": ["dev"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "noImplicitAny": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "references": [
+    { "path": "./tsconfig.lib.json" }
+  ],
+  "files": []
 }
