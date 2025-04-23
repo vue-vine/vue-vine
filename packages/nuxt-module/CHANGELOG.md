@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.2.21
+
+### Patch Changes
+
+- Fixing incorrect inferred type by useTemplateRef.
+- Updated dependencies
+  - vue-vine@0.3.21
+
 ## 0.2.20
 
 ### Patch Changes

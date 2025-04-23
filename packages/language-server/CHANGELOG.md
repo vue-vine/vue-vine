@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.21
+
+### Patch Changes
+
+- Fixing incorrect inferred type by useTemplateRef.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.21
+  - @vue-vine/language-service@0.3.21
+
 ## 0.3.20
 
 ### Patch Changes

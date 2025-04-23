@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 0.3.21
+
+### Patch Changes
+
+- Fixing incorrect inferred type by useTemplateRef.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.21
+
 ## 0.3.20
 
 ### Patch Changes

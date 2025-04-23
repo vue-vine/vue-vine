@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.3.21
+
+### Patch Changes
+
+- Fixing incorrect inferred type by useTemplateRef.
+
 ## 0.3.20
 
 ### Patch Changes
