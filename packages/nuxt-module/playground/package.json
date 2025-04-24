@@ -7,6 +7,6 @@
     "generate": "nuxi generate"
   },
   "dependencies": {
-    "nuxt": "catalog:"
+    "nuxt": "catalog:nuxt-libs"
   }
 }

@@ -11,3 +11,5 @@ tsconfig.tsbuildinfo
 *.vsix
 *.virtual.ts
 auto-imports.d.ts
+.temp
+

@@ -61,21 +61,21 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
     "@baiwusanyu/utils-log": "^1.0.15",
-    "@changesets/cli": "catalog:",
-    "@types/node": "catalog:",
+    "@changesets/cli": "catalog:cli",
+    "@types/node": "catalog:types",
     "@vue-vine/eslint-parser": "workspace:*",
     "del": "^7.1.0",
-    "eslint": "catalog:",
+    "eslint": "catalog:eslint-libs",
     "esno": "^4.7.0",
     "lint-staged": "^13.3.0",
     "playwright-chromium": "^1.45.1",
     "simple-git-hooks": "^2.9.0",
     "tree-kill": "^1.2.2",
     "tsup": "^8.0.2",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:",
-    "vue": "catalog:"
+    "typescript": "catalog:cli",
+    "vite": "catalog:vite-ecosystem",
+    "vitest": "catalog:vite-ecosystem",
+    "vue": "catalog:vue-libs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

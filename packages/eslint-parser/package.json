@@ -35,9 +35,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "catalog:",
-    "@typescript-eslint/scope-manager": "catalog:",
-    "@typescript-eslint/typescript-estree": "catalog:",
+    "@typescript-eslint/parser": "catalog:eslint-libs",
+    "@typescript-eslint/scope-manager": "catalog:eslint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
     "debug": "^4.3.4",
     "eslint-scope": "^8.2.0",
     "espree": "^9.6.1",
@@ -48,12 +48,12 @@
     "@types/debug": "^4.1.12",
     "@types/eslint-scope": "^3.7.7",
     "@types/estree": "^1.0.6",
-    "@types/line-column": "catalog:",
+    "@types/line-column": "catalog:types",
     "@types/lodash": "^4.14.201",
-    "@types/node": "catalog:",
+    "@types/node": "catalog:types",
     "@types/semver": "^7.5.5",
     "@typescript-eslint/types": "8.15.0",
-    "eslint": "catalog:",
+    "eslint": "catalog:eslint-libs",
     "eslint-visitor-keys": "^4.2.0",
     "lodash": "^4.17.21"
   }

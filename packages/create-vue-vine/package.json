@@ -43,12 +43,12 @@
     "yoctocolors": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
+    "@types/node": "catalog:types",
     "unocss": "catalog:",
     "unplugin-auto-import": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-inspect": "catalog:",
-    "vue": "catalog:",
+    "vite": "catalog:vite-ecosystem",
+    "vite-plugin-inspect": "catalog:vite-ecosystem",
+    "vue": "catalog:vue-libs",
     "vue-vine": "workspace:*"
   }
 }

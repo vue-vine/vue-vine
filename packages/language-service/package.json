@@ -48,18 +48,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@volar/language-server": "catalog:",
-    "@volar/typescript": "catalog:",
+    "@volar/language-server": "catalog:volar",
+    "@volar/typescript": "catalog:volar",
     "@vue-vine/compiler": "workspace:*",
-    "@vue/language-core": "catalog:",
-    "@vue/shared": "catalog:",
+    "@vue/language-core": "catalog:vue-libs",
+    "@vue/shared": "catalog:vue-libs",
     "detect-port": "^2.1.0",
     "muggle-string": "^0.4.1",
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "@babel/types": "catalog:",
-    "@types/node": "catalog:",
+    "@babel/types": "catalog:compiler",
+    "@types/node": "catalog:types",
     "@types/ws": "^8.5.14",
     "vscode-uri": "catalog:"
   }

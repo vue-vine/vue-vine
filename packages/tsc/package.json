@@ -27,9 +27,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@volar/language-core": "catalog:",
-    "@volar/typescript": "catalog:",
+    "@volar/language-core": "catalog:volar",
+    "@volar/typescript": "catalog:volar",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "catalog:"
+    "@vue/language-core": "catalog:vue-libs"
   }
 }

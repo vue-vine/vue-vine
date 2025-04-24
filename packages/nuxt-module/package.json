@@ -39,18 +39,18 @@
     "typecheck": "pnpm run setup && tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "catalog:",
+    "@nuxt/kit": "catalog:nuxt-libs",
     "consola": "^3.4.0",
     "vue-vine": "workspace:*"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.6.1",
-    "@nuxt/eslint-config": "^0.7.1",
-    "@nuxt/module-builder": "catalog:",
-    "@nuxt/schema": "catalog:",
-    "@nuxt/test-utils": "^3.14.4",
+    "@nuxt/devtools": "catalog:nuxt-libs",
+    "@nuxt/eslint-config": "catalog:nuxt-libs",
+    "@nuxt/module-builder": "catalog:nuxt-libs",
+    "@nuxt/schema": "catalog:nuxt-libs",
+    "@nuxt/test-utils": "catalog:nuxt-libs",
     "changelogen": "^0.5.7",
-    "nuxt": "catalog:",
-    "vue-tsc": "catalog:"
+    "nuxt": "catalog:nuxt-libs",
+    "vue-tsc": "catalog:vue-libs"
   }
 }

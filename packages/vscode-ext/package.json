@@ -109,10 +109,9 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
-    "@changesets/cli": "catalog:",
     "@types/vscode": "1.84.0",
-    "@volar/language-server": "catalog:",
-    "@volar/vscode": "catalog:",
+    "@volar/language-server": "catalog:volar",
+    "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",

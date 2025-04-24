@@ -37,7 +37,7 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@types/hash-sum": "catalog:",
+    "@types/hash-sum": "catalog:types",
     "rollup": "^4.27.3"
   },
   "publishConfig": {

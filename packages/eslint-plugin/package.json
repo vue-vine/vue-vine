@@ -49,10 +49,10 @@
   "devDependencies": {
     "@types/eslint": "^9.6.0",
     "@types/prettier-linter-helpers": "^1.0.1",
-    "@typescript-eslint/types": "catalog:",
-    "@typescript-eslint/typescript-estree": "catalog:",
-    "@typescript-eslint/utils": "catalog:",
-    "eslint": "catalog:",
+    "@typescript-eslint/types": "catalog:eslint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
+    "@typescript-eslint/utils": "catalog:eslint-libs",
+    "eslint": "catalog:eslint-libs",
     "eslint-vitest-rule-tester": "^0.6.1",
     "jsonc-eslint-parser": "^2.4.0"
   }

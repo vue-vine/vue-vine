@@ -18,13 +18,13 @@
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.20",
-    "@types/node": "catalog:",
+    "@types/node": "catalog:types",
     "@vue-vine/eslint-config": "workspace:*",
-    "eslint": "catalog:",
+    "eslint": "catalog:eslint-libs",
     "less": "^4.2.0",
     "unocss": "catalog:",
     "unplugin-auto-import": "catalog:",
-    "vite-plugin-inspect": "catalog:",
+    "vite-plugin-inspect": "catalog:vite-ecosystem",
     "vue-vine": "workspace:*"
   }
 }
