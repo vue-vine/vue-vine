@@ -55,7 +55,8 @@
     "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
     "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
     "typecheck": "pnpm --parallel -r typecheck",
-    "upgrade-deps": "node scripts/upgrade-deps.js"
+    "upgrade-deps": "node scripts/upgrade-deps.js",
+    "local-pack-ext": "pnpm build && pnpm --filter vue-vine-extension pack:ext"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
