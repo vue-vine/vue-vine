@@ -92,6 +92,9 @@ catalogs:
     '@types/node':
       specifier: ^22.14.1
       version: 22.14.1
+    '@types/ws':
+      specifier: ^8.18.1
+      version: 8.18.1
   vite-ecosystem:
     vite:
       specifier: ^6.3.2
@@ -563,7 +566,7 @@ importers:
         specifier: catalog:types
         version: 22.14.1
       '@types/ws':
-        specifier: ^8.5.14
+        specifier: catalog:types
         version: 8.18.1
       vscode-uri:
         specifier: 'catalog:'

@@ -61,7 +61,7 @@
   "devDependencies": {
     "@babel/types": "catalog:compiler",
     "@types/node": "catalog:types",
-    "@types/ws": "^8.5.14",
+    "@types/ws": "catalog:types",
     "vscode-uri": "catalog:"
   }
 }

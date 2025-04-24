@@ -36,6 +36,7 @@ catalogs:
     '@types/jsdom': ^21.1.7
     '@types/line-column': ^1.0.2
     '@types/node': ^22.14.1
+    '@types/ws': ^8.18.1
   vite-ecosystem:
     vite: ^6.3.2
     vite-plugin-inspect: ^11.0.1
