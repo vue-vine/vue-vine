@@ -48,6 +48,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@volar/language-core": "catalog:volar",
     "@volar/language-server": "catalog:volar",
     "@volar/typescript": "catalog:volar",
     "@vue-vine/compiler": "workspace:*",

@@ -1,6 +1,7 @@
+import type { Options } from 'tsup'
 import { createRequire } from 'node:module'
 import process from 'node:process'
-import { defineConfig, type Options } from 'tsup'
+import { defineConfig } from 'tsup'
 
 const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'

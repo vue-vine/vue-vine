@@ -1,4 +1,5 @@
-import { inject, type InjectionKey, provide } from 'vue'
+import type { InjectionKey } from 'vue'
+import { inject, provide } from 'vue'
 
 type MaybePromise<T> = T | Promise<T>
 

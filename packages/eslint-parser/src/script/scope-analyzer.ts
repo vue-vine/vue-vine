@@ -11,13 +11,14 @@ import type {
   VExpressionContainer,
   VTemplateRoot,
 } from '../ast'
+import type { VineESLintParserOptions } from '../types'
 import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
 import { getFallbackKeys, traverseNodes } from '../ast'
 import { getEslintScope } from '../common/eslint-scope'
 import { getEcmaVersionIfUseEspree } from '../common/espree'
 import { createVirtualVineFnPropsReference } from '../common/vine-specific'
 import { camelize } from '../template/utils'
-import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
+import { ReferenceFlag, ReferenceTypeFlag } from '../types'
 
 const BUILTIN_COMPONENTS = new Set([
   'template',

@@ -1,6 +1,7 @@
+import type { Location, OffsetRange, VTemplateRoot } from '../../ast'
 import type { FinalProcessTemplateInfo, NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
 import { simpleTraverse as tsESLintTravese, TSESTree } from '@typescript-eslint/typescript-estree'
-import { type Location, type OffsetRange, traverseNodes, type VTemplateRoot } from '../../ast'
+import { traverseNodes } from '../../ast'
 
 export function fixVineOffset(
   token: NeedFixToken,

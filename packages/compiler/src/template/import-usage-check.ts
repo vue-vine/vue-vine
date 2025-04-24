@@ -1,10 +1,10 @@
+import type { ExpressionNode, SimpleExpressionNode, TemplateChildNode } from '@vue/compiler-dom'
 import type { VineCompFnCtx } from '../types'
 import {
-  type ExpressionNode,
+
   NodeTypes,
   parserOptions,
-  type SimpleExpressionNode,
-  type TemplateChildNode,
+
   walkIdentifiers,
 } from '@vue/compiler-dom'
 import { camelize, capitalize, isBuiltInDirective } from '@vue/shared'

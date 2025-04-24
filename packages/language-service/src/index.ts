@@ -1,11 +1,11 @@
+import type { LanguagePlugin } from '@volar/language-server'
 import type {
-  LanguagePlugin,
   VueCompilerOptions,
 } from '@vue/language-core'
 import type * as ts from 'typescript'
 import {
   forEachEmbeddedCode,
-} from '@vue/language-core'
+} from '@volar/language-core'
 import { URI } from 'vscode-uri'
 import { VLS_ErrorLog } from './shared'
 import { createVueVineCode } from './virtual-code'
