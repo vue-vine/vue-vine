@@ -38,9 +38,9 @@
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
     "docs:build": "pnpm --filter vue-vine-docs run build",
     "docs:preview": "pnpm --filter vue-vine-docs run preview",
-    "postinstall": "simple-git-hooks && esno scripts/post-install.js",
-    "clean": "esno scripts/clean.js",
-    "clean:deps": "esno scripts/clean-deps.js && node scripts/clean-root-deps.js",
+    "postinstall": "simple-git-hooks && tsx scripts/post-install.js",
+    "clean": "tsx scripts/clean.js",
+    "clean:deps": "tsx scripts/clean-deps.js && node scripts/clean-root-deps.js",
     "pack:ext": "pnpm --filter vue-vine-extension pack:ext",
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:eslint": "pnpm --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config publish",
@@ -59,19 +59,19 @@
     "local-pack-ext": "pnpm build && pnpm --filter vue-vine-extension pack:ext"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.12.0",
-    "@baiwusanyu/utils-log": "^1.1.2",
+    "@antfu/eslint-config": "catalog:eslint-libs",
+    "@baiwusanyu/utils-log": "catalog:cli",
     "@changesets/cli": "catalog:cli",
     "@types/node": "catalog:types",
     "@vue-vine/eslint-parser": "workspace:*",
-    "del": "^8.0.0",
+    "del": "catalog:cli",
     "eslint": "catalog:eslint-libs",
-    "esno": "^4.8.0",
-    "lint-staged": "^15.5.1",
-    "playwright-chromium": "^1.52.0",
-    "simple-git-hooks": "^2.13.0",
-    "tree-kill": "^1.2.2",
-    "tsup": "^8.4.0",
+    "lint-staged": "catalog:cli",
+    "playwright-chromium": "catalog:miscs",
+    "simple-git-hooks": "catalog:cli",
+    "tree-kill": "catalog:cli",
+    "tsup": "catalog:cli",
+    "tsx": "catalog:cli",
     "typescript": "catalog:cli",
     "vite": "catalog:vite-ecosystem",
     "vitest": "catalog:vite-ecosystem",
@@ -90,7 +90,7 @@
     ]
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck && pnpm esno scripts/pre-commit.js"
+    "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck && pnpm tsx scripts/pre-commit.js"
   },
   "lint-staged": {
     "*": "eslint . --fix --cache"

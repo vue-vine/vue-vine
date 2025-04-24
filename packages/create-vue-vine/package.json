@@ -36,16 +36,16 @@
     "prepublish": "pnpm run build && node scripts/preprocess-template.mjs"
   },
   "dependencies": {
-    "@clack/prompts": "^0.8.1",
-    "clerc": "^0.44.0",
-    "execa": "^9.5.1",
-    "pkg-dir": "^8.0.0",
-    "yoctocolors": "^2.1.1"
+    "@clack/prompts": "catalog:cli",
+    "clerc": "catalog:cli",
+    "execa": "catalog:cli",
+    "pkg-dir": "catalog:cli",
+    "yoctocolors": "catalog:cli"
   },
   "devDependencies": {
     "@types/node": "catalog:types",
-    "unocss": "catalog:",
-    "unplugin-auto-import": "catalog:",
+    "unocss": "catalog:miscs",
+    "unplugin-auto-import": "catalog:miscs",
     "vite": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
     "vue": "catalog:vue-libs",

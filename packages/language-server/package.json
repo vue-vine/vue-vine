@@ -48,15 +48,15 @@
     "volar-service-emmet": "catalog:volar",
     "volar-service-html": "catalog:volar",
     "volar-service-typescript": "catalog:volar",
-    "vscode-languageserver-protocol": "^3.17.5",
-    "vscode-languageserver-textdocument": "^1.0.12",
-    "ws": "^8.18.1"
+    "vscode-languageserver-protocol": "catalog:vscode",
+    "vscode-languageserver-textdocument": "catalog:vscode",
+    "ws": "catalog:miscs"
   },
   "devDependencies": {
     "@types/node": "catalog:types",
-    "@types/ws": "^8.5.14",
+    "@types/ws": "catalog:types",
     "@vue/shared": "catalog:vue-libs",
-    "vscode-html-languageservice": "^5.3.0",
-    "vscode-uri": "catalog:"
+    "vscode-html-languageservice": "catalog:vscode",
+    "vscode-uri": "catalog:vscode"
   }
 }

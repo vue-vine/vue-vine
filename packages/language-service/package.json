@@ -62,6 +62,6 @@
     "@babel/types": "catalog:compiler",
     "@types/node": "catalog:types",
     "@types/ws": "catalog:types",
-    "vscode-uri": "catalog:"
+    "vscode-uri": "catalog:vscode"
   }
 }

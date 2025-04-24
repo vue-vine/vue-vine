@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:types",
-    "rollup": "^4.27.3"
+    "rollup": "catalog:cli"
   },
   "publishConfig": {
     "access": "public",

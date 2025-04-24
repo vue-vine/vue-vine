@@ -38,23 +38,23 @@
     "@typescript-eslint/parser": "catalog:eslint-libs",
     "@typescript-eslint/scope-manager": "catalog:eslint-libs",
     "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
-    "debug": "^4.3.4",
-    "eslint-scope": "^8.2.0",
-    "espree": "^9.6.1",
-    "line-column": "catalog:",
-    "semver": "^7.5.4"
+    "debug": "catalog:cli",
+    "eslint-scope": "catalog:eslint-libs",
+    "espree": "catalog:eslint-libs",
+    "line-column": "catalog:miscs",
+    "semver": "catalog:miscs"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.12",
-    "@types/eslint-scope": "^3.7.7",
-    "@types/estree": "^1.0.6",
+    "@types/debug": "catalog:types",
+    "@types/eslint-scope": "catalog:types",
+    "@types/estree": "catalog:types",
     "@types/line-column": "catalog:types",
-    "@types/lodash": "^4.14.201",
+    "@types/lodash": "catalog:types",
     "@types/node": "catalog:types",
-    "@types/semver": "^7.5.5",
+    "@types/semver": "catalog:types",
     "@typescript-eslint/types": "catalog:eslint-libs",
     "eslint": "catalog:eslint-libs",
-    "eslint-visitor-keys": "^4.2.0",
-    "lodash": "^4.17.21"
+    "eslint-visitor-keys": "catalog:eslint-libs",
+    "lodash": "catalog:miscs"
   }
 }

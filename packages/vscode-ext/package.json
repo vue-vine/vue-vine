@@ -108,14 +108,14 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.8",
-    "@types/vscode": "1.84.0",
+    "@changesets/changelog-github": "catalog:miscs",
+    "@types/vscode": "catalog:types",
     "@volar/language-server": "catalog:volar",
     "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
     "ovsx": "latest",
-    "reactive-vscode": "^0.2.10"
+    "reactive-vscode": "catalog:vscode"
   }
 }

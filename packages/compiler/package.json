@@ -40,22 +40,22 @@
     "@vue/compiler-dom": "catalog:vue-libs",
     "@vue/compiler-ssr": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
-    "estree-walker": "^2.0.2",
-    "get-tsconfig": "^4.10.0",
-    "hash-sum": "^2.0.0",
-    "line-column": "catalog:",
-    "lru-cache": "^11.0.2",
-    "magic-string": "^0.30.10",
-    "merge-source-map": "^1.1.0",
-    "postcss": "^8.4.29",
-    "postcss-selector-parser": "^6.0.13",
+    "estree-walker": "catalog:compiler",
+    "get-tsconfig": "catalog:compiler",
+    "hash-sum": "catalog:miscs",
+    "line-column": "catalog:miscs",
+    "lru-cache": "catalog:miscs",
+    "magic-string": "catalog:compiler",
+    "merge-source-map": "catalog:compiler",
+    "postcss": "catalog:compiler",
+    "postcss-selector-parser": "catalog:compiler",
     "ts-morph": "catalog:compiler"
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:types",
     "@types/line-column": "catalog:types",
-    "prettier": "catalog:",
-    "source-map-js": "^1.2.1"
+    "prettier": "catalog:miscs",
+    "source-map-js": "catalog:compiler"
   },
   "publishConfig": {
     "access": "public",
