@@ -15,7 +15,7 @@
   "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
-    "vscode": "^1.84.0"
+    "vscode": "^1.99.0"
   },
   "activationEvents": [
     "onLanguage:typescript"
@@ -109,7 +109,7 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
-    "@types/vscode": "~1.99.1",
+    "@types/vscode": "~1.84.0",
     "@volar/language-server": "~2.4.12",
     "@volar/vscode": "~2.4.12",
     "@vscode/vsce": "latest",

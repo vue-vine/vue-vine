@@ -819,8 +819,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1
       '@types/vscode':
-        specifier: ~1.99.1
-        version: 1.99.1
+        specifier: ~1.84.0
+        version: 1.84.2
       '@volar/language-server':
         specifier: ~2.4.12
         version: 2.4.12
@@ -841,7 +841,7 @@ importers:
         version: 0.10.2
       reactive-vscode:
         specifier: ^0.2.14
-        version: 0.2.14(@types/vscode@1.99.1)
+        version: 0.2.14(@types/vscode@1.84.2)
 
   packages/vue-vine:
     dependencies:
@@ -2618,8 +2618,8 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@types/vscode@1.99.1':
-    resolution: {integrity: sha512-cQlqxHZ040ta6ovZXnXRxs3fJiTmlurkIWOfZVcLSZPcm9J4ikFpXuB7gihofGn5ng+kDVma5EmJIclfk0trPQ==, tarball: https://registry.npmjs.org/@types/vscode/-/vscode-1.99.1.tgz}
+  '@types/vscode@1.84.2':
+    resolution: {integrity: sha512-LCe1FvCDMJKkPdLVGYhP0HRJ1PDop2gRVm/zFHiOKwYLBRS7vEV3uOOUId4HMV+L1IxqyS+IZXMmlSMRbZGIAw==, tarball: https://registry.npmjs.org/@types/vscode/-/vscode-1.84.2.tgz}
 
   '@types/web-bluetooth@0.0.21':
     resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
@@ -10102,7 +10102,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@types/vscode@1.99.1': {}
+  '@types/vscode@1.84.2': {}
 
   '@types/web-bluetooth@0.0.21': {}
 
@@ -14783,10 +14783,10 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.14(@types/vscode@1.99.1):
+  reactive-vscode@0.2.14(@types/vscode@1.84.2):
     dependencies:
       '@reactive-vscode/reactivity': 0.2.14
-      '@types/vscode': 1.99.1
+      '@types/vscode': 1.84.2
 
   read-package-up@11.0.0:
     dependencies:
