@@ -5,15 +5,15 @@ catalogs:
   cli:
     '@baiwusanyu/utils-log': ^1.1.2
     '@changesets/cli': ^2.29.2
-    '@clack/prompts': ^0.8.1
+    '@clack/prompts': ^0.10.1
     clerc: ^0.44.0
-    consola: ^3.4.0
-    debug: ^4.3.4
+    consola: ^3.4.2
+    debug: ^4.4.0
     del: ^8.0.0
-    execa: ^9.5.1
+    execa: ^9.5.2
     lint-staged: ^15.5.1
     pkg-dir: ^8.0.0
-    rollup: ^4.27.3
+    rollup: ^4.40.0
     simple-git-hooks: ^2.13.0
     tree-kill: ^1.2.2
     tsup: ^8.4.0
@@ -23,12 +23,12 @@ catalogs:
   compiler:
     '@babel/parser': ^7.27.0
     '@babel/types': ^7.27.0
-    estree-walker: ^2.0.2
+    estree-walker: ^3.0.3
     get-tsconfig: ^4.10.0
-    magic-string: ^0.30.10
+    magic-string: ^0.30.17
     merge-source-map: ^1.1.0
-    postcss: ^8.4.29
-    postcss-selector-parser: ^6.0.13
+    postcss: ^8.5.3
+    postcss-selector-parser: ^7.1.0
     source-map-js: ^1.2.1
     ts-morph: ^25.0.1
   eslint-libs:
@@ -39,21 +39,21 @@ catalogs:
     '@typescript-eslint/typescript-estree': ~8.31.0
     '@typescript-eslint/utils': ~8.31.0
     eslint: ~9.25.1
-    eslint-scope: ^8.2.0
+    eslint-scope: ^8.3.0
     eslint-visitor-keys: ^4.2.0
-    eslint-vitest-rule-tester: ^0.6.1
-    espree: ^9.6.1
+    eslint-vitest-rule-tester: ^2.2.0
+    espree: ^10.3.0
   miscs:
-    '@changesets/changelog-github': ^0.4.8
-    changelogen: ^0.5.7
+    '@changesets/changelog-github': ^0.5.1
+    changelogen: ^0.6.1
     hash-sum: ^2.0.0
-    jsdom: ^25.0.1
+    jsdom: ^26.1.0
     line-column: ^1.0.2
     lodash: ^4.17.21
-    lru-cache: ^11.0.2
+    lru-cache: ^11.1.0
     playwright-chromium: ^1.52.0
     prettier: ^3.5.3
-    semver: ^7.5.4
+    semver: ^7.7.1
     unocss: ^66.0.0
     unplugin-auto-import: ^19.1.2
     vscode-uri: ^3.1.0
@@ -68,21 +68,21 @@ catalogs:
     nuxt: ^3.16.2
   types:
     '@types/debug': ^4.1.12
-    '@types/eslint': ^9.6.0
+    '@types/eslint': ^9.6.1
     '@types/eslint-scope': ^3.7.7
-    '@types/estree': ^1.0.6
+    '@types/estree': ^1.0.7
     '@types/hash-sum': ^1.0.2
     '@types/jsdom': ^21.1.7
     '@types/line-column': ^1.0.2
-    '@types/lodash': ^4.14.201
-    '@types/node': ^22.14.1
-    '@types/prettier-linter-helpers': ^1.0.1
-    '@types/semver': ^7.5.5
-    '@types/vscode': ~1.84.0
+    '@types/lodash': ^4.17.16
+    '@types/node': ^22.15.0
+    '@types/prettier-linter-helpers': ^1.0.4
+    '@types/semver': ^7.7.0
+    '@types/vscode': ~1.99.1
     '@types/ws': ^8.18.1
   vite-ecosystem:
-    '@vitejs/plugin-vue': ^5.2.0
-    vite: ^6.3.2
+    '@vitejs/plugin-vue': ^5.2.3
+    vite: ^6.3.3
     vite-plugin-inspect: ^11.0.1
     vitest: ^3.1.2
   volar:
@@ -96,8 +96,8 @@ catalogs:
     volar-service-html: ~0.0.64
     volar-service-typescript: ~0.0.64
   vscode:
-    reactive-vscode: ^0.2.10
-    vscode-html-languageservice: ^5.3.0
+    reactive-vscode: ^0.2.14
+    vscode-html-languageservice: ^5.3.3
     vscode-languageserver-protocol: ^3.17.5
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0

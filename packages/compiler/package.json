@@ -40,7 +40,6 @@
     "@vue/compiler-dom": "catalog:vue-libs",
     "@vue/compiler-ssr": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
-    "estree-walker": "catalog:compiler",
     "get-tsconfig": "catalog:compiler",
     "hash-sum": "catalog:miscs",
     "line-column": "catalog:miscs",
@@ -54,6 +53,7 @@
   "devDependencies": {
     "@types/hash-sum": "catalog:types",
     "@types/line-column": "catalog:types",
+    "estree-walker": "catalog:compiler",
     "prettier": "catalog:miscs",
     "source-map-js": "catalog:compiler"
   },

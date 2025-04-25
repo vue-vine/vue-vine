@@ -56,7 +56,8 @@
     "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
     "typecheck": "pnpm --parallel -r typecheck",
     "upgrade-deps": "node scripts/upgrade-deps.js",
-    "local-pack-ext": "pnpm build && pnpm --filter vue-vine-extension pack:ext"
+    "local-pack-ext": "pnpm build && pnpm --filter vue-vine-extension pack:ext",
+    "verify": "pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:eslint-libs",
@@ -90,7 +91,7 @@
     ]
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm install && pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck && pnpm tsx scripts/pre-commit.js"
+    "pre-commit": "pnpm install && pnpm run verify && pnpm tsx scripts/pre-commit.js"
   },
   "lint-staged": {
     "*": "eslint . --fix --cache"

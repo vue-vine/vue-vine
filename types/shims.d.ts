@@ -3,12 +3,12 @@ declare module 'merge-source-map' {
 }
 
 declare module 'estree-walker' {
-  export function walk<T>(
-    root: T,
+  export function walk<R, N extends import('@babel/types').Node>(
+    root: R,
     options: {
-      enter?: (node: T, parent: T | null) => any
-      leave?: (node: T, parent: T | null) => any
-      exit?: (node: T) => any
+      enter?: (node: N, parent: N | null) => any
+      leave?: (node: N, parent: N | null) => any
+      exit?: (node: N) => any
     } & ThisType<{ skip: () => void }>,
   )
 }
