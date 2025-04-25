@@ -67,5 +67,5 @@ jobs:
       - name: Install playwright
         run: pnpm exec playwright install
 
-      - name: Verify
-        run: pnpm run verify
+      - name: Test
+        run: pnpm run test
