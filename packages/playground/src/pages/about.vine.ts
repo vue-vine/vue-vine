@@ -35,10 +35,21 @@ function TestSlotContainer({ fizz, bar = 1 }: {
   `
 }
 
+function TestGenerics<T extends boolean>(props: {
+  foo: T
+}) {
+  return vine`
+    <div>
+      <p>foo: {{ foo }}</p>
+    </div>
+  `
+}
+
 export function AboutPage() {
   const handleEmitCamel = (bar: string) => {
     console.log(bar)
   }
+  const testBool = ref(true)
   const testSlotContainerText = ref('')
   const slotContainerRef = useTemplateRef('slotContainerRef')
 
@@ -47,6 +58,7 @@ export function AboutPage() {
     <div>
       <h2>About page</h2>
     </div>
+    <TestGenerics :foo="testBool" />
     <p class="my-4">
       TestSlotContainer text: {{ testSlotContainerText ?? "__Empty__" }}
     </p>

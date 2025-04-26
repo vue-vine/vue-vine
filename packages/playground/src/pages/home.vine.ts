@@ -97,6 +97,7 @@ export function HomePage() {
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
 
   return vine`
+    <PageHeader />
     <OutsideExample :id="id" />
     <div class="flex flex-row items-center justify-center my-4">
       <div

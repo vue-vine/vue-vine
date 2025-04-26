@@ -13,6 +13,7 @@ import type {
   TSPropertySignature,
   TSTypeAnnotation,
   TSTypeLiteral,
+  TSTypeParameterDeclaration,
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
@@ -20,6 +21,7 @@ import type { BindingTypes } from '@vue/compiler-dom'
 import type {
   BabelFunctionNodeTypes,
   Nil,
+  TsMorphCache,
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
@@ -61,6 +63,7 @@ import {
 } from '@babel/types'
 import { walkIdentifiers } from '@vue/compiler-dom'
 import hashId from 'hash-sum'
+
 import {
   canNeverBeRef,
   findVineTagTemplateStringReturn,
@@ -84,13 +87,12 @@ import {
   isVineStyle,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
-
 import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
 import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/import-usage-check'
 import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
-import { _breakableTraverse, exitTraverse } from './utils'
+import { _breakableTraverse, exitTraverse, isBasicBoolTypeNames } from './utils'
 
 interface AnalyzeCtx {
   vineCompilerHooks: VineCompilerHooks
@@ -435,6 +437,46 @@ const analyzeVineProps: AnalyzeRunner = (
     const { typeAnnotation } = propsTypeAnnotation
     vineCompFnCtx.propsFormalParamType = typeAnnotation
 
+    const isTypeLiteralProps = isTSTypeLiteral(typeAnnotation)
+    const isContainsGenericTypeParams = (fnItselfNode.typeParameters as TSTypeParameterDeclaration | Nil)
+      ? (fnItselfNode.typeParameters as TSTypeParameterDeclaration).params.length > 0
+      : false
+    const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.disableTsMorph
+    let tsMorphCache: TsMorphCache | undefined
+    let tsMorphAnalyzedPropsInfo: Record<string, VinePropMeta> | undefined
+
+    // Should initialize ts-morph when props is a type alias
+    // or that type literal contains generic type parameters
+    if (
+      (!isTypeLiteralProps || isContainsGenericTypeParams)
+      && !isTsMorphDisabled
+      && vineCompilerHooks.getTsMorph
+    ) {
+      try {
+        tsMorphCache = vineCompilerHooks.getTsMorph()
+        // Use ts-morph to analyze props info
+        const { project, typeChecker } = tsMorphCache
+        const sourceFile = project.getSourceFileOrThrow(vineFileCtx.fileId)
+        tsMorphAnalyzedPropsInfo = resolveVineCompFnProps({
+          typeChecker,
+          sourceFile,
+          vineCompFnCtx,
+          defaultsFromDestructuredProps,
+        })
+      }
+      catch (err) {
+        vineCompilerHooks.onError(
+          vineErr(
+            { vineFileCtx, vineCompFnCtx },
+            {
+              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. Error: ${err}`,
+              location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
+            },
+          ),
+        )
+      }
+    }
+
     if (isTSTypeLiteral(typeAnnotation)) {
       // Analyze the object literal type annotation
       // and save the props info into `vineCompFnCtx.props`
@@ -454,12 +496,7 @@ const analyzeVineProps: AnalyzeRunner = (
         const propMeta: VinePropMeta = {
           isFromMacroDefine: false,
           isRequired: member.optional === undefined ? true : !member.optional,
-          isBool: [
-            'boolean',
-            'Boolean',
-            'true',
-            'false',
-          ].includes(propType),
+          isBool: isBasicBoolTypeNames(propType) || Boolean(tsMorphAnalyzedPropsInfo?.[propName]?.isBool),
           typeAnnotationRaw: propType,
         }
         vineCompFnCtx.props[propName] = propMeta
@@ -477,36 +514,14 @@ const analyzeVineProps: AnalyzeRunner = (
       })
     }
     else {
-      if (vineCompilerHooks.getCompilerCtx().options.disableTsMorph) {
-        return
-      }
       if (!vineCompilerHooks.getTsMorph) {
         throw new Error('ts-morph is not initialized')
       }
+      if (!tsMorphCache || !tsMorphAnalyzedPropsInfo) {
+        return
+      }
 
-      try {
-        // Use ts-morph to analyze props info
-        const { project, typeChecker } = vineCompilerHooks.getTsMorph()
-        const sourceFile = project.getSourceFileOrThrow(vineFileCtx.fileId)
-        const propsInfo = resolveVineCompFnProps({
-          typeChecker,
-          sourceFile,
-          vineCompFnCtx,
-          defaultsFromDestructuredProps,
-        })
-        vineCompFnCtx.props = propsInfo
-      }
-      catch (err) {
-        vineCompilerHooks.onError(
-          vineErr(
-            { vineFileCtx, vineCompFnCtx },
-            {
-              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. Error: ${err}`,
-              location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
-            },
-          ),
-        )
-      }
+      vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
     }
   }
   else if (formalParams.length === 0) {

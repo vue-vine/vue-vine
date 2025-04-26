@@ -87,3 +87,12 @@ export const _breakableTraverse: typeof traverse = (node, handlers) => {
     throw e
   }
 }
+
+export function isBasicBoolTypeNames(type: string) {
+  return [
+    'boolean',
+    'Boolean',
+    'true',
+    'false',
+  ].includes(type)
+}
