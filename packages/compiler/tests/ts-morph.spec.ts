@@ -198,4 +198,33 @@ export function TestTsMorph(props: P) {
       }
     `)
   })
+
+  it('can resolve generics in props type literal', () => {
+    const { vineFile, project, typeChecker } = prepareTsMorphProject(`
+export function TestGenerics<T extends boolean>(props: {
+  foo: T
+}) {
+  return vine\`
+    <div>TestGenerics foo: {{ foo }}</div>
+  \`
+}
+    `)
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx(vineFile.fileId, project, typeChecker)
+    compileVineTypeScriptFile(vineFile.content, vineFile.fileId, { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`0`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toMatchInlineSnapshot(`0`)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(vineFile.fileId)
+    const vineCompFnCtx = fileCtx?.vineCompFns?.find(fn => fn.fnName === 'TestGenerics')
+    expect(vineCompFnCtx).not.toBeUndefined()
+    expect(vineCompFnCtx?.props).toMatchInlineSnapshot(`
+      {
+        "foo": {
+          "isBool": true,
+          "isFromMacroDefine": false,
+          "isRequired": true,
+          "typeAnnotationRaw": "T",
+        },
+      }
+    `)
+  })
 })

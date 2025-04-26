@@ -24,6 +24,14 @@ function isBooleanType(
     return type.getIntersectionTypes().some(t => t.isBoolean())
   }
 
+  // Generic types, need to get the actual type
+  if (type.isTypeParameter()) {
+    const actualType = type.getConstraint()
+    if (actualType) {
+      return isBooleanType(typeChecker, actualType)
+    }
+  }
+
   // Alias types, need to get the actual type
   const aliasSymbol = type.getAliasSymbol()
   if (aliasSymbol) {
