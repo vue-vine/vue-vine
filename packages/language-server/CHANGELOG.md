@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.3.22
+
+### Patch Changes
+
+- Fix props analysis when type literal contains generic parameter.
+- Updated dependencies
+  - @vue-vine/compiler@0.3.22
+  - @vue-vine/language-service@0.3.22
+
 ## 0.3.21
 
 ### Patch Changes

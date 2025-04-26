@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.2.22
+
+### Patch Changes
+
+- Fix props analysis when type literal contains generic parameter.
+- Updated dependencies
+  - @vue-vine/language-service@0.3.22
+
 ## 0.2.21
 
 ### Patch Changes

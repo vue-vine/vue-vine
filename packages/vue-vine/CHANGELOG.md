@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.3.22
+
+### Patch Changes
+
+- Fix props analysis when type literal contains generic parameter.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.3.22
+
 ## 0.3.21
 
 ### Patch Changes

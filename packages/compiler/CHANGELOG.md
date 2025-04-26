@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.3.22
+
+### Patch Changes
+
+- Fix props analysis when type literal contains generic parameter.
+
 ## 0.3.21
 
 ### Patch Changes
