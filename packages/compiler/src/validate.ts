@@ -1,7 +1,6 @@
 import type {
   ArrayExpression,
   CallExpression,
-  FunctionDeclaration,
   Identifier,
   Node,
   TraversalAncestors,
@@ -12,7 +11,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { BabelFunctionNodeTypes, CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
+import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
 import process from 'node:process'
 import {
   isArrayExpression,
@@ -45,7 +44,6 @@ import {
   isVineTaggedTemplateString,
 } from './babel-helpers/ast'
 import {
-  BARE_CALL_MACROS,
   CAN_BE_CALLED_MULTI_TIMES_MACROS,
   SUPPORTED_CSS_LANGS,
 } from './constants'
