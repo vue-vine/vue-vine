@@ -51,9 +51,9 @@ declare global {
   const vineOptions: (options: VineOptionsDef) => void
 
   function vineValidators<P = unknown>(
-    validators: {
+    validators: Partial<{
       [K in keyof P]: VinePropValidator<P[K]>
-    },
+    }>,
   ): void
 
   function vineModel<T>(): Ref<T>
