@@ -18,7 +18,7 @@ function MyComponent(props: {
   bar: number
 }) {
   vineValidators({
-    // The type of `val` is auto inferred from the props type
+    // 这里 `val` 的类型已经由 props 的类型自动推断得出了
     foo: (val) => val.startsWith('vine:'),
     bar: (val) => val > 5,
   })
