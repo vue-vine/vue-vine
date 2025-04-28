@@ -5,7 +5,15 @@
  * in order to remain a clean environment for testing.
  */
 
-function DebugTest() {
+function DebugTest(props: {
+  foo: string;
+  bar: number;
+}) {
+  vineValidators({
+    foo: (val) => val.startsWith('vine:'),
+    bar: (val) => val > 5,
+  })
+
   return vine`
     <div>...</div>
   `

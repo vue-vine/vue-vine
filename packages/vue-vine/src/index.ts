@@ -1,3 +1,4 @@
+import { warn } from 'vue'
 import { reactiveComputed } from './utils/reactive'
 
 export * from './defineVibe'

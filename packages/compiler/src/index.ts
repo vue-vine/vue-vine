@@ -29,6 +29,9 @@ export {
   createTsMorph,
 } from './ts-morph/create'
 
+export {
+  VinePropsDefinitionBy,
+} from './types'
 export type {
   HMRCompFnsName,
   VineCompilerCtx,

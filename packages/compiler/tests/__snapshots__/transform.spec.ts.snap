@@ -3,16 +3,17 @@
 exports[`test transform > inline mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
   createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -37,6 +38,60 @@ const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
 const v2 = ref(0);
 
 someExternalFunction2();
+
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _cache[0] ||
+                (_cache[0] = _createElementVNode(
+                  "div",
+                  null,
+                  "AnotherComp",
+                  -1 /* HOISTED */,
+                )),
+              _createElementVNode(
+                "p",
+                null,
+                "foo:" + _toDisplayString(__props.foo),
+                1 /* TEXT */,
+              ),
+              _createElementVNode(
+                "p",
+                null,
+                "bar:" + _toDisplayString(__props.bar),
+                1 /* TEXT */,
+              ),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "4ea25612";
+
+  return __vine;
+})();
 
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
@@ -168,6 +223,10 @@ export const MyApp = (() => {
               name: "Tomy",
               age: 24,
             }),
+            _createVNode(AnotherComp, {
+              foo: "vine:hello",
+              bar: "10",
+            }),
           ])
         );
       };
@@ -179,6 +238,9 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
@@ -193,16 +255,17 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 exports[`test transform > not output HMR content in non-dev mode 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
   createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -227,6 +290,58 @@ const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
 const v2 = ref(0);
 
 someExternalFunction2();
+
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _cache[0] ||
+                (_cache[0] = _createElementVNode(
+                  "div",
+                  null,
+                  "AnotherComp",
+                  -1 /* HOISTED */,
+                )),
+              _createElementVNode(
+                "p",
+                null,
+                "foo:" + _toDisplayString(__props.foo),
+                1 /* TEXT */,
+              ),
+              _createElementVNode(
+                "p",
+                null,
+                "bar:" + _toDisplayString(__props.bar),
+                1 /* TEXT */,
+              ),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  return __vine;
+})();
 
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
@@ -357,6 +472,10 @@ export const MyApp = (() => {
               name: "Tomy",
               age: 24,
             }),
+            _createVNode(AnotherComp, {
+              foo: "vine:hello",
+              bar: "10",
+            }),
           ])
         );
       };
@@ -375,15 +494,16 @@ export default MyApp;
 exports[`test transform > separated mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
   createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -408,6 +528,62 @@ const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
 const v2 = ref(0);
 
 someExternalFunction2();
+
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return (
+      _openBlock(),
+      _createElementBlock(
+        _Fragment,
+        null,
+        [
+          _cache[0] ||
+            (_cache[0] = _createElementVNode(
+              "div",
+              null,
+              "AnotherComp",
+              -1 /* HOISTED */,
+            )),
+          _createElementVNode(
+            "p",
+            null,
+            "foo:" + _toDisplayString($props.foo),
+            1 /* TEXT */,
+          ),
+          _createElementVNode(
+            "p",
+            null,
+            "bar:" + _toDisplayString($props.bar),
+            1 /* TEXT */,
+          ),
+        ],
+        64 /* STABLE_FRAGMENT */,
+      )
+    );
+  }
+  __vine.render = __sfc_render;
+
+  __vine.__hmrId = "93184a5c";
+
+  return __vine;
+})();
 
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
@@ -478,6 +654,7 @@ export const MyProfile = (() => {
         handleRefresh,
         v1,
         v2,
+        AnotherComp,
         MyProfile,
         MyApp,
       };
@@ -538,7 +715,7 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return { data, v1, v2, MyProfile, MyApp };
+      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -556,6 +733,10 @@ export const MyApp = (() => {
           name: "Tomy",
           age: 24,
         }),
+        _createVNode($setup["AnotherComp"], {
+          foo: "vine:hello",
+          bar: "10",
+        }),
       ])
     );
   }
@@ -565,6 +746,9 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
@@ -579,20 +763,20 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 exports[`test transform > separated mode output result by ssr 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  ssrRenderStyle as _ssrRenderStyle,
-  ssrRenderAttrs as _ssrRenderAttrs,
-  ssrInterpolate as _ssrInterpolate,
-  ssrRenderComponent as _ssrRenderComponent,
-} from "vue/server-renderer";
-import {
-  mergeProps as _mergeProps,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
+  mergeProps as _mergeProps,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
   withAsyncContext as _withAsyncContext,
 } from "vue";
+import {
+  ssrInterpolate as _ssrInterpolate,
+  ssrRenderStyle as _ssrRenderStyle,
+  ssrRenderAttrs as _ssrRenderAttrs,
+  ssrRenderComponent as _ssrRenderComponent,
+} from "vue/server-renderer";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
@@ -611,6 +795,47 @@ const v1: SomeType = someExternalFunction1({ a: 1, b: 2 });
 const v2 = ref(0);
 
 someExternalFunction2();
+
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_ssr_render(
+    _ctx,
+    _push,
+    _parent,
+    _attrs,
+    $props,
+    $setup,
+    $data,
+    $options,
+  ) {
+    _push(
+      \`<!--[--><div data-v-93184a5c>AnotherComp</div><p data-v-93184a5c>foo:\${_ssrInterpolate(
+        $props.foo,
+      )}</p><p data-v-93184a5c>bar:\${_ssrInterpolate($props.bar)}</p><!--]-->\`,
+    );
+  }
+  __vine.ssrRender = __sfc_ssr_render;
+
+  __vine.__hmrId = "93184a5c";
+
+  return __vine;
+})();
 
 export const MyProfile = (() => {
   const __vine = _defineComponent({
@@ -680,6 +905,7 @@ export const MyProfile = (() => {
         handleRefresh,
         v1,
         v2,
+        AnotherComp,
         MyProfile,
         MyApp,
       };
@@ -733,7 +959,7 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return { data, v1, v2, MyProfile, MyApp };
+      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_ssr_render(
@@ -760,6 +986,17 @@ export const MyApp = (() => {
         _parent,
       ),
     );
+    _push(
+      _ssrRenderComponent(
+        $setup["AnotherComp"],
+        {
+          foo: "vine:hello",
+          bar: "10",
+        },
+        null,
+        _parent,
+      ),
+    );
     _push(\`</div>\`);
   }
   __vine.ssrRender = __sfc_ssr_render;
@@ -768,6 +1005,9 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);

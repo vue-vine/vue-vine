@@ -96,6 +96,14 @@ export function findVineCompFnDecls(root: VineBabelRoot) {
   return vineFnComps
 }
 
+export function isBabelFunctionTypes(node: Node): node is BabelFunctionNodeTypes {
+  return (
+    isFunctionDeclaration(node)
+    || isFunctionExpression(node)
+    || isArrowFunctionExpression(node)
+  )
+}
+
 export function isDescendant(node: Node, potentialDescendant: Node): boolean {
   const stack: Node[] = [node]
 
@@ -201,6 +209,7 @@ export const isVineEmits = isVineMacroOf('vineEmits')
 export const isVineModel = isVineMacroOf('vineModel')
 export const isVineStyle = isVineMacroOf('vineStyle')
 export const isVineCustomElement = isVineMacroOf('vineCustomElement')
+export const isVineValidators = isVineMacroOf('vineValidators')
 
 interface VineImportScopedCallee extends MemberExpression {
   object: CallExpression

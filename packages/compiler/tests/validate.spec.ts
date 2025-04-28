@@ -167,7 +167,7 @@ function App() {
           "\`vineExpose\` must have one object literal argument",
           "\`vineOptions\` must have one object literal argument",
           "\`vineOptions\` call must be a bare call",
-          "\`vineCustomElement\` call must be a bare call",
+          "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",
         ]
       `)
   })
