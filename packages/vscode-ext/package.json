@@ -15,7 +15,7 @@
   "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.84.0"
   },
   "activationEvents": [
     "onLanguage:typescript"
