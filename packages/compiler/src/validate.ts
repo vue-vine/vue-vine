@@ -889,7 +889,6 @@ function validateMacrosUsage(
   }
 
   let isCountCorrect = true
-  let isBareCallMacrosPass = true
 
   traverse(vineCompFn, {
     enter(node, parent) {
@@ -909,23 +908,6 @@ function validateMacrosUsage(
         macroCountMap[macroName].count += 1
         macroCountMap[macroName].node = node
         macroCountMap[macroName].parent = [...parent]
-      }
-
-      const VarDeclThatMacroBeInside = parent.find(ancestor => (
-        isVariableDeclaration(ancestor.node)
-      ))
-      // Bare call macros can not be inside a variable declaration
-      if (VarDeclThatMacroBeInside && (BARE_CALL_MACROS as any).includes(macroName)) {
-        isBareCallMacrosPass = false
-        vineCompilerHooks.onError(
-          vineErr(
-            { vineFileCtx },
-            {
-              msg: `\`${macroName}\` macro call is not allowed to be inside a variable declaration`,
-              location: VarDeclThatMacroBeInside?.node.loc,
-            },
-          ),
-        )
       }
     },
   })
@@ -971,7 +953,7 @@ function validateMacrosUsage(
     )
     .every(Boolean)
 
-  return isCountCorrect && isBareCallMacrosPass && isAssertsPass
+  return isCountCorrect && isAssertsPass
 }
 
 function validateVineModel(
