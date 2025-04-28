@@ -1,5 +1,16 @@
 # @vue-vine/nuxt
 
+## 0.3.0
+
+### Minor Changes
+
+- Support new macro `vineValidators`
+
+### Patch Changes
+
+- Updated dependencies
+  - vue-vine@0.4.0
+
 ## 0.2.22
 
 ### Patch Changes

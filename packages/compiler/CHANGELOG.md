@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.4.0
+
+### Minor Changes
+
+- Support new macro `vineValidators`
+
 ## 0.3.22
 
 ### Patch Changes

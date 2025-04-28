@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.6
+
+### Patch Changes
+
+- Support new macro `vineValidators`
+
 ## 0.1.5
 
 ### Patch Changes

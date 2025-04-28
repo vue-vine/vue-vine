@@ -1,5 +1,17 @@
 # @vue-vine/language-server
 
+## 0.4.0
+
+### Minor Changes
+
+- Support new macro `vineValidators`
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/compiler@0.4.0
+  - @vue-vine/language-service@0.4.0
+
 ## 0.3.22
 
 ### Patch Changes

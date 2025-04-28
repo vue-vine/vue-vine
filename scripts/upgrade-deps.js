@@ -4,6 +4,10 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 
 function run() {
+  // 获取命令行参数，忽略前两个（node 可执行文件路径和脚本路径）
+  const args = process.argv.slice(2)
+  const shouldCommit = args.includes('-g') || args.includes('--git')
+
   const vineVersion = getDepVersion('vue-vine')
   const tscVersion = getDepVersion('tsc')
 
@@ -11,7 +15,9 @@ function run() {
     upgradeDeps('vue-vine', ['common'], vineVersion)
     upgradeDeps('vue-vine-tsc', ['config', 'ts'], tscVersion)
 
-    commitChanges()
+    if (shouldCommit) {
+      commitChanges()
+    }
   }
   catch (error) {
     console.error(error)
