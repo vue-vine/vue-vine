@@ -6,6 +6,27 @@
 
 这些宏的类型定义可以在 [我们的 Github 仓库](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts) 中找到。
 
+## `vineValidators` <code version>v0.4.0+</code> {#vinevalidators}
+
+当使用宏定义 props 时，`vineProp` 提供了定义校验器的能力。
+
+但当使用函数参数的类型注解定义 props 时，您需要使用此宏定义校验器，如下例所示：
+
+```vue-vine
+function MyComponent(props: {
+  foo: string,
+  bar: number
+}) {
+  vineValidators({
+    // The type of `val` is auto inferred from the props type
+    foo: (val) => val.startsWith('vine:'),
+    bar: (val) => val > 5,
+  })
+
+  return vine`...`
+}
+```
+
 ## `vineEmits` {#vineemits}
 
 为组件定义 `emits`，用法与官方版本基本一致。
