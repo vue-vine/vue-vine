@@ -453,10 +453,13 @@ const analyzeVineProps: AnalyzeRunner = (
     // Should initialize ts-morph when props is a type alias
     // or that type literal contains generic type parameters
     if (
-      (!isTypeLiteralProps || isContainsGenericTypeParams)
-      && !isTsMorphDisabled
-      && vineCompilerHooks.getTsMorph
+      !isTsMorphDisabled
+      && (!isTypeLiteralProps || isContainsGenericTypeParams)
     ) {
+      if (!vineCompilerHooks.getTsMorph) {
+        throw new Error('ts-morph is not initialized')
+      }
+
       try {
         tsMorphCache = vineCompilerHooks.getTsMorph()
         // Use ts-morph to analyze props info
@@ -518,14 +521,7 @@ const analyzeVineProps: AnalyzeRunner = (
         }
       })
     }
-    else {
-      if (!vineCompilerHooks.getTsMorph) {
-        throw new Error('ts-morph is not initialized')
-      }
-      if (!tsMorphCache || !tsMorphAnalyzedPropsInfo) {
-        return
-      }
-
+    else if (tsMorphCache && tsMorphAnalyzedPropsInfo) {
       vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
     }
   }
