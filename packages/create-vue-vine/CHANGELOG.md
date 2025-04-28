@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.7
+
+### Patch Changes
+
+- Fix vscode extension broken by ts-morph not initialized.
+
 ## 0.1.6
 
 ### Patch Changes

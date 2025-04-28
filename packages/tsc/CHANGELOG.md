@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.3.1
+
+### Patch Changes
+
+- Fix vscode extension broken by ts-morph not initialized.
+- Updated dependencies
+  - @vue-vine/language-service@0.4.1
+
 ## 0.3.0
 
 ### Minor Changes

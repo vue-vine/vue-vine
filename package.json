@@ -45,7 +45,7 @@
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:eslint": "pnpm --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config publish",
     "publish:ext": "pnpm --filter vue-vine-extension run publish:ext && pnpm --filter vue-vine-extension run publish:osvx",
-    "publish:main": "pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:ext",
+    "publish:main": "pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:ext && pnpm publish:cli",
     "publish:tsc": "pnpm --filter vue-vine-tsc publish",
     "publish:cli": "pnpm --filter create-vue-vine publish",
     "publish:nuxt": "pnpm --filter @vue-vine/nuxt publish",

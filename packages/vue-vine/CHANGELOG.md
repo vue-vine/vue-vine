@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.4.1
+
+### Patch Changes
+
+- Fix vscode extension broken by ts-morph not initialized.
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
