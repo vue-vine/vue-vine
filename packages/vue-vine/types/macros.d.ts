@@ -50,6 +50,12 @@ declare global {
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void
 
+  function vineValidators<P = unknown>(
+    validators: Partial<{
+      [K in keyof P]: VinePropValidator<P[K]>
+    }>,
+  ): void
+
   function vineModel<T>(): Ref<T>
   function vineModel<T>(modelOptions: {
     default?: T

@@ -44,7 +44,6 @@ import {
   isVineTaggedTemplateString,
 } from './babel-helpers/ast'
 import {
-  BARE_CALL_MACROS,
   CAN_BE_CALLED_MULTI_TIMES_MACROS,
   SUPPORTED_CSS_LANGS,
 } from './constants'
@@ -56,6 +55,9 @@ interface VineValidatorCtx {
   vineCompilerHooks: VineCompilerHooks
   vineFileCtx: VineFileCtx
   vineCompFns: Node[]
+}
+interface MacroAssertCtx extends VineValidatorCtx {
+  fromVineCompFnNode: Node
 }
 
 interface VineModelValidateCtx {
@@ -171,14 +173,19 @@ function validateVineTemplateStringUsage(
 }
 
 function assertMacroCallMustBeBare(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
-  const isBareCall = !!(
-    parent
-    && parent.length > 0
-    && parent[parent.length - 1]?.node.type === 'ExpressionStatement'
+  const isParentNotEmpty = parent && parent.length > 0
+  const isBareCall = Boolean(isParentNotEmpty && parent[parent.length - 1]!.node.type === 'ExpressionStatement')
+  const isInsideVarDecl = Boolean(isParentNotEmpty && parent!.some(ancestor => isVariableDeclaration(ancestor.node)))
+
+  const macroName = getVineMacroCalleeName(macroCallNode)
+  const errMsg = (
+    isInsideVarDecl
+      ? `\`${macroName}\` macro call is not allowed to be inside a variable declaration`
+      : `\`${macroName}\` call must be a bare call`
   )
 
   if (!isBareCall) {
@@ -186,9 +193,7 @@ function assertMacroCallMustBeBare(
       vineErr(
         { vineFileCtx },
         {
-          msg: `\`${
-            getVineMacroCalleeName(macroCallNode)
-          }\` call must be a bare call`,
+          msg: errMsg,
           location: macroCallNode.loc,
         },
       ),
@@ -199,7 +204,7 @@ function assertMacroCallMustBeBare(
 }
 
 function assertVineStyleUsage(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   vineStyleMacroCallNode: CallExpression,
 ) {
   const vineStyleArgsLength = vineStyleMacroCallNode.arguments.length
@@ -273,7 +278,7 @@ function assertVineStyleUsage(
 }
 
 function assertMacroCanOnlyHaveOneObjLiteralArg(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
 ) {
   const macroCallArgsLength = macroCallNode.arguments.length
@@ -313,7 +318,7 @@ function assertMacroCanOnlyHaveOneObjLiteralArg(
 }
 
 function assertMacroCanOnlyHaveOneTypeParam(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
 ) {
   const macroCallee = macroCallNode.callee as Identifier
@@ -376,7 +381,7 @@ function assertMacroVariableDeclarationMustBeIdentifier(
 }
 
 function assertVineEmitsUsage(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
@@ -453,7 +458,7 @@ function assertVineEmitsUsage(
 }
 
 function assertSlotMethodSignature(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   methodSignature: TSMethodSignature,
 ) {
   // Every method's signature must have only one parameter named `props` with a TSTypeLiteral type annotation
@@ -513,7 +518,7 @@ function assertSlotMethodSignature(
 }
 
 function assertSlotPropertySignature(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   propertySignature: TSPropertySignature,
 ) {
   // Every property's signature must have a TSTypeFunction type annotation
@@ -568,7 +573,7 @@ function assertSlotPropertySignature(
 }
 
 function assertVineSlotsUsage(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
@@ -820,7 +825,7 @@ function validateMacrosUsage(
   vineCompFn: Node,
 ) {
   type MacroAssert = (
-    context: VineValidatorCtx,
+    context: MacroAssertCtx,
     macroCallNode: CallExpression,
     parent?: TraversalAncestors,
   ) => boolean
@@ -872,10 +877,16 @@ function validateMacrosUsage(
         assertMacroCallMustBeBare,
       ],
     },
+    vineValidators: {
+      count: 0,
+      asserts: [
+        assertMacroCanOnlyHaveOneObjLiteralArg,
+        assertMacroCallMustBeBare,
+      ],
+    },
   }
 
   let isCountCorrect = true
-  let isBareCallMacrosPass = true
 
   traverse(vineCompFn, {
     enter(node, parent) {
@@ -895,22 +906,6 @@ function validateMacrosUsage(
         macroCountMap[macroName].count += 1
         macroCountMap[macroName].node = node
         macroCountMap[macroName].parent = [...parent]
-      }
-
-      const VarDeclThatMacroBeInside = parent.find(ancestor => (
-        isVariableDeclaration(ancestor.node)
-      ))
-      if (VarDeclThatMacroBeInside && (BARE_CALL_MACROS as any).includes(macroName)) {
-        isBareCallMacrosPass = false
-        vineCompilerHooks.onError(
-          vineErr(
-            { vineFileCtx },
-            {
-              msg: `\`${macroName}\` macro call is not allowed to be inside a variable declaration`,
-              location: VarDeclThatMacroBeInside?.node.loc,
-            },
-          ),
-        )
       }
     },
   })
@@ -944,7 +939,10 @@ function validateMacrosUsage(
     .map(([macroName, it]) => it.asserts
       .map((assert) => {
         const isPass = it.node
-          ? assert(validatorCtx, it.node, it.parent)
+          ? assert({
+              ...validatorCtx,
+              fromVineCompFnNode: vineCompFn,
+            }, it.node, it.parent)
           : true
         vitestLogMacroAssert(macroName, isPass)
         return isPass
@@ -953,7 +951,7 @@ function validateMacrosUsage(
     )
     .every(Boolean)
 
-  return isCountCorrect && isBareCallMacrosPass && isAssertsPass
+  return isCountCorrect && isAssertsPass
 }
 
 function validateVineModel(

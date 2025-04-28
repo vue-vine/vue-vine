@@ -6,6 +6,27 @@ This solution's basic idea is to use specific functions in the source code to ma
 
 The type definition of these macros can be found in [our Github repo](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts).
 
+## `vineValidators` <code version>v0.4.0+</code>
+
+When using macros to define props, `vineProp` provides users with the ability to define validators.
+
+But when defining props using type annotations of function parameters, you'll need to use this macro as the following example shows:
+
+```vue-vine
+function MyComponent(props: {
+  foo: string,
+  bar: number
+}) {
+  vineValidators({
+    // The type of `val` is auto inferred from the props type
+    foo: (val) => val.startsWith('vine:'),
+    bar: (val) => val > 5,
+  })
+
+  return vine`...`
+}
+```
+
 ## `vineEmits`
 
 Define `emits` for the component, the usage is quite similar to the official version.

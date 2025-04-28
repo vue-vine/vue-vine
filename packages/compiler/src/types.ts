@@ -181,6 +181,12 @@ export interface VineDestructuredProp {
   default?: Node
 }
 
+export const VinePropsDefinitionBy = {
+  annotation: 1,
+  macro: 2,
+} as const
+export type VinePropsDefinitionSource = typeof VinePropsDefinitionBy[keyof typeof VinePropsDefinitionBy]
+
 export interface VineCompFnCtx {
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
@@ -202,7 +208,7 @@ export interface VineCompFnCtx {
   propsAlias: string
   props: Record<string, VinePropMeta>
   propsDestructuredNames: Record<string, VineDestructuredProp>
-  propsDefinitionBy: 'annotaion' | 'macro'
+  propsDefinitionBy: VinePropsDefinitionSource
   propsFormalParamType?: TSType
   emitsAlias: string
   emits: string[]
@@ -227,6 +233,7 @@ export interface VineCompFnCtx {
     modelModifiersName: string
     modelOptions: Node | null
   }>
+  vineValidatorsMacroCall?: CallExpression
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>

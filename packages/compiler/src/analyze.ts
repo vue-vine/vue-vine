@@ -48,6 +48,8 @@ import {
   isImportDefaultSpecifier,
   isImportNamespaceSpecifier,
   isImportSpecifier,
+  isObjectExpression,
+  isObjectMethod,
   isObjectPattern,
   isObjectProperty,
   isRestElement,
@@ -74,6 +76,7 @@ import {
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
   getVinePropCallTypeParams,
+  isBabelFunctionTypes,
   isCallOf,
   isStaticNode,
   isVineCompFnDecl,
@@ -85,6 +88,7 @@ import {
   isVineModel,
   isVineSlots,
   isVineStyle,
+  isVineValidators,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
 import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
@@ -92,6 +96,7 @@ import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/import-usage-check'
 import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
+import { VinePropsDefinitionBy } from './types'
 import { _breakableTraverse, exitTraverse, isBasicBoolTypeNames } from './utils'
 
 interface AnalyzeCtx {
@@ -525,7 +530,7 @@ const analyzeVineProps: AnalyzeRunner = (
     }
   }
   else if (formalParams.length === 0) {
-    vineCompFnCtx.propsDefinitionBy = 'macro'
+    vineCompFnCtx.propsDefinitionBy = VinePropsDefinitionBy.macro
 
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
@@ -589,6 +594,67 @@ const analyzeVineProps: AnalyzeRunner = (
         macroMeta: propMeta,
       })
     })
+  }
+}
+
+const analyzeVineValidators: AnalyzeRunner = (
+  { vineCompilerHooks, vineCompFnCtx, vineFileCtx }: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  let vineValidatorsMacroCall: CallExpression | undefined
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isVineValidators(node)) {
+      vineValidatorsMacroCall = node
+      throw exitTraverse
+    }
+  })
+  if (
+    !vineValidatorsMacroCall
+    || !vineValidatorsMacroCall.arguments[0]
+    || !isObjectExpression(vineValidatorsMacroCall.arguments[0])
+  ) {
+    return
+  }
+
+  if (vineCompFnCtx.propsDefinitionBy === VinePropsDefinitionBy.macro) {
+    vineCompilerHooks.onError(
+      vineErr({ vineFileCtx, vineCompFnCtx }, {
+        msg: 'vineValidators macro call can only be used when props are defined by annotation',
+        location: vineCompFnCtx.fnItselfNode?.loc,
+      }),
+    )
+    return
+  }
+
+  vineCompFnCtx.vineValidatorsMacroCall = vineValidatorsMacroCall
+
+  // Extract the validators from the only argument
+  const validators = vineValidatorsMacroCall.arguments[0]
+  for (const validatorDef of validators.properties) {
+    if (isObjectProperty(validatorDef)) {
+      const { key, value } = validatorDef
+
+      if (!isStringLiteral(key) && !isIdentifier(key))
+        continue
+      if (!isBabelFunctionTypes(value))
+        continue
+
+      const propName = (isStringLiteral(key)) ? key.value : key.name
+      const validatorFn = value
+      const propsDef = vineCompFnCtx.props[propName]
+      if (!propsDef)
+        continue
+
+      propsDef.validator = validatorFn
+    }
+    else if (isObjectMethod(validatorDef)) {
+      vineCompilerHooks.onError(
+        vineErr({ vineFileCtx, vineCompFnCtx }, {
+          msg: 'Please use function expression to define validator instead of an object method',
+          location: validatorDef.loc,
+        }),
+      )
+    }
   }
 }
 
@@ -995,6 +1061,7 @@ const analyzeVineModel: AnalyzeRunner = (
 
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
+  analyzeVineValidators,
   analyzeVineEmits,
   analyzeVineExpose,
   analyzeVineSlots,
@@ -1112,7 +1179,7 @@ function buildVineCompFnCtx(
     templateRefNames: new Set<string>(),
     linkedMacroCalls: [],
     propsDestructuredNames: {},
-    propsDefinitionBy: 'annotaion',
+    propsDefinitionBy: VinePropsDefinitionBy.annotation,
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},

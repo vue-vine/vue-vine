@@ -16,6 +16,22 @@ const v2 = ref(0)
 
 someExternalFunction2()
 
+function AnotherComp(props: {
+  foo: string;
+  bar: number;
+}) {
+  vineValidators({
+    foo: (val: string) => val.startsWith('vine:'),
+    bar: (val: number) => val > 5,
+  })
+
+  return vine\`
+    <div>AnotherComp</div>
+    <p>foo:{{ foo }}</p>
+    <p>bar:{{ bar }}</p>
+  \`
+}
+
 function MyProfile() {
   const name = vineProp<string>()
   const age = vineProp.withDefault<number>(18)
@@ -83,6 +99,7 @@ export default async function MyApp() {
     <div class="my-app">
       <h2>Hello world</h2>
       <MyProfile name="Tomy" :age="24" />
+      <AnotherComp foo="vine:hello" bar="10" />
     </div>
   \`
 }`

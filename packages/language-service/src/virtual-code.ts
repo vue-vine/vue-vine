@@ -1,12 +1,12 @@
-import type { ArrowFunctionExpression, CallExpression, FunctionDeclaration, FunctionExpression, Identifier, VariableDeclaration } from '@babel/types'
+import type { ArrowFunctionExpression, BlockStatement, CallExpression, FunctionDeclaration, FunctionExpression, Identifier, VariableDeclaration } from '@babel/types'
 import type { VinePropMeta } from '@vue-vine/compiler'
 import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelToken, VueVineCode } from './shared'
 import path from 'node:path/posix'
-import { isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
-import { _breakableTraverse } from '@vue-vine/compiler'
+import { isBlockStatement, isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
+import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
@@ -200,8 +200,14 @@ export function createVueVineCode(
     // and generate a temporary variable like `__VINE_VLS_1` and use `typeof __VINE_VLS_1`
     // as the type of that single prop.
     const tempVarDecls: string[] = []
-    const isVineCompHasFnBlock = vineCompFn.fnItselfNode?.body?.type === 'BlockStatement'
+    const isVineCompHasFnBlock = isBlockStatement(vineCompFn.fnItselfNode?.body)
     if (isVineCompHasFnBlock) {
+      // Generate until the first function body statement
+      const firstStmt = (vineCompFn.fnItselfNode?.body as BlockStatement).body[0]
+      generateScriptUntil(firstStmt.start!)
+
+      tsCodeSegments.push(`\ntype ${vineCompFn.fnName}_Props = Parameters<typeof ${vineCompFn.fnName}>[0];\n\n`)
+
       Object.entries(vineCompFn.props).forEach(([propName, propMeta]) => {
         const defaultValueExpr = propMeta.default
         if (!defaultValueExpr || propMeta.typeAnnotationRaw !== 'any') {
@@ -224,6 +230,14 @@ export function createVueVineCode(
     if (vineCompFn.expose) {
       generateExposeHoist(vineCompFn)
     }
+
+    if (vineCompFn.vineValidatorsMacroCall) {
+      generateScriptUntil(
+        vineCompFn.vineValidatorsMacroCall.start! + 'vineValidators'.length,
+      )
+      tsCodeSegments.push(`<${vineCompFn.fnName}_Props>`)
+    }
+
     // after all statements in the function body
     generateScriptUntil(vineCompFn.templateReturn.start!)
     if (isVineCompHasFnBlock && tempVarDecls.length > 0) {
@@ -231,10 +245,10 @@ export function createVueVineCode(
       tsCodeSegments.push('\n\n')
     }
 
+    // Generate the template virtual code
     const templateRefNames = vineCompFn.templateRefNames
     const destructuredPropNames = new Set(Object.keys(vineCompFn.propsDestructuredNames))
 
-    // Generate the template virtual code
     for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
       tsCodeSegments.push('\n// --- Start: Template virtual code\n')
 
@@ -524,7 +538,7 @@ export function createVueVineCode(
   }
 
   function generatePropsExtra(vineCompFn: VineCompFn) {
-    const commonProps = '& __VINE_VLS_VineComponentCommonProps'
+    const commonProps = ' & __VINE_VLS_VineComponentCommonProps'
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
     return [
@@ -536,7 +550,7 @@ export function createVueVineCode(
 
   function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
     tsCodeSegments.push('\n')
-    if (vineCompFn.propsDefinitionBy === 'macro') {
+    if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
         joinStr: ',\n',
@@ -557,7 +571,7 @@ export function createVueVineCode(
         vineFileCtx.root.tokens ?? [],
       ) + 1, // means generate after '(',
     )
-    if (vineCompFn.propsDefinitionBy === 'macro') {
+    if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
       const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ ${
@@ -625,7 +639,7 @@ export function createVueVineCode(
   ) {
     // We should generate linked code tag as block comment
     // before the variable declared by `vineProp`
-    if (vineCompFn.propsDefinitionBy !== 'macro') {
+    if (vineCompFn.propsDefinitionBy !== VinePropsDefinitionBy.macro) {
       return
     }
     const propsVarIdAstNode = vinePropMeta.macroDeclaredIdentifier

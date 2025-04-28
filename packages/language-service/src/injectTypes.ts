@@ -2,7 +2,7 @@ import type { VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
 import { posix as path } from 'node:path'
-import { VineBindingTypes } from '@vue-vine/compiler'
+import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 
 export function setupGlobalTypes(
@@ -149,7 +149,7 @@ ${notPropsBindings.map(([name]) => {
   }${name},`
 }).join('\n')}
   ${
-    vineCompFn.propsDefinitionBy === 'annotaion'
+    vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.annotation
       ? mayNeedPropsAlias(vineCompFn)
       : '/* No props formal params */'
   }

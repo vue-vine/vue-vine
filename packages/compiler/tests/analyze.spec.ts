@@ -307,6 +307,53 @@ function Comp() {
     expect(vineFnComp?.options).toMatchSnapshot()
   })
 
+  it('analyze `vineValidators` macro call', () => {
+    const content = `
+function MyComp(props: {
+  foo: string;
+  bar: number;
+}) {
+  vineValidators({
+    foo: (val: string) => val.startsWith('vine:'),
+    'bar': function (val: number) {
+      return val > 5
+    },
+  })
+
+  return vine\`
+    <div>Test vine validators</div>
+    <p>foo:{{ foo }}</p>
+    <p>bar:{{ bar }}</p>
+  \`
+}
+
+function ErrComp() {
+  const zig = vineProp<string>()
+  vineValidators({
+    zig: (val: string) => val.startsWith('vine:'),
+  })
+
+  return vine\`...\`
+}
+    `
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineValidators', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`1`)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg)).toMatchInlineSnapshot(`
+      [
+        "vineValidators macro call can only be used when props are defined by annotation",
+      ]
+    `)
+    expect(mockCompilerCtx.fileCtxMap.size).toMatchInlineSnapshot(`1`)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineValidators')
+    expect(fileCtx?.vineCompFns.length).toMatchInlineSnapshot(`2`)
+    const MyComp = fileCtx?.vineCompFns[0]
+    expect(Boolean(MyComp?.vineValidatorsMacroCall)).toBe(true)
+    expect(Boolean(MyComp?.props.foo.validator)).toBe(true)
+    expect(Boolean(MyComp?.props.bar.validator)).toBe(true)
+  })
+
   it('analyze vine component function\'s Vue bindings type', () => {
     const content = `
 import { ref, reactive } from 'vue'

@@ -12,6 +12,10 @@ function TestSlotContainer({ fizz, bar = 1 }: {
   vineEmits<{ emitCamel: [bar: string] }>()
   vineSlots<{ slotCamel(props: { foo: number }): any }>()
 
+  vineValidators({
+    fizz: (val) => val.startsWith('vine:')
+  })
+
   const num = ref(1)
   const text = vineModel<string>({ default: '' })
 

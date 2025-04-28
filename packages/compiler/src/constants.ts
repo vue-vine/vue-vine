@@ -22,6 +22,7 @@ export const BARE_CALL_MACROS = [
   'vineStyle.scoped',
   'vineStyle.import',
   'vineCustomElement',
+  'vineValidators',
 ] as const
 export const VINE_MACROS = [
   'vineProp',
