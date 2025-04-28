@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "prepublish": "pnpm run build && node scripts/preprocess-template.mjs"
+    "prepublish": "pnpm run build && node scripts/preprocess-template.mjs -g"
   },
   "dependencies": {
     "@clack/prompts": "catalog:cli",

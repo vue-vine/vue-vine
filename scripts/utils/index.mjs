@@ -4,7 +4,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
-import { colorful } from './color-str'
+import { colorful } from './color-str.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -76,8 +76,10 @@ export function cliExec(cmd) {
   })
 }
 
-export function commitTemplateDepsUpgradeChanges(push = false) {
-  const addResult = spawnSync('git', ['add', '.'])
+export function commitTemplateDepsUpgradeChanges(
+  { push = false } = {},
+) {
+  const addResult = spawnSync('git', ['add', '--all'])
 
   if (addResult.status !== 0) {
     throw new Error(`Git add failed: ${addResult.stderr.toString()}`)
@@ -91,7 +93,7 @@ export function commitTemplateDepsUpgradeChanges(push = false) {
     throw new Error(`Git commit failed: ${commitResult.stderr.toString()}`)
   }
 
-  log('info', 'Git commit success, ', push ? 'pushing to remote' : 'not pushing to remote')
+  log('info', `Git commit success, ${push ? 'pushing to remote' : 'not pushing to remote'}`)
   if (push) {
     const pushResult = spawnSync('git', ['push'])
     if (pushResult.status !== 0) {

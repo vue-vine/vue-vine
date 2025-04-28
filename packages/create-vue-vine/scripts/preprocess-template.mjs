@@ -1,7 +1,9 @@
 import { writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { commitTemplateDepsUpgradeChanges } from '../../../scripts/utils/index.mjs'
 
 const _require = createRequire(import.meta.url)
 const vueVinePackageJson = _require('../../vue-vine/package.json')
@@ -52,3 +54,10 @@ console.log(
   `\x1B[32m%s\x1B[0m`,
   `Replace @vue-vine/eslint-config in template with "${eslintPkgReplacement}"`,
 )
+
+const args = process.argv.slice(2)
+const shouldCommit = args.includes('-g') || args.includes('--git')
+
+if (shouldCommit) {
+  commitTemplateDepsUpgradeChanges({ push: true })
+}
