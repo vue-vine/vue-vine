@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.8
+
+### Patch Changes
+
+- Fix vineExpose in compile time, allowing it expose anything
+
 ## 0.1.7
 
 ### Patch Changes

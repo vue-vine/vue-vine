@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.3.2
+
+### Patch Changes
+
+- Fix vineExpose in compile time, allowing it expose anything
+- Updated dependencies
+  - @vue-vine/language-service@0.4.2
+
 ## 0.3.1
 
 ### Patch Changes

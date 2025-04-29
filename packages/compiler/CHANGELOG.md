@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.4.2
+
+### Patch Changes
+
+- Fix vineExpose in compile time, allowing it expose anything
+
 ## 0.4.1
 
 ### Patch Changes

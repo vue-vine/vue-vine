@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.4.2
+
+### Patch Changes
+
+- Fix vineExpose in compile time, allowing it expose anything
+- Updated dependencies
+  - @vue-vine/compiler@0.4.2
+  - @vue-vine/language-service@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
