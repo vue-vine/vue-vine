@@ -860,7 +860,6 @@ function validateMacrosUsage(
     vineExpose: {
       count: 0,
       asserts: [
-        assertMacroCanOnlyHaveOneObjLiteralArg,
         assertMacroCallMustBeBare,
       ],
     },

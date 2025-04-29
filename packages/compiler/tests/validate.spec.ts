@@ -131,7 +131,6 @@ function App(props: { foo: string }) {
     }
   \`)
   y = vineOptions(false)
-  vineExpose(color)
   vineEmits()
   const x = vineCustomElement()
   z = vineValidators(3)
@@ -148,7 +147,7 @@ function App(props: { foo: string }) {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`18`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`17`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
@@ -164,7 +163,6 @@ function App(props: { foo: string }) {
           "\`vineStyle\` can only have one string argument'",
           "\`vineEmits\` macro must have a type parameter or an array of string for event names",
           "\`vineSlots\` can only have 1 type parameter",
-          "\`vineExpose\` must have one object literal argument",
           "\`vineOptions\` must have one object literal argument",
           "\`vineOptions\` call must be a bare call",
           "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",
