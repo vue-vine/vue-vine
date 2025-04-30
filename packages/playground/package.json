@@ -17,11 +17,12 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "^1.1.20",
+    "@iconify-json/carbon": "catalog:miscs",
     "@types/node": "catalog:types",
+    "@vitejs/plugin-vue-jsx": "catalog:vite-ecosystem",
     "@vue-vine/eslint-config": "workspace:*",
     "eslint": "catalog:eslint-libs",
-    "less": "^4.2.0",
+    "less": "catalog:miscs",
     "unocss": "catalog:miscs",
     "unplugin-auto-import": "catalog:miscs",
     "vite-plugin-inspect": "catalog:vite-ecosystem",

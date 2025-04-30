@@ -45,9 +45,11 @@ catalogs:
     espree: ^10.3.0
   miscs:
     '@changesets/changelog-github': ^0.5.1
+    '@iconify-json/carbon': ^1.1.20
     changelogen: ^0.6.1
     hash-sum: ^2.0.0
     jsdom: ^26.1.0
+    less: ^4.2.0
     line-column: ^1.0.2
     lodash: ^4.17.21
     lru-cache: ^11.1.0
@@ -82,6 +84,7 @@ catalogs:
     '@types/ws': ^8.18.1
   vite-ecosystem:
     '@vitejs/plugin-vue': ^5.2.3
+    '@vitejs/plugin-vue-jsx': ^4.1.2
     vite: ^6.3.3
     vite-plugin-inspect: ^11.0.1
     vitest: ^3.1.2
