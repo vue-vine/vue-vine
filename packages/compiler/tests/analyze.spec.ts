@@ -349,7 +349,7 @@ function ErrComp() {
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineValidators')
     expect(fileCtx?.vineCompFns.length).toMatchInlineSnapshot(`2`)
     const MyComp = fileCtx?.vineCompFns[0]
-    expect(Boolean(MyComp?.vineValidatorsMacroCall)).toBe(true)
+    expect(Boolean(MyComp?.macrosInfoForVolar.some(info => info.macroType === 'vineValidators'))).toBe(true)
     expect(Boolean(MyComp?.props.foo.validator)).toBe(true)
     expect(Boolean(MyComp?.props.bar.validator)).toBe(true)
   })

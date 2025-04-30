@@ -211,6 +211,10 @@ export const isVineStyle = isVineMacroOf('vineStyle')
 export const isVineCustomElement = isVineMacroOf('vineCustomElement')
 export const isVineValidators = isVineMacroOf('vineValidators')
 
+export function isUseTemplateRefCall(node: Node) {
+  return isCallOf(node, 'useTemplateRef')
+}
+
 interface VineImportScopedCallee extends MemberExpression {
   object: CallExpression
   property: Identifier
