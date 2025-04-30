@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.3.3
+
+### Patch Changes
+
+- Fix language service for virtual code generation as it should be sorted
+- Updated dependencies
+  - vue-vine@0.4.3
+
 ## 0.3.2
 
 ### Patch Changes

@@ -13,11 +13,6 @@
   "scripts": {
     "play": "pnpm --filter @vue-vine/playground run dev",
     "build": "pnpm --filter=\"./packages/*\" --stream build",
-    "dev:compiler": "NODE_ENV=development pnpm --filter @vue-vine/compiler run dev",
-    "dev:vite": "NODE_ENV=development pnpm --filter @vue-vine/vite-plugin run dev",
-    "dev:main": "NODE_ENV=development pnpm --filter vue-vine run dev",
-    "dev:lang-service": "NODE_ENV=development pnpm --filter @vue-vine/language-service run dev",
-    "dev:lang-server": "NODE_ENV=development pnpm --filter @vue-vine/language-server run dev",
     "build:compiler": "NODE_ENV=production pnpm --filter @vue-vine/compiler run build",
     "build:vite": "NODE_ENV=production pnpm --filter @vue-vine/vite-plugin run build",
     "build:plugin": "NODE_ENV=production pnpm --filter @vue-vine/compiler --filter @vue-vine/vite-plugin run build",
@@ -33,7 +28,7 @@
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test --run",
     "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test --run",
     "test:nuxt": "pnpm --filter @vue-vine/nuxt run test --run",
-    "lint": "node -e \"if (process.env.RUN_ENV === 'ci') { console.log('Running pnpm build:eslint'); require('child_process').execSync('pnpm build:eslint', { stdio: 'inherit' }); } console.log('Running pnpm eslint .'); require('child_process').execSync('pnpm eslint .', { stdio: 'inherit' });\"",
+    "lint": "pnpm eslint .",
     "lint:fix": "pnpm eslint . --fix",
     "docs:dev": "pnpm --filter vue-vine-docs run dev",
     "docs:build": "pnpm --filter vue-vine-docs run build",
@@ -44,20 +39,17 @@
     "pack:ext": "pnpm --filter vue-vine-extension pack:ext",
     "publish:core": "pnpm --filter @vue-vine/compiler --filter @vue-vine/language-server --filter @vue-vine/language-service --filter @vue-vine/vite-plugin --filter vue-vine publish",
     "publish:eslint": "pnpm --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config publish",
-    "publish:ext": "pnpm --filter vue-vine-extension run publish:ext && pnpm --filter vue-vine-extension run publish:osvx",
-    "publish:main": "pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:ext && pnpm publish:cli",
+    "publish:ext": "pnpm tsx scripts/vscode-ext-publish.js",
+    "publish:nuxt": "pnpm --filter @vue-vine/nuxt publish",
     "publish:tsc": "pnpm --filter vue-vine-tsc publish",
     "publish:cli": "pnpm --filter create-vue-vine publish",
-    "publish:nuxt": "pnpm --filter @vue-vine/nuxt publish",
-    "publish:bump": "pnpm publish:main && pnpm publish:tsc && pnpm publish:nuxt",
-    "bump": "pnpm changeset add",
-    "changeset:core": "pnpm changeset version --ignore \"vue-vine-extension\" --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
-    "changeset:main": "pnpm changeset version --ignore \"vue-vine-tsc\" --ignore \"@vue-vine/nuxt\" && git add ./packages/*/package.json",
+    "publish:main": "pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:cli && pnpm publish:ext",
     "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
     "typecheck": "pnpm --parallel -r typecheck",
-    "upgrade-deps": "node scripts/upgrade-deps.js",
+    "upgrade-template-deps": "pnpm tsx scripts/upgrade-template-deps.js",
     "local-pack-ext": "pnpm build && pnpm --filter vue-vine-extension pack:ext",
-    "verify": "pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck"
+    "verify": "pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck",
+    "version": "pnpm changeset version && pnpm upgrade-template-deps"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:eslint-libs",
@@ -76,7 +68,8 @@
     "typescript": "catalog:cli",
     "vite": "catalog:vite-ecosystem",
     "vitest": "catalog:vite-ecosystem",
-    "vue": "catalog:vue-libs"
+    "vue": "catalog:vue-libs",
+    "yaml": "^2.7.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

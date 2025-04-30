@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { commitTemplateDepsUpgradeChanges } from './utils'
+import { colorful } from './utils/color-str'
 
 function run() {
   const args = process.argv.slice(2)
@@ -9,10 +10,12 @@ function run() {
 
   const vineVersion = getDepVersion('vue-vine')
   const tscVersion = getDepVersion('tsc')
+  const eslintVersion = getDepVersion('eslint-config')
 
   try {
     upgradeDeps('vue-vine', ['common'], vineVersion)
     upgradeDeps('vue-vine-tsc', ['config', 'ts'], tscVersion)
+    upgradeDeps('@vue-vine/eslint-config', ['config', 'eslint'], eslintVersion)
 
     if (shouldCommit) {
       commitTemplateDepsUpgradeChanges()
@@ -51,6 +54,10 @@ function upgradeDeps(dep, paths, version) {
   vueVineContent.devDependencies[dep] = `^${version}`
 
   writeFileSync(templatePath, `${JSON.stringify(vueVineContent, null, 2)}\n`)
+
+  console.log(
+    colorful(`Upgrade ${dep} in template to ${version}`, ['green', 'bold']),
+  )
 }
 
 run()

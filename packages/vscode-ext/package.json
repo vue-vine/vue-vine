@@ -2,7 +2,7 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
@@ -108,14 +108,15 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.5.1",
-    "@types/vscode": "~1.84.0",
-    "@volar/language-server": "~2.4.12",
-    "@volar/vscode": "~2.4.12",
+    "@changesets/changelog-github": "catalog:miscs",
+    "@types/vscode": "catalog:types",
+    "@volar/language-server": "catalog:volar",
+    "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
     "ovsx": "latest",
-    "reactive-vscode": "^0.2.14"
-  }
+    "reactive-vscode": "catalog:vscode"
+  },
+  "dependencies": {}
 }

@@ -42,10 +42,10 @@ const colorMap = {
  */
 export function colorful(str, options = []) {
   const colors = options
-    .map((option) => {
+    ?.map((option) => {
       return colorMap[option]
     })
-    .join(';')
+    .join(';') ?? ''
 
   return `\u001B[${colors}m${str}\u001B[0m`
 }

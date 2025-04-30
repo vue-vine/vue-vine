@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.1.9
+
+### Patch Changes
+
+- Fix language service for virtual code generation as it should be sorted
+
 ## 0.1.8
 
 ### Patch Changes

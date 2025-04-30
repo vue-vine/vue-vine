@@ -1,5 +1,13 @@
 # vue-vine
 
+## 0.4.3
+
+### Patch Changes
+
+- Fix language service for virtual code generation as it should be sorted
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.4.3
+
 ## 0.4.2
 
 ### Patch Changes
