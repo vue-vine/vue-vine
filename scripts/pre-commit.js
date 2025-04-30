@@ -1,15 +1,13 @@
 import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { log } from '@baiwusanyu/utils-log'
 
 const commitRE
       // eslint-disable-next-line regexp/no-unused-capturing-group
       = /^(revert: )?(feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?!?: .{1,50}/
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const msgPath = join(__dirname, '..', '.git', 'COMMIT_EDITMSG')
+const msgPath = join(import.meta.dirname, '..', '.git', 'COMMIT_EDITMSG')
 
 if (!msgPath) {
   log('error', 'Error: No commit message file path provided.')

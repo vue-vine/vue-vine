@@ -1,15 +1,11 @@
 import { exec, spawn, spawnSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
 import { colorful } from './color-str'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-export const r = (...args) => resolve(__dirname, '..', ...args)
+export const r = (...args) => resolve(import.meta.dirname, '..', ...args)
 
 export async function runCommand(command, options = {}) {
   options.title && log('info', 'Executing ...', `${colorful(

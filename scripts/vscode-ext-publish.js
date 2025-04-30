@@ -1,17 +1,14 @@
 import { spawnSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { resolve } from 'node:path'
 import { useCatalogSemverSwitcher } from './utils/catalog-semver.js'
 import { colorful } from './utils/color-str.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 const workspaceYamlPath = resolve(
-  __dirname,
+  import.meta.dirname,
   '../pnpm-workspace.yaml',
 )
 const vscodeExtPackageJSONPath = resolve(
-  __dirname,
+  import.meta.dirname,
   '../packages/vscode-ext/package.json',
 )
 
