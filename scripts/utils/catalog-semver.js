@@ -17,7 +17,7 @@ export function useCatalogSemverSwitcher(
       'utf-8',
     ),
   )
-  
+
   const originalSnapshot = JSON.parse(JSON.stringify(packageJSON))
 
   function getSemver(pkgName, catalogDef, customReplacer) {
@@ -26,7 +26,9 @@ export function useCatalogSemverSwitcher(
     }
     if (customReplacer) {
       const hitCustom = customReplacer({
-        pkgName, catalogDef, packageJSON
+        pkgName,
+        catalogDef,
+        packageJSON,
       })
       if (hitCustom) {
         return hitCustom
@@ -43,17 +45,17 @@ export function useCatalogSemverSwitcher(
     else if (!catalogCategory[pkgName]) {
       throw new Error(`Package '${pkgName}' not found in catalog '${catalogDef}'`)
     }
-  
+
     const semver = catalogCategory[pkgName]
     return semver
   }
-  
+
   function replace({
     customReplacer,
   } = {}) {
     const dependencies = packageJSON.dependencies ?? {}
     const devDependencies = packageJSON.devDependencies ?? {}
-  
+
     for (const [pkgName, catalogDef] of Object.entries(dependencies)) {
       dependencies[pkgName] = getSemver(pkgName, catalogDef, customReplacer)
     }
@@ -61,19 +63,19 @@ export function useCatalogSemverSwitcher(
       devDependencies[pkgName] = getSemver(pkgName, catalogDef, customReplacer)
       console.log(`[Omen DEBUG] devDependencies[${pkgName}]`, devDependencies[pkgName])
     }
-  
+
     const newPackageJSON = {
       ...packageJSON,
       dependencies,
       devDependencies,
     }
-  
+
     writeFileSync(
       packageJSONPath,
       `${JSON.stringify(newPackageJSON, null, 2)}\n`,
     )
   }
-  
+
   function revert() {
     writeFileSync(
       packageJSONPath,

@@ -1,8 +1,8 @@
+import { spawnSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { useCatalogSemverSwitcher } from './utils/catalog-semver.js'
 import { colorful } from './utils/color-str.js'
-import { spawnSync } from 'node:child_process'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -28,13 +28,13 @@ async function publish() {
       }
 
       return null
-    }
+    },
   })
   console.log(
     colorful(
       '[Vue Vine VSCode Ext Publish] VSCode extension package.json catalogs has been replaced with semver.',
       ['green', 'bold'],
-    )
+    ),
   )
 
   try {
@@ -44,22 +44,23 @@ async function publish() {
     }
     await spawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:ext'], spawnSyncOptions)
     await spawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:osvx'], spawnSyncOptions)
-  } catch (err) {
+  }
+  catch (err) {
     console.log(
       colorful(
         '[Vue Vine VSCode Ext Publish] Extension publish failed.',
         ['red', 'bold'],
-      )
+      ),
     )
     console.error(err)
   }
-  
+
   revert()
   console.log(
     colorful(
       '[Vue Vine VSCode Ext Publish] VSCode extension package.json catalogs has been reverted.',
       ['green', 'bold'],
-    )
+    ),
   )
 }
 

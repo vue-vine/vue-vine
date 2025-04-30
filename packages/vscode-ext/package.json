@@ -107,6 +107,7 @@
     "publish:osvx": "ovsx publish",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {},
   "devDependencies": {
     "@changesets/changelog-github": "catalog:miscs",
     "@types/vscode": "catalog:types",
@@ -117,6 +118,5 @@
     "@vue-vine/language-service": "workspace:*",
     "ovsx": "latest",
     "reactive-vscode": "catalog:vscode"
-  },
-  "dependencies": {}
+  }
 }
