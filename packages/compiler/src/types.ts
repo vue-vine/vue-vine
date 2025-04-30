@@ -39,10 +39,13 @@ export type CountingMacros = Exclude<
   | 'vineProp.withDefault'
   | 'vineModel'
 >
-export type LinkedMacroInfo =
+export type MacrosInfoForVolar =
   | { macroType: 'vineProp', macroCall: CallExpression, macroMeta: VinePropMeta }
   | { macroType: 'vineEmits', macroCall: CallExpression }
   | { macroType: 'vineSlots', macroCall: CallExpression }
+  | { macroType: 'vineExpose', macroCall: CallExpression }
+  | { macroType: 'vineValidators', macroCall: CallExpression }
+  | { macroType: 'useTemplateRef', macroCall: CallExpression }
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
@@ -204,7 +207,7 @@ export interface VineCompFnCtx {
   fnName: string
   scopeId: string
   bindings: VineTemplateBindings
-  linkedMacroCalls: LinkedMacroInfo[]
+  macrosInfoForVolar: MacrosInfoForVolar[]
   propsAlias: string
   props: Record<string, VinePropMeta>
   propsDestructuredNames: Record<string, VineDestructuredProp>
@@ -233,7 +236,6 @@ export interface VineCompFnCtx {
     modelModifiersName: string
     modelOptions: Node | null
   }>
-  vineValidatorsMacroCall?: CallExpression
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>

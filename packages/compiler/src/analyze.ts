@@ -20,6 +20,7 @@ import type {
 import type { BindingTypes } from '@vue/compiler-dom'
 import type {
   BabelFunctionNodeTypes,
+  MacrosInfoForVolar,
   Nil,
   TsMorphCache,
   VINE_MACRO_NAMES,
@@ -79,6 +80,7 @@ import {
   isBabelFunctionTypes,
   isCallOf,
   isStaticNode,
+  isUseTemplateRefCall,
   isVineCompFnDecl,
   isVineCustomElement,
   isVineEmits,
@@ -149,6 +151,10 @@ const analyzeVineExpose = storeTheOnlyMacroCallArg(
       macroCall,
       paramObj: macroCallArg,
     }
+    vineCompFnCtx.macrosInfoForVolar.push({
+      macroCall,
+      macroType: 'vineExpose',
+    })
   },
 )
 
@@ -584,7 +590,7 @@ const analyzeVineProps: AnalyzeRunner = (
       const propName = propVarIdentifier.name
       vineCompFnCtx.props[propName] = propMeta
       vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
-      vineCompFnCtx.linkedMacroCalls.push({
+      vineCompFnCtx.macrosInfoForVolar.push({
         macroCall,
         macroType: 'vineProp',
         macroMeta: propMeta,
@@ -622,8 +628,6 @@ const analyzeVineValidators: AnalyzeRunner = (
     return
   }
 
-  vineCompFnCtx.vineValidatorsMacroCall = vineValidatorsMacroCall
-
   // Extract the validators from the only argument
   const validators = vineValidatorsMacroCall.arguments[0]
   for (const validatorDef of validators.properties) {
@@ -652,6 +656,11 @@ const analyzeVineValidators: AnalyzeRunner = (
       )
     }
   }
+
+  vineCompFnCtx.macrosInfoForVolar.push({
+    macroType: 'vineValidators',
+    macroCall: vineValidatorsMacroCall,
+  })
 }
 
 const analyzeVineEmits: AnalyzeRunner = (
@@ -668,7 +677,7 @@ const analyzeVineEmits: AnalyzeRunner = (
         const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
         parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
 
-        vineCompFnCtx.linkedMacroCalls.push({
+        vineCompFnCtx.macrosInfoForVolar.push({
           macroType: 'vineEmits',
           macroCall: vineEmitsMacroCall,
         })
@@ -911,7 +920,7 @@ const analyzeVineSlots: AnalyzeRunner = (
       const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
       parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
 
-      vineCompFnCtx.linkedMacroCalls.push({
+      vineCompFnCtx.macrosInfoForVolar.push({
         macroType: 'vineSlots',
         macroCall: node,
       })
@@ -1055,6 +1064,27 @@ const analyzeVineModel: AnalyzeRunner = (
   }
 }
 
+const analyzeUseTemplateRef: AnalyzeRunner = (
+  { vineCompFnCtx },
+  fnItselfNode,
+) => {
+  const useTemplateRefMacroCalls: CallExpression[] = []
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isUseTemplateRefCall(node)) {
+      useTemplateRefMacroCalls.push(node)
+    }
+  })
+  if (!useTemplateRefMacroCalls.length) {
+    return
+  }
+  vineCompFnCtx.macrosInfoForVolar.push(
+    ...useTemplateRefMacroCalls.map((useTemplateRefCall): MacrosInfoForVolar => ({
+      macroType: 'useTemplateRef',
+      macroCall: useTemplateRefCall,
+    })),
+  )
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineValidators,
@@ -1066,6 +1096,7 @@ const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineBindings,
   analyzeVineStyle,
   analyzeVineCustomElement,
+  analyzeUseTemplateRef,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
@@ -1173,7 +1204,7 @@ function buildVineCompFnCtx(
     templateSource,
     templateComponentNames: new Set<string>(),
     templateRefNames: new Set<string>(),
-    linkedMacroCalls: [],
+    macrosInfoForVolar: [],
     propsDestructuredNames: {},
     propsDefinitionBy: VinePropsDefinitionBy.annotation,
     propsAlias: 'props',
