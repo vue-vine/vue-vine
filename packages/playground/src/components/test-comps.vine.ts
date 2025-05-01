@@ -1,4 +1,4 @@
-export function TestComp(props: {
+export function VineComp(props: {
   foo: string
 }) {
   const msg = ref('Hello, world!')

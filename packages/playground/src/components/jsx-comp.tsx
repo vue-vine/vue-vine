@@ -1,4 +1,4 @@
-import { TestComp } from './test-comp.vine'
+import { VineComp } from './test-comps.vine'
 
 export const JsxComp = defineComponent({
   setup() {
@@ -11,7 +11,7 @@ export const JsxComp = defineComponent({
           Count:
           {count.value}
         </p>
-        <TestComp foo="111" />
+        <VineComp foo='111' />
       </div>
     )
   },
