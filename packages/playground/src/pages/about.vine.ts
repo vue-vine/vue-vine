@@ -16,11 +16,20 @@ function TestSlotContainer({ fizz, bar = 1 }: {
     fizz: (val) => val.startsWith('vine:')
   })
 
+  const r = reactive({
+    x: 3,
+    y: 4,
+  })
+
   const num = ref(1)
   const text = vineModel<string>({ default: '' })
 
   watch(() => bar, (newVal) => {
     console.log('bar changed', newVal)
+  })
+
+  vineExpose({
+    r,
   })
 
   return vine`

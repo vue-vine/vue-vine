@@ -2,7 +2,7 @@ import type { Node } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
 import MagicString from 'magic-string'
 import { analyzeVine, createLinkedCodeTag } from './analyze'
-import { findVineCompFnDecls } from './babel-helpers/ast'
+import { findAllExportNamedDeclarations, findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
 import { transformFile } from './transform'
 import { validateVine } from './validate'
@@ -89,6 +89,7 @@ export function createVineFileCtx(
     isCRLF: code.includes('\r\n'),
     fileMagicCode: new MagicString(code),
     vineCompFns: [],
+    exportNamedDeclarations: findAllExportNamedDeclarations(root),
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},

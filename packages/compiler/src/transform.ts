@@ -11,7 +11,7 @@ import {
 } from '@babel/types'
 import { extractIdentifiers, isFunctionType, isInDestructureAssignment, isReferencedIdentifier, isStaticProperty, TS_NODE_TYPES, unwrapTSNode, walkFunctionParams } from '@vue/compiler-dom'
 import { walk } from 'estree-walker'
-import { isCallOf, isStatementContainsVineMacroCall } from './babel-helpers/ast'
+import { fineAllExplicitExports, isCallOf, isStatementContainsVineMacroCall } from './babel-helpers/ast'
 import {
   CREATE_PROPS_REST_PROXY_HELPER,
   CSS_VARS_HELPER,
@@ -429,6 +429,9 @@ export function transformFile(
   const styleImportStmts = sortStyleImport(vineFileCtx)
   const mergedImportsMap: MergedImportsMap = new Map()
 
+  // Get all explicit declared export in exportNamedDeclarations
+  const explicitExports = fineAllExplicitExports(vineFileCtx.exportNamedDeclarations)
+
   // Flag that is used for noticing prepend `useDefaults` helper function.
   let isPrependedUseDefaults = false
 
@@ -772,7 +775,11 @@ export function transformFile(
 
     // Defaultly set `export` for all component functions
     // because it's required by HMR context.
-    ms.prependLeft(firstStmt.start!, `\nexport const ${
+    ms.prependLeft(firstStmt.start!, `\n${
+      explicitExports.includes(vineCompFnCtx.fnName)
+        ? ''
+        : 'export'
+    } const ${
       vineCompFnCtx.fnName
     } = (() => {\n${
       // Prepend all generated preamble statements
