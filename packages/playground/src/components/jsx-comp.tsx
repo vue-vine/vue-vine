@@ -11,7 +11,7 @@ export const JsxComp = defineComponent({
           Count:
           {count.value}
         </p>
-        <TestComp />
+        <TestComp foo="111" />
       </div>
     )
   },

@@ -39,7 +39,7 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions) {
   globalTypes = globalTypes
     .replace(
       'type __VLS_Element = import(\'vue/jsx-runtime\').JSX.Element;',
-      'type __VLS_Element = { [VUE_VINE_COMPONENT]: true }',
+      'type __VLS_Element = import(\'vue/jsx-runtime\').JSX.Element & { [VUE_VINE_COMPONENT]: true };',
     )
 
   // Insert Vine specific definition after 'declare global'

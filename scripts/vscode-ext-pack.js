@@ -1,5 +1,7 @@
 import { spawnSync } from 'node:child_process'
 import { resolve } from 'node:path'
+import process from 'node:process'
+import semver from 'semver'
 import { useCatalogSemverSwitcher } from './utils/catalog-semver.js'
 import { colorful } from './utils/color-str.js'
 
@@ -12,21 +14,18 @@ const vscodeExtPackageJSONPath = resolve(
   '../packages/vscode-ext/package.json',
 )
 
+async function runSpawnSync(cmd, args) {
+  await spawnSync(cmd, args, {
+    stdio: 'inherit',
+  })
+}
+
 const { replace, revert } = useCatalogSemverSwitcher(
   workspaceYamlPath,
   vscodeExtPackageJSONPath,
 )
 
 async function publish() {
-  replace({
-    customReplacer: ({ pkgName, packageJSON }) => {
-      if (pkgName === '@types/vscode') {
-        return packageJSON.engines.vscode
-      }
-
-      return null
-    },
-  })
   console.log(
     colorful(
       '[Vue Vine VSCode Ext Publish] VSCode extension package.json catalogs has been replaced with semver.',
@@ -35,12 +34,8 @@ async function publish() {
   )
 
   try {
-    /** @type {import('node:child_process').SpawnSyncOptions} */
-    const spawnSyncOptions = {
-      stdio: 'inherit',
-    }
-    await spawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:ext'], spawnSyncOptions)
-    await spawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:osvx'], spawnSyncOptions)
+    await runSpawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:ext'])
+    await runSpawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'publish:osvx'])
   }
   catch (err) {
     console.log(
@@ -50,6 +45,39 @@ async function publish() {
       ),
     )
     console.error(err)
+  }
+}
+
+async function pack() {
+  await runSpawnSync('pnpm', ['--filter', 'vue-vine-extension', 'run', 'pack:ext'])
+  console.log(
+    colorful(
+      '[Vue Vine VSCode Ext Pack] Extension pack has been created.',
+      ['green', 'bold'],
+    ),
+  )
+}
+
+async function run() {
+  replace({
+    customReplacer: ({ pkgName, packageJSON }) => {
+      if (pkgName === '@types/vscode') {
+        return packageJSON.engines.vscode
+      }
+
+      return null
+    },
+    versionReplacer: ({ packageJSON }) => {
+      return semver.inc(packageJSON.version, 'patch')
+    },
+  })
+
+  const args = process.argv.slice(2)
+  if (args.includes('publish')) {
+    await publish()
+  }
+  else if (args.includes('pack')) {
+    await pack()
   }
 
   revert()
@@ -61,4 +89,4 @@ async function publish() {
   )
 }
 
-publish()
+run()

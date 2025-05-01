@@ -52,6 +52,7 @@ export function useCatalogSemverSwitcher(
 
   function replace({
     customReplacer,
+    versionReplacer,
   } = {}) {
     const dependencies = packageJSON.dependencies ?? {}
     const devDependencies = packageJSON.devDependencies ?? {}
@@ -61,13 +62,15 @@ export function useCatalogSemverSwitcher(
     }
     for (const [pkgName, catalogDef] of Object.entries(devDependencies)) {
       devDependencies[pkgName] = getSemver(pkgName, catalogDef, customReplacer)
-      console.log(`[Omen DEBUG] devDependencies[${pkgName}]`, devDependencies[pkgName])
     }
+
+    const version = versionReplacer({ packageJSON })
 
     const newPackageJSON = {
       ...packageJSON,
       dependencies,
       devDependencies,
+      version,
     }
 
     writeFileSync(

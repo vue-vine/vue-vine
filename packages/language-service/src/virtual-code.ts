@@ -468,7 +468,15 @@ export function createVueVineCode(
   function generatePrefixVirtualCode(vineCompFn: VineCompFn) {
     // __VLS_ComponentProps__
     tsCodeSegments.push(`\ntype ${vineCompFn.fnName}_Props = Parameters<typeof ${vineCompFn.fnName}>[0];\n\n`)
+  }
 
+  function generateVineExpose(vineCompFn: VineCompFn) {
+    if (!vineCompFn.expose) {
+      return
+    }
+
+    const { macroCall, paramObj } = vineCompFn.expose
+    generateScriptUntil(macroCall.start!)
     // __VLS_ComponentExpose__
     tsCodeSegments.push('const __VLS_ComponentExpose__ = ')
     tsCodeSegments.push(
@@ -482,14 +490,7 @@ export function createVueVineCode(
         : '{}',
     )
     tsCodeSegments.push(';\n')
-  }
 
-  function generateVineExpose(vineCompFn: VineCompFn) {
-    if (!vineCompFn.expose) {
-      return
-    }
-
-    const { macroCall, paramObj } = vineCompFn.expose
     generateScriptUntil(paramObj.start!)
     tsCodeSegments.push('__VLS_ComponentExpose__')
     currentOffset.value = paramObj.end!
