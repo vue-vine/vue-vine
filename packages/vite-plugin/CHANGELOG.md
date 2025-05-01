@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 0.4.4
+
+### Patch Changes
+
+- Verify compatibility of Vine mixing with JSX
+- Updated dependencies
+  - @vue-vine/compiler@0.4.4
+
 ## 0.4.3
 
 ### Patch Changes

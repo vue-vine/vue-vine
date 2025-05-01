@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.4.4
+
+### Patch Changes
+
+- Verify compatibility of Vine mixing with JSX
+
 ## 0.4.3
 
 ### Patch Changes

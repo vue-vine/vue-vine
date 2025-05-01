@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.3.4
+
+### Patch Changes
+
+- Verify compatibility of Vine mixing with JSX
+- Updated dependencies
+  - @vue-vine/language-service@0.4.4
+
 ## 0.3.3
 
 ### Patch Changes
