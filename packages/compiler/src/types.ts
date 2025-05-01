@@ -2,6 +2,7 @@ import type { ParseResult, ParserOptions } from '@babel/parser'
 import type {
   ArrowFunctionExpression,
   CallExpression,
+  ExportNamedDeclaration,
   File,
   FunctionDeclaration,
   FunctionExpression,
@@ -155,6 +156,9 @@ export interface VineFileCtx {
    * so we store the its location here.
    */
   importsLastLine?: SourceLocation | null
+
+  /* Store all ExportNamedDeclaration */
+  exportNamedDeclarations: ExportNamedDeclaration[]
 
   getAstNodeContent: (node: Node) => string
   getLinkedTSTypeLiteralNodeContent: (node: TSTypeLiteral) => string

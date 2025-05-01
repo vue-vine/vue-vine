@@ -1,6 +1,7 @@
 import type { ParseResult } from '@babel/parser'
 import type {
   CallExpression,
+  ExportNamedDeclaration,
   File,
   Identifier,
   ImportDeclaration,
@@ -496,4 +497,27 @@ export function tryInferExpressionTSType(node: Node) {
     default:
       return 'any' // Can't infer
   }
+}
+
+export function findAllExportNamedDeclarations(root: ParseResult<File>) {
+  const exportNamedDeclarations: ExportNamedDeclaration[] = []
+  for (const stmt of root.program.body) {
+    if (isExportNamedDeclaration(stmt)) {
+      exportNamedDeclarations.push(stmt)
+    }
+  }
+
+  return exportNamedDeclarations
+}
+
+export function fineAllExplicitExports(exportNamedDeclarations: ExportNamedDeclaration[]) {
+  const explicitExports: string[] = []
+  for (const exportDecl of exportNamedDeclarations) {
+    for (const specifier of exportDecl.specifiers) {
+      if (isIdentifier(specifier.exported)) {
+        explicitExports.push(specifier.exported.name)
+      }
+    }
+  }
+  return explicitExports
 }

@@ -375,4 +375,34 @@ export function MyComp({
 
     expect(formated).toMatchSnapshot()
   })
+
+  it('should not export on function delcaration when already exported in somewhere', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+const a = 1;
+function MyComp() {
+  return vine\`...\`
+}
+
+export {
+  a,
+}
+export {
+  MyComp,
+}
+    `
+
+    compileVineTypeScriptFile(specContent, 'testExportOnFunctionDeclaration', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportOnFunctionDeclaration')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(fileCtx?.exportNamedDeclarations.length).toMatchInlineSnapshot(`2`)
+    expect(formated).toMatchSnapshot()
+  })
 })

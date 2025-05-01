@@ -1100,6 +1100,43 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 "
 `;
 
+exports[`test transform > should not export on function delcaration when already exported in somewhere 2`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+} from "vue";
+
+const a = 1;
+
+const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return "...";
+      };
+    },
+  });
+
+  __vine.__hmrId = "0fc65dae";
+
+  return __vine;
+})();
+
+export { a };
+export { MyComp };
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
 exports[`test transform > should transform destructured props 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
