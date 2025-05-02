@@ -11,7 +11,7 @@ export const JsxComp = defineComponent({
           Count:
           {count.value}
         </p>
-        <VineComp foo='111' />
+        <VineComp foo="111" />
       </div>
     )
   },
