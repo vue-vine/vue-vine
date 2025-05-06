@@ -483,7 +483,7 @@ const analyzeVineProps: AnalyzeRunner = (
           vineErr(
             { vineFileCtx, vineCompFnCtx },
             {
-              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. Error: ${err}`,
+              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. ${err}`,
               location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
             },
           ),

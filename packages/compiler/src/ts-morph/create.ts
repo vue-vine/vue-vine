@@ -1,5 +1,5 @@
 import type { TsMorphCache } from '../types'
-import { dirname, resolve } from 'node:path'
+import { dirname, isAbsolute, resolve } from 'node:path'
 import { getTsconfig } from 'get-tsconfig'
 import { Project } from 'ts-morph'
 
@@ -18,8 +18,13 @@ function createByConfigFile(fileId: string) {
   })
 
   // Read the reference configurations
+  const tsconfigDir = dirname(tsconfig.path)
   tsconfig.config.references?.forEach((ref) => {
-    project.addSourceFilesFromTsConfig(resolve(tsconfig.path, '..', ref.path))
+    project.addSourceFilesFromTsConfig(
+      isAbsolute(ref.path)
+        ? ref.path
+        : resolve(tsconfigDir, ref.path),
+    )
   })
 
   return project
