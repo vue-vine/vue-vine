@@ -27,7 +27,6 @@ import type MagicString from 'magic-string'
 import type { Project, TypeChecker } from 'ts-morph'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 
-// Types:
 export type Nil = null | undefined
 export type VineBabelRoot = ParseResult<File>
 export type VINE_MACRO_NAMES = typeof VINE_MACROS[number]
@@ -78,12 +77,13 @@ export interface VineCompilerHooks {
 
 export interface VineCompilerOptions {
   envMode?: string // 'development' | 'production'
-  vueCompilerOptions?: CompilerOptions
   inlineTemplate?: boolean
+  vueCompilerOptions?: CompilerOptions
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]
   disableTsMorph?: boolean
+  plugins?: VineCompilerPlugin[]
 }
 
 export interface VineStyleMeta {
@@ -269,4 +269,39 @@ export interface VineCompileCtx {
   compilerHooks: VineCompilerHooks
   fileCtxCache?: VineFileCtx
   babelParseOptions?: ParserOptions
+}
+
+export interface VineValidatorCtx {
+  vineCompilerHooks: VineCompilerHooks
+  vineFileCtx: VineFileCtx
+  vineCompFns: Node[]
+}
+
+export interface MacroAssertCtx extends VineValidatorCtx {
+  fromVineCompFnNode: Node
+}
+
+export type VineValidator = (
+  context: VineValidatorCtx,
+  fromNode: Node,
+) => boolean
+
+export interface VineAnalyzeCtx {
+  vineCompilerHooks: VineCompilerHooks
+  vineFileCtx: VineFileCtx
+  vineCompFnCtx: VineCompFnCtx
+}
+
+export type VineAnalyzeRunner = (
+  analyzeCtx: VineAnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => void
+
+export interface VineCompilerPlugin {
+  name: string
+  validators?: Array<{
+    from: 'root' | 'fnDecl' | 'fnItself'
+    validator: VineValidator
+  }>
+  analyzers?: VineAnalyzeRunner[]
 }

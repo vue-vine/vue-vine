@@ -96,3 +96,10 @@ export function isBasicBoolTypeNames(type: string) {
     'false',
   ].includes(type)
 }
+
+export function createLinkedCodeTag(
+  side: 'left' | 'right',
+  itemLength: number,
+) {
+  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
+}
