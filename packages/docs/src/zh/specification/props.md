@@ -30,7 +30,7 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-### 解构 `props` 形参 <code version>v0.3.0+</code> {#destructure-props-parameter}
+### 解构 `props` 形参 <VersionTip version="v0.3.0+" /> {#destructure-props-parameter}
 
 从 Vue Vine v0.3.0 版本开始，您可以解构 `props` 形参，并使用解构后的变量来访问 props 的属性。
 
@@ -83,7 +83,7 @@ function MyComponent({
 }
 ```
 
-### 使用更复杂的类型 <code version>v0.2.0+</code> {#using-complex-type-v0-2-0}
+### 使用更复杂的类型 <VersionTip version="v0.2.0+" /> {#using-complex-type-v0-2-0}
 
 从 Vue Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
 

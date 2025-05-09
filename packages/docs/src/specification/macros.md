@@ -6,7 +6,7 @@ This solution's basic idea is to use specific functions in the source code to ma
 
 The type definition of these macros can be found in [our Github repo](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts).
 
-## `vineValidators` <code version>v0.4.0+</code>
+## `vineValidators` <VersionTip version="v0.4.0+" />
 
 When using macros to define props, `vineProp` provides users with the ability to define validators.
 

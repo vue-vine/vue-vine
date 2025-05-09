@@ -104,6 +104,10 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vue-vine/vue-vine' },
     ],
+
+    outline: {
+      level: 'deep',
+    },
   },
   locales: {
     root: {

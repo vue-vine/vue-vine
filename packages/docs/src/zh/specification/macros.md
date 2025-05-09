@@ -6,7 +6,7 @@
 
 这些宏的类型定义可以在 [我们的 Github 仓库](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts) 中找到。
 
-## `vineValidators` <code version>v0.4.0+</code> {#vinevalidators}
+## `vineValidators` <VersionTip version="v0.4.0+" /> {#vinevalidators}
 
 当使用宏定义 props 时，`vineProp` 提供了定义校验器的能力。
 
