@@ -1,10 +1,11 @@
 import type { Node } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
 import MagicString from 'magic-string'
-import { analyzeVine, createLinkedCodeTag } from './analyze'
+import { analyzeVine } from './analyze'
 import { findAllExportNamedDeclarations, findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
 import { transformFile } from './transform'
+import { createLinkedCodeTag } from './utils'
 import { validateVine } from './validate'
 
 export {

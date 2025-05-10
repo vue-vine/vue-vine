@@ -11,7 +11,7 @@ import type {
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
+import type { CountingMacros, MacroAssertCtx, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo, VineValidatorCtx } from './types'
 import process from 'node:process'
 import {
   isArrayExpression,
@@ -50,15 +50,6 @@ import {
 import { vineErr, vineWarn } from './diagnostics'
 import { _breakableTraverse } from './utils'
 import { colorful } from './utils/color-string'
-
-interface VineValidatorCtx {
-  vineCompilerHooks: VineCompilerHooks
-  vineFileCtx: VineFileCtx
-  vineCompFns: Node[]
-}
-interface MacroAssertCtx extends VineValidatorCtx {
-  fromVineCompFnNode: Node
-}
 
 interface VineModelValidateCtx {
   hasDefaultModel: boolean

@@ -88,13 +88,6 @@ export const VUE_LIFECYCLE_HOOK_APIS = [
   'onDeactivated',
   'onServerPrefetch',
 ] as const
-export const TS_NODE_TYPES = [
-  'TSAsExpression', // foo as number
-  'TSTypeAssertion', // (<number>foo)
-  'TSNonNullExpression', // foo!
-  'TSInstantiationExpression', // foo<string>
-  'TSSatisfiesExpression', // foo satisfies T
-]
 /** This is derived from `@vue/compiler-core` */
 export const VineBindingTypes = {
   /**

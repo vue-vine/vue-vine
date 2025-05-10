@@ -216,11 +216,11 @@ export function MyComp() {
     )
     expect(formated).toMatchInlineSnapshot(`
       "import {
+        defineComponent as _defineComponent,
+        useCssVars as _useCssVars,
         toDisplayString as _toDisplayString,
         openBlock as _openBlock,
         createElementBlock as _createElementBlock,
-        defineComponent as _defineComponent,
-        useCssVars as _useCssVars,
       } from "vue";
 
       import { ref, Ref } from "vue";
@@ -259,7 +259,6 @@ export function MyComp() {
           );
         }
         __vine.render = __sfc_render;
-
         __vine.__hmrId = "01d6e3a5";
 
         return __vine;
@@ -347,9 +346,12 @@ export function MyComp({
 }) {
 
   const test1 = ref(fooZee)
-
   const test2 = watch(() => bar, (newVal) => {
     console.log(newVal)
+  })
+  onMounted(() => {
+    console.log('other1', rest.other1)
+    console.log('other2', rest.other2)
   })
 
   return vine\`
@@ -369,10 +371,7 @@ export function MyComp({
 
     expect(formated).toMatch('const test1 = ref(props["foo:zee"])')
     expect(formated).toMatch('() => props.bar')
-    expect(formated).toMatch(
-      /const __propsRestProxy = _createPropsRestProxy\(__props, \[\s*"foo:zee",\s*"bar",\s*"arr",\s*\]\);/,
-    )
-
+    expect(formated).toMatch('const rest = _createPropsRestProxy(__props, ["foo:zee", "bar", "arr"]);')
     expect(formated).toMatchSnapshot()
   })
 

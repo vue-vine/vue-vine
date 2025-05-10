@@ -38,30 +38,26 @@ export function sortStyleImport(
     })
   }
 
-  const sortedStyleImportStmts = (
-    topoSort(relationsMap)?.map(
-      compName => vineCompFns.find(
-        compFn => compFn.fnName === compName,
-      )!,
-    ) ?? []
+  const sortedCompFns = topoSort(relationsMap)?.map(
+    compName => vineCompFns.find(
+      compFn => compFn.fnName === compName,
+    )!,
+  ) ?? []
+  const hasStyleDefineCompFns = sortedCompFns.filter(
+    compFn => Boolean(styleDefine[compFn.scopeId]),
   )
-    .filter(
-      fnCompCtx => Boolean(styleDefine[fnCompCtx.scopeId]),
-    )
-    .map(
-      fnCompCtx => [fnCompCtx, styleDefine[fnCompCtx.scopeId]] as const,
-    )
-    .map(
-      ([fnCompCtx, styleMetas]) => styleMetas.map(
-        (styleMeta, i) => createStyleImportStmt(
-          vineFileCtx,
-          fnCompCtx,
-          styleMeta,
-          i,
-        ),
+  const sortedStyleImportStmts = hasStyleDefineCompFns.map(
+    compFn => [compFn, styleDefine[compFn.scopeId]] as const,
+  ).map(
+    ([compFn, styleMetas]) => styleMetas.map(
+      (styleMeta, i) => createStyleImportStmt(
+        vineFileCtx,
+        compFn,
+        styleMeta,
+        i,
       ),
-    )
-    .flat()
+    ),
+  ).flat()
 
   return sortedStyleImportStmts
 }

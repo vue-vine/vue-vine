@@ -19,6 +19,8 @@ import type {
 } from '@babel/types'
 import type { BindingTypes } from '@vue/compiler-dom'
 import type {
+  VineAnalyzeCtx as AnalyzeCtx,
+  VineAnalyzeRunner as AnalyzeRunner,
   BabelFunctionNodeTypes,
   MacrosInfoForVolar,
   Nil,
@@ -99,18 +101,7 @@ import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/import-usage-check'
 import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
 import { VinePropsDefinitionBy } from './types'
-import { _breakableTraverse, exitTraverse, isBasicBoolTypeNames } from './utils'
-
-interface AnalyzeCtx {
-  vineCompilerHooks: VineCompilerHooks
-  vineFileCtx: VineFileCtx
-  vineCompFnCtx: VineCompFnCtx
-}
-
-type AnalyzeRunner = (
-  analyzeCtx: AnalyzeCtx,
-  fnItselfNode: BabelFunctionNodeTypes,
-) => void
+import { _breakableTraverse, createLinkedCodeTag, exitTraverse, isBasicBoolTypeNames } from './utils'
 
 function storeTheOnlyMacroCallArg(
   macroName: VINE_MACRO_NAMES,
@@ -1160,13 +1151,6 @@ function analyzeFileImportStmts(
   }
   const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]
   vineFileCtx.importsLastLine = lastImportStmt.loc
-}
-
-export function createLinkedCodeTag(
-  side: 'left' | 'right',
-  itemLength: number,
-) {
-  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
 }
 
 function buildVineCompFnCtx(

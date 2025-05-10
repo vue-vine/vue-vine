@@ -3,9 +3,13 @@ import type { TestProps } from '../types';
 interface T1 {
   step?: number
 }
-function TestTsMorphAnother({ step = 3 }: T1) {
+function TestPropsDestruct({ step = 3 }: T1) {
   return vine`
-    <div class="text-zinc-500">Step: {{ step }}</div>
+    <div class="flex flex-col">
+      <h4>Test props destruct</h4>
+      <div class="text-zinc-500">Step: {{ step }}</div>
+      <p class="text-zinc-600">should be 3</p>
+    </div>
   `
 }
 
@@ -22,6 +26,7 @@ export function TestTsMorphChild(props: TestProps) {
 
 export function TestTsMorph() {
   return vine`
+    <PageHeader />
     <div>
       <h3>Test Ts Morph</h3>
       <div class="flex-row">
@@ -33,7 +38,7 @@ export function TestTsMorph() {
         <TestTsMorphChild variant="error" title="error" errorCode="404" />
       </div>
       <h3 class="mt-6">Another:</h3>
-      <TestTsMorphAnother />
+      <TestPropsDestruct />
     </div>
   `
 }

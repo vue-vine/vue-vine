@@ -38,9 +38,9 @@ import {
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
+import { TS_NODE_TYPES } from '@vue/compiler-dom'
 import {
   EXPECTED_ERROR,
-  TS_NODE_TYPES,
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
 } from '../constants'

@@ -51,6 +51,14 @@ function patchModule(
     return patchRes
   }
 
+  const oldFnNames = oVineCompFns.map(fn => fn.fnName)
+  const newFnNames = nVineCompFns.map(fn => fn.fnName)
+  if (!areStrArraysEqual(oldFnNames, newFnNames)) {
+    newVFCtx.renderOnly = false
+    patchRes.hmrCompFnsName = newFnNames.find(name => !oldFnNames.includes(name))!
+    return patchRes
+  }
+
   const nStyleDefine = newVFCtx.styleDefine
   const oStyleDefine = oldVFCtx.styleDefine
   const nOriginCode = normalizeLineEndings(newVFCtx.originCode)
