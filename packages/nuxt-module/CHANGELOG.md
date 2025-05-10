@@ -1,5 +1,16 @@
 # @vue-vine/nuxt
 
+## 0.4.0
+
+### Minor Changes
+
+- Refactoring transform code and fix HMR when renaming function
+
+### Patch Changes
+
+- Updated dependencies
+  - vue-vine@0.5.0
+
 ## 0.3.4
 
 ### Patch Changes

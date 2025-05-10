@@ -1,5 +1,16 @@
 # vue-vine
 
+## 0.5.0
+
+### Minor Changes
+
+- Refactoring transform code and fix HMR when renaming function
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/vite-plugin@0.5.0
+
 ## 0.4.4
 
 ### Patch Changes

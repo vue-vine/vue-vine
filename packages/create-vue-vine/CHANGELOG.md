@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.2.0
+
+### Minor Changes
+
+- Refactoring transform code and fix HMR when renaming function
+
 ## 0.1.9
 
 ### Patch Changes

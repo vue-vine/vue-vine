@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.5.0
+
+### Minor Changes
+
+- Refactoring transform code and fix HMR when renaming function
+
 ## 0.4.4
 
 ### Patch Changes
