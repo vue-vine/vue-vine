@@ -170,6 +170,21 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       return runCompileScript(code, id, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
+      // Before executing HMR, TypeScript project (by ts-morph) should be updated
+      // to make sure the latest type information is available
+      if (tsMorphCache) {
+        // Update the source file in the project to reflect the latest changes
+        const { project } = tsMorphCache
+        const sourceFile = project.getSourceFileOrThrow(ctx.file)
+
+        // Read the updated file content
+        const updatedContent = await ctx.read()
+
+        // Update the source file with the new content
+        sourceFile.replaceWithText(updatedContent)
+        // Project's type checker will automatically update with the new content
+      }
+
       const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
       return affectedModules
     },

@@ -3,22 +3,22 @@
 exports[`test transform > inline mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
   createElementVNode as _createElementVNode,
   toDisplayString as _toDisplayString,
   Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
-  createVNode as _createVNode,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   withAsyncContext as _withAsyncContext,
+  createVNode as _createVNode,
 } from "vue";
 
 import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
@@ -119,6 +119,7 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
         age: () => 18,
       });
@@ -132,7 +133,6 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -189,7 +189,6 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
   const _hoisted_1 = { class: "my-app" };
   const __vine = _defineComponent({
@@ -245,32 +244,32 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
-export default MyApp;
-
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+
+export default MyApp;
 "
 `;
 
 exports[`test transform > not output HMR content in non-dev mode 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
   createElementVNode as _createElementVNode,
   toDisplayString as _toDisplayString,
   Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
-  createVNode as _createVNode,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   withAsyncContext as _withAsyncContext,
+  createVNode as _createVNode,
 } from "vue";
 
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
@@ -369,6 +368,7 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
         age: () => 18,
       });
@@ -382,7 +382,6 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -438,7 +437,6 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
   const _hoisted_1 = { class: "my-app" };
   const __vine = _defineComponent({
@@ -494,21 +492,21 @@ export default MyApp;
 exports[`test transform > separated mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
   createElementVNode as _createElementVNode,
   toDisplayString as _toDisplayString,
   Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
-  createVNode as _createVNode,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
   withAsyncContext as _withAsyncContext,
+  createVNode as _createVNode,
 } from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
@@ -579,7 +577,6 @@ export const AnotherComp = (() => {
     );
   }
   __vine.render = __sfc_render;
-
   __vine.__hmrId = "93184a5c";
 
   return __vine;
@@ -611,6 +608,7 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
         age: () => 18,
       });
@@ -624,7 +622,6 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -696,7 +693,6 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
   const _hoisted_1 = { class: "my-app" };
   const __vine = _defineComponent({
@@ -753,30 +749,30 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
-export default MyApp;
-
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+
+export default MyApp;
 "
 `;
 
 exports[`test transform > separated mode output result by ssr 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  mergeProps as _mergeProps,
-  useSlots as _useSlots,
-  useModel as _useModel,
-  toRefs as _toRefs,
-  withAsyncContext as _withAsyncContext,
-} from "vue";
-import {
   ssrInterpolate as _ssrInterpolate,
   ssrRenderStyle as _ssrRenderStyle,
   ssrRenderAttrs as _ssrRenderAttrs,
   ssrRenderComponent as _ssrRenderComponent,
 } from "vue/server-renderer";
+import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  useSlots as _useSlots,
+  useModel as _useModel,
+  toRefs as _toRefs,
+  mergeProps as _mergeProps,
+  withAsyncContext as _withAsyncContext,
+} from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
@@ -831,7 +827,6 @@ export const AnotherComp = (() => {
     );
   }
   __vine.ssrRender = __sfc_ssr_render;
-
   __vine.__hmrId = "93184a5c";
 
   return __vine;
@@ -862,6 +857,7 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
         age: () => 18,
       });
@@ -875,7 +871,6 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
@@ -941,7 +936,6 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
   const __vine = _defineComponent({
     name: "MyApp",
@@ -1012,20 +1006,20 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
-export default MyApp;
-
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
+
+export default MyApp;
 "
 `;
 
 exports[`test transform > should generate export default in correct position 1`] = `
 "import {
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
 } from "vue";
 
 export const MyComp = (() => {
@@ -1048,21 +1042,21 @@ export const MyComp = (() => {
   return __vine;
 })();
 
-export default MyComp;
-
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+
+export default MyComp;
 "
 `;
 
 exports[`test transform > should generate hmrId If there is no style 1`] = `
 "import {
-  createElementVNode as _createElementVNode,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  createElementVNode as _createElementVNode,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
 } from "vue";
 
 export const About = (() => {
@@ -1108,7 +1102,6 @@ exports[`test transform > should not export on function delcaration when already
 } from "vue";
 
 const a = 1;
-
 const MyComp = (() => {
   const __vine = _defineComponent({
     name: "MyComp",
@@ -1140,14 +1133,14 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 exports[`test transform > should transform destructured props 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
   createPropsRestProxy as _createPropsRestProxy,
   toRefs as _toRefs,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
 } from "vue";
 
 import { ref, watch } from "vue";
@@ -1170,20 +1163,19 @@ export const MyComp = (() => {
       const props = _useDefaults(__props, {
         bar: () => 1,
       });
-      const __propsRestProxy = _createPropsRestProxy(__props, [
-        "foo:zee",
-        "bar",
-        "arr",
-      ]);
       const { "foo:zee": fooZee, bar, arr, ...rest } = _toRefs(props);
+      const rest = _createPropsRestProxy(__props, ["foo:zee", "bar", "arr"]);
       const test1 = ref(props["foo:zee"]);
-
       const test2 = watch(
         () => props.bar,
         (newVal) => {
           console.log(newVal);
         },
       );
+      onMounted(() => {
+        console.log("other1", rest.other1);
+        console.log("other2", rest.other2);
+      });
 
       return (_ctx, _cache) => {
         return (
@@ -1211,12 +1203,12 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 
 exports[`test transform > should transform top-level await expressions 1`] = `
 "import {
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
   withAsyncContext as _withAsyncContext,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
 } from "vue";
 
 export const MyComp = (() => {

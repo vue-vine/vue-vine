@@ -18,7 +18,14 @@ export function topoSort(
     visited[node] = true
     stack[node] = true
 
-    for (const depNode of relationsMap[node]) {
+    const depNodes = relationsMap[node]
+    if (!depNodes) {
+      // Invalid dependency, maybe an external component,
+      // So we exit here to skip it
+      return
+    }
+
+    for (const depNode of depNodes) {
       const result = dfs(depNode, stack)
       if (result === null) {
         // sub-tree detected circle dependency, so just quit
@@ -32,11 +39,6 @@ export function topoSort(
 
   for (const node of Object.keys(relationsMap)) {
     dfs(node, {})
-  }
-
-  // If there're still some nodes not visited, it means there's a circle dependency.
-  if (sorted.length !== Object.keys(visited).length) {
-    return null
   }
 
   return sorted

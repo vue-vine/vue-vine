@@ -83,7 +83,6 @@ export interface VineCompilerOptions {
   postcssOptions?: any
   postcssPlugins?: any[]
   disableTsMorph?: boolean
-  plugins?: VineCompilerPlugin[]
 }
 
 export interface VineStyleMeta {
@@ -296,12 +295,3 @@ export type VineAnalyzeRunner = (
   analyzeCtx: VineAnalyzeCtx,
   fnItselfNode: BabelFunctionNodeTypes,
 ) => void
-
-export interface VineCompilerPlugin {
-  name: string
-  validators?: Array<{
-    from: 'root' | 'fnDecl' | 'fnItself'
-    validator: VineValidator
-  }>
-  analyzers?: VineAnalyzeRunner[]
-}
