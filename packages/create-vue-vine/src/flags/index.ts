@@ -1,6 +1,6 @@
 import type { ProjectOptions } from '../create'
 import type { FeatureFlagActionCtx } from '../utils'
-import { confirm, defineFlagMeta } from '../utils'
+import { confirm, defineFlagMeta, select } from '../utils'
 
 const metas = {
   router: defineFlagMeta({
@@ -19,16 +19,6 @@ const metas = {
     flag: {
       type: Boolean,
       description: 'Add Pinia',
-      default: true,
-    } as const,
-    initialValue: true,
-  }),
-  css: defineFlagMeta({
-    name: 'css',
-    message: 'Use Tailwind CSS?',
-    flag: {
-      type: Boolean,
-      description: 'Add TailwindCSS',
       default: true,
     } as const,
     initialValue: true,
@@ -69,6 +59,15 @@ export function useFlags() {
         },
       }
 
+      const css = await select({
+        message: 'Using atomized css?',
+        options: [
+          { value: 'tailwind', label: 'Tailwind' },
+          { value: 'unocss', label: 'Unocss' },
+          { value: 'no', label: 'No' },
+        ],
+      })
+
       for (const key in metas) {
         const metaKey = key as MetaKeys
         const { initialValue, message } = metas[metaKey]
@@ -94,8 +93,8 @@ export function useFlags() {
         }
       }
 
-      if (flags.css) {
-        context.template('code/css/tailwind')
+      if (css !== 'no') {
+        context.template(`code/css/${css}`)
       }
       else {
         context.template('code/css/base')
