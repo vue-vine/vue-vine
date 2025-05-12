@@ -3,7 +3,7 @@
 ### 工具链
 
 - 使用 [PNPM](https://pnpm.io/) 管理包和依赖
-- 使用 [Tsup](https://tsup.egoist.sh/) 最终打包
+- 使用 [Tsdown](https://tsdown.dev/) 最终打包
 - 使用 [Changeset](https://github.com/atlassian/changesets) 进行更改记录、changelog 生成和发布管理
 
 ### 提交规范

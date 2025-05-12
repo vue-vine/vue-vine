@@ -64,7 +64,7 @@
     "semver": "^7.7.1",
     "simple-git-hooks": "catalog:cli",
     "tree-kill": "catalog:cli",
-    "tsup": "catalog:cli",
+    "tsdown": "catalog:cli",
     "tsx": "catalog:cli",
     "typescript": "catalog:cli",
     "vite": "catalog:vite-ecosystem",

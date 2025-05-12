@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/vite-plugin",
+  "type": "module",
   "version": "0.5.1",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
@@ -17,18 +18,18 @@
     ".": {
       "dev": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
     "test": "vitest",
     "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"

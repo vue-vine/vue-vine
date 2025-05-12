@@ -97,9 +97,9 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
-    "dev": "NODE_ENV=development tsup --watch",
-    "build": "NODE_ENV=production tsup",
-    "build:debug": "NODE_ENV=development tsup",
+    "dev": "NODE_ENV=development tsdown --watch",
+    "build": "NODE_ENV=production tsdown",
+    "build:debug": "NODE_ENV=development tsdown",
     "lint": "eslint src --ext ts",
     "pack:ext": "vsce pack",
     "prepack": "pnpm run build",

@@ -1,6 +1,14 @@
 {
-  "references": [
-    { "path": "./tsconfig.lib.json" }
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages",
+    "types",
+    "tsdown.config.ts"
   ],
-  "files": []
+  "exclude": [
+    "**/dist",
+    "packages/nuxt-module",
+    "packages/playground",
+    "packages/create-vue-vine/template"
+  ]
 }

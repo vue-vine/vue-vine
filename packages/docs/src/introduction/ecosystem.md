@@ -16,7 +16,7 @@ To configure the custom parser, run the following command to install the package
 pnpm i -D @vue-vine/eslint-config
 ```
 
-Then, add the following configuration to your `eslint.config.mjs`:
+Then, add the following configuration to your `eslint.config.js`:
 
 ```js
 import antfu from '@antfu/eslint-config'

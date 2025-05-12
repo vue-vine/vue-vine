@@ -16,7 +16,7 @@
 pnpm i -D @vue-vine/eslint-config
 ```
 
-接着，请将以下配置添加到你的 `eslint.config.mjs` 文件中：
+接着，请将以下配置添加到你的 `eslint.config.js` 文件中：
 
 ```js
 import antfu from '@antfu/eslint-config'
