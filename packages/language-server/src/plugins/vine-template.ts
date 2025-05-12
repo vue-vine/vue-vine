@@ -237,41 +237,40 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
               const tagAttrs: IAttributeData[] = []
               let tagInfo = tagInfos.get(tag)
 
-              if (!tagInfo) {
-                const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
-                  (compFn) => {
-                    return compFn.fnName === tag
-                  },
-                )
-                if (!triggerAtVineCompFn) {
-                  // Can't find component info in current file,
-                  // try to fetch info from pipeline
+              // Re-compute tagInfo
+              const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
+                (compFn) => {
+                  return compFn.fnName === tag
+                },
+              )
 
-                  // Create request if there's no pending one
-                  if (!pipelineStatus.pendingRequest.has('getComponentPropsRequest')) {
-                    const tsConfigFileName = context.project.typescript!.configFileName!
-                    const tsHost = context.project.typescript!.sys
-                    getComponentPropsFromPipeline(
-                      tag,
-                      {
-                        tagInfos,
-                        vineVirtualCode,
-                        pipelineStatus,
-                        tsConfigFileName,
-                        tsHost,
-                      },
-                    )
-                  }
-
-                  return tagAttrs
+              // If we can't find component info in current file,
+              // try to fetch info from pipeline
+              if (!triggerAtVineCompFn) {
+                // Create request if there's no pending one
+                if (!pipelineStatus.pendingRequest.has('getComponentPropsRequest')) {
+                  const tsConfigFileName = context.project.typescript!.configFileName!
+                  const tsHost = context.project.typescript!.sys
+                  getComponentPropsFromPipeline(
+                    tag,
+                    {
+                      tagInfos,
+                      vineVirtualCode,
+                      pipelineStatus,
+                      tsConfigFileName,
+                      tsHost,
+                    },
+                  )
                 }
 
-                tagInfo = {
-                  props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
-                  events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
-                }
-                tagInfos.set(tag, tagInfo)
+                return tagAttrs
               }
+
+              tagInfo = {
+                props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
+                events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
+              }
+              tagInfos.set(tag, tagInfo)
 
               const { props, events } = tagInfo
               const attributes: IAttributeData[] = []
