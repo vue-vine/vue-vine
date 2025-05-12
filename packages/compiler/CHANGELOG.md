@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.5.1
+
+### Patch Changes
+
+- Fix language service for not updating component event completion items.
+
 ## 0.5.0
 
 ### Minor Changes

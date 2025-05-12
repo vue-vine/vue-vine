@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.5.1
+
+### Patch Changes
+
+- Fix language service for not updating component event completion items.
+- Updated dependencies
+  - @vue-vine/compiler@0.5.1
+  - @vue-vine/language-service@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes

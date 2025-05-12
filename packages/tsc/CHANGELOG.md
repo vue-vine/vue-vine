@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 0.4.1
+
+### Patch Changes
+
+- Fix language service for not updating component event completion items.
+- Updated dependencies
+  - @vue-vine/language-service@0.5.1
+
 ## 0.4.0
 
 ### Minor Changes
