@@ -67,7 +67,7 @@ export default defineConfig(
     {
       entry: {
         client: './src/index.ts',
-        server: './node_modules/@vue-vine/language-server/src/index.js',
+        server: './node_modules/@vue-vine/language-server/src/index.ts',
       },
       ...sharedConfig,
     },
