@@ -53,7 +53,7 @@ function fallbackKeysFilter(this: any, key: string): boolean {
  * @param node The node to get.
  * @returns The keys to traverse.
  */
-function getFallbackKeys(node: Node): string[] {
+function getFallbackKeys(node: any): string[] {
   return Object.keys(node).filter(fallbackKeysFilter, node)
 }
 
