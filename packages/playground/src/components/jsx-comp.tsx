@@ -11,8 +11,14 @@ export const JsxComp = defineComponent<JsxCompProps>({
 
     return () => (
       <div>
-        <p>Name: {props.name}</p>
-        <p>Age: {props.age}</p>
+        <p>
+          Name:
+          {props.name}
+        </p>
+        <p>
+          Age:
+          {props.age}
+        </p>
         <button onClick={() => count.value++}>Click me</button>
         <p>
           Count:
