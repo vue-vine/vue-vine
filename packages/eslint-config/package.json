@@ -1,6 +1,6 @@
 {
   "name": "@vue-vine/eslint-config",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "description": "ESLint config for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
