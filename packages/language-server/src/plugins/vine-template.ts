@@ -236,17 +236,24 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             provideAttributes: (tag) => {
               const tagAttrs: IAttributeData[] = []
               let tagInfo = tagInfos.get(tag)
-
-              // Re-compute tagInfo
               const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
                 (compFn) => {
                   return compFn.fnName === tag
                 },
               )
 
-              // If we can't find component info in current file,
-              // try to fetch info from pipeline
-              if (!triggerAtVineCompFn) {
+              if (triggerAtVineCompFn) {
+                // If trigger on a tag that references a local component(in current file),
+                // we recompute tagInfo
+                tagInfo = {
+                  props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
+                  events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
+                }
+                tagInfos.set(tag, tagInfo)
+              }
+              else if (!tagInfo) {
+                // Trigger on a tag that references a external component,
+                // and we only fetch once
                 // Create request if there's no pending one
                 if (!pipelineStatus.pendingRequest.has('getPropsAndEmitsRequest')) {
                   const tsConfigFileName = context.project.typescript!.configFileName!
@@ -265,12 +272,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
                 return tagAttrs
               }
-
-              tagInfo = {
-                props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
-                events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
-              }
-              tagInfos.set(tag, tagInfo)
 
               const { props, events } = tagInfo
               const attributes: IAttributeData[] = []
