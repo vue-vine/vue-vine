@@ -21,7 +21,7 @@ We compare the following features of the solutions:
 | Directly destructuring | ❌ | ✅ | ✅ | ✅ |
 | SSR memory leak | ✅ | ❌ | ✅ | ✅ |
 | SSR-safe | ✅ | ❌ | ✅ | ✅ |
-| Implicit dependency | ✅ | ✅ | ❌ | ✅ |
+| Explicit dependency | ✅ | ✅ | ❌ | ✅ |
 
 ## Usage
 
