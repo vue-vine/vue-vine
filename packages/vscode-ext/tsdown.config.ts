@@ -38,11 +38,11 @@ const plugins: Options['plugins'] = [
     name: 'mock-ts-morph',
     load: {
       filter: {
-        id: /^ts-morph$/,
+        id: /ts-morph/,
       },
       handler() {
         return {
-          code: `export default {}`,
+          code: `module.exports = {}`,
           moduleType: 'js',
         }
       },
