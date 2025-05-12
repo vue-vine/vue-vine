@@ -59,7 +59,13 @@ export function searchVarDeclInCompFn(
   }
 }
 
-export function getComponentProps(
+/**
+ * Get component props and emits from TypeScript context.
+ *
+ * Since we've already merged props and emits in virtual code,
+ * we only need to return all props names here.
+ */
+export function getComponentPropsAndEmits(
   context: PipelineContext,
   vineCode: VueVineCode,
   compName: string,
@@ -94,6 +100,7 @@ export function getComponentProps(
   // we need to extract `props` type from it
   const propsNode = compFnType.getCallSignatures()[0].getParameters()[0]!
   const propsType = checker.getTypeOfSymbol(propsNode)
+
   // Extract all properties
   const propsNames = propsType
     .getProperties()

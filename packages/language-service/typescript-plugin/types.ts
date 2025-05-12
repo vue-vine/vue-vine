@@ -6,10 +6,10 @@ export type TypeScriptSdk = Parameters<Parameters<(typeof createLanguageServiceP
 export type TsPluginInfo = Parameters<Parameters<(typeof createLanguageServicePlugin)>[0]>[1]
 
 export type PipelineRequest =
-  | { type: 'getComponentPropsRequest', componentName: string, fileName: string }
+  | { type: 'getPropsAndEmitsRequest', componentName: string, fileName: string }
 
 export type PipelineResponse =
-  | { type: 'getComponentPropsResponse', props: string[] }
+  | { type: 'getPropsAndEmitsResponse', props: string[] }
 
 export interface PipelineContext {
   ts: TypeScriptSdk

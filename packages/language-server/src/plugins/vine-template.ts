@@ -248,7 +248,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
               // try to fetch info from pipeline
               if (!triggerAtVineCompFn) {
                 // Create request if there's no pending one
-                if (!pipelineStatus.pendingRequest.has('getComponentPropsRequest')) {
+                if (!pipelineStatus.pendingRequest.has('getPropsAndEmitsRequest')) {
                   const tsConfigFileName = context.project.typescript!.configFileName!
                   const tsHost = context.project.typescript!.sys
                   getComponentPropsFromPipeline(

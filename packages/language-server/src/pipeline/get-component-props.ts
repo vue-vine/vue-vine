@@ -41,7 +41,7 @@ export function getComponentPropsFromPipeline(
         }
 
         console.log(`Pipeline: Got message`, JSON.stringify(resp, null, 2))
-        if (resp.type === 'getComponentPropsResponse') {
+        if (resp.type === 'getPropsAndEmitsResponse') {
           tagInfos.set(tag, {
             props: [...resp.props],
             events: [],
@@ -53,7 +53,7 @@ export function getComponentPropsFromPipeline(
       console.log(`Pipeline: Fetching component '${tag}' props`)
       pipelineClient.send(
         pipelineRequest({
-          type: 'getComponentPropsRequest',
+          type: 'getPropsAndEmitsRequest',
           componentName: tag,
           fileName: vineVirtualCode.fileName,
         }),
@@ -61,7 +61,7 @@ export function getComponentPropsFromPipeline(
     })
   }).finally(() => {
     pipelineClient.close()
-    pipelineStatus.pendingRequest.delete('getComponentPropsRequest')
+    pipelineStatus.pendingRequest.delete('getPropsAndEmitsRequest')
   })
-  pipelineStatus.pendingRequest.set('getComponentPropsRequest', requestPromise)
+  pipelineStatus.pendingRequest.set('getPropsAndEmitsRequest', requestPromise)
 }

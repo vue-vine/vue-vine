@@ -3,7 +3,7 @@ import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, Ty
 import { WebSocketServer } from 'ws'
 import { isVueVineVirtualCode } from '../src'
 import { pipelineResponse } from './utils'
-import { getComponentProps } from './visitors'
+import { getComponentPropsAndEmits } from './visitors'
 
 interface PipelineServerCreateParams {
   ts: TypeScriptSdk
@@ -60,8 +60,8 @@ export function createVueVinePipelineServer(
 function handlePipelineRequest(request: PipelineRequest, context: PipelineContext) {
   try {
     switch (request.type) {
-      case 'getComponentPropsRequest':
-        handleGetComponentProps(request, context)
+      case 'getPropsAndEmitsRequest':
+        handleGetComponentPropsAndEmits(request, context)
         break
     }
   }
@@ -70,7 +70,7 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineContex
   }
 }
 
-function handleGetComponentProps(request: PipelineRequest, context: PipelineContext) {
+function handleGetComponentPropsAndEmits(request: PipelineRequest, context: PipelineContext) {
   const { ws, language } = context
   const { componentName, fileName } = request
 
@@ -81,7 +81,7 @@ function handleGetComponentProps(request: PipelineRequest, context: PipelineCont
   const vineCode = volarFile.generated.root
 
   try {
-    const props = getComponentProps(
+    const props = getComponentPropsAndEmits(
       context,
       vineCode,
       componentName,
@@ -90,7 +90,7 @@ function handleGetComponentProps(request: PipelineRequest, context: PipelineCont
 
     ws.send(
       pipelineResponse({
-        type: 'getComponentPropsResponse',
+        type: 'getPropsAndEmitsResponse',
         props,
       }),
     )
