@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@types/debug": "catalog:types",
-    "@types/eslint-scope": "catalog:types",
     "@types/estree": "catalog:types",
     "@types/line-column": "catalog:types",
     "@types/lodash": "catalog:types",
