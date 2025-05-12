@@ -62,8 +62,8 @@ export function useFlags() {
       const css = await select({
         message: 'Using atomized css?',
         options: [
-          { value: 'tailwind', label: 'Tailwind' },
           { value: 'unocss', label: 'Unocss' },
+          { value: 'tailwind', label: 'Tailwind' },
           { value: 'no', label: 'No' },
         ],
       })
