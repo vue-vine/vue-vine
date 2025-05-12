@@ -91,8 +91,10 @@ You may seen the following output:
 ◇  Use Pinia as state management?
 │  Yes
 │
-◇  Use Tailwind CSS?
-│  Yes
+◇  Using atomized css?
+│  - Tailwind
+│  - Unocss
+│  - No
 │
 ◇  Install all dependencies for the project now?
 │  Yes
