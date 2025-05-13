@@ -1,5 +1,13 @@
 # @vue-vine/eslint-plugin
 
+## 0.2.20
+
+### Patch Changes
+
+- Fix for #243 that only update event names completion in current opened file.
+- Updated dependencies
+  - @vue-vine/eslint-parser@0.2.20
+
 ## 0.2.19
 
 ### Patch Changes

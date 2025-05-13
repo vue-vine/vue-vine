@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 0.5.2
+
+### Patch Changes
+
+- Fix for #243 that only update event names completion in current opened file.
+- Updated dependencies
+  - @vue-vine/compiler@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes

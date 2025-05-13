@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.2.2
+
+### Patch Changes
+
+- Fix for #243 that only update event names completion in current opened file.
+
 ## 0.2.0
 
 ### Minor Changes

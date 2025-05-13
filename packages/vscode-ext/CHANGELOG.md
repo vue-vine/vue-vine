@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 0.5.2
+
+### Patch Changes
+
+- Fix for #243 that only update event names completion in current opened file.
+
 ## 0.5.1
 
 ### Patch Changes

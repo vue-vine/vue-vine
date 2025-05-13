@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.4.2
+
+### Patch Changes
+
+- Fix for #243 that only update event names completion in current opened file.
+- Updated dependencies
+  - vue-vine@0.5.2
+
 ## 0.4.1
 
 ### Patch Changes
