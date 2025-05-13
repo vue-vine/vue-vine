@@ -26,11 +26,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "NODE_ENV=development tsdown --watch",
-    "build": "NODE_ENV=production tsdown",
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

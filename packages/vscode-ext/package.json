@@ -96,13 +96,8 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run build",
-    "dev": "NODE_ENV=development tsdown --watch",
-    "build": "NODE_ENV=production tsdown",
-    "build:debug": "NODE_ENV=development tsdown",
     "lint": "eslint src --ext ts",
     "pack:ext": "vsce pack",
-    "prepack": "pnpm run build",
     "publish:ext": "vsce publish",
     "publish:osvx": "ovsx publish",
     "typecheck": "tsc --noEmit"

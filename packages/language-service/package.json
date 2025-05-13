@@ -41,9 +41,6 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "NODE_ENV=development tsdown --watch",
-    "build": "NODE_ENV=production tsdown",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

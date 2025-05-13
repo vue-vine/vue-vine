@@ -28,9 +28,6 @@
     "types"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
-    "prepublish": "pnpm run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },

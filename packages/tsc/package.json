@@ -21,9 +21,6 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

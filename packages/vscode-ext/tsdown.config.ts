@@ -53,13 +53,17 @@ const plugins: Options['plugins'] = [
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
   external: ['vscode'],
-  dts: false,
   minify: !isDev,
   sourcemap: isDev,
   define: {
     'process.env.NODE_ENV': '"production"',
   },
   plugins,
+  inputOptions: {
+    resolve: {
+      conditionNames: ['dev', 'import'],
+    },
+  },
 }
 
 export default defineConfig(

@@ -30,11 +30,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
     "test": "vitest",
     "test:dev": "vitest",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

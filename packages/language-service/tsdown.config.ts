@@ -1,15 +1,10 @@
 import { defineConfig } from 'tsdown'
-import base from '../../tsdown.config.ts'
 
-export default defineConfig([
+export default defineConfig(
   {
-    ...base,
-    entry: ['src/index.ts'],
-    outDir: './dist',
+    entry: {
+      'index': 'src/index.ts',
+      'typescript-plugin/index': 'typescript-plugin/index.ts',
+    },
   },
-  {
-    ...base,
-    entry: ['typescript-plugin/index.ts'],
-    outDir: './dist/typescript-plugin',
-  },
-])
+)

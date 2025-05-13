@@ -23,15 +23,13 @@
     ".": "./dist/index.js"
   },
   "module": "./dist/index.js",
-  "bin": "./bin/create-vue-vine.js",
+  "bin": "./dist/index.js",
   "files": [
     "bin",
     "dist",
     "template"
   ],
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
     "prepublish": "pnpm run build"
   },
   "dependencies": {
