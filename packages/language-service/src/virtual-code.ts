@@ -535,7 +535,7 @@ export function createVueVineCode(
         ? `\n${' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)}${lineWrapAtStart ? `\n  \n` : '\n'}`
         : ''
     )
-    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}}`
+    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}} | {}`
     return contextFormalParam
   }
 
