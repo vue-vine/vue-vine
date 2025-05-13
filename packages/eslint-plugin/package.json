@@ -19,8 +19,7 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },

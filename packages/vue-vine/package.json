@@ -13,15 +13,11 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "import": "./dist/index.js",
-      "node": "./dist/index.js",
-      "require": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
-      "import": "./dist/vite.js",
-      "node": "./dist/index.js",
-      "require": "./dist/vite.js"
+      "default": "./dist/vite.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"

@@ -17,13 +17,11 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./typescript-plugin": {
       "dev": "./typescript-plugin/index.ts",
-      "import": "./dist/typescript-plugin/index.js",
-      "require": "./dist/typescript-plugin/index.js"
+      "default": "./dist/typescript-plugin/index.js"
     }
   },
   "main": "./dist/index.js",
