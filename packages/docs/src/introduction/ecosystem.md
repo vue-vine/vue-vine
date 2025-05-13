@@ -92,8 +92,8 @@ You may seen the following output:
 │  Yes
 │
 ◇  Using atomized css?
+│  - UnoCSS
 │  - Tailwind
-│  - Unocss
 │  - No
 │
 ◇  Install all dependencies for the project now?

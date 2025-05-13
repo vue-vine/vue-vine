@@ -91,9 +91,9 @@ create-vue-vine my-vine-project
 ◇  Use Pinia as state management?
 │  Yes
 │
-│◇  Using atomized css?
+◇  Using atomized css?
+│  - UnoCSS
 │  - Tailwind
-│  - Unocss
 │  - No
 │
 ◇  Install all dependencies for the project now?
