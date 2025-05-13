@@ -10,7 +10,7 @@ import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
-import { getVineTempPropName, turnBackToCRLF } from './shared'
+import { turnBackToCRLF } from './shared'
 import { compileVineForVirtualCode } from './vine-ctx'
 
 type VineCodeInformation = VueCodeInformation
@@ -64,7 +64,7 @@ function getLinkedCodeMappings(tsCode: string): Mapping[] {
   return linkedCodeMappings
 }
 
-function getIndexAfterFnDeclLeftParen(
+function getIndexOfFnDeclLeftParen(
   node: BabelFunctionNodeTypes,
   tokens: BabelToken[] = [],
 ): number {
@@ -99,7 +99,7 @@ function getIndexAfterFnDeclLeftParen(
       )
     default:
       // ArrowFunctionExpression
-      return node.start! + 1 // '('.length
+      return node.start!
   }
 }
 
@@ -203,7 +203,6 @@ export function createVueVineCode(
       const firstStmt = (vineCompFn.fnItselfNode?.body as BlockStatement).body[0]
       generateScriptUntil(firstStmt.start!)
       generatePrefixVirtualCode(vineCompFn)
-      extractExpressionForTempVar(vineCompFn, tempVarDecls)
       generateVirtualCodeByAstPositionSorted(vineCompFn, {
         excludeBindings,
       })
@@ -362,25 +361,6 @@ export function createVueVineCode(
     },
   }
 
-  function extractExpressionForTempVar(vineCompFn: VineCompFn, tempVarDecls: string[]) {
-    // Need to extract all complex expression in `vineProp.withDefault`
-    // and generate a temporary variable like `__VINE_VLS_1` and use `typeof __VINE_VLS_1`
-    // as the type of that single prop.
-    Object.entries(vineCompFn.props).forEach(([propName, propMeta]) => {
-      const defaultValueExpr = propMeta.default
-      if (!defaultValueExpr || propMeta.typeAnnotationRaw !== 'any') {
-        return
-      }
-
-      const tempVarName = getVineTempPropName(propName)
-      const tempVarDecl = `const ${tempVarName} = (${
-        vineFileCtx.getAstNodeContent(defaultValueExpr)
-      });`
-      tempVarDecls.push(tempVarDecl)
-      propMeta.typeAnnotationRaw = `typeof ${tempVarName}`
-    })
-  }
-
   function generateScriptUntil(targetOffset: number) {
     tsCodeSegments.push([
       snapshotContent.slice(currentOffset.value, targetOffset),
@@ -523,28 +503,25 @@ export function createVueVineCode(
       )
 
     // Generate `expose: (exposed: ExposedType) => void`
-    const exposeField = `expose: (exposed: ${
-      vineCompFn.expose
-        ? `ReturnType<typeof ${vineCompFn.fnName}>`
-        : '{}'
-    }) => void,`
-    contextProperties.push(exposeField)
+    if (vineCompFn.expose) {
+      contextProperties.push(
+        `expose: (exposed: ReturnType<typeof ${vineCompFn.fnName}>) => void,`,
+      )
+    }
 
     const contextFieldsStr = (
       contextProperties.length > 0
         ? `\n${' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)}${lineWrapAtStart ? `\n  \n` : '\n'}`
         : ''
     )
-    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}} | {}`
+    const contextFormalParam = `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}}`
     return contextFormalParam
   }
 
   function generatePropsExtra(vineCompFn: VineCompFn) {
-    const commonProps = ' & __VINE_VLS_VineComponentCommonProps'
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
     return [
-      commonProps,
       emitProps,
       modelProps,
     ].filter(Boolean).join(' ')
@@ -556,7 +533,7 @@ export function createVueVineCode(
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
         joinStr: ',\n',
-      })}\n`)
+      })} & __VLS_VineComponentCommonProps\n`)
     }
     if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${
@@ -568,7 +545,7 @@ export function createVueVineCode(
     // Gurantee the component function has a `props` formal parameter in virtual code,
     // This is for props intellisense on editing template tag attrs.
     generateScriptUntil(
-      getIndexAfterFnDeclLeftParen(
+      getIndexOfFnDeclLeftParen(
         vineCompFn.fnItselfNode!,
         vineFileCtx.root.tokens ?? [],
       ) + 1, // means generate after '(',

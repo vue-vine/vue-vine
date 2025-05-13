@@ -15,9 +15,6 @@ export interface SpawnLogger {
 
 export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
 
-export function getVineTempPropName(propName: string) {
-  return `__VINE_VLS_TEMP_PROP_${propName}__`
-}
 export interface VueVineCode extends VirtualCode {
   __VUE_VINE_VIRTUAL_CODE__: true
   vineMetaCtx: {
