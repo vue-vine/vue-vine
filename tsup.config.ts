@@ -14,7 +14,7 @@ export default defineConfig({
   splitting: true,
   clean: true,
   dts: true,
-  tsconfig: join(__dirname, 'tsconfig.lib.json'),
+  tsconfig: join(__dirname, 'tsconfig.json'),
   esbuildOptions(options) {
     options.conditions = ['dev']
   },

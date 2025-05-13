@@ -3,9 +3,7 @@ import { join } from 'node:path'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 
-const commitRE
-      // eslint-disable-next-line regexp/no-unused-capturing-group
-      = /^(revert: )?(feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?!?: .{1,50}/
+const commitRE = /^(?:revert: )?(?:feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(?:\(.+\))?!?: .{1,50}/
 
 const msgPath = join(import.meta.dirname, '..', '.git', 'COMMIT_EDITMSG')
 
