@@ -45,6 +45,7 @@
     "access": "public"
   },
   "scripts": {
+    "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
