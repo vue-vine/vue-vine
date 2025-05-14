@@ -43,6 +43,9 @@ export async function activate(context: vscode.ExtensionContext) {
     serverOptions,
     clientOptions,
   )
+
+  console.log('Starting Vine Language Server ...')
+
   await client.start()
   console.log('Vine language server started')
 
