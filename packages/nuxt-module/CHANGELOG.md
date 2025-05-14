@@ -1,5 +1,16 @@
 # @vue-vine/nuxt
 
+## 1.0.0
+
+### Major Changes
+
+- Migrate Vue Vine to ESM only and bundled by tsdown.
+
+### Patch Changes
+
+- Updated dependencies
+  - vue-vine@1.0.0
+
 ## 0.4.3
 
 ### Patch Changes

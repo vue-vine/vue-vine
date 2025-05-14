@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.0.0
+
+### Major Changes
+
+- Migrate Vue Vine to ESM only and bundled by tsdown.
+
 ## 0.2.3
 
 ### Patch Changes

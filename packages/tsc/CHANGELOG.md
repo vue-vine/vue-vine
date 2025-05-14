@@ -1,5 +1,16 @@
 # vue-vine-tsc
 
+## 1.0.0
+
+### Major Changes
+
+- Migrate Vue Vine to ESM only and bundled by tsdown.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/language-service@1.0.0
+
 ## 0.4.3
 
 ### Patch Changes

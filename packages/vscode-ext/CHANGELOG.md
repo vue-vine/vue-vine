@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.0.0
+
+### Major Changes
+
+- Migrate Vue Vine to ESM only and bundled by tsdown.
+
 ## 0.5.3
 
 ### Patch Changes
