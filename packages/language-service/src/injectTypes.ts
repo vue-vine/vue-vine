@@ -66,6 +66,10 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions) {
       [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
   }>, undefined>>;
 
+  type __VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends VueVineComponent & {
+    exposed: infer E
+  } ? (exposed: E) => void : never;
+
   type __VLS_VineComponentCommonProps = {
     key?: PropertyKey
     ref?: string | import('vue').Ref | ((ref: Element | import('vue').ComponentPublicInstance | null, refs: Record<string, any>) => void);

@@ -291,10 +291,10 @@ export function createVueVineCode(
       generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
       // clear the template string
-      tsCodeSegments.push(`\`\` as any as ${
+      tsCodeSegments.push(`\`\` as any as VueVineComponent${
         vineCompFn.expose
-          ? `(import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>)`
-          : 'VueVineComponent'
+          ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>) }`
+          : ''
       };\n`)
       currentOffset.value = vineCompFn.templateStringNode.quasi.end!
     }
@@ -505,7 +505,7 @@ export function createVueVineCode(
     // Generate `expose: (exposed: ExposedType) => void`
     if (vineCompFn.expose) {
       contextProperties.push(
-        `expose: (exposed: ReturnType<typeof ${vineCompFn.fnName}>) => void,`,
+        `expose: __VLS_PickComponentExpose<typeof ${vineCompFn.fnName}>,`,
       )
     }
 
@@ -519,9 +519,11 @@ export function createVueVineCode(
   }
 
   function generatePropsExtra(vineCompFn: VineCompFn) {
+    const commonProps = '& __VLS_VineComponentCommonProps'
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
     return [
+      commonProps,
       emitProps,
       modelProps,
     ].filter(Boolean).join(' ')
@@ -532,7 +534,7 @@ export function createVueVineCode(
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
         joinStr: ',\n',
-      })} & __VLS_VineComponentCommonProps\n`)
+      })}\n`)
     }
     if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${
