@@ -13,10 +13,12 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
+      "types": "./dist/vite.d.ts",
       "default": "./dist/vite.js"
     },
     "./macros": {

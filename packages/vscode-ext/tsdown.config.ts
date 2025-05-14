@@ -64,6 +64,7 @@ const sharedConfig: Partial<Options> = {
       conditionNames: ['dev', 'import'],
     },
   },
+  dts: false,
 }
 
 export default defineConfig(

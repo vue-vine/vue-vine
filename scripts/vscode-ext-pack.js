@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import semver from 'semver'
+import { removeTypeScriptPluginSourcemap } from './remove-sourcemap.js'
 import { useCatalogSemverSwitcher } from './utils/catalog-semver.js'
 import { colorful } from './utils/color-str.js'
 
@@ -88,5 +89,8 @@ async function run() {
     ),
   )
 }
+
+// Must remove sourcemap before pack
+removeTypeScriptPluginSourcemap()
 
 run()

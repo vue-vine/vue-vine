@@ -17,14 +17,18 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./typescript-plugin": {
       "dev": "./typescript-plugin/index.ts",
+      "types": "./dist/typescript-plugin/index.d.ts",
       "default": "./dist/typescript-plugin/index.js"
     }
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
