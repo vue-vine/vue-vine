@@ -528,7 +528,6 @@ export function createVueVineCode(
   }
 
   function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
-    tsCodeSegments.push('\n')
     if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
@@ -540,7 +539,6 @@ export function createVueVineCode(
         vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
       }>>;\n`)
     }
-    tsCodeSegments.push('\n')
 
     // Gurantee the component function has a `props` formal parameter in virtual code,
     // This is for props intellisense on editing template tag attrs.
