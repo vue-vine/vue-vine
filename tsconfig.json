@@ -1,5 +1,17 @@
 {
-  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ES2023"],
+    "baseUrl": ".",
+    "customConditions": ["VueVineSourceCodeDev"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
   "include": [
     "packages",
     "types",
