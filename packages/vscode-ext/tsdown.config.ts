@@ -61,7 +61,7 @@ const sharedConfig: Partial<Options> = {
   plugins,
   inputOptions: {
     resolve: {
-      conditionNames: ['dev', 'import'],
+      conditionNames: ['vine', 'import'],
     },
   },
   dts: false,
