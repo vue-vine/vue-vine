@@ -1,35 +1,20 @@
-import type { Options } from 'tsup'
+import type { Options } from 'tsdown'
 import { createRequire } from 'node:module'
 import process from 'node:process'
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown'
 
 const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'
 
-type SetupBuild = Parameters<Exclude<Options['esbuildPlugins'], undefined>[number]['setup']>[0]
-function mockDependency(name: string) {
-  return {
-    name: `mock-${name}`,
-    setup(build: SetupBuild) {
-      build.onResolve({ filter: new RegExp(`^${name}$`) }, () => {
-        return { path: name, namespace: `mock-${name}` }
-      })
-      build.onLoad({ filter: /.*/, namespace: `mock-${name}` }, () => {
-        return {
-          contents: 'export default {}',
-          loader: 'js',
-        }
-      })
-    },
-  }
-}
-
-const esbuildPlugins: Options['esbuildPlugins'] = [
+const plugins: Options['plugins'] = [
   {
     name: 'umd2esm',
-    setup(build) {
-      build.onResolve({ filter: /^(vscode-.*|jsonc-parser)/ }, (args) => {
-        const pathUmdMay = require.resolve(args.path, { paths: [args.resolveDir] })
+    resolveId: {
+      filter: {
+        id: /^(vscode-.*-languageservice|vscode-languageserver-types|jsonc-parser)$/,
+      },
+      handler(path, importer) {
+        const pathUmdMay = require.resolve(path, { paths: [importer!] })
         // Call twice the replace is to solve the problem of the path in Windows
         let pathEsm = pathUmdMay
           .replace('/umd/', '/esm/')
@@ -41,26 +26,45 @@ const esbuildPlugins: Options['esbuildPlugins'] = [
             .replace('\\esm\\index.js', '\\esm\\index.mjs')
         }
 
-        return { path: pathEsm }
-      })
+        return { id: pathEsm }
+      },
     },
   },
 
   // Mock ts-morph dependency for '@vue-vine/compiler',
   // in order to decrease the bundle size, because VSCode extension
   // doesn't need ts-morph to analyze props
-  mockDependency('ts-morph'),
+  {
+    name: 'mock-ts-morph',
+    load: {
+      filter: {
+        id: /ts-morph/,
+      },
+      handler() {
+        return {
+          code: `module.exports = {}`,
+          moduleType: 'js',
+        }
+      },
+    },
+  },
 ]
+
 const sharedConfig: Partial<Options> = {
   format: 'cjs',
   external: ['vscode'],
   minify: !isDev,
-  bundle: true,
   sourcemap: isDev,
   define: {
     'process.env.NODE_ENV': '"production"',
   },
-  esbuildPlugins,
+  plugins,
+  inputOptions: {
+    resolve: {
+      conditionNames: ['dev', 'import'],
+    },
+  },
+  dts: false,
 }
 
 export default defineConfig(
@@ -68,10 +72,9 @@ export default defineConfig(
     {
       entry: {
         client: './src/index.ts',
-        server: './node_modules/@vue-vine/language-server/bin/vue-vine-language-server.js',
+        server: './node_modules/@vue-vine/language-server/src/index.ts',
       },
       ...sharedConfig,
-      clean: true,
     },
     // We need to generate this inside node_modules so VS Code can resolve it
     // Bundle src/typescript-plugin.cjs -> node_modules/@vue-vine/typescript-plugin/index.js

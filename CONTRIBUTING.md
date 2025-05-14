@@ -5,7 +5,7 @@ Hello!, We are very excited that you are interested in contributing with Vue Vin
 ### Tooling
 
 - [PNPM](https://pnpm.io/) to manage packages and dependencies
-- [Tsup](https://tsup.egoist.sh/) to bundle packages
+- [tsdown](https://tsdown.dev/) to bundle packages
 - [Changeset](https://github.com/atlassian/changesets) for changes
   documentation, changelog generation, and release management.
 

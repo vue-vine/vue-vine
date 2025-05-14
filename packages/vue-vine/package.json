@@ -1,5 +1,6 @@
 {
   "name": "vue-vine",
+  "type": "module",
   "version": "0.5.3",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
@@ -12,15 +13,13 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "node": "./dist/index.js",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./vite": {
       "dev": "./src/vite/index.ts",
-      "import": "./dist/vite.mjs",
-      "node": "./dist/index.js",
-      "require": "./dist/vite.js"
+      "types": "./dist/vite.d.ts",
+      "default": "./dist/vite.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"
@@ -31,9 +30,6 @@
     "types"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
-    "prepublish": "pnpm run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },

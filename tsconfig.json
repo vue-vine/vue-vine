@@ -3,7 +3,7 @@
   "include": [
     "packages",
     "types",
-    "tsup.config.ts"
+    "tsdown.config.ts"
   ],
   "exclude": [
     "**/dist",

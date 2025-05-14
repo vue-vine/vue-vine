@@ -1,8 +1,6 @@
-import { defineConfig } from 'tsup'
-import base from '../../tsup.config'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  ...base,
   entry: {
     index: './src/index.ts',
     vite: './src/vite/index.ts',

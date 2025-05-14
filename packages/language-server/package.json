@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/language-server",
+  "type": "module",
   "version": "0.5.3",
   "author": "Ray <i@mk1.io> (@so1ve)",
   "license": "MIT",
@@ -32,9 +33,6 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "NODE_ENV=development tsup --watch",
-    "build": "NODE_ENV=production tsup",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

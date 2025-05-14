@@ -25,6 +25,7 @@ export type VineESLintParserOptions = ParserOptions & {
   ecmaFeatures?: ParserOptions['ecmaFeatures'] & {
     [key: string]: any
   }
+  sourceType?: 'module' | 'script'
 }
 
 export interface VineTemplatePositionInfo {

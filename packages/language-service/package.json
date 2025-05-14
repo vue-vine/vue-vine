@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/language-service",
+  "type": "module",
   "version": "0.5.3",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -16,16 +17,18 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./typescript-plugin": {
       "dev": "./typescript-plugin/index.ts",
-      "import": "./dist/typescript-plugin/index.mjs",
-      "require": "./dist/typescript-plugin/index.js"
+      "types": "./dist/typescript-plugin/index.d.ts",
+      "default": "./dist/typescript-plugin/index.js"
     }
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
@@ -42,9 +45,6 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "NODE_ENV=development tsup --watch",
-    "build": "NODE_ENV=production tsup",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

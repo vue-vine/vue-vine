@@ -1,5 +1,6 @@
 {
   "name": "create-vue-vine",
+  "type": "module",
   "version": "0.2.3",
   "description": "Official CLI for creating Vue Vine project.",
   "author": "ShenQingchuan",
@@ -19,20 +20,16 @@
     "Vine"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs"
-    }
+    ".": "./dist/index.js"
   },
-  "module": "./dist/index.mjs",
-  "bin": "./bin/create-vue-vine.mjs",
+  "module": "./dist/index.js",
+  "bin": "./dist/index.js",
   "files": [
     "bin",
     "dist",
     "template"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
     "prepublish": "pnpm run build"
   },
   "dependencies": {

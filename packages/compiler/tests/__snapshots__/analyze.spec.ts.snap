@@ -67,7 +67,6 @@ exports[`test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\`
             "type": "ObjectProperty",
             "value": Node {
               "end": 62,
-              "extra": undefined,
               "loc": SourceLocation {
                 "end": Position {
                   "column": 20,
@@ -194,7 +193,6 @@ exports[`test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\`
         "type": "ObjectProperty",
         "value": Node {
           "end": 62,
-          "extra": undefined,
           "loc": SourceLocation {
             "end": Position {
               "column": 20,

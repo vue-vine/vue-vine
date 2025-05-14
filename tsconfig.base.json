@@ -3,13 +3,13 @@
     "target": "ESNext",
     "lib": ["ES2023"],
     "baseUrl": ".",
+    "customConditions": ["dev"],
     "module": "Preserve",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "strict": true,
     "noImplicitAny": true,
     "noEmit": true,
-    "esModuleInterop": true,
     "skipLibCheck": true
   }
 }

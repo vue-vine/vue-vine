@@ -31,6 +31,6 @@
     "dist",
     "node_modules",
     "expectations/**/*.js",
-    "eslint.config.mjs"
+    "eslint.config.js"
   ]
 }

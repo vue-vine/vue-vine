@@ -1,5 +1,6 @@
 {
   "name": "@vue-vine/compiler",
+  "type": "module",
   "version": "0.5.3",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
@@ -16,22 +17,19 @@
   "exports": {
     ".": {
       "dev": "./src/index.ts",
-      "node": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "NODE_ENV=development tsup --watch",
-    "build": "NODE_ENV=production tsup",
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest",
-    "prepublish": "pnpm run build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -1,8 +1,6 @@
-import { defineConfig } from 'tsup'
-import base from '../../tsup.config'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  ...base,
   external: [
     'vite',
     '@babel/types',
