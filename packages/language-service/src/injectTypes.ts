@@ -127,11 +127,6 @@ export function generateVLSContext(
   )
 
   const __VINE_CONTEXT_TYPES = `
-type __CTX_TYPES_FROM_FORMAL_PARAMS = ${
-  vineCompFn.getPropsTypeRecordStr({
-    joinStr: '; ',
-  })
-};
 const __VLS_ctx = __createVineVLSCtx({
 ${notPropsBindings.map(([name]) => {
   // `name` maybe 'router-view' format,

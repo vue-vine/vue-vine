@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 0.5.3
+
+### Patch Changes
+
+- Shouldn't add exposed type in component function context when no exposed data.
+
 ## 0.5.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 0.2.3
+
+### Patch Changes
+
+- Shouldn't add exposed type in component function context when no exposed data.
+
 ## 0.2.2
 
 ### Patch Changes

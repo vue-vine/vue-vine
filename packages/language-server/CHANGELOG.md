@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 0.5.3
+
+### Patch Changes
+
+- Shouldn't add exposed type in component function context when no exposed data.
+- Updated dependencies
+  - @vue-vine/compiler@0.5.3
+  - @vue-vine/language-service@0.5.3
+
 ## 0.5.2
 
 ### Patch Changes
