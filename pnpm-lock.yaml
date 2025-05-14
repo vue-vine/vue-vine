@@ -46,8 +46,8 @@ catalogs:
       specifier: ^1.2.2
       version: 1.2.2
     tsdown:
-      specifier: https://pkg.pr.new/tsdown@91ed530
-      version: 0.11.8
+      specifier: ^0.11.9
+      version: 0.11.9
     tsx:
       specifier: ^4.19.3
       version: 4.19.3
@@ -355,7 +355,7 @@ importers:
         version: 1.2.2
       tsdown:
         specifier: catalog:cli
-        version: https://pkg.pr.new/tsdown@91ed530(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
+        version: 0.11.9(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
       tsx:
         specifier: catalog:cli
         version: 4.19.3
@@ -7246,9 +7246,8 @@ packages:
       typescript:
         optional: true
 
-  tsdown@https://pkg.pr.new/tsdown@91ed530:
-    resolution: {tarball: https://pkg.pr.new/tsdown@91ed530}
-    version: 0.11.8
+  tsdown@0.11.9:
+    resolution: {integrity: sha512-Lp1lflza4U+Ennezzj7NyC3+OtoeAn7TuOe0fm7uKl0lt71I4gCGSj1HAdInRMD3uQhKUH3uU7nj+MpRSXL7Lg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -11828,7 +11827,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.7.1
+      semver: 7.7.2
 
   ee-first@1.1.1: {}
 
@@ -12007,7 +12006,7 @@ snapshots:
   eslint-compat-utils@0.5.1(eslint@9.25.1(jiti@2.4.2)):
     dependencies:
       eslint: 9.25.1(jiti@2.4.2)
-      semver: 7.7.1
+      semver: 7.7.2
 
   eslint-compat-utils@0.6.5(eslint@9.25.1(jiti@2.4.2)):
     dependencies:
@@ -15541,7 +15540,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  tsdown@https://pkg.pr.new/tsdown@91ed530(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
+  tsdown@0.11.9(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
     dependencies:
       ansis: 4.0.0
       cac: 6.7.14
