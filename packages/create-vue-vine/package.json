@@ -29,9 +29,7 @@
     "dist",
     "template"
   ],
-  "scripts": {
-    "prepublish": "pnpm run build"
-  },
+  "scripts": {},
   "dependencies": {
     "@clack/prompts": "catalog:cli",
     "clerc": "catalog:cli",
