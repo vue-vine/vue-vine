@@ -13,6 +13,14 @@ afterEach(() => {
       .replace(
         '<span class="name">{{name}}</span>',
         '<div class="name">{{name}}</div>',
+      )
+      .replace(
+        '<TestTsMorph1 ',
+        '<TestTsMorph ',
+      )
+      .replace(
+        'function TestTsMorph1',
+        'function TestTsMorph',
       ),
   )
 })
@@ -72,5 +80,18 @@ describe('hmr', () => {
     editFile('test.vine.ts', code => code.replace('ref(\'vine\')', 'ref(\'vue\')'))
     await untilUpdated(() => browserCtx.page!.textContent('.name'), 'vue')
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
+  }))
+
+  it('should display correct props when changing component function name', createBrowserCtxEnvironment(async (browserCtx) => {
+    expect(await browserCtx.page!.textContent('.test-ts-morph')).toBe('foo: 123')
+    editFile(
+      'test.vine.ts',
+      code => (
+        code
+          .replace('<TestTsMorph', '<TestTsMorph1')
+          .replace('function TestTsMorph', 'function TestTsMorph1')
+      ),
+    )
+    await untilUpdated(() => browserCtx.page!.textContent('.test-ts-morph'), 'foo: 123')
   }))
 })
