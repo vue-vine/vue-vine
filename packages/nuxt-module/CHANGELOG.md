@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 0.4.3
+
+### Patch Changes
+
+- Shouldn't add exposed type in component function context when no exposed data.
+- Updated dependencies
+  - vue-vine@0.5.3
+
 ## 0.4.2
 
 ### Patch Changes
