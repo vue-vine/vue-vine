@@ -12,12 +12,12 @@
   },
   "exports": {
     ".": {
-      "VueVineSourceCodeDev": "./src/index.ts",
+      "vine": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./vite": {
-      "VueVineSourceCodeDev": "./src/vite/index.ts",
+      "vine": "./src/vite/index.ts",
       "types": "./dist/vite.d.ts",
       "default": "./dist/vite.js"
     },

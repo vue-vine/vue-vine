@@ -16,7 +16,7 @@
   ],
   "exports": {
     ".": {
-      "VueVineSourceCodeDev": "./src/index.ts",
+      "vine": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }

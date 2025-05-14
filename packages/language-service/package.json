@@ -16,12 +16,12 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "VueVineSourceCodeDev": "./src/index.ts",
+      "vine": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./typescript-plugin": {
-      "VueVineSourceCodeDev": "./typescript-plugin/index.ts",
+      "vine": "./typescript-plugin/index.ts",
       "types": "./dist/typescript-plugin/index.d.ts",
       "default": "./dist/typescript-plugin/index.js"
     }

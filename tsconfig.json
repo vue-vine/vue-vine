@@ -3,7 +3,7 @@
     "target": "ESNext",
     "lib": ["ES2023"],
     "baseUrl": ".",
-    "customConditions": ["VueVineSourceCodeDev"],
+    "customConditions": ["vine"],
     "module": "Preserve",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
