@@ -2,7 +2,6 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "type": "module",
   "version": "0.5.3",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
@@ -13,7 +12,7 @@
   "categories": [
     "Programming Languages"
   ],
-  "main": "./dist/client.cjs",
+  "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
     "vscode": "^1.84.0"

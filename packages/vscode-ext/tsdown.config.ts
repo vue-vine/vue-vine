@@ -77,7 +77,7 @@ export default defineConfig(
       ...sharedConfig,
     },
     // We need to generate this inside node_modules so VS Code can resolve it
-    // Bundle src/typescript-plugin.cjs -> node_modules/@vue-vine/typescript-plugin/index.js
+    // Bundle src/typescript-plugin.ts -> node_modules/@vue-vine/typescript-plugin/index.js
     {
       entry: {
         index: 'src/typescript-plugin.ts',
