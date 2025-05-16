@@ -60,7 +60,7 @@ export function createVueVinePipelineServer(
 function handlePipelineRequest(request: PipelineRequest, context: PipelineContext) {
   try {
     switch (request.type) {
-      case 'getPropsAndEmitsRequest':
+      case 'getComponentPropsRequest':
         handleGetComponentPropsAndEmits(request, context)
         break
     }
@@ -72,7 +72,7 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineContex
 
 function handleGetComponentPropsAndEmits(request: PipelineRequest, context: PipelineContext) {
   const { ws, language } = context
-  const { componentName, fileName } = request
+  const { requestId, componentName, fileName } = request
 
   const volarFile = language.scripts.get(fileName)
   if (!(isVueVineVirtualCode(volarFile?.generated?.root))) {
@@ -90,12 +90,25 @@ function handleGetComponentPropsAndEmits(request: PipelineRequest, context: Pipe
 
     ws.send(
       pipelineResponse({
-        type: 'getPropsAndEmitsResponse',
+        type: 'getComponentPropsResponse',
+        requestId,
+        componentName,
+        fileName,
         props,
       }),
     )
   }
   catch (err) {
     context.tsPluginLogger.error('Pipeline: Error on getComponentProps:', err)
+    // Send empty response when error
+    ws.send(
+      pipelineResponse({
+        type: 'getComponentPropsResponse',
+        requestId,
+        componentName,
+        fileName,
+        props: [],
+      }),
+    )
   }
 }
