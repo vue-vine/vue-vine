@@ -1,5 +1,6 @@
 import type { Language } from '@volar/language-server'
 import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
+import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
 import { isVueVineVirtualCode } from '../src'
 import { pipelineResponse } from './utils'
@@ -33,7 +34,7 @@ export function createVueVinePipelineServer(
 
       let request: PipelineRequest | undefined
       try {
-        request = JSON.parse(message.toString().trim()) as PipelineRequest
+        request = safeDestr<PipelineRequest>(message.toString().trim())
       }
       catch (err) {
         tsPluginLogger.error('Pipeline: Error parsing message:', err)
