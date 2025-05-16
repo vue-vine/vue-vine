@@ -88,11 +88,11 @@ catalogs:
     vite-plugin-inspect: ^11.0.1
     vitest: ^3.1.2
   volar:
-    '@volar/language-core': ~2.4.12
-    '@volar/language-server': ~2.4.12
-    '@volar/language-service': ~2.4.12
-    '@volar/typescript': ~2.4.12
-    '@volar/vscode': ~2.4.12
+    '@volar/language-core': ~2.4.14
+    '@volar/language-server': ~2.4.14
+    '@volar/language-service': ~2.4.14
+    '@volar/typescript': ~2.4.14
+    '@volar/vscode': ~2.4.14
     volar-service-css: ~0.0.64
     volar-service-emmet: ~0.0.64
     volar-service-html: ~0.0.64
