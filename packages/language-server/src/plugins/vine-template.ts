@@ -7,7 +7,7 @@ import type {
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import type { HtmlTagInfo, PipelineStatus } from '../types'
+import type { HtmlTagInfo, PipelineContext } from '../types'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
@@ -134,19 +134,23 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             tagInfos = tagInfosMap.get(vineVirtualCode.fileName)!
           }
 
-          // Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
-          baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+          // Set up HTML data providers before requesting completions
           const { sync } = provideHtmlData(
             tagInfos,
             vineVirtualCode,
             triggerAtVineCompFn,
           )
-          let isDataReady = false
-          let htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          while (!isDataReady) {
-            isDataReady = await sync()
-            htmlComplete = await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-          }
+
+          // Wait for all pipeline requests to complete
+          await sync()
+
+          // Get completions only once after all data is ready
+          const htmlComplete = await baseServiceInstance.provideCompletionItems?.(
+            document,
+            position,
+            completionContext,
+            triggerCharToken,
+          )
 
           return htmlComplete
         },
@@ -196,9 +200,8 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         )
         const vineVolarContextProvider = createVineTemplateDataProvider()
 
-        let pipelineStatus: PipelineStatus = {
-          isFetchDone: false,
-          pendingRequest: new Map(),
+        let pipelineStatus: PipelineContext = {
+          pendingRequests: new Map(),
         }
 
         updateCustomData([
@@ -208,11 +211,35 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
         return {
           async sync() {
-            const promises = Array.from(pipelineStatus.pendingRequest.values())
-            await Promise.all(promises).then(() => {
-              pipelineStatus.isFetchDone = true
-            })
-            return pipelineStatus.isFetchDone
+            if (pipelineStatus.pendingRequests.size > 0) {
+              try {
+                const pendingPromises = Array
+                  .from(pipelineStatus.pendingRequests.values())
+                  .map(
+                    resolver => new Promise<void>((resolve, reject) => {
+                      const originalResolve = resolver.resolve
+                      const originalReject = resolver.reject
+
+                      resolver.resolve = (value) => {
+                        originalResolve(value)
+                        resolve()
+                      }
+
+                      resolver.reject = (reason) => {
+                        originalReject(reason)
+                        reject(reason)
+                      }
+                    }),
+                  )
+
+                await Promise.allSettled(pendingPromises)
+              }
+              catch (err) {
+                console.error('Error waiting for pipeline requests:', err)
+              }
+            }
+
+            return true
           },
         }
 
@@ -254,8 +281,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
               else if (!tagInfo) {
                 // Trigger on a tag that references a external component,
                 // and we only fetch once
-                // Create request if there's no pending one
-                if (!pipelineStatus.pendingRequest.has('getPropsAndEmitsRequest')) {
+                try {
                   const tsConfigFileName = context.project.typescript!.configFileName!
                   const tsHost = context.project.typescript!.sys
                   getComponentPropsFromPipeline(
@@ -267,7 +293,12 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                       tsConfigFileName,
                       tsHost,
                     },
-                  )
+                  ).catch((err) => {
+                    console.error(`Failed to fetch props for component ${tag}:`, err)
+                  })
+                }
+                catch (err) {
+                  console.error(`Error creating pipeline request for ${tag}:`, err)
                 }
 
                 return tagAttrs

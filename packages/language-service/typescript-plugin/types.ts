@@ -5,11 +5,18 @@ import type { WebSocket } from 'ws'
 export type TypeScriptSdk = Parameters<Parameters<(typeof createLanguageServicePlugin)>[0]>[0]
 export type TsPluginInfo = Parameters<Parameters<(typeof createLanguageServicePlugin)>[0]>[1]
 
+type _pipelineReq<T extends { type: string }> = {
+  requestId: string
+} & T
+type _pipelineResp<T extends { type: string }> = {
+  requestId: string
+} & T
+
 export type PipelineRequest =
-  | { type: 'getPropsAndEmitsRequest', componentName: string, fileName: string }
+  | (_pipelineReq<{ type: 'getComponentPropsRequest', componentName: string, fileName: string }>)
 
 export type PipelineResponse =
-  | { type: 'getPropsAndEmitsResponse', props: string[] }
+  | (_pipelineResp<{ type: 'getComponentPropsResponse', componentName: string, fileName: string, props: string[] }>)
 
 export interface PipelineContext {
   ts: TypeScriptSdk

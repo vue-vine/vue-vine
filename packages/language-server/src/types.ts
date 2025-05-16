@@ -1,5 +1,3 @@
-import type { PipelineRequest } from '@vue-vine/language-service'
-
 export type VineVirtualFileExtension =
   | 'ts'
   | 'css'
@@ -9,9 +7,14 @@ export type VineVirtualFileExtension =
   | 'styl'
   | 'html'
 
-export interface PipelineStatus {
-  isFetchDone: boolean
-  pendingRequest: Map<PipelineRequest['type'], Promise<void>>
+export interface RequestResolver {
+  resolve: (value: any) => void
+  reject: (reason?: any) => void
+  timeout?: NodeJS.Timeout
+}
+
+export interface PipelineContext {
+  pendingRequests: Map<string, RequestResolver>
 }
 
 export interface HtmlTagInfo {
