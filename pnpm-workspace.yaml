@@ -1,6 +1,12 @@
 packages:
   - 'packages/*'
 
+defines:
+  - &vue ^3.5.13
+  - &vue-lang-tools ~2.2.10
+  - &volar ~2.4.14
+  - &volar-service ~0.0.64
+
 catalogs:
   cli:
     '@baiwusanyu/utils-log': ^1.1.2
@@ -88,15 +94,15 @@ catalogs:
     vite-plugin-inspect: ^11.0.1
     vitest: ^3.1.2
   volar:
-    '@volar/language-core': ~2.4.12
-    '@volar/language-server': ~2.4.12
-    '@volar/language-service': ~2.4.12
-    '@volar/typescript': ~2.4.12
-    '@volar/vscode': ~2.4.12
-    volar-service-css: ~0.0.64
-    volar-service-emmet: ~0.0.64
-    volar-service-html: ~0.0.64
-    volar-service-typescript: ~0.0.64
+    '@volar/language-core': *volar
+    '@volar/language-server': *volar
+    '@volar/language-service': *volar
+    '@volar/typescript': *volar
+    '@volar/vscode': *volar
+    volar-service-css: *volar-service
+    volar-service-emmet: *volar-service
+    volar-service-html: *volar-service
+    volar-service-typescript: *volar-service
   vscode:
     reactive-vscode: ^0.2.14
     vscode-html-languageservice: ^5.3.3
@@ -104,11 +110,11 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
   vue-libs:
-    '@vue/compiler-dom': ^3.5.13
-    '@vue/compiler-ssr': ^3.5.13
-    '@vue/language-core': ~2.2.10
-    '@vue/language-service': ~2.2.10
-    '@vue/shared': ^3.5.13
+    '@vue/compiler-dom': *vue
+    '@vue/compiler-ssr': *vue
+    '@vue/language-core': *vue-lang-tools
+    '@vue/language-service': *vue-lang-tools
+    '@vue/shared': *vue
     '@vue/test-utils': ^2.4.6
-    vue: ^3.5.13
-    vue-tsc: ~2.2.10
+    vue: *vue
+    vue-tsc: *vue-lang-tools
