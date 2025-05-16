@@ -3,6 +3,7 @@ packages:
 
 defines:
   - &vue ^3.5.13
+  - &vue-lang-tools ~2.2.10
   - &volar ~2.4.14
   - &volar-service ~0.0.64
 
@@ -111,9 +112,9 @@ catalogs:
   vue-libs:
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
-    '@vue/language-core': ~2.2.10
-    '@vue/language-service': ~2.2.10
+    '@vue/language-core': *vue-lang-tools
+    '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue
     '@vue/test-utils': ^2.4.6
     vue: *vue
-    vue-tsc: ~2.2.10
+    vue-tsc: *vue-lang-tools
