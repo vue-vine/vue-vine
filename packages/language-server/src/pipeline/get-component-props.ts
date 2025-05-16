@@ -50,13 +50,14 @@ export function getComponentPropsFromPipeline(
         }
       })
 
-      console.log(`Pipeline: Fetching component '${tag}' props`)
+      const requestData = {
+        type: 'getPropsAndEmitsRequest',
+        componentName: tag,
+        fileName: vineVirtualCode.fileName,
+      } as const
+      console.log(`Pipeline: Fetching component '${tag}' props`, requestData)
       pipelineClient.send(
-        pipelineRequest({
-          type: 'getPropsAndEmitsRequest',
-          componentName: tag,
-          fileName: vineVirtualCode.fileName,
-        }),
+        pipelineRequest(requestData),
       )
     })
   }).finally(() => {

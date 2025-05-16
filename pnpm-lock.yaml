@@ -132,6 +132,12 @@ catalogs:
     changelogen:
       specifier: ^0.6.1
       version: 0.6.1
+    destr:
+      specifier: ^2.0.5
+      version: 2.0.5
+    detect-port:
+      specifier: ^2.1.0
+      version: 2.1.0
     hash-sum:
       specifier: ^2.0.0
       version: 2.0.0
@@ -150,6 +156,9 @@ catalogs:
     lru-cache:
       specifier: ^11.1.0
       version: 11.1.0
+    muggle-string:
+      specifier: ^0.4.1
+      version: 0.4.1
     playwright-chromium:
       specifier: ^1.52.0
       version: 1.52.0
@@ -700,14 +709,17 @@ importers:
       '@vue/shared':
         specifier: catalog:vue-libs
         version: 3.5.13
+      destr:
+        specifier: catalog:miscs
+        version: 2.0.5
       detect-port:
-        specifier: ^2.1.0
+        specifier: catalog:miscs
         version: 2.1.0
       muggle-string:
-        specifier: ^0.4.1
+        specifier: catalog:miscs
         version: 0.4.1
       ws:
-        specifier: ^8.18.1
+        specifier: catalog:miscs
         version: 8.18.1
     devDependencies:
       '@babel/types':

@@ -53,12 +53,15 @@ catalogs:
     '@changesets/changelog-github': ^0.5.1
     '@iconify-json/carbon': ^1.1.20
     changelogen: ^0.6.1
+    destr: ^2.0.5
+    detect-port: ^2.1.0
     hash-sum: ^2.0.0
     jsdom: ^26.1.0
     less: ^4.2.0
     line-column: ^1.0.2
     lodash: ^4.17.21
     lru-cache: ^11.1.0
+    muggle-string: ^0.4.1
     playwright-chromium: ^1.52.0
     prettier: ^3.5.3
     semver: ^7.7.1

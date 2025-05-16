@@ -55,9 +55,10 @@
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
-    "detect-port": "^2.1.0",
-    "muggle-string": "^0.4.1",
-    "ws": "^8.18.1"
+    "destr": "catalog:miscs",
+    "detect-port": "catalog:miscs",
+    "muggle-string": "catalog:miscs",
+    "ws": "catalog:miscs"
   },
   "devDependencies": {
     "@babel/types": "catalog:compiler",
