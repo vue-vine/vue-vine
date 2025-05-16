@@ -1,17 +1,26 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "customConditions": ["dev"],
-    "module": "ESNext",
+    "lib": ["ES2023"],
+    "baseUrl": ".",
+    "customConditions": ["vine"],
+    "module": "Preserve",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "strict": true,
+    "noImplicitAny": true,
     "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
+  "include": [
+    "packages",
+    "types",
+    "tsdown.config.ts"
+  ],
   "exclude": [
-    "node_modules",
-    "dist"
+    "**/dist",
+    "packages/nuxt-module",
+    "packages/playground",
+    "packages/create-vue-vine/template"
   ]
 }

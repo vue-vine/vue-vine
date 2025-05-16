@@ -1,33 +1,37 @@
+import type {
+  ArrayExpression,
+  CallExpression,
+  Identifier,
+  Node,
+  TraversalAncestors,
+  TSMethodSignature,
+  TSPropertySignature,
+  TSTypeAnnotation,
+  TSTypeLiteral,
+  VariableDeclaration,
+  VariableDeclarator,
+} from '@babel/types'
+import type { CountingMacros, MacroAssertCtx, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo, VineValidatorCtx } from './types'
 import process from 'node:process'
 import {
+  isArrayExpression,
   isIdentifier,
   isObjectExpression,
+  isObjectPattern,
   isObjectProperty,
+  isRestElement,
   isStringLiteral,
+  isTaggedTemplateExpression,
+  isTemplateLiteral,
   isTSFunctionType,
   isTSMethodSignature,
   isTSPropertySignature,
   isTSTypeAnnotation,
   isTSTypeLiteral,
-  isTaggedTemplateExpression,
-  isTemplateLiteral,
   isVariableDeclaration,
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
-import type {
-  CallExpression,
-  Identifier,
-  Node,
-  TSMethodSignature,
-  TSPropertySignature,
-  TSTypeAnnotation,
-  TSTypeLiteral,
-  TraversalAncestors,
-  VariableDeclaration,
-  VariableDeclarator,
-} from '@babel/types'
-import type { CountingMacros, VINE_MACRO_NAMES, VineCompilerHooks, VineFileCtx, VineFnPickedInfo } from './types'
 import {
   getFunctionParams,
   getFunctionPickedInfos,
@@ -39,20 +43,13 @@ import {
   isVineProp,
   isVineTaggedTemplateString,
 } from './babel-helpers/ast'
-import { vineErr } from './diagnostics'
 import {
-  BARE_CALL_MACROS,
   CAN_BE_CALLED_MULTI_TIMES_MACROS,
   SUPPORTED_CSS_LANGS,
 } from './constants'
-import { colorful } from './utils/color-string'
+import { vineErr, vineWarn } from './diagnostics'
 import { _breakableTraverse } from './utils'
-
-interface VineValidatorCtx {
-  vineCompilerHooks: VineCompilerHooks
-  vineFileCtx: VineFileCtx
-  vineCompFns: Node[]
-}
+import { colorful } from './utils/color-string'
 
 interface VineModelValidateCtx {
   hasDefaultModel: boolean
@@ -66,16 +63,16 @@ type VineValidator = (
 function wrapVineValidatorWithLog(validators: VineValidator[]) {
   return process.env.VINE_DEV_VITEST === 'true'
     ? validators.map(validator => (...args: Parameters<VineValidator>) => {
-      const isPass = validator(...args)
-      // Bypass this ESLint is for local development to find out which test case is failed,
-      // eslint-disable-next-line no-console
-      console.log(`${
+        const isPass = validator(...args)
+        // Bypass this ESLint is for local development to find out which test case is failed,
+        // eslint-disable-next-line no-console
+        console.log(`${
           colorful(' VINE VALIDATE ', ['bgGreen', 'white'])
         } ${validator.name} => ${
           colorful(isPass ? 'PASS' : 'FAIL', [isPass ? 'green' : 'red'])
         }`)
-      return isPass
-    })
+        return isPass
+      })
     : validators
 }
 
@@ -110,7 +107,7 @@ function validateNoOutsideMacroCalls(
     if (!isMacroInsideVineCompFn) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vine macro calls must be inside Vue Vine component function!',
             location: node.loc,
@@ -141,7 +138,7 @@ function validateVineTemplateStringUsage(
     if (vineTemplateStrCount > 1) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Multiple vine tagged template are not allowed inside Vine component function',
             location: node.loc,
@@ -153,7 +150,7 @@ function validateVineTemplateStringUsage(
     if (isTagTemplateStringContainsInterpolation(node)) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vine template string are not allowed to contain interpolation!',
             location: node.loc,
@@ -167,24 +164,27 @@ function validateVineTemplateStringUsage(
 }
 
 function assertMacroCallMustBeBare(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
-  const isBareCall = !!(
-    parent
-    && parent.length > 0
-    && parent[parent.length - 1]?.node.type === 'ExpressionStatement'
+  const isParentNotEmpty = parent && parent.length > 0
+  const isBareCall = Boolean(isParentNotEmpty && parent[parent.length - 1]!.node.type === 'ExpressionStatement')
+  const isInsideVarDecl = Boolean(isParentNotEmpty && parent!.some(ancestor => isVariableDeclaration(ancestor.node)))
+
+  const macroName = getVineMacroCalleeName(macroCallNode)
+  const errMsg = (
+    isInsideVarDecl
+      ? `\`${macroName}\` macro call is not allowed to be inside a variable declaration`
+      : `\`${macroName}\` call must be a bare call`
   )
 
   if (!isBareCall) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
-          msg: `\`${
-            getVineMacroCalleeName(macroCallNode)
-          }\` call must be a bare call`,
+          msg: errMsg,
           location: macroCallNode.loc,
         },
       ),
@@ -195,7 +195,7 @@ function assertMacroCallMustBeBare(
 }
 
 function assertVineStyleUsage(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   vineStyleMacroCallNode: CallExpression,
 ) {
   const vineStyleArgsLength = vineStyleMacroCallNode.arguments.length
@@ -203,7 +203,7 @@ function assertVineStyleUsage(
   if (vineStyleArgsLength !== 1) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: `\`vineStyle\` ${
             vineStyleArgsLength > 1
@@ -225,7 +225,7 @@ function assertVineStyleUsage(
     if (theOnlyArg.expressions.length > 0) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'vineStyle argument must be a plain string, template string interpolation is not allowed',
             location: theOnlyArg.loc,
@@ -243,7 +243,7 @@ function assertVineStyleUsage(
     ) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'vineStyle CSS language only supports: `css`, `scss`, `sass`, `less`, `stylus` and `postcss`',
             location: theOnlyArg.tag.loc,
@@ -256,7 +256,7 @@ function assertVineStyleUsage(
   else {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: 'vineStyle\'s argument can only be string',
           location: theOnlyArg.loc,
@@ -269,7 +269,7 @@ function assertVineStyleUsage(
 }
 
 function assertMacroCanOnlyHaveOneObjLiteralArg(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
 ) {
   const macroCallArgsLength = macroCallNode.arguments.length
@@ -282,7 +282,7 @@ function assertMacroCanOnlyHaveOneObjLiteralArg(
     if (!isObjectExpression(theOnlyArg)) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: errMsg,
             location: theOnlyArg.loc,
@@ -295,7 +295,7 @@ function assertMacroCanOnlyHaveOneObjLiteralArg(
   else {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: errMsg,
           location: macroCallee.loc,
@@ -309,7 +309,7 @@ function assertMacroCanOnlyHaveOneObjLiteralArg(
 }
 
 function assertMacroCanOnlyHaveOneTypeParam(
-  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  { vineCompilerHooks, vineFileCtx }: MacroAssertCtx,
   macroCallNode: CallExpression,
 ) {
   const macroCallee = macroCallNode.callee as Identifier
@@ -321,7 +321,7 @@ function assertMacroCanOnlyHaveOneTypeParam(
   if (typeParamsLength !== 1) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: errMsg,
           location: macroCallNode.callee.loc,
@@ -346,7 +346,7 @@ function assertMacroVariableDeclarationMustBeIdentifier(
     if (!isIdentifier(varDeclThatMayBeInsideNode.id)) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: `the declaration of macro \`${macroName}\` call must be an identifier`,
             location: varDeclThatMayBeInsideNode.id.loc,
@@ -359,7 +359,7 @@ function assertMacroVariableDeclarationMustBeIdentifier(
   else if (isMustBeInsideVarDecl) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: `the declaration of \`${macroName}\` macro call must be inside a variable declaration`,
           location: macroCallNode.loc,
@@ -372,23 +372,44 @@ function assertMacroVariableDeclarationMustBeIdentifier(
 }
 
 function assertVineEmitsUsage(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
   let isVineEmitsUsageCorrect = true
 
-  if (!assertMacroCanOnlyHaveOneTypeParam(validatorCtx, macroCallNode)) {
-    isVineEmitsUsageCorrect = false
+  const callArgs = macroCallNode.arguments
+  const typeParams = macroCallNode.typeParameters?.params
+  if (!typeParams || typeParams.length === 0) {
+    // No type parameter and no argument, it's a invalid usage
+    // which doesn't provide emits key for Vue component
+    const isVineEmitsArgCorrect = !!(
+      callArgs.length === 1
+      && isArrayExpression(callArgs[0])
+      && (callArgs[0] as ArrayExpression).elements.every(el => isStringLiteral(el))
+    )
+
+    if (!isVineEmitsArgCorrect) {
+      vineCompilerHooks.onError(
+        vineErr(
+          { vineFileCtx },
+          {
+            msg: '`vineEmits` macro must have a type parameter or an array of string for event names',
+            location: callArgs[0]?.loc,
+          },
+        ),
+      )
+    }
+
+    isVineEmitsUsageCorrect = isVineEmitsArgCorrect
   }
   else {
-    const typeParams = macroCallNode.typeParameters?.params
     const theOnlyTypeParam = typeParams?.[0]
     if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vue Vine component function\'s vineEmits type must be object literal!',
             location: theOnlyTypeParam?.loc,
@@ -402,10 +423,10 @@ function assertVineEmitsUsage(
       isVineEmitsUsageCorrect = false
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vue Vine component function\'s vineEmits type must be object literal! '
-            + 'And all properties\' key must be string literal or identifier',
+              + 'And all properties\' key must be string literal or identifier',
             location: theOnlyTypeParam?.loc,
           },
         ),
@@ -428,7 +449,7 @@ function assertVineEmitsUsage(
 }
 
 function assertSlotMethodSignature(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   methodSignature: TSMethodSignature,
 ) {
   // Every method's signature must have only one parameter named `props` with a TSTypeLiteral type annotation
@@ -438,7 +459,7 @@ function assertSlotMethodSignature(
   if (params.length !== 1) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: errMsg,
           location: methodSignature.loc,
@@ -456,13 +477,13 @@ function assertSlotMethodSignature(
   ) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: `${errMsg}${
             isNameNotProps
               ? `, and its parameter name must be \`props\`, but got \`${
                 (theSignatureOnlyParam as Identifier).name
-                }\``
+              }\``
               : ''
           }`,
           location: theSignatureOnlyParam.loc,
@@ -475,7 +496,7 @@ function assertSlotMethodSignature(
   if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: `${errMsg}, and its type annotation must be object literal`,
           location: theSignatureOnlyParam.loc,
@@ -488,7 +509,7 @@ function assertSlotMethodSignature(
 }
 
 function assertSlotPropertySignature(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   propertySignature: TSPropertySignature,
 ) {
   // Every property's signature must have a TSTypeFunction type annotation
@@ -497,7 +518,7 @@ function assertSlotPropertySignature(
   if (!typeAnnotation || !isTSFunctionType(typeAnnotation)) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: 'Properties of `vineSlots` can only have function type annotation',
           location: propertySignature.loc,
@@ -515,7 +536,7 @@ function assertSlotPropertySignature(
   if (params.length !== 1 || !isIdentifier(firstParam)) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: errMsg,
           location: typeAnnotation.loc,
@@ -529,7 +550,7 @@ function assertSlotPropertySignature(
   if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: `${errMsg}, and its type annotation must be object literal`,
           location: firstParam.loc,
@@ -543,7 +564,7 @@ function assertSlotPropertySignature(
 }
 
 function assertVineSlotsUsage(
-  validatorCtx: VineValidatorCtx,
+  validatorCtx: MacroAssertCtx,
   macroCallNode: CallExpression,
   parent?: TraversalAncestors,
 ) {
@@ -559,7 +580,7 @@ function assertVineSlotsUsage(
     if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vue Vine component function\'s vineSlots type must be object literal!',
             location: theOnlyTypeParam?.loc,
@@ -585,7 +606,7 @@ function assertVineSlotsUsage(
       isVineSlotsUsageCorrect = false
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Every property of Vue Vine component function\'s `vineSlots` type must be function signature',
             location: theOnlyTypeParam?.loc,
@@ -657,7 +678,7 @@ function assertVineModelDefaultDuplicated(
     if (isAlreadyHasDefault) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vue Vine component function can only have one default model',
             location: macroCallNode.loc,
@@ -685,35 +706,56 @@ function assertVineModelUsage(
 
   const typeParams = macroCallNode.typeParameters?.params
   const macroCallArgs = macroCallNode.arguments
+  const firstArg = macroCallArgs?.[0]
   const lastArg = macroCallArgs?.[macroCallArgs.length - 1]
+
+  if (firstArg) {
+    if (isObjectExpression(firstArg)) {
+      // PASS for this check
+    }
+    else if (!isStringLiteral(firstArg)) {
+      vineCompilerHooks.onError(
+        vineErr(
+          { vineFileCtx },
+          {
+            msg: 'The given vineModel name must be a string literal',
+            location: firstArg.loc,
+          },
+        ),
+      )
+    }
+  }
 
   if (typeParams?.length === 0) {
     // vineModel can be called without type parameter and argument,
     // if so, it's a `Ref<unknown>` type and user will notice that during reference it.
+    // But we can give a warning here.
     if (macroCallArgs?.length === 0) {
-      // PASS! Very simple case
+      vineCompilerHooks.onWarn(
+        vineWarn(
+          { vineFileCtx },
+          {
+            msg: '`vineModel` without type parameter will receive a `Ref<unknown>`.',
+            location: macroCallNode.loc,
+          },
+        ),
+      )
     }
     // Check the last argument, i.e. the options object literal
     // if there's not a 'default' field, report an error for no type parameter defined
     else if (
       isObjectExpression(lastArg)
-      && !lastArg.properties.some((prop) => {
-        if (
-          isObjectProperty(prop)
-          && isIdentifier(prop.key)
-          && prop.key.name === 'default'
-        ) {
-          return true
-        }
-
-        return false
-      })
+      && !lastArg.properties.some(prop => (
+        isObjectProperty(prop)
+        && isIdentifier(prop.key)
+        && prop.key.name === 'default'
+      ))
     ) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
-            msg: 'If `vineModel` macro call doesn\'t have type parameter, it must have a `default` field in the options object literal',
+            msg: 'If `vineModel` macro call doesn\'t have type parameter, it must have a `default` field in options',
             location: lastArg.loc,
           },
         ),
@@ -746,7 +788,7 @@ function assertVineModelUsage(
   if (macroCallArgs?.length > 2) {
     vineCompilerHooks.onError(
       vineErr(
-        vineFileCtx,
+        { vineFileCtx },
         {
           msg: '`vineModel` macro call can only have at most 2 arguments',
           location: macroCallNode.loc,
@@ -774,7 +816,7 @@ function validateMacrosUsage(
   vineCompFn: Node,
 ) {
   type MacroAssert = (
-    context: VineValidatorCtx,
+    context: MacroAssertCtx,
     macroCallNode: CallExpression,
     parent?: TraversalAncestors,
   ) => boolean
@@ -787,7 +829,7 @@ function validateMacrosUsage(
   }
 
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
-  const macroCountMap: Record<CountingMacros, MacroDescriptor> = {
+  const macroCountMap: Partial<Record<CountingMacros, MacroDescriptor>> = {
     vineStyle: {
       count: 0,
       asserts: [
@@ -809,7 +851,6 @@ function validateMacrosUsage(
     vineExpose: {
       count: 0,
       asserts: [
-        assertMacroCanOnlyHaveOneObjLiteralArg,
         assertMacroCallMustBeBare,
       ],
     },
@@ -826,10 +867,16 @@ function validateMacrosUsage(
         assertMacroCallMustBeBare,
       ],
     },
+    vineValidators: {
+      count: 0,
+      asserts: [
+        assertMacroCanOnlyHaveOneObjLiteralArg,
+        assertMacroCallMustBeBare,
+      ],
+    },
   }
 
   let isCountCorrect = true
-  let isBareCallMacrosPass = true
 
   traverse(vineCompFn, {
     enter(node, parent) {
@@ -850,22 +897,6 @@ function validateMacrosUsage(
         macroCountMap[macroName].node = node
         macroCountMap[macroName].parent = [...parent]
       }
-
-      const VarDeclThatMacroBeInside = parent.find(ancestor => (
-        isVariableDeclaration(ancestor.node)
-      ))
-      if (VarDeclThatMacroBeInside && (BARE_CALL_MACROS as any).includes(macroName)) {
-        isBareCallMacrosPass = false
-        vineCompilerHooks.onError(
-          vineErr(
-            vineFileCtx,
-            {
-              msg: `\`${macroName}\` macro call is not allowed to be inside a variable declaration`,
-              location: VarDeclThatMacroBeInside?.node.loc,
-            },
-          ),
-        )
-      }
     },
   })
 
@@ -883,7 +914,7 @@ function validateMacrosUsage(
     macroMoreThanOnce.forEach(([macroName, it]) => {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: `Multiple \`${macroName}\` calls are not allowed inside Vine component function`,
             location: it.node?.loc,
@@ -898,15 +929,19 @@ function validateMacrosUsage(
     .map(([macroName, it]) => it.asserts
       .map((assert) => {
         const isPass = it.node
-          ? assert(validatorCtx, it.node, it.parent)
+          ? assert({
+              ...validatorCtx,
+              fromVineCompFnNode: vineCompFn,
+            }, it.node, it.parent)
           : true
         vitestLogMacroAssert(macroName, isPass)
         return isPass
       })
       .every(Boolean),
-    ).every(Boolean)
+    )
+    .every(Boolean)
 
-  return isCountCorrect && isBareCallMacrosPass && isAssertsPass
+  return isCountCorrect && isAssertsPass
 }
 
 function validateVineModel(
@@ -957,7 +992,6 @@ function validatePropsForSingelFC(
 ) {
   const vineCompFnParams = fnItselfNode ? getFunctionParams(fnItselfNode) : []
   const vineCompFnParamsLength = vineCompFnParams.length
-  let vinePropMacroCallCount = 0
 
   const isCheckVinePropMacroCallPass = () => {
     // Check vineProp macro call,
@@ -969,7 +1003,6 @@ function validatePropsForSingelFC(
         if (!isVineProp(node)) {
           return
         }
-        vinePropMacroCallCount += 1
         const macroCalleeName = getVineMacroCalleeName(node)
         if (!macroCalleeName) {
           return
@@ -979,7 +1012,7 @@ function validatePropsForSingelFC(
           if (typeParamsLength !== 1) {
             vineCompilerHooks.onError(
               vineErr(
-                vineFileCtx,
+                { vineFileCtx },
                 {
                   msg: `\`${macroCalleeName}\` macro call ${
                     (typeParamsLength && typeParamsLength > 1)
@@ -998,7 +1031,7 @@ function validatePropsForSingelFC(
           // `vineProp.withDefault` macro call must have at least 1 argument
           vineCompilerHooks.onError(
             vineErr(
-              vineFileCtx,
+              { vineFileCtx },
               {
                 msg: `\`${macroCalleeName}\` macro call must have at least 1 argument`,
                 location: node.loc,
@@ -1011,7 +1044,7 @@ function validatePropsForSingelFC(
           // `vineProp.withDefault` macro call can only have at most 2 arguments
           vineCompilerHooks.onError(
             vineErr(
-              vineFileCtx,
+              { vineFileCtx },
               {
                 msg: `\`${macroCalleeName}\` macro call can only have at most 2 arguments`,
                 location: node.loc,
@@ -1026,7 +1059,7 @@ function validatePropsForSingelFC(
           isVinePropCheckPass = false
           vineCompilerHooks.onError(
             vineErr(
-              vineFileCtx,
+              { vineFileCtx },
               {
                 msg: '`vineProp` macro call must be inside a `const` variable declaration',
                 location: node.loc,
@@ -1040,7 +1073,7 @@ function validatePropsForSingelFC(
             isVinePropCheckPass = false
             vineCompilerHooks.onError(
               vineErr(
-                vineFileCtx,
+                { vineFileCtx },
                 {
                   msg: '`vineProp` macro call must be inside a `const` declaration',
                   location: parentVarDecl.node.loc,
@@ -1054,7 +1087,7 @@ function validatePropsForSingelFC(
             isVinePropCheckPass = false
             vineCompilerHooks.onError(
               vineErr(
-                vineFileCtx,
+                { vineFileCtx },
                 {
                   msg: 'the declaration of `vineProp` macro call must be an identifier',
                   location: varDeclarator.id.loc,
@@ -1073,26 +1106,55 @@ function validatePropsForSingelFC(
   }
   else if (vineCompFnParamsLength === 1) {
     // Check Vine component function's formal parameter first,
-    // it can only have one parameter, and its type annotation must be object literal
+    // it can only have one parameter, and it must have a type annotation
     const theOnlyFormalParam = vineCompFnParams[0]
     let isCheckFormalParamsPropPass = true
-    if (!isIdentifier(theOnlyFormalParam)) {
-      vineCompilerHooks.onError(
-        vineErr(
-          vineFileCtx,
-          {
-            msg: 'If you\'re defining a Vine component function\'s props with formal parameter, it must be one and only identifier',
-            location: theOnlyFormalParam.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
+
+    if (isObjectPattern(theOnlyFormalParam)) {
+      // Make sure every destructured property is an identifier
+      for (const property of theOnlyFormalParam.properties) {
+        const isValidKey = (
+          (isRestElement(property) && isIdentifier(property.argument))
+          || (isObjectProperty(property) && (isIdentifier(property.key) || isStringLiteral(property.key)))
+        )
+        if (!isValidKey) {
+          isCheckFormalParamsPropPass = false
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: `Invalid property name when defining props with formal parameter!`,
+                location: theOnlyFormalParam.loc,
+              },
+            ),
+          )
+        }
+
+        // Error on nested destructuring
+        if (
+          isObjectProperty(property)
+          && property.value.type.endsWith('Pattern')
+          && property.value.type !== 'AssignmentPattern'
+        ) {
+          isCheckFormalParamsPropPass = false
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: 'When destructuring props on formal parameter, nested destructuring is not allowed',
+                location: property.loc,
+              },
+            ),
+          )
+        }
+      }
     }
+
     const theOnlyFormalParamTypeAnnotation = theOnlyFormalParam.typeAnnotation
     if (!theOnlyFormalParamTypeAnnotation) {
       vineCompilerHooks.onError(
         vineErr(
-          vineFileCtx,
+          { vineFileCtx },
           {
             msg: 'Vine component function\'s props must have a type annotation',
             location: theOnlyFormalParam.loc,
@@ -1120,10 +1182,10 @@ function validatePropsForSingelFC(
       if (!isTSTypeAnnotationValid) {
         vineCompilerHooks.onError(
           vineErr(
-            vineFileCtx,
+            { vineFileCtx },
             {
-              msg: 'Vine component function\'s props type annotation must be an object literal, '
-              + 'only contains properties signature, and all properties\' key must be string literal or identifier',
+              msg: 'When Vine component function\'s props type annotation is an object literal, '
+                + 'properties\' key must be an identifier or a string literal',
               location: propsTypeAnnotation.loc,
             },
           ),
@@ -1131,43 +1193,32 @@ function validatePropsForSingelFC(
         isCheckFormalParamsPropPass = false
       }
     }
-    else {
-      vineCompilerHooks.onError(
-        vineErr(
-          vineFileCtx,
-          {
-            msg: 'Vine component function\'s props type annotation must be an object literal',
-            location: theOnlyFormalParamTypeAnnotation?.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
-    }
 
-    if (vinePropMacroCallCount > 0) {
-      vineCompilerHooks.onError(
-        vineErr(
-          vineFileCtx,
-          {
-            msg: 'Vine component function\'s props can only be defined with formal parameter or `vineProp` macro calls, not both',
-            location: theOnlyFormalParam.loc,
-          },
-        ),
-      )
-      isCheckFormalParamsPropPass = false
-    }
+    // Still check if there're maybe some invalid `vineProp` macro call
+    // that should be reported, we don't allow two defintion styles to be used together
+    _breakableTraverse(
+      vineCompFnDecl,
+      (node) => {
+        if (isVineProp(node)) {
+          vineCompilerHooks.onError(
+            vineErr(
+              { vineFileCtx },
+              {
+                msg: '`vineProp` macro calls is not allowed when props with props formal parameter defined',
+                location: node.loc,
+              },
+            ),
+          )
+          isCheckFormalParamsPropPass = false
+        }
+      },
+    )
 
-    if (!isCheckFormalParamsPropPass) {
-      // Still check if there're maybe some invalid `vineProp` macro call
-      // that should be reported
-      isCheckVinePropMacroCallPass()
-      return false
-    }
-    return isCheckVinePropMacroCallPass()
+    return isCheckFormalParamsPropPass
   }
   vineCompilerHooks.onError(
     vineErr(
-      vineFileCtx,
+      { vineFileCtx },
       {
         msg: 'Vine component function can only have one parameter',
         location: vineCompFnDecl.loc,

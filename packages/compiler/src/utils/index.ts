@@ -1,5 +1,5 @@
-import { traverse } from '@babel/types'
 import type { VineStyleLang } from '../types'
+import { traverse } from '@babel/types'
 import { makeMap } from './makeMap'
 
 const camelizeRE = /-(\w)/g
@@ -86,4 +86,20 @@ export const _breakableTraverse: typeof traverse = (node, handlers) => {
     // else:
     throw e
   }
+}
+
+export function isBasicBoolTypeNames(type: string) {
+  return [
+    'boolean',
+    'Boolean',
+    'true',
+    'false',
+  ].includes(type)
+}
+
+export function createLinkedCodeTag(
+  side: 'left' | 'right',
+  itemLength: number,
+) {
+  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
 }

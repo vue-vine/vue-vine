@@ -1,26 +1,32 @@
+import type { ParseResult, ParserOptions } from '@babel/parser'
+import type {
+  ArrowFunctionExpression,
+  CallExpression,
+  ExportNamedDeclaration,
+  File,
+  FunctionDeclaration,
+  FunctionExpression,
+  Identifier,
+  Node,
+  ObjectProperty,
+  ReturnStatement,
+  SourceLocation,
+  StringLiteral,
+  TaggedTemplateExpression,
+  TemplateLiteral,
+  TSType,
+  TSTypeLiteral,
+} from '@babel/types'
 import type {
   CompilerOptions,
   RootNode,
   BindingTypes as VueBindingTypes,
+  SourceLocation as VueSourceLocation,
 } from '@vue/compiler-dom'
-import type {
-  ArrowFunctionExpression,
-  File,
-  FunctionDeclaration,
-  FunctionExpression,
-  Node,
-  ReturnStatement,
-  SourceLocation,
-  StringLiteral,
-  TSTypeLiteral,
-  TaggedTemplateExpression,
-  TemplateLiteral,
-} from '@babel/types'
-import type { ParseResult, ParserOptions } from '@babel/parser'
 import type MagicString from 'magic-string'
+import type { Project, TypeChecker } from 'ts-morph'
 import type { BARE_CALL_MACROS, VINE_MACROS } from './constants'
 
-// Types:
 export type Nil = null | undefined
 export type VineBabelRoot = ParseResult<File>
 export type VINE_MACRO_NAMES = typeof VINE_MACROS[number]
@@ -33,6 +39,13 @@ export type CountingMacros = Exclude<
   | 'vineProp.withDefault'
   | 'vineModel'
 >
+export type MacrosInfoForVolar =
+  | { macroType: 'vineProp', macroCall: CallExpression, macroMeta: VinePropMeta }
+  | { macroType: 'vineEmits', macroCall: CallExpression }
+  | { macroType: 'vineSlots', macroCall: CallExpression }
+  | { macroType: 'vineExpose', macroCall: CallExpression }
+  | { macroType: 'vineValidators', macroCall: CallExpression }
+  | { macroType: 'useTemplateRef', macroCall: CallExpression }
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
@@ -45,10 +58,15 @@ export type BabelFunctionNodeTypes =
   | ArrowFunctionExpression
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
-export declare type HMRCompFnsName = string | null
+export type HMRCompFnsName = string | null
+export interface TsMorphCache {
+  project: Project
+  typeChecker: TypeChecker
+}
 
 export interface VineCompilerHooks {
   getCompilerCtx: () => VineCompilerCtx
+  getTsMorph?: () => TsMorphCache
   onError: (err: VineDiagnostic) => void
   onWarn: (warn: VineDiagnostic) => void
   onBindFileCtx?: (fileId: string, fileCtx: VineFileCtx) => void
@@ -59,16 +77,18 @@ export interface VineCompilerHooks {
 
 export interface VineCompilerOptions {
   envMode?: string // 'development' | 'production'
-  vueCompilerOptions?: CompilerOptions
   inlineTemplate?: boolean
+  vueCompilerOptions?: CompilerOptions
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]
+  disableTsMorph?: boolean
 }
 
 export interface VineStyleMeta {
   lang: VineStyleLang
   source: string
+  isExternalFilePathSource: boolean
   range: [number, number] | undefined
   scoped: boolean
   fileCtx: VineFileCtx
@@ -76,7 +96,7 @@ export interface VineStyleMeta {
 }
 
 export interface VinePropMeta {
-  typeAnnotationRaw: string
+  typeAnnotationRaw?: string
   isFromMacroDefine: boolean
   isBool: boolean
   isRequired: boolean
@@ -84,6 +104,10 @@ export interface VinePropMeta {
   validator?: Node
   /** Source code node of given default value */
   default?: Node
+  /** Declared identifier AST Node by vineProp */
+  macroDeclaredIdentifier?: Identifier
+  /** Whether the prop name needs to be quoted */
+  nameNeedQuoted?: boolean
 }
 
 export interface VineCompilerCtx {
@@ -99,7 +123,7 @@ export interface VineUserImport {
   isType: boolean
   isNamespace?: boolean
   isDefault?: boolean
-  isUsedInTemplate?: boolean
+  isUsedInTemplate?: (vineCompFn: VineCompFnCtx) => boolean
 }
 
 export interface VineFileCtx {
@@ -132,8 +156,42 @@ export interface VineFileCtx {
    */
   importsLastLine?: SourceLocation | null
 
+  /* Store all ExportNamedDeclaration */
+  exportNamedDeclarations: ExportNamedDeclaration[]
+
   getAstNodeContent: (node: Node) => string
+  getLinkedTSTypeLiteralNodeContent: (node: TSTypeLiteral) => string
 }
+
+export interface VineQuery {
+  type: string
+  scopeId: string
+  scoped: boolean
+  lang: string
+  index: number
+
+  // External style imports should
+  // store Vine file ID for postcss compilation
+  vineFileId?: string
+}
+
+export interface VineExternalStyleFileCtx {
+  query: VineQuery
+  sourceCode: string
+}
+
+export interface VineDestructuredProp {
+  node: ObjectProperty['key']
+  isRest: boolean
+  alias?: string
+  default?: Node
+}
+
+export const VinePropsDefinitionBy = {
+  annotation: 1,
+  macro: 2,
+} as const
+export type VinePropsDefinitionSource = typeof VinePropsDefinitionBy[keyof typeof VinePropsDefinitionBy]
 
 export interface VineCompFnCtx {
   fnDeclNode: Node
@@ -142,6 +200,9 @@ export interface VineCompFnCtx {
   templateReturn?: ReturnStatement
   templateStringNode?: TaggedTemplateExpression
   templateAst?: RootNode
+  templateParsedAst?: RootNode
+  templateComponentNames: Set<string>
+  templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
   /** is web component (customElement) */
@@ -149,35 +210,52 @@ export interface VineCompFnCtx {
   fnName: string
   scopeId: string
   bindings: VineTemplateBindings
+  macrosInfoForVolar: MacrosInfoForVolar[]
   propsAlias: string
   props: Record<string, VinePropMeta>
+  propsDestructuredNames: Record<string, VineDestructuredProp>
+  propsDefinitionBy: VinePropsDefinitionSource
+  propsFormalParamType?: TSType
   emitsAlias: string
   emits: string[]
+  emitsTypeParam?: TSTypeLiteral
+  emitsDefinitionByNames?: boolean
   /** Store the `defineExpose`'s argument in source code */
-  expose?: Node
+  expose?: {
+    macroCall: CallExpression
+    paramObj: Node
+  }
   /** Store the `defineOptions`'s argument in source code */
   options?: Node
   /** Store every slot's props definition */
   slots: Record<string, {
     props: TSTypeLiteral
   }>
+  slotsNamesInTemplate: string[]
   /** Store `vineModel` defines */
   vineModels: Record<string, {
     varName: string
+    typeParameter?: TSType
     modelModifiersName: string
     modelOptions: Node | null
   }>
   slotsAlias: string
   hoistSetupStmts: Node[]
   cssBindings: Record<string, string | null>
+  externalStyleFilePaths: string[]
 
-  getPropsTypeRecordStr: (joinStr?: string) => string
+  getPropsTypeRecordStr: (options?: {
+    joinStr?: string
+    isNeedLinkedCodeTag?: boolean
+  }) => string
 }
 
 export interface VineDiagnostic {
   full: string
   msg: string
   location: SourceLocation | null | undefined
+  vineCompFnCtx?: VineCompFnCtx
+  rawVueTemplateLocation?: VueSourceLocation | null
 }
 
 export interface VineFnPickedInfo {
@@ -191,3 +269,29 @@ export interface VineCompileCtx {
   fileCtxCache?: VineFileCtx
   babelParseOptions?: ParserOptions
 }
+
+export interface VineValidatorCtx {
+  vineCompilerHooks: VineCompilerHooks
+  vineFileCtx: VineFileCtx
+  vineCompFns: Node[]
+}
+
+export interface MacroAssertCtx extends VineValidatorCtx {
+  fromVineCompFnNode: Node
+}
+
+export type VineValidator = (
+  context: VineValidatorCtx,
+  fromNode: Node,
+) => boolean
+
+export interface VineAnalyzeCtx {
+  vineCompilerHooks: VineCompilerHooks
+  vineFileCtx: VineFileCtx
+  vineCompFnCtx: VineCompFnCtx
+}
+
+export type VineAnalyzeRunner = (
+  analyzeCtx: VineAnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => void

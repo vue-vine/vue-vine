@@ -1,5 +1,5 @@
-import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
 import type { TSESTree } from '@typescript-eslint/types'
+import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
 import { ReferenceFlag, ReferenceTypeFlag } from '../types'
 
 export function createVirtualVineFnPropsReference(

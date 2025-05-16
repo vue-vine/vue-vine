@@ -1,6 +1,7 @@
-import { TSESTree, simpleTraverse as traverse } from '@typescript-eslint/typescript-estree'
-import type { NeedFixToken, ParseForESLintResult, VineTemplatePositionInfo } from '../../types'
 import type { Location, OffsetRange, VTemplateRoot } from '../../ast'
+import type { FinalProcessTemplateInfo, NeedFixToken, TsESLintParseForESLint, VineTemplatePositionInfo } from '../../types'
+import { simpleTraverse as tsESLintTravese, TSESTree } from '@typescript-eslint/typescript-estree'
+import { traverseNodes } from '../../ast'
 
 export function fixVineOffset(
   token: NeedFixToken,
@@ -17,60 +18,87 @@ export function fixVineOffset(
     },
     fixedCache: cache,
   } = fixCtx
-  // The location of `VTemplateRoot` is correctly set on construction.
-  if (token.type !== 'VTemplateRoot') {
-    // Because the output token position is based on the start of the template,
-    // but the final expected token requires accurate offset to the source code!
-    if (!cache.has(token.range)) {
-      token.range[0] += templateStartOffset
-      token.range[1] += templateStartOffset
-      cache.add(token.range)
+
+  // Because the output token position is based on the start of the template,
+  // but the final expected token requires accurate offset to the source code!
+  if (!cache.has(token.range)) {
+    token.range[0] += templateStartOffset
+    token.range[1] += templateStartOffset
+    cache.add(token.range)
+
+    if ('start' in token) {
+      token.start = token.range[0]
     }
-
-    if (!cache.has(token.loc.start)) {
-      // Also, the line number should be based on the start of the template.
-      // -1 is because the TSESTree's line number is 1-based.
-      token.loc.start.line += templateStartLine - 1
-
-      // For column, it's a little bit more complicated:
-      // 1) If the token is at the first line, then the column number should be based on the start of the template.
-      // 2) If the token is not at the first line, then the column number is what it is.
-      token.loc.start.column = (
-        token.loc.start.line === templateStartLine
-          ? templateStartColumn + token.loc.start.column
-          : token.loc.start.column
-      )
-
-      cache.add(token.loc.start)
-    }
-
-    if (!cache.has(token.loc.end)) {
-      token.loc.end.line += templateStartLine - 1
-      token.loc.end.column = (
-        token.loc.end.line === templateStartLine
-          ? templateStartColumn + token.loc.end.column
-          : token.loc.end.column
-      )
-
-      cache.add(token.loc.end)
+    if ('end' in token) {
+      token.end = token.range[1]
     }
   }
+
+  if (!cache.has(token.loc.start)) {
+    // Also, the line number should be based on the start of the template.
+    // -1 is because the TSESTree's line number is 1-based.
+    token.loc.start.line += templateStartLine - 1
+
+    // For column, it's a little bit more complicated:
+    // 1) If the token is at the first line, then the column number should be based on the start of the template.
+    // 2) If the token is not at the first line, then the column number is what it is.
+    token.loc.start.column = (
+      token.loc.start.line === templateStartLine
+        ? templateStartColumn + token.loc.start.column
+        : token.loc.start.column
+    )
+
+    cache.add(token.loc.start)
+  }
+
+  if (!cache.has(token.loc.end)) {
+    token.loc.end.line += templateStartLine - 1
+    token.loc.end.column = (
+      token.loc.end.line === templateStartLine
+        ? templateStartColumn + token.loc.end.column
+        : token.loc.end.column
+    )
+
+    cache.add(token.loc.end)
+  }
+}
+
+export function fixFromVineTemplateRoot(
+  root: VTemplateRoot,
+  fixCtx: {
+    posInfo: VineTemplatePositionInfo
+    fixedCache: WeakSet<Location | OffsetRange>
+  },
+) {
+  traverseNodes(
+    root,
+    {
+      enterNode: (node) => {
+        if (node.type === 'VTemplateRoot') {
+          return
+        }
+
+        fixVineOffset(node, fixCtx)
+      },
+      leaveNode: () => {},
+    },
+  )
 }
 
 export type ExtractVineTemplateResult = Array<{
   templateNode: TSESTree.TaggedTemplateExpression
   parentOfTemplate: TSESTree.Node
-  bindVineTemplateESTree: (vineESTree: VTemplateRoot) => void
+  bindVineTemplateESTree: (vineESTree: FinalProcessTemplateInfo) => void
 }>
 
 export function extractForVineTemplate(
-  ast: ParseForESLintResult['ast'],
+  ast: TsESLintParseForESLint['ast'],
 ) {
   const extractVineTemplateResult: ExtractVineTemplateResult = []
   const extractedTemplateNodes: WeakSet<TSESTree.TaggedTemplateExpression> = new WeakSet()
 
   try {
-    traverse(ast, {
+    tsESLintTravese(ast, {
       enter(node, parent) {
         // Find all tagged template expressions which are tagged with 'vine'.
         if (
@@ -85,16 +113,17 @@ export function extractForVineTemplate(
           extractedTemplateNodes.add(templateNode)
 
           let parentOfTemplate: TSESTree.Node | undefined
-          let bindVineTemplateESTree: ((vineESTree: VTemplateRoot) => void) | undefined
+          let bindVineTemplateESTree: ((templateInfo: FinalProcessTemplateInfo) => void) | undefined
 
           // Delete it from the AST, because we're going to replace it with
           // our custom AST node.
           if (parent?.type === TSESTree.AST_NODE_TYPES.ReturnStatement) {
             parent.argument = null
             parentOfTemplate = parent
-            bindVineTemplateESTree = (vineESTree) => {
+            bindVineTemplateESTree = ({ templateRootAST: vineESTree, templateMeta: _, ...templateInfo }) => {
               parent.argument = vineESTree as any as TSESTree.Expression
               vineESTree.parent = parent
+              vineESTree.templateInfo = templateInfo
             }
           }
           // Not only `ReturnStatement`:
@@ -104,9 +133,10 @@ export function extractForVineTemplate(
             // @ts-expect-error `body` will be replaced by our custom AST node.
             parent.body = null
             parentOfTemplate = parent
-            bindVineTemplateESTree = (vineESTree) => {
+            bindVineTemplateESTree = ({ templateRootAST: vineESTree, templateMeta: _, ...templateInfo }) => {
               parent.body = vineESTree as any as TSESTree.Expression
               vineESTree.parent = parent
+              vineESTree.templateInfo = templateInfo
             }
           }
 

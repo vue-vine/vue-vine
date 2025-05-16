@@ -1,19 +1,19 @@
-import assert from 'node:assert'
 import type { TSESTree } from '@typescript-eslint/types'
+import type { ErrorCode, HasLocation, Location, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
+import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
+import type { EndTag, IntermediateToken, Mustache, StartTag, Text } from './intermediate-tokenizer'
+import type { Tokenizer } from './tokenizer'
+import assert from 'node:assert'
 import findLastIndex from 'lodash/findLastIndex'
 import last from 'lodash/last'
 import { NS, ParseError } from '../ast'
-import type { ErrorCode, HasLocation, Location, Namespace, VAttribute, VElement, VExpressionContainer, VTemplateRoot } from '../ast'
-import type { VineESLintParserOptions, VineTemplateMeta, VineTemplatePositionInfo } from '../types'
 import { debug } from '../common/debug'
 import { LocationCalculatorForHtml } from '../common/location-calculator'
-import type { EndTag, IntermediateToken, Mustache, StartTag, Text } from './intermediate-tokenizer'
 import { IntermediateTokenizer } from './intermediate-tokenizer'
-import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
-import { fixVineOffset } from './utils/process-vine-template-node'
-import type { Tokenizer } from './tokenizer'
 import { convertToDirective, processMustache, resolveReferences } from './utils'
 import { MATHML_ATTRIBUTE_NAME_MAP, SVG_ATTRIBUTE_NAME_MAP } from './utils/attribute-names'
+import { fixFromVineTemplateRoot, fixVineOffset } from './utils/process-vine-template-node'
+import { HTML_CAN_BE_LEFT_OPEN_TAGS, HTML_NON_FHRASING_TAGS, HTML_RAWTEXT_TAGS, HTML_RCDATA_TAGS, HTML_VOID_ELEMENT_TAGS, SVG_ELEMENT_NAME_MAP } from './utils/tag-names'
 
 const DIRECTIVE_NAME = /^(?:v-|[.:@#]).*[^.:@#]$/u
 const DT_DD = /^d[dt]$/u
@@ -84,7 +84,7 @@ function isHTMLIntegrationPoint(element: VElement): boolean {
           && a.key.name === 'encoding'
           && a.value != null
           && (a.value.value === 'text/html'
-          || a.value.value === 'application/xhtml+xml'),
+            || a.value.value === 'application/xhtml+xml'),
       )
     )
   }
@@ -129,15 +129,17 @@ export class VineTemplateParser {
     parserOptions: VineESLintParserOptions
   ) => void)[] = []
 
-  private offsetFixedTokenSet = new WeakSet<Location>()
+  private offsetFixedTokenSet: WeakSet<Location>
 
   constructor(
     parserOptions: VineESLintParserOptions,
     tokenizer: Tokenizer,
     parentOfTemplate: TSESTree.Node,
     templatePos: VineTemplatePositionInfo,
+    offsetFixedTokenSet: WeakSet<Location>,
   ) {
     this.baseParserOptions = parserOptions
+    this.offsetFixedTokenSet = offsetFixedTokenSet
     this.tokenizer = new IntermediateTokenizer(tokenizer, parserOptions)
     this.locationCalculator = new LocationCalculatorForHtml(
       tokenizer.gaps,
@@ -192,7 +194,10 @@ export class VineTemplateParser {
       comment,
       this.fixVineOffsetCtx,
     ))
-    fixVineOffset(this.vTemplateRoot, this.fixVineOffsetCtx)
+    fixFromVineTemplateRoot(
+      this.vTemplateRoot,
+      this.fixVineOffsetCtx,
+    )
   }
 
   /**
@@ -270,7 +275,7 @@ export class VineTemplateParser {
     const attrName = node.key.rawName
     const expressionEnabled
         = this.expressionEnabled
-        || (attrName === 'v-pre' && !this.isInVPreElement)
+          || (attrName === 'v-pre' && !this.isInVPreElement)
 
     if (!expressionEnabled) {
       return false
@@ -303,8 +308,8 @@ export class VineTemplateParser {
         if (
           isHTMLIntegrationPoint(element)
           || (isMathMLIntegrationPoint(element)
-          && name !== 'mglyph'
-          && name !== 'malignmark')
+            && name !== 'mglyph'
+            && name !== 'malignmark')
         ) {
           ns = NS.HTML
         }
@@ -454,7 +459,7 @@ export class VineTemplateParser {
     }
     const hasVPre
       = !this.isInVPreElement
-      && token.attributes.some(a => a.key.rawName === 'v-pre')
+        && token.attributes.some(a => a.key.rawName === 'v-pre')
 
     // Disable expression if v-pre
     if (hasVPre) {
@@ -489,7 +494,7 @@ export class VineTemplateParser {
     // Check whether the self-closing is valid.
     const isVoid
       = namespace === NS.HTML
-      && HTML_VOID_ELEMENT_TAGS.has(element.rawName)
+        && HTML_VOID_ELEMENT_TAGS.has(element.rawName)
     if (token.selfClosing && !isVoid && namespace === NS.HTML) {
       this.reportParseError(
         token,
@@ -625,7 +630,7 @@ export class VineTemplateParser {
     }
     this.postProcessForScript = []
 
-    // Finally, fix all token positions with vine`...` offset among this file
+    // fix all token positions with vine`...` offset among this file
     this.correctMetaTokenPos()
 
     return [templateRoot, templateMeta]

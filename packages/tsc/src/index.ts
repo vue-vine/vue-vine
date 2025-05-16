@@ -1,19 +1,17 @@
-import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import type { LanguagePlugin } from '@volar/language-core'
-import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
+import type {
+  VueCompilerOptions,
+} from '@vue/language-core'
+import { posix as path } from 'node:path'
+import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
+import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import {
-  FileMap,
   createParsedCommandLine,
   createVueLanguagePlugin,
-  resolveVueCompilerOptions,
+  getDefaultCompilerOptions,
 } from '@vue/language-core'
 
-const removeEmitGlobalTypesRegexp = /^[^\n]*__VLS_globalTypesStart[\s\S]*__VLS_globalTypesEnd[^\n]*\n?$/gm
 const windowsPathReg = /\\/g
-
-export function removeEmitGlobalTypes(dts: string) {
-  return dts.replace(removeEmitGlobalTypesRegexp, '')
-}
 
 export function run() {
   const tscSdk = require.resolve('typescript/lib/tsc')
@@ -25,29 +23,30 @@ export function run() {
       (ts, runTscOptions) => {
         const languagePlugins: LanguagePlugin[] = []
         const { configFilePath } = runTscOptions.options
-        const vueOptions = typeof configFilePath === 'string'
-          ? createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/')).vueOptions
-          : resolveVueCompilerOptions({})
-        const writeFile = runTscOptions.host!.writeFile.bind(runTscOptions.host)
-        runTscOptions.host!.writeFile = (fileName, contents, ...args) => {
-          return writeFile(fileName, removeEmitGlobalTypes(contents), ...args)
+        let vueOptions: VueCompilerOptions
+        if (typeof configFilePath === 'string') {
+          vueOptions = createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/'), true).vueOptions
+          const globalTypesFilePath = setupGlobalTypes(path.dirname(configFilePath.replace(windowsPathReg, '/')), vueOptions, ts.sys)
+          if (globalTypesFilePath) {
+            vueOptions.__setupedGlobalTypes = {
+              absolutePath: globalTypesFilePath,
+            }
+          }
+        }
+        else {
+          vueOptions = getDefaultCompilerOptions(
+            (void 0),
+            (void 0),
+            true,
+          )
         }
 
         languagePlugins.push(
           createVueLanguagePlugin<string>(
             ts,
-            id => id,
-            () => '',
-            (fileName) => {
-              const fileMap = new FileMap(runTscOptions.host?.useCaseSensitiveFileNames?.() ?? false)
-              const vueFiles = runTscOptions.rootNames.map(rootName => rootName.replace(windowsPathReg, '/'))
-              for (const vueFileName of vueFiles) {
-                fileMap.set(vueFileName, undefined)
-              }
-              return fileMap.has(fileName)
-            },
             runTscOptions.options,
             vueOptions,
+            id => id,
           ),
         )
 

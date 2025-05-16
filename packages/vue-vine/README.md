@@ -2,6 +2,8 @@
 
 Another style to write Vue.js.
 
+Learn more in [vue-vine.dev](https://vue-vine.dev/).
+
 ## Install
 
 ```bash

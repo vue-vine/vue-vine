@@ -20,13 +20,9 @@ because it's not just JSX or function that makes React more flexible in coding, 
 
 Maybe this is the secret to keep JavaScript users in their heart-flow. Front-end work requires developers to switch between views, styles, and logic frequently, and we find that in the increasingly complex front-end application development trend, writing logic has gradually become the main task.
 
-So users definitely want to write less boilerplate code outside of JS code. And Vine provides a relatively concise way to do this.
+Front-end work requires developers to often switch between views, styles, and logic, and we find that in the increasingly complex front-end application development trend, although there are still many developers who insist on the "separation of concerns" dogma, we don't want to rigidly follow it.
 
-We must admit this may just be a sweet syntax sugar, and it won't change the reality that you "need to write XML-like when describing views, and CSS-like when describing styles".
-
-The original intention of Vine is to **provide a more convenient form of organization**.
-
-So, it seems we'd better compose our code into just one file type.
+We must admit this may just be a sweet syntax sugar, and it won't change the reality that you "need to write XML-like when describing views, and CSS-like when describing styles". The original intention of Vine is to **provide more convenience and flexibility for your code organization**.
 
 ## The trade-off between JSX and template
 

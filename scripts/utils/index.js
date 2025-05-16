@@ -1,11 +1,11 @@
-import process from 'node:process'
+import { exec, spawn, spawnSync } from 'node:child_process'
 import { resolve } from 'node:path'
-import { exec, spawn } from 'node:child_process'
+import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
 import { colorful } from './color-str'
 
-export const r = (...args) => resolve(__dirname, '..', ...args)
+export const r = (...args) => resolve(import.meta.dirname, '..', ...args)
 
 export async function runCommand(command, options = {}) {
   options.title && log('info', 'Executing ...', `${colorful(
@@ -14,38 +14,30 @@ export async function runCommand(command, options = {}) {
   )}  `)
 
   return new Promise((resolve, reject) => {
-    try {
-      const proc = exec(command, {
-        env: {
-          ...process.env,
-          FORCE_COLOR: 'true',
-        },
-        cwd: r('../'),
-        shell: true,
-      })
-      proc.stdout.pipe(process.stdout)
-      proc.stderr.pipe(process.stderr)
+    const proc = exec(command, {
+      env: {
+        ...process.env,
+        FORCE_COLOR: 'true',
+      },
+      cwd: r('..'),
+      shell: true,
+    })
+    proc.stdout.pipe(process.stdout)
+    proc.stderr.pipe(process.stderr)
 
-      proc.on('close', resolve)
-      proc.on('exit', resolve)
-      proc.on('error', (err) => {
-        log('error', String(err), `${colorful(
-        `${options.title ? ` ${options.title} ` : ' '}`,
-          ['black', 'bgRed', 'bold'],
-        )}  `)
-        reject(err)
-      })
-      proc.on('SIGINT', () => {
-        log('info', `Exit ${options.title} ...`)
-      })
-    }
-    catch (err) {
+    proc.on('close', resolve)
+    proc.on('exit', resolve)
+    proc.on('error', (err) => {
+      console.log(`[DEBUG] on error: ${err}`)
       log('error', String(err), `${colorful(
-      `${options.title ? ` ${options.title} ` : ' '}`,
-        ['white', 'bgRed', 'bold'],
+        `${options.title ? ` ${options.title} ` : ' '}`,
+        ['black', 'bgRed', 'bold'],
       )}  `)
       reject(err)
-    }
+    })
+    proc.on('SIGINT', () => {
+      log('info', `Exit ${options.title} ...`)
+    })
   })
 }
 
@@ -78,4 +70,29 @@ export function cliExec(cmd) {
       exitAll(child.pid)
     }
   })
+}
+
+export function commitTemplateDepsUpgradeChanges(push = false) {
+  const addResult = spawnSync('git', ['add', '.'])
+
+  if (addResult.status !== 0) {
+    throw new Error(`Git add failed: ${addResult.stderr.toString()}`)
+  }
+
+  const commitMessage = 'chore(create-vue-vine): upgrade template dep version'
+
+  const commitResult = spawnSync('git', ['commit', '-m', commitMessage, '--no-verify'])
+
+  if (commitResult.status !== 0) {
+    throw new Error(`Git commit failed: ${commitResult.stderr.toString()}`)
+  }
+
+  log('info', 'Git commit success, ', push ? 'pushing to remote' : 'not pushing to remote')
+  if (push) {
+    const pushResult = spawnSync('git', ['push'])
+    if (pushResult.status !== 0) {
+      throw new Error(`Git push failed: ${pushResult.stderr.toString()}`)
+    }
+  }
+  log('success', 'Template deps upgrade changes has pushed to remote.')
 }

@@ -1,4 +1,6 @@
-import { reactiveComputed } from '@vueuse/core'
+import { reactiveComputed } from './utils/reactive'
+
+export * from './defineVibe'
 
 export function useDefaults<P extends Record<string, any>>(props: P, defaults: Partial<P>) {
   return reactiveComputed(() => {

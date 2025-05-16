@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
-import { createMockTransformCtx } from './shared-utils'
+import { createMockTransformCtx } from './test-utils'
 
 describe('test Vine compiler validate', () => {
   it('validate no outside macro calls', () => {
@@ -122,8 +122,8 @@ function Box() {
     <div class="box">Test Box</div>
   \`
 }
-function App() {
-  let y;
+function App(props: { foo: string }) {
+  let y, z;
   const color = ref('red');
   vineStyle({ scoped: true }, \`
     .app {
@@ -131,9 +131,9 @@ function App() {
     }
   \`)
   y = vineOptions(false)
-  vineExpose(color)
   vineEmits()
   const x = vineCustomElement()
+  z = vineValidators(3)
 
   vineSlots<{
     default: (props: string) => void;
@@ -147,7 +147,7 @@ function App() {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`16`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`17`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
@@ -157,16 +157,17 @@ function App() {
           "Function signature of \`vineSlots\` definition can only have one parameter named \`props\`, and its parameter name must be \`props\`, but got \`yyy\`",
           "Properties of \`vineSlots\` can only have function type annotation",
           "the declaration of \`vineModel\` macro call must be inside a variable declaration",
+          "The given vineModel name must be a string literal",
           "the declaration of macro \`vineModel\` call must be an identifier",
           "Vue Vine component function can only have one default model",
-          "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",
           "\`vineStyle\` can only have one string argument'",
-          "\`vineEmits\` must have 1 type parameter",
+          "\`vineEmits\` macro must have a type parameter or an array of string for event names",
           "\`vineSlots\` can only have 1 type parameter",
-          "\`vineExpose\` must have one object literal argument",
           "\`vineOptions\` must have one object literal argument",
           "\`vineOptions\` call must be a bare call",
-          "\`vineCustomElement\` call must be a bare call",
+          "\`vineCustomElement\` macro call is not allowed to be inside a variable declaration",
+          "\`vineValidators\` must have one object literal argument",
+          "\`vineValidators\` call must be a bare call",
         ]
       `)
   })
@@ -186,13 +187,9 @@ function App() {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineStyleInsideLexicalDeclaration', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`1`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`0`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
-      .toMatchInlineSnapshot(`
-        [
-          "\`vineStyle\` macro call is not allowed to be inside a variable declaration",
-        ]
-      `)
+      .toMatchInlineSnapshot(`[]`)
   })
 
   it('validate vine component function props', () => {
@@ -209,34 +206,32 @@ function App() {
     vineProp.withDefault(1)
     return vine\`<div>Macro</div>\`
   }
-  function Box({ a, b }: SomeExternalType1) {
+  function Box({ a, b }: { a: string, b: number }) {
     return vine\`<div>Test Box</div>\`
   }
-  function App(props: SomeExternalType2) {
+  function App() {
     const noTypeProp = vineProp()
     const invalidDefault = vineProp.withDefault()
     const emptyValidator = vineProp.optional()
 
-  return vine\`
-    <div>
-      Hello app
-      <Box />
-    </div>
-  \`
-}`
+    return vine\`
+      <div>
+        Hello app
+        <Box />
+      </div>
+    \`
+  }
+  `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineComponentFunctionProps', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`10`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`7`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
-          "Vine component function's props type annotation must be an object literal, only contains properties signature, and all properties' key must be string literal or identifier",
+          "When Vine component function's props type annotation is an object literal, properties' key must be an identifier or a string literal",
           "the declaration of \`vineProp\` macro call must be an identifier",
           "\`vineProp\` macro call must be inside a \`const\` declaration",
           "\`vineProp\` macro call must be inside a \`const\` variable declaration",
-          "If you're defining a Vine component function's props with formal parameter, it must be one and only identifier",
-          "Vine component function's props type annotation must be an object literal",
-          "Vine component function's props type annotation must be an object literal",
           "\`vineProp\` macro call must have a type parameter to specify the prop's type",
           "\`vineProp.withDefault\` macro call must have at least 1 argument",
           "\`vineProp.optional\` macro call must have a type parameter to specify the prop's type",
@@ -254,7 +249,7 @@ function TestComp() {
     compileVineTypeScriptFile(content, 'testVineEmitsUsage', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"`vineEmits` must have 1 type parameter"')
+      .toMatchInlineSnapshot(`"\`vineEmits\` macro must have a type parameter or an array of string for event names"`)
     expect(mockCompilerCtx.vineCompileErrors[1].msg)
       .toMatchInlineSnapshot(`"the declaration of macro \`vineEmits\` call must be an identifier"`)
   })
@@ -281,5 +276,39 @@ function TestComp() {
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
     expect(mockCompilerCtx.vineCompileErrors[0].msg)
       .toMatchInlineSnapshot('"[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates."')
+  })
+
+  it('should report props destructuring errors', () => {
+    const content = `
+import { watch } from 'vue'
+
+export function MyComp({
+  arr: [a, b, ...c],
+  foo = 1,
+}: {
+  arr: boolean[],
+  foo?: number,
+}) {
+
+  const testFoo = watch(foo, (newVal) => {
+    console.log(newVal)
+  })
+
+  return vine\`
+    <div> foo: {{ foo }} </div>
+  \`
+}
+    `
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testPropsDestructuringErrors', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(2)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
+      .toMatchInlineSnapshot(`
+        [
+          "When destructuring props on formal parameter, nested destructuring is not allowed",
+          ""foo" is a destructured prop and should not be passed directly to watch(). Pass a getter () => foo instead.",
+        ]
+      `)
   })
 })

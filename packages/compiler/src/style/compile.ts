@@ -1,11 +1,11 @@
-import type { RawSourceMap } from 'source-map-js'
 import type { Message, ProcessOptions } from 'postcss'
-import postcss from 'postcss'
+import type { RawSourceMap } from 'source-map-js'
 import type { VineCompilerCtx, VineProcessorLang } from '../types'
+import postcss from 'postcss'
+import { cssVarsPlugin } from './css-vars-plugin'
 import { processors } from './preprocessor'
 import { scopedPlugin } from './scoped-plugin'
 import { trimPlugin } from './trim-plugin'
-import { cssVarsPlugin } from './css-vars-plugin'
 
 export async function compileVineStyle(
   compilerCtx: VineCompilerCtx,

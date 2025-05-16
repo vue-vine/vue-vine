@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { cancel as _cancel, confirm as _confirm, text as _text, isCancel } from '@clack/prompts'
+import { cancel as _cancel, confirm as _confirm, select as _select, text as _text, isCancel } from '@clack/prompts'
 
 export function cancel(...args: Parameters<typeof _cancel>): never {
   _cancel(...args)
@@ -18,4 +18,5 @@ function wrapClack<T extends (...args: any[]) => any>(fn: T) {
 }
 
 export const text = wrapClack(_text)
+export const select = wrapClack(_select)
 export const confirm = wrapClack(_confirm)

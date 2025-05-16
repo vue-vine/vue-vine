@@ -25,9 +25,11 @@ function MyComponent() {
 const AnotherComponent = () => vine`<div>Hello World</div>`
 ```
 
+> You may wonder where this `vine` tag function is imported from, it's actually just declared a function signature and no implementation, written in a type definition file (`macros.d.ts`) on the global environment, making it available at compile time.
+
 Vine compiler will transform this kind of function into a Vue component object in underhood.
 
-In addition, the tagged template string expression will just return an `undefined`, without any effect in runtime.
+In addition, the tagged template string expression doesn't have any meaning in runtime.
 
 It's indeed a valid function in TypeScript syntax and context, <b class="text-rose-400">but calling it will not make any sense, in order to avoid undefined behavior, please don't do that.</b>
 
@@ -35,10 +37,21 @@ It's indeed a valid function in TypeScript syntax and context, <b class="text-ro
 
 **Using expression interpolation in template is forbidden.**
 
-Because the whole tagged template string is a raw Vue template. Vine compiler will transfer it to `@vue/compiler-dom` to compile it to render function in the end.
+Because the whole tagged template string is just a raw Vue template. Vine compiler will transfer it to `@vue/compiler-dom` to compile it to render function in the end.
 
 ```vue-vine
-function MyComponent() {
+function ValidComponent() {
+  const count = ref(0)
+
+  return vine`
+    <div>
+      <button @click="count++">Increment</button>
+      <div>Count: {{ count }}</div>
+    </div>
+  `
+}
+
+function InvalidComponent() {
   const name = 'World'
 
   return vine`<div>Hello ${name}</div>` // This will report an error
@@ -51,7 +64,8 @@ To be noted, in Vue's template, there might be JS expressions inside v-bind or b
 function MyComponent() {
   const userName = ref('Vine')
 
-  // IDE can't highlight the template part correctly
+  // As you can see below in our documentation site,
+  // IDE can't highlight the template part correctly like this.
   return vine`
     <a :href="/user/\`\${userName}\`">
       Profile

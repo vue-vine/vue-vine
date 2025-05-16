@@ -2,12 +2,12 @@
   "publisher": "ShenQingchuan",
   "name": "vue-vine-extension",
   "displayName": "Vue Vine",
-  "version": "0.1.17",
+  "version": "1.0.0",
   "private": true,
   "description": "Vue Vine extension for syntax highlight and language features",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShenQingchuan/vue-vine-extension.git"
+    "url": "https://github.com/vue-vine/vue-vine.git"
   },
   "categories": [
     "Programming Languages"
@@ -15,7 +15,7 @@
   "main": "./dist/client.js",
   "icon": "assets/ext-icon.png",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.84.0"
   },
   "activationEvents": [
     "onLanguage:typescript"
@@ -37,14 +37,14 @@
         }
       },
       {
-        "scopeName": "vine-vue-template.interpolations",
+        "scopeName": "source.vine-vue-template.interpolations",
         "path": "./syntaxes/vue-interpolations.json",
         "injectTo": [
           "source.vine-vue-template"
         ]
       },
       {
-        "scopeName": "vine-vue-template.directives",
+        "scopeName": "source.vine-vue-template.directives",
         "path": "./syntaxes/vue-directives.json",
         "injectTo": [
           "source.vine-vue-template"
@@ -56,7 +56,7 @@
         "embeddedLanguages": {
           "source.vine-vue-template": "vine-vue-template",
           "source.css": "css",
-          "source.css.scss": "scss",
+          "source.css.scess": "scss",
           "source.css.less": "less",
           "source.css.postcss": "postcss",
           "source.sass": "sass",
@@ -86,25 +86,31 @@
         "uiTheme": "vs-dark",
         "path": "./themes/rocking-vine.json"
       }
+    ],
+    "commands": [
+      {
+        "command": "vine.action.restartServer",
+        "title": "Restart Vue Vine and TS servers",
+        "category": "Vue Vine"
+      }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run build",
-    "dev": "cross-env NODE_ENV=development tsup --watch",
-    "build": "cross-env NODE_ENV=production tsup",
     "lint": "eslint src --ext ts",
-    "pack": "vsce package",
-    "publish:ext": "vsce publish"
+    "pack:ext": "vsce pack",
+    "publish:ext": "vsce publish",
+    "publish:osvx": "ovsx publish",
+    "typecheck": "tsc --noEmit"
   },
+  "dependencies": {},
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.8",
-    "@changesets/cli": "^2.26.2",
-    "@types/vscode": "1.85.0",
-    "@volar/typescript": "~2.4.14",
-    "@volar/vscode": "~2.4.14",
+    "@changesets/changelog-github": "catalog:miscs",
+    "@types/vscode": "catalog:types",
+    "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "latest",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.0.26"
+    "ovsx": "latest",
+    "reactive-vscode": "catalog:vscode"
   }
 }

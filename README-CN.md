@@ -6,8 +6,9 @@
 创造另一种书写 Vue 组件的方式。
 
 - NPM 版本：&nbsp; [![NPM Version](https://img.shields.io/npm/v/vue-vine)](https://www.npmjs.com/package/vue-vine)
-- VSCode 插件版本：&nbsp; [![VSCode ext version](https://vsmarketplacebadges.dev/version/shenqingchuan.vue-vine-extension.svg)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
-- 要了解更多细节，请查看文档站：&nbsp;[![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
+- VSCode 插件版本：&nbsp; [![VSCode ext version](https://img.shields.io/visual-studio-marketplace/v/shenqingchuan.vue-vine-extension)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
+- Open VSX 插件版本: &nbsp; [![Open VSX ext version](https://img.shields.io/open-vsx/v/shenqingchuan/vue-vine-extension)](https://open-vsx.org/extension/shenqingchuan/vue-vine-extension)
+- 要了解更多细节，请查看 [官方文档](https://vue-vine.dev)：&nbsp;[![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
 <details>
   <summary>
@@ -25,17 +26,26 @@
 
 </details>
 
+## 尝试示例
+
+使用交互式命令(`create-vue-vine`)创建您的第一个项目。看这里: [项目启动模板](https://vue-vine.dev/zh/introduction/ecosystem.html#project-starter-template)
+
+或者你可以在线上尝试: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
+
 ## 项目 NPM 包总览
 
-| 包名 | 版本 | 简介 |
-| --- | --- | --- |
-| [@vue-vine/compiler](./packages/compiler) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/compiler)](https://www.npmjs.com/package/@vue-vine/compiler) | 编译器 |
-| [@vue-vine/language-server](./packages/language-server) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-server)](https://www.npmjs.com/package/@vue-vine/language-server) | 语言服务器 |
-| [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | 语言服务集成 |
-| [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite 插件 |
-| [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint 自定义解析器 |
-| [@vue-vine/nuxt](./packages/nuxt-module) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/nuxt)](https://www.npmjs.com/package/@vue-vine/nuxt) | Nuxt Module |
-| [vue-vine-tsc](./packages/tsc) | [![NPM Version](https://img.shields.io/npm/v/vue-vine-tsc)](https://www.npmjs.com/package/vue-vine-tsc) | TypeScript CLI 检查器 |
+| 类别 | 包名 | 版本 | 简介 |
+| --- | --- | --- | --- |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/compiler](./packages/compiler) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/compiler)](https://www.npmjs.com/package/@vue-vine/compiler) | 编译器 |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-server](./packages/language-server) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-server)](https://www.npmjs.com/package/@vue-vine/language-server) | 语言服务器 |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | 语言服务集成 |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite 插件 |
+| ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint 自定义解析器 |
+| ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-plugin](./packages/eslint-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-plugin)](https://www.npmjs.com/package/@vue-vine/eslint-plugin) | ESLint 插件 |
+| ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-config](./packages/eslint-config) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-config)](https://www.npmjs.com/package/@vue-vine/eslint-config) | ESLint 配置 |
+| ![nuxt](https://img.shields.io/badge/vue_vine-nuxt-green) | [@vue-vine/nuxt](./packages/nuxt-module) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/nuxt)](https://www.npmjs.com/package/@vue-vine/nuxt) | Nuxt Module |
+| ![tsc](https://img.shields.io/badge/vue_vine-tsc-violet) | [vue-vine-tsc](./packages/tsc) | [![NPM Version](https://img.shields.io/npm/v/vue-vine-tsc)](https://www.npmjs.com/package/vue-vine-tsc) | TypeScript CLI 检查器 |
+| ![CLI](https://img.shields.io/badge/vue_vine-cli-cyan) | [create-vue-vine](./packages/create-vue-vine) | [![NPM Version](https://img.shields.io/npm/v/create-vue-vine)](https://www.npmjs.com/package/create-vue-vine) | 项目脚手架 CLI |
 
 ## 安装
 
@@ -67,75 +77,29 @@ export default defineConfig({
 }
 ```
 
-若要配置 ESLint，请安装我们的自定义 ESLint 解析器：
+对于 ESLint, 请安装我们提供的 ESLint 配置包：
 
 ```bash
-ni -D @vue-vine/eslint-parser
+ni -D @vue-vine/eslint-config
 ```
 
-你需要为 `.vine.ts` 文件设置自定义 ESLint 解析器：
+你需要将其载入到 ESLint flat configs 中。
 
 ```js
-// eslint.config.mjs
 import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+// `VueVine()` 返回了一个 ESLint flat config
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
-    // 在这里覆盖 antfu 的设置：
-    // - 目前不支持 ESLint Stylistic
-    stylistic: false,
+    // 第一个选项对象不是 ESLint 的 FlatConfig
+    // 是 antfu 规则自身的配置
   },
-  {
-    rules: {
-      // ... 在这里自定义规则
-    },
-  },
-  {
-    files: [
-      'path/to/**/*.vine.ts',
-    ],
-    languageOptions: {
-      parser: VueVineESLintParser,
-    },
-    rules: {
-      // ... 在这里自定义规则
-    },
-  },
+  ...VueVine(),
 )
 ```
 
 最后，安装 VSCode 插件，在市场中搜索 `Vue Vine`。
 
 <img width="339" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/d86867d3-5a63-4541-b318-f5543f90cf0e">
-
-## 尝试示例
-
-你可以按照下面的步骤操作，启动示例项目来预览：
-
-首先，你需要获取 VSCode 插件的构建输出。
-
-```bash
-git clone https://github.com/vue-vine/vue-vine.git
-cd vue-vine
-pnpm install
-
-# 构建所有相关的包
-pnpm run build
-
-# 构建 VSCode 插件
-pnpm run build:ext
-```
-
-在构建完 VSCode 插件后，你可以在 VSCode 的 'Debug' 选项卡中找到 'Rune Vine Extension' 的配置项，然后点击运行。
-
-<img width="356" alt="image" src="https://github.com/vue-vine/vue-vine/assets/46062972/e12e2de6-666f-45d5-8607-c59168684bc1">
-
-然后，在另一个终端会话中开启 Playground 的 Vite 开发服务器。
-
-```bash
-pnpm run play
-```
-
-1. 接下来可以在 `http://localhost:3333/` 中看到示例。
-2. 你可以在 `http://localhost:3333/__inspect/` 中查看源代码在 Vite 处理管道的转换过程。

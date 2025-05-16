@@ -1,14 +1,25 @@
+import type { ParseResult } from '@babel/parser'
 import type {
   CallExpression,
+  ExportNamedDeclaration,
   File,
   Identifier,
   ImportDeclaration,
+  MemberExpression,
   Node,
   ReturnStatement,
-  TSPropertySignature,
   TaggedTemplateExpression,
+  TSPropertySignature,
   VariableDeclarator,
 } from '@babel/types'
+import type {
+  BabelFunctionNodeTypes,
+  BabelFunctionParams,
+  Nil,
+  VINE_MACRO_NAMES,
+  VineBabelRoot,
+  VineFnPickedInfo,
+} from '../types'
 import {
   isArrowFunctionExpression,
   isCallExpression,
@@ -27,21 +38,13 @@ import {
   isVariableDeclarator,
   traverse,
 } from '@babel/types'
-import type { ParseResult } from '@babel/parser'
-import type {
-  BabelFunctionNodeTypes,
-  BabelFunctionParams,
-  Nil,
-  VINE_MACRO_NAMES,
-  VineBabelRoot,
-  VineFnPickedInfo,
-} from '../types'
+import { TS_NODE_TYPES } from '@vue/compiler-dom'
 import {
   EXPECTED_ERROR,
-  TS_NODE_TYPES,
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
 } from '../constants'
+import { _breakableTraverse, exitTraverse } from '../utils'
 
 export function isVineCompFnDecl(target: Node) {
   if (
@@ -92,6 +95,14 @@ export function findVineCompFnDecls(root: VineBabelRoot) {
     }
   }
   return vineFnComps
+}
+
+export function isBabelFunctionTypes(node: Node): node is BabelFunctionNodeTypes {
+  return (
+    isFunctionDeclaration(node)
+    || isFunctionExpression(node)
+    || isArrowFunctionExpression(node)
+  )
 }
 
 export function isDescendant(node: Node, potentialDescendant: Node): boolean {
@@ -199,12 +210,43 @@ export const isVineEmits = isVineMacroOf('vineEmits')
 export const isVineModel = isVineMacroOf('vineModel')
 export const isVineStyle = isVineMacroOf('vineStyle')
 export const isVineCustomElement = isVineMacroOf('vineCustomElement')
+export const isVineValidators = isVineMacroOf('vineValidators')
+
+export function isUseTemplateRefCall(node: Node) {
+  return isCallOf(node, 'useTemplateRef')
+}
+
+interface VineImportScopedCallee extends MemberExpression {
+  object: CallExpression
+  property: Identifier
+}
+interface VineImportScoped extends CallExpression {
+  callee: VineImportScopedCallee
+}
+export function isVineImportScoped(
+  node: Node | Nil,
+): node is VineImportScoped {
+  if (!isCallExpression(node)) {
+    return false
+  }
+  const callee = node.callee
+  if (!isMemberExpression(callee)) {
+    return false
+  }
+
+  return (
+    isVineStyle(callee.object)
+    && isIdentifier(callee.property)
+    && callee.property.name === 'scoped'
+  )
+}
 
 export function isStatementContainsVineMacroCall(node: Node) {
   let result = false
-  traverse(node, (descendant) => {
+  _breakableTraverse(node, (descendant) => {
     if (isVineMacroCallExpression(descendant)) {
       result = true
+      throw exitTraverse
     }
   })
   return result
@@ -455,4 +497,27 @@ export function tryInferExpressionTSType(node: Node) {
     default:
       return 'any' // Can't infer
   }
+}
+
+export function findAllExportNamedDeclarations(root: ParseResult<File>) {
+  const exportNamedDeclarations: ExportNamedDeclaration[] = []
+  for (const stmt of root.program.body) {
+    if (isExportNamedDeclaration(stmt)) {
+      exportNamedDeclarations.push(stmt)
+    }
+  }
+
+  return exportNamedDeclarations
+}
+
+export function fineAllExplicitExports(exportNamedDeclarations: ExportNamedDeclaration[]) {
+  const explicitExports: string[] = []
+  for (const exportDecl of exportNamedDeclarations) {
+    for (const specifier of exportDecl.specifiers) {
+      if (isIdentifier(specifier.exported)) {
+        explicitExports.push(specifier.exported.name)
+      }
+    }
+  }
+  return explicitExports
 }

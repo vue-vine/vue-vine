@@ -1,15 +1,12 @@
-import MagicString from 'magic-string'
 import type { Node } from '@babel/types'
 import type { VineCompileCtx, VineCompilerCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from './types'
-import { findVineCompFnDecls } from './babel-helpers/ast'
-import { validateVine } from './validate'
+import MagicString from 'magic-string'
 import { analyzeVine } from './analyze'
-import { transformFile } from './transform'
+import { findAllExportNamedDeclarations, findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
-
-export {
-  compileVineStyle,
-} from './style/compile'
+import { transformFile } from './transform'
+import { createLinkedCodeTag } from './utils'
+import { validateVine } from './validate'
 
 export {
   findVineCompFnDecls,
@@ -19,16 +16,48 @@ export {
   VineBindingTypes,
 } from './constants'
 
+export {
+  compileVineStyle,
+} from './style/compile'
+
+export {
+  isComponentNode,
+  isElementNode,
+  walkVueTemplateAst,
+} from './template/walk'
+
+export {
+  createTsMorph,
+} from './ts-morph/create'
+
+export {
+  VinePropsDefinitionBy,
+} from './types'
 export type {
+  HMRCompFnsName,
+  VineCompilerCtx,
+  VineCompilerHooks,
+  VineCompilerOptions,
+  VineDiagnostic,
   VineFileCtx,
   VineCompFnCtx as VineFnCompCtx,
-  VineCompilerOptions,
   VineProcessorLang,
-  VineCompilerHooks,
-  VineDiagnostic,
-  VineCompilerCtx,
-  HMRCompFnsName,
+  VinePropMeta,
+  VineQuery,
 } from './types'
+
+export {
+  _breakableTraverse,
+  exitTraverse,
+} from './utils'
+
+export {
+  topoSort,
+} from './utils/topo-sort'
+
+export type {
+  ComponentRelationsMap,
+} from './utils/topo-sort'
 
 export function createCompilerCtx(
   options: VineCompilerOptions = {},
@@ -61,14 +90,31 @@ export function createVineFileCtx(
     isCRLF: code.includes('\r\n'),
     fileMagicCode: new MagicString(code),
     vineCompFns: [],
+    exportNamedDeclarations: findAllExportNamedDeclarations(root),
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},
     get originCode() {
       return this.fileMagicCode.original
     },
-    getAstNodeContent(node: Node) {
+    getAstNodeContent(node) {
       return this.originCode.slice(node.start!, node.end!)
+    },
+    getLinkedTSTypeLiteralNodeContent(node) {
+      return `{ ${
+        node.members.map((member) => {
+          const memberOriginCode = this.originCode.slice(member.start!, member.end!)
+
+          return `${
+            (
+              member.type === 'TSMethodSignature'
+              || member.type === 'TSPropertySignature'
+            )
+              ? `${createLinkedCodeTag('left', this.getAstNodeContent(member.key).length)}${memberOriginCode}`
+              : memberOriginCode
+          }`
+        }).join(', ')
+      } }`
     },
   }
   return vineFileCtx

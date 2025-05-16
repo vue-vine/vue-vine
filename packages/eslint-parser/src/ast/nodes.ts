@@ -1,5 +1,6 @@
-import type { ScopeManager } from 'eslint-scope'
 import type { TSESTree } from '@typescript-eslint/types'
+import type { ScopeManager } from 'eslint-scope'
+import type { FinalProcessTemplateInfo, PrettierType } from '../types'
 import type { ParseError } from './errors'
 import type { HasLocation } from './locations'
 import type { Token } from './tokens'
@@ -20,6 +21,17 @@ export interface HasParent {
  */
 export type Node =
   | ESLintNode
+  | VNode
+  | VForExpression
+  | VOnExpression
+  | VSlotScopeExpression
+  | VFilterSequenceExpression
+  | VFilter
+
+/**
+ * The union type for all template nodes.
+ */
+export type VTemplateNode =
   | VNode
   | VForExpression
   | VOnExpression
@@ -81,6 +93,7 @@ export interface ESLintProgram extends HasLocation, HasParent {
 
 export type ESLintStatement =
   | ESLintExpressionStatement
+  | ESLintDirective
   | ESLintBlockStatement
   | ESLintEmptyStatement
   | ESLintDebuggerStatement
@@ -112,6 +125,12 @@ export interface ESLintBlockStatement extends HasLocation, HasParent {
 export interface ESLintExpressionStatement extends HasLocation, HasParent {
   type: 'ExpressionStatement'
   expression: ESLintExpression
+}
+
+export interface ESLintDirective extends HasLocation, HasParent {
+  type: 'ExpressionStatement'
+  expression: ESLintLiteral
+  directive: string
 }
 
 export interface ESLintIfStatement extends HasLocation, HasParent {
@@ -819,6 +838,13 @@ export type VNode =
   | VStartTag
   | VText
 
+export type VExpression =
+  | ESLintExpression
+  | VFilterSequenceExpression
+  | VForExpression
+  | VOnExpression
+  | VSlotScopeExpression
+
 /**
  * Text nodes.
  */
@@ -835,13 +861,7 @@ export interface VText extends HasLocation, HasParent {
 export interface VExpressionContainer extends HasLocation, HasParent {
   type: 'VExpressionContainer'
   parent: VTemplateRoot | VElement | VDirective | VDirectiveKey
-  expression:
-    | ESLintExpression
-    | VFilterSequenceExpression
-    | VForExpression
-    | VOnExpression
-    | VSlotScopeExpression
-    | null
+  expression: VExpression | null
   references: Reference[]
 }
 
@@ -946,4 +966,5 @@ export interface VTemplateRoot extends HasLocation {
   type: 'VTemplateRoot'
   parent: TSESTree.Node
   children: (VElement | VText | VExpressionContainer)[]
+  templateInfo?: PrettierType<Omit<FinalProcessTemplateInfo, 'templateMeta' | 'templateRootAST'>>
 }

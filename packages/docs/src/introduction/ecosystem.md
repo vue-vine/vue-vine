@@ -2,51 +2,34 @@
 
 Besides Vite plugin and VSCode extension, Vine also provides some other libraries that you might need.
 
-## Custom ESLint parser
+## ESLint config
 
 Since we defined a new syntax for `.vine.ts`, i.e. the tagged template string as Vue template, we need a custom ESLint parser make ESLint work. if you're curious about the internal implementation, you can check out the [source code](https://github.com/vue-vine/vue-vine/tree/main/packages/eslint-parser). In a shortnut, it will replace the ESTree node of tagged template string with a Vue template root node.
 
-We haven't provided any specific ESLint rules for Vue Vine yet, but it's supposed to work with most of the existing rule presets like `@antfu/eslint-config`, `@sxzz/eslint-config`, etc.
+We indeed provide a ESLint config for Vue Vine now, and it's supposed to work with most popular rule presets like `@antfu/eslint-config`, `@sxzz/eslint-config`, etc.
 
-**But style rules are not fully supported yet:**
-
-- `ESLint-Stylistics` will break template format due to some issues
-- `eslint-plugin-prettier` seems fine but doesn't fix much for template formatting.
+**But style rules are not fully supported yet, we will continue to make it better.**
 
 To configure the custom parser, run the following command to install the package:
 
 ```bash
-pnpm i -D @vue-vine/eslint-parser
+pnpm i -D @vue-vine/eslint-config
 ```
 
-Then, add the following configuration to your `eslint.config.mjs`:
+Then, add the following configuration to your `eslint.config.js`:
 
 ```js
 import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+// `VueVine()` returns a ESLint flat config
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
-    // Override settings
-    // for antfu's ESLint config
+    // First option is not Linter.FlatConfig,
+    // it's a setting for antfu's config itself
   },
-  {
-    // Some user config
-    // that might been used
-    // for non-Vine files
-  },
-  {
-    files: [
-      'path/to/**/*.vine.ts',
-    ],
-    languageOptions: {
-      parser: VueVineESLintParser,
-    },
-    rules: {
-      // Customize rules here
-      // for `.vine.ts` files
-    },
-  },
+  ...VueVine(),
 )
 ```
 
@@ -105,10 +88,18 @@ You may seen the following output:
 ◇  Use Vue Router?
 │  Yes
 │
-◇  Project created at: /path/to/my-vine-project
-│
-◇  Install dependencies?
+◇  Use Pinia as state management?
 │  Yes
+│
+◇  Using atomized css?
+│  - UnoCSS
+│  - Tailwind
+│  - No
+│
+◇  Install all dependencies for the project now?
+│  Yes
+│
+◇  Project created at: /path/to/my-vine-project
 │
 
 ...
@@ -117,8 +108,24 @@ You may seen the following output:
 │
 └  You're all set! Now run:
 
-  cd my-vine-project
-  pnpm dev
+   cd my-vine-project
+   pnpm dev
 
-  Happy hacking!
+   Happy hacking!
+```
+
+## Common issues
+
+### Conflict with UnoCSS Attribute Mode
+
+Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode. To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
+
+```ts
+declare module 'vue' {
+  interface HTMLAttributes {
+    [key: string]: any
+  }
+}
+
+export {}
 ```

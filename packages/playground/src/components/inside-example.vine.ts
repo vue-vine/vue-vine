@@ -1,6 +1,7 @@
 export function InsideExample() {
   const title = vineProp<string>(value => value.startsWith('#'))
   const author = vineProp.withDefault('Anonymous')
+  const emits = vineEmits<{ metaBgColorChange: [string] }>()
 
   const isDark = useDark()
   const defaultMetaBgColor = computed(() => isDark.value ? '#333' : '#ddd')
@@ -12,15 +13,11 @@ export function InsideExample() {
         : defaultMetaBgColor.value
     )
     metaBgColor.value = nextBgColor
-    emit('metaBgColorChange', nextBgColor)
+    emits('metaBgColorChange', nextBgColor)
   }
   watch(isDark, () => {
     metaBgColor.value = defaultMetaBgColor.value
   })
-
-  const emit = vineEmits<{
-    metaBgColorChange: [string]
-  }>()
 
   vineStyle.scoped(`
     .playground-title {

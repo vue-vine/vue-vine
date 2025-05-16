@@ -27,6 +27,9 @@ declare global {
   interface VineStyleMacro {
     (style: string | VineStyle): void
     scoped: (style: string | VineStyle) => void
+    import: (path: string) => {
+      scoped: () => void
+    }
   }
 
   interface VineOptionsDef {
@@ -46,6 +49,12 @@ declare global {
   const vineSlots: <D extends Record<string, (props: any) => any>>() => D
   const vineExpose: (exposed: Record<string, any>) => void
   const vineOptions: (options: VineOptionsDef) => void
+
+  function vineValidators<P = unknown>(
+    validators: Partial<{
+      [K in keyof P]: VinePropValidator<P[K]>
+    }>,
+  ): void
 
   function vineModel<T>(): Ref<T>
   function vineModel<T>(modelOptions: {

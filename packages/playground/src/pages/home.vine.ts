@@ -1,34 +1,28 @@
-import { PageHeader } from '../components/page-header.vine'
-import { InsideExample } from '../components/inside-example.vine'
 import { generateRandomString } from '~/utils'
 
-function OutsideExample(props: { id: string }) {
-  vineStyle(scss`
-    .loading-view {
-      margin: 1rem 0;
-    }
-  `)
-  vineStyle.scoped(`
-    .state-container-meta {
-      margin-top: 16px;
-      font-style: italic;
-    }
-    .state-container-title {
-      margin: 0.5rem 0;
-      font-weight: bold;
-      opacity: 0.8;
-    }
-  `)
+// No need to manually import the following components,
+// they will be automatically imported
+// - import { InsideExample } from '../components/inside-example.vine'
 
+function OutsideExample(props: { id: string }) {
   const randomStr = ref('')
   const loading = ref(true)
+  const title = ref('Here is a title')
   const mockUpdate = () => {
-    loading.value = true
+  loading.value = true
     setTimeout(() => {
       loading.value = false
       randomStr.value = generateRandomString(30)
     }, 2000)
   }
+
+  vineStyle(scss`
+    .loading-view {
+      margin: 1rem 0;
+    }
+  `)
+  vineStyle.import('~/styles/outside-example.css').scoped()
+
 
   // Mock result of a network request
   watch(() => props.id, () => {
@@ -38,8 +32,8 @@ function OutsideExample(props: { id: string }) {
   return vine`
     <div class="state-container">
       <InsideExample
-        title="Here's a title"
-        author="ShenQingchuan"
+        :title
+        author="Tom"
         @metaBgColorChange="(color: string) => console.log(color)"
       />
 
@@ -59,6 +53,10 @@ function OutsideExample(props: { id: string }) {
 }
 
 function RandomStringButton() {
+  const emit = vineEmits<{
+    tap: [number, number],
+    move?: [number, number, number]
+  }>()
   vineStyle(`
     .random-state-change-btn {
       font-size: 1rem;
@@ -72,10 +70,6 @@ function RandomStringButton() {
     }
   `)
 
-  const emit = vineEmits<{
-    tap: [number, number],
-    move: [number, number, number]
-  }>()
   // const emit = vineEmits(['tap', 'move'])
 
   const onBtnTap = (event: MouseEvent) => {
@@ -91,17 +85,16 @@ function RandomStringButton() {
   `
 }
 
-export function Home() {
+export function HomePage() {
   const id = ref('1')
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
   const randomState = () => {
     id.value = String(Math.floor(Math.random() * 100) + 1)
   }
-  const userInputText = vineModel<string>()
+  const userInputText = ref('')
 
   console.log('%c VINE %c Click the link to explore source code ->', 'background: green;', '')
-
 
   return vine`
     <PageHeader />
@@ -110,21 +103,17 @@ export function Home() {
       <div
         :class="[
           isDark ? 'i-carbon:moon' : 'i-carbon:sun',
-          'mr-2 text-6 cursor-pointer']
-        "
+          'mr-2 text-6 cursor-pointer',
+        ]"
         @click="toggleDark()"
       />
       <RandomStringButton @tap="randomState" />
     </div>
     <div class="flex flex-col items-center justify-center my-4">
-      <p class="my-4">{{ userInputText || 'Please input something here...' }}</p>
+      <p class="my-4">{{ userInputText || "Please input something here..." }}</p>
       <input
         type="text"
-        class="
-          bg-blueGray-200:80 dark:bg-coolgray-400:20
-          dark:caret-light border-none outline-none p-2
-          dark:text-light rounded w-300px
-        "
+        class="bg-blueGray-200:80 dark:bg-coolgray-400:20 dark:caret-light border-none outline-none p-2 dark:text-light rounded w-300px"
         v-model="userInputText"
       />
     </div>

@@ -1,22 +1,24 @@
-import type * as escopeTypes from 'eslint-scope'
 import type { TSESTree } from '@typescript-eslint/types'
-import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
-import { ReferenceFlag, ReferenceTypeFlag, type VineESLintParserOptions } from '../types'
+import type * as escopeTypes from 'eslint-scope'
 import type {
   ESLintIdentifier,
   ESLintProgram,
   Reference,
+  Variable,
   VAttribute,
   VDirective,
   VElement,
   VExpressionContainer,
   VTemplateRoot,
-  Variable,
 } from '../ast'
+import type { VineESLintParserOptions } from '../types'
+import * as tsEscopeTypes from '@typescript-eslint/scope-manager'
 import { getFallbackKeys, traverseNodes } from '../ast'
 import { getEslintScope } from '../common/eslint-scope'
 import { getEcmaVersionIfUseEspree } from '../common/espree'
 import { createVirtualVineFnPropsReference } from '../common/vine-specific'
+import { camelize } from '../template/utils'
+import { ReferenceFlag, ReferenceTypeFlag } from '../types'
 
 const BUILTIN_COMPONENTS = new Set([
   'template',
@@ -60,27 +62,27 @@ const BUILTIN_DIRECTIVES = new Set([
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element
 const HTML_TAGS
   = 'html,body,base,head,link,meta,style,title,address,article,aside,footer,'
-  + 'header,h1,h2,h3,h4,h5,h6,nav,section,div,dd,dl,dt,figcaption,'
-  + 'figure,picture,hr,img,li,main,ol,p,pre,ul,a,b,abbr,bdi,bdo,br,cite,code,'
-  + 'data,dfn,em,i,kbd,mark,q,rp,rt,ruby,s,samp,small,span,strong,sub,sup,'
-  + 'time,u,var,wbr,area,audio,map,track,video,embed,object,param,source,'
-  + 'canvas,script,noscript,del,ins,caption,col,colgroup,table,thead,tbody,td,'
-  + 'th,tr,button,datalist,fieldset,form,input,label,legend,meter,optgroup,'
-  + 'option,output,progress,select,textarea,details,dialog,menu,'
-  + 'summary,template,blockquote,iframe,tfoot'
+    + 'header,h1,h2,h3,h4,h5,h6,nav,section,div,dd,dl,dt,figcaption,'
+    + 'figure,picture,hr,img,li,main,ol,p,pre,ul,a,b,abbr,bdi,bdo,br,cite,code,'
+    + 'data,dfn,em,i,kbd,mark,q,rp,rt,ruby,s,samp,small,span,strong,sub,sup,'
+    + 'time,u,var,wbr,area,audio,map,track,video,embed,object,param,source,'
+    + 'canvas,script,noscript,del,ins,caption,col,colgroup,table,thead,tbody,td,'
+    + 'th,tr,button,datalist,fieldset,form,input,label,legend,meter,optgroup,'
+    + 'option,output,progress,select,textarea,details,dialog,menu,'
+    + 'summary,template,blockquote,iframe,tfoot'
 
 // https://developer.mozilla.org/en-US/docs/Web/SVG/Element
 const SVG_TAGS
   = 'svg,animate,animateMotion,animateTransform,circle,clipPath,color-profile,'
-  + 'defs,desc,discard,ellipse,feBlend,feColorMatrix,feComponentTransfer,'
-  + 'feComposite,feConvolveMatrix,feDiffuseLighting,feDisplacementMap,'
-  + 'feDistanceLight,feDropShadow,feFlood,feFuncA,feFuncB,feFuncG,feFuncR,'
-  + 'feGaussianBlur,feImage,feMerge,feMergeNode,feMorphology,feOffset,'
-  + 'fePointLight,feSpecularLighting,feSpotLight,feTile,feTurbulence,filter,'
-  + 'foreignObject,g,hatch,hatchpath,image,line,linearGradient,marker,mask,'
-  + 'mesh,meshgradient,meshpatch,meshrow,metadata,mpath,path,pattern,'
-  + 'polygon,polyline,radialGradient,rect,set,solidcolor,stop,switch,symbol,'
-  + 'text,textPath,title,tspan,unknown,use,view'
+    + 'defs,desc,discard,ellipse,feBlend,feColorMatrix,feComponentTransfer,'
+    + 'feComposite,feConvolveMatrix,feDiffuseLighting,feDisplacementMap,'
+    + 'feDistanceLight,feDropShadow,feFlood,feFuncA,feFuncB,feFuncG,feFuncR,'
+    + 'feGaussianBlur,feImage,feMerge,feMergeNode,feMorphology,feOffset,'
+    + 'fePointLight,feSpecularLighting,feSpotLight,feTile,feTurbulence,filter,'
+    + 'foreignObject,g,hatch,hatchpath,image,line,linearGradient,marker,mask,'
+    + 'mesh,meshgradient,meshpatch,meshrow,metadata,mpath,path,pattern,'
+    + 'polygon,polyline,radialGradient,rect,set,solidcolor,stop,switch,symbol,'
+    + 'text,textPath,title,tspan,unknown,use,view'
 
 const NATIVE_TAGS = new Set([...HTML_TAGS.split(','), ...SVG_TAGS.split(',')])
 
@@ -103,15 +105,6 @@ function isUnique(
   return (
     index === 0 || reference.identifier !== references[index - 1].identifier
   )
-}
-
-/**
- * `casing.camelCase()` converts the beginning to lowercase,
- * but does not convert the case of the beginning character when converting with Vue3.
- * @see https://github.com/vuejs/vue-next/blob/48de8a42b7fed7a03f7f1ff5d53d6a704252cafe/packages/shared/src/index.ts#L109
- */
-function camelize(str: string) {
-  return str.replace(/-(\w)/gu, (_, c) => (c ? c.toUpperCase() : ''))
 }
 
 function capitalize(str: string) {
@@ -208,7 +201,7 @@ function analyze(
 ): escopeTypes.Scope {
   const scopeManager
         = parserResult.scopeManager
-        || analyzeScope(parserResult.ast, parserOptions)
+          || analyzeScope(parserResult.ast, parserOptions)
   return scopeManager.globalScope
 }
 
@@ -238,7 +231,8 @@ export function analyzeVariablesAndExternalReferences(
   const scope = analyze(parserResult, parserOptions)
   return {
     variables: getForScope(scope)
-      .variables.filter(hasDefinition)
+      .variables
+      .filter(hasDefinition)
       .map(v => transformVariable(v, kind)),
     references: scope.through.filter(isUnique).map(transformReference),
   }
@@ -278,6 +272,11 @@ function collectVariablesForVCF(
       && foundVCF.type !== 'ArrowFunctionExpression'
     ))
     if (foundVCF) {
+      Object.assign(
+        foundVCF,
+        { __isVine__: true },
+      )
+
       const tryGetVCFScope = tsFileScopeManager.nodeToScope.get(foundVCF)
       if (tryGetVCFScope?.[0]) {
         foundVCFScope = tryGetVCFScope[0]

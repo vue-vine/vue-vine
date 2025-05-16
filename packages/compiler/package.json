@@ -1,50 +1,59 @@
 {
   "name": "@vue-vine/compiler",
-  "version": "0.1.20",
+  "type": "module",
+  "version": "1.0.0",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/compiler"
+  },
   "keywords": [
     "Vue",
     "Vine"
   ],
   "exports": {
     ".": {
-      "dev": "./src/index.ts",
-      "node": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
     "test": "vitest",
-    "test:verbose": "VINE_DEV_VITEST=true vitest"
+    "test:verbose": "VINE_DEV_VITEST=true vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.0",
-    "@babel/types": "^7.24.0",
-    "@vue/compiler-dom": "^3.4.38",
-    "@vue/compiler-ssr": "^3.4.38",
-    "estree-walker": "^2.0.2",
-    "hash-sum": "^2.0.0",
-    "line-column": "^1.0.2",
-    "magic-string": "^0.30.10",
-    "merge-source-map": "^1.1.0",
-    "postcss": "^8.4.29",
-    "postcss-selector-parser": "^6.0.13",
-    "source-map-js": "^1.0.2"
+    "@babel/parser": "catalog:compiler",
+    "@babel/types": "catalog:compiler",
+    "@vue/compiler-dom": "catalog:vue-libs",
+    "@vue/compiler-ssr": "catalog:vue-libs",
+    "@vue/shared": "catalog:vue-libs",
+    "get-tsconfig": "catalog:compiler",
+    "hash-sum": "catalog:miscs",
+    "line-column": "catalog:miscs",
+    "lru-cache": "catalog:miscs",
+    "magic-string": "catalog:compiler",
+    "merge-source-map": "catalog:compiler",
+    "postcss": "catalog:compiler",
+    "postcss-selector-parser": "catalog:compiler",
+    "ts-morph": "catalog:compiler"
   },
   "devDependencies": {
-    "@types/hash-sum": "^1.0.0",
-    "@types/line-column": "^1.0.0",
-    "prettier": "^3.0.3"
+    "@types/hash-sum": "catalog:types",
+    "@types/line-column": "catalog:types",
+    "estree-walker": "catalog:compiler",
+    "prettier": "catalog:miscs",
+    "source-map-js": "catalog:compiler"
   },
   "publishConfig": {
     "access": "public",

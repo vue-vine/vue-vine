@@ -3,17 +3,17 @@
 ### 工具链
 
 - 使用 [PNPM](https://pnpm.io/) 管理包和依赖
-- 使用 [Tsup](https://tsup.egoist.sh/) 打包包
+- 使用 [tsdown](https://tsdown.dev/) 最终打包
 - 使用 [Changeset](https://github.com/atlassian/changesets) 进行更改记录、changelog 生成和发布管理
 
 ### 提交规范
 
-在提交pull request之前，请检查你的commit是否符合本仓库的提交规范。
+在提交 Pull Request 之前，请检查你的 commit 是否符合本仓库的提交规范。
 
-当你创建一个commit时，我们要求你遵循以下规范：
+当你创建一个 commit 时，我们要求你遵循以下规范：
 
 - `feat`: 所有引入新代码或新功能的修改
-- `fix`: 修复bug（理想情况下，你会额外引用一个issue）
+- `fix`: 修复bug，理想情况下，你会额外引用一个 issue 的号码，例如 `#123`
 - `refactor`: 不是修复也不是新功能的任何代码相关改变
 - `docs`: 修改现有的文档或创建新的文档（例如 README、对某个库或 CLI 的使用文档）
 - `build`: 所有与软件构建有关的修改，包括更改依赖项或添加新依赖

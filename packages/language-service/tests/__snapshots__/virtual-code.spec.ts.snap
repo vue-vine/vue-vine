@@ -1,0 +1,792 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`verify Volar virtual code snapshots > should match with fixture.vine.ts virtual code 1`] = `
+"/// <reference types=".vue-global-types/vine_vue_99_true" />
+
+const Foo = 123
+
+// #region Fixures for ESLint show warns and errors in VSCode
+
+type __VINE_VLS_Comp_props__ = {
+/* __LINKED_CODE_LEFT__#3 */foo: string
+}
+function Comp(
+  props: __VINE_VLS_Comp_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type Comp_Props = Parameters<typeof Comp>[0];
+
+const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp<string>()
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+( __VINE_VLS_ctx.foo );
+// @ts-ignore
+[foo,];
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_SampleOne_props__ = {
+/* __LINKED_CODE_LEFT__#2 */p1: string
+}
+
+
+// - Case 1: 'vue-vine/format-vine-macros-leading'
+// - Case 2: 'vue-vine/essentials-no-child-content'
+export function SampleOne(
+  props: __VINE_VLS_SampleOne_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type SampleOne_Props = Parameters<typeof SampleOne>[0];
+
+const count = ref(0)
+  const msg = ref('hello world')
+
+  const /* __LINKED_CODE_RIGHT__#2 */p1 = vineProp<string>()
+  vineOptions({
+    name: 'ESLintErrsSample'
+  })
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#2 */p1: /* __LINKED_CODE_RIGHT__#2 */p1,
+  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#3 */msg: /* __LINKED_CODE_RIGHT__#3 */msg,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+...{ style: {} },
+...{ style: ({
+        color: __VINE_VLS_ctx.count > 5 ? 'red' : 'blue',
+      }) },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+__VINE_VLS_asFunctionalDirective(__VINE_VLS_directives.vText)(null!, { ...__VINE_VLS_directiveBindingRestFields, value: (__VINE_VLS_ctx.msg) }, null!, null!);
+// @ts-ignore
+[count,vText,msg,];
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'Comp', __VINE_VLS_LocalComponents, void, 'Comp', 'Comp', 'Comp'>).Comp;
+/** @type {[typeof __VINE_VLS_components.Comp, ]} */;
+// @ts-ignore
+Comp;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+foo: "111",
+foo: ('222'),
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+foo: "111",
+foo: ('222'),
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_SampleTwo_props__ = {}
+
+
+// - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
+// - Case 2: 'vue-vine/format-prefer-template' not autofix in template
+export function SampleTwo(
+  props: __VINE_VLS_SampleTwo_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type SampleTwo_Props = Parameters<typeof SampleTwo>[0];
+
+let count = ref('0x' + Foo + 'CAFE')
+  let type = ref('primary')
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#4 */type: /* __LINKED_CODE_RIGHT__#4 */type,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+...{ class: (['btn', 'btn' + __VINE_VLS_ctx.type]) },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.span, __VINE_VLS_intrinsicElements.span)({
+});
+( __VINE_VLS_ctx.count );
+// @ts-ignore
+[type,count,];
+/** @type {__VINE_VLS_StyleScopedClasses['btn']} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestPlainTextTemplate_props__ = {}
+
+
+export function TestPlainTextTemplate(
+  props: __VINE_VLS_TestPlainTextTemplate_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  // This should not report any formatting warning
+  
+type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestUnoCssAttributeMode_props__ = {}
+
+
+export function TestUnoCssAttributeMode(
+  props: __VINE_VLS_TestUnoCssAttributeMode_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+border: "1px solid red",
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.span, __VINE_VLS_intrinsicElements.span)({
+});
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestCompOne_props__ = {
+/* __LINKED_CODE_LEFT__#3 */zee: string,
+/* __LINKED_CODE_LEFT__#3 */foo?: number
+}
+
+
+// #endregion
+
+
+// #region Fixtures for testing component reference & props check in VSCode
+function TestCompOne(
+  props: __VINE_VLS_TestCompOne_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
+
+const /* __LINKED_CODE_RIGHT__#3 */zee = vineProp<string>()
+  const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */zee: /* __LINKED_CODE_RIGHT__#3 */zee,
+  /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+( __VINE_VLS_ctx.foo );
+// @ts-ignore
+[foo,];
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestCompTwo_props__ = {}
+
+
+function TestCompTwo(
+  props: __VINE_VLS_TestCompTwo_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type TestCompTwo_Props = Parameters<typeof TestCompTwo>[0];
+
+const bar = ref('123')
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#11 */UnknownComp: /* __LINKED_CODE_RIGHT__#11 */UnknownComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#3 */bar: /* __LINKED_CODE_RIGHT__#3 */bar,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+( __VINE_VLS_ctx.bar );
+// @ts-ignore
+[bar,];
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'UnknownComp', __VINE_VLS_LocalComponents, void, 'UnknownComp', 'UnknownComp', 'UnknownComp'>).UnknownComp;
+/** @type {[typeof __VINE_VLS_components.UnknownComp, ]} */;
+// @ts-ignore
+UnknownComp;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+const __VINE_VLS_4 = ({} as __VINE_VLS_WithComponent<'TestCompOne', __VINE_VLS_LocalComponents, void, 'TestCompOne', 'TestCompOne', 'TestCompOne'>).TestCompOne;
+/** @type {[typeof __VINE_VLS_components.TestCompOne, ]} */;
+// @ts-ignore
+TestCompOne;
+// @ts-ignore
+const __VINE_VLS_5 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_4, new __VINE_VLS_4({
+}));
+const __VINE_VLS_6 = __VINE_VLS_5({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_5));
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TargetComp_props__ = {}
+
+// #endregion
+
+
+// #region Test vineExpose and component ref
+function TargetComp(
+  props: __VINE_VLS_TargetComp_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {
+  expose: __VINE_VLS_PickComponentExpose<typeof TargetComp>,
+  
+}) {
+  
+type TargetComp_Props = Parameters<typeof TargetComp>[0];
+
+const count = ref(0)
+
+
+  watchEffect(() => {
+    console.log('count: ', count.value)
+  })
+  const __VINE_VLS_ComponentExpose__ = {
+    count
+  };
+vineExpose(__VINE_VLS_ComponentExpose__)
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+...{ onClick: (...[$event]) => {
+__VINE_VLS_ctx.count++;
+// @ts-ignore
+[count,];
+}},
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+( __VINE_VLS_ctx.count );
+// @ts-ignore
+[count,];
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VINE_VLS_ComponentExpose__>) };
+
+}
+type __VINE_VLS_TestCompRef_props__ = {}
+
+
+export function TestCompRef(
+  props: __VINE_VLS_TestCompRef_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  // const target = ref<ReturnType<typeof TargetComp>>()
+  
+type TestCompRef_Props = Parameters<typeof TestCompRef>[0];
+
+const target = useTemplateRef<__VINE_VLS_TemplateRefs['target'], keyof __VINE_VLS_TemplateRefs>('target')
+
+  console.log('target count: ', target.value?.count)
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'TargetComp', __VINE_VLS_LocalComponents, void, 'TargetComp', 'TargetComp', 'TargetComp'>).TargetComp;
+/** @type {[typeof __VINE_VLS_components.TargetComp, ]} */;
+// @ts-ignore
+TargetComp;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+ref: "target",
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+ref: "target",
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+/** @type {typeof __VINE_VLS_ctx.target} */;
+var __VINE_VLS_4 = {} as (Parameters<NonNullable<typeof __VINE_VLS_3['expose']>>[0] | null);
+var __VINE_VLS_3!: __VINE_VLS_PickFunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+// @ts-ignore
+var __VINE_VLS_5 = __VINE_VLS_4, ;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+target: typeof __VINE_VLS_5,
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestNoVforKeyOnChild_props__ = {}
+
+// #endregion
+
+// #region Test ESLint rule: no-v-for-key-on-child
+export function TestNoVforKeyOnChild(
+  props: __VINE_VLS_TestNoVforKeyOnChild_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
+
+interface User { id: string; name: string }
+  const users = ref<User[]>([])
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */users: /* __LINKED_CODE_RIGHT__#5 */users,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+...{ class: "user-list" },
+});
+for (const [user] of __VINE_VLS_getVForSourceType((__VINE_VLS_ctx.users)!)) {
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+key: (user.id),
+});
+( user.name );
+// @ts-ignore
+[users,];
+}
+/** @type {__VINE_VLS_StyleScopedClasses['user-list']} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_TestNoLifecycleHookAfterAwait_props__ = {}
+
+// #endregion
+
+// #region Test ESLint rule: no-lifecycle-hook-after-await
+declare const doSomethingAsync: () => Promise<void>
+export async function TestNoLifecycleHookAfterAwait(
+  props: __VINE_VLS_TestNoLifecycleHookAfterAwait_props__ & __VINE_VLS_VineComponentCommonProps, 
+context: {}) {
+  
+type TestNoLifecycleHookAfterAwait_Props = Parameters<typeof TestNoLifecycleHookAfterAwait>[0];
+
+await doSomethingAsync()
+
+  onMounted(() => {
+    // ...
+  })
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['p'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+// #endregion
+
+const __VINE_VLS_ComponentsReferenceMap = {
+  Comp: Comp,
+  SampleOne: SampleOne,
+  SampleTwo: SampleTwo,
+  TestPlainTextTemplate: TestPlainTextTemplate,
+  TestUnoCssAttributeMode: TestUnoCssAttributeMode,
+  TestCompOne: TestCompOne,
+  TestCompTwo: TestCompTwo,
+  UnknownComp: UnknownComp,
+  TargetComp: TargetComp,
+  TestCompRef: TestCompRef,
+  TestNoVforKeyOnChild: TestNoVforKeyOnChild,
+  TestNoLifecycleHookAfterAwait: TestNoLifecycleHookAfterAwait
+};
+"
+`;

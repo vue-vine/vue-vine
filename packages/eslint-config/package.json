@@ -1,0 +1,43 @@
+{
+  "name": "@vue-vine/eslint-config",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "ESLint config for Vue Vine",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/eslint-config"
+  },
+  "keywords": [
+    "Vue",
+    "Vine",
+    "eslint",
+    "eslintConfig"
+  ],
+  "exports": {
+    ".": {
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "test:dev": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vue-vine/eslint-plugin": "workspace:*",
+    "eslint": "catalog:eslint-libs"
+  }
+}

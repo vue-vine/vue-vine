@@ -1,21 +1,25 @@
 {
   "name": "vue-vine",
-  "version": "0.1.20",
+  "type": "module",
+  "version": "1.0.0",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/vue-vine"
+  },
   "exports": {
     ".": {
-      "dev": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "node": "./dist/index.js"
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./vite": {
-      "dev": "./src/vite/index.ts",
-      "import": "./dist/vite.mjs",
-      "require": "./dist/vite.js",
-      "node": "./dist/index.js"
+      "vine": "./src/vite/index.ts",
+      "types": "./dist/vite.d.ts",
+      "default": "./dist/vite.js"
     },
     "./macros": {
       "types": "./types/macros.d.ts"
@@ -26,12 +30,17 @@
     "types"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": ">=3.2"
   },
   "dependencies": {
-    "@vue-vine/vite-plugin": "workspace:*",
-    "@vueuse/core": "^10.4.1"
+    "@vue-vine/vite-plugin": "workspace:^"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "catalog:vue-libs"
   },
   "publishConfig": {
     "access": "public",

@@ -1,5 +1,5 @@
-function About() {
+export default function About() {
   return vine`
-    <div>About</div>
+    <div class="h-full flex justify-center items-center">Enjoy~</div>
   `
 }

@@ -1,5 +1,3 @@
-import assert from 'node:assert'
-import last from 'lodash/last'
 import type {
   ErrorCode,
   HasLocation,
@@ -7,10 +5,12 @@ import type {
   Token,
   VAttribute,
 } from '../ast'
+import type { VineESLintParserOptions } from '../types'
+import type { Tokenizer, TokenizerState, TokenType } from './tokenizer'
+import assert from 'node:assert'
+import last from 'lodash/last'
 import { ParseError } from '../ast'
 import { debug } from '../common/debug'
-import type { VineESLintParserOptions } from '../types'
-import type { TokenType, Tokenizer, TokenizerState } from './tokenizer'
 
 const DUMMY_PARENT: any = Object.freeze({})
 
@@ -543,7 +543,7 @@ export class IntermediateTokenizer {
     }
     const separated
             = this.currentToken != null
-            && this.currentToken.range[1] !== token.range[0]
+              && this.currentToken.range[1] !== token.range[0]
     const result = separated ? this.commit() : null
 
     this.tokens.push(token)

@@ -1,0 +1,56 @@
+{
+  "name": "@vue-vine/eslint-plugin",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "ESLint plugin for Vue Vine",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/eslint-plugin"
+  },
+  "keywords": [
+    "Vue",
+    "Vine",
+    "eslint",
+    "eslintPlugin"
+  ],
+  "exports": {
+    ".": {
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist",
+    "worker"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "test:dev": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@antfu/utils": "^0.7.10",
+    "@vue-vine/eslint-parser": "workspace:*",
+    "prettier": "catalog:miscs",
+    "prettier-linter-helpers": "^1.0.0",
+    "synckit": "^0.9.2"
+  },
+  "devDependencies": {
+    "@types/eslint": "catalog:types",
+    "@types/prettier-linter-helpers": "catalog:types",
+    "@typescript-eslint/types": "catalog:eslint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
+    "@typescript-eslint/utils": "catalog:eslint-libs",
+    "eslint": "catalog:eslint-libs",
+    "eslint-vitest-rule-tester": "catalog:eslint-libs"
+  }
+}

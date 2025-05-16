@@ -7,5 +7,5 @@
       "include": "source.vine-vue-template#vue-directives"
     }
   ],
-  "scopeName": "vine-vue-template.directives"
+  "scopeName": "source.vine-vue-template.directives"
 }

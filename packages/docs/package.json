@@ -14,8 +14,7 @@
   "devDependencies": {
     "@iconify-json/logos": "^1.1.34",
     "@iconify-json/twemoji": "^1.1.15",
-    "unocss": "^0.58.9",
-    "vitepress": "^1.0.2",
-    "vue": "^3.4.25"
+    "unocss": "catalog:miscs",
+    "vitepress": "^1.0.2"
   }
 }

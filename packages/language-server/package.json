@@ -1,12 +1,14 @@
 {
   "name": "@vue-vine/language-server",
-  "version": "0.1.20",
+  "type": "module",
+  "version": "1.0.0",
   "author": "Ray <i@mk1.io> (@so1ve)",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vue-vine/vue-vine.git"
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/language-server"
   },
   "bugs": {
     "url": "https://github.com/vue-vine/vue-vine/issues"
@@ -31,26 +33,28 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
-    "prepublishOnly": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@volar/language-core": "~2.4.14",
-    "@volar/language-server": "~2.4.14",
-    "@volar/language-service": "~2.4.14",
+    "@volar/language-server": "catalog:volar",
+    "@volar/language-service": "catalog:volar",
     "@vue-vine/compiler": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "@vue/language-core": "~2.0.26",
-    "@vue/language-service": "~2.0.26",
-    "volar-service-css": "0.0.59",
-    "volar-service-emmet": "0.0.59",
-    "volar-service-html": "0.0.59",
-    "volar-service-typescript": "0.0.59",
-    "vscode-uri": "^3.0.8"
+    "@vue/language-core": "catalog:vue-libs",
+    "@vue/language-service": "catalog:vue-libs",
+    "volar-service-css": "catalog:volar",
+    "volar-service-emmet": "catalog:volar",
+    "volar-service-html": "catalog:volar",
+    "volar-service-typescript": "catalog:volar",
+    "vscode-languageserver-protocol": "catalog:vscode",
+    "vscode-languageserver-textdocument": "catalog:vscode",
+    "ws": "catalog:miscs"
   },
   "devDependencies": {
-    "@types/node": "^20.11.25",
-    "vscode-html-languageservice": "^5.3.0"
+    "@types/node": "catalog:types",
+    "@types/ws": "catalog:types",
+    "@vue/shared": "catalog:vue-libs",
+    "vscode-html-languageservice": "catalog:vscode",
+    "vscode-uri": "catalog:vscode"
   }
 }

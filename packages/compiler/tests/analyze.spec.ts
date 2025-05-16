@@ -1,9 +1,9 @@
+import type { Nil } from '../src/types'
 import { describe, expect, it } from 'vitest'
+import { VineBindingTypes } from '../src/constants'
 import { compileVineTypeScriptFile } from '../src/index'
 import { sortStyleImport } from '../src/style/order'
-import type { Nil } from '../src/types'
-import { VineBindingTypes } from '../src/constants'
-import { createMockTransformCtx } from './shared-utils'
+import { createMockTransformCtx } from './test-utils'
 
 // implement a function for excluding fields of an object
 function excludeFields<T extends Record<string, any>, K extends keyof T>(
@@ -55,30 +55,26 @@ import type { SomeType } from 'types-2'
     compileVineTypeScriptFile(content, 'testAnalyzeImports', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeImports')
-    expect(fileCtx?.userImports).toMatchInlineSnapshot(`
-      {
-        "SomeType": {
-          "isType": true,
-          "isUsedInTemplate": false,
-          "source": "types-2",
-        },
-        "Something": {
-          "isNamespace": true,
-          "isType": false,
-          "isUsedInTemplate": false,
-          "source": "lib-1",
+    expect(JSON.stringify(fileCtx?.userImports, null, 2)).toMatchInlineSnapshot(`
+      "{
+        "ref": {
+          "source": "vue",
+          "isType": false
         },
         "VueReactive": {
-          "isType": false,
-          "isUsedInTemplate": false,
           "source": "vue",
+          "isType": false
         },
-        "ref": {
+        "Something": {
+          "source": "lib-1",
           "isType": false,
-          "isUsedInTemplate": false,
-          "source": "vue",
+          "isNamespace": true
         },
-      }
+        "SomeType": {
+          "source": "types-2",
+          "isType": true
+        }
+      }"
     `)
   })
 
@@ -161,6 +157,24 @@ function MyComp() {
     expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
   })
 
+  it('analyze vine emits definition of plain string names', () => {
+    const content = `
+function MyComp() {
+  const myEmits = vineEmits(['foo', 'bar'])
+  return vine\`<div>Test emits</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineEmits', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineEmits')
+    expect(fileCtx?.vineCompFns.length).toBe(1)
+    const vineFnComp = fileCtx?.vineCompFns[0]
+    expect(vineFnComp?.emitsAlias).toBe('myEmits')
+    expect(vineFnComp?.emits).toEqual(['foo', 'bar'])
+    expect(vineFnComp?.emitsDefinitionByNames).toBe(true)
+  })
+
   it('analyze vine slots definition', () => {
     const content = `
 function MyComp() {
@@ -215,9 +229,9 @@ function MyComp() {
         ),
         modelOptions: vineFnComp!.vineModels[name].modelOptions
           ? content.slice(
-            vineFnComp!.vineModels[name].modelOptions!.start!,
-            vineFnComp!.vineModels[name].modelOptions!.end!,
-          )
+              vineFnComp!.vineModels[name].modelOptions!.start!,
+              vineFnComp!.vineModels[name].modelOptions!.end!,
+            )
           : undefined,
       }
     }
@@ -228,6 +242,7 @@ function MyComp() {
       {
         "modelModifiersName": "modelModifiers",
         "modelOptions": "{ default: 'test' }",
+        "typeParameter": undefined,
         "varName": "defaultModelWithValue",
       }
     `)
@@ -246,6 +261,25 @@ function MyComp() {
       {
         "modelModifiersName": "countModifiers",
         "modelOptions": undefined,
+        "typeParameter": Node {
+          "end": 168,
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 32,
+              "index": 168,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 26,
+              "index": 162,
+              "line": 5,
+            },
+          },
+          "start": 162,
+          "type": "TSNumberKeyword",
+        },
         "varName": "count",
       }
     `)
@@ -271,6 +305,53 @@ function Comp() {
     const vineFnComp = fileCtx?.vineCompFns[0]
     expect(vineFnComp?.expose).toMatchSnapshot()
     expect(vineFnComp?.options).toMatchSnapshot()
+  })
+
+  it('analyze `vineValidators` macro call', () => {
+    const content = `
+function MyComp(props: {
+  foo: string;
+  bar: number;
+}) {
+  vineValidators({
+    foo: (val: string) => val.startsWith('vine:'),
+    'bar': function (val: number) {
+      return val > 5
+    },
+  })
+
+  return vine\`
+    <div>Test vine validators</div>
+    <p>foo:{{ foo }}</p>
+    <p>bar:{{ bar }}</p>
+  \`
+}
+
+function ErrComp() {
+  const zig = vineProp<string>()
+  vineValidators({
+    zig: (val: string) => val.startsWith('vine:'),
+  })
+
+  return vine\`...\`
+}
+    `
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineValidators', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`1`)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg)).toMatchInlineSnapshot(`
+      [
+        "vineValidators macro call can only be used when props are defined by annotation",
+      ]
+    `)
+    expect(mockCompilerCtx.fileCtxMap.size).toMatchInlineSnapshot(`1`)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineValidators')
+    expect(fileCtx?.vineCompFns.length).toMatchInlineSnapshot(`2`)
+    const MyComp = fileCtx?.vineCompFns[0]
+    expect(Boolean(MyComp?.macrosInfoForVolar.some(info => info.macroType === 'vineValidators'))).toBe(true)
+    expect(Boolean(MyComp?.props.foo.validator)).toBe(true)
+    expect(Boolean(MyComp?.props.bar.validator)).toBe(true)
   })
 
   it('analyze vine component function\'s Vue bindings type', () => {
@@ -435,10 +516,14 @@ function MyComp() {
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testStoreVinePropTypeAnnotation')
     const MyComp = fileCtx?.vineCompFns[0]
     expect(MyComp?.getPropsTypeRecordStr())
-      .toMatchInlineSnapshot(`"{ p1: string, p2: number, p3: typeof V1, p4: any, p5: T1, p6: boolean, p7: T2 }"`)
-    // expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
-    // expect(mockCompilerCtx.vineCompileWarnings[0].msg)
-    //   .toMatchInlineSnapshot(`"The default value is too complex for Vine compiler to infer its type. Please explicitly give a type paramter for IDE type check."`)
+      .toMatchInlineSnapshot(`
+        "{
+        p1: string, p2?: number, p3?: typeof V1, p4?: any, p5?: T1, p6?: boolean, p7?: T2
+        }"
+      `)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
+    expect(mockCompilerCtx.vineCompileWarnings[0].msg)
+      .toMatchInlineSnapshot(`"The default value is an expression, Vine compiler doesn't embed TypeScript to infer its type. So it's recommended to provide a type anonation explicitly for IDE checking."`)
   })
 })
 
@@ -501,5 +586,33 @@ function MyBox() {
         myEmits: VineBindingTypes.SETUP_CONST,
       }),
     )
+  })
+
+  it('vineProp.withDefault should be an optional prop', () => {
+    const content = `
+    function MyComp() {
+      const prop1 = vineProp.withDefault(0)
+      const prop2 = vineProp<string>()
+      const p3 = vineProp.optional<boolean>()
+
+      return vine\`<div>Test default prop {{ prop1 }}</div>\`
+    }`
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVinePropWithDefault', { compilerHooks: mockCompilerHooks })
+    const MyComp = mockCompilerCtx.fileCtxMap.get('testVinePropWithDefault')?.vineCompFns[0]
+    expect(MyComp?.props).toEqual(
+      expect.objectContaining({
+        prop1: expect.objectContaining({
+          isRequired: false,
+        }),
+      }),
+    )
+    expect(MyComp?.getPropsTypeRecordStr())
+      .toMatchInlineSnapshot(`
+        "{
+        prop1?: number, prop2: string, p3?: boolean
+        }"
+      `)
   })
 })

@@ -1,14 +1,14 @@
+import type { VineESLintParserOptions } from '../types'
+import type { BasicParserObject } from './parser-object'
+
 import path from 'node:path'
 import process from 'node:process'
-
 // @ts-expect-error -- ignore
 import * as dependencyEspree from 'espree'
 import { lt, lte } from 'semver'
-import type { VineESLintParserOptions } from '../types'
-import { getLinterRequire } from './linter-require'
 
 import { createRequire } from './create-require'
-import type { BasicParserObject } from './parser-object'
+import { getLinterRequire } from './linter-require'
 
 type Espree = BasicParserObject & {
   latestEcmaVersion?: number

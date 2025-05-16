@@ -5,6 +5,7 @@
       "name": "Run Vine extension",
       "type": "extensionHost",
       "request": "launch",
+      "autoAttachChildProcesses": true,
       "args": [
         "--inspector",
         "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext",

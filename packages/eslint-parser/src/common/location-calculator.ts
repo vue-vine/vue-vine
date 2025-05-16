@@ -1,5 +1,5 @@
-import sortedLastIndex from 'lodash/sortedLastIndex'
 import type { Location } from '../ast'
+import sortedLastIndex from 'lodash/sortedLastIndex'
 import { LinesAndColumns } from './lines-and-columns'
 
 /**

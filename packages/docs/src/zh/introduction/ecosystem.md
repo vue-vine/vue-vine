@@ -2,50 +2,34 @@
 
 除了 Vite 插件和 VSCode 扩展，Vine 还提供了一些你可能需要的其他库。
 
-## 自定义 ESLint 解析器 {#custom-eslint-parser}
+## 自定义 ESLint 配置 {#eslint-config}
 
 因为我们为 `.vine.ts` 定义了一种新的语法，即将标记模板字符串作为 Vue 模板，我们需要一个自定义的 ESLint 解析器来使 ESLint 正常工作。如果你对内部实现感兴趣，可以查看[源代码](https://github.sheincorp.cn/vue-vine/vue-vine/tree/main/packages/eslint-parser)。简而言之，它将用 Vue 模板根节点替换标记模板字符串的 ESTree 节点。
 
-我们还没有为 Vue Vine 提供任何特定的 ESLint 规则，但它应该可以与大多数现有的规则预设一起工作，比如 `@antfu/eslint-config`、`@sxzz/eslint-config` 等。
+我们已经为 Vue Vine 提供了一份特定的 ESLint 规则包，它应该可以与大多数现有的规则预设一起工作，比如 `@antfu/eslint-config`、`@sxzz/eslint-config` 等。
 
-**但样式相关的规则尚未完全支持：**
-
-- `ESLint-Stylistics` 会因为一些未知问题无法格式化模板
-- `eslint-plugin-prettier` 运行起来似乎没问题，但并也没有怎么对模板部分做格式化
+**但样式相关的规则尚未完全支持，我们会持续迭代并完善。**
 
 要配置自定义解析器，请运行以下命令安装包：
 
 ```bash
-pnpm i -D @vue-vine/eslint-parser
+pnpm i -D @vue-vine/eslint-config
 ```
 
-接着，请将以下配置添加到你的 `eslint.config.mjs` 文件中：
+接着，请将以下配置添加到你的 `eslint.config.js` 文件中：
 
 ```js
 import antfu from '@antfu/eslint-config'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+
+// `VueVine()` 返回一个 ESLint flat config
+import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
   {
-    // 在这里覆盖
-    // antfu ESLint 预设的配置
+    // 第一个选项对象不是 ESLint 的 FlatConfig
+    // 是 antfu 规则自身的配置
   },
-  {
-    // 在这里放一些
-    // 可能会被其他非 Vine 文件
-    // 用到的用户配置
-  },
-  {
-    files: [
-      'path/to/**/*.vine.ts',
-    ],
-    languageOptions: {
-      parser: VueVineESLintParser,
-    },
-    rules: {
-      // 在这里定制 `.vine.ts` 文件的规则
-    },
-  },
+  ...VueVine(),
 )
 ```
 
@@ -104,10 +88,18 @@ create-vue-vine my-vine-project
 ◇  Use Vue Router?
 │  Yes
 │
-◇  Project created at: /path/to/my-vine-project
-│
-◇  Install dependencies?
+◇  Use Pinia as state management?
 │  Yes
+│
+◇  Using atomized css?
+│  - UnoCSS
+│  - Tailwind
+│  - No
+│
+◇  Install all dependencies for the project now?
+│  Yes
+│
+◇  Project created at: /path/to/my-vine-project
 │
 
 ...
@@ -116,8 +108,24 @@ create-vue-vine my-vine-project
 │
 └  You're all set! Now run:
 
-  cd my-vine-project
-  pnpm dev
+   cd my-vine-project
+   pnpm dev
 
-  Happy hacking!
+   Happy hacking!
+```
+
+## 可能遇到的问题 {#common-issues}
+
+### 与 UnoCSS Attribute Mode 冲突 {#conflict-with-unocss-attribute-mode}
+
+因为 Vue Vine 的模板类型检查开启了 Vue language tools 的严格模式，所以本身是不允许随便在模板的 HTML 标签上使用任意名称的属性的，而这会影响到使用 UnoCSS Attribute Mode 的场景。为了解决此类问题，请你在项目 `tsconfig.json` 所包含（`include`）的范围内，添加一个 `shims.d.ts` 文件，并写入以下内容：
+
+```ts
+declare module 'vue' {
+  interface HTMLAttributes {
+    [key: string]: any
+  }
+}
+
+export {}
 ```

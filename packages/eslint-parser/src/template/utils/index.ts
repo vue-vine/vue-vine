@@ -1,17 +1,43 @@
-import { debug } from '../../common/debug'
-import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
+import type {
+  ESLintExpression,
+  ESLintExtendedProgram,
+  ESLintIdentifier,
+  Reference,
+  Token,
+  VAttribute,
+  VDirective,
+  VDirectiveKey,
+  VElement,
+  VExpressionContainer,
+  VFilterSequenceExpression,
+  VForExpression,
+  VIdentifier,
+  VLiteral,
+  VNode,
+  VOnExpression,
+  VSlotScopeExpression,
+} from '../../ast'
 import type { LocationCalculatorForHtml } from '../../common/location-calculator'
+import type { ExpressionParseResult } from '../../script'
+import type { VineESLintParserOptions, VineFixLocationContext, VineTemplateMeta } from '../../types'
 import { ParseError } from '../../ast'
-import type { ESLintExpression, Reference, Token, VAttribute, VDirective, VDirectiveKey, VElement, VExpressionContainer, VFilterSequenceExpression, VForExpression, VIdentifier, VLiteral, VNode, VOnExpression, VSlotScopeExpression } from '../../ast'
+import { debug } from '../../common/debug'
 import { insertError } from '../../common/error-utils'
 import { createSimpleToken, insertComments, replaceTokens } from '../../common/token-utils'
-import type { ExpressionParseResult } from '../../script'
-import { parseExpression, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
-import { fixVineOffset } from './process-vine-template-node'
+import { parseExpression, parseScriptFragment, parseSlotScopeExpression, parseVForExpression, parseVOnExpression } from '../../script'
 
 const shorthandSign = /^[.:@#]/u
 const shorthandNameMap = { ':': 'bind', '.': 'bind', '@': 'on', '#': 'slot' }
 const invalidDynamicArgumentNextChar = /^[\s=/>]$/u
+
+/**
+ * `casing.camelCase()` converts the beginning to lowercase,
+ * but does not convert the case of the beginning character when converting with Vue3.
+ * @see https://github.com/vuejs/vue-next/blob/48de8a42b7fed7a03f7f1ff5d53d6a704252cafe/packages/shared/src/index.ts#L109
+ */
+export function camelize(str: string) {
+  return str.replace(/-(\w)/gu, (_, c) => (c ? c.toUpperCase() : ''))
+}
 
 /**
  * Information of a mustache.
@@ -54,7 +80,7 @@ function getStandardDirectiveKind(
     directiveName === 'slot'
     || directiveName === 'slot-scope'
     || (directiveName === 'scope'
-    && element.rawName === 'template')
+      && element.rawName === 'template')
   ) {
     return 'slot'
   }
@@ -69,7 +95,6 @@ function getStandardDirectiveKind(
  * @param code Whole source code text.
  * @param parserOptions The parser options to parse expressions.
  * @param globalLocationCalculator The location calculator to adjust the locations of nodes.
- * @param vineFixLocationContext The context for fixing vine template locations.
  * @param node The attribute node to replace. This function modifies this node directly.
  * @param element The element which is currently parsing attrs.
  * @param directiveKey The key of this directive.
@@ -78,7 +103,6 @@ function parseAttributeValue(
   code: string,
   parserOptions: VineESLintParserOptions,
   globalLocationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
   node: VLiteral,
   element: VElement,
   directiveKey: VDirectiveKey,
@@ -119,7 +143,6 @@ function parseAttributeValue(
     result = parseVForExpression(
       node.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -127,7 +150,6 @@ function parseAttributeValue(
     result = parseVOnExpression(
       node.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -135,7 +157,6 @@ function parseAttributeValue(
     result = parseSlotScopeExpression(
       node.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -143,7 +164,6 @@ function parseAttributeValue(
     result = parseExpression(
       node.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
       { allowFilters: true },
     )
@@ -152,7 +172,6 @@ function parseAttributeValue(
     result = parseExpression(
       node.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
     )
   }
@@ -191,7 +210,6 @@ function parseAttributeValue(
 function parseDirectiveKeyStatically(
   node: VIdentifier,
   templateMeta: VineTemplateMeta,
-  vineFixLocationContext: VineFixLocationContext,
 ): VDirectiveKey {
   const {
     name: text,
@@ -210,12 +228,10 @@ function parseDirectiveKeyStatically(
     argument: null as VIdentifier | null,
     modifiers: [] as VIdentifier[],
   }
-  fixVineOffset(directiveKey, vineFixLocationContext)
 
   let i = 0
 
   function createIdentifier(
-    vineFixLocationContext: VineFixLocationContext,
     start: number,
     end: number,
     name?: string,
@@ -231,20 +247,19 @@ function parseDirectiveKeyStatically(
       name: name || text.slice(start, end),
       rawName: rawText.slice(start, end),
     }
-    fixVineOffset(id, vineFixLocationContext)
     return id
   }
 
   // Parse.
   if (shorthandSign.test(text)) {
     const sign = text[0] as ':' | '.' | '@' | '#'
-    directiveKey.name = createIdentifier(vineFixLocationContext, 0, 1, shorthandNameMap[sign])
+    directiveKey.name = createIdentifier(0, 1, shorthandNameMap[sign])
     i = 1
   }
   else {
     const colon = text.indexOf(':')
     if (colon !== -1) {
-      directiveKey.name = createIdentifier(vineFixLocationContext, 0, colon)
+      directiveKey.name = createIdentifier(0, colon)
       i = colon + 1
     }
   }
@@ -253,7 +268,7 @@ function parseDirectiveKeyStatically(
     // Dynamic argument.
     const len = text.slice(i).lastIndexOf(']')
     if (len !== -1) {
-      directiveKey.argument = createIdentifier(vineFixLocationContext, i, i + len + 1)
+      directiveKey.argument = createIdentifier(i, i + len + 1)
       i = i + len + 1 + (text[i + len + 1] === '.' ? 1 : 0)
     }
   }
@@ -262,7 +277,7 @@ function parseDirectiveKeyStatically(
     .slice(i)
     .split('.')
     .map((modifierName) => {
-      const modifier = createIdentifier(vineFixLocationContext, i, i + modifierName.length)
+      const modifier = createIdentifier(i, i + modifierName.length)
       if (modifierName === '' && i < text.length) {
         insertError(
           templateMeta,
@@ -292,7 +307,7 @@ function parseDirectiveKeyStatically(
       templateMeta,
       new ParseError(
         `Unexpected token '${
-            text[directiveKey.name.range[1] - offset]
+          text[directiveKey.name.range[1] - offset]
         }'`,
         undefined,
         directiveKey.name.range[1],
@@ -309,7 +324,7 @@ function parseDirectiveKeyStatically(
   ) {
     const pos
           = (directiveKey.argument || directiveKey.name).range[1] - offset
-    const propModifier = createIdentifier(vineFixLocationContext, pos, pos, 'prop')
+    const propModifier = createIdentifier(pos, pos, 'prop')
     directiveKey.modifiers.unshift(propModifier)
   }
 
@@ -398,7 +413,6 @@ function convertDynamicArgument(
   templateMeta: VineTemplateMeta,
   parserOptions: VineESLintParserOptions,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
 ): void {
   const { argument } = node
   if (
@@ -417,7 +431,6 @@ function convertDynamicArgument(
     const { comments, expression, references, tokens } = parseExpression(
       rawName.slice(1, -1),
       locationCalculator.getSubCalculatorAfter(range[0] + 1),
-      vineFixLocationContext,
       parserOptions,
     )
 
@@ -429,7 +442,6 @@ function convertDynamicArgument(
       expression,
       references,
     }
-    fixVineOffset(node.argument, vineFixLocationContext)
 
     if (expression != null) {
       expression.parent = node.argument
@@ -488,10 +500,9 @@ function createDirectiveKey(
   templateMeta: VineTemplateMeta,
   parserOptions: VineESLintParserOptions,
   locationCalculator: LocationCalculatorForHtml,
-  vineFixLocationContext: VineFixLocationContext,
 ): VDirectiveKey {
   // Parse node and tokens.
-  const directiveKey = parseDirectiveKeyStatically(node, templateMeta, vineFixLocationContext)
+  const directiveKey = parseDirectiveKeyStatically(node, templateMeta)
   const tokens = parseDirectiveKeyTokens(directiveKey)
   replaceTokens(templateMeta, directiveKey, tokens)
 
@@ -509,7 +520,6 @@ function createDirectiveKey(
     templateMeta,
     parserOptions,
     locationCalculator,
-    vineFixLocationContext,
   )
 
   return directiveKey
@@ -546,11 +556,6 @@ export function convertToDirective(
     templateMeta,
     parserOptions,
     locationCalculator,
-    vineFixLocationContext,
-  )
-  fixVineOffset(
-    directive.key,
-    vineFixLocationContext,
   )
 
   const { argument } = directive.key
@@ -578,6 +583,14 @@ export function convertToDirective(
   }
 
   if (node.value == null) {
+    if (directive.key.name.name === 'bind') {
+      // v-bind same-name shorthand (Vue 3.4+)
+      convertForVBindSameNameShorthandValue(
+        directive,
+        parserOptions,
+        locationCalculator,
+      )
+    }
     return
   }
 
@@ -586,7 +599,6 @@ export function convertToDirective(
       code,
       parserOptions,
       locationCalculator,
-      vineFixLocationContext,
       node.value,
       node.parent.parent,
       directive.key,
@@ -600,10 +612,6 @@ export function convertToDirective(
       expression: ret.expression,
       references: ret.references,
     }
-    fixVineOffset(
-      directive.value,
-      vineFixLocationContext,
-    )
     if (ret.expression != null) {
       ret.expression.parent = directive.value
     }
@@ -659,12 +667,10 @@ export function processMustache(
   debug('[template] convert mustache {{%s}} %j', mustache.value, range)
 
   try {
-    const locationCalculator
-          = globalLocationCalculator.getSubCalculatorAfter(range[0])
+    const locationCalculator = globalLocationCalculator.getSubCalculatorAfter(range[0])
     const ret = parseExpression(
       mustache.value,
       locationCalculator,
-      vineFixLocationContext,
       parserOptions,
       { allowEmpty: true, allowFilters: true },
     )
@@ -731,4 +737,64 @@ export function resolveReferences(container: VExpressionContainer): void {
       resolveReference(reference, element)
     }
   }
+}
+
+export function convertForVBindSameNameShorthandValue(
+  directive: VDirective,
+  parserOptions: VineESLintParserOptions,
+  locationCalculator: LocationCalculatorForHtml,
+) {
+  if (
+    directive.key.name.name !== 'bind'
+    || directive.key.argument == null
+    || directive.key.argument.type !== 'VIdentifier'
+  ) {
+    return
+  }
+  // v-bind same-name shorthand (Vue 3.4+)
+  const vId = directive.key.argument
+  const camelName = camelize(vId.name)
+  let result: ESLintExtendedProgram | null = null
+  try {
+    result = parseScriptFragment(
+      camelName,
+      locationCalculator.getSubCalculatorAfter(vId.range[0]),
+      parserOptions,
+    )
+  }
+  catch (err) {
+    debug('[template] Parse error: %s', err)
+  }
+  if (
+    result == null
+    || result.ast.body.length !== 1
+    || result.ast.body[0].type !== 'ExpressionStatement'
+    || result.ast.body[0].expression.type !== 'Identifier'
+  ) {
+    return
+  }
+  const id: ESLintIdentifier = result.ast.body[0].expression
+  id.range[1] = vId.range[1]
+  id.loc.end = { ...vId.loc.end }
+  if (id.end != null) {
+    id.end = vId.end
+  }
+  directive.value = {
+    type: 'VExpressionContainer',
+    range: [...vId.range],
+    loc: {
+      start: { ...vId.loc.start },
+      end: { ...vId.loc.end },
+    },
+    parent: directive,
+    expression: id,
+    references: [
+      {
+        id,
+        mode: 'r',
+        variable: null,
+      },
+    ],
+  }
+  id.parent = directive.value
 }

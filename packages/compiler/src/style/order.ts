@@ -1,52 +1,10 @@
 import type { ElementNode } from '@vue/compiler-dom'
+import type { VineFileCtx } from '../types'
+import type { ComponentRelationsMap } from '../utils/topo-sort'
 import { traverseTemplate } from '../template/traverse'
 import { isComponentNode, isTemplateElementNode } from '../template/type-predicate'
-import type { VineFileCtx } from '../types'
+import { topoSort } from '../utils/topo-sort'
 import { createStyleImportStmt } from './create-import-statement'
-
-type ComponentRelationsMap = Record<string, Set<string>>
-
-function topoSort(
-  relationsMap: Record<string, Set<string>>,
-): string[] | null {
-  const visited: Record<string, boolean> = {}
-  const sorted: string[] = []
-
-  function dfs(node: string, stack: Record<string, boolean>) {
-    if (stack[node]) {
-      // circle dependency detected
-      return null
-    }
-
-    if (visited[node])
-      return
-
-    visited[node] = true
-    stack[node] = true
-
-    for (const depNode of relationsMap[node]) {
-      const result = dfs(depNode, stack)
-      if (result === null) {
-        // sub-tree detected circle dependency, so just quit
-        return null
-      }
-    }
-
-    stack[node] = false
-    sorted.push(node)
-  }
-
-  for (const node of Object.keys(relationsMap)) {
-    dfs(node, {})
-  }
-
-  // If there're still some nodes not visited, it means there's a circle dependency.
-  if (sorted.length !== Object.keys(visited).length) {
-    return null
-  }
-
-  return sorted
-}
 
 /**
  * Sort the style import statements.
@@ -55,7 +13,9 @@ function topoSort(
  * higher than parent-component's style, so we must compute
  * a import map for the current file's multiple components.
  */
-export function sortStyleImport(vineFileCtx: VineFileCtx) {
+export function sortStyleImport(
+  vineFileCtx: VineFileCtx,
+) {
   const { vineCompFns, styleDefine } = vineFileCtx
   const relationsMap: ComponentRelationsMap = Object.fromEntries(
     vineCompFns.map(
@@ -78,30 +38,26 @@ export function sortStyleImport(vineFileCtx: VineFileCtx) {
     })
   }
 
-  const sortedStyleImportStmts = (
-    topoSort(relationsMap)?.map(
-      compName => vineCompFns.find(
-        compFn => compFn.fnName === compName,
-      )!,
-    ) ?? []
+  const sortedCompFns = topoSort(relationsMap)?.map(
+    compName => vineCompFns.find(
+      compFn => compFn.fnName === compName,
+    )!,
+  ) ?? []
+  const hasStyleDefineCompFns = sortedCompFns.filter(
+    compFn => Boolean(styleDefine[compFn.scopeId]),
   )
-    .filter(
-      fnCompCtx => Boolean(styleDefine[fnCompCtx.scopeId]),
-    )
-    .map(
-      fnCompCtx => [fnCompCtx, styleDefine[fnCompCtx.scopeId]] as const,
-    )
-    .map(
-      ([fnCompCtx, styleMetas]) => styleMetas.map(
-        (styleMeta, i) => createStyleImportStmt(
-          vineFileCtx,
-          fnCompCtx,
-          styleMeta,
-          i,
-        ),
+  const sortedStyleImportStmts = hasStyleDefineCompFns.map(
+    compFn => [compFn, styleDefine[compFn.scopeId]] as const,
+  ).map(
+    ([compFn, styleMetas]) => styleMetas.map(
+      (styleMeta, i) => createStyleImportStmt(
+        vineFileCtx,
+        compFn,
+        styleMeta,
+        i,
       ),
-    )
-    .flat()
+    ),
+  ).flat()
 
   return sortedStyleImportStmts
 }

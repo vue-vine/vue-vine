@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
     "module": "ESNext",
@@ -17,10 +18,19 @@
     "allowJs": true,
     "strict": true,
     "strictNullChecks": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "exclude": ["dist", "node_modules", "expectations/**/*.js"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "expectations/**/*.js",
+    "eslint.config.js"
+  ]
 }

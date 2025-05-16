@@ -1,94 +1,30 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`test transform > hmrId should be generated If there is no style 1`] = `
-"import {
-  createElementVNode as _createElementVNode,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
-  defineComponent as _defineComponent,
-  useCssVars as _useCssVars,
-  unref as _unref,
-} from "vue";
-
-export const About = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-ba945b60"), (n = n()), _popScopeId(), n
-  );
-  const _hoisted_1 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "About page",
-      -1 /* HOISTED */,
-    ),
-  );
-  const _hoisted_2 = [_hoisted_1];
-  const __vine = _defineComponent({
-    name: "About",
-    /* No props */
-    /* No emits */
-    setup(__props, { expose: __expose }) {
-      __expose();
-      const props = __props;
-
-      return (_ctx, _cache) => {
-        return _openBlock(), _createElementBlock("div", null, _hoisted_2);
-      };
-    },
-  });
-
-  __vine.__hmrId = "ba945b60";
-
-  return __vine;
-})();
-
-typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
-export const _rerender_only = false;
-export const _rerender_vcf_fn_name = "";
-import.meta.hot?.accept((mod) => {
-  if (!mod) {
-    return;
-  }
-  const { _rerender_only, _rerender_vcf_fn_name } = mod;
-  if (!_rerender_vcf_fn_name) {
-    return;
-  }
-  const component = mod[_rerender_vcf_fn_name];
-  if (_rerender_only) {
-    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-  } else {
-    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-  }
-});
-"
-`;
-
 exports[`test transform > inline mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
-  createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
+  withAsyncContext as _withAsyncContext,
   createVNode as _createVNode,
 } from "vue";
 
 import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?vineFileId=testTransformInlineResult&type=vine-style-external&scopeId=3921d7bd&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "../styles/test2.scss";
 import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
@@ -103,16 +39,69 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _cache[0] ||
+                (_cache[0] = _createElementVNode(
+                  "div",
+                  null,
+                  "AnotherComp",
+                  -1 /* HOISTED */,
+                )),
+              _createElementVNode(
+                "p",
+                null,
+                "foo:" + _toDisplayString(__props.foo),
+                1 /* TEXT */,
+              ),
+              _createElementVNode(
+                "p",
+                null,
+                "bar:" + _toDisplayString(__props.bar),
+                1 /* TEXT */,
+              ),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "4ea25612";
+
+  return __vine;
+})();
+
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3921d7bd"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -130,8 +119,9 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -143,12 +133,18 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
         // ...
       };
+
+      onMounted(async () => {
+        const data = await fetch(
+          "https://api.sampleapis.com/futurama/characters",
+        );
+        console.log(data);
+      });
 
       __expose({
         age,
@@ -193,20 +189,8 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-9c121b96"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -227,10 +211,20 @@ export const MyApp = (() => {
         return (
           _openBlock(),
           _createElementBlock("div", _hoisted_1, [
-            _hoisted_2,
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "h2",
+                null,
+                "Hello world",
+                -1 /* HOISTED */,
+              )),
             _createVNode(MyProfile, {
               name: "Tomy",
               age: 24,
+            }),
+            _createVNode(AnotherComp, {
+              foo: "vine:hello",
+              bar: "10",
             }),
           ])
         );
@@ -245,55 +239,43 @@ export const MyApp = (() => {
 })();
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
-export default MyApp;
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
-export const _rerender_only = false;
-export const _rerender_vcf_fn_name = "";
-import.meta.hot?.accept((mod) => {
-  if (!mod) {
-    return;
-  }
-  const { _rerender_only, _rerender_vcf_fn_name } = mod;
-  if (!_rerender_vcf_fn_name) {
-    return;
-  }
-  const component = mod[_rerender_vcf_fn_name];
-  if (_rerender_only) {
-    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-  } else {
-    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-  }
-});
+
+export default MyApp;
 "
 `;
 
 exports[`test transform > not output HMR content in non-dev mode 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
-  createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   unref as _unref,
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
+  withAsyncContext as _withAsyncContext,
   createVNode as _createVNode,
 } from "vue";
 
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?vineFileId=testNoHMRContentOnProduction&type=vine-style-external&scopeId=3b48c990&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "../styles/test2.scss";
 import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
@@ -308,16 +290,67 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _cache[0] ||
+                (_cache[0] = _createElementVNode(
+                  "div",
+                  null,
+                  "AnotherComp",
+                  -1 /* HOISTED */,
+                )),
+              _createElementVNode(
+                "p",
+                null,
+                "foo:" + _toDisplayString(__props.foo),
+                1 /* TEXT */,
+              ),
+              _createElementVNode(
+                "p",
+                null,
+                "bar:" + _toDisplayString(__props.bar),
+                1 /* TEXT */,
+              ),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  return __vine;
+})();
+
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-3b48c990"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -335,8 +368,9 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -348,12 +382,18 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
         // ...
       };
+
+      onMounted(async () => {
+        const data = await fetch(
+          "https://api.sampleapis.com/futurama/characters",
+        );
+        console.log(data);
+      });
 
       __expose({
         age,
@@ -397,20 +437,8 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-c5a474f0"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -431,10 +459,20 @@ export const MyApp = (() => {
         return (
           _openBlock(),
           _createElementBlock("div", _hoisted_1, [
-            _hoisted_2,
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "h2",
+                null,
+                "Hello world",
+                -1 /* HOISTED */,
+              )),
             _createVNode(MyProfile, {
               name: "Tomy",
               age: 24,
+            }),
+            _createVNode(AnotherComp, {
+              foo: "vine:hello",
+              bar: "10",
             }),
           ])
         );
@@ -454,25 +492,27 @@ export default MyApp;
 exports[`test transform > separated mode output result 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
-  toDisplayString as _toDisplayString,
-  createElementVNode as _createElementVNode,
-  createTextVNode as _createTextVNode,
-  vShow as _vShow,
-  withDirectives as _withDirectives,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
-  pushScopeId as _pushScopeId,
-  popScopeId as _popScopeId,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  Fragment as _Fragment,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
+  createTextVNode as _createTextVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
+  withAsyncContext as _withAsyncContext,
   createVNode as _createVNode,
 } from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?vineFileId=testTransformSeparatedResult&type=vine-style-external&scopeId=25e4e706&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "../styles/test2.scss";
 import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
@@ -487,16 +527,70 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return (
+      _openBlock(),
+      _createElementBlock(
+        _Fragment,
+        null,
+        [
+          _cache[0] ||
+            (_cache[0] = _createElementVNode(
+              "div",
+              null,
+              "AnotherComp",
+              -1 /* HOISTED */,
+            )),
+          _createElementVNode(
+            "p",
+            null,
+            "foo:" + _toDisplayString($props.foo),
+            1 /* TEXT */,
+          ),
+          _createElementVNode(
+            "p",
+            null,
+            "bar:" + _toDisplayString($props.bar),
+            1 /* TEXT */,
+          ),
+        ],
+        64 /* STABLE_FRAGMENT */,
+      )
+    );
+  }
+  __vine.render = __sfc_render;
+  __vine.__hmrId = "93184a5c";
+
+  return __vine;
+})();
+
 export const MyProfile = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-25e4e706"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -514,8 +608,9 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -527,12 +622,18 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
         // ...
       };
+
+      onMounted(async () => {
+        const data = await fetch(
+          "https://api.sampleapis.com/futurama/characters",
+        );
+        console.log(data);
+      });
 
       __expose({
         age,
@@ -546,17 +647,11 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
-        emits,
         textColor,
         handleRefresh,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
         v1,
         v2,
+        AnotherComp,
         MyProfile,
         MyApp,
       };
@@ -598,20 +693,8 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
-  const _withScopeId = (n) => (
-    _pushScopeId("data-v-b909f216"), (n = n()), _popScopeId(), n
-  );
   const _hoisted_1 = { class: "my-app" };
-  const _hoisted_2 = /*#__PURE__*/ _withScopeId(() =>
-    /*#__PURE__*/ _createElementVNode(
-      "h2",
-      null,
-      "Hello world",
-      -1 /* HOISTED */,
-    ),
-  );
   const __vine = _defineComponent({
     name: "MyApp",
     /* No props */
@@ -628,29 +711,27 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return {
-        data,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
-        v1,
-        v2,
-        MyProfile,
-        MyApp,
-      };
+      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return (
       _openBlock(),
       _createElementBlock("div", _hoisted_1, [
-        _hoisted_2,
+        _cache[0] ||
+          (_cache[0] = _createElementVNode(
+            "h2",
+            null,
+            "Hello world",
+            -1 /* HOISTED */,
+          )),
         _createVNode($setup["MyProfile"], {
           name: "Tomy",
           age: 24,
+        }),
+        _createVNode($setup["AnotherComp"], {
+          foo: "vine:hello",
+          bar: "10",
         }),
       ])
     );
@@ -663,51 +744,40 @@ export const MyApp = (() => {
 })();
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
-export default MyApp;
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
-export const _rerender_only = false;
-export const _rerender_vcf_fn_name = "";
-import.meta.hot?.accept((mod) => {
-  if (!mod) {
-    return;
-  }
-  const { _rerender_only, _rerender_vcf_fn_name } = mod;
-  if (!_rerender_vcf_fn_name) {
-    return;
-  }
-  const component = mod[_rerender_vcf_fn_name];
-  if (_rerender_only) {
-    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-  } else {
-    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-  }
-});
+
+export default MyApp;
 "
 `;
 
 exports[`test transform > separated mode output result by ssr 1`] = `
 "import { useDefaults as _useDefaults } from "vue-vine";
 import {
+  ssrInterpolate as _ssrInterpolate,
   ssrRenderStyle as _ssrRenderStyle,
   ssrRenderAttrs as _ssrRenderAttrs,
-  ssrInterpolate as _ssrInterpolate,
   ssrRenderComponent as _ssrRenderComponent,
 } from "vue/server-renderer";
 import {
-  mergeProps as _mergeProps,
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
+  mergeProps as _mergeProps,
+  withAsyncContext as _withAsyncContext,
 } from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
 import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?vineFileId=testTransformSeparatedResult&type=vine-style-external&scopeId=25e4e706&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "../styles/test2.scss";
 import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
@@ -722,12 +792,54 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const AnotherComp = (() => {
+  const __vine = _defineComponent({
+    name: "AnotherComp",
+    props: {
+      foo: {
+        required: true,
+        validator: (val: string) => val.startsWith("vine:"),
+      },
+      bar: { required: true, validator: (val: number) => val > 5 },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_ssr_render(
+    _ctx,
+    _push,
+    _parent,
+    _attrs,
+    $props,
+    $setup,
+    $data,
+    $options,
+  ) {
+    _push(
+      \`<!--[--><div data-v-93184a5c>AnotherComp</div><p data-v-93184a5c>foo:\${_ssrInterpolate(
+        $props.foo,
+      )}</p><p data-v-93184a5c>bar:\${_ssrInterpolate($props.bar)}</p><!--]-->\`,
+    );
+  }
+  __vine.ssrRender = __sfc_ssr_render;
+  __vine.__hmrId = "93184a5c";
+
+  return __vine;
+})();
+
 export const MyProfile = (() => {
   const __vine = _defineComponent({
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: { required: true },
+      age: {
+        /* Simple prop */
+      },
       bio: {
         /* Simple prop */
       },
@@ -745,8 +857,9 @@ export const MyProfile = (() => {
       "update:count",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
+      const emits = __emit;
       const props = _useDefaults(__props, {
-        age: 18,
+        age: () => 18,
       });
       const { name, age, bio } = _toRefs(props);
 
@@ -758,12 +871,18 @@ export const MyProfile = (() => {
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
       const mySlots = _useSlots();
-      const emits = __emit;
 
       const textColor = ref("#1c1c1c");
       const handleRefresh = () => {
         // ...
       };
+
+      onMounted(async () => {
+        const data = await fetch(
+          "https://api.sampleapis.com/futurama/characters",
+        );
+        console.log(data);
+      });
 
       __expose({
         age,
@@ -777,17 +896,11 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
-        emits,
         textColor,
         handleRefresh,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
         v1,
         v2,
+        AnotherComp,
         MyProfile,
         MyApp,
       };
@@ -823,7 +936,6 @@ export const MyProfile = (() => {
 
   return __vine;
 })();
-
 export const MyApp = (() => {
   const __vine = _defineComponent({
     name: "MyApp",
@@ -841,19 +953,7 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return {
-        data,
-        ref,
-        someDefaultExport,
-        someNamedExport,
-        someNamespaceExport,
-        someExternalFunction1,
-        someExternalFunction2,
-        v1,
-        v2,
-        MyProfile,
-        MyApp,
-      };
+      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_ssr_render(
@@ -867,9 +967,7 @@ export const MyApp = (() => {
     $options,
   ) {
     _push(
-      \`<div\${_ssrRenderAttrs(
-        _mergeProps({ class: "my-app" }, _attrs),
-      )} data-v-b909f216><h2 data-v-b909f216>Hello world</h2>\`,
+      \`<div\${_ssrRenderAttrs(_mergeProps({ class: "my-app" }, _attrs))} data-v-b909f216><h2 data-v-b909f216>Hello world</h2>\`,
     );
     _push(
       _ssrRenderComponent(
@@ -877,6 +975,17 @@ export const MyApp = (() => {
         {
           name: "Tomy",
           age: 24,
+        },
+        null,
+        _parent,
+      ),
+    );
+    _push(
+      _ssrRenderComponent(
+        $setup["AnotherComp"],
+        {
+          foo: "vine:hello",
+          bar: "10",
         },
         null,
         _parent,
@@ -892,28 +1001,258 @@ export const MyApp = (() => {
 })();
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
+  __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
-export default MyApp;
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyProfile.__hmrId, MyProfile);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyApp.__hmrId, MyApp);
-export const _rerender_only = false;
-export const _rerender_vcf_fn_name = "";
-import.meta.hot?.accept((mod) => {
-  if (!mod) {
-    return;
-  }
-  const { _rerender_only, _rerender_vcf_fn_name } = mod;
-  if (!_rerender_vcf_fn_name) {
-    return;
-  }
-  const component = mod[_rerender_vcf_fn_name];
-  if (_rerender_only) {
-    __VUE_HMR_RUNTIME__.rerender(component.__hmrId, component.render);
-  } else {
-    __VUE_HMR_RUNTIME__.reload(component.__hmrId, component);
-  }
-});
+
+export default MyApp;
+"
+`;
+
+exports[`test transform > should generate export default in correct position 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return _openBlock(), _createElementBlock("div", null, "Test");
+      };
+    },
+  });
+
+  __vine.__hmrId = "cc6366e8";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+
+export default MyComp;
+"
+`;
+
+exports[`test transform > should generate hmrId If there is no style 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  createElementVNode as _createElementVNode,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+export const About = (() => {
+  const __vine = _defineComponent({
+    name: "About",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            "div",
+            null,
+            _cache[0] ||
+              (_cache[0] = [
+                _createElementVNode("h2", null, "About page", -1 /* HOISTED */),
+              ]),
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "ba945b60";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(About.__hmrId, About);
+"
+`;
+
+exports[`test transform > should not export on function delcaration when already exported in somewhere 2`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+} from "vue";
+
+const a = 1;
+const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return "...";
+      };
+    },
+  });
+
+  __vine.__hmrId = "0fc65dae";
+
+  return __vine;
+})();
+
+export { a };
+export { MyComp };
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
+exports[`test transform > should transform destructured props 1`] = `
+"import { useDefaults as _useDefaults } from "vue-vine";
+import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  createPropsRestProxy as _createPropsRestProxy,
+  toRefs as _toRefs,
+  toDisplayString as _toDisplayString,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+import { ref, watch } from "vue";
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    props: {
+      "foo:zee": { required: true },
+      bar: {
+        /* Simple prop */
+      },
+      arr: { required: true },
+      other1: { required: true },
+      other2: { required: true },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = _useDefaults(__props, {
+        bar: () => 1,
+      });
+      const { "foo:zee": fooZee, bar, arr, ...rest } = _toRefs(props);
+      const rest = _createPropsRestProxy(__props, ["foo:zee", "bar", "arr"]);
+      const test1 = ref(props["foo:zee"]);
+      const test2 = watch(
+        () => props.bar,
+        (newVal) => {
+          console.log(newVal);
+        },
+      );
+      onMounted(() => {
+        console.log("other1", rest.other1);
+        console.log("other2", rest.other2);
+      });
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            "div",
+            null,
+            _toDisplayString(_ctx.name),
+            1 /* TEXT */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "7fffacdb";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
+exports[`test transform > should transform top-level await expressions 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  withAsyncContext as _withAsyncContext,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    async setup(__props, { expose: __expose }) {
+      __expose();
+      let __temp, __restore;
+      const props = __props;
+      ([__temp, __restore] = _withAsyncContext(() => someAsyncFunction())),
+        await __temp,
+        __restore();
+      const data =
+        (([__temp, __restore] = _withAsyncContext(() =>
+          fetch("https://test-api.com"),
+        )),
+        (__temp = await __temp),
+        __restore(),
+        __temp);
+      window.fooList[
+        (([__temp, __restore] = _withAsyncContext(() => bar())),
+        (__temp = await __temp),
+        __restore(),
+        __temp)
+      ] = true;
+
+      useDebounceFn(async () => {
+        await doSomeAsync();
+      });
+
+      return (_ctx, _cache) => {
+        return _openBlock(), _createElementBlock("div", null, "Test");
+      };
+    },
+  });
+
+  __vine.__hmrId = "31ff5352";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
 "
 `;

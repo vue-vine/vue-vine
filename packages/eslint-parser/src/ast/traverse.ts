@@ -1,12 +1,12 @@
 import type { VisitorKeys } from 'eslint-visitor-keys'
-import * as Evk from 'eslint-visitor-keys'
 import type { Node } from './nodes'
+import * as Evk from 'eslint-visitor-keys'
 
 // ------------------------------------------------------------------------------
 // Helpers
 // ------------------------------------------------------------------------------
 
-const VineVisitorKeys = {
+const VineVisitorKeys: VisitorKeys = {
   VAttribute: ['key', 'value'],
   VDirectiveKey: ['name', 'argument', 'modifiers'],
   VTemplateRoot: ['children'],
@@ -53,7 +53,7 @@ function fallbackKeysFilter(this: any, key: string): boolean {
  * @param node The node to get.
  * @returns The keys to traverse.
  */
-function getFallbackKeys(node: Node): string[] {
+function getFallbackKeys(node: any): string[] {
   return Object.keys(node).filter(fallbackKeysFilter, node)
 }
 

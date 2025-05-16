@@ -1,24 +1,28 @@
-import process from 'node:process'
-import type { HmrContext, Plugin, TransformResult } from 'vite'
-import { createLogger } from 'vite'
-import {
-  compileVineStyle,
-  compileVineTypeScriptFile,
-  createCompilerCtx,
-} from '@vue-vine/compiler'
 import type {
   VineCompilerHooks,
   VineCompilerOptions,
   VineFileCtx,
   VineProcessorLang,
+  VineQuery,
 } from '@vue-vine/compiler'
 import type { TransformPluginContext } from 'rollup'
-import type { VineQuery } from './parse-query'
+import type { HmrContext, PluginOption, TransformResult } from 'vite'
+import { readFile } from 'node:fs/promises'
+import process from 'node:process'
+import {
+  compileVineStyle,
+  compileVineTypeScriptFile,
+  createCompilerCtx,
+  createTsMorph,
+} from '@vue-vine/compiler'
+import { createLogger } from 'vite'
+import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
+import { addHMRHelperCode, vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
-import { vineHMR } from './hot-update'
-import { QUERY_TYPE_STYLE } from './constants'
 
-function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
+type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
+
+function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   const compilerCtx = createCompilerCtx({
     ...options,
     envMode: options.envMode ?? (process.env.NODE_ENV || 'development'),
@@ -31,16 +35,16 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
         .map(diagnositc => diagnositc.full)
         .join('\n')
       compilerCtx.vineCompileErrors.length = 0
-      pluginContext.error(new Error(
-        `Vue Vine compilation failed:\n${allErrMsg}`,
-      ))
+      pluginContext.error(`Vue Vine compilation failed:\n${allErrMsg}`)
     }
   }
 
   let transformPluginContext: TransformPluginContext
+  let tsMorphCache: TsMorphCache
 
   const compilerHooks: VineCompilerHooks = {
     getCompilerCtx: () => compilerCtx,
+    getTsMorph: () => tsMorphCache,
     onError: errMsg => compilerCtx.vineCompileErrors.push(errMsg),
     onWarn: warnMsg => compilerCtx.vineCompileWarnings.push(warnMsg),
     onBindFileCtx: (fileId, fileCtx) => compilerCtx.fileCtxMap.set(fileId, fileCtx),
@@ -48,16 +52,16 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
   }
 
   const runCompileScript = (code: string, fileId: string, ssr: boolean): Partial<TransformResult> => {
-    let fileCtxMap: undefined | VineFileCtx
+    let fileCtxCache: undefined | VineFileCtx
     if (compilerCtx.isRunningHMR) {
-      fileCtxMap = compilerCtx.fileCtxMap.get(fileId)
+      fileCtxCache = compilerCtx.fileCtxMap.get(fileId)
     }
     const vineFileCtx = compileVineTypeScriptFile(
       code,
       fileId,
       {
         compilerHooks,
-        fileCtxCache: fileCtxMap,
+        fileCtxCache,
       },
       ssr,
     )
@@ -70,6 +74,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
       }
     }
     compilerCtx.vineCompileWarnings.length = 0
+
+    // Inject `import.meta.hot.accept`
+    addHMRHelperCode(vineFileCtx)
 
     return {
       code: vineFileCtx.fileMagicCode.toString(),
@@ -103,39 +110,81 @@ function createVinePlugin(options: VineCompilerOptions = {}): Plugin {
     enforce: 'pre',
     async resolveId(id) {
       const { query } = parseQuery(id)
-      if (query.type === QUERY_TYPE_STYLE) {
+      if (
+        query.type === QUERY_TYPE_STYLE
+        || query.type === QUERY_TYPE_STYLE_EXTERNAL
+      ) {
         // serve vine style requests as virtual modules
         return id
       }
     },
     async load(id) {
-      const { fileId, query } = parseQuery(id)
+      const { filePath, query } = parseQuery(id)
       if (query.type === QUERY_TYPE_STYLE && query.scopeId) {
-        const fullFileId = `${fileId}.vine.ts`
+        const fullFileId = `${filePath}.vine.ts`
         const styleSource = compilerCtx.fileCtxMap
-          .get(fullFileId)?.styleDefine[query.scopeId][query.index]
-          .source ?? ''
+          .get(fullFileId)
+          ?.styleDefine
+          ?.[query.scopeId]
+          ?.[query.index]
+          ?.source ?? ''
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
-          `${fileId /* This is virtual file id */}.vine.ts`,
+          `${filePath}.vine.ts`,
         )
+        return compiledStyle
+      }
+      else if (
+        query.type === QUERY_TYPE_STYLE_EXTERNAL
+        && query.scopeId
+        && query.vineFileId
+      ) {
+        const styleSource = await readFile(filePath, 'utf-8')
+        const compiledStyle = await runCompileStyle(
+          styleSource,
+          query,
+          `${query.vineFileId}.vine.ts`,
+        )
+
         return compiledStyle
       }
     },
     async transform(code, id, opt) {
       const ssr = opt?.ssr === true
-      const { fileId, query } = parseQuery(id)
-      if (!fileId.endsWith('.vine.ts') || query.type === QUERY_TYPE_STYLE) {
+      const { filePath, query } = parseQuery(id)
+      if (
+        !filePath.endsWith('.vine.ts')
+        || query.type === QUERY_TYPE_STYLE
+      ) {
         return
       }
 
       // eslint-disable-next-line ts/no-this-alias
       transformPluginContext = this
 
+      if (!tsMorphCache) {
+        tsMorphCache = createTsMorph(id)
+      }
+
       return runCompileScript(code, id, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
+      // Before executing HMR, TypeScript project (by ts-morph) should be updated
+      // to make sure the latest type information is available
+      if (tsMorphCache) {
+        // Update the source file in the project to reflect the latest changes
+        const { project } = tsMorphCache
+        const sourceFile = project.getSourceFileOrThrow(ctx.file)
+
+        // Read the updated file content
+        const updatedContent = await ctx.read()
+
+        // Update the source file with the new content
+        sourceFile.replaceWithText(updatedContent)
+        // Project's type checker will automatically update with the new content
+      }
+
       const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
       return affectedModules
     },

@@ -9,6 +9,9 @@ export const USE_SLOT_HELPER = 'useSlots'
 export const UN_REF_HELPER = 'unref'
 export const DEFAULT_MODEL_NAME = 'modelValue'
 export const DEFAULT_MODEL_MODIFIERS_NAME = 'modelModifiers'
+export const WITH_ASYNC_CONTEXT_HELPER = 'withAsyncContext'
+export const CREATE_PROPS_REST_PROXY_HELPER = 'createPropsRestProxy'
+
 /**
  * These macros can't be inside other expressions but just called directly.
  */
@@ -17,7 +20,9 @@ export const BARE_CALL_MACROS = [
   'vineOptions',
   'vineStyle',
   'vineStyle.scoped',
+  'vineStyle.import',
   'vineCustomElement',
+  'vineValidators',
 ] as const
 export const VINE_MACROS = [
   'vineProp',
@@ -42,6 +47,13 @@ export const CAN_BE_CALLED_MULTI_TIMES_MACROS = [
   'vineStyle',
 ]
 export const SUPPORTED_CSS_LANGS = ['css', 'scss', 'sass', 'less', 'stylus', 'postcss'] as const
+export const SUPPORTED_STYLE_FILE_EXTS = [
+  '.css',
+  '.scss',
+  '.sass',
+  '.less',
+  '.styl',
+]
 export const VUE_REACTIVITY_APIS = [
   'ref',
   'shallowRef',
@@ -76,13 +88,6 @@ export const VUE_LIFECYCLE_HOOK_APIS = [
   'onDeactivated',
   'onServerPrefetch',
 ] as const
-export const TS_NODE_TYPES = [
-  'TSAsExpression', // foo as number
-  'TSTypeAssertion', // (<number>foo)
-  'TSNonNullExpression', // foo!
-  'TSInstantiationExpression', // foo<string>
-  'TSSatisfiesExpression', // foo satisfies T
-]
 /** This is derived from `@vue/compiler-core` */
 export const VineBindingTypes = {
   /**
@@ -120,6 +125,11 @@ export const VineBindingTypes = {
    * a literal constant, e.g. 'foo', 1, true
    */
   LITERAL_CONST: 'literal-const' as VueBindingTypes.LITERAL_CONST,
+
+  /**
+   * a destructured prop
+   */
+  DESTRUCTURED_PROP: 'destructured-prop' as const,
 } as const
 
 export const EXPECTED_ERROR = 'expected_error'

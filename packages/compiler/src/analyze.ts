@@ -1,27 +1,3 @@
-import hashId from 'hash-sum'
-import type { BindingTypes } from '@vue/compiler-dom'
-import { walkIdentifiers } from '@vue/compiler-dom'
-import {
-  isArrayPattern,
-  isBlockStatement,
-  isBooleanLiteral,
-  isClassDeclaration,
-  isDeclaration,
-  isExportDefaultDeclaration,
-  isFunctionDeclaration,
-  isIdentifier,
-  isImportDefaultSpecifier,
-  isImportNamespaceSpecifier,
-  isImportSpecifier,
-  isObjectPattern,
-  isStringLiteral,
-  isTSMethodSignature,
-  isTSPropertySignature,
-  isTaggedTemplateExpression,
-  isTemplateLiteral,
-  isVariableDeclaration,
-  isVariableDeclarator,
-} from '@babel/types'
 import type {
   ArrayPattern,
   ArrowFunctionExpression,
@@ -37,16 +13,22 @@ import type {
   TSPropertySignature,
   TSTypeAnnotation,
   TSTypeLiteral,
+  TSTypeParameterDeclaration,
   VariableDeclaration,
   VariableDeclarator,
 } from '@babel/types'
-import { DEFAULT_MODEL_MODIFIERS_NAME, VineBindingTypes } from './constants'
+import type { BindingTypes } from '@vue/compiler-dom'
 import type {
+  VineAnalyzeCtx as AnalyzeCtx,
+  VineAnalyzeRunner as AnalyzeRunner,
   BabelFunctionNodeTypes,
+  MacrosInfoForVolar,
   Nil,
+  TsMorphCache,
   VINE_MACRO_NAMES,
   VineCompFnCtx,
   VineCompilerHooks,
+  VineDestructuredProp,
   VineFileCtx,
   VineFnPickedInfo,
   VinePropMeta,
@@ -55,6 +37,37 @@ import type {
   VineStyleValidArg,
   VineUserImport,
 } from './types'
+import {
+  isArrayExpression,
+  isArrayPattern,
+  isAssignmentPattern,
+  isBlockStatement,
+  isBooleanLiteral,
+  isClassDeclaration,
+  isDeclaration,
+  isExportDefaultDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
+  isImportDefaultSpecifier,
+  isImportNamespaceSpecifier,
+  isImportSpecifier,
+  isObjectExpression,
+  isObjectMethod,
+  isObjectPattern,
+  isObjectProperty,
+  isRestElement,
+  isStringLiteral,
+  isTaggedTemplateExpression,
+  isTemplateLiteral,
+  isTSMethodSignature,
+  isTSPropertySignature,
+  isTSTypeAnnotation,
+  isTSTypeLiteral,
+  isVariableDeclaration,
+  isVariableDeclarator,
+} from '@babel/types'
+import { walkIdentifiers } from '@vue/compiler-dom'
+import hashId from 'hash-sum'
 
 import {
   canNeverBeRef,
@@ -66,37 +79,33 @@ import {
   getTSTypeLiteralPropertySignatureName,
   getVineMacroCalleeName,
   getVinePropCallTypeParams,
+  isBabelFunctionTypes,
   isCallOf,
   isStaticNode,
+  isUseTemplateRefCall,
   isVineCompFnDecl,
   isVineCustomElement,
   isVineEmits,
+  isVineImportScoped,
   isVineMacroCallExpression,
   isVineMacroOf,
   isVineModel,
   isVineSlots,
   isVineStyle,
+  isVineValidators,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
+import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
+import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
-import { isImportUsed } from './template/importUsageCheck'
-import { vineWarn } from './diagnostics'
-import { _breakableTraverse, exitTraverse } from './utils'
-
-interface AnalyzeCtx {
-  vineCompilerHooks: VineCompilerHooks
-  vineFileCtx: VineFileCtx
-  vineCompFnCtx: VineCompFnCtx
-}
-
-type AnalyzeRunner = (
-  analyzeCtx: AnalyzeCtx,
-  fnItselfNode: BabelFunctionNodeTypes,
-) => void
+import { isImportUsed } from './template/import-usage-check'
+import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
+import { VinePropsDefinitionBy } from './types'
+import { _breakableTraverse, createLinkedCodeTag, exitTraverse, isBasicBoolTypeNames } from './utils'
 
 function storeTheOnlyMacroCallArg(
   macroName: VINE_MACRO_NAMES,
-  callback: (analyzeCtx: AnalyzeCtx, macroCallArg: Node) => void,
+  callback: (analyzeCtx: AnalyzeCtx, macroCall: CallExpression, macroCallArg: Node) => void,
 ): AnalyzeRunner {
   const findMacroCallNode: (fnItselfNode: BabelFunctionNodeTypes) => CallExpression | undefined = (
     fnItselfNode,
@@ -122,20 +131,27 @@ function storeTheOnlyMacroCallArg(
     if (!macroCallArg) {
       return
     }
-    callback(analyzeCtx, macroCallArg)
+    callback(analyzeCtx, macroCall, macroCallArg)
   }
 }
 
 const analyzeVineExpose = storeTheOnlyMacroCallArg(
   'vineExpose',
-  ({ vineCompFnCtx }, macroCallArg) => {
-    vineCompFnCtx.expose = macroCallArg
+  ({ vineCompFnCtx }, macroCall, macroCallArg) => {
+    vineCompFnCtx.expose = {
+      macroCall,
+      paramObj: macroCallArg,
+    }
+    vineCompFnCtx.macrosInfoForVolar.push({
+      macroCall,
+      macroType: 'vineExpose',
+    })
   },
 )
 
 const analyzeVineOptions = storeTheOnlyMacroCallArg(
   'vineOptions',
-  ({ vineCompFnCtx }, macroCallArg) => {
+  ({ vineCompFnCtx }, _, macroCallArg) => {
     vineCompFnCtx.options = macroCallArg
   },
 )
@@ -362,7 +378,6 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
 }
 
 const analyzeVineProps: AnalyzeRunner = (
-
   { vineCompilerHooks, vineCompFnCtx, vineFileCtx },
   fnItselfNode,
 ) => {
@@ -371,35 +386,148 @@ const analyzeVineProps: AnalyzeRunner = (
     // The Vine validator has guranateed there's only one formal params,
     // its type is `identifier`, and it must have an object literal type annotation.
     // Save this parameter's name as `propsAlias`
-    const propsFormalParam = formalParams[0] as Identifier
-    const propsTypeAnnotation = (propsFormalParam.typeAnnotation as TSTypeAnnotation).typeAnnotation as TSTypeLiteral
-    vineCompFnCtx.propsAlias = propsFormalParam.name;
-    // Analyze the object literal type annotation
-    // and save the props info into `vineCompFnCtx.props`
-    (propsTypeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
-      if (!isIdentifier(member.key)) {
-        return
+    const propsFormalParam = formalParams[0] as (Identifier | ObjectPattern)
+    const defaultsFromDestructuredProps: Record<string, Node> = {}
+
+    // If this formal parameter has destructuring,
+    // we need to record these destructed names as `desctructedPropNames`
+    if (isObjectPattern(propsFormalParam)) {
+      for (const property of propsFormalParam.properties) {
+        if (isRestElement(property)) {
+          const restProp = property.argument as Identifier
+          vineCompFnCtx.propsDestructuredNames[restProp.name] = {
+            node: restProp,
+            isRest: true,
+          }
+        }
+        else if (isObjectProperty(property)) {
+          const propItemKey = property.key as (Identifier | StringLiteral)
+          const propItemName = (
+            isIdentifier(propItemKey)
+              ? propItemKey.name
+              : propItemKey.value
+          )
+          const data: VineDestructuredProp = {
+            node: propItemKey,
+            isRest: false,
+          }
+          if (isIdentifier(property.value) && property.value.name !== propItemName) {
+            data.alias = property.value.name
+          }
+          else if (isAssignmentPattern(property.value)) {
+            data.default = property.value.right
+            defaultsFromDestructuredProps[propItemName] = property.value.right
+          }
+
+          // Why we mark it as `SETUP_REF` instead of `PROPS_ALIASED`?
+          // Because we will actually destructure from our user-land, customized `props`
+          // which may come from `useDefaults`
+          vineCompFnCtx.bindings[propItemName] = VineBindingTypes.SETUP_REF
+          vineCompFnCtx.propsDestructuredNames[propItemName] = data
+        }
       }
-      const propName = member.key.name
-      const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation!.typeAnnotation)
-      const propMeta: VinePropMeta = {
-        isFromMacroDefine: false,
-        isRequired: member.optional === undefined ? true : !member.optional,
-        isBool: [
-          'boolean',
-          'Boolean',
-          'true',
-          'false',
-        ].includes(propType),
-        typeAnnotationRaw: propType,
+    }
+    else {
+      vineCompFnCtx.propsAlias = propsFormalParam.name
+    }
+
+    const propsTypeAnnotation = propsFormalParam.typeAnnotation
+    if (!isTSTypeAnnotation(propsTypeAnnotation)) {
+      return
+    }
+
+    const { typeAnnotation } = propsTypeAnnotation
+    vineCompFnCtx.propsFormalParamType = typeAnnotation
+
+    const isTypeLiteralProps = isTSTypeLiteral(typeAnnotation)
+    const isContainsGenericTypeParams = (fnItselfNode.typeParameters as TSTypeParameterDeclaration | Nil)
+      ? (fnItselfNode.typeParameters as TSTypeParameterDeclaration).params.length > 0
+      : false
+    const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.disableTsMorph
+    let tsMorphCache: TsMorphCache | undefined
+    let tsMorphAnalyzedPropsInfo: Record<string, VinePropMeta> | undefined
+
+    // Should initialize ts-morph when props is a type alias
+    // or that type literal contains generic type parameters
+    if (
+      !isTsMorphDisabled
+      && (!isTypeLiteralProps || isContainsGenericTypeParams)
+    ) {
+      if (!vineCompilerHooks.getTsMorph) {
+        throw new Error('ts-morph is not initialized')
       }
-      vineCompFnCtx.props[propName] = propMeta
-      vineCompFnCtx.bindings[propName] = VineBindingTypes.PROPS
-    })
+
+      try {
+        tsMorphCache = vineCompilerHooks.getTsMorph()
+        // Use ts-morph to analyze props info
+        const { project, typeChecker } = tsMorphCache
+        const sourceFile = project.getSourceFileOrThrow(vineFileCtx.fileId)
+        tsMorphAnalyzedPropsInfo = resolveVineCompFnProps({
+          typeChecker,
+          sourceFile,
+          vineCompFnCtx,
+          defaultsFromDestructuredProps,
+        })
+      }
+      catch (err) {
+        vineCompilerHooks.onError(
+          vineErr(
+            { vineFileCtx, vineCompFnCtx },
+            {
+              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. ${err}`,
+              location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
+            },
+          ),
+        )
+      }
+    }
+
+    if (isTSTypeLiteral(typeAnnotation)) {
+      // Analyze the object literal type annotation
+      // and save the props info into `vineCompFnCtx.props`
+      (typeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
+        if (
+          (!isIdentifier(member.key) && !isStringLiteral(member.key))
+          || !member.typeAnnotation
+        ) {
+          return
+        }
+        const propName = (
+          isIdentifier(member.key)
+            ? member.key.name
+            : member.key.value
+        )
+        const propType = vineFileCtx.getAstNodeContent(member.typeAnnotation.typeAnnotation)
+        const propMeta: VinePropMeta = {
+          isFromMacroDefine: false,
+          isRequired: member.optional === undefined ? true : !member.optional,
+          isBool: isBasicBoolTypeNames(propType) || Boolean(tsMorphAnalyzedPropsInfo?.[propName]?.isBool),
+          typeAnnotationRaw: propType,
+        }
+        vineCompFnCtx.props[propName] = propMeta
+
+        // If the prop is already defined as a binding at destructure,
+        // we should skip defining it as a PROPS binding.
+        vineCompFnCtx.bindings[propName] ??= VineBindingTypes.PROPS
+
+        if (defaultsFromDestructuredProps[propName]) {
+          vineCompFnCtx.props[propName].default = defaultsFromDestructuredProps[propName]
+        }
+        if (!isIdentifier(member.key)) {
+          vineCompFnCtx.props[propName].nameNeedQuoted = true
+        }
+      })
+    }
+    else if (tsMorphCache && tsMorphAnalyzedPropsInfo) {
+      vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
+    }
   }
   else if (formalParams.length === 0) {
+    vineCompFnCtx.propsDefinitionBy = VinePropsDefinitionBy.macro
+
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
+
     allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
       const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
       const propMeta: VinePropMeta = {
@@ -407,14 +535,20 @@ const analyzeVineProps: AnalyzeRunner = (
         isRequired: macroCalleeName !== 'vineProp.optional',
         isBool: false,
         typeAnnotationRaw: 'any',
+        macroDeclaredIdentifier: propVarIdentifier,
       }
 
       if (macroCalleeName === 'vineProp.withDefault') {
         // in `vineProp.withDefault`, type info comes from type inference by default value
         // TypeScript will report but it's not guranteed that there's a default value.
         propMeta.default = macroCall.arguments[0]
+        if (!propMeta.default) {
+          return
+        }
+
         propMeta.validator = macroCall.arguments[1]
         propMeta.isBool = isBooleanLiteral(propMeta.default)
+        propMeta.isRequired = false // prop with default value is optional
 
         const inferredType = tryInferExpressionTSType(propMeta.default)
         propMeta.typeAnnotationRaw = inferredType
@@ -433,7 +567,7 @@ const analyzeVineProps: AnalyzeRunner = (
 
       if (propMeta.typeAnnotationRaw === 'any') {
         vineCompilerHooks.onWarn(
-          vineWarn(vineFileCtx, {
+          vineWarn({ vineFileCtx, vineCompFnCtx }, {
             msg: (
               'The default value is an expression, Vine compiler doesn\'t embed TypeScript to infer its type.'
               + ' So it\'s recommended to provide a type anonation explicitly for IDE checking.'
@@ -447,8 +581,77 @@ const analyzeVineProps: AnalyzeRunner = (
       const propName = propVarIdentifier.name
       vineCompFnCtx.props[propName] = propMeta
       vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+      vineCompFnCtx.macrosInfoForVolar.push({
+        macroCall,
+        macroType: 'vineProp',
+        macroMeta: propMeta,
+      })
     })
   }
+}
+
+const analyzeVineValidators: AnalyzeRunner = (
+  { vineCompilerHooks, vineCompFnCtx, vineFileCtx }: AnalyzeCtx,
+  fnItselfNode: BabelFunctionNodeTypes,
+) => {
+  let vineValidatorsMacroCall: CallExpression | undefined
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isVineValidators(node)) {
+      vineValidatorsMacroCall = node
+      throw exitTraverse
+    }
+  })
+  if (
+    !vineValidatorsMacroCall
+    || !vineValidatorsMacroCall.arguments[0]
+    || !isObjectExpression(vineValidatorsMacroCall.arguments[0])
+  ) {
+    return
+  }
+
+  if (vineCompFnCtx.propsDefinitionBy === VinePropsDefinitionBy.macro) {
+    vineCompilerHooks.onError(
+      vineErr({ vineFileCtx, vineCompFnCtx }, {
+        msg: 'vineValidators macro call can only be used when props are defined by annotation',
+        location: vineCompFnCtx.fnItselfNode?.loc,
+      }),
+    )
+    return
+  }
+
+  // Extract the validators from the only argument
+  const validators = vineValidatorsMacroCall.arguments[0]
+  for (const validatorDef of validators.properties) {
+    if (isObjectProperty(validatorDef)) {
+      const { key, value } = validatorDef
+
+      if (!isStringLiteral(key) && !isIdentifier(key))
+        continue
+      if (!isBabelFunctionTypes(value))
+        continue
+
+      const propName = (isStringLiteral(key)) ? key.value : key.name
+      const validatorFn = value
+      const propsDef = vineCompFnCtx.props[propName]
+      if (!propsDef)
+        continue
+
+      propsDef.validator = validatorFn
+    }
+    else if (isObjectMethod(validatorDef)) {
+      vineCompilerHooks.onError(
+        vineErr({ vineFileCtx, vineCompFnCtx }, {
+          msg: 'Please use function expression to define validator instead of an object method',
+          location: validatorDef.loc,
+        }),
+      )
+    }
+  }
+
+  vineCompFnCtx.macrosInfoForVolar.push({
+    macroType: 'vineValidators',
+    macroCall: vineValidatorsMacroCall,
+  })
 }
 
 const analyzeVineEmits: AnalyzeRunner = (
@@ -464,6 +667,12 @@ const analyzeVineEmits: AnalyzeRunner = (
         vineEmitsMacroCall = descendant
         const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
         parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+
+        vineCompFnCtx.macrosInfoForVolar.push({
+          macroType: 'vineEmits',
+          macroCall: vineEmitsMacroCall,
+        })
+
         throw exitTraverse
       }
     },
@@ -472,23 +681,38 @@ const analyzeVineEmits: AnalyzeRunner = (
     return
   }
   const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
-  if (!typeParam) {
-    return
-  }
+  const callArg = vineEmitsMacroCall.arguments[0]
 
-  // Save all the properties' name of
-  // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
-  // to a string array for `vineCompFn.emits`
-  const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
-  emitsTypeLiteralProps.forEach((prop) => {
-    const propName = getTSTypeLiteralPropertySignatureName(prop)
-    vineCompFnCtx.emits.push(propName)
-  })
+  if (typeParam && isTSTypeLiteral(typeParam)) {
+    vineCompFnCtx.emitsTypeParam = typeParam
+
+    // Save all the properties' name of
+    // the typeParam (it's guranteed to be a TSTypeLiteral with all TSPropertySignature)
+    // to a string array for `vineCompFn.emits`
+    const emitsTypeLiteralProps = (typeParam as TSTypeLiteral).members as TSPropertySignature[]
+    emitsTypeLiteralProps.forEach((prop) => {
+      const propName = getTSTypeLiteralPropertySignatureName(prop)
+      vineCompFnCtx.emits.push(propName)
+    })
+  }
+  else if (isArrayExpression(callArg)) {
+    // Save all the string elements of the array expression
+    // as `vineCompFn.emits`
+    vineCompFnCtx.emitsDefinitionByNames = true
+    callArg.elements.forEach((el) => {
+      if (isStringLiteral(el)) {
+        vineCompFnCtx.emits.push((el as StringLiteral).value)
+      }
+    })
+  }
 
   // If `vineEmits` is inside a variable declaration,
   // save the variable name to `vineCompFn.emitsAlias`
   if (parentVarDecl) {
-    vineCompFnCtx.emitsAlias = (parentVarDecl.id as Identifier).name
+    const emitsAlias = (parentVarDecl.id as Identifier).name
+    vineCompFnCtx.emitsAlias = emitsAlias
+    // vineEmits is treated as `setup-const` bindings #89
+    vineCompFnCtx.bindings[emitsAlias] = VineBindingTypes.SETUP_CONST
   }
 }
 
@@ -571,12 +795,18 @@ const analyzeVineBindings: AnalyzeRunner = (
 }
 
 const analyzeVineStyle: AnalyzeRunner = (
-  { vineFileCtx, vineCompFnCtx }: AnalyzeCtx,
+  { vineFileCtx, vineCompFnCtx, vineCompilerHooks }: AnalyzeCtx,
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
   let vineStyleMacroCalls: CallExpression[] = []
+  let vineStyleMacroCallOfScopedVineStyleImport = new WeakSet<CallExpression>()
   _breakableTraverse(fnItselfNode, (node) => {
-    if (isVineStyle(node)) {
+    if (isVineImportScoped(node)) {
+      vineStyleMacroCallOfScopedVineStyleImport.add(
+        node.callee.object,
+      )
+    }
+    else if (isVineStyle(node)) {
       vineStyleMacroCalls.push(node)
     }
   })
@@ -593,23 +823,57 @@ const analyzeVineStyle: AnalyzeRunner = (
     if (!vineStyleArg) {
       return
     }
-    const { styleLang, styleSource, range } = getVineStyleSource(
+    const {
+      styleLang,
+      styleSource,
+      range,
+    } = getVineStyleSource(
       vineStyleArg as VineStyleValidArg,
     )
+    const isExternalFilePathSource = macroCalleeName === 'vineStyle.import'
     const styleMeta: VineStyleMeta = {
       lang: styleLang,
       source: styleSource,
+      isExternalFilePathSource,
       range,
-      scoped: macroCalleeName === 'vineStyle.scoped',
+      scoped: (
+        macroCalleeName === 'vineStyle.scoped'
+        || (
+          macroCalleeName === 'vineStyle.import'
+          && vineStyleMacroCallOfScopedVineStyleImport.has(vineStyleMacroCall)
+        )
+      ),
       fileCtx: vineFileCtx,
       compCtx: vineCompFnCtx,
     }
 
+    // If `styleSource` is a path to a file,
+    if (isExternalFilePathSource) {
+      vineCompFnCtx.externalStyleFilePaths.push(styleSource)
+      const fileExt = SUPPORTED_STYLE_FILE_EXTS.find(ext => styleSource.endsWith(ext))
+      if (fileExt) {
+        styleMeta.lang = fileExt.slice(1) as VineStyleLang
+      }
+      else {
+        vineCompilerHooks.onError(
+          vineErr({ vineFileCtx, vineCompFnCtx }, {
+            msg: 'Invalid external style file',
+            location: vineStyleArg.loc,
+          }),
+        )
+      }
+    }
+
+    // Besides external file path, we have raw style source code here,
     // Collect style meta
     if (vineCompFnCtx.scopeId) {
       vineFileCtx.styleDefine[vineCompFnCtx.scopeId] ??= []
       vineFileCtx.styleDefine[vineCompFnCtx.scopeId].push(styleMeta)
     }
+    if (isExternalFilePathSource) {
+      continue
+    }
+
     // Collect css v-bind
     const cssvarsValueList = parseCssVars([styleSource])
     if (cssvarsValueList.length > 0) {
@@ -646,6 +910,12 @@ const analyzeVineSlots: AnalyzeRunner = (
       vineSlotsMacroCall = node
       const foundVarDeclAncestor = parent.find(ancestor => (isVariableDeclarator(ancestor.node)))
       parentVarDecl = foundVarDeclAncestor?.node as VariableDeclarator
+
+      vineCompFnCtx.macrosInfoForVolar.push({
+        macroType: 'vineSlots',
+        macroCall: node,
+      })
+
       throw exitTraverse
     }
   })
@@ -664,8 +934,9 @@ const analyzeVineSlots: AnalyzeRunner = (
   for (const prop of slotsTypeLiteralProps) {
     if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
-        = ((prop.typeAnnotation!.typeAnnotation as TSFunctionType | Nil)
-          ?.parameters?.[0]?.typeAnnotation as TSTypeAnnotation)
+        = ((prop.typeAnnotation?.typeAnnotation as TSFunctionType | Nil)
+          ?.parameters?.[0]
+          ?.typeAnnotation as TSTypeAnnotation)
           ?.typeAnnotation as TSTypeLiteral
 
       if (fnFirstParamType) {
@@ -718,6 +989,7 @@ const analyzeVineModel: AnalyzeRunner = (
     }
 
     const varName = parentVarDecl.id.name
+    const typeParameter = macroCall.typeParameters?.params[0]
 
     // If the macro call has no argument,
     // - its model name is 'modelValue' as default
@@ -728,6 +1000,7 @@ const analyzeVineModel: AnalyzeRunner = (
         varName,
         modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
         modelOptions: null,
+        typeParameter,
       }
       continue
     }
@@ -744,6 +1017,7 @@ const analyzeVineModel: AnalyzeRunner = (
           varName,
           modelModifiersName: `${modelName}Modifiers`,
           modelOptions: null,
+          typeParameter,
         }
       }
       // If this argument is a object literal,
@@ -755,6 +1029,7 @@ const analyzeVineModel: AnalyzeRunner = (
           varName,
           modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
           modelOptions: macroCall.arguments[0],
+          typeParameter,
         }
       }
     }
@@ -778,15 +1053,32 @@ const analyzeVineModel: AnalyzeRunner = (
     // If `varName` is equal to `modelName`, it would be overrided to `setup-ref`
     vineCompFnCtx.bindings[modelDef.varName] = VineBindingTypes.SETUP_REF
   }
+}
 
-  // vineEmits is treated as `setup-const` bindings #89
-  if (vineCompFnCtx.emitsAlias && vineCompFnCtx.emits.length) {
-    vineCompFnCtx.bindings[vineCompFnCtx.emitsAlias] = VineBindingTypes.SETUP_CONST
+const analyzeUseTemplateRef: AnalyzeRunner = (
+  { vineCompFnCtx },
+  fnItselfNode,
+) => {
+  const useTemplateRefMacroCalls: CallExpression[] = []
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isUseTemplateRefCall(node)) {
+      useTemplateRefMacroCalls.push(node)
+    }
+  })
+  if (!useTemplateRefMacroCalls.length) {
+    return
   }
+  vineCompFnCtx.macrosInfoForVolar.push(
+    ...useTemplateRefMacroCalls.map((useTemplateRefCall): MacrosInfoForVolar => ({
+      macroType: 'useTemplateRef',
+      macroCall: useTemplateRefCall,
+    })),
+  )
 }
 
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
+  analyzeVineValidators,
   analyzeVineEmits,
   analyzeVineExpose,
   analyzeVineSlots,
@@ -795,6 +1087,7 @@ const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineBindings,
   analyzeVineStyle,
   analyzeVineCustomElement,
+  analyzeUseTemplateRef,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
@@ -852,10 +1145,8 @@ function analyzeFileImportStmts(
         vineFileCtx.userImports[spec.local.name] = importMeta
       }
 
-      const isUsedInTemplate = vineFileCtx.vineCompFns.some(
-        vineCompFn => isImportUsed(vineCompFn, spec.local.name),
-      )
-      importMeta.isUsedInTemplate = isUsedInTemplate
+      const specLocalName = spec.local.name
+      importMeta.isUsedInTemplate = compFnCtx => isImportUsed(compFnCtx, specLocalName)
     }
   }
   const lastImportStmt = fileImportStmts[fileImportStmts.length - 1]
@@ -895,23 +1186,49 @@ function buildVineCompFnCtx(
     templateStringNode,
     templateReturn,
     templateSource,
+    templateComponentNames: new Set<string>(),
+    templateRefNames: new Set<string>(),
+    macrosInfoForVolar: [],
+    propsDestructuredNames: {},
+    propsDefinitionBy: VinePropsDefinitionBy.annotation,
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},
     emits: [],
     slots: {},
     slotsAlias: 'slots',
+    slotsNamesInTemplate: ['default'], // Vue component's default slot name
     vineModels: {},
     bindings: {},
     cssBindings: {},
+    externalStyleFilePaths: [],
     hoistSetupStmts: [],
 
-    getPropsTypeRecordStr(joinStr = ', '): string {
-      return `{ ${
-        Object.entries(this.props).map(
-          ([propName, propMeta]) => `${propName}: ${propMeta.typeAnnotationRaw}`,
-        ).join(joinStr)
-      } }`
+    getPropsTypeRecordStr({
+      joinStr = ', ',
+      isNeedLinkedCodeTag = false,
+    } = {}): string {
+      const fields = Object
+        .entries(this.props)
+        .map(
+          ([propName, propMeta]) => `${
+            (
+              isNeedLinkedCodeTag
+                ? `${createLinkedCodeTag('left', propName.length)}${propName}`
+                : propName
+            ) + (
+              propMeta.isRequired ? '' : '?'
+            )
+          }: ${propMeta.typeAnnotationRaw ?? 'any'}`,
+        )
+        .filter(Boolean)
+        .join(joinStr)
+
+      return `{${
+        fields.length > 0
+          ? `\n${fields}\n`
+          : ''
+      }}`
     },
   }
   const analyzeCtx: AnalyzeCtx = {
@@ -931,7 +1248,7 @@ export function analyzeVine(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): void {
   // Analyze all import statements in this file
   // and make a userImportAlias for key methods in 'vue', like 'ref', 'reactive'
   // in order to create binding records
@@ -967,7 +1284,7 @@ export function analyzeVine(
       const binding = vineFnComp.bindings[id.name]
       if (binding && binding !== VineBindingTypes.LITERAL_CONST) {
         vineCompilerHooks.onError(
-          vineWarn(vineFileCtx, {
+          vineWarn({ vineFileCtx }, {
             msg: `Cannot reference "${id.name}" locally declared variables because it will be hoisted outside of component's setup() function.`,
             location: id.loc,
           }),

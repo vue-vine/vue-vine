@@ -1,4 +1,4 @@
-const { rm } = require('node:fs')
+import { rm } from 'node:fs'
 
 const ROOT_NODE_MODULES = 'node_modules'
 async function doCleanRootDeps() {

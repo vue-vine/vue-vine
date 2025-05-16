@@ -1,13 +1,21 @@
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readFileSync } from 'node:fs'
-import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
+import { defineConfig } from 'vitepress'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const vineGrammar = JSON.parse(
   readFileSync(join(__dirname, './vine-ts.tmLanguage.json'), 'utf-8'),
 )
+const vineRequiredLangs = [
+  'vue-html',
+  'css',
+  'scss',
+  'sass',
+  'less',
+  'stylus',
+]
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -21,6 +29,8 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
+    ['script', { 'defer': '', 'data-domain': 'vue-vine.dev', 'src': 'https://stats.dokduk.cc/js/script.hash.outbound-links.js' }],
+    ['script', {}, 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }'],
   ],
   lang: 'en-US',
   themeConfig: {
@@ -61,11 +71,12 @@ export default defineConfig({
           ],
         },
         {
-          text: '定义说明',
+          text: '说明书',
           items: [
             { text: '总览', link: '/zh/specification/overview' },
             { text: 'Props', link: '/zh/specification/props' },
-            { text: '宏', link: '/zh/specification/macros' },
+            { text: '宏函数', link: '/zh/specification/macros' },
+            { text: 'Vibe', link: '/zh/specification/vibe' },
           ],
         },
       ],
@@ -84,6 +95,7 @@ export default defineConfig({
             { text: 'Overview', link: '/specification/overview' },
             { text: 'Props', link: '/specification/props' },
             { text: 'Macros', link: '/specification/macros' },
+            { text: 'Vibe', link: '/specification/vibe' },
           ],
         },
       ],
@@ -92,6 +104,10 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vue-vine/vue-vine' },
     ],
+
+    outline: {
+      level: 'deep',
+    },
   },
   locales: {
     root: {
@@ -102,7 +118,7 @@ export default defineConfig({
           { text: 'Guide', link: '/introduction/quick-start' },
           {
             text: 'Playground',
-            link: 'https://stackblitz.com/github/wzc520pyfm/vine-router-template/tree/main?file=README.md',
+            link: 'https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground',
           },
         ],
       },
@@ -115,7 +131,7 @@ export default defineConfig({
           { text: '指引', link: '/zh/introduction/quick-start' },
           {
             text: '演练场',
-            link: 'https://stackblitz.com/github/wzc520pyfm/vine-router-template/tree/main?file=README.md',
+            link: 'https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground',
           },
         ],
       },
@@ -127,15 +143,9 @@ export default defineConfig({
       dark: 'vitesse-dark',
     },
     languages: [
+      ...vineRequiredLangs,
       {
-        embeddedLangs: [
-          'vue-html',
-          'css',
-          'scss',
-          'sass',
-          'less',
-          'stylus',
-        ],
+        embeddedLangs: [...vineRequiredLangs],
         ...vineGrammar,
       },
     ],

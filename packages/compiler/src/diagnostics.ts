@@ -1,5 +1,6 @@
 import type { SourceLocation } from '@babel/types'
-import type { VineDiagnostic, VineFileCtx } from './types'
+import type { SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { VineCompFnCtx, VineDiagnostic, VineFileCtx } from './types'
 import { createColorful } from './utils/color-string'
 
 const whiteFgRedBg = createColorful(['white', 'bgRed'])
@@ -12,10 +13,15 @@ const WarningLabel = whiteFgYellowBg(' Warning ')
 export interface DiagnosticParams {
   msg: string
   location?: SourceLocation | null
+  rawVueTemplateLocation?: VueSourceLocation | null
 }
 export interface MakeDiagnosticParams extends DiagnosticParams {
   fileId: string
   msgColorful: (str: string) => string
+}
+interface MakeDiagnosticContext {
+  vineFileCtx: VineFileCtx
+  vineCompFnCtx?: VineCompFnCtx
 }
 
 export function makeDiagnostic(label: string, { msg, fileId, location, msgColorful }: MakeDiagnosticParams) {
@@ -29,22 +35,28 @@ ${msgColorful(msg)}
 `
 }
 
-export function vineErr(vineFileCtx: VineFileCtx, { msg, location }: DiagnosticParams): VineDiagnostic {
+export function vineErr(
+  { vineFileCtx, vineCompFnCtx }: MakeDiagnosticContext,
+  { msg, location, rawVueTemplateLocation }: DiagnosticParams,
+): VineDiagnostic {
   const full = makeDiagnostic(ErrorLabel, {
     msg,
-    fileId: vineFileCtx.fileId,
     location,
+    fileId: vineFileCtx.fileId,
     msgColorful: redFgBold,
   })
-  return { full, msg, location }
+  return { full, msg, location, rawVueTemplateLocation, vineCompFnCtx }
 }
 
-export function vineWarn(vineFileCtx: VineFileCtx, { msg, location }: DiagnosticParams): VineDiagnostic {
+export function vineWarn(
+  { vineFileCtx, vineCompFnCtx }: MakeDiagnosticContext,
+  { msg, location, rawVueTemplateLocation }: DiagnosticParams,
+): VineDiagnostic {
   const full = makeDiagnostic(WarningLabel, {
     msg,
-    fileId: vineFileCtx.fileId,
     location,
+    fileId: vineFileCtx.fileId,
     msgColorful: whiteFgYellowBg,
   })
-  return { full, msg, location }
+  return { full, msg, location, rawVueTemplateLocation, vineCompFnCtx }
 }

@@ -1,51 +1,58 @@
 {
   "name": "@vue-vine/eslint-parser",
-  "version": "0.1.20",
+  "type": "module",
+  "version": "1.0.0",
   "description": "ESLint parser for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/eslint-parser"
+  },
   "keywords": [
     "Vue",
     "Vine"
   ],
   "exports": {
     ".": {
-      "dev": "./src/index.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "node": "./dist/index.js"
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
-    "test": "vitest --run",
-    "test:dev": "vitest"
+    "test": "vitest",
+    "test:dev": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^6.21.0",
-    "@typescript-eslint/scope-manager": "^6.21.0",
-    "@typescript-eslint/typescript-estree": "^6.21.0",
-    "debug": "^4.3.4",
-    "eslint-scope": "^7.2.2",
-    "espree": "^9.6.1",
-    "line-column": "^1.0.2",
-    "semver": "^7.5.4"
+    "@typescript-eslint/parser": "catalog:eslint-libs",
+    "@typescript-eslint/scope-manager": "catalog:eslint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
+    "debug": "catalog:cli",
+    "eslint-scope": "catalog:eslint-libs",
+    "espree": "catalog:eslint-libs",
+    "line-column": "catalog:miscs",
+    "semver": "catalog:miscs"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.12",
-    "@types/eslint-scope": "^3.7.7",
-    "@types/line-column": "^1.0.2",
-    "@types/lodash": "^4.14.201",
-    "@types/node": "^20.9.2",
-    "@types/semver": "^7.5.5",
-    "eslint": "^8.54.0",
-    "lodash": "^4.17.21"
+    "@types/debug": "catalog:types",
+    "@types/estree": "catalog:types",
+    "@types/line-column": "catalog:types",
+    "@types/lodash": "catalog:types",
+    "@types/node": "catalog:types",
+    "@types/semver": "catalog:types",
+    "@typescript-eslint/types": "catalog:eslint-libs",
+    "eslint": "catalog:eslint-libs",
+    "eslint-visitor-keys": "catalog:eslint-libs",
+    "lodash": "catalog:miscs"
   }
 }

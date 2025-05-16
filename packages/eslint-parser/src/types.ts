@@ -1,10 +1,19 @@
-import type { TSESTree } from '@typescript-eslint/types'
 import type { ParserOptions, parseForESLint as tsESLintParseForESLint } from '@typescript-eslint/parser'
-import type { HasLocation, Location, OffsetRange, ParseError, Token } from './ast'
+import type { ESLintProgram, HasLocation, Location, OffsetRange, ParseError, Token, VTemplateRoot } from './ast'
 import type { ParserObject } from './common/parser-object'
+import type { prepareTemplate } from './template/utils/process-vine-template-node'
 
-export type VineESLintAST = TSESTree.Program
-export type ParseForESLintResult = ReturnType<typeof tsESLintParseForESLint>
+export type PrettierType<T> = {
+  [K in keyof T]: T[K]
+} & {}
+
+export type TsESLintParseForESLint = ReturnType<typeof tsESLintParseForESLint>
+export interface ParseForESLintResult {
+  ast: ESLintProgram
+  services: TsESLintParseForESLint['services']
+  scopeManager: TsESLintParseForESLint['scopeManager']
+  visitorKeys: TsESLintParseForESLint['visitorKeys']
+}
 
 export type VineESLintParserOptions = ParserOptions & {
   // ...To be extended
@@ -16,6 +25,7 @@ export type VineESLintParserOptions = ParserOptions & {
   ecmaFeatures?: ParserOptions['ecmaFeatures'] & {
     [key: string]: any
   }
+  sourceType?: 'module' | 'script'
 }
 
 export interface VineTemplatePositionInfo {
@@ -48,4 +58,9 @@ export enum ReferenceFlag {
 export enum ReferenceTypeFlag {
   Value = 1,
   Type = 2,
+}
+
+export type FinalProcessTemplateInfo = ReturnType<typeof prepareTemplate> & {
+  templateRootAST: VTemplateRoot
+  templateMeta: VineTemplateMeta
 }
