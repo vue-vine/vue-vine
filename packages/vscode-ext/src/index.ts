@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import * as serverProtocol from '@volar/language-server/protocol'
 import {
   activateAutoInsertion,
   createLabsInfo,
@@ -47,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // support for auto close tag
   activateAutoInsertion(['typescript'], client)
 
-  const labsInfo = createLabsInfo(serverProtocol)
+  const labsInfo = createLabsInfo()
   labsInfo.addLanguageClient(client)
 
   return labsInfo.extensionExports

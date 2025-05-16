@@ -20,8 +20,8 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@volar/language-core": "~2.4.0-alpha.15",
-    "@volar/typescript": "~2.4.0-alpha.15",
+    "@volar/language-core": "~2.4.14",
+    "@volar/typescript": "~2.4.14",
     "@vue-vine/language-service": "workspace:*",
     "@vue/language-core": "~2.0.26"
   }
