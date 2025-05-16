@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.0.1
+
+### Patch Changes
+
+- Fix language service pipeline server for supporting request ID.
+- Updated dependencies
+  - @vue-vine/language-service@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

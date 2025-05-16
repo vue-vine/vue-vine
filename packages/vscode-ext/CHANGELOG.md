@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.0.1
+
+### Patch Changes
+
+- Fix language service pipeline server for supporting request ID.
+
 ## 1.0.0
 
 ### Major Changes
