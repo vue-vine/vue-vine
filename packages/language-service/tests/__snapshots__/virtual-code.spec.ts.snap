@@ -788,5 +788,6 @@ const __VINE_VLS_ComponentsReferenceMap = {
   TestNoVforKeyOnChild: TestNoVforKeyOnChild,
   TestNoLifecycleHookAfterAwait: TestNoLifecycleHookAfterAwait
 };
-"
+
+const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;

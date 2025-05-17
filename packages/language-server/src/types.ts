@@ -13,10 +13,6 @@ export interface RequestResolver {
   timeout?: NodeJS.Timeout
 }
 
-export interface PipelineContext {
-  pendingRequests: Map<string, RequestResolver>
-}
-
 export interface HtmlTagInfo {
   events: string[]
   props: string[]

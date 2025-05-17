@@ -1,0 +1,142 @@
+import type { PipelineRequest, PipelineResponseInstance, VueVineVirtualCode } from '@vue-vine/language-service'
+import type * as ts from 'typescript'
+import type { HtmlTagInfo, RequestResolver } from '../types'
+import { randomUUID } from 'node:crypto'
+import { tryParsePipelineResponse } from '@vue-vine/language-service'
+import { WebSocket } from 'ws'
+import { getPipelineServerPort } from './get-pipeline-server-port'
+
+type RequestNameToResponseName<T extends PipelineRequest['type']> = T extends `${infer R}Request` ? `${R}Response` : never
+
+function getResponseName<N extends PipelineRequest['type']>(requestName: N) {
+  return requestName.replace('Request', 'Response') as RequestNameToResponseName<N>
+}
+
+export interface PipelineClientContext {
+  vineVirtualCode: VueVineVirtualCode
+  tagInfos: Map<string, HtmlTagInfo>
+  pendingRequests: Map<string, RequestResolver>
+  tsConfigFileName: string
+  tsHost: ts.System
+}
+export interface PipelineClientInstance {
+  debounceCache: Set<PipelineRequest['type']>
+}
+
+const REQUEST_TIMEOUT = 10000
+const pipelineClient: PipelineClientInstance = {
+  debounceCache: new Set(),
+}
+
+export function handlePipelineResponse<Req extends PipelineRequest['type']>(
+  context: PipelineClientContext,
+  params: {
+    requestName: Req
+    onSend: (ws: WebSocket, requestId: string) => void
+    onMessageData: (response: PipelineResponseInstance<RequestNameToResponseName<Req>>) => void
+  },
+) {
+  const { tsConfigFileName, tsHost, pendingRequests } = context
+  const { requestName, onSend, onMessageData } = params
+
+  if (pipelineClient.debounceCache.has(requestName)) {
+    // Skip request if it's already in cache
+    return
+  }
+
+  const port = getPipelineServerPort(tsConfigFileName, tsHost)
+  const pipelineWebSocket = new WebSocket(`ws://localhost:${port}`)
+
+  const requestId = randomUUID()
+
+  const requestPromise = new Promise<void>((resolve, reject) => {
+    // set request timeout
+    const timeout = setTimeout(() => {
+      const resolver = pendingRequests.get(requestId)
+      if (resolver) {
+        resolver.reject(new Error(`Pipeline request timeout`))
+        pendingRequests.delete(requestId)
+      }
+      pipelineWebSocket.close()
+    }, REQUEST_TIMEOUT)
+
+    // store resolver for later use
+    const resolver: RequestResolver = {
+      resolve,
+      reject,
+      timeout,
+    }
+    pendingRequests.set(requestId, resolver)
+
+    pipelineWebSocket.on('open', () => {
+      onSend(pipelineWebSocket, requestId)
+      pipelineClient.debounceCache.add(requestName)
+    })
+
+    pipelineWebSocket.on('message', (msgData) => {
+      const resp = tryParsePipelineResponse(msgData.toString(), (err) => {
+        reject(err)
+      })
+      if (!resp) {
+        const err = new Error(
+          '[Vue Vine Pipeline] Invalid pipeline response data',
+          { cause: msgData.toString() },
+        )
+        reject(err)
+        return
+      }
+
+      console.log(`Pipeline: Got message for ${resp.type}`)
+
+      // ensure this response is for our request
+      if (
+        resp.type === getResponseName(requestName)
+        && resp.requestId === requestId
+      ) {
+        onMessageData(resp as PipelineResponseInstance<RequestNameToResponseName<Req>>)
+
+        // Clear timeout timer
+        const resolver = pendingRequests.get(requestId)
+        if (resolver?.timeout) {
+          clearTimeout(resolver.timeout)
+        }
+
+        // Remove from pending requests
+        pipelineClient.debounceCache.delete(requestName)
+        pendingRequests.delete(requestId)
+        // Close WebSocket connection and resolve Promise
+        pipelineWebSocket.close()
+        console.log(`Pipeline: Request '${requestName}' completed!`)
+
+        resolve()
+      }
+    })
+
+    pipelineWebSocket.on('error', (error) => {
+      console.error(`Pipeline error for '${requestName}' - requestId ${requestId}:`, error)
+      reject(error)
+
+      // 清理资源
+      const resolver = pendingRequests.get(requestId)
+      if (resolver?.timeout) {
+        clearTimeout(resolver.timeout)
+      }
+      pendingRequests.delete(requestId)
+    })
+
+    pipelineWebSocket.on('close', () => {
+      // Ensure resources are cleaned up when closing
+      const resolver = pendingRequests.get(requestId)
+      if (resolver?.timeout) {
+        clearTimeout(resolver.timeout)
+      }
+    })
+  }).catch((err) => {
+    console.error(`Pipeline: Request failed for '${requestName}'`, err)
+    pendingRequests.delete(requestId)
+    pipelineWebSocket.close()
+    throw err
+  })
+
+  return requestPromise
+}

@@ -2,9 +2,8 @@ import type { Language } from '@volar/language-server'
 import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
 import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
-import { isVueVineVirtualCode } from '../src'
-import { pipelineResponse } from './utils'
-import { getComponentPropsAndEmits } from './visitors'
+import { handleGetComponentProps } from './pipeline/get-component-props'
+import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 
 interface PipelineServerCreateParams {
   ts: TypeScriptSdk
@@ -41,7 +40,13 @@ export function createVueVinePipelineServer(
       }
 
       if (request) {
-        const context = { ts, tsPluginInfo, ws, language, tsPluginLogger }
+        const context = {
+          ts,
+          tsPluginInfo,
+          ws,
+          language,
+          tsPluginLogger,
+        }
         handlePipelineRequest(request, context)
       }
     })
@@ -62,54 +67,14 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineContex
   try {
     switch (request.type) {
       case 'getComponentPropsRequest':
-        handleGetComponentPropsAndEmits(request, context)
+        handleGetComponentProps(request, context)
+        break
+      case 'getElementAttrsRequest':
+        handleGetElementAttrs(request, context)
         break
     }
   }
   catch (err) {
     context.tsPluginLogger.error('Pipeline: Unhandled error during request:', err)
-  }
-}
-
-function handleGetComponentPropsAndEmits(request: PipelineRequest, context: PipelineContext) {
-  const { ws, language } = context
-  const { requestId, componentName, fileName } = request
-
-  const volarFile = language.scripts.get(fileName)
-  if (!(isVueVineVirtualCode(volarFile?.generated?.root))) {
-    return
-  }
-  const vineCode = volarFile.generated.root
-
-  try {
-    const props = getComponentPropsAndEmits(
-      context,
-      vineCode,
-      componentName,
-    )
-    context.tsPluginLogger.info('Pipeline: Got component props', props)
-
-    ws.send(
-      pipelineResponse({
-        type: 'getComponentPropsResponse',
-        requestId,
-        componentName,
-        fileName,
-        props,
-      }),
-    )
-  }
-  catch (err) {
-    context.tsPluginLogger.error('Pipeline: Error on getComponentProps:', err)
-    // Send empty response when error
-    ws.send(
-      pipelineResponse({
-        type: 'getComponentPropsResponse',
-        requestId,
-        componentName,
-        fileName,
-        props: [],
-      }),
-    )
   }
 }

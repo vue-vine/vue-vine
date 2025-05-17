@@ -2,28 +2,28 @@ import type { PipelineClientContext } from './shared'
 import { pipelineRequest } from '@vue-vine/language-service'
 import { handlePipelineResponse } from './shared'
 
-export function getComponentPropsFromPipeline(
+export function getElementAttrsFromPipeline(
   tag: string,
   context: PipelineClientContext,
 ) {
   return handlePipelineResponse(
     context,
     {
-      requestName: 'getComponentPropsRequest',
+      requestName: 'getElementAttrsRequest',
       onSend: (ws, requestId) => {
-        console.log(`Pipeline: Fetching component '${tag}' props, requestId: ${requestId}`)
+        console.log(`Pipeline: Fetching element '${tag}' attrs, requestId: ${requestId}`)
         ws.send(
           pipelineRequest({
-            type: 'getComponentPropsRequest',
+            type: 'getElementAttrsRequest',
             requestId,
-            componentName: tag,
+            tagName: tag,
             fileName: context.vineVirtualCode.fileName,
           }),
         )
       },
       onMessageData: (response) => {
         context.tagInfos.set(tag, {
-          props: [...response.props],
+          props: [...response.attrs],
           events: [],
         })
       },

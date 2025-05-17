@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ES2023"],
-    "baseUrl": ".",
     "customConditions": ["vine"],
     "module": "Preserve",
     "moduleResolution": "bundler",

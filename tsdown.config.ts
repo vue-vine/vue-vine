@@ -13,4 +13,9 @@ export default defineConfig({
   tsconfig: join(import.meta.dirname, 'tsconfig.json'),
   entry: ['src/index.ts'],
   sourcemap: isDev,
+  inputOptions: {
+    resolve: {
+      conditionNames: ['vine'],
+    },
+  },
 })

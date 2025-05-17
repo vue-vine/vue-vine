@@ -8,11 +8,13 @@ import {
 } from '@volar/language-core'
 import { URI } from 'vscode-uri'
 import { VLS_ErrorLog } from './shared'
-import { createVueVineCode } from './virtual-code'
+import { createVueVineVirtualCode } from './virtual-code'
 
 export type {
   PipelineRequest,
+  PipelineRequestInstance,
   PipelineResponse,
+  PipelineResponseInstance,
 } from '../typescript-plugin/types'
 export {
   pipelineRequest,
@@ -28,11 +30,11 @@ export {
   vlsInfoLog,
 } from './shared'
 export type {
-  VueVineCode,
+  VueVineVirtualCode,
 } from './shared'
 
 export {
-  createVueVineCode,
+  createVueVineVirtualCode,
 } from './virtual-code'
 
 interface VineLanguagePluginOptions {
@@ -74,7 +76,7 @@ export function createVueVineLanguagePlugin(
 
         try {
           const snapshotContent = snapshot.getText(0, snapshot.getLength())
-          const virtualCode = createVueVineCode(
+          const virtualCode = createVueVineVirtualCode(
             ts,
             moduleId,
             snapshotContent,

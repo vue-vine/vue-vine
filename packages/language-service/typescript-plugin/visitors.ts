@@ -1,5 +1,5 @@
 import type * as ts from 'typescript'
-import type { VueVineCode } from '../src'
+import type { VueVineVirtualCode } from '../src'
 import type { PipelineContext } from './types'
 
 export function searchFunctionDeclInRoot(
@@ -65,9 +65,9 @@ export function searchVarDeclInCompFn(
  * Since we've already merged props and emits in virtual code,
  * we only need to return all props names here.
  */
-export function getComponentPropsAndEmits(
+export function getComponentProps(
   context: PipelineContext,
-  vineCode: VueVineCode,
+  vineCode: VueVineVirtualCode,
   compName: string,
 ): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
@@ -107,4 +107,71 @@ export function getComponentPropsAndEmits(
     .map(p => p.getName())
 
   return propsNames
+}
+
+export function getElementAttrs(
+  context: PipelineContext,
+  vineCode: VueVineVirtualCode,
+  tagName: string,
+) {
+  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const program = tsPluginInfo.languageService.getProgram()!
+  const checker = program.getTypeChecker()
+  const elements = getVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
+  if (!elements) {
+    return []
+  }
+  const elementType = elements.type.getProperty(tagName)
+  if (!elementType) {
+    return []
+  }
+
+  const attrs = checker.getTypeOfSymbol(elementType).getProperties()
+  const result = attrs.map(c => c.name)
+  tsPluginLogger.info('Pipeline: Got element attrs', result)
+  return result
+}
+
+function searchVariableDeclarationNode(
+  ts: typeof import('typescript'),
+  sourceFile: ts.SourceFile,
+  name: string,
+) {
+  let result: ts.Node | undefined
+  walk(sourceFile)
+  return result
+
+  function walk(node: ts.Node) {
+    if (result) {
+      return
+    }
+
+    if (ts.isVariableDeclaration(node) && node.name.getText() === name) {
+      result = node
+    }
+    else {
+      node.forEachChild(walk)
+    }
+  }
+}
+
+export function getVariableType(
+  ts: typeof import('typescript'),
+  languageService: ts.LanguageService,
+  vueCode: VueVineVirtualCode,
+  name: string,
+) {
+  const program = languageService.getProgram()!
+
+  const tsSourceFile = program.getSourceFile(vueCode.fileName)
+  if (tsSourceFile) {
+    const checker = program.getTypeChecker()
+    const node = searchVariableDeclarationNode(ts, tsSourceFile, name)
+    if (node) {
+      return {
+        node,
+        type: checker.getTypeAtLocation(node),
+      }
+    }
+  }
 }

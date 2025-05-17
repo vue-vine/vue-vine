@@ -5,9 +5,10 @@ import type {
   LanguageServicePlugin,
 } from '@volar/language-service'
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
-import type { VueVineCode } from '@vue-vine/language-service'
+import type { VueVineVirtualCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import type { HtmlTagInfo, PipelineContext } from '../types'
+import type { PipelineClientContext } from '../pipeline/shared'
+import type { HtmlTagInfo } from '../types'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
@@ -15,6 +16,7 @@ import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 import { getComponentPropsFromPipeline } from '../pipeline/get-component-props'
+import { getElementAttrsFromPipeline } from '../pipeline/get-element-attrs'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
@@ -194,7 +196,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
       function provideHtmlData(
         tagInfos: Map<string, HtmlTagInfo>,
-        vineVirtualCode: VueVineCode,
+        vineVirtualCode: VueVineVirtualCode,
         triggerAtVineCompFn: VineFnCompCtx,
       ) {
         const templateBuiltIn = newHTMLDataProvider(
@@ -202,9 +204,14 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
           vueTemplateBuiltinData,
         )
         const vineVolarContextProvider = createVineTemplateDataProvider()
-
-        let pipelineStatus: PipelineContext = {
+        const tsConfigFileName = context.project.typescript!.configFileName!
+        const tsHost = context.project.typescript!.sys
+        const pipelineClientContext: PipelineClientContext = {
+          tagInfos,
+          vineVirtualCode,
           pendingRequests: new Map(),
+          tsConfigFileName,
+          tsHost,
         }
 
         updateCustomData([
@@ -214,10 +221,11 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
         return {
           async sync() {
-            if (pipelineStatus.pendingRequests.size > 0) {
+            const { pendingRequests } = pipelineClientContext
+            if (pendingRequests.size > 0) {
               try {
                 const pendingPromises = Array
-                  .from(pipelineStatus.pendingRequests.values())
+                  .from(pendingRequests.values())
                   .map(
                     resolver => new Promise<void>((resolve, reject) => {
                       const originalResolve = resolver.resolve
@@ -282,26 +290,15 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                 tagInfos.set(tag, tagInfo)
               }
               else if (!tagInfo) {
-                // Trigger on a tag that references a external component,
-                // and we only fetch once
+                // Trigger on a tag that may be:
+                //  - a native HTML element
+                //  - references a external component, that we need to fetch props from pipeline
                 try {
-                  const tsConfigFileName = context.project.typescript!.configFileName!
-                  const tsHost = context.project.typescript!.sys
-                  getComponentPropsFromPipeline(
-                    tag,
-                    {
-                      tagInfos,
-                      vineVirtualCode,
-                      pipelineStatus,
-                      tsConfigFileName,
-                      tsHost,
-                    },
-                  ).catch((err) => {
-                    console.error(`Failed to fetch props for component ${tag}:`, err)
-                  })
+                  getComponentPropsFromPipeline(tag, pipelineClientContext)
+                  getElementAttrsFromPipeline(tag, pipelineClientContext)
                 }
                 catch (err) {
-                  console.error(`Error creating pipeline request for ${tag}:`, err)
+                  console.error(`Failed to fetch info for tag ${tag} from pipeline:`, err)
                 }
 
                 return tagAttrs

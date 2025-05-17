@@ -42,7 +42,7 @@
     "typecheck": "pnpm --parallel -r typecheck",
     "upgrade-template-deps": "pnpm tsx scripts/upgrade-template-deps.js",
     "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack",
-    "verify": "pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck",
+    "verify": "pnpm build && pnpm test && pnpm typecheck && pnpm lint && pnpm lint-staged",
     "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build"
   },
   "devDependencies": {

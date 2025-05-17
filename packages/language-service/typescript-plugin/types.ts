@@ -13,16 +13,20 @@ type _pipelineResp<T extends { type: string }> = {
 } & T
 
 export type PipelineRequest =
-  | (_pipelineReq<{ type: 'getComponentPropsRequest', componentName: string, fileName: string }>)
+  | (_pipelineReq<{ type: 'getComponentPropsRequest', fileName: string, componentName: string }>)
+  | (_pipelineReq<{ type: 'getElementAttrsRequest', fileName: string, tagName: string }>)
+export type PipelineRequestInstance<T extends PipelineRequest['type']> = PipelineRequest & { type: T }
 
 export type PipelineResponse =
   | (_pipelineResp<{ type: 'getComponentPropsResponse', componentName: string, fileName: string, props: string[] }>)
+  | (_pipelineResp<{ type: 'getElementAttrsResponse', fileName: string, tagName: string, attrs: string[] }>)
+export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & { type: T }
 
 export interface PipelineContext {
   ts: TypeScriptSdk
+  language: Language
   tsPluginInfo: TsPluginInfo
   ws: WebSocket
-  language: Language
   tsPluginLogger: PipelineLogger
 }
 
