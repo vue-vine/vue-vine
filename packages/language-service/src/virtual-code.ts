@@ -143,7 +143,7 @@ function buildMappings(chunks: Segment<VineCodeInformation>[]) {
   return mappings
 }
 
-export function createVueVineCode(
+export function createVueVineVirtualCode(
   ts: typeof import('typescript'),
   fileId: string,
   snapshotContent: string,
@@ -314,6 +314,7 @@ export function createVueVineCode(
   tsCodeSegments.push(`\nconst __VLS_ComponentsReferenceMap = {\n${
     [...usedComponents].map(compName => `  ${compName}: ${compName}`).join(',\n')
   }\n};\n`)
+  tsCodeSegments.push(`\nconst __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;`)
 
   // Add a 'VINE' prefix to all '__VLS_'
   replaceAll(

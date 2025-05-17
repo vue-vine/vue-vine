@@ -1,35 +1,44 @@
 import type { PipelineContext, PipelineRequestInstance } from '../types'
 import { isVueVineVirtualCode } from '../../src'
-import { getVariableType } from './utils'
+import { pipelineResponse } from '../utils'
+import { getElementAttrs } from '../visitors'
 
 export function handleGetElementAttrs(
   request: PipelineRequestInstance<'getElementAttrsRequest'>,
   context: PipelineContext,
 ) {
-  const { ts, language, languageService } = context
-  const { fileName, tagName } = request
+  const { ws, language } = context
+  const { fileName, tagName, requestId } = request
 
   const volarFile = language.scripts.get(fileName)
   if (!isVueVineVirtualCode(volarFile?.generated?.root)) {
     return
   }
-  const vueCode = volarFile.generated.root
 
-  const program = languageService.getProgram()!
-  const checker = program.getTypeChecker()
-  const elements = getVariableType(ts, languageService, vueCode, '__VLS_elements')
-  if (!elements) {
-    return []
+  const vineCode = volarFile.generated.root
+
+  try {
+    const attrs = getElementAttrs(context, vineCode, tagName)
+    ws.send(
+      pipelineResponse({
+        type: 'getElementAttrsResponse',
+        requestId,
+        tagName,
+        fileName,
+        attrs,
+      }),
+    )
   }
-
-  const elementType = elements.type.getProperty(tagName)
-  if (!elementType) {
-    return []
+  catch (err) {
+    context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
+    ws.send(
+      pipelineResponse({
+        type: 'getElementAttrsResponse',
+        requestId,
+        tagName,
+        fileName,
+        attrs: [],
+      }),
+    )
   }
-
-  const attrs = checker.getTypeOfSymbol(elementType).getProperties()
-  const result = attrs.map(c => c.name)
-  context.tsPluginLogger.info('Pipeline: Got element attrs', result)
-
-  return result
 }

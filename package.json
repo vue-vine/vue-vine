@@ -16,7 +16,7 @@
     "build:compiler": "NODE_ENV=production pnpm tsdown -f packages/compiler",
     "build:eslint": "tsdown -f packages/eslint-parser -f packages/eslint-plugin -f packages/eslint-config",
     "build:ext": "NODE_ENV=production tsdown -f packages/compiler -f packages/language-service -f packages/language-server -f packages/tsc -f packages/vscode-ext",
-    "debug:ext": "NODE_ENV=development tsdown -f packages/vscode-ext -w",
+    "debug:ext": "NODE_ENV=development tsdown -f packages/compiler -f packages/language-service -f packages/language-server -f packages/tsc -f packages/vscode-ext",
     "test": "NODE_ENV=test pnpm --parallel --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/e2e-test --filter @vue-vine/eslint-parser --filter @vue-vine/nuxt --filter vue-vine run test --run",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test --run",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test --run",
@@ -42,7 +42,7 @@
     "typecheck": "pnpm --parallel -r typecheck",
     "upgrade-template-deps": "pnpm tsx scripts/upgrade-template-deps.js",
     "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack",
-    "verify": "pnpm build && pnpm test && pnpm lint && pnpm lint-staged && pnpm typecheck",
+    "verify": "pnpm build && pnpm test && pnpm typecheck && pnpm lint && pnpm lint-staged",
     "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build"
   },
   "devDependencies": {

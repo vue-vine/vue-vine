@@ -1,5 +1,4 @@
 import type { Language } from '@volar/language-server'
-import type ts from 'typescript'
 import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
 import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
@@ -10,7 +9,6 @@ interface PipelineServerCreateParams {
   ts: TypeScriptSdk
   tsPluginInfo: TsPluginInfo
   language: Language
-  languageService: ts.LanguageService
   tsPluginLogger: PipelineLogger
 }
 export function createVueVinePipelineServer(
@@ -19,7 +17,6 @@ export function createVueVinePipelineServer(
     ts,
     tsPluginInfo,
     language,
-    languageService,
     tsPluginLogger,
   }: PipelineServerCreateParams,
 ) {
@@ -48,7 +45,6 @@ export function createVueVinePipelineServer(
           tsPluginInfo,
           ws,
           language,
-          languageService,
           tsPluginLogger,
         }
         handlePipelineRequest(request, context)

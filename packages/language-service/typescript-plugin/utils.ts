@@ -1,4 +1,5 @@
 import type { PipelineRequest, PipelineResponse } from './types'
+import { safeDestr } from 'destr'
 
 export function pipelineRequest<T extends PipelineRequest>(data: T) {
   return JSON.stringify(data)
@@ -13,7 +14,7 @@ export function tryParsePipelineResponse(
   onError?: (e: unknown) => void,
 ): PipelineResponse | undefined {
   try {
-    return JSON.parse(data)
+    return safeDestr(data)
   }
   catch (err) {
     onError?.(err)

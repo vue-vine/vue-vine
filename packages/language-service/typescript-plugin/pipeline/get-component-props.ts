@@ -1,7 +1,7 @@
 import type { PipelineContext, PipelineRequestInstance } from '../types'
 import { isVueVineVirtualCode } from '../../src'
 import { pipelineResponse } from '../utils'
-import { getComponentPropsAndEmits } from '../visitors'
+import { getComponentProps } from '../visitors'
 
 export function handleGetComponentProps(
   request: PipelineRequestInstance<'getComponentPropsRequest'>,
@@ -17,7 +17,7 @@ export function handleGetComponentProps(
   const vineCode = volarFile.generated.root
 
   try {
-    const props = getComponentPropsAndEmits(
+    const props = getComponentProps(
       context,
       vineCode,
       componentName,
