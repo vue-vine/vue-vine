@@ -76,9 +76,7 @@ connection.onInitialize(async (params) => {
         tsdk.typescript.sys,
       )
       if (vineGlobalTypesPath) {
-        vueCompilerOptions.__setupedGlobalTypes = {
-          absolutePath: vineGlobalTypesPath,
-        }
+        vueCompilerOptions.__setupedGlobalTypes = vineGlobalTypesPath
       }
     }
 
