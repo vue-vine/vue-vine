@@ -28,7 +28,14 @@ const logger = {
 
 let pipelineServer: WebSocketServer | undefined
 
-export function createVueVineTypeScriptPlugin() {
+export interface VueVineTypeScriptPluginOptions {
+  enablePipelineServer?: boolean
+}
+export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOptions = {}) {
+  const {
+    enablePipelineServer = true,
+  } = options
+
   const plugin = createLanguageServicePlugin((ts, info) => {
     const configFileName = info.project.getProjectName()
     const isConfiguredTsProject = info.project.projectKind === ts.server.ProjectKind.Configured
@@ -51,9 +58,7 @@ export function createVueVineTypeScriptPlugin() {
         ts.sys,
       )
       if (globalTypesFilePath) {
-        vueOptions.__setupedGlobalTypes = {
-          absolutePath: globalTypesFilePath,
-        }
+        vueOptions.__setupedGlobalTypes = globalTypesFilePath
       }
     }
 
@@ -69,7 +74,11 @@ export function createVueVineTypeScriptPlugin() {
     return {
       languagePlugins: [vueVinePlugin],
       setup: (language) => {
-        if (isConfiguredTsProject && !pipelineServer) {
+        if (
+          enablePipelineServer
+          && isConfiguredTsProject
+          && !pipelineServer
+        ) {
           detect(DEFAULT_PIPELINE_PORT)
             .then((availablePort) => {
               if (pipelineServer) {
