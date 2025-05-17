@@ -134,6 +134,9 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             tagInfos = tagInfosMap.get(vineVirtualCode.fileName)!
           }
 
+          // #4298: Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
+          baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+
           // Set up HTML data providers before requesting completions
           const { sync } = provideHtmlData(
             tagInfos,
