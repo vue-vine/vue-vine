@@ -1,6 +1,5 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
-import type * as ts from 'typescript'
 import { posix as path } from 'node:path'
 import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
@@ -8,10 +7,13 @@ import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 export function setupGlobalTypes(
   rootDir: string,
   vueOptions: VueCompilerOptions,
-  host: ts.System,
-) {
+  host: {
+    fileExists: (path: string) => boolean
+    writeFile?: (path: string, data: string) => void
+  },
+): VueCompilerOptions['__setupedGlobalTypes'] {
   if (!host.writeFile) {
-    return ''
+    return void 0
   }
   try {
     let dir = rootDir
@@ -25,10 +27,12 @@ export function setupGlobalTypes(
     const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
     const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions)}`
     host.writeFile(globalTypesPath, globalTypesContents)
-    return globalTypesPath
+    return {
+      absolutePath: globalTypesPath,
+    }
   }
   catch {
-    return ''
+    console.error('[Vue Vine] Failed to setup global types')
   }
 }
 

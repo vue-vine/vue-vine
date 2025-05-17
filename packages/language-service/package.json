@@ -58,6 +58,7 @@
     "destr": "catalog:miscs",
     "detect-port": "catalog:miscs",
     "muggle-string": "catalog:miscs",
+    "pathe": "catalog:miscs",
     "ws": "catalog:miscs"
   },
   "devDependencies": {
