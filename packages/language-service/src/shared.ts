@@ -15,7 +15,7 @@ export interface SpawnLogger {
 
 export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
 
-export interface VueVineCode extends VirtualCode {
+export interface VueVineVirtualCode extends VirtualCode {
   __VUE_VINE_VIRTUAL_CODE__: true
   vineMetaCtx: {
     vineCompileErrs: VineDiagnostic[]
@@ -76,6 +76,6 @@ export function createSpawnLogger(tag: string) {
   }
 }
 
-export function isVueVineVirtualCode(vCode: any): vCode is VueVineCode {
+export function isVueVineVirtualCode(vCode: any): vCode is VueVineVirtualCode {
   return Boolean(vCode?.__VUE_VINE_VIRTUAL_CODE__)
 }

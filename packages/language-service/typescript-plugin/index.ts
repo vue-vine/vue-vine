@@ -88,6 +88,7 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
               pipelineServer = createVueVinePipelineServer(availablePort, {
                 ts,
                 language,
+                languageService: info.languageService,
                 tsPluginInfo: info,
                 tsPluginLogger: logger,
               })

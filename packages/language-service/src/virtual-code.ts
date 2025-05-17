@@ -3,7 +3,7 @@ import type { VinePropMeta } from '@vue-vine/compiler'
 import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
-import type { BabelToken, VueVineCode } from './shared'
+import type { BabelToken, VueVineVirtualCode } from './shared'
 import path from 'node:path/posix'
 import { isBlockStatement, isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
 import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
@@ -150,7 +150,7 @@ export function createVueVineCode(
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
   target: 'extension' | 'tsc',
-): VueVineCode {
+): VueVineVirtualCode {
   // Compile `.vine.ts` with Vine's own compiler
   const compileStartTime = performance.now()
   const {

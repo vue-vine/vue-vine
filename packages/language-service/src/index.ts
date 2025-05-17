@@ -28,7 +28,7 @@ export {
   vlsInfoLog,
 } from './shared'
 export type {
-  VueVineCode,
+  VueVineVirtualCode as VueVineCode,
 } from './shared'
 
 export {
