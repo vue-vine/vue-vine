@@ -46,8 +46,8 @@ catalogs:
       specifier: ^1.2.2
       version: 1.2.2
     tsdown:
-      specifier: ^0.11.9
-      version: 0.11.9
+      specifier: ^0.11.10
+      version: 0.11.10
     tsx:
       specifier: ^4.19.3
       version: 4.19.3
@@ -367,7 +367,7 @@ importers:
         version: 1.2.2
       tsdown:
         specifier: catalog:cli
-        version: 0.11.9(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
+        version: 0.11.10(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
       tsx:
         specifier: catalog:cli
         version: 4.19.3
@@ -3942,6 +3942,15 @@ packages:
       supports-color:
         optional: true
 
+  debug@4.4.1:
+    resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
   decache@4.6.2:
     resolution: {integrity: sha512-2LPqkLeu8XWHU8qNCS3kcF6sCcb5zIzvWaAHYSvPfwhdd7mHuah29NssMzrTYyHN4F5oFy2ko9OBYxegtU0FEw==}
 
@@ -6714,8 +6723,8 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
-  rolldown-plugin-dts@0.12.1:
-    resolution: {integrity: sha512-w/gLkL1Up+YhMGEM6SsyB/gqqYQoA0I3pY3it/UmLN5LS88aRbURY9SJRg/hrYvMjzY9aONSRZ8MmZ8UnG1PPg==}
+  rolldown-plugin-dts@0.13.1:
+    resolution: {integrity: sha512-CFoolC9/YQlETg1DqatEq3Q4UyMqBsL/m5zpsQuDmNJ8MHIUqzMS2iLEOuRIt/Q8yOs18sKDYzZ3aT8vvrbfGA==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       rolldown: ^1.0.0-beta.8-commit.2a5c6a6
@@ -7261,8 +7270,8 @@ packages:
       typescript:
         optional: true
 
-  tsdown@0.11.9:
-    resolution: {integrity: sha512-Lp1lflza4U+Ennezzj7NyC3+OtoeAn7TuOe0fm7uKl0lt71I4gCGSj1HAdInRMD3uQhKUH3uU7nj+MpRSXL7Lg==}
+  tsdown@0.11.10:
+    resolution: {integrity: sha512-AMXl1b3xoMoBIVxWzeo1bxDbnfxF6VK5ZvtrWsQMAm5nk6sYFqZiaVLp8y5/PFgxI80pUrlXctwCM6bs3HpDuw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -11659,6 +11668,10 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
+  debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
+
   decache@4.6.2:
     dependencies:
       callsite: 1.0.0
@@ -14967,13 +14980,14 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
-  rolldown-plugin-dts@0.12.1(rolldown@1.0.0-beta.8-commit.d95f99e)(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
+  rolldown-plugin-dts@0.13.1(rolldown@1.0.0-beta.8-commit.d95f99e)(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
     dependencies:
       '@babel/generator': 7.27.1
       '@babel/parser': 7.27.2
       '@babel/types': 7.27.1
       ast-kit: 2.0.0
-      debug: 4.4.0
+      birpc: 2.3.0
+      debug: 4.4.1
       dts-resolver: 2.0.1
       get-tsconfig: 4.10.0
       rolldown: 1.0.0-beta.8-commit.d95f99e
@@ -15554,17 +15568,17 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  tsdown@0.11.9(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
+  tsdown@0.11.10(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3)):
     dependencies:
       ansis: 4.0.0
       cac: 6.7.14
       chokidar: 4.0.3
-      debug: 4.4.0
+      debug: 4.4.1
       diff: 8.0.1
       empathic: 1.1.0
       hookable: 5.5.3
       rolldown: 1.0.0-beta.8-commit.d95f99e
-      rolldown-plugin-dts: 0.12.1(rolldown@1.0.0-beta.8-commit.d95f99e)(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
+      rolldown-plugin-dts: 0.13.1(rolldown@1.0.0-beta.8-commit.d95f99e)(typescript@5.8.3)(vue-tsc@2.2.10(typescript@5.8.3))
       semver: 7.7.2
       tinyexec: 1.0.1
       tinyglobby: 0.2.13
