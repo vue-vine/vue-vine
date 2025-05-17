@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.0.2
+
+### Patch Changes
+
+- Support completions on native element events.
+- Updated dependencies
+  - @vue-vine/language-service@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

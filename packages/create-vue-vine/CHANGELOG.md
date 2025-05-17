@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.0.1
+
+### Patch Changes
+
+- Support completions on native element events.
+
 ## 1.0.0
 
 ### Major Changes
