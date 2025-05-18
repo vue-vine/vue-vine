@@ -1,7 +1,7 @@
 /**
  * HTML tag names.
  */
-export const HTML_TAGS = new Set([
+export const HTML_TAGS: Readonly<Set<string>> = new Set([
   'a',
   'abbr',
   'address',
@@ -121,7 +121,7 @@ export const HTML_TAGS = new Set([
 /**
  * HTML tag names of void elements.
  */
-export const HTML_VOID_ELEMENT_TAGS = new Set([
+export const HTML_VOID_ELEMENT_TAGS: Readonly<Set<string>> = new Set([
   'area',
   'base',
   'br',
@@ -141,7 +141,7 @@ export const HTML_VOID_ELEMENT_TAGS = new Set([
 /**
  * https://github.com/vuejs/vue/blob/e4da249ab8ef32a0b8156c840c9d2b9773090f8a/src/platforms/web/compiler/util.js#L12
  */
-export const HTML_CAN_BE_LEFT_OPEN_TAGS = new Set([
+export const HTML_CAN_BE_LEFT_OPEN_TAGS: Readonly<Set<string>> = new Set([
   'colgroup',
   'li',
   'options',
@@ -157,7 +157,7 @@ export const HTML_CAN_BE_LEFT_OPEN_TAGS = new Set([
 /**
  * https://github.com/vuejs/vue/blob/e4da249ab8ef32a0b8156c840c9d2b9773090f8a/src/platforms/web/compiler/util.js#L18
  */
-export const HTML_NON_FHRASING_TAGS = new Set([
+export const HTML_NON_FHRASING_TAGS: Readonly<Set<string>> = new Set([
   'address',
   'article',
   'aside',
@@ -214,7 +214,7 @@ export const HTML_NON_FHRASING_TAGS = new Set([
 /**
  * HTML tag names of RCDATA.
  */
-export const HTML_RCDATA_TAGS = new Set([
+export const HTML_RCDATA_TAGS: Readonly<Set<string>> = new Set([
   'title',
   'textarea',
 ])
@@ -222,7 +222,7 @@ export const HTML_RCDATA_TAGS = new Set([
 /**
  * HTML tag names of RAWTEXT.
  */
-export const HTML_RAWTEXT_TAGS = new Set([
+export const HTML_RAWTEXT_TAGS: Readonly<Set<string>> = new Set([
   'style',
   'xmp',
   'iframe',
@@ -235,7 +235,7 @@ export const HTML_RAWTEXT_TAGS = new Set([
 /**
  * SVG tag names.
  */
-export const SVG_TAGS = new Set([
+export const SVG_TAGS: Readonly<Set<string>> = new Set([
   'a',
   'altGlyph',
   'altGlyphDef',
@@ -342,7 +342,7 @@ export const SVG_TAGS = new Set([
 /**
  * The map from lowercase names to actual names in SVG.
  */
-export const SVG_ELEMENT_NAME_MAP = new Map<string, string>()
+export const SVG_ELEMENT_NAME_MAP: Readonly<Map<string, string>> = new Map<string, string>()
 for (const name of SVG_TAGS) {
   if (/[A-Z]/.test(name)) {
     SVG_ELEMENT_NAME_MAP.set(name.toLowerCase(), name)
@@ -352,7 +352,7 @@ for (const name of SVG_TAGS) {
 /**
  * MathML tag names.
  */
-export const MATHML_TAGS = new Set([
+export const MATHML_TAGS: Readonly<Set<string>> = new Set([
   'abs',
   'and',
   'annotation',

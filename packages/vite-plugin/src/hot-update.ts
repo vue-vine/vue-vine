@@ -220,7 +220,7 @@ export async function vineHMR(
   ctx: HmrContext,
   compilerCtx: VineCompilerCtx,
   compilerHooks: VineCompilerHooks,
-) {
+): Promise<ModuleNode[] | undefined> {
   const { modules, file: fileId, read } = ctx
   const fileContent = await read()
 
@@ -275,7 +275,7 @@ export async function vineHMR(
 
 export function addHMRHelperCode(
   vineFileCtx: VineFileCtx,
-) {
+): void {
   const ms = vineFileCtx.fileMagicCode
   ms.appendRight(
     ms.length(),

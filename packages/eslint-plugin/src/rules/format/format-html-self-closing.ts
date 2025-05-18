@@ -1,6 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/types'
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { VElement } from '@vue-vine/eslint-parser'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, isCustomComponent, isHtmlElementNode, isHtmlVoidElementName, isMathElementNode, isSvgElementNode } from '../../utils'
 
 const messageId = 'format-html-self-closing' as const
@@ -84,7 +85,7 @@ function isEmpty(node: VElement, sourceCode: RuleContext<MessageIds, Options>['s
   return contentBetweenTags.trim() === ''
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
     type: 'layout',
@@ -181,3 +182,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

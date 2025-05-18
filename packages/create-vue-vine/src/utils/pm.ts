@@ -1,3 +1,4 @@
+import type { Result } from 'execa'
 import process from 'node:process'
 import { execa, execaSync } from 'execa'
 
@@ -38,7 +39,7 @@ const packageManager = detectPackageManager()
 
 type Command = 'install' | 'dev'
 
-export function getPmCommand(command: Command) {
+export function getPmCommand(command: Command): [string, string[]] {
   let commands: [string, string[]]
   if (packageManager === 'pnpm') {
     commands = ['pnpm', [command]]
@@ -49,10 +50,10 @@ export function getPmCommand(command: Command) {
   return commands
 }
 
-export function formatPmCommand(commands: [string, string[]]) {
+export function formatPmCommand(commands: [string, string[]]): string {
   return commands.flat().join(' ')
 }
 
-export function runPmCommand(command: Command, cwd: string) {
+export function runPmCommand(command: Command, cwd: string): Promise<Result<{ stdio: 'inherit', cwd: string }>> {
   return execa(...getPmCommand(command), { stdio: 'inherit', cwd })
 }

@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types'
-import type { ESLintProgram, Location } from './ast'
-import type { FinalProcessTemplateInfo, ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions } from './types'
+import type { ESLintProgram, Location, VTemplateRoot } from './ast'
+import type { FinalProcessTemplateInfo, ParseForESLintResult, TsESLintParseForESLint, VineESLintParserOptions, VineTemplateMeta } from './types'
 import { parseForESLint as tsParseForESLint } from '@typescript-eslint/parser'
 import { KEYS } from './ast'
 import { analyzeUsedInTemplateVariables } from './script/scope-analyzer'
@@ -56,7 +56,7 @@ export function getTemplateRootDataList(
   prepareResult: TemplateRootASTPreparation | null,
   offsetFixedTokenSet: WeakSet<Location>,
   parserOptions: VineESLintParserOptions,
-) {
+): [VTemplateRoot, VineTemplateMeta] | null {
   if (!prepareResult) {
     return null
   }
@@ -78,7 +78,7 @@ export function finalProcessForTSFileAST(
   bindVineTemplateESTree: (templateInfo: FinalProcessTemplateInfo) => void,
   tsFileAST: TsESLintParseForESLint['ast'],
   templateInfo: FinalProcessTemplateInfo,
-) {
+): void {
   // Put our custom ESTree node into its original place,
   // i.e. the return value of the Vine component function.
   bindVineTemplateESTree(templateInfo)

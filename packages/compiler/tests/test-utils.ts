@@ -1,7 +1,10 @@
-import type { VineCompilerHooks, VineCompilerOptions } from '../src/types'
+import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions } from '../src/types'
 import { createCompilerCtx } from '../src/index'
 
-export function createMockTransformCtx(option: VineCompilerOptions = {}) {
+export function createMockTransformCtx(option: VineCompilerOptions = {}): {
+  mockCompilerHooks: VineCompilerHooks
+  mockCompilerCtx: VineCompilerCtx
+} {
   const mockCompilerCtx = createCompilerCtx(option)
   const mockCompilerHooks = {
     getCompilerCtx: () => mockCompilerCtx,

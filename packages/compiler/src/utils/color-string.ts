@@ -65,7 +65,7 @@ const colorMap: Record<ColorfulOptions, string> = {
  * @param options Colorful options.
  * @returns Ascii colorful string.
  */
-export function colorful(str: string, options: ColorfulOptions[] = []) {
+export function colorful(str: string, options: ColorfulOptions[] = []): string {
   const colors = options
     .map((option) => {
       return colorMap[option]
@@ -75,7 +75,7 @@ export function colorful(str: string, options: ColorfulOptions[] = []) {
   return `\u001B[${colors}m${str}\u001B[0m`
 }
 
-export function createColorful(options: ColorfulOptions[]) {
+export function createColorful(options: ColorfulOptions[]): (str: string) => string {
   return (str: string) => colorful(str, options)
 }
 

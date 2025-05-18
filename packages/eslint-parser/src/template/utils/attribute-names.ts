@@ -1,4 +1,4 @@
-export const SVG_ATTRIBUTE_NAME_MAP = new Map([
+export const SVG_ATTRIBUTE_NAME_MAP: Readonly<Map<string, string>> = new Map([
   ['attributename', 'attributeName'],
   ['attributetype', 'attributeType'],
   ['basefrequency', 'baseFrequency'],
@@ -59,6 +59,6 @@ export const SVG_ATTRIBUTE_NAME_MAP = new Map([
   ['zoomandpan', 'zoomAndPan'],
 ])
 
-export const MATHML_ATTRIBUTE_NAME_MAP = new Map([
+export const MATHML_ATTRIBUTE_NAME_MAP: Readonly<Map<string, string>> = new Map([
   ['definitionurl', 'definitionUrl'],
 ])

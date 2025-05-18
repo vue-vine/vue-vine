@@ -79,7 +79,7 @@ export function createVineFileCtx(
   code: string,
   fileId: string,
   vineCompileCtx: VineCompileCtx,
-) {
+): VineFileCtx {
   const { fileCtxCache, babelParseOptions = {} } = vineCompileCtx
   const root = babelParse(code, babelParseOptions)
   const vineFileCtx: VineFileCtx = {
@@ -124,7 +124,7 @@ export function doValidateVine(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): void {
   validateVine(vineCompilerHooks, vineFileCtx, vineCompFnDecls)
   vineCompilerHooks.onValidateEnd?.()
 }
@@ -133,7 +133,7 @@ export function doAnalyzeVine(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): void {
   analyzeVine(vineCompilerHooks, vineFileCtx, vineCompFnDecls)
   vineCompilerHooks.onAnalysisEnd?.()
 }
@@ -143,7 +143,7 @@ export function compileVineTypeScriptFile(
   fileId: string,
   vineCompileCtx: VineCompileCtx,
   ssr = false,
-) {
+): VineFileCtx {
   const { compilerHooks } = vineCompileCtx
   const compilerOptions = compilerHooks.getCompilerCtx().options
   // Using babel to validate vine declarations

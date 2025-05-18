@@ -6,7 +6,7 @@ const mergeArrayWithDedupe = (a: unknown[], b: unknown[]) => Array.from(new Set(
  * @param target the existing object
  * @param obj the new object
  */
-export function deepMerge(target: Record<string, any>, obj: Record<string, any>) {
+export function deepMerge(target: Record<string, any>, obj: Record<string, any>): Record<string, any> {
   for (const key of Object.keys(obj)) {
     const oldVal = target[key]
     const newVal = obj[key]

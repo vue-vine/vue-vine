@@ -9,7 +9,10 @@ import {
 } from '@babel/types'
 import { EXPECTED_ERROR } from '../constants'
 
-export function mayContainAwaitExpr(vineFnBodyStmt: Node) {
+export function mayContainAwaitExpr(vineFnBodyStmt: Node): {
+  isNeedResult: boolean
+  awaitExpr?: AwaitExpression
+} | null {
   let awaitExpr: AwaitExpression | undefined
   const isExprStmt = isExpressionStatement(vineFnBodyStmt)
   const isVarDeclStmt = isVariableDeclaration(vineFnBodyStmt)
@@ -53,7 +56,7 @@ export function mayContainAwaitExpr(vineFnBodyStmt: Node) {
 export function wrapWithAsyncContext(
   isNeedResult: boolean,
   exprSourceCode: string,
-) {
+): string {
   return isNeedResult
     ? `(
     ([__temp,__restore] = _withAsyncContext(() => ${exprSourceCode})),
@@ -73,7 +76,7 @@ export function registerImport(
   importSource: string,
   specifier: string,
   alias: string,
-) {
+): void {
   const vueVineImports = mergedImportsMap.get(importSource)
   if (!vueVineImports) {
     mergedImportsMap.set(importSource, {

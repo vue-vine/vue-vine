@@ -47,7 +47,7 @@ export function resolveVineCompFnProps(params: {
   sourceFile: SourceFile
   vineCompFnCtx: VineCompFnCtx
   defaultsFromDestructuredProps: Record<string, BabelNode>
-}) {
+}): Record<string, VinePropMeta> {
   const { typeChecker, sourceFile, vineCompFnCtx, defaultsFromDestructuredProps } = params
   const propsInfo: Record<string, VinePropMeta> = {}
 

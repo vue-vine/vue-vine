@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsdown'
 
-export default defineConfig({
+const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig({
   entry: {
     index: './src/index.ts',
     vite: './src/vite/index.ts',
@@ -10,3 +10,4 @@ export default defineConfig({
     'vue',
   ],
 })
+export default tsdownConfig

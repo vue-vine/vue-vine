@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsdown'
 
-export default defineConfig({
+const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig({
   external: [
     'vite',
     '@babel/types',
@@ -13,3 +13,4 @@ export default defineConfig({
     'postcss-selector-parser',
   ],
 })
+export default tsdownConfig

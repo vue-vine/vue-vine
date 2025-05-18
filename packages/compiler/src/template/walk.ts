@@ -31,7 +31,7 @@ function isWalkable(item: any): item is Walkable {
 export function walkVueTemplateAst(
   root: RootNode | undefined,
   walkActions: WalkActions,
-) {
+): void {
   if (!root) {
     return
   }

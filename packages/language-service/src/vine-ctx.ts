@@ -1,10 +1,14 @@
-import type { VineCompilerHooks, VineDiagnostic } from '@vue-vine/compiler'
+import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import {
   compileVineTypeScriptFile,
   createCompilerCtx,
 } from '@vue-vine/compiler'
 
-export function compileVineForVirtualCode(fileId: string, source: string) {
+export function compileVineForVirtualCode(fileId: string, source: string): {
+  vineFileCtx: VineFileCtx
+  vineCompileErrs: VineDiagnostic[]
+  vineCompileWarns: VineDiagnostic[]
+} {
   const compilerCtx = createCompilerCtx({
     disableTsMorph: true, // No need ts-morph to analyze props
     envMode: 'module',

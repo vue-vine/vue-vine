@@ -1,11 +1,11 @@
 import type { TSESTree } from '@typescript-eslint/types'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, notVineCompFn } from '../../utils'
 
 const RULE_NAME = 'format-vine-component-name' as const
 
-const CONFLICT_WITH_HTML_BUILT_IN = `${RULE_NAME}-conflict-with-html-built-in`
-const NOT_PASCAL_CASE = `${RULE_NAME}-not-pascal-case`
-
+const CONFLICT_WITH_HTML_BUILT_IN = 'format-vine-component-name-conflict-with-html-built-in' as const
+const NOT_PASCAL_CASE = 'format-vine-component-name-not-pascal-case' as const
 const CONFLICT_WITH_HTML_BUILT_IN_MSG = 'Vue Vine component function name must not conflict with HTML built-in tag names'
 const NOT_PASCAL_CASE_MSG = 'Vue Vine component function name must be in PascalCase'
 
@@ -131,7 +131,7 @@ function checkPascalCase(fnName: string) {
   return /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/.test(fnName)
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'suggestion',
@@ -185,3 +185,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

@@ -1,3 +1,4 @@
+import type { RuleModule } from '../../utils'
 import { TSESTree } from '@typescript-eslint/types'
 import { createEslintRule, notVineCompFn } from '../../utils'
 
@@ -28,7 +29,7 @@ function getMemberExpressionName(node: TSESTree.MemberExpression): string {
   return nameChain.join('.')
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
     type: 'suggestion',
@@ -120,3 +121,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

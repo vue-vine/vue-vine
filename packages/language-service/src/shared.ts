@@ -27,11 +27,11 @@ export interface VueVineVirtualCode extends VirtualCode {
   get compileTime(): string
 }
 
-export function turnBackToCRLF(code: string) {
+export function turnBackToCRLF(code: string): string {
   return code.replace(/\r?\n/g, '\r\n')
 }
 
-export function vlsInfoLog(...msgs: any[]) {
+export function vlsInfoLog(...msgs: any[]): void {
   console.log(
     msgs.map((msg, i) => (
       i === 0
@@ -45,7 +45,7 @@ export function vlsInfoLog(...msgs: any[]) {
   )
 }
 
-export function VLS_ErrorLog(err: any, tag: string) {
+export function VLS_ErrorLog(err: any, tag: string): void {
   console.log(
     `[vue-vine] ${tag} error: ${String(err)}`,
   )
@@ -56,7 +56,7 @@ export function VLS_ErrorLog(err: any, tag: string) {
   }
 }
 
-export function createSpawnLogger(tag: string) {
+export function createSpawnLogger(tag: string): SpawnLogger {
   let isHeadLine = true
 
   return {

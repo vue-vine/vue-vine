@@ -31,7 +31,7 @@ let pipelineServer: WebSocketServer | undefined
 export interface VueVineTypeScriptPluginOptions {
   enablePipelineServer?: boolean
 }
-export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOptions = {}) {
+export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOptions = {}): ts.server.PluginModuleFactory {
   const {
     enablePipelineServer = true,
   } = options

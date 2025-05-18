@@ -6,7 +6,7 @@ export function searchFunctionDeclInRoot(
   ts: typeof import('typescript'),
   sourceFile: ts.SourceFile,
   name: string,
-) {
+): ts.Node | undefined {
   let functionNode: ts.Node | undefined
   walk(sourceFile)
   return functionNode
@@ -40,7 +40,7 @@ export function searchVarDeclInCompFn(
   ts: typeof import('typescript'),
   compFnNode: ts.Node,
   name: string,
-) {
+): ts.Node | undefined {
   let componentsNode: ts.Node | undefined
   walk(compFnNode)
   return componentsNode
@@ -113,7 +113,7 @@ export function getElementAttrs(
   context: PipelineContext,
   vineCode: VueVineVirtualCode,
   tagName: string,
-) {
+): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
   const program = tsPluginInfo.languageService.getProgram()!
   const checker = program.getTypeChecker()
@@ -136,7 +136,7 @@ function searchVariableDeclarationNode(
   ts: typeof import('typescript'),
   sourceFile: ts.SourceFile,
   name: string,
-) {
+): ts.Node | undefined {
   let result: ts.Node | undefined
   walk(sourceFile)
   return result
@@ -160,7 +160,10 @@ export function getVariableType(
   languageService: ts.LanguageService,
   vueCode: VueVineVirtualCode,
   name: string,
-) {
+): {
+  node: ts.Node
+  type: ts.Type
+} | undefined {
   const program = languageService.getProgram()!
 
   const tsSourceFile = program.getSourceFile(vueCode.fileName)

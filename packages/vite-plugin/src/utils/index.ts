@@ -11,6 +11,6 @@ export function areStrArraysEqual(arr1: string[] | undefined, arr2: string[] | u
   return set1.size === set2.size && [...set1].every(item => set2.has(item))
 }
 
-export function normalizeLineEndings(str: string) {
+export function normalizeLineEndings(str: string): string {
   return str.replace(/\r\n/g, '\n')
 }

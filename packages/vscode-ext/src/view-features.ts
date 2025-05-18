@@ -2,7 +2,7 @@ import type * as lsp from '@volar/vscode/node'
 import { executeCommand, useCommand, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
 import * as vscode from 'vscode'
 
-export function useVineExtensionViewFeatures(client: lsp.BaseLanguageClient) {
+export function useVineExtensionViewFeatures(client: lsp.BaseLanguageClient): void {
   useCommand('vine.action.restartServer', async () => {
     await executeCommand('typescript.restartTsServer')
     await client.stop()

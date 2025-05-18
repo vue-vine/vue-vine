@@ -584,7 +584,10 @@ export function parseExpression(
   code: string,
   locationCalculator: LocationCalculatorForHtml,
   parserOptions: VineESLintParserOptions,
-  { allowEmpty = false, allowFilters = false } = {},
+  { allowEmpty = false, allowFilters = false }: {
+    allowEmpty?: boolean
+    allowFilters?: boolean
+  } = {},
 ): ExpressionParseResult<ESLintExpression | VFilterSequenceExpression> {
   debug('[script] parse expression: "%s"', code)
 

@@ -1,4 +1,4 @@
-import type { Message, ProcessOptions } from 'postcss'
+import type { Message, ProcessOptions, Result } from 'postcss'
 import type { RawSourceMap } from 'source-map-js'
 import type { VineCompilerCtx, VineProcessorLang } from '../types'
 import postcss from 'postcss'
@@ -23,7 +23,13 @@ export async function compileVineStyle(
     onErr?: (msg: string) => void
     onWarn?: (msg: string) => void
   },
-) {
+): Promise<{
+    code: string
+    map?: RawSourceMap
+    errors: Error[]
+    rawResult?: Result
+    dependencies: Set<string>
+  }> {
   let { source } = params
   const {
     vineFileId,

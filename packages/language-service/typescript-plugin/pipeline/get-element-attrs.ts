@@ -6,7 +6,7 @@ import { getElementAttrs } from '../visitors'
 export function handleGetElementAttrs(
   request: PipelineRequestInstance<'getElementAttrsRequest'>,
   context: PipelineContext,
-) {
+): void {
   const { ws, language } = context
   const { fileName, tagName, requestId } = request
 

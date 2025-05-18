@@ -5,7 +5,7 @@ import { handlePipelineResponse } from './shared'
 export function getComponentPropsFromPipeline(
   tag: string,
   context: PipelineClientContext,
-) {
+): Promise<void> {
   return handlePipelineResponse(
     context,
     {

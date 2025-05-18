@@ -9,7 +9,7 @@ export function fixVineOffset(
     posInfo: VineTemplatePositionInfo
     fixedCache: WeakSet<Location | OffsetRange>
   },
-) {
+): void {
   const {
     posInfo: {
       templateStartOffset,
@@ -69,7 +69,7 @@ export function fixFromVineTemplateRoot(
     posInfo: VineTemplatePositionInfo
     fixedCache: WeakSet<Location | OffsetRange>
   },
-) {
+): void {
   traverseNodes(
     root,
     {
@@ -93,7 +93,7 @@ export type ExtractVineTemplateResult = Array<{
 
 export function extractForVineTemplate(
   ast: TsESLintParseForESLint['ast'],
-) {
+): ExtractVineTemplateResult {
   const extractVineTemplateResult: ExtractVineTemplateResult = []
   const extractedTemplateNodes: WeakSet<TSESTree.TaggedTemplateExpression> = new WeakSet()
 
@@ -171,7 +171,10 @@ export function extractForVineTemplate(
 
 export function prepareTemplate(
   templateNode: TSESTree.TaggedTemplateExpression,
-) {
+): {
+    templatePositionInfo: VineTemplatePositionInfo
+    templateRawContent: string
+  } {
   const { quasi: { quasis } } = templateNode
 
   // This `TemplateElement` node still contains two quotes.

@@ -67,7 +67,7 @@ const sharedConfig: Partial<Options> = {
   dts: false,
 }
 
-export default defineConfig(
+const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig(
   [
     {
       entry: {
@@ -88,3 +88,4 @@ export default defineConfig(
     },
   ],
 )
+export default tsdownConfig

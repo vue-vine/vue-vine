@@ -35,14 +35,9 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
     onSend: (ws: WebSocket, requestId: string) => void
     onMessageData: (response: PipelineResponseInstance<RequestNameToResponseName<Req>>) => void
   },
-) {
+): Promise<void> {
   const { tsConfigFileName, tsHost, pendingRequests } = context
   const { requestName, onSend, onMessageData } = params
-
-  if (pipelineClient.debounceCache.has(requestName)) {
-    // Skip request if it's already in cache
-    return
-  }
 
   const port = getPipelineServerPort(tsConfigFileName, tsHost)
   const pipelineWebSocket = new WebSocket(`ws://localhost:${port}`)
@@ -69,6 +64,11 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
     pendingRequests.set(requestId, resolver)
 
     pipelineWebSocket.on('open', () => {
+      if (pipelineClient.debounceCache.has(requestName)) {
+        // Skip request if it's already in cache
+        return
+      }
+
       onSend(pipelineWebSocket, requestId)
       pipelineClient.debounceCache.add(requestName)
     })

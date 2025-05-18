@@ -6,7 +6,7 @@ export function createStyleImportStmt(
   vineCompFnCtx: VineCompFnCtx,
   styleMeta: VineStyleMeta,
   index: number,
-) {
+): string {
   if (styleMeta.isExternalFilePathSource) {
     if (!styleMeta.scoped) {
       // Just use the user-given style file path directly

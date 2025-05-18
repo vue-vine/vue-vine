@@ -24,7 +24,7 @@ const VineVisitorKeys: VisitorKeys = {
   VText: [],
 }
 
-export const KEYS = Evk.unionWith(VineVisitorKeys)
+export const KEYS: VisitorKeys = Evk.unionWith(VineVisitorKeys)
 
 /**
  * Check that the given key should be traversed or not.

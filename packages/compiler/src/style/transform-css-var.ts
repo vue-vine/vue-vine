@@ -101,7 +101,7 @@ function genCSSVarsValue(
 export function compileCSSVars(
   vineCompFnCtx: VineCompFnCtx,
   inline = false,
-) {
+): string {
   const {
     cssBindings,
     propsAlias,

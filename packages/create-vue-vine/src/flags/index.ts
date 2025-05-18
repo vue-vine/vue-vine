@@ -1,47 +1,69 @@
 import type { ProjectOptions } from '../create'
-import type { FeatureFlagActionCtx } from '../utils'
+import type { FeatureFlag, FeatureFlagActionCtx } from '../utils'
 import { confirm, defineFlagMeta, select } from '../utils'
 
-const metas = {
-  router: defineFlagMeta({
-    name: 'router',
-    message: 'Use Vue Router?',
-    flag: {
-      type: Boolean,
-      description: 'Add Vue Router',
-      default: true,
-    } as const,
-    initialValue: true,
-  }),
-  store: defineFlagMeta({
-    name: 'store',
-    message: 'Use Pinia as state management?',
-    flag: {
-      type: Boolean,
-      description: 'Add Pinia',
-      default: true,
-    } as const,
-    initialValue: true,
-  }),
-  install: defineFlagMeta({
-    name: 'install',
-    message: 'Install all dependencies for the project now?',
-    flag: {
-      type: Boolean,
-      description: 'Install dependencies',
-      alias: 'i',
-      default: false,
-    },
-    initialValue: false,
-  }),
+const router: FeatureFlag<'router', {
+  readonly type: BooleanConstructor
+  readonly description: 'Add Vue Router'
+  readonly default: true
+}> = defineFlagMeta({
+  name: 'router',
+  message: 'Use Vue Router?',
+  flag: {
+    type: Boolean,
+    description: 'Add Vue Router',
+    default: true,
+  } as const,
+  initialValue: true,
+})
+const store: FeatureFlag<'store', {
+  readonly type: BooleanConstructor
+  readonly description: 'Add Pinia'
+  readonly default: true
+}> = defineFlagMeta({
+  name: 'store',
+  message: 'Use Pinia as state management?',
+  flag: {
+    type: Boolean,
+    description: 'Add Pinia',
+    default: true,
+  } as const,
+  initialValue: true,
+})
+const install: FeatureFlag<'install', {
+  readonly type: BooleanConstructor
+  readonly description: 'Install dependencies'
+  readonly alias: 'i'
+  readonly default: false
+}> = defineFlagMeta({
+  name: 'install',
+  message: 'Install all dependencies for the project now?',
+  flag: {
+    type: Boolean,
+    description: 'Install dependencies',
+    alias: 'i',
+    default: false,
+  },
+  initialValue: false,
+})
+
+const metas: {
+  router: typeof router
+  store: typeof store
+  install: typeof install
+} = {
+  router,
+  store,
+  install,
 } as const
 
-const flags = Object.entries(metas).reduce((acc, [key, value]) => {
+type Flags = {
+  [K in keyof typeof metas]: typeof metas[K]['flag']
+}
+const flags: Flags = Object.entries(metas).reduce((acc, [key, value]) => {
   Reflect.set(acc, key, value.flag)
   return acc
-}, {} as {
-  [K in MetaKeys]: typeof metas[K]['flag']
-})
+}, {} as Flags)
 
 type MetaKeys = keyof typeof metas
 
@@ -49,7 +71,10 @@ export type ParsedFlags = {
   [K in MetaKeys]: boolean
 }
 
-export function useFlags() {
+export function useFlags(): {
+  flags: typeof flags
+  executeFlags: (flags: ParsedFlags, options: ProjectOptions) => Promise<void>
+} {
   return {
     flags,
     executeFlags: async (flags: ParsedFlags, options: ProjectOptions) => {

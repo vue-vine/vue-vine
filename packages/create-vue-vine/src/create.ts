@@ -26,7 +26,7 @@ export function createProjectOptions(
   }
 }
 
-export async function createProject(options: ProjectOptions) {
+export async function createProject(options: ProjectOptions): Promise<void> {
   const templateDirectory = (await getTemplateDirectory())!
   const withBase = (path: string) => join(templateDirectory, path)
 

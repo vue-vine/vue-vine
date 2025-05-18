@@ -54,7 +54,7 @@ export interface SingleFnCompTransformCtx {
 export function createVueImportsSpecs(
   transformCtx: TransformContext,
   vineCompFnCtx: VineCompFnCtx,
-) {
+): Map<string, string> {
   const { inline, mergedImportsMap } = transformCtx
 
   // Add `defineComponent` helper function import specifier
@@ -88,7 +88,7 @@ export function createVueImportsSpecs(
 export function generateAsyncContext(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vueImportsSpecs, vineCompFnBody, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -130,7 +130,7 @@ export function generateAsyncContext(
 export function onlyRemainFunctionBody(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const ms = transformCtx.vineFileCtx.fileMagicCode
   const {
     vineCompFnStart,
@@ -149,7 +149,7 @@ export function onlyRemainFunctionBody(
 export function removeStatementsContainsMacro(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnBody } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -167,7 +167,7 @@ export function removeStatementsContainsMacro(
 export function buildSetupFormalParams(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt, lastStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -210,7 +210,7 @@ export function buildSetupFormalParams(
 export function generateVineSlots(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -226,7 +226,7 @@ export function generateVineSlots(
 export function generateVineModel(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { mergedImportsMap } = transformCtx
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
@@ -261,7 +261,7 @@ export function generateVineModel(
 export function generateUseCssVars(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { inline } = transformCtx
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
@@ -282,7 +282,7 @@ export function generateUseCssVars(
 export function generateVinePropToRefs(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const { mergedImportsMap } = transformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
@@ -313,7 +313,7 @@ export function generateVinePropToRefs(
 export function generateVineExpose(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt, lastStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -341,7 +341,7 @@ export function generateVineExpose(
 export function generateSetupReturns(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineFileCtx, templateComposer, mergedImportsMap } = transformCtx
   const { vineCompFnCtx, lastStmt } = fnTransformCtx
   const { compileSetupFnReturns } = templateComposer
@@ -362,7 +362,7 @@ export function generateSetupReturns(
 export function generatePropsDestructure(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   // Replace references to destructured prop identifiers
   // with access expressions like `x` to `props.x`~
 
@@ -613,7 +613,7 @@ export function generatePropsDestructure(
 export function generatePropsRestProxy(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt, vueImportsSpecs } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -640,7 +640,7 @@ export function generatePropsRestProxy(
 export function generatePropsDeclaration(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { mergedImportsMap } = transformCtx
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
@@ -680,7 +680,7 @@ export function generatePropsDeclaration(
 export function generateVineFactory(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const {
     inline,
     ssr,
@@ -757,7 +757,7 @@ export function generateVineFactory(
 export function generateDefineComponentWrapper(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { firstStmt, lastStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -768,7 +768,7 @@ export function generateDefineComponentWrapper(
 export function generateBasicComponentOptions(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -786,7 +786,7 @@ export function generateBasicComponentOptions(
 export function generatePropsOptions(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineFileCtx } = transformCtx
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
@@ -859,7 +859,7 @@ export function generatePropsOptions(
 export function generateEmitsOptions(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
-) {
+): void {
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
@@ -880,7 +880,7 @@ export function generateEmitsOptions(
 
 export function generateStyleImports(
   transformCtx: TransformContext,
-) {
+): void {
   const { vineFileCtx } = transformCtx
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
@@ -893,7 +893,7 @@ export function generateStyleImports(
 
 export function generateAllImports(
   transformCtx: TransformContext,
-) {
+): void {
   const { mergedImportsMap } = transformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
