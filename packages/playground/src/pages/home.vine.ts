@@ -41,7 +41,7 @@ function OutsideExample(props: { id: string }) {
         Random string:
       </div>
 
-      <div v-if="loading" class="loading-view" @click="">
+      <div v-if="loading" class="loading-view">
         <div class="icon-loading" />
         <span>Loading...</span>
       </div>
