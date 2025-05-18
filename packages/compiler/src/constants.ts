@@ -24,15 +24,18 @@ export const BARE_CALL_MACROS = [
   'vineCustomElement',
   'vineValidators',
 ] as const
-export const VINE_MACROS = [
+export const DECLARATION_MACROS = [
   'vineProp',
   'vineProp.optional',
   'vineProp.withDefault',
   'vineEmits',
   'vineSlots',
   'vineModel',
-  ...BARE_CALL_MACROS,
 ] as const
+export const VINE_MACROS: Array<(typeof DECLARATION_MACROS)[number] | (typeof BARE_CALL_MACROS)[number]> = [
+  ...DECLARATION_MACROS,
+  ...BARE_CALL_MACROS,
+]
 export const VINE_TAG_TEMPLATE_CALLER = [
   'vine',
   'css',
@@ -42,12 +45,12 @@ export const VINE_TAG_TEMPLATE_CALLER = [
   'stylus',
   'postcss',
 ] as const
-export const CAN_BE_CALLED_MULTI_TIMES_MACROS = [
+export const CAN_BE_CALLED_MULTI_TIMES_MACROS: string[] = [
   'vineModel',
   'vineStyle',
 ]
 export const SUPPORTED_CSS_LANGS = ['css', 'scss', 'sass', 'less', 'stylus', 'postcss'] as const
-export const SUPPORTED_STYLE_FILE_EXTS = [
+export const SUPPORTED_STYLE_FILE_EXTS: string[] = [
   '.css',
   '.scss',
   '.sass',

@@ -1,5 +1,5 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { AttributeNode, BindingTypes, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { AttributeNode, BindingTypes, CodegenResult, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
@@ -14,7 +14,7 @@ import { walkVueTemplateAst } from './walk'
 function toPascalCase(str: string) {
   return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
 }
-export function postProcessForRenderCodegen(codegen: string) {
+export function postProcessForRenderCodegen(codegen: string): string {
   return codegen
     // https://github.com/vue-vine/vue-vine/issues/171
     // Replace all `= _resolveComponent('...')`, '...' is the component name,
@@ -35,7 +35,10 @@ export function compileVineTemplate(
     ssr: boolean
     getParsedAst?: boolean
   },
-) {
+): (
+  CodegenResult
+  & { templateParsedAst?: ReturnType<typeof parse> }
+) | null {
   const _compile = ssr ? ssrCompile : compile
   try {
     return {

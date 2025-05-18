@@ -178,7 +178,10 @@ export class VineTemplateParser {
     this.expressionEnabled = true
   }
 
-  get fixVineOffsetCtx() {
+  get fixVineOffsetCtx(): {
+    posInfo: VineTemplatePositionInfo
+    fixedCache: WeakSet<Location>
+  } {
     return {
       posInfo: this.templatePos,
       fixedCache: this.offsetFixedTokenSet,
@@ -430,7 +433,7 @@ export class VineTemplateParser {
     }
   }
 
-  protected StartTag(token: StartTag) {
+  protected StartTag(token: StartTag): void {
     debug('[html] StartTag %j', token)
 
     this.closeCurrentElementIfNecessary(token)

@@ -1,4 +1,5 @@
 import type { VDirective, Node as VineESLintNode } from '@vue-vine/eslint-parser'
+import type { RuleModule } from '../../utils'
 import { createEslintRule } from '../../utils'
 
 const RULE_NAME = 'no-child-content' as const
@@ -16,7 +17,7 @@ function isWhiteSpaceTextNode(node: VineESLintNode) {
   return node.type === 'VText' && node.value.trim() === ''
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'problem',
@@ -91,3 +92,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

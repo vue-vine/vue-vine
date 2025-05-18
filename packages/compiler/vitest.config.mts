@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config'
 
-export default defineConfig({
+const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
   test: {
     coverage: {
       provider: 'v8',
     },
   },
 })
+export default vitestConfig

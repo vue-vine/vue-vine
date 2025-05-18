@@ -1,4 +1,7 @@
 /* eslint-disable no-console */
+import type {
+  LabsInfo,
+} from '@volar/vscode'
 import {
   activateAutoInsertion,
   createLabsInfo,
@@ -10,7 +13,7 @@ import { useVineExtensionViewFeatures } from './view-features'
 
 let client: lsp.BaseLanguageClient
 
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
   const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js')
   const runOptions = { execArgv: <string[]>[] }
   const debugOptions = { execArgv: ['--nolazy', `--inspect=6019`] }

@@ -1,4 +1,5 @@
 import type { TSESTree } from '@typescript-eslint/types'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, notVineCompFn } from '../../utils'
 
 const RULE_NAME = 'no-lifecycle-hook-after-await' as const
@@ -21,7 +22,7 @@ const LIFECYCLE_HOOKS = [
   'onServerPrefetch',
 ]
 
-export default createEslintRule<[], MessageIds>({
+const rule: RuleModule<[]> = createEslintRule<[], MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'problem',
@@ -104,3 +105,5 @@ export default createEslintRule<[], MessageIds>({
     }
   },
 })
+
+export default rule

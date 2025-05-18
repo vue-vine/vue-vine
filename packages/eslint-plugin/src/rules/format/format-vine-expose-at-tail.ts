@@ -1,11 +1,12 @@
 import type { TSESTree } from '@typescript-eslint/types'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, notVineCompFn } from '../../utils'
 
 const messageId = 'format-vine-expose-at-tail ' as const
 export type MessageIds = typeof messageId
 export type Options = []
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
     type: 'suggestion',
@@ -79,3 +80,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

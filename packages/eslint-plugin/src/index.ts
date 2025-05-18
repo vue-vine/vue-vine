@@ -19,7 +19,7 @@ import vineMacrosLeading from './rules/format/format-vine-macros-leading'
 import vineStyleIndent from './rules/format/format-vine-style-indent'
 import vineTemplateFormat from './rules/format/format-vine-template'
 
-const plugin = {
+const plugin: ESLint.Plugin = {
   meta: {
     name: 'vue-vine',
     version,
@@ -38,7 +38,7 @@ const plugin = {
     'format-vine-expose-at-tail': vineExposeAtTail,
     'format-html-self-closing': formatHtmlSelfClosing,
   },
-} satisfies ESLint.Plugin
+}
 
 export {
   plugin as default,

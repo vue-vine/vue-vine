@@ -10,6 +10,7 @@ import type {
   ReturnStatement,
   TaggedTemplateExpression,
   TSPropertySignature,
+  TSType,
   VariableDeclarator,
 } from '@babel/types'
 import type {
@@ -46,7 +47,7 @@ import {
 } from '../constants'
 import { _breakableTraverse, exitTraverse } from '../utils'
 
-export function isVineCompFnDecl(target: Node) {
+export function isVineCompFnDecl(target: Node): boolean {
   if (
     (
       isExportNamedDeclaration(target)
@@ -87,7 +88,7 @@ export function isVineCompFnDecl(target: Node) {
   return false
 }
 
-export function findVineCompFnDecls(root: VineBabelRoot) {
+export function findVineCompFnDecls(root: VineBabelRoot): Node[] {
   const vineFnComps: Node[] = []
   for (const stmt of root.program.body) {
     if (isVineCompFnDecl(stmt)) {
@@ -158,7 +159,7 @@ export function isVineMacroCallExpression(node: Node): node is CallExpression {
   return false
 }
 
-export function getVineMacroCalleeName(node: CallExpression) {
+export function getVineMacroCalleeName(node: CallExpression): string {
   const callee = node.callee
   if (isIdentifier(callee)) {
     return callee.name
@@ -173,7 +174,7 @@ export function getVineMacroCalleeName(node: CallExpression) {
   return ''
 }
 
-export function getVinePropCallTypeParams(node: CallExpression) {
+export function getVinePropCallTypeParams(node: CallExpression): TSType | undefined {
   // We restricted the `vineProp` can only have 1 type parameter
   return node.typeParameters?.params?.[0]
 }
@@ -204,15 +205,15 @@ export function isVineMacroOf(
   }
 }
 
-export const isVineProp = isVineMacroOf('vineProp')
-export const isVineSlots = isVineMacroOf('vineSlots')
-export const isVineEmits = isVineMacroOf('vineEmits')
-export const isVineModel = isVineMacroOf('vineModel')
-export const isVineStyle = isVineMacroOf('vineStyle')
-export const isVineCustomElement = isVineMacroOf('vineCustomElement')
-export const isVineValidators = isVineMacroOf('vineValidators')
-
-export function isUseTemplateRefCall(node: Node) {
+type IsVineMacroOf = (node: Node | Nil) => node is CallExpression
+export const isVineProp: IsVineMacroOf = isVineMacroOf('vineProp')
+export const isVineSlots: IsVineMacroOf = isVineMacroOf('vineSlots')
+export const isVineEmits: IsVineMacroOf = isVineMacroOf('vineEmits')
+export const isVineModel: IsVineMacroOf = isVineMacroOf('vineModel')
+export const isVineStyle: IsVineMacroOf = isVineMacroOf('vineStyle')
+export const isVineCustomElement: IsVineMacroOf = isVineMacroOf('vineCustomElement')
+export const isVineValidators: IsVineMacroOf = isVineMacroOf('vineValidators')
+export function isUseTemplateRefCall(node: Node): node is CallExpression {
   return isCallOf(node, 'useTemplateRef')
 }
 
@@ -241,7 +242,7 @@ export function isVineImportScoped(
   )
 }
 
-export function isStatementContainsVineMacroCall(node: Node) {
+export function isStatementContainsVineMacroCall(node: Node): boolean {
   let result = false
   _breakableTraverse(node, (descendant) => {
     if (isVineMacroCallExpression(descendant)) {
@@ -252,7 +253,7 @@ export function isStatementContainsVineMacroCall(node: Node) {
   return result
 }
 
-export function isVueReactivityApiCallExpression(node: Node) {
+export function isVueReactivityApiCallExpression(node: Node): boolean {
   return (
     isCallExpression(node)
     && isIdentifier(node.callee)
@@ -260,11 +261,11 @@ export function isVueReactivityApiCallExpression(node: Node) {
   )
 }
 
-export function isTagTemplateStringContainsInterpolation(tagTmplNode: TaggedTemplateExpression) {
+export function isTagTemplateStringContainsInterpolation(tagTmplNode: TaggedTemplateExpression): boolean {
   return tagTmplNode.quasi.expressions.length > 0
 }
 
-export function getFunctionParams(fnItselfNode: BabelFunctionNodeTypes) {
+export function getFunctionParams(fnItselfNode: BabelFunctionNodeTypes): BabelFunctionParams {
   const params: BabelFunctionParams = []
   if (isFunctionDeclaration(fnItselfNode)) {
     params.push(...fnItselfNode.params)
@@ -325,7 +326,10 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
   return pickedInfo
 }
 
-export function findVineTagTemplateStringReturn(node: Node) {
+export function findVineTagTemplateStringReturn(node: Node): {
+  templateReturn: ReturnStatement | undefined
+  templateStringNode: TaggedTemplateExpression | undefined
+} {
   let templateReturn: ReturnStatement | undefined
   let templateStringNode: TaggedTemplateExpression | undefined
   traverse(node, (descendant) => {
@@ -343,7 +347,7 @@ export function findVineTagTemplateStringReturn(node: Node) {
   }
 }
 
-export function getImportStatements(root: ParseResult<File>) {
+export function getImportStatements(root: ParseResult<File>): ImportDeclaration[] {
   const importStmts: ImportDeclaration[] = []
   for (const stmt of root.program.body) {
     if (isImportDeclaration(stmt)) {
@@ -353,7 +357,7 @@ export function getImportStatements(root: ParseResult<File>) {
   return importStmts
 }
 
-export function getTSTypeLiteralPropertySignatureName(tsTypeLit: TSPropertySignature) {
+export function getTSTypeLiteralPropertySignatureName(tsTypeLit: TSPropertySignature): string {
   return isIdentifier(tsTypeLit.key)
     ? tsTypeLit.key.name
     : isStringLiteral(tsTypeLit.key)
@@ -361,7 +365,7 @@ export function getTSTypeLiteralPropertySignatureName(tsTypeLit: TSPropertySigna
       : ''
 }
 
-export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes) {
+export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes): [CallExpression, Identifier][] {
   const allVinePropMacroCalls: [CallExpression, Identifier][] = [] // [macro Call, defined prop name]
   traverse(fnItselfNode.body, {
     enter(node, parent) {
@@ -443,7 +447,7 @@ export function isCallOf(
   )
 }
 
-export function isLiteralNode(node: Node) {
+export function isLiteralNode(node: Node): boolean {
   return node.type.endsWith('Literal')
 }
 
@@ -475,7 +479,7 @@ export function canNeverBeRef(node: Node, userReactiveImport?: string): boolean 
   }
 }
 
-export function tryInferExpressionTSType(node: Node) {
+export function tryInferExpressionTSType(node: Node): string {
   switch (node.type) {
     case 'BooleanLiteral':
       return 'boolean'
@@ -499,7 +503,7 @@ export function tryInferExpressionTSType(node: Node) {
   }
 }
 
-export function findAllExportNamedDeclarations(root: ParseResult<File>) {
+export function findAllExportNamedDeclarations(root: ParseResult<File>): ExportNamedDeclaration[] {
   const exportNamedDeclarations: ExportNamedDeclaration[] = []
   for (const stmt of root.program.body) {
     if (isExportNamedDeclaration(stmt)) {
@@ -510,7 +514,7 @@ export function findAllExportNamedDeclarations(root: ParseResult<File>) {
   return exportNamedDeclarations
 }
 
-export function fineAllExplicitExports(exportNamedDeclarations: ExportNamedDeclaration[]) {
+export function fineAllExplicitExports(exportNamedDeclarations: ExportNamedDeclaration[]): string[] {
   const explicitExports: string[] = []
   for (const exportDecl of exportNamedDeclarations) {
     for (const specifier of exportDecl.specifiers) {

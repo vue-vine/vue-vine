@@ -316,7 +316,7 @@ function collectVariablesForVCF(
 export function analyzeUsedInTemplateVariables(
   scopeManager: tsEscopeTypes.ScopeManager,
   templateRoot: VTemplateRoot,
-) {
+): void {
   const scriptVariables = collectVariablesForVCF(scopeManager, templateRoot)
   const markedVariables = new Set<string>()
 

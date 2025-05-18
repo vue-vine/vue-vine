@@ -1,4 +1,5 @@
 import type { VAttribute, VDirective } from '@vue-vine/eslint-parser'
+import type { RuleModule } from '../../utils'
 import { createEslintRule } from '../../utils'
 
 const RULE_NAME = 'no-dupe-attributes'
@@ -27,7 +28,7 @@ function getName(attribute: VAttribute | VDirective): string | null {
   return null
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'problem',
@@ -97,3 +98,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

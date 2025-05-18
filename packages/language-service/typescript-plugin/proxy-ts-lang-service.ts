@@ -6,7 +6,7 @@ export function proxyLanguageServiceForVine(
   ts: typeof import('typescript'),
   language: Language<string>,
   languageService: ts.LanguageService,
-) {
+): ts.LanguageService {
   const getProxyMethod = (
     target: ts.LanguageService,
     p: keyof ts.LanguageService,

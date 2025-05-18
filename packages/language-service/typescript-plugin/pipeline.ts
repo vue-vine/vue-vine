@@ -19,7 +19,7 @@ export function createVueVinePipelineServer(
     language,
     tsPluginLogger,
   }: PipelineServerCreateParams,
-) {
+): WebSocketServer {
   const wss = new WebSocketServer({ port })
 
   wss.on('error', (err) => {
@@ -63,7 +63,7 @@ export function createVueVinePipelineServer(
   return wss
 }
 
-function handlePipelineRequest(request: PipelineRequest, context: PipelineContext) {
+function handlePipelineRequest(request: PipelineRequest, context: PipelineContext): void {
   try {
     switch (request.type) {
       case 'getComponentPropsRequest':

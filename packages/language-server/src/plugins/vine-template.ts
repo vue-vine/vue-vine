@@ -57,7 +57,7 @@ export function transformVineDiagnostic(
   }
 }
 
-export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vineCompName: string | undefined) {
+export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vineCompName: string | undefined): boolean {
   return (
     vineDiag.rawVueTemplateLocation != null
     && vineDiag.vineCompFnCtx?.fnName.toLowerCase() === vineCompName?.toLowerCase()
@@ -137,7 +137,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
           }
 
           // #4298: Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
-          baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
+          // baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
 
           // Set up HTML data providers before requesting completions
           const { sync } = provideHtmlData(

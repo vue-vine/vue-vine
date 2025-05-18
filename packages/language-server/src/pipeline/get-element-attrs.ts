@@ -5,7 +5,7 @@ import { handlePipelineResponse } from './shared'
 export function getElementAttrsFromPipeline(
   tag: string,
   context: PipelineClientContext,
-) {
+): Promise<void> {
   return handlePipelineResponse(
     context,
     {

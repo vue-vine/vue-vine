@@ -3,7 +3,10 @@ import { QUERY_TYPE_SCRIPT } from './constants'
 
 type VineQueryRaw = Record<keyof VineQuery, string>
 
-export function parseQuery(id: string) {
+export function parseQuery(id: string): {
+  filePath: string
+  query: VineQuery
+} {
   const [filePath, queryRawStr] = id.split('?', 2) as [fileId: string, queryRawStr?: string]
   const rawQuery = Object.fromEntries(new URLSearchParams(queryRawStr)) as VineQueryRaw
   const query: VineQuery = {

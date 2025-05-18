@@ -123,7 +123,7 @@ export function fixLocation<T extends HasLocation>(
 export function fixErrorLocation(
   error: ParseError,
   locationCalculator: LocationCalculator,
-) {
+): void {
   const diff = locationCalculator.getFixOffset(error.index, 'start')
 
   error.index += diff

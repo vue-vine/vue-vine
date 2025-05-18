@@ -35,7 +35,7 @@ const invalidDynamicArgumentNextChar = /^[\s=/>]$/u
  * but does not convert the case of the beginning character when converting with Vue3.
  * @see https://github.com/vuejs/vue-next/blob/48de8a42b7fed7a03f7f1ff5d53d6a704252cafe/packages/shared/src/index.ts#L109
  */
-export function camelize(str: string) {
+export function camelize(str: string): string {
   return str.replace(/-(\w)/gu, (_, c) => (c ? c.toUpperCase() : ''))
 }
 
@@ -743,7 +743,7 @@ export function convertForVBindSameNameShorthandValue(
   directive: VDirective,
   parserOptions: VineESLintParserOptions,
   locationCalculator: LocationCalculatorForHtml,
-) {
+): void {
   if (
     directive.key.name.name !== 'bind'
     || directive.key.argument == null

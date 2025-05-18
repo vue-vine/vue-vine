@@ -1283,7 +1283,7 @@ export function validateVine(
   compilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
   vineCompFnDecls: Node[],
-) {
+): boolean {
   const findValidateError = createVineValidator(compilerHooks, vineFileCtx, vineCompFnDecls)
   if (findValidateError(validatesFromRoot, vineFileCtx.root)) {
     return false

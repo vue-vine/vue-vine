@@ -4,7 +4,7 @@ import path from 'node:path'
 import deepMerge from './deepMerge'
 import sortDependencies from './sortDependencies'
 
-export async function renderTemplate(src: string, dest: string) {
+export async function renderTemplate(src: string, dest: string): Promise<void> {
   const stats = await stat(src)
 
   if (stats.isDirectory()) {
@@ -52,7 +52,7 @@ export async function renderTemplate(src: string, dest: string) {
 
 let isLastFetchTimeout = false
 
-async function getLatestVineVersion(dep: string) {
+async function getLatestVineVersion(dep: string): Promise<string | undefined> {
   // If the last query has timed out,
   // all subsequent queries will not go through the server.
   if (isLastFetchTimeout) {
@@ -80,7 +80,7 @@ async function getLatestVineVersion(dep: string) {
   }
 }
 
-async function setLatestVineVersion(pkg: Record<string, any>, dep: string) {
+async function setLatestVineVersion(pkg: Record<string, any>, dep: string): Promise<void> {
   try {
     const latestVersion = await getLatestVineVersion(dep)
 

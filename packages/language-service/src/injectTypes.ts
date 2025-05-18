@@ -36,7 +36,7 @@ export function setupGlobalTypes(
   }
 }
 
-export function generateGlobalTypes(vueOptions: VueCompilerOptions) {
+export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
   let globalTypes = _generateGlobalTypes(vueOptions)
 
   // Replace __VLS_Element

@@ -14,26 +14,26 @@ function cacheStringFunction<T extends (str: string) => string>(fn: T): T {
 export function concating<T>(
   condition: boolean,
   arr: T[],
-) {
+): T[] {
   return condition ? arr : []
 }
 
-export function showIf(condition: boolean, s: string, not?: string) {
+export function showIf(condition: boolean, s: string, not?: string): string {
   return condition ? s : (not ?? '')
 }
 
 export function filterJoin(
   arr: string[],
   join: string,
-) {
+): string {
   return arr.filter(Boolean).join(join)
 }
 
-export function dedupe<T extends string | number | boolean>(arr: T[]) {
+export function dedupe<T extends string | number | boolean>(arr: T[]): T[] {
   return [...new Set(arr)]
 }
 
-export function getStyleLangFileExt(styleLang: VineStyleLang) {
+export function getStyleLangFileExt(styleLang: VineStyleLang): string {
   if (styleLang === 'postcss') {
     return 'css'
   }
@@ -47,7 +47,7 @@ export function appendToMapArray<K extends object, V>(
   storeMap: WeakMap<K, V[]>,
   key: K,
   value: V,
-) {
+): void {
   const arr = storeMap.get(key)
   if (!arr) {
     storeMap.set(key, [value])
@@ -57,15 +57,15 @@ export function appendToMapArray<K extends object, V>(
   }
 }
 
-export const camelize = cacheStringFunction((str: string): string => {
+export const camelize: (str: string) => string = cacheStringFunction((str: string): string => {
   return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''))
 })
 
-export const capitalize = cacheStringFunction(
+export const capitalize: (str: string) => string = cacheStringFunction(
   (str: string) => str.charAt(0).toUpperCase() + str.slice(1),
 )
 
-export const isBuiltInDirective = /* #__PURE__ */ makeMap(
+export const isBuiltInDirective: (str: string) => boolean = /* #__PURE__ */ makeMap(
   'bind,cloak,else-if,else,for,html,if,model,on,once,pre,show,slot,text,memo',
 )
 
@@ -74,7 +74,7 @@ export class ExitTraverseError extends Error {
     super('ExitTraverse')
   }
 }
-export const exitTraverse = new ExitTraverseError()
+export const exitTraverse: ExitTraverseError = new ExitTraverseError()
 export const _breakableTraverse: typeof traverse = (node, handlers) => {
   try {
     return traverse(node, handlers)
@@ -88,7 +88,7 @@ export const _breakableTraverse: typeof traverse = (node, handlers) => {
   }
 }
 
-export function isBasicBoolTypeNames(type: string) {
+export function isBasicBoolTypeNames(type: string): boolean {
   return [
     'boolean',
     'Boolean',

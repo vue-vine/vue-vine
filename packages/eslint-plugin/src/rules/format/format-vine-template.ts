@@ -2,6 +2,7 @@
 
 import type { VTemplateRoot } from '@vue-vine/eslint-parser'
 import type { Options as PrettierOptions } from 'prettier'
+import type { RuleModule } from '../../utils'
 import { join } from 'node:path'
 import { generateDifferences, showInvisibles } from 'prettier-linter-helpers'
 import { createSyncFn } from 'synckit'
@@ -14,7 +15,7 @@ export type Options = [PrettierOptions]
 
 const { INSERT, DELETE, REPLACE } = generateDifferences
 
-export const messages = {
+export const messages: Record<string, string> = {
   [INSERT]: 'Insert `{{ insertText }}`',
   [DELETE]: 'Delete `{{ deleteText }}`',
   [REPLACE]: 'Replace `{{ deleteText }}` with `{{ insertText }}`',
@@ -22,7 +23,7 @@ export const messages = {
 
 let formatRunner: (code: string, options: PrettierOptions) => string
 
-export default createEslintRule<Options, string>({
+const rule: RuleModule<Options> = createEslintRule<Options, string>({
   name: messageId,
   meta: {
     type: 'layout',
@@ -147,3 +148,5 @@ export default createEslintRule<Options, string>({
     }
   },
 })
+
+export default rule

@@ -13,6 +13,6 @@ export interface FeatureFlag<N extends string, T extends FlagOptions> {
 
 export type ParsedFeatureFlag = Record<string, boolean>
 
-export function defineFlagMeta<N extends string, T extends FlagOptions>(flag: FeatureFlag<N, T>) {
+export function defineFlagMeta<N extends string, T extends FlagOptions>(flag: FeatureFlag<N, T>): FeatureFlag<N, T> {
   return flag
 }

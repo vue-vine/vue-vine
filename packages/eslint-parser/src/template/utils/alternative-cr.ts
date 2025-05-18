@@ -1,7 +1,7 @@
 /**
  * Code mapping of HTML numeric entities.
  */
-export const alternativeCR = new Map(
+export const alternativeCR: Readonly<Map<number, number>> = new Map(
   [
     [128, 8364],
     [130, 8218],

@@ -13,7 +13,7 @@ import {
 
 const windowsPathReg = /\\/g
 
-export function run() {
+export function run(): void {
   const tscSdk = require.resolve('typescript/lib/tsc')
   const main = () => {
     // Type check for `.vine.ts` files

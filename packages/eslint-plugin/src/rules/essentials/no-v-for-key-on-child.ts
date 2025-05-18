@@ -1,4 +1,5 @@
 import type { VDirective, VElement } from '@vue-vine/eslint-parser'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, getDirective, hasDirective, isVElement } from '../../utils'
 
 const RULE_NAME = 'no-v-for-key-on-child' as const
@@ -25,7 +26,7 @@ function isUsingIterationVar(vFor: VDirective, vBindKey: VDirective) {
   )
 }
 
-export default createEslintRule<[], MessageIds>({
+const rule: RuleModule<[]> = createEslintRule<[], MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'suggestion',
@@ -70,3 +71,5 @@ export default createEslintRule<[], MessageIds>({
     }
   },
 })
+
+export default rule

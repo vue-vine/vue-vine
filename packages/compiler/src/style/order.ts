@@ -15,7 +15,7 @@ import { createStyleImportStmt } from './create-import-statement'
  */
 export function sortStyleImport(
   vineFileCtx: VineFileCtx,
-) {
+): string[] {
   const { vineCompFns, styleDefine } = vineFileCtx
   const relationsMap: ComponentRelationsMap = Object.fromEntries(
     vineCompFns.map(

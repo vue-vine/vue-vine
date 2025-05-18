@@ -6,7 +6,7 @@ import { getComponentProps } from '../visitors'
 export function handleGetComponentProps(
   request: PipelineRequestInstance<'getComponentPropsRequest'>,
   context: PipelineContext,
-) {
+): void {
   const { ws, language } = context
   const { requestId, componentName, fileName } = request
 

@@ -102,7 +102,7 @@ export const createEslintRule = RuleCreator(
   { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, TDocs>>
 ) => RuleModule<TOptions>
 
-export function notVineCompFn(node: any) {
+export function notVineCompFn(node: any): boolean {
   return !(node as any).__isVine__
 }
 
@@ -113,7 +113,7 @@ export function notVineCompFn(node: any) {
  * @param {ParserServices.TokenStore | SourceCode} sourceCode The ESLint source code object.
  * @returns {boolean} the source code for the given node.
  */
-export function equalTokens(left: Node, right: Node, sourceCode: SourceCode) {
+export function equalTokens(left: Node, right: Node, sourceCode: SourceCode): boolean {
   const tokensL = sourceCode.getTokens(left as any)
   const tokensR = sourceCode.getTokens(right as any)
 

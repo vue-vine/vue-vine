@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "lib": ["ES2023"],
     "customConditions": ["vine"],
@@ -8,7 +9,10 @@
     "allowImportingTsExtensions": true,
     "strict": true,
     "noImplicitAny": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "noEmit": true,
+    "isolatedDeclarations": true,
     "skipLibCheck": true
   },
   "include": [
@@ -20,6 +24,8 @@
     "**/dist",
     "packages/nuxt-module",
     "packages/playground",
-    "packages/create-vue-vine/template"
+    "packages/e2e-test",
+    "packages/create-vue-vine/template",
+    "packages/e2e-test/src/*.vine.ts"
   ]
 }

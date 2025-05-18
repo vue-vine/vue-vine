@@ -9,7 +9,7 @@ export * from './ast'
 export function parse(
   code: string,
   parserOptions: VineESLintParserOptions,
-) {
+): ParseForESLintResult['ast'] {
   return parseForESLint(code, parserOptions).ast
 }
 

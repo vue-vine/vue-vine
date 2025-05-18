@@ -1,5 +1,6 @@
 import type { SourceCode } from '@typescript-eslint/utils/ts-eslint'
 import type { VDirective, VElement, VExpression } from '@vue-vine/eslint-parser'
+import type { RuleModule } from '../../utils'
 import { createEslintRule, equalTokens, getDirective, prevSibling } from '../../utils'
 
 interface OrOperands {
@@ -96,7 +97,7 @@ export type MessageIds =
   | typeof RULE_NAME
 export type Options = []
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
     type: 'problem',
@@ -169,3 +170,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

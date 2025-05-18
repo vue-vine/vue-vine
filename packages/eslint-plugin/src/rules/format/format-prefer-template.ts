@@ -1,9 +1,10 @@
 import type { TSESTree } from '@typescript-eslint/types'
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
+import type { RuleModule } from '../../utils'
 import { createEslintRule } from '../../utils'
 
 const messageId = 'format-prefer-template' as const
-const inTemplateMessageId = `${messageId}-inside-vine-template` as const
+const inTemplateMessageId = 'format-prefer-template-inside-vine-template' as const
 export type MessageIds =
   | typeof messageId
   | typeof inTemplateMessageId
@@ -60,7 +61,7 @@ function collectParts(
   }]
 }
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
     type: 'problem',
@@ -121,3 +122,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule

@@ -14,7 +14,7 @@ function isLinterPath(p: string): boolean {
   )
 }
 
-export function getLinterRequire() {
+export function getLinterRequire(): ((modname: string) => any) | null {
   // Lookup the loaded eslint
   const __require = NodeCreateRequire(
     fileURLToPath(import.meta.url),

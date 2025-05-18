@@ -1,11 +1,11 @@
 import type { PipelineRequest, PipelineResponse } from './types'
 import { safeDestr } from 'destr'
 
-export function pipelineRequest<T extends PipelineRequest>(data: T) {
+export function pipelineRequest<T extends PipelineRequest>(data: T): string {
   return JSON.stringify(data)
 }
 
-export function pipelineResponse<T extends PipelineResponse>(data: T) {
+export function pipelineResponse<T extends PipelineResponse>(data: T): string {
   return JSON.stringify(data)
 }
 

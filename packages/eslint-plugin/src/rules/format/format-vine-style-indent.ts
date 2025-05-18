@@ -1,3 +1,4 @@
+import type { RuleModule } from '../../utils'
 import { unindent } from '@antfu/utils'
 import { createEslintRule } from '../../utils'
 
@@ -16,7 +17,7 @@ const VINE_STYLE_TAGS = [
   'postcss',
 ]
 
-export default createEslintRule<Options, MessageIds>({
+const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: messageId,
   meta: {
     type: 'layout',
@@ -81,3 +82,5 @@ export default createEslintRule<Options, MessageIds>({
     }
   },
 })
+
+export default rule
