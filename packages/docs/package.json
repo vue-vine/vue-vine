@@ -12,9 +12,9 @@
     "preview": "vitepress preview src"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.1.34",
-    "@iconify-json/twemoji": "^1.1.15",
+    "@iconify-json/logos": "catalog:docs",
+    "@iconify-json/twemoji": "catalog:docs",
     "unocss": "catalog:miscs",
-    "vitepress": "^1.0.2"
+    "vitepress": "catalog:docs"
   }
 }

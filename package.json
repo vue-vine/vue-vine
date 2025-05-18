@@ -56,7 +56,7 @@
     "eslint": "catalog:eslint-libs",
     "lint-staged": "catalog:cli",
     "playwright-chromium": "catalog:miscs",
-    "semver": "^7.7.1",
+    "semver": "catalog:miscs",
     "simple-git-hooks": "catalog:cli",
     "tree-kill": "catalog:cli",
     "tsdown": "catalog:cli",
@@ -65,19 +65,7 @@
     "vite": "catalog:vite-ecosystem",
     "vitest": "catalog:vite-ecosystem",
     "vue": "catalog:vue-libs",
-    "yaml": "^2.7.1"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@vscode/vsce-sign",
-      "esbuild",
-      "keytar",
-      "playwright-chromium",
-      "simple-git-hooks",
-      "unrs-resolver",
-      "vue-demi"
-    ]
+    "yaml": "catalog:miscs"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm install && pnpm run verify && pnpm tsx scripts/pre-commit.js"

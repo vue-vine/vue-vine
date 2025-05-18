@@ -107,10 +107,10 @@
     "@changesets/changelog-github": "catalog:miscs",
     "@types/vscode": "catalog:types",
     "@volar/vscode": "catalog:volar",
-    "@vscode/vsce": "latest",
+    "@vscode/vsce": "catalog:vscode",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "ovsx": "latest",
+    "ovsx": "catalog:cli",
     "reactive-vscode": "catalog:vscode"
   }
 }
