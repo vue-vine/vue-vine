@@ -38,7 +38,9 @@
     "yoctocolors": "catalog:cli"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "catalog:miscs",
     "@types/node": "catalog:types",
+    "tailwindcss": "catalog:miscs",
     "unocss": "catalog:miscs",
     "unplugin-auto-import": "catalog:miscs",
     "vite": "catalog:vite-ecosystem",

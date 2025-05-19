@@ -1,10 +1,10 @@
 // uno.config.ts
-import { defineConfig, presetIcons, presetUno } from 'unocss'
+import { defineConfig, presetIcons, presetWind3 } from 'unocss'
 
 export default defineConfig({
   // ...UnoCSS options
   presets: [
-    presetUno(),
+    presetWind3(),
     presetIcons(),
   ],
   content: {
