@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.0.2
+
+### Patch Changes
+
+- Switch to tailwind 4 based configs.
+
 ## 1.0.1
 
 ### Patch Changes
