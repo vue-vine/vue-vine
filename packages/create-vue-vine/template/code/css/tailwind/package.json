@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.7"
   }
 }

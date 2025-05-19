@@ -1,6 +1,4 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
@@ -12,7 +10,6 @@ html {
 
 a {
   text-decoration: none;
-  color: inherit;
 }
 
 img {
