@@ -14,7 +14,7 @@
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/dist/**/*.js"
       ],
-      "preLaunchTask": "npm: debug:ext"
+      "preLaunchTask": "npm: watch:ext"
     },
     {
       "name": "Attach to Server",

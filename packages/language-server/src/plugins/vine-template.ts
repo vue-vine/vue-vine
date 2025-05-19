@@ -244,6 +244,11 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                   )
 
                 await Promise.allSettled(pendingPromises)
+
+                updateCustomData([
+                  templateBuiltIn,
+                  vineVolarContextProvider,
+                ])
               }
               catch (err) {
                 console.error('Error waiting for pipeline requests:', err)
