@@ -47,25 +47,25 @@
     "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "catalog:eslint-libs",
-    "@baiwusanyu/utils-log": "catalog:cli",
+    "@antfu/eslint-config": "catalog:lint-libs",
+    "@baiwusanyu/utils-log": "catalog:utils",
     "@changesets/cli": "catalog:cli",
     "@types/node": "catalog:types",
     "@vue-vine/eslint-parser": "workspace:*",
     "del": "catalog:cli",
-    "eslint": "catalog:eslint-libs",
+    "eslint": "catalog:lint-libs",
     "lint-staged": "catalog:cli",
-    "playwright-chromium": "catalog:miscs",
-    "semver": "catalog:miscs",
+    "playwright-chromium": "catalog:vitest-libs",
+    "semver": "catalog:utils",
     "simple-git-hooks": "catalog:cli",
     "tree-kill": "catalog:cli",
     "tsdown": "catalog:cli",
     "tsx": "catalog:cli",
     "typescript": "catalog:cli",
     "vite": "catalog:vite-ecosystem",
-    "vitest": "catalog:vite-ecosystem",
+    "vitest": "catalog:vitest-libs",
     "vue": "catalog:vue-libs",
-    "yaml": "catalog:miscs"
+    "yaml": "catalog:utils"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm install && pnpm run verify && pnpm tsx scripts/pre-commit.js"

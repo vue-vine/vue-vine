@@ -38,11 +38,11 @@
     "yoctocolors": "catalog:cli"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "catalog:miscs",
+    "@tailwindcss/vite": "catalog:vite-ecosystem",
     "@types/node": "catalog:types",
-    "tailwindcss": "catalog:miscs",
-    "unocss": "catalog:miscs",
-    "unplugin-auto-import": "catalog:miscs",
+    "tailwindcss": "catalog:styles",
+    "unocss": "catalog:styles",
+    "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
     "vue": "catalog:vue-libs",

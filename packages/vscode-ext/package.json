@@ -104,7 +104,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@changesets/changelog-github": "catalog:miscs",
+    "@changesets/changelog-github": "catalog:utils",
     "@types/vscode": "catalog:types",
     "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "catalog:vscode",

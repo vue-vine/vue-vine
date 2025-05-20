@@ -364,7 +364,7 @@ importers:
   .:
     devDependencies:
       '@antfu/eslint-config':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 4.12.0(@typescript-eslint/utils@8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(@vue/compiler-sfc@3.5.13)(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.2(@types/debug@4.1.12)(@types/node@22.15.0)(jiti@2.4.2)(jsdom@26.1.0)(less@4.3.0)(lightningcss@1.30.1)(sass@1.87.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
       '@baiwusanyu/utils-log':
         specifier: catalog:cli
@@ -382,7 +382,7 @@ importers:
         specifier: catalog:cli
         version: 8.0.0
       eslint:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 9.25.1(jiti@2.4.2)
       lint-staged:
         specifier: catalog:cli
@@ -573,28 +573,28 @@ importers:
         specifier: workspace:*
         version: link:../eslint-plugin
       eslint:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 9.25.1(jiti@2.4.2)
 
   packages/eslint-parser:
     dependencies:
       '@typescript-eslint/parser':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/scope-manager':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0
       '@typescript-eslint/typescript-estree':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0(typescript@5.8.3)
       debug:
         specifier: catalog:cli
         version: 4.4.0
       eslint-scope:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.3.0
       espree:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 10.3.0
       line-column:
         specifier: catalog:miscs
@@ -622,13 +622,13 @@ importers:
         specifier: catalog:types
         version: 7.7.0
       '@typescript-eslint/types':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0
       eslint:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 9.25.1(jiti@2.4.2)
       eslint-visitor-keys:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 4.2.0
       lodash:
         specifier: catalog:miscs
@@ -646,7 +646,7 @@ importers:
         specifier: catalog:miscs
         version: 3.5.3
       prettier-linter-helpers:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 1.0.0
       synckit:
         specifier: catalog:miscs
@@ -659,19 +659,19 @@ importers:
         specifier: catalog:types
         version: 1.0.4
       '@typescript-eslint/types':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0
       '@typescript-eslint/typescript-estree':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0(typescript@5.8.3)
       '@typescript-eslint/utils':
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 8.31.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
       eslint:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 9.25.1(jiti@2.4.2)
       eslint-vitest-rule-tester:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 2.2.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.2(@types/debug@4.1.12)(@types/node@22.15.0)(jiti@2.4.2)(jsdom@26.1.0)(less@4.3.0)(lightningcss@1.30.1)(sass@1.87.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
 
   packages/language-server:
@@ -849,7 +849,7 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       eslint:
-        specifier: catalog:eslint-libs
+        specifier: catalog:lint-libs
         version: 9.25.1(jiti@2.4.2)
       less:
         specifier: catalog:miscs

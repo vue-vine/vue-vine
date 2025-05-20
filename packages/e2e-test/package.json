@@ -11,7 +11,7 @@
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue": "catalog:vite-ecosystem",
     "@vue/test-utils": "catalog:vue-libs",
-    "jsdom": "catalog:miscs",
+    "jsdom": "catalog:vitest-libs",
     "vue-tsc": "catalog:vue-libs",
     "vue-vine": "workspace:*"
   }

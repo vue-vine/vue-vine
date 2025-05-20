@@ -39,9 +39,9 @@
     "@vue/compiler-ssr": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
     "get-tsconfig": "catalog:compiler",
-    "hash-sum": "catalog:miscs",
-    "line-column": "catalog:miscs",
-    "lru-cache": "catalog:miscs",
+    "hash-sum": "catalog:utils",
+    "line-column": "catalog:utils",
+    "lru-cache": "catalog:utils",
     "magic-string": "catalog:compiler",
     "merge-source-map": "catalog:compiler",
     "postcss": "catalog:compiler",
@@ -52,7 +52,7 @@
     "@types/hash-sum": "catalog:types",
     "@types/line-column": "catalog:types",
     "estree-walker": "catalog:compiler",
-    "prettier": "catalog:miscs",
+    "prettier": "catalog:lint-libs",
     "source-map-js": "catalog:compiler"
   },
   "publishConfig": {

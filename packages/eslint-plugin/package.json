@@ -38,19 +38,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@antfu/utils": "catalog:miscs",
+    "@antfu/utils": "catalog:utils",
     "@vue-vine/eslint-parser": "workspace:*",
-    "prettier": "catalog:miscs",
-    "prettier-linter-helpers": "catalog:eslint-libs",
+    "prettier": "catalog:lint-libs",
+    "prettier-linter-helpers": "catalog:lint-libs",
     "synckit": "catalog:miscs"
   },
   "devDependencies": {
     "@types/eslint": "catalog:types",
     "@types/prettier-linter-helpers": "catalog:types",
-    "@typescript-eslint/types": "catalog:eslint-libs",
-    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
-    "@typescript-eslint/utils": "catalog:eslint-libs",
-    "eslint": "catalog:eslint-libs",
-    "eslint-vitest-rule-tester": "catalog:eslint-libs"
+    "@typescript-eslint/types": "catalog:lint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:lint-libs",
+    "@typescript-eslint/utils": "catalog:lint-libs",
+    "eslint": "catalog:lint-libs",
+    "eslint-vitest-rule-tester": "catalog:lint-libs"
   }
 }

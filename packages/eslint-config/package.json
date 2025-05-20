@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "@vue-vine/eslint-plugin": "workspace:*",
-    "eslint": "catalog:eslint-libs"
+    "eslint": "catalog:lint-libs"
   }
 }

@@ -17,14 +17,14 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "catalog:miscs",
+    "@iconify-json/carbon": "catalog:styles",
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue-jsx": "catalog:vite-ecosystem",
     "@vue-vine/eslint-config": "workspace:*",
-    "eslint": "catalog:eslint-libs",
-    "less": "catalog:miscs",
-    "unocss": "catalog:miscs",
-    "unplugin-auto-import": "catalog:miscs",
+    "eslint": "catalog:lint-libs",
+    "less": "catalog:styles",
+    "unocss": "catalog:styles",
+    "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
     "vue-vine": "workspace:*"
   }

@@ -34,14 +34,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "catalog:eslint-libs",
-    "@typescript-eslint/scope-manager": "catalog:eslint-libs",
-    "@typescript-eslint/typescript-estree": "catalog:eslint-libs",
+    "@typescript-eslint/parser": "catalog:lint-libs",
+    "@typescript-eslint/scope-manager": "catalog:lint-libs",
+    "@typescript-eslint/typescript-estree": "catalog:lint-libs",
     "debug": "catalog:cli",
-    "eslint-scope": "catalog:eslint-libs",
-    "espree": "catalog:eslint-libs",
-    "line-column": "catalog:miscs",
-    "semver": "catalog:miscs"
+    "eslint-scope": "catalog:lint-libs",
+    "espree": "catalog:lint-libs",
+    "line-column": "catalog:utils",
+    "semver": "catalog:utils"
   },
   "devDependencies": {
     "@types/debug": "catalog:types",
@@ -50,9 +50,9 @@
     "@types/lodash": "catalog:types",
     "@types/node": "catalog:types",
     "@types/semver": "catalog:types",
-    "@typescript-eslint/types": "catalog:eslint-libs",
-    "eslint": "catalog:eslint-libs",
-    "eslint-visitor-keys": "catalog:eslint-libs",
-    "lodash": "catalog:miscs"
+    "@typescript-eslint/types": "catalog:lint-libs",
+    "eslint": "catalog:lint-libs",
+    "eslint-visitor-keys": "catalog:lint-libs",
+    "lodash": "catalog:utils"
   }
 }
