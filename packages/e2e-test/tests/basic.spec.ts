@@ -1,6 +1,11 @@
-import type { E2EPlaywrightContext } from '../../utils/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createBrowserContext, editFile, freeBrowserContext, getColor, untilUpdated } from '../../utils/test-utils'
+import {
+  createBrowserCtxEnvironment,
+  editFile,
+  getColor,
+  getDisplayStyle,
+  untilUpdated,
+} from '../utils/test-utils'
 
 afterEach(() => {
   // reset
@@ -21,20 +26,12 @@ afterEach(() => {
       .replace(
         'function TestTsMorph1',
         'function TestTsMorph',
-      ),
+      )
+      .replace(':z-index="6"', ':z-index="12"'),
   )
 })
-describe('hmr', () => {
-  const createBrowserCtxEnvironment = (
-    testRunner: (browserCtx: E2EPlaywrightContext) => Promise<void>,
-  ) => {
-    return async () => {
-      const browserCtx = await createBrowserContext()
-      await testRunner(browserCtx)
-      freeBrowserContext(browserCtx)
-    }
-  }
 
+describe('hmr', () => {
   it('should update style and preserve state when style is edited', createBrowserCtxEnvironment(async (browserCtx) => {
     expect(await getColor(browserCtx, 'button.test-btn')).toBe('rgb(0, 0, 0)')
     await untilUpdated(
@@ -93,5 +90,16 @@ describe('hmr', () => {
       ),
     )
     await untilUpdated(() => browserCtx.page!.textContent('.test-ts-morph'), 'foo: 123')
+  }))
+})
+
+describe('ts-morph', () => {
+  it('should update complex type annotation props', createBrowserCtxEnvironment(async (browserCtx) => {
+    expect(await browserCtx.page!.textContent('.test-complex-ts-morph h4')).toBe('This is a complex ts-morph example')
+
+    // Component should be hidden by v-show = false
+    // div.test-complex-ts-morph should have style display: none
+    editFile('test.vine.ts', code => code.replace(':z-index="12"', ':z-index="6"'))
+    await untilUpdated(() => getDisplayStyle(browserCtx, '.test-complex-ts-morph'), 'none')
   }))
 })

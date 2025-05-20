@@ -520,7 +520,7 @@ export function createVueVineVirtualCode(
   }
 
   function generatePropsExtra(vineCompFn: VineCompFn) {
-    const commonProps = '& __VLS_VineComponentCommonProps'
+    const commonProps = ' & __VLS_VineComponentCommonProps'
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
     return [

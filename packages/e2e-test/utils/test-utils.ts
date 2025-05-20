@@ -142,3 +142,31 @@ export async function getColor(
     selector,
   )
 }
+
+export async function getDisplayStyle(
+  e2eTestCtx: E2EPlaywrightContext,
+  selector: string,
+  page?: Page,
+) {
+  const pageCtx = page ?? e2eTestCtx.page
+  return await pageCtx?.evaluate(
+    (selector: string) => {
+      const el = document.querySelector(selector)
+      if (!el) {
+        return null
+      }
+      return getComputedStyle(el).display
+    },
+    selector,
+  )
+}
+
+export function createBrowserCtxEnvironment(
+  testRunner: (browserCtx: E2EPlaywrightContext) => Promise<void>,
+) {
+  return async () => {
+    const browserCtx = await createBrowserContext()
+    await testRunner(browserCtx)
+    freeBrowserContext(browserCtx)
+  }
+}

@@ -11,7 +11,7 @@ type __VINE_VLS_Comp_props__ = {
 /* __LINKED_CODE_LEFT__#3 */foo: string
 }
 function Comp(
-  props: __VINE_VLS_Comp_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_Comp_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type Comp_Props = Parameters<typeof Comp>[0];
@@ -75,7 +75,7 @@ type __VINE_VLS_SampleOne_props__ = {
 // - Case 1: 'vue-vine/format-vine-macros-leading'
 // - Case 2: 'vue-vine/essentials-no-child-content'
 export function SampleOne(
-  props: __VINE_VLS_SampleOne_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_SampleOne_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type SampleOne_Props = Parameters<typeof SampleOne>[0];
@@ -164,7 +164,7 @@ type __VINE_VLS_SampleTwo_props__ = {}
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo(
-  props: __VINE_VLS_SampleTwo_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_SampleTwo_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type SampleTwo_Props = Parameters<typeof SampleTwo>[0];
@@ -230,7 +230,7 @@ type __VINE_VLS_TestPlainTextTemplate_props__ = {}
 
 
 export function TestPlainTextTemplate(
-  props: __VINE_VLS_TestPlainTextTemplate_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestPlainTextTemplate_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   // This should not report any formatting warning
   
@@ -282,7 +282,7 @@ type __VINE_VLS_TestUnoCssAttributeMode_props__ = {}
 
 
 export function TestUnoCssAttributeMode(
-  props: __VINE_VLS_TestUnoCssAttributeMode_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestUnoCssAttributeMode_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[0];
@@ -346,7 +346,7 @@ type __VINE_VLS_TestCompOne_props__ = {
 
 // #region Fixtures for testing component reference & props check in VSCode
 function TestCompOne(
-  props: __VINE_VLS_TestCompOne_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestCompOne_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
@@ -409,7 +409,7 @@ type __VINE_VLS_TestCompTwo_props__ = {}
 
 
 function TestCompTwo(
-  props: __VINE_VLS_TestCompTwo_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestCompTwo_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type TestCompTwo_Props = Parameters<typeof TestCompTwo>[0];
@@ -490,7 +490,7 @@ type __VINE_VLS_TargetComp_props__ = {}
 
 // #region Test vineExpose and component ref
 function TargetComp(
-  props: __VINE_VLS_TargetComp_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TargetComp_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {
   expose: __VINE_VLS_PickComponentExpose<typeof TargetComp>,
   
@@ -568,7 +568,7 @@ type __VINE_VLS_TestCompRef_props__ = {}
 
 
 export function TestCompRef(
-  props: __VINE_VLS_TestCompRef_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestCompRef_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   // const target = ref<ReturnType<typeof TargetComp>>()
   
@@ -646,7 +646,7 @@ type __VINE_VLS_TestNoVforKeyOnChild_props__ = {}
 
 // #region Test ESLint rule: no-v-for-key-on-child
 export function TestNoVforKeyOnChild(
-  props: __VINE_VLS_TestNoVforKeyOnChild_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestNoVforKeyOnChild_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
@@ -716,7 +716,7 @@ type __VINE_VLS_TestNoLifecycleHookAfterAwait_props__ = {}
 // #region Test ESLint rule: no-lifecycle-hook-after-await
 declare const doSomethingAsync: () => Promise<void>
 export async function TestNoLifecycleHookAfterAwait(
-  props: __VINE_VLS_TestNoLifecycleHookAfterAwait_props__ & __VINE_VLS_VineComponentCommonProps, 
+  props: __VINE_VLS_TestNoLifecycleHookAfterAwait_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
   
 type TestNoLifecycleHookAfterAwait_Props = Parameters<typeof TestNoLifecycleHookAfterAwait>[0];

@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config'
 const timeout = process.env.CI ? 50000 : 30000
 export default defineConfig({
   test: {
-    include: ['./src/**/*.spec.[tj]s'],
+    include: ['./tests/**/*.spec.[tj]s'],
     testTimeout: timeout,
     hookTimeout: timeout,
     reporters: 'dot',
@@ -14,6 +14,6 @@ export default defineConfig({
     },
   },
   esbuild: {
-    target: 'node14',
+    // target: 'node14',
   },
 })

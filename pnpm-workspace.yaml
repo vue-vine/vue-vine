@@ -57,6 +57,7 @@ catalogs:
     prettier: ^3.5.3
     prettier-linter-helpers: ^1.0.0
   miscs:
+    element-plus: ^2.9.10
     synckit: ^0.9.2
     ws: ^8.18.1
   nuxt-libs:

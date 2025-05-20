@@ -1,5 +1,5 @@
-import type { TestProps } from './types';
-import { ref } from 'vue'
+import type { TestProps, WatermarkProps } from './types';
+import { computed, ref } from 'vue'
 
 function TestTsMorph(props: TestProps) {
   return vine`
@@ -9,9 +9,21 @@ function TestTsMorph(props: TestProps) {
   `
 }
 
+function TestComplexTsMorph(props: WatermarkProps) {
+  const isShow = computed(() => props.zIndex > 10)
+
+  return vine`
+    <div v-show="isShow" class="test-complex-ts-morph">
+      <h4>This is a complex ts-morph example</h4>
+      <span>{{ content }}</span>
+    </div>
+  `
+}
+
 export function App() {
   const count = ref(0)
   const name = ref('vine')
+  const content = ref('lorem ipsum')
   const inc = () => {
     count.value += 2
   }
@@ -28,5 +40,11 @@ export function App() {
     <div class="counter">Count: {{count}}</div>
 
     <TestTsMorph :foo="123" />
+    <TestComplexTsMorph
+      :z-index="12"
+      :content
+      :rotate="0"
+      :gap="[10, 10]"
+    />
   `
 }
