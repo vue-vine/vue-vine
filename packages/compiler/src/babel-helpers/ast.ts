@@ -211,6 +211,7 @@ export const isVineSlots: IsVineMacroOf = isVineMacroOf('vineSlots')
 export const isVineEmits: IsVineMacroOf = isVineMacroOf('vineEmits')
 export const isVineModel: IsVineMacroOf = isVineMacroOf('vineModel')
 export const isVineStyle: IsVineMacroOf = isVineMacroOf('vineStyle')
+export const isVineStyleImport: IsVineMacroOf = isVineMacroOf('vineStyle.import')
 export const isVineCustomElement: IsVineMacroOf = isVineMacroOf('vineCustomElement')
 export const isVineValidators: IsVineMacroOf = isVineMacroOf('vineValidators')
 export function isUseTemplateRefCall(node: Node): node is CallExpression {
@@ -236,7 +237,7 @@ export function isVineImportScoped(
   }
 
   return (
-    isVineStyle(callee.object)
+    isVineStyleImport(callee.object)
     && isIdentifier(callee.property)
     && callee.property.name === 'scoped'
   )

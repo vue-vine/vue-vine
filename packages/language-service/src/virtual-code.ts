@@ -10,7 +10,7 @@ import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
-import { turnBackToCRLF } from './shared'
+import { parseCssClassNames, turnBackToCRLF } from './shared'
 import { compileVineForVirtualCode } from './vine-ctx'
 
 type VineCodeInformation = VueCodeInformation
@@ -225,6 +225,9 @@ export function createVueVineVirtualCode(
         tsCodeSegments.push(generateVLSContext(vineCompFn, {
           excludeBindings,
         }))
+
+        // Insert `__VLS_StyleScopedClasses`
+        generateStyleScopedClasses()
 
         const generatedTemplate = generateTemplate({
           ts,
@@ -636,9 +639,49 @@ export function createVueVineVirtualCode(
               generateScriptUntil(vineValidatorsMacroCall.end!)
               break
             }
+            case 'vineStyle': {
+              // Skip generate `vineStyle` macro call
+              const vineStyleMacroCall = macroInfo.macroCall
+              generateScriptUntil(vineStyleMacroCall.start!)
+              currentOffset.value = vineStyleMacroCall.end!
+              break
+            }
           }
         },
       )
+  }
+
+  function generateStyleScopedClasses() {
+    tsCodeSegments.push('\ntype __VLS_StyleScopedClasses = {}')
+    for (const styleDefines of Object.values(vineFileCtx.styleDefine)) {
+      for (const { source: styleSource, range, scoped } of styleDefines) {
+        if (!range || !scoped) {
+          continue
+        }
+
+        const scopedClassNames = new Set<string>()
+        const [rangeStart] = range
+        const classNames = parseCssClassNames(styleSource)
+        for (const { offset, text: classNameWithDot } of classNames) {
+          if (scopedClassNames.has(classNameWithDot)) {
+            continue
+          }
+
+          scopedClassNames.add(classNameWithDot)
+          const realOffset = rangeStart + offset + 1 // Move to the right of '.'
+          tsCodeSegments.push('\n & { ')
+          tsCodeSegments.push([
+            classNameWithDot.slice(1),
+            classNameWithDot,
+            realOffset,
+            { navigation: true },
+          ])
+
+          tsCodeSegments.push(': true }')
+        }
+      }
+    }
+    tsCodeSegments.push(';\n')
   }
 
   function generateLinkedCodeTagRightForVineProp(

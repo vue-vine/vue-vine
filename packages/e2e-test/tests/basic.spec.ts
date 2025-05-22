@@ -112,3 +112,12 @@ describe('style-order', () => {
     targetRoute: '/style-order',
   }))
 })
+
+describe('external-style-import', () => {
+  it('should be aligned with SFC style order', createBrowserCtxEnvironment(async (browserCtx) => {
+    expect(await getColor(browserCtx, '.container .test-me')).toBe('rgb(0, 0, 0)')
+    expect(await getColor(browserCtx, '.child-comp .test-me')).toBe('rgb(255, 0, 0)')
+  }, {
+    targetRoute: '/external-style-import',
+  }))
+})

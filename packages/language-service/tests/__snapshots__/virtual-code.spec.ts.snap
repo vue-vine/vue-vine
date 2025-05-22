@@ -44,6 +44,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 });
 ( __VINE_VLS_ctx.foo );
@@ -116,6 +118,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 ...{ style: {} },
 ...{ style: ({
@@ -199,6 +203,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 ...{ class: (['btn', 'btn' + __VINE_VLS_ctx.type]) },
 });
@@ -261,6 +267,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
@@ -312,6 +320,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 border: "1px solid red",
 });
@@ -381,6 +391,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 });
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
@@ -443,6 +455,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 });
 ( __VINE_VLS_ctx.bar );
@@ -535,6 +549,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 ...{ onClick: (...[$event]) => {
 __VINE_VLS_ctx.count++;
@@ -603,6 +619,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 });
 const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'TargetComp', __VINE_VLS_LocalComponents, void, 'TargetComp', 'TargetComp', 'TargetComp'>).TargetComp;
@@ -679,6 +697,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
 ...{ class: "user-list" },
 });
@@ -752,6 +772,8 @@ const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
   ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
 };
+
+type __VINE_VLS_StyleScopedClasses = {};
 __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
 });
 type __VINE_VLS_Slots = {};

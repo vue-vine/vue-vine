@@ -25,7 +25,7 @@ export default defineConfig({
     },
   },
   resolve: {
-    conditions: ['dev'],
+    conditions: ['vine'],
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,
     },
