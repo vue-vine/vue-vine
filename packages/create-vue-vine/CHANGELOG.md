@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.0.3
+
+### Patch Changes
+
+- Fix broken external style import and support scoped class reference.
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.0.3
+
+### Patch Changes
+
+- Fix broken external style import and support scoped class reference.
+- Updated dependencies
+  - @vue-vine/compiler@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes
