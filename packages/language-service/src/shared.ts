@@ -79,3 +79,33 @@ export function createSpawnLogger(tag: string): SpawnLogger {
 export function isVueVineVirtualCode(vCode: any): vCode is VueVineVirtualCode {
   return Boolean(vCode?.__VUE_VINE_VIRTUAL_CODE__)
 }
+
+const commentReg = /(?<=\/\*)[\s\S]*?(?=\*\/)|(?<=\/\/)[\s\S]*?(?=\n)/g
+function fillBlank(css: string, ...regs: RegExp[]) {
+  for (const reg of regs) {
+    css = css.replace(reg, match => ' '.repeat(match.length))
+  }
+  return css
+}
+
+const cssClassNameReg = /(?=(\.[a-z_][-\w]*)[\s.,+~>:#)[{])/gi
+const fragmentReg = /(?<=\{)[^{]*(?=(?<!\\);)/g
+
+export function parseCssClassNames(css: string): {
+  offset: number
+  text: string
+}[] {
+  css = fillBlank(css, commentReg, fragmentReg)
+  const matches = css.matchAll(cssClassNameReg)
+  const classNames = []
+  for (const match of matches) {
+    const matchText = match[1]
+    if (matchText) {
+      classNames.push({
+        offset: match.index,
+        text: matchText,
+      })
+    }
+  }
+  return classNames
+}

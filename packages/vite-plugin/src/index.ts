@@ -110,11 +110,20 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
     enforce: 'pre',
     async resolveId(id) {
       const { query } = parseQuery(id)
+
+      // serve vine style requests as virtual modules
       if (
         query.type === QUERY_TYPE_STYLE
         || query.type === QUERY_TYPE_STYLE_EXTERNAL
       ) {
-        // serve vine style requests as virtual modules
+        // Resolve relative path
+        if (id.startsWith('.')) {
+          const resolvedFilePath = await this.resolve(id, query.vineFileId)
+          if (resolvedFilePath) {
+            id = resolvedFilePath.id
+          }
+        }
+
         return id
       }
     },
@@ -144,7 +153,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
         const compiledStyle = await runCompileStyle(
           styleSource,
           query,
-          `${query.vineFileId}.vine.ts`,
+          query.vineFileId,
         )
 
         return compiledStyle

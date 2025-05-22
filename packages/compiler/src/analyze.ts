@@ -92,6 +92,7 @@ import {
   isVineModel,
   isVineSlots,
   isVineStyle,
+  isVineStyleImport,
   isVineValidators,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
@@ -806,7 +807,7 @@ const analyzeVineStyle: AnalyzeRunner = (
         node.callee.object,
       )
     }
-    else if (isVineStyle(node)) {
+    else if (isVineStyle(node) || isVineStyleImport(node)) {
       vineStyleMacroCalls.push(node)
     }
   })
@@ -831,21 +832,26 @@ const analyzeVineStyle: AnalyzeRunner = (
       vineStyleArg as VineStyleValidArg,
     )
     const isExternalFilePathSource = macroCalleeName === 'vineStyle.import'
+    const scoped = (
+      macroCalleeName === 'vineStyle.scoped'
+      || (
+        macroCalleeName === 'vineStyle.import'
+        && vineStyleMacroCallOfScopedVineStyleImport.has(vineStyleMacroCall)
+      )
+    )
     const styleMeta: VineStyleMeta = {
       lang: styleLang,
       source: styleSource,
       isExternalFilePathSource,
       range,
-      scoped: (
-        macroCalleeName === 'vineStyle.scoped'
-        || (
-          macroCalleeName === 'vineStyle.import'
-          && vineStyleMacroCallOfScopedVineStyleImport.has(vineStyleMacroCall)
-        )
-      ),
+      scoped,
       fileCtx: vineFileCtx,
       compCtx: vineCompFnCtx,
     }
+    vineCompFnCtx.macrosInfoForVolar.push({
+      macroType: 'vineStyle',
+      macroCall: vineStyleMacroCall,
+    })
 
     // If `styleSource` is a path to a file,
     if (isExternalFilePathSource) {

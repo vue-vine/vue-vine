@@ -46,6 +46,7 @@ export type MacrosInfoForVolar =
   | { macroType: 'vineExpose', macroCall: CallExpression }
   | { macroType: 'vineValidators', macroCall: CallExpression }
   | { macroType: 'useTemplateRef', macroCall: CallExpression }
+  | { macroType: 'vineStyle', macroCall: CallExpression }
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
@@ -169,9 +170,6 @@ export interface VineQuery {
   scoped: boolean
   lang: string
   index: number
-
-  // External style imports should
-  // store Vine file ID for postcss compilation
   vineFileId?: string
 }
 

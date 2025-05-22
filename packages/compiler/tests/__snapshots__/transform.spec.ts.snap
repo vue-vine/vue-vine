@@ -21,11 +21,11 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
-import "testTransformInlineResult?type=vine-style&scopeId=3921d7bd&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
-import "../styles/test1.less?vineFileId=testTransformInlineResult&type=vine-style-external&scopeId=3921d7bd&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "testTransformInlineResult?type=vine-style&vineFileId=testTransformInlineResult&scopeId=3921d7bd&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformInlineResult?type=vine-style&vineFileId=testTransformInlineResult&scopeId=3921d7bd&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?type=vine-style-external&vineFileId=testTransformInlineResult&scopeId=3921d7bd&comp=MyProfile&lang=less&scoped=true&index=2&virtual.less";
 import "../styles/test2.scss";
-import "testTransformInlineResult?type=vine-style&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
+import "testTransformInlineResult?type=vine-style&vineFileId=testTransformInlineResult&scopeId=9c121b96&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -272,11 +272,11 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=3b48c990&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
-import "../styles/test1.less?vineFileId=testNoHMRContentOnProduction&type=vine-style-external&scopeId=3b48c990&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "testNoHMRContentOnProduction?type=vine-style&vineFileId=testNoHMRContentOnProduction&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&vineFileId=testNoHMRContentOnProduction&scopeId=3b48c990&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?type=vine-style-external&vineFileId=testNoHMRContentOnProduction&scopeId=3b48c990&comp=MyProfile&lang=less&scoped=true&index=2&virtual.less";
 import "../styles/test2.scss";
-import "testNoHMRContentOnProduction?type=vine-style&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
+import "testNoHMRContentOnProduction?type=vine-style&vineFileId=testNoHMRContentOnProduction&scopeId=c5a474f0&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -509,11 +509,11 @@ import {
   createVNode as _createVNode,
 } from "vue";
 
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
-import "../styles/test1.less?vineFileId=testTransformSeparatedResult&type=vine-style-external&scopeId=25e4e706&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?type=vine-style-external&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=less&scoped=true&index=2&virtual.less";
 import "../styles/test2.scss";
-import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";
@@ -774,11 +774,11 @@ import {
   withAsyncContext as _withAsyncContext,
 } from "vue";
 
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
-import "testTransformSeparatedResult?type=vine-style&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
-import "../styles/test1.less?vineFileId=testTransformSeparatedResult&type=vine-style-external&scopeId=25e4e706&comp=MyProfile&lang=less&index=2&scoped=true&virtual.less";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=css&scoped=true&index=1&virtual.css";
+import "../styles/test1.less?type=vine-style-external&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=less&scoped=true&index=2&virtual.less";
 import "../styles/test2.scss";
-import "testTransformSeparatedResult?type=vine-style&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
+import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=b909f216&comp=MyApp&lang=css&scoped=true&index=0&virtual.css";
 
 import { ref } from "vue";
 import someDefaultExport from "some-module-1";

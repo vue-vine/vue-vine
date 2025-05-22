@@ -20,39 +20,38 @@ export function createStyleImportStmt(
     const styleFileExt = styleMeta.source.slice(
       styleMeta.source.lastIndexOf('.'),
     )
-    return `import ${showIf(
-      // handle web component styles
-      Boolean(vineCompFnCtx.isCustomElement),
-      `__${vineCompFnCtx.fnName.toLowerCase()}_styles from `,
-    )}'${styleMeta.source}?vineFileId=${
-      encodeURIComponent(vineFileCtx.fileId.replace(/\.vine\.ts$/, ''))
-    }&type=vine-style-external&scopeId=${
-      vineCompFnCtx.scopeId
-    }&comp=${vineCompFnCtx.fnName}&lang=${
-      styleMeta.lang
-    }&index=${index}${
-      showIf(
-        Boolean(styleMeta.scoped),
-        '&scoped=true',
-      )
-    }&virtual${styleFileExt}';`
+
+    const importStmt = [
+      'import ',
+      vineCompFnCtx.isCustomElement ? `__${vineCompFnCtx.fnName.toLowerCase()}_styles from '` : '\'',
+      `${styleMeta.source}?`,
+      `type=vine-style-external`,
+      `&vineFileId=${vineFileCtx.fileId}`,
+      `&scopeId=${vineCompFnCtx.scopeId}`,
+      `&comp=${vineCompFnCtx.fnName}`,
+      `&lang=${styleMeta.lang}`,
+      styleMeta.scoped ? `&scoped=true` : '',
+      `&index=${index}`,
+      `&virtual${styleFileExt}'`,
+    ].filter(Boolean).join('')
+
+    return importStmt
   }
 
   const styleLangExt = getStyleLangFileExt(styleMeta.lang)
-  return `import ${showIf(
-    // handle web component styles
-    Boolean(vineCompFnCtx.isCustomElement),
-    `__${vineCompFnCtx.fnName.toLowerCase()}_styles from `,
-  )}'${
-    vineFileCtx.fileId.replace(/\.vine\.ts$/, '')
-  }?type=vine-style&scopeId=${
-    vineCompFnCtx.scopeId
-  }&comp=${vineCompFnCtx.fnName}&lang=${
-    styleMeta.lang
-  }${
-    showIf(
-      Boolean(styleMeta.scoped),
-      '&scoped=true',
-    )
-  }&index=${index}&virtual.${styleLangExt}';`
+  const importStmt = [
+    'import ',
+    vineCompFnCtx.isCustomElement ? `__${vineCompFnCtx.fnName.toLowerCase()}_styles from '` : '\'',
+    `${vineFileCtx.fileId.replace(/\.vine\.ts$/, '')}?`,
+    `type=vine-style`,
+    `&vineFileId=${vineFileCtx.fileId}`,
+    `&scopeId=${vineCompFnCtx.scopeId}`,
+    `&comp=${vineCompFnCtx.fnName}`,
+    `&lang=${styleMeta.lang}`,
+    styleMeta.scoped ? `&scoped=true` : '',
+    `&index=${index}`,
+    `&virtual.${styleLangExt}'`,
+  ].filter(Boolean).join('')
+
+  return importStmt
 }

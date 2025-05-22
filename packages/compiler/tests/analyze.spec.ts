@@ -563,8 +563,8 @@ function MyBox() {
     const sorted = sortStyleImport(fileCtx!)
     expect(sorted).toMatchInlineSnapshot(`
       [
-        "import 'testSortStyleImport?type=vine-style&scopeId=939fb36a&comp=MyApp&lang=css&index=0&virtual.css';",
-        "import 'testSortStyleImport?type=vine-style&scopeId=939fac16&comp=MyBox&lang=scss&scoped=true&index=0&virtual.scss';",
+        "import 'testSortStyleImport?type=vine-style&vineFileId=testSortStyleImport&scopeId=939fb36a&comp=MyApp&lang=css&index=0&virtual.css'",
+        "import 'testSortStyleImport?type=vine-style&vineFileId=testSortStyleImport&scopeId=939fac16&comp=MyBox&lang=scss&scoped=true&index=0&virtual.scss'",
       ]
     `)
   })
