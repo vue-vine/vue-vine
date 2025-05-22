@@ -10,11 +10,10 @@
     "up": "taze major -I"
   },
   "dependencies": {
-    "@iconify-json/mdi": "^1.2.1",
-    "@vueuse/core": "^12.3.0",
-    "pinia": "^2.2.4",
-    "sass": "^1.66.1",
-    "vue-router": "^4.2.4"
+    "@iconify-json/mdi": "catalog:icons",
+    "@vueuse/core": "catalog:vue-libs",
+    "pinia": "catalog:vue-libs",
+    "vue-router": "catalog:vue-libs"
   },
   "devDependencies": {
     "@iconify-json/carbon": "catalog:styles",
@@ -23,6 +22,7 @@
     "@vue-vine/eslint-config": "workspace:*",
     "eslint": "catalog:lint-libs",
     "less": "catalog:styles",
+    "sass": "catalog:styles",
     "unocss": "catalog:styles",
     "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",

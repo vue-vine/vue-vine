@@ -17,7 +17,6 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  // @ts-expect-error - Vue Router doesn't support Vue Vine yet
   routes,
 })
 

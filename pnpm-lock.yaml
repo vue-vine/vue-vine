@@ -89,15 +89,19 @@ catalogs:
       specifier: ^25.0.1
       version: 25.0.1
   docs:
-    '@iconify-json/logos':
-      specifier: ^1.1.34
-      version: 1.2.4
-    '@iconify-json/twemoji':
-      specifier: ^1.1.15
-      version: 1.2.2
     vitepress:
       specifier: ^1.0.2
       version: 1.6.3
+  icons:
+    '@iconify-json/logos':
+      specifier: ^1.1.34
+      version: 1.2.4
+    '@iconify-json/mdi':
+      specifier: ^1.2.1
+      version: 1.2.3
+    '@iconify-json/twemoji':
+      specifier: ^1.1.15
+      version: 1.2.2
   lint-libs:
     '@antfu/eslint-config':
       specifier: ^4.12.0
@@ -177,6 +181,9 @@ catalogs:
     less:
       specifier: ^4.2.0
       version: 4.3.0
+    sass:
+      specifier: ^1.81.0
+      version: 1.87.0
     tailwindcss:
       specifier: ^4.1.7
       version: 4.1.7
@@ -358,9 +365,18 @@ catalogs:
     '@vue/test-utils':
       specifier: ^2.4.6
       version: 2.4.6
+    '@vueuse/core':
+      specifier: ^12.3.0
+      version: 12.8.2
+    pinia:
+      specifier: ^2.2.4
+      version: 2.3.1
     vue:
       specifier: ^3.5.13
       version: 3.5.13
+    vue-router:
+      specifier: ^4.2.4
+      version: 4.5.0
     vue-tsc:
       specifier: ~2.2.10
       version: 2.2.10
@@ -537,10 +553,10 @@ importers:
   packages/docs:
     devDependencies:
       '@iconify-json/logos':
-        specifier: catalog:docs
+        specifier: catalog:icons
         version: 1.2.4
       '@iconify-json/twemoji':
-        specifier: catalog:docs
+        specifier: catalog:icons
         version: 1.2.2
       unocss:
         specifier: catalog:styles
@@ -569,6 +585,12 @@ importers:
       jsdom:
         specifier: catalog:vitest-libs
         version: 26.1.0
+      vite-plugin-inspect:
+        specifier: catalog:vite-ecosystem
+        version: 11.0.1(@nuxt/kit@3.16.2(magicast@0.3.5))(vite@6.3.3(@types/node@22.15.0)(jiti@2.4.2)(less@4.3.0)(lightningcss@1.30.1)(sass@1.87.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
+      vue-router:
+        specifier: catalog:vue-libs
+        version: 4.5.0(vue@3.5.13(typescript@5.8.3))
       vue-tsc:
         specifier: catalog:vue-libs
         version: 2.2.10(typescript@5.8.3)
@@ -830,19 +852,16 @@ importers:
   packages/playground:
     dependencies:
       '@iconify-json/mdi':
-        specifier: ^1.2.1
+        specifier: catalog:icons
         version: 1.2.3
       '@vueuse/core':
-        specifier: ^12.3.0
+        specifier: catalog:vue-libs
         version: 12.8.2(typescript@5.8.3)
       pinia:
-        specifier: ^2.2.4
+        specifier: catalog:vue-libs
         version: 2.3.1(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))
-      sass:
-        specifier: ^1.66.1
-        version: 1.87.0
       vue-router:
-        specifier: ^4.2.4
+        specifier: catalog:vue-libs
         version: 4.5.0(vue@3.5.13(typescript@5.8.3))
     devDependencies:
       '@iconify-json/carbon':
@@ -863,6 +882,9 @@ importers:
       less:
         specifier: catalog:styles
         version: 4.3.0
+      sass:
+        specifier: catalog:styles
+        version: 1.87.0
       unocss:
         specifier: catalog:styles
         version: 66.1.2(postcss@8.5.3)(vite@6.3.3(@types/node@22.15.0)(jiti@2.4.2)(less@4.3.0)(lightningcss@1.30.1)(sass@1.87.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))

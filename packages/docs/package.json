@@ -12,8 +12,8 @@
     "preview": "vitepress preview src"
   },
   "devDependencies": {
-    "@iconify-json/logos": "catalog:docs",
-    "@iconify-json/twemoji": "catalog:docs",
+    "@iconify-json/logos": "catalog:icons",
+    "@iconify-json/twemoji": "catalog:icons",
     "unocss": "catalog:styles",
     "vitepress": "catalog:docs"
   }

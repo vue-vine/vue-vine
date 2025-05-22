@@ -13,6 +13,8 @@
     "@vue/test-utils": "catalog:vue-libs",
     "element-plus": "catalog:miscs",
     "jsdom": "catalog:vitest-libs",
+    "vite-plugin-inspect": "catalog:vite-ecosystem",
+    "vue-router": "catalog:vue-libs",
     "vue-tsc": "catalog:vue-libs",
     "vue-vine": "workspace:*"
   }

@@ -24,6 +24,7 @@ export interface E2EPlaywrightContext {
   page: Page | undefined
   viteServer: ViteDevServer | undefined
   viteTestUrl: string
+  targetRoute?: string
 }
 
 const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
@@ -72,16 +73,19 @@ async function startDefaultServe(e2eTestCtx: E2EPlaywrightContext) {
     e2eTestCtx.viteServer.config.server.port
   }${
     devBase === '/' ? '' : devBase
+  }${
+    e2eTestCtx.targetRoute ?? ''
   }`
 }
 
-export async function createBrowserContext() {
+export async function createBrowserContext(context: Partial<E2EPlaywrightContext> = {}) {
   const e2eBrowserCtx: E2EPlaywrightContext = {
     browser: undefined,
     browserCtx: undefined,
     page: undefined,
     viteServer: undefined,
     viteTestUrl: '',
+    ...context,
   }
   e2eBrowserCtx.browser = await chromium.launch()
   e2eBrowserCtx.browserCtx = await e2eBrowserCtx.browser.newContext()
@@ -163,9 +167,10 @@ export async function getDisplayStyle(
 
 export function createBrowserCtxEnvironment(
   testRunner: (browserCtx: E2EPlaywrightContext) => Promise<void>,
+  context: Partial<E2EPlaywrightContext> = {},
 ) {
   return async () => {
-    const browserCtx = await createBrowserContext()
+    const browserCtx = await createBrowserContext(context)
     await testRunner(browserCtx)
     freeBrowserContext(browserCtx)
   }

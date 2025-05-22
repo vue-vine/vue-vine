@@ -103,3 +103,12 @@ describe('ts-morph', () => {
     await untilUpdated(() => getDisplayStyle(browserCtx, '.test-complex-ts-morph'), 'none')
   }))
 })
+
+describe('style-order', () => {
+  it('should be aligned with SFC style order', createBrowserCtxEnvironment(async (browserCtx) => {
+    expect(await getColor(browserCtx, '.test-style-order h2.test')).toBe('rgb(255, 0, 0)')
+    expect(await getColor(browserCtx, '.child-comp span.test')).toBe('rgb(255, 0, 0)')
+  }, {
+    targetRoute: '/style-order',
+  }))
+})
