@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/language-service",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",

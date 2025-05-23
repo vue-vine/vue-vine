@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.1.0
+
+### Minor Changes
+
+- Migrate vite plugin to not enforce: pre
+
 ## 1.0.3
 
 ### Patch Changes
