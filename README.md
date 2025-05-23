@@ -88,7 +88,7 @@ You need to load the config into your flat configs.
 ```js
 import antfu from '@antfu/eslint-config'
 
-// `VueVine()` returns a ESLint flat config
+// `VueVine()` returns an ESLint flat config
 import VueVine from '@vue-vine/eslint-config'
 
 export default antfu(
