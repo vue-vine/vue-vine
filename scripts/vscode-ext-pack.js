@@ -60,18 +60,22 @@ async function pack() {
 }
 
 async function run() {
-  replace({
-    customReplacer: ({ pkgName, packageJSON }) => {
+  const isLocalPack = process.argv.includes('--local')
+
+  const replaceOptions = {
+    depVersionReplacer: ({ pkgName, packageJSON }) => {
       if (pkgName === '@types/vscode') {
         return packageJSON.engines.vscode
       }
-
-      return null
     },
-    versionReplacer: ({ packageJSON }) => {
+  }
+  if (isLocalPack) {
+    replaceOptions.pkgVersionReplacer = ({ packageJSON }) => {
       return semver.inc(packageJSON.version, 'patch')
-    },
-  })
+    }
+  }
+
+  replace(replaceOptions)
 
   const args = process.argv.slice(2)
   if (args.includes('publish')) {

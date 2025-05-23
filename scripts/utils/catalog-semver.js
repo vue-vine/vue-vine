@@ -20,12 +20,12 @@ export function useCatalogSemverSwitcher(
 
   const originalSnapshot = JSON.parse(JSON.stringify(packageJSON))
 
-  function getSemver(pkgName, catalogDef, customReplacer) {
+  function getSemver(pkgName, catalogDef, depVersionReplacer) {
     if (typeof catalogDef !== 'string' || !catalogDef.startsWith('catalog:')) {
       return catalogDef
     }
-    if (customReplacer) {
-      const hitCustom = customReplacer({
+    if (depVersionReplacer) {
+      const hitCustom = depVersionReplacer({
         pkgName,
         catalogDef,
         packageJSON,
@@ -51,20 +51,22 @@ export function useCatalogSemverSwitcher(
   }
 
   function replace({
-    customReplacer,
-    versionReplacer,
+    depVersionReplacer,
+    pkgVersionReplacer,
   } = {}) {
     const dependencies = packageJSON.dependencies ?? {}
     const devDependencies = packageJSON.devDependencies ?? {}
 
     for (const [pkgName, catalogDef] of Object.entries(dependencies)) {
-      dependencies[pkgName] = getSemver(pkgName, catalogDef, customReplacer)
+      dependencies[pkgName] = getSemver(pkgName, catalogDef, depVersionReplacer)
     }
     for (const [pkgName, catalogDef] of Object.entries(devDependencies)) {
-      devDependencies[pkgName] = getSemver(pkgName, catalogDef, customReplacer)
+      devDependencies[pkgName] = getSemver(pkgName, catalogDef, depVersionReplacer)
     }
 
-    const version = versionReplacer({ packageJSON })
+    const version = pkgVersionReplacer
+      ? pkgVersionReplacer({ packageJSON })
+      : packageJSON.version
 
     const newPackageJSON = {
       ...packageJSON,
