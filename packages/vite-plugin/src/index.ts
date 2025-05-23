@@ -15,7 +15,7 @@ import {
   createCompilerCtx,
   createTsMorph,
 } from '@vue-vine/compiler'
-import { createLogger } from 'vite'
+import { createLogger, transformWithEsbuild } from 'vite'
 import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
 import { addHMRHelperCode, vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
@@ -51,7 +51,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
     onEnd: () => panicOnCompilerError(transformPluginContext),
   }
 
-  const runCompileScript = (code: string, fileId: string, ssr: boolean): Partial<TransformResult> => {
+  const runCompileScript = async (code: string, fileId: string, ssr: boolean): Promise<Partial<TransformResult>> => {
     let fileCtxCache: undefined | VineFileCtx
     if (compilerCtx.isRunningHMR) {
       fileCtxCache = compilerCtx.fileCtxMap.get(fileId)
@@ -78,13 +78,25 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
     // Inject `import.meta.hot.accept`
     addHMRHelperCode(vineFileCtx)
 
-    return {
-      code: vineFileCtx.fileMagicCode.toString(),
-      map: vineFileCtx.fileMagicCode.generateMap({
+    // Since we skipped using vite:esbuild built-in plugin to transform .vine.ts files,
+    // we need to transform them manually here.
+    const { code: compiledCode, map } = await transformWithEsbuild(
+      vineFileCtx.fileMagicCode.toString(),
+      fileId,
+      {
+        loader: 'ts',
+        target: 'esnext',
+      },
+      vineFileCtx.fileMagicCode.generateMap({
         includeContent: true,
         hires: true,
         source: fileId,
       }),
+    )
+
+    return {
+      code: compiledCode,
+      map,
     }
   }
   const runCompileStyle = async (
@@ -106,8 +118,28 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   }
 
   return {
-    name: 'vue-vine-plugin',
-    enforce: 'pre',
+    name: 'vite:vue-vine',
+    config(config) {
+      if (!config.esbuild) {
+        config.esbuild = {}
+      }
+
+      // Exclude vine files from esbuild
+      config.esbuild.exclude = [
+        ...(
+          config.esbuild.exclude
+            ? (
+                Array.isArray(config.esbuild.exclude)
+                  ? config.esbuild.exclude
+                  : [config.esbuild.exclude]
+              )
+            : []
+        ),
+        /\.vine\.ts$/,
+      ]
+
+      return config
+    },
     async resolveId(id) {
       const { query } = parseQuery(id)
 
@@ -116,14 +148,6 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
         query.type === QUERY_TYPE_STYLE
         || query.type === QUERY_TYPE_STYLE_EXTERNAL
       ) {
-        // Resolve relative path
-        if (id.startsWith('.')) {
-          const resolvedFilePath = await this.resolve(id, query.vineFileId)
-          if (resolvedFilePath) {
-            id = resolvedFilePath.id
-          }
-        }
-
         return id
       }
     },
