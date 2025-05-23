@@ -106,14 +106,14 @@ function MyComponent() {
 
 To define props for component, there're two ways for you:
 
-1. Define props on a VCF parameter, it should be the first one, and write a TypeScript Object literal type annotation for it, with all the props you want to define.
+1. Define props on a VCF parameter, it should be the first one, and write a TypeScript type annotation for it.
 
-2. Use `vineProp` macro to define prop one by one, but the advantage of this way is that you can easily use every single prop's value as a `Ref`, instead of wrapping `props` with`toRefs` manually.
+2. Use `vineProp` macro to define prop one by one, the advantage of this way is that you can easily use every single prop's value as a `Readonly<Ref>`, instead of wrapping `props` with`toRefs` manually.
 
 We provide a dedicated chapter for props, you can [check it](./props.html) for more details.
 
 ## Macros
 
-With Vue 3.2 was released, we have a few powerful macros in `<script setup>` block, and [Vue Macros](https://vue-macros.sxzz.moe/) shows how fantastic this idea is, and then in v3.3, Vue added more built-in macros.
+With Vue 3.2 was released, we have a few powerful macros in `<script setup>` block, and [Vue Macros](https://vue-macros.sxzz.moe/) shows how fantastic this idea is, and after v3.3, Vue added more built-in macros.
 
 In Vine, we just provide a small amount of macros for now, you can check more details in our dedicated [Macros](./macros.html) chapter. We keep the possibility to add more macros in the future, but every step we take will be cautious.

@@ -29,7 +29,7 @@ const AnotherComponent = () => vine`<div>Hello World</div>`
 
 Vine 编译器将在底层将这种函数转换为 Vue 组件对象。
 
-而这个标记模板字符串表达式最终没有任何运行时的意义。
+而这个带标签的模板字符串表达式最终没有任何运行时的意义。
 
 在 TypeScript 源码上下文中，这虽然确实是一个语法上合法的函数，<b class="text-rose-400">但在别处调用它没有任何作用，为避免未定义行为，也请不要这样做。</b>
 
@@ -57,6 +57,8 @@ function InvalidComponent() {
   return vine`<div>Hello ${name}</div>` // 这将报错
 }
 ```
+
+值得注意的是，在 Vue 模板中或许会有 `v-bind` 或 `{{ ... }}` 中包含 JS 表达式的情况，因此理论上也存在有插值表达式的可能性，但 Vine 中不允许这样做。
 
 ```ts
 function MyComponent() {
@@ -104,14 +106,14 @@ function MyComponent() {
 
 若要为组件定义 props，有两种方式：
 
-1. 给组件函数设置形式参数 `props` ，并且是第一个参数，并为其编写一个 TypeScript 对象字面量形式的类型注解，其中包含您想要定义的所有 props。
+1. 给组件函数设置形式参数 `props` ，并且是第一个参数，并为其编写一个 TypeScript 类型注解。
 
-2. 使用 `vineProp` 宏逐个定义 prop，但这种方式的优势在于您可以很方便地将每个 prop 的值作为一个 `Ref` 使用，不用再手动将 `props` 进行 `toRefs` 处理。
+2. 使用 `vineProp` 宏逐个定义 prop，这种方式的优势在于您可以很方便地将每个 prop 的值作为一个 `Readonly<Ref>` 使用，无需手动将 `props` 进行 `toRefs` 处理。
 
-我们为 props 提供了一个专门的章节供你 [参阅](./props.html) 以获取更多细节。
+我们为 props 提供了一个 [专门的章节](./props.html) 供你参阅以获取更多细节。
 
 ## 宏 {#macros}
 
-随着 Vue 3.2 的发布，我们可以在 `<script setup>` 块中使用宏，而 [Vue Macros](https://vue-macros.sxzz.moe/) 将这个想法推向了极致，在 Vue 3.3 中，Vue 添加了更多内置宏。
+随着 Vue 3.2 的发布，我们可以在 `<script setup>` 块中使用宏，而 [Vue Macros](https://vue-macros.sxzz.moe/) 将这个想法推向了极致，在 Vue 3.3 之后的版本里，Vue 添加了更多内置宏。
 
-在 Vine 中，我们目前只提供了一小部分宏，您可以在我们单独的 [宏](./macros.html) 章节中查看更多详细信息。我们保留了将来添加更多宏的可能性，但我们将谨慎地迈出每一步。
+在 Vine 中，我们目前只提供了一小部分宏，您可以在我们单独的 [宏函数](./macros.html) 章节中查看更多详细信息。我们保留了将来添加更多宏的可能性，但我们将谨慎地迈出每一步。
