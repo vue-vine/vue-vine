@@ -58,7 +58,7 @@ function InvalidComponent() {
 }
 ```
 
-To be noted, in Vue's template, there might be JS expressions inside v-bind or between <code v-text="'{{'" /> and <code v-text="'}}'" /> , so there might be template strings with interpolation expressions, but in Vine, this is not allowed.
+It's worth mentioning that in Vue's template there might be JS expressions inside `v-bind` or <code v-text="'{{' + ' ... ' + '}}'" />, so theoretically there might be template strings with interpolation expressions, but in Vine, this is not allowed.
 
 ```ts
 function MyComponent() {

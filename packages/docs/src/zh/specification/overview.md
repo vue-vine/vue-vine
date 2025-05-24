@@ -58,7 +58,7 @@ function InvalidComponent() {
 }
 ```
 
-值得注意的是，在 Vue 模板中或许会有 `v-bind` 或 `{{ ... }}` 中包含 JS 表达式的情况，因此理论上也存在有插值表达式的可能性，但 Vine 中不允许这样做。
+值得注意的是，在 Vue 模板中或许会有 `v-bind` 或 <code v-text="'{{' + ' ... ' + '}}'" /> 中包含 JS 表达式的情况，因此理论上也存在有插值表达式的可能性，但 Vine 中不允许这样做。
 
 ```ts
 function MyComponent() {
