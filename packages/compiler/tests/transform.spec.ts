@@ -71,7 +71,7 @@ function MyProfile() {
       font-size: 12px;
     }
   \`)
-  vineStyle.import('../styles/test1.less').scoped()
+  vineStyle.import.scoped('../styles/test1.less')
   vineStyle.import(\`../styles/test2.scss\`)
 
   onMounted(async () => {

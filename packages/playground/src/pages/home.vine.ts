@@ -21,7 +21,7 @@ function OutsideExample(props: { id: string }) {
       margin: 1rem 0;
     }
   `)
-  vineStyle.import('~/styles/outside-example.css').scoped()
+  vineStyle.import.scoped('~/styles/outside-example.css')
 
 
   // Mock result of a network request

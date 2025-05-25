@@ -99,7 +99,7 @@ export interface VineStyleMeta {
 export interface VinePropMeta {
   typeAnnotationRaw?: string
   isFromMacroDefine: boolean
-  isBool: boolean
+  isMaybeBool: boolean
   isRequired: boolean
   /** Source code node of given validator function */
   validator?: Node
@@ -192,6 +192,7 @@ export const VinePropsDefinitionBy = {
 export type VinePropsDefinitionSource = typeof VinePropsDefinitionBy[keyof typeof VinePropsDefinitionBy]
 
 export interface VineCompFnCtx {
+  fileCtx: VineFileCtx
   fnDeclNode: Node
   fnItselfNode?: BabelFunctionNodeTypes
   templateSource: string

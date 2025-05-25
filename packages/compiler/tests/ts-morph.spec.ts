@@ -103,23 +103,23 @@ export type TestProps = SuccessProps | ErrorProps
     expect(vineCompFnCtx?.props).toMatchInlineSnapshot(`
       {
         "errorCode": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": false,
         },
         "message": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": false,
         },
         "title": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
         },
         "variant": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
         },
       }
@@ -186,13 +186,13 @@ export function TestTsMorph(props: P) {
     expect(vineCompFnCtx?.props).toMatchInlineSnapshot(`
       {
         "aaa": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
         },
         "bbb": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
         },
       }
@@ -219,12 +219,40 @@ export function TestGenerics<T extends boolean>(props: {
     expect(vineCompFnCtx?.props).toMatchInlineSnapshot(`
       {
         "foo": {
-          "isBool": true,
           "isFromMacroDefine": false,
+          "isMaybeBool": true,
           "isRequired": true,
           "typeAnnotationRaw": "T",
         },
       }
     `)
+  })
+
+  it('can resolve implict boolean', () => {
+    const { vineFile, project, typeChecker } = prepareTsMorphProject(`
+type TEST = string | boolean
+
+declare function getBool(): TEST;
+
+export function TestImplictBoolean() {
+  const foo = vineProp.optional<TEST>()
+  const bar = vineProp.withDefault(getBool())
+
+  return vine\`
+    <div>TestImplictBoolean</div>
+    <p>foo: {{ foo }}</p>
+    <p>bar: {{ bar }}</p>
+  \`
+}
+    `)
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx(vineFile.fileId, project, typeChecker)
+    compileVineTypeScriptFile(vineFile.content, vineFile.fileId, { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`0`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toMatchInlineSnapshot(`0`)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(vineFile.fileId)
+    const vineCompFnCtx = fileCtx?.vineCompFns?.find(fn => fn.fnName === 'TestImplictBoolean')
+    expect(vineCompFnCtx).not.toBeUndefined()
+    expect(vineCompFnCtx?.props.foo.isMaybeBool).toMatchInlineSnapshot(`true`)
+    expect(vineCompFnCtx?.props.bar.isMaybeBool).toMatchInlineSnapshot(`true`)
   })
 })

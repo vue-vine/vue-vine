@@ -98,20 +98,20 @@ function MyComp(p: {
     expect(vineFnComp?.props).toMatchInlineSnapshot(`
       {
         "bool": {
-          "isBool": true,
           "isFromMacroDefine": false,
+          "isMaybeBool": true,
           "isRequired": true,
           "typeAnnotationRaw": "boolean",
         },
         "data": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
           "typeAnnotationRaw": "SomeExternalType",
         },
         "name": {
-          "isBool": false,
           "isFromMacroDefine": false,
+          "isMaybeBool": false,
           "isRequired": true,
           "typeAnnotationRaw": "string",
         },
@@ -521,9 +521,7 @@ function MyComp() {
         p1: string, p2?: number, p3?: typeof V1, p4?: any, p5?: T1, p6?: boolean, p7?: T2
         }"
       `)
-    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(1)
-    expect(mockCompilerCtx.vineCompileWarnings[0].msg)
-      .toMatchInlineSnapshot(`"The default value is an expression, Vine compiler doesn't embed TypeScript to infer its type. So it's recommended to provide a type anonation explicitly for IDE checking."`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toBe(0)
   })
 })
 

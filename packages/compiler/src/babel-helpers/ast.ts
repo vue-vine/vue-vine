@@ -5,7 +5,6 @@ import type {
   File,
   Identifier,
   ImportDeclaration,
-  MemberExpression,
   Node,
   ReturnStatement,
   TaggedTemplateExpression,
@@ -142,19 +141,8 @@ export function isVineTaggedTemplateString(node: Node | null | undefined): node 
 
 export function isVineMacroCallExpression(node: Node): node is CallExpression {
   if (isCallExpression(node)) {
-    const callee = node.callee
-    if (isIdentifier(callee)) {
-      return (VINE_MACROS as any as string[]).includes(callee.name)
-    }
-    if (isMemberExpression(callee)) {
-      const obj = callee.object
-      const prop = callee.property
-      if (isIdentifier(obj) && isIdentifier(prop)) {
-        return (VINE_MACROS as any as string[]).includes(
-          `${obj.name}.${prop.name}`,
-        )
-      }
-    }
+    const calleeName = getVineMacroCalleeName(node)
+    return (VINE_MACROS as any as string[]).includes(calleeName)
   }
   return false
 }
@@ -165,11 +153,21 @@ export function getVineMacroCalleeName(node: CallExpression): string {
     return callee.name
   }
   if (isMemberExpression(callee)) {
-    const obj = callee.object
-    const prop = callee.property
-    if (isIdentifier(obj) && isIdentifier(prop)) {
-      return `${obj.name}.${prop.name}`
+    // Recursively build the member expression chain
+    const buildMemberPath = (node: Node): string => {
+      if (isIdentifier(node)) {
+        return node.name
+      }
+      if (isMemberExpression(node)) {
+        const objPath = buildMemberPath(node.object)
+        if (isIdentifier(node.property)) {
+          return `${objPath}.${node.property.name}`
+        }
+      }
+      return ''
     }
+
+    return buildMemberPath(callee)
   }
   return ''
 }
@@ -179,29 +177,24 @@ export function getVinePropCallTypeParams(node: CallExpression): TSType | undefi
   return node.typeParameters?.params?.[0]
 }
 
+/**
+ * Check if it belongs to a certain category of macro instead of directly checking callee name
+ * @param name - The name of the macro or an array of macro names
+ */
 export function isVineMacroOf(
   name: VINE_MACRO_NAMES | Array<VINE_MACRO_NAMES>,
 ) {
   return (node: Node | Nil): node is CallExpression => {
-    if (isCallExpression(node)) {
-      const callee = node.callee
-      if (isIdentifier(callee)) {
-        return Array.isArray(name)
-          ? (name as any).includes(callee.name)
-          : callee.name === name
-      }
-      if (isMemberExpression(callee)) {
-        const obj = callee.object
-        const prop = callee.property
-        if (isIdentifier(obj) && isIdentifier(prop)) {
-          return Array.isArray(name)
-            ? name.some(n => `${obj.name}.${prop.name}`.includes(n))
-            : `${obj.name}.${prop.name}`.includes(name)
-        }
-        return false
-      }
+    if (!isCallExpression(node)) {
+      return false
     }
-    return false
+
+    const macroCalleeName = getVineMacroCalleeName(node) as VINE_MACRO_NAMES
+    return (
+      Array.isArray(name)
+        ? name.includes(macroCalleeName)
+        : macroCalleeName.includes(name)
+    )
   }
 }
 
@@ -210,37 +203,16 @@ export const isVineProp: IsVineMacroOf = isVineMacroOf('vineProp')
 export const isVineSlots: IsVineMacroOf = isVineMacroOf('vineSlots')
 export const isVineEmits: IsVineMacroOf = isVineMacroOf('vineEmits')
 export const isVineModel: IsVineMacroOf = isVineMacroOf('vineModel')
-export const isVineStyle: IsVineMacroOf = isVineMacroOf('vineStyle')
-export const isVineStyleImport: IsVineMacroOf = isVineMacroOf('vineStyle.import')
+export const isVineStyle: IsVineMacroOf = isVineMacroOf([
+  'vineStyle',
+  'vineStyle.scoped',
+  'vineStyle.import',
+  'vineStyle.import.scoped',
+])
 export const isVineCustomElement: IsVineMacroOf = isVineMacroOf('vineCustomElement')
 export const isVineValidators: IsVineMacroOf = isVineMacroOf('vineValidators')
 export function isUseTemplateRefCall(node: Node): node is CallExpression {
   return isCallOf(node, 'useTemplateRef')
-}
-
-interface VineImportScopedCallee extends MemberExpression {
-  object: CallExpression
-  property: Identifier
-}
-interface VineImportScoped extends CallExpression {
-  callee: VineImportScopedCallee
-}
-export function isVineImportScoped(
-  node: Node | Nil,
-): node is VineImportScoped {
-  if (!isCallExpression(node)) {
-    return false
-  }
-  const callee = node.callee
-  if (!isMemberExpression(callee)) {
-    return false
-  }
-
-  return (
-    isVineStyleImport(callee.object)
-    && isIdentifier(callee.property)
-    && callee.property.name === 'scoped'
-  )
 }
 
 export function isStatementContainsVineMacroCall(node: Node): boolean {

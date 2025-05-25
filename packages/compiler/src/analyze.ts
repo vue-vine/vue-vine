@@ -86,13 +86,11 @@ import {
   isVineCompFnDecl,
   isVineCustomElement,
   isVineEmits,
-  isVineImportScoped,
   isVineMacroCallExpression,
   isVineMacroOf,
   isVineModel,
   isVineSlots,
   isVineStyle,
-  isVineStyleImport,
   isVineValidators,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
@@ -100,7 +98,7 @@ import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTyp
 import { vineErr, vineWarn } from './diagnostics'
 import { parseCssVars } from './style/analyze-css-vars'
 import { isImportUsed } from './template/import-usage-check'
-import { resolveVineCompFnProps } from './ts-morph/resolve-props-type'
+import { checkForBoolean, resolveVineCompFnProps } from './ts-morph/resolve-type'
 import { VinePropsDefinitionBy } from './types'
 import { _breakableTraverse, createLinkedCodeTag, exitTraverse, isBasicBoolTypeNames } from './utils'
 
@@ -378,6 +376,21 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
   }
 }
 
+function getTsMorph(
+  vineCompilerHooks: VineCompilerHooks,
+): TsMorphCache | undefined {
+  const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.disableTsMorph
+  if (isTsMorphDisabled) {
+    return
+  }
+
+  if (!vineCompilerHooks.getTsMorph) {
+    return
+  }
+
+  return vineCompilerHooks.getTsMorph()
+}
+
 const analyzeVineProps: AnalyzeRunner = (
   { vineCompilerHooks, vineCompFnCtx, vineFileCtx },
   fnItselfNode,
@@ -444,48 +457,25 @@ const analyzeVineProps: AnalyzeRunner = (
     const isContainsGenericTypeParams = (fnItselfNode.typeParameters as TSTypeParameterDeclaration | Nil)
       ? (fnItselfNode.typeParameters as TSTypeParameterDeclaration).params.length > 0
       : false
-    const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.disableTsMorph
-    let tsMorphCache: TsMorphCache | undefined
     let tsMorphAnalyzedPropsInfo: Record<string, VinePropMeta> | undefined
+    let tsMorphCache: TsMorphCache | undefined
 
     // Should initialize ts-morph when props is a type alias
     // or that type literal contains generic type parameters
-    if (
-      !isTsMorphDisabled
-      && (!isTypeLiteralProps || isContainsGenericTypeParams)
-    ) {
-      if (!vineCompilerHooks.getTsMorph) {
-        throw new Error('ts-morph is not initialized')
-      }
-
-      try {
-        tsMorphCache = vineCompilerHooks.getTsMorph()
+    if (!isTypeLiteralProps || isContainsGenericTypeParams) {
+      tsMorphCache = getTsMorph(vineCompilerHooks)
+      if (tsMorphCache) {
         // Use ts-morph to analyze props info
-        const { project, typeChecker } = tsMorphCache
-        const sourceFile = project.getSourceFileOrThrow(vineFileCtx.fileId)
         tsMorphAnalyzedPropsInfo = resolveVineCompFnProps({
-          typeChecker,
-          sourceFile,
+          tsMorphCache,
           vineCompFnCtx,
           defaultsFromDestructuredProps,
         })
       }
-      catch (err) {
-        vineCompilerHooks.onError(
-          vineErr(
-            { vineFileCtx, vineCompFnCtx },
-            {
-              msg: `Failed to resolve props type '${vineFileCtx.getAstNodeContent(typeAnnotation)}'. ${err}`,
-              location: vineCompFnCtx.fnItselfNode?.params?.[0]?.loc,
-            },
-          ),
-        )
-      }
     }
 
+    // 1. Fast-path for explicit type literal
     if (isTSTypeLiteral(typeAnnotation)) {
-      // Analyze the object literal type annotation
-      // and save the props info into `vineCompFnCtx.props`
       (typeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
         if (
           (!isIdentifier(member.key) && !isStringLiteral(member.key))
@@ -502,7 +492,7 @@ const analyzeVineProps: AnalyzeRunner = (
         const propMeta: VinePropMeta = {
           isFromMacroDefine: false,
           isRequired: member.optional === undefined ? true : !member.optional,
-          isBool: isBasicBoolTypeNames(propType) || Boolean(tsMorphAnalyzedPropsInfo?.[propName]?.isBool),
+          isMaybeBool: isBasicBoolTypeNames(propType) || Boolean(tsMorphAnalyzedPropsInfo?.[propName]?.isMaybeBool),
           typeAnnotationRaw: propType,
         }
         vineCompFnCtx.props[propName] = propMeta
@@ -519,8 +509,18 @@ const analyzeVineProps: AnalyzeRunner = (
         }
       })
     }
+    // 2. Use ts-morph to analyze complex props
     else if (tsMorphCache && tsMorphAnalyzedPropsInfo) {
       vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
+    }
+    // Missing props info is unexpected!
+    else {
+      vineCompilerHooks.onError(
+        vineErr({ vineFileCtx, vineCompFnCtx }, {
+          msg: `Failed to analyze props type info of '${vineCompFnCtx.fnName}'`,
+          location: vineCompFnCtx.fnItselfNode?.loc,
+        }),
+      )
     }
   }
   else if (formalParams.length === 0) {
@@ -530,14 +530,25 @@ const analyzeVineProps: AnalyzeRunner = (
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
 
     allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
+      // Collect prop's information
+      const propName = propVarIdentifier.name
       const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
       const propMeta: VinePropMeta = {
         isFromMacroDefine: true,
         isRequired: macroCalleeName !== 'vineProp.optional',
-        isBool: false,
+        isMaybeBool: false,
         typeAnnotationRaw: 'any',
         macroDeclaredIdentifier: propVarIdentifier,
       }
+      vineCompFnCtx.props[propName] = propMeta
+      vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
+      vineCompFnCtx.macrosInfoForVolar.push({
+        macroCall,
+        macroType: 'vineProp',
+        macroMeta: propMeta,
+      })
+
+      const tsMorphCache = getTsMorph(vineCompilerHooks)
 
       if (macroCalleeName === 'vineProp.withDefault') {
         // in `vineProp.withDefault`, type info comes from type inference by default value
@@ -548,7 +559,17 @@ const analyzeVineProps: AnalyzeRunner = (
         }
 
         propMeta.validator = macroCall.arguments[1]
-        propMeta.isBool = isBooleanLiteral(propMeta.default)
+        propMeta.isMaybeBool = (
+          tsMorphCache
+            ? checkForBoolean({
+                propName,
+                tsMorphCache,
+                vineCompilerHooks,
+                vineCompFnCtx,
+                babelNode: propMeta.default,
+              })
+            : isBooleanLiteral(propMeta.default)
+        )
         propMeta.isRequired = false // prop with default value is optional
 
         const inferredType = tryInferExpressionTSType(propMeta.default)
@@ -562,31 +583,20 @@ const analyzeVineProps: AnalyzeRunner = (
       const macroCallTypeParamNode = getVinePropCallTypeParams(macroCall)
       if (macroCallTypeParamNode) {
         const macroCallTypeParam = vineFileCtx.getAstNodeContent(macroCallTypeParamNode)
-        propMeta.isBool = macroCallTypeParam === 'boolean'
+
+        propMeta.isMaybeBool = (
+          tsMorphCache
+            ? checkForBoolean({
+                propName,
+                tsMorphCache,
+                vineCompilerHooks,
+                vineCompFnCtx,
+                babelNode: macroCallTypeParamNode,
+              })
+            : macroCallTypeParam === 'boolean'
+        )
         propMeta.typeAnnotationRaw = macroCallTypeParam
       }
-
-      if (propMeta.typeAnnotationRaw === 'any') {
-        vineCompilerHooks.onWarn(
-          vineWarn({ vineFileCtx, vineCompFnCtx }, {
-            msg: (
-              'The default value is an expression, Vine compiler doesn\'t embed TypeScript to infer its type.'
-              + ' So it\'s recommended to provide a type anonation explicitly for IDE checking.'
-            ),
-            location: macroCall.loc,
-          }),
-        )
-      }
-
-      // Collect prop's information
-      const propName = propVarIdentifier.name
-      vineCompFnCtx.props[propName] = propMeta
-      vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
-      vineCompFnCtx.macrosInfoForVolar.push({
-        macroCall,
-        macroType: 'vineProp',
-        macroMeta: propMeta,
-      })
     })
   }
 }
@@ -800,14 +810,8 @@ const analyzeVineStyle: AnalyzeRunner = (
   fnItselfNode: BabelFunctionNodeTypes,
 ) => {
   let vineStyleMacroCalls: CallExpression[] = []
-  let vineStyleMacroCallOfScopedVineStyleImport = new WeakSet<CallExpression>()
   _breakableTraverse(fnItselfNode, (node) => {
-    if (isVineImportScoped(node)) {
-      vineStyleMacroCallOfScopedVineStyleImport.add(
-        node.callee.object,
-      )
-    }
-    else if (isVineStyle(node) || isVineStyleImport(node)) {
+    if (isVineStyle(node)) {
       vineStyleMacroCalls.push(node)
     }
   })
@@ -831,13 +835,13 @@ const analyzeVineStyle: AnalyzeRunner = (
     } = getVineStyleSource(
       vineStyleArg as VineStyleValidArg,
     )
-    const isExternalFilePathSource = macroCalleeName === 'vineStyle.import'
+    const isExternalFilePathSource = (
+      macroCalleeName === 'vineStyle.import'
+      || macroCalleeName === 'vineStyle.import.scoped'
+    )
     const scoped = (
       macroCalleeName === 'vineStyle.scoped'
-      || (
-        macroCalleeName === 'vineStyle.import'
-        && vineStyleMacroCallOfScopedVineStyleImport.has(vineStyleMacroCall)
-      )
+      || macroCalleeName === 'vineStyle.import.scoped'
     )
     const styleMeta: VineStyleMeta = {
       lang: styleLang,
@@ -1182,6 +1186,7 @@ function buildVineCompFnCtx(
   const templateStringQuasiNode = templateStringNode?.quasi.quasis[0]
   const templateSource = templateStringQuasiNode?.value.raw ?? ''
   const vineCompFnCtx: VineCompFnCtx = {
+    fileCtx: vineFileCtx,
     isExportDefault: isExportDefaultDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
     isCustomElement: false,
