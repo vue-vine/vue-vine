@@ -1,5 +1,5 @@
 import type { ESLint, Linter } from 'eslint'
-import * as VueVineESLintParser from '@vue-vine/eslint-parser'
+import VueVineESLintParser from '@vue-vine/eslint-parser'
 
 import { version } from '../package.json'
 
