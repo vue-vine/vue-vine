@@ -1,5 +1,16 @@
 # @vue-vine/language-service
 
+## 1.2.0
+
+### Minor Changes
+
+- More robust boolean type check for vineProp.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/compiler@1.2.0
+
 ## 1.1.0
 
 ### Minor Changes

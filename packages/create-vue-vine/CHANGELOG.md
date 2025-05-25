@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.2.0
+
+### Minor Changes
+
+- More robust boolean type check for vineProp.
+
 ## 1.1.0
 
 ### Minor Changes
