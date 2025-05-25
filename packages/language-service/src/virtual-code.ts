@@ -643,7 +643,9 @@ export function createVueVineVirtualCode(
               // Skip generate `vineStyle` macro call
               const vineStyleMacroCall = macroInfo.macroCall
               generateScriptUntil(vineStyleMacroCall.start!)
-              currentOffset.value = vineStyleMacroCall.end!
+              const arg = vineStyleMacroCall.arguments[0]
+              // Skip the argument
+              currentOffset.value = arg.end!
               break
             }
           }
