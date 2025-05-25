@@ -12,7 +12,8 @@
         "--folder-uri=${workspaceRoot}/packages/playground"
       ],
       "outFiles": [
-        "${workspaceFolder}/packages/vscode-ext/dist/**/*.js"
+        "${workspaceFolder}/packages/vscode-ext/node_modules/@vue-vine/typescript-plugin/**/*",
+        "${workspaceFolder}/packages/vscode-ext/dist/**/*"
       ],
       "preLaunchTask": "npm: watch:ext"
     },

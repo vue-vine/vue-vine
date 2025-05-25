@@ -1,21 +1,17 @@
-import type { ArrowFunctionExpression, BlockStatement, CallExpression, FunctionDeclaration, FunctionExpression, Identifier, VariableDeclaration } from '@babel/types'
+import type { BlockStatement, CallExpression, Identifier, VariableDeclaration } from '@babel/types'
 import type { VinePropMeta } from '@vue-vine/compiler'
-import type { CodeInformation, Mapping, VirtualCode, VueCodeInformation, VueCompilerOptions } from '@vue/language-core'
+import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
-import type { BabelToken, VueVineVirtualCode } from './shared'
+import type { BabelFunctionNodeTypes, BabelToken, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
 import path from 'node:path/posix'
 import { isBlockStatement, isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
 import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
-import { parseCssClassNames, turnBackToCRLF } from './shared'
+import { parseCssClassNames, turnBackToCRLF, wrapWith } from './shared'
 import { compileVineForVirtualCode } from './vine-ctx'
-
-type VineCodeInformation = VueCodeInformation
-type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
-type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
 const FULL_FEATURES = {
   completion: true,
@@ -642,9 +638,10 @@ export function createVueVineVirtualCode(
             case 'vineStyle': {
               // Skip generate `vineStyle` macro call
               const vineStyleMacroCall = macroInfo.macroCall
-              generateScriptUntil(vineStyleMacroCall.start!)
               const arg = vineStyleMacroCall.arguments[0]
+              generateScriptUntil(arg.start!)
               // Skip the argument
+              tsCodeSegments.push('"..."')
               currentOffset.value = arg.end!
               break
             }
@@ -661,23 +658,28 @@ export function createVueVineVirtualCode(
           continue
         }
 
-        const scopedClassNames = new Set<string>()
         const [rangeStart] = range
         const classNames = parseCssClassNames(styleSource)
         for (const { offset, text: classNameWithDot } of classNames) {
-          if (scopedClassNames.has(classNameWithDot)) {
-            continue
-          }
-
-          scopedClassNames.add(classNameWithDot)
-          const realOffset = rangeStart + offset + 1 // Move to the right of '.'
+          const realOffset = rangeStart + offset
           tsCodeSegments.push('\n & { ')
-          tsCodeSegments.push([
-            classNameWithDot.slice(1),
-            classNameWithDot,
-            realOffset,
-            { navigation: true },
-          ])
+          tsCodeSegments.push(
+            ...wrapWith(
+              realOffset,
+              realOffset + classNameWithDot.length,
+              { navigation: true },
+              [
+                '"',
+                [
+                  classNameWithDot.slice(1),
+                  undefined,
+                  realOffset + 1, // after '.'
+                  { __combineOffset: 1 },
+                ],
+                '"',
+              ],
+            ),
+          )
 
           tsCodeSegments.push(': true }')
         }

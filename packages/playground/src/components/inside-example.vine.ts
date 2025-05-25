@@ -19,7 +19,7 @@ export function InsideExample() {
     metaBgColor.value = defaultMetaBgColor.value
   })
 
-  vineStyle.scoped(`
+  vineStyle.scoped(scss`
     .playground-title {
       font-size: 20px;
       font-weight: 700;
@@ -35,10 +35,11 @@ export function InsideExample() {
     }
     .playground-meta-line {
       padding: 6px 0;
-    }
-    .playground-meta-line.change-bg {
-      cursor: pointer;
-      user-select: none;
+    
+      &.change-bg {
+        cursor: pointer;
+        user-select: none;
+      }
     }
     .playground-meta-span {
       margin: 0 8px;

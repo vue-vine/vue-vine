@@ -1,5 +1,14 @@
+import type { ArrowFunctionExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
 import type { VirtualCode } from '@volar/language-server/node'
 import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
+import type { VueCodeInformation } from '@vue/language-core'
+import type { Segment } from 'muggle-string'
+import type { compileVineForVirtualCode } from './vine-ctx'
+
+export type VineCodeInformation = VueCodeInformation
+export type Code = Segment<VineCodeInformation>
+export type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
+export type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
 export interface BabelToken {
   start: number
@@ -108,4 +117,25 @@ export function parseCssClassNames(css: string): {
     }
   }
   return classNames
+}
+
+export function wrapWith(
+  startOffset: number,
+  endOffset: number,
+  features: VueCodeInformation,
+  codes: Code[],
+): Code[] {
+  const results: Code[] = []
+
+  results.push(['', undefined, startOffset, features])
+  let offset = 1
+  for (const code of codes) {
+    if (typeof code !== 'string') {
+      offset++
+    }
+    results.push(code)
+  }
+  results.push(['', undefined, endOffset, { __combineOffset: offset }])
+
+  return results
 }
