@@ -134,7 +134,7 @@ import '~/styles/some-style.less'
 But if you want it to be **`scoped`**, you can use `vineStyle` in this way:
 
 ```ts
-vineStyle.import('~/styles/some-style.less').scoped()
+vineStyle.import.scoped('~/styles/some-style.less')
 ```
 
 it's equivalent to write the following code in Vue SFC.

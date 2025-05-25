@@ -1,5 +1,5 @@
 function ScopedImportExternalStyle() {
-  vineStyle.import('./styles/e2e.css').scoped()
+  vineStyle.import.scoped('./styles/e2e.css')
 
   return vine`
     <div class="child-comp">

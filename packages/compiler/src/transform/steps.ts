@@ -796,7 +796,7 @@ export function generatePropsOptions(
     if (propMeta.isRequired) {
       metaFields.push('required: true')
     }
-    if (propMeta.isBool) {
+    if (propMeta.isMaybeBool) {
       metaFields.push('type: Boolean')
     }
     if (propMeta.validator) {

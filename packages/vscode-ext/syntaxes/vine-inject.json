@@ -38,22 +38,20 @@
     },
 
     {
-      "begin": "(vineStyle)(?:(\\.)(import))(\\()",
+      "begin": "(vineStyle)(?:(\\.)(import))(?:(\\.)(scoped))?(\\()",
       "beginCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.start.ts" },
         "1": { "name": "support.name.macro.vine-style.ts" },
         "2": { "name": "punctuation.accessor.ts" },
         "3": { "name": "support.name.macro.decorator.vine-style-import.ts" },
-        "4": { "name": "meta.brace.round.ts" }
+        "4": { "name": "punctuation.accessor.ts" },
+        "5": { "name": "support.name.macro.decorator.vine-style-scoped.ts" },
+        "6": { "name": "meta.brace.round.ts" }
       },
-      "end": "(?:\\s*)(\\))(?:(\\.)(scoped)(\\()(\\)))?",
+      "end": "(?:\\s*)(\\))",
       "endCaptures": {
         "0": { "name": "meta.name.function.macro.vine-css.end.ts" },
-        "1": { "name": "meta.brace.round.ts" },
-        "2": { "name": "punctuation.accessor.ts" },
-        "3": { "name": "support.name.macro.decorator.vine-style-scoped.ts" },
-        "4": { "name": "meta.brace.round.ts" },
-        "5": { "name": "meta.brace.round.ts" }
+        "1": { "name": "meta.brace.round.ts" }
       },
       "patterns": [
         { "include": "source.ts" }

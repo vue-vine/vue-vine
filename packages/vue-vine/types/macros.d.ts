@@ -27,8 +27,9 @@ declare global {
   interface VineStyleMacro {
     (style: string | VineStyle): void
     scoped: (style: string | VineStyle) => void
-    import: (path: string) => {
-      scoped: () => void
+    import: {
+      (path: string): void
+      scoped: (path: string) => void
     }
   }
 

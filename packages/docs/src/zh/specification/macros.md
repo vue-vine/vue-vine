@@ -133,7 +133,7 @@ import '~/styles/some-style.less'
 但如果你想要该样式文件是带 **`scoped`** 作用的，可以这样使用 `vineStyle` 宏：
 
 ```ts
-vineStyle.import('~/styles/some-style.less').scoped()
+vineStyle.import.scoped('~/styles/some-style.less')
 ```
 
 它等价于在 SFC 中这样写：

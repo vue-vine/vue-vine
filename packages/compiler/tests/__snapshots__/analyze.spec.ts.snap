@@ -378,8 +378,8 @@ Node {
 exports[`test Vine compiler analyze > analyze vine component props by macro calls 1`] = `
 {
   "disabled": {
-    "isBool": true,
     "isFromMacroDefine": true,
+    "isMaybeBool": true,
     "isRequired": false,
     "macroDeclaredIdentifier": Node {
       "end": 74,
@@ -405,8 +405,8 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "validator": undefined,
   },
   "name": {
-    "isBool": false,
     "isFromMacroDefine": true,
+    "isMaybeBool": false,
     "isRequired": true,
     "macroDeclaredIdentifier": Node {
       "end": 36,
@@ -456,8 +456,8 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
       "type": "StringLiteral",
       "value": "# Title",
     },
-    "isBool": false,
     "isFromMacroDefine": true,
+    "isMaybeBool": false,
     "isRequired": false,
     "macroDeclaredIdentifier": Node {
       "end": 119,
