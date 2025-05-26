@@ -9,6 +9,7 @@ import type { VueVineVirtualCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
 import type { PipelineClientContext } from '../pipeline/shared'
 import type { HtmlTagInfo } from '../types'
+import { VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
@@ -77,6 +78,10 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
       },
     }
   }
+  const updateCustomData = (extraData: IHTMLDataProvider[]) => {
+    customData = extraData
+    onDidChangeCustomDataListeners.forEach(l => l())
+  }
   const baseService = createHtmlService({
     documentSelector: ['html'],
     getCustomData() {
@@ -136,15 +141,15 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             tagInfos = tagInfosMap.get(vineVirtualCode.fileName)!
           }
 
-          // #4298: Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
-          // baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
-
           // Set up HTML data providers before requesting completions
           const { sync } = provideHtmlData(
             tagInfos,
             vineVirtualCode,
             triggerAtVineCompFn,
           )
+
+          // #4298: Precompute HTMLDocument before provideHtmlData to avoid parseHTMLDocument requesting component names from tsserver
+          await baseServiceInstance.provideCompletionItems?.(document, position, completionContext, triggerCharToken)
 
           // Wait for all pipeline requests to complete
           await sync()
@@ -224,26 +229,9 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             const { pendingRequests } = pipelineClientContext
             if (pendingRequests.size > 0) {
               try {
-                const pendingPromises = Array
-                  .from(pendingRequests.values())
-                  .map(
-                    resolver => new Promise<void>((resolve, reject) => {
-                      const originalResolve = resolver.resolve
-                      const originalReject = resolver.reject
-
-                      resolver.resolve = (value) => {
-                        originalResolve(value)
-                        resolve()
-                      }
-
-                      resolver.reject = (reason) => {
-                        originalReject(reason)
-                        reject(reason)
-                      }
-                    }),
-                  )
-
-                await Promise.allSettled(pendingPromises)
+                await Promise.allSettled(
+                  Array.from(pendingRequests.values()),
+                )
 
                 updateCustomData([
                   templateBuiltIn,
@@ -285,7 +273,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                 },
               )
 
-              if (triggerAtVineCompFn) {
+              if (triggerAtVineCompFn?.propsDefinitionBy === VinePropsDefinitionBy.typeLiteral) {
                 // If trigger on a tag that references a local component(in current file),
                 // we recompute tagInfo
                 tagInfo = {
@@ -349,10 +337,5 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         }
       }
     },
-  }
-
-  function updateCustomData(extraData: IHTMLDataProvider[]) {
-    customData = extraData
-    onDidChangeCustomDataListeners.forEach(l => l())
   }
 }

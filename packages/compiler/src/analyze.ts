@@ -463,6 +463,7 @@ const analyzeVineProps: AnalyzeRunner = (
     // Should initialize ts-morph when props is a type alias
     // or that type literal contains generic type parameters
     if (!isTypeLiteralProps || isContainsGenericTypeParams) {
+      vineCompFnCtx.propsDefinitionBy = VinePropsDefinitionBy.typeReference
       tsMorphCache = getTsMorph(vineCompilerHooks)
       if (tsMorphCache) {
         // Use ts-morph to analyze props info
@@ -475,7 +476,7 @@ const analyzeVineProps: AnalyzeRunner = (
     }
 
     // 1. Fast-path for explicit type literal
-    if (isTSTypeLiteral(typeAnnotation)) {
+    if (isTypeLiteralProps) {
       (typeAnnotation.members as TSPropertySignature[])?.forEach((member) => {
         if (
           (!isIdentifier(member.key) && !isStringLiteral(member.key))
@@ -1201,7 +1202,7 @@ function buildVineCompFnCtx(
     templateRefNames: new Set<string>(),
     macrosInfoForVolar: [],
     propsDestructuredNames: {},
-    propsDefinitionBy: VinePropsDefinitionBy.annotation,
+    propsDefinitionBy: VinePropsDefinitionBy.typeLiteral,
     propsAlias: 'props',
     emitsAlias: 'emits',
     props: {},

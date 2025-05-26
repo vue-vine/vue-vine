@@ -4,10 +4,12 @@ import { ref, Ref } from 'vue'
 //                - Test if it broke compilation in JS runtime
 import { PageHeader } from '../components/page-header.vine'
 
-function TestSlotContainer({ fizz, bar = 1 }: {
+interface TestSlotContainerProps {
   fizz: string,
   bar?: number
-}) {
+}
+
+function TestSlotContainer({ fizz, bar = 1 }: TestSlotContainerProps) {
   // const fizz = vineProp<string>()
   vineEmits<{ emitCamel: [bar: string] }>()
   vineSlots<{ slotCamel(props: { foo: number }): any }>()
@@ -77,12 +79,12 @@ export function AboutPage() {
     </p>
     <TestSlotContainer
       ref="slotContainerRef"
-      fizz="bass"
+      fizz="bazz"
       :bar="10"
       @emit-camel="handleEmitCamel"
       v-model="testSlotContainerText"
     >
-      <template #slotCamel="{ foo }">
+    <template #slotCamel="{ foo }">
         <p>in slot: {{ foo }}</p>
       </template>
     </TestSlotContainer>

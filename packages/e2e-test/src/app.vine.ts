@@ -1,3 +1,11 @@
+const routes = [
+  { path: '/hmr', label: 'HMR' },
+  { path: '/style-order', label: 'Style Order' },
+  { path: '/external-style-import', label: 'External Style Import' },
+  { path: '/transform-asset-url', label: 'Transform Asset Url' },
+  { path: '/props-destructure', label: 'Props Destructure' },
+]
+
 export function NavList() {
   vineStyle.scoped(`
     .e2e-test-nav {
@@ -22,17 +30,8 @@ export function NavList() {
 
   return vine`
     <ul class="e2e-test-nav">
-      <li class="e2e-test-nav-item">
-        <router-link to="/hmr">HMR</router-link>
-      </li>
-      <li class="e2e-test-nav-item">
-        <router-link to="/style-order">Style Order</router-link>
-      </li>
-      <li class="e2e-test-nav-item">
-        <router-link to="/external-style-import">External Style Import</router-link>
-      </li>
-      <li class="e2e-test-nav-item">
-        <router-link to="/transform-asset-url">Transform Asset Url</router-link>
+      <li v-for="route in routes" :key="route.path" class="e2e-test-nav-item">
+        <router-link :to="route.path">{{ route.label }}</router-link>
       </li>
     </ul>
   `

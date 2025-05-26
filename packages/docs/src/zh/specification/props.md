@@ -55,19 +55,14 @@ function MyComponent({ foo, bar, ...rest }: {
 ```vue-vine
 import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
 
-function MyComponent(props: {
-  foo: string,
-  bar?: number,
-  other1: boolean,
-  other2: string
-}) {
+// ...
+
   const rest = _createPropsRestProxy(props, ['foo', 'bar'])
   watchEffect(() => {
     console.log('foo: ', props.foo, ', bar: ', props.bar, ', rest: ', rest)
   })
 
-  return vine`...`
-}
+// ...
 ```
 
 这样的解构写法和 Vue 3.5 当中的 [响应式 Props 解构](https://cn.vuejs.org/api/sfc-script-setup.html#reactive-props-destructure) 是等价的。本质是一个方便你使用单个 prop 的语法糖。

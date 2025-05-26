@@ -1,6 +1,6 @@
 import type { PipelineClientContext } from './shared'
 import { pipelineRequest } from '@vue-vine/language-service'
-import { handlePipelineResponse } from './shared'
+import { handlePipelineResponse, mergeTagInfo } from './shared'
 
 export function getElementAttrsFromPipeline(
   tag: string,
@@ -22,10 +22,11 @@ export function getElementAttrsFromPipeline(
         )
       },
       onMessageData: (response) => {
-        context.tagInfos.set(tag, {
+        const currentTagInfo = context.tagInfos.get(tag)
+        context.tagInfos.set(tag, mergeTagInfo(currentTagInfo, {
           props: [...response.attrs],
           events: [],
-        })
+        }))
       },
     },
   )
