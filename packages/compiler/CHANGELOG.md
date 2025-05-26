@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.3.1
+
+### Patch Changes
+
+- Stability enhancement update: check #266 for more details.
+
 ## 1.3.0
 
 ### Minor Changes

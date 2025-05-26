@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.3.1
+
+### Patch Changes
+
+- Stability enhancement update: check #266 for more details.
+- Updated dependencies
+  - @vue-vine/compiler@1.3.1
+
 ## 1.3.0
 
 ### Minor Changes
