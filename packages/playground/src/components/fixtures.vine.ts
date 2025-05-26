@@ -114,7 +114,6 @@ function TargetComp() {
 }
 
 export function TestCompRef() {
-  // const target = ref<ReturnType<typeof TargetComp>>()
   const target = useTemplateRef('target')
 
   console.log('target count: ', target.value?.count)
