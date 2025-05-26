@@ -96,9 +96,20 @@ export async function createBrowserContext(context: Partial<E2EPlaywrightContext
 }
 
 export async function freeBrowserContext(ctx: E2EPlaywrightContext) {
-  await ctx.page?.close()
-  if (ctx.browser) {
-    await ctx.browser.close()
+  try {
+    await ctx.page?.close()
+    if (ctx.browserCtx) {
+      await ctx.browserCtx.close()
+    }
+    if (ctx.browser) {
+      await ctx.browser.close()
+    }
+    if (ctx.viteServer) {
+      await ctx.viteServer.close()
+    }
+  }
+  catch (error) {
+    console.error('Error closing resources:', error)
   }
 }
 
@@ -189,7 +200,15 @@ export function createBrowserCtxEnvironment(
 ) {
   return async () => {
     const browserCtx = await createBrowserContext(context)
-    await testRunner(browserCtx)
-    freeBrowserContext(browserCtx)
+    try {
+      await testRunner(browserCtx)
+    }
+    catch (error) {
+      console.error('Test execution error:', error)
+      throw error
+    }
+    finally {
+      await freeBrowserContext(browserCtx)
+    }
   }
 }
