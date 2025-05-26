@@ -18,7 +18,7 @@
     "build:ext": "NODE_ENV=production tsdown -F packages/vscode-ext",
     "debug:ext": "NODE_ENV=development tsdown -F packages/vscode-ext",
     "watch:ext": "NODE_ENV=development pnpm tsdown -F packages/vscode-ext -w packages/compiler/src -w packages/language-service/src -w packages/language-service/typescript-plugin -w packages/language-server/src -w packages/vscode-ext/src",
-    "test": "NODE_ENV=test pnpm --parallel --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/e2e-test --filter @vue-vine/eslint-parser --filter @vue-vine/nuxt --filter vue-vine run test --run",
+    "test": "NODE_ENV=test pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/e2e-test --filter @vue-vine/eslint-parser --filter @vue-vine/nuxt --filter vue-vine run test --run",
     "test:compiler": "pnpm --filter @vue-vine/compiler run test --run",
     "test:e2e": "pnpm --filter @vue-vine/e2e-test run test --run",
     "test:eslint-parser": "pnpm --filter @vue-vine/eslint-parser run test --run",
