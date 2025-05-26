@@ -4,12 +4,10 @@ import { ref, Ref } from 'vue'
 //                - Test if it broke compilation in JS runtime
 import { PageHeader } from '../components/page-header.vine'
 
-interface TestSlotContainerProps {
+function TestSlotContainer({ fizz, bar = 1 }: {
   fizz: string,
   bar?: number
-}
-
-function TestSlotContainer({ fizz, bar = 1 }: TestSlotContainerProps) {
+}) {
   // const fizz = vineProp<string>()
   vineEmits<{ emitCamel: [bar: string] }>()
   vineSlots<{ slotCamel(props: { foo: number }): any }>()
