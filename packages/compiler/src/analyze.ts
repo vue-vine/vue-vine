@@ -513,8 +513,8 @@ const analyzeVineProps: AnalyzeRunner = (
     else if (tsMorphCache && tsMorphAnalyzedPropsInfo) {
       vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
     }
-    // Missing props info is unexpected!
-    else {
+    // If ts-morph is enabled, missing props info is unexpected!
+    else if (!vineCompilerHooks.getCompilerCtx().options.disableTsMorph) {
       vineCompilerHooks.onError(
         vineErr({ vineFileCtx, vineCompFnCtx }, {
           msg: `Failed to analyze props type info of '${vineCompFnCtx.fnName}'`,

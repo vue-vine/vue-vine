@@ -1,7 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`test transform > inline mode output result 1`] = `
-"import { useDefaults as _useDefaults } from "vue-vine";
+"import _imports_0 from "@/assets/sample.png";
+import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
@@ -178,6 +179,16 @@ export const MyProfile = (() => {
               { onClick: handleRefresh },
               "Refresh",
             ),
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "img",
+                {
+                  src: _imports_0,
+                  alt: "sample",
+                },
+                null,
+                -1 /* HOISTED */,
+              )),
           ])
         );
       };
@@ -252,7 +263,8 @@ export default MyApp;
 `;
 
 exports[`test transform > not output HMR content in non-dev mode 1`] = `
-"import { useDefaults as _useDefaults } from "vue-vine";
+"import _imports_0 from "@/assets/sample.png";
+import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
@@ -427,6 +439,16 @@ export const MyProfile = (() => {
               { onClick: handleRefresh },
               "Refresh",
             ),
+            _cache[0] ||
+              (_cache[0] = _createElementVNode(
+                "img",
+                {
+                  src: _imports_0,
+                  alt: "sample",
+                },
+                null,
+                -1 /* HOISTED */,
+              )),
           ])
         );
       };
@@ -490,7 +512,8 @@ export default MyApp;
 `;
 
 exports[`test transform > separated mode output result 1`] = `
-"import { useDefaults as _useDefaults } from "vue-vine";
+"import _imports_0 from "@/assets/sample.png";
+import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
@@ -684,6 +707,16 @@ export const MyProfile = (() => {
           { onClick: $setup.handleRefresh },
           "Refresh",
         ),
+        _cache[0] ||
+          (_cache[0] = _createElementVNode(
+            "img",
+            {
+              src: _imports_0,
+              alt: "sample",
+            },
+            null,
+            -1 /* HOISTED */,
+          )),
       ])
     );
   }
@@ -757,10 +790,12 @@ export default MyApp;
 `;
 
 exports[`test transform > separated mode output result by ssr 1`] = `
-"import { useDefaults as _useDefaults } from "vue-vine";
+"import _imports_0 from "@/assets/sample.png";
+import { useDefaults as _useDefaults } from "vue-vine";
 import {
   ssrInterpolate as _ssrInterpolate,
   ssrRenderStyle as _ssrRenderStyle,
+  ssrRenderAttr as _ssrRenderAttr,
   ssrRenderAttrs as _ssrRenderAttrs,
   ssrRenderComponent as _ssrRenderComponent,
 } from "vue/server-renderer";
@@ -927,7 +962,10 @@ export const MyProfile = (() => {
         $setup.bio ? null : { display: "none" },
       )}" data-v-25e4e706>\${_ssrInterpolate(
         $setup.bio,
-      )}</p><button data-v-25e4e706>Refresh</button></div>\`,
+      )}</p><button data-v-25e4e706>Refresh</button><img\${_ssrRenderAttr(
+        "src",
+        _imports_0,
+      )} alt="sample" data-v-25e4e706></div>\`,
     );
   }
   __vine.ssrRender = __sfc_ssr_render;

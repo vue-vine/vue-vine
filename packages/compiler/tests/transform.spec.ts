@@ -84,6 +84,7 @@ function MyProfile() {
       <div>{{ name }}<span> - {{ age }}</span></div>
       <p class="bio" v-show="bio">{{ bio }}</p>
       <button @click="handleRefresh">Refresh</button>
+      <img src="@/assets/sample.png" alt="sample" />
     </div>
   \`
 }
