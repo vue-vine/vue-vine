@@ -1,5 +1,16 @@
 # vue-vine
 
+## 1.3.0
+
+### Minor Changes
+
+- Support transform boolean props syntax sugar.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.3.0
+
 ## 1.2.1
 
 ### Patch Changes

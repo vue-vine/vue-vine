@@ -1,5 +1,17 @@
 # @vue-vine/language-server
 
+## 1.3.0
+
+### Minor Changes
+
+- Support transform boolean props syntax sugar.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/compiler@1.3.0
+  - @vue-vine/language-service@1.3.0
+
 ## 1.2.1
 
 ### Patch Changes
