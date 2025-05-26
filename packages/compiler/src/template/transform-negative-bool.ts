@@ -4,6 +4,7 @@ import type {
   NodeTypes,
 } from '@vue/compiler-dom'
 
+// Copied from https://github.com/vue-macros/vue-macros/blob/main/packages/boolean-prop/src/core/transformer.ts - MIT License
 export const transformBooleanProp: NodeTransform = (node) => {
   if (node.type !== (1 satisfies NodeTypes.ELEMENT))
     return
