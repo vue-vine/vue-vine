@@ -29,7 +29,7 @@ export function TestDestructurePropsPage() {
   return vine`
     <div class="container">
       <MyComponent
-        foo="vine"
+        foo="hello"
         other
       />
     </div>
