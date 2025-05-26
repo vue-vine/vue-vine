@@ -8,8 +8,9 @@ import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
-import { appendToMapArray } from '../utils'
+import { appendRestArray, appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
+import { transformBooleanProp } from './transform-negative-bool'
 import { walkVueTemplateAst } from './walk'
 
 function toPascalCase(str: string) {
@@ -30,6 +31,7 @@ export function postProcessForRenderCodegen(codegen: string): string {
 }
 
 export function compileVineTemplate(
+  compilerHooks: VineCompilerHooks,
   source: string,
   params: Partial<CompilerOptions>,
   { ssr, getParsedAst = false }: {
@@ -42,6 +44,13 @@ export function compileVineTemplate(
 ) | null {
   const _compile = ssr ? ssrCompile : compile
 
+  const isTransformNegativeBoolEnabled = (
+    compilerHooks.getCompilerCtx()
+      ?.options
+      ?.vueCompilerOptions
+      ?.transformNegativeBool ?? false
+  )
+
   try {
     return {
       ..._compile(source, {
@@ -52,6 +61,10 @@ export function compileVineTemplate(
         inline: true,
         nodeTransforms: [
           transformAssetUrl,
+          ...appendRestArray(
+            isTransformNegativeBoolEnabled,
+            [transformBooleanProp],
+          ),
         ],
         ...params,
       }),
@@ -283,6 +296,7 @@ export function createSeparatedTemplateComposer(
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
+        compilerHooks,
         templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
@@ -455,6 +469,7 @@ export function createInlineTemplateComposer(
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
+        compilerHooks,
         templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,

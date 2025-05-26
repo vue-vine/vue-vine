@@ -79,7 +79,9 @@ export interface VineCompilerHooks {
 export interface VineCompilerOptions {
   envMode?: string // 'development' | 'production'
   inlineTemplate?: boolean
-  vueCompilerOptions?: CompilerOptions
+  vueCompilerOptions?: CompilerOptions & {
+    transformNegativeBool?: boolean
+  }
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]

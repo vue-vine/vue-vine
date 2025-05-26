@@ -11,11 +11,11 @@ function cacheStringFunction<T extends (str: string) => string>(fn: T): T {
   }) as T
 }
 
-export function concating<T>(
-  condition: boolean,
+export function appendRestArray<T>(
+  condition: boolean | undefined,
   arr: T[],
 ): T[] {
-  return condition ? arr : []
+  return condition ? arr : [] as T[]
 }
 
 export function showIf(condition: boolean, s: string, not?: string): string {
