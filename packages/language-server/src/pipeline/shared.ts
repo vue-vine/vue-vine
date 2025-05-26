@@ -1,6 +1,6 @@
 import type { PipelineRequest, PipelineResponseInstance, VueVineVirtualCode } from '@vue-vine/language-service'
 import type * as ts from 'typescript'
-import type { HtmlTagInfo, RequestResolver } from '../types'
+import type { HtmlTagInfo } from '../types'
 import { randomUUID } from 'node:crypto'
 import { tryParsePipelineResponse } from '@vue-vine/language-service'
 import { WebSocket } from 'ws'
@@ -15,7 +15,7 @@ function getResponseName<N extends PipelineRequest['type']>(requestName: N) {
 export interface PipelineClientContext {
   vineVirtualCode: VueVineVirtualCode
   tagInfos: Map<string, HtmlTagInfo>
-  pendingRequests: Map<string, RequestResolver>
+  pendingRequests: Map<string, Promise<void>>
   tsConfigFileName: string
   tsHost: ts.System
 }
@@ -43,25 +43,13 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
   const pipelineWebSocket = new WebSocket(`ws://localhost:${port}`)
 
   const requestId = randomUUID()
-
   const requestPromise = new Promise<void>((resolve, reject) => {
     // set request timeout
     const timeout = setTimeout(() => {
-      const resolver = pendingRequests.get(requestId)
-      if (resolver) {
-        resolver.reject(new Error(`Pipeline request timeout`))
-        pendingRequests.delete(requestId)
-      }
+      reject(new Error(`Pipeline request timeout`))
+      pendingRequests.delete(requestId)
       pipelineWebSocket.close()
     }, REQUEST_TIMEOUT)
-
-    // store resolver for later use
-    const resolver: RequestResolver = {
-      resolve,
-      reject,
-      timeout,
-    }
-    pendingRequests.set(requestId, resolver)
 
     pipelineWebSocket.on('open', () => {
       if (pipelineClient.debounceCache.has(requestName)) {
@@ -95,12 +83,6 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
       ) {
         onMessageData(resp as PipelineResponseInstance<RequestNameToResponseName<Req>>)
 
-        // Clear timeout timer
-        const resolver = pendingRequests.get(requestId)
-        if (resolver?.timeout) {
-          clearTimeout(resolver.timeout)
-        }
-
         // Remove from pending requests
         pipelineClient.debounceCache.delete(requestName)
         pendingRequests.delete(requestId)
@@ -109,27 +91,19 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
         console.log(`Pipeline: Request '${requestName}' completed!`)
 
         resolve()
+        clearTimeout(timeout)
       }
     })
 
     pipelineWebSocket.on('error', (error) => {
       console.error(`Pipeline error for '${requestName}' - requestId ${requestId}:`, error)
       reject(error)
-
-      // 清理资源
-      const resolver = pendingRequests.get(requestId)
-      if (resolver?.timeout) {
-        clearTimeout(resolver.timeout)
-      }
       pendingRequests.delete(requestId)
+      clearTimeout(timeout)
     })
 
     pipelineWebSocket.on('close', () => {
-      // Ensure resources are cleaned up when closing
-      const resolver = pendingRequests.get(requestId)
-      if (resolver?.timeout) {
-        clearTimeout(resolver.timeout)
-      }
+      pendingRequests.delete(requestId)
     })
   }).catch((err) => {
     console.error(`Pipeline: Request failed for '${requestName}'`, err)
@@ -137,6 +111,17 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
     pipelineWebSocket.close()
     throw err
   })
+  pendingRequests.set(requestId, requestPromise)
 
   return requestPromise
+}
+
+export function mergeTagInfo(currentTagInfo: HtmlTagInfo | undefined, newTagInfo: {
+  props: string[]
+  events: string[]
+}): HtmlTagInfo {
+  return {
+    props: [...new Set([...currentTagInfo?.props ?? [], ...newTagInfo.props])],
+    events: [...new Set([...currentTagInfo?.events ?? [], ...newTagInfo.events])],
+  }
 }

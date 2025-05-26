@@ -152,7 +152,7 @@ ${notPropsBindings.map(([name]) => {
   }${name},`
 }).join('\n')}
   ${
-    vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.annotation
+    vineCompFn.propsDefinitionBy !== VinePropsDefinitionBy.macro
       ? mayNeedPropsAlias(vineCompFn)
       : '/* No props formal params */'
   }

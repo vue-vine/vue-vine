@@ -188,8 +188,9 @@ export interface VineDestructuredProp {
 }
 
 export const VinePropsDefinitionBy = {
-  annotation: 1,
-  macro: 2,
+  typeLiteral: 1,
+  typeReference: 2,
+  macro: 3,
 } as const
 export type VinePropsDefinitionSource = typeof VinePropsDefinitionBy[keyof typeof VinePropsDefinitionBy]
 
