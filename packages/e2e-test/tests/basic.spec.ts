@@ -60,6 +60,7 @@ describe('test basic functionality', async () => {
         expect(await browserCtx.page!.textContent('#item-1')).toBe('foo: hello')
         expect(await browserCtx.page!.textContent('#item-2')).toBe('bar: 1')
         expect(await browserCtx.page!.textContent('#item-3')).toBe('other: true')
+        expect(await browserCtx.page!.textContent('#item-4')).toBe('doubleBar: 2')
       },
     ),
   )
