@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.0
+
+### Minor Changes
+
+- align type with Linter.Parser
+
 ## 1.0.0
 
 ### Major Changes

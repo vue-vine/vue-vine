@@ -1,5 +1,16 @@
 # @vue-vine/eslint-config
 
+## 1.1.0
+
+### Minor Changes
+
+- align type with Linter.Parser
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.0
+
 ## 1.0.0
 
 ### Major Changes
