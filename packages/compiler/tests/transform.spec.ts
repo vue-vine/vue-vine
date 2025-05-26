@@ -405,4 +405,42 @@ export {
     expect(fileCtx?.exportNamedDeclarations.length).toMatchInlineSnapshot(`2`)
     expect(formated).toMatchSnapshot()
   })
+
+  it('should transform negative bool props', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+      vueCompilerOptions: {
+        transformNegativeBool: true,
+      },
+    })
+    const specContent = `
+function MyComp(props: {
+  foo: boolean;
+  bar: string;
+}) {
+  return vine\`
+    <div v-show="foo">
+      <p>bar: {{ bar }}</p>
+    </div>
+  \`
+}
+
+export function App() {
+  return vine\`
+    <MyComp !foo bar="hello" />
+    <MyComp foo bar="world" />
+  \`
+}
+    `
+
+    compileVineTypeScriptFile(specContent, 'testTransformNegativeBoolProps', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformNegativeBoolProps')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
 })

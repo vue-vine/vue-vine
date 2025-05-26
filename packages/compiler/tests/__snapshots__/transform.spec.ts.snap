@@ -1239,6 +1239,105 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 "
 `;
 
+exports[`test transform > should transform negative bool props 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toDisplayString as _toDisplayString,
+  createElementVNode as _createElementVNode,
+  vShow as _vShow,
+  withDirectives as _withDirectives,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  createVNode as _createVNode,
+  Fragment as _Fragment,
+} from "vue";
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    props: {
+      foo: { required: true, type: Boolean },
+      bar: { required: true },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return _withDirectives(
+          (_openBlock(),
+          _createElementBlock(
+            "div",
+            null,
+            [
+              _createElementVNode(
+                "p",
+                null,
+                "bar: " + _toDisplayString(__props.bar),
+                1 /* TEXT */,
+              ),
+            ],
+            512 /* NEED_PATCH */,
+          )),
+          [[_vShow, __props.foo]],
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "6bb7c988";
+
+  return __vine;
+})();
+
+export const App = (() => {
+  const __vine = _defineComponent({
+    name: "App",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _createVNode(MyComp, {
+                foo: false,
+                bar: "hello",
+              }),
+              _createVNode(MyComp, {
+                foo: true,
+                bar: "world",
+              }),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__hmrId = "36c47294";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(App.__hmrId, App);
+"
+`;
+
 exports[`test transform > should transform top-level await expressions 1`] = `
 "import {
   defineComponent as _defineComponent,

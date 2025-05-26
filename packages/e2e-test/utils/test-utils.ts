@@ -1,9 +1,8 @@
 import type { Browser, BrowserContext, Page } from 'playwright-chromium'
 import type { InlineConfig, ViteDevServer } from 'vite'
 import fs from 'node:fs'
-import path from 'node:path'
+import path, { resolve } from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import {
 
   chromium,
@@ -30,7 +29,7 @@ export interface E2EPlaywrightContext {
 const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
 
 async function startDefaultServe(e2eTestCtx: E2EPlaywrightContext) {
-  const __dirname = fileURLToPath(new URL('../../e2e-test', import.meta.url))
+  const e2eRoot = resolve(import.meta.dirname, '..')
   const options: InlineConfig = {
     logLevel: 'silent',
     configFile: false,
@@ -61,7 +60,7 @@ async function startDefaultServe(e2eTestCtx: E2EPlaywrightContext) {
       mode: 'development',
     },
     undefined,
-    __dirname,
+    e2eRoot,
   )
 
   process.env.VITE_INLINE = 'inline-serve'
