@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.2.1
+
+### Patch Changes
+
+- Support missing feature: transform asset url and fix unexpected compiler error in VSCode.
+- Updated dependencies
+  - @vue-vine/compiler@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes

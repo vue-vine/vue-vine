@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.2.1
+
+### Patch Changes
+
+- Support missing feature: transform asset url and fix unexpected compiler error in VSCode.
+
 ## 1.2.0
 
 ### Minor Changes

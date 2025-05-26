@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.2.1
+
+### Patch Changes
+
+- Support missing feature: transform asset url and fix unexpected compiler error in VSCode.
+- Updated dependencies
+  - vue-vine@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes
