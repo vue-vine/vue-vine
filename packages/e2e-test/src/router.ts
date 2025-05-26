@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { TestExternalStyleImport } from './external-style-import.vine'
+import { HmrApp } from './hmr.vine'
 import { TestStyleOrder } from './style-order.vine'
-import { App } from './test.vine'
+import { TestTransformAssetUrl } from './transform-asset-url.vine'
 
 const routes = [
-  { path: '/', component: App },
+  { path: '/hmr', component: HmrApp },
   { path: '/style-order', component: TestStyleOrder },
   { path: '/external-style-import', component: TestExternalStyleImport },
+  { path: '/transform-asset-url', component: TestTransformAssetUrl },
 ]
 
 const router = createRouter({

@@ -165,6 +165,24 @@ export async function getDisplayStyle(
   )
 }
 
+export async function getAssetUrl(
+  e2eTestCtx: E2EPlaywrightContext,
+  selector: string,
+  page?: Page,
+) {
+  const pageCtx = page ?? e2eTestCtx.page
+  return await pageCtx?.evaluate(
+    (selector: string) => {
+      const el = document.querySelector(selector)
+      if (!el) {
+        return null
+      }
+      return el.getAttribute('src')
+    },
+    selector,
+  )
+}
+
 export function createBrowserCtxEnvironment(
   testRunner: (browserCtx: E2EPlaywrightContext) => Promise<void>,
   context: Partial<E2EPlaywrightContext> = {},

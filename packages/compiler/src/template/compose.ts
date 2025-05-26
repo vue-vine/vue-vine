@@ -9,6 +9,7 @@ import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
+import { transformAssetUrl } from './transform-asset-url'
 import { walkVueTemplateAst } from './walk'
 
 function toPascalCase(str: string) {
@@ -40,6 +41,7 @@ export function compileVineTemplate(
   & { templateParsedAst?: ReturnType<typeof parse> }
 ) | null {
   const _compile = ssr ? ssrCompile : compile
+
   try {
     return {
       ..._compile(source, {
@@ -48,6 +50,9 @@ export function compileVineTemplate(
         cacheHandlers: true,
         prefixIdentifiers: true,
         inline: true,
+        nodeTransforms: [
+          transformAssetUrl,
+        ],
         ...params,
       }),
       templateParsedAst: (
