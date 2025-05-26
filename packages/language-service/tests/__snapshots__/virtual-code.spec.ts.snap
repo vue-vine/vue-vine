@@ -586,7 +586,6 @@ type __VINE_VLS_TestCompRef_props__ = {}
 export function TestCompRef(
   props: __VINE_VLS_TestCompRef_props__  & __VINE_VLS_VineComponentCommonProps, 
 context: {}) {
-  // const target = ref<ReturnType<typeof TargetComp>>()
   
 type TestCompRef_Props = Parameters<typeof TestCompRef>[0];
 
