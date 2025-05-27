@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.3.2
+
+### Patch Changes
+
+- Support '!foo' style props feature in language service.
+- Updated dependencies
+  - vue-vine@1.3.2
+
 ## 1.3.1
 
 ### Patch Changes

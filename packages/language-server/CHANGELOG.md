@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.3.2
+
+### Patch Changes
+
+- Support '!foo' style props feature in language service.
+- Updated dependencies
+  - @vue-vine/compiler@1.3.2
+  - @vue-vine/language-service@1.3.2
+
 ## 1.3.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.3.2
+
+### Patch Changes
+
+- Support '!foo' style props feature in language service.
+
 ## 1.3.1
 
 ### Patch Changes
