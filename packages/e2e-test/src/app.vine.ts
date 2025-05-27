@@ -4,6 +4,7 @@ const routes = [
   { path: '/external-style-import', label: 'External Style Import' },
   { path: '/transform-asset-url', label: 'Transform Asset Url' },
   { path: '/props-destructure', label: 'Props Destructure' },
+  { path: '/vibe', label: 'Vibe' },
 ]
 
 export function NavList() {

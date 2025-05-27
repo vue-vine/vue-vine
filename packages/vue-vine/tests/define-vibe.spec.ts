@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { defineVibe } from '../src/defineVibe'
 
 async function mockDataFetch() {
@@ -21,45 +21,43 @@ describe('defineVibe', () => {
       return { count, increment }
     })
 
-    const Counter = {
+    const Counter = defineComponent({
       setup() {
         const { count, increment } = useCounter()
         return { count, increment }
       },
       template: `
         <div>
-          <button @click="increment">Increment</button>
+          <button class="test-btn" @click="increment">Increment</button>
           <p>Count: {{ count }}</p>
         </div>
       `,
-    }
-    const App = {
+    })
+    const App = defineComponent({
       components: { Counter },
       setup() {
         initCounter()
       },
       template: `
-        <div>
-          <Counter />
-        </div>
+        <Counter />
       `,
-    }
+    })
 
     const mounted = mount(App)
     expect(mounted.find('p').text()).toBe('Count: 0')
-    await mounted.find('button').trigger('click')
+    await mounted.find('button.test-btn').trigger('click')
     expect(mounted.find('p').text()).toBe('Count: 1')
   })
 
   it('should work with async factory', async () => {
-    const [useCounter, initCounter] = defineVibe('counter', () => {
+    const [useAsyncData, initAsyncData] = defineVibe('async-data', () => {
       const data = ref('')
       return { data }
     })
 
-    const Counter = {
+    const Counter = defineComponent({
       setup() {
-        const { data } = useCounter()
+        const { data } = useAsyncData()
         return { data }
       },
       template: `
@@ -68,12 +66,12 @@ describe('defineVibe', () => {
           <p v-else>Data: {{ data }}</p>
         </div>
       `,
-    }
+    })
 
-    const App = {
+    const App = defineComponent({
       components: { Counter },
       setup() {
-        initCounter(async ({ data }) => {
+        initAsyncData(async ({ data }) => {
           const resp = await mockDataFetch()
           data.value = resp.data
         })
@@ -81,7 +79,7 @@ describe('defineVibe', () => {
       template: `
         <Counter />
       `,
-    }
+    })
 
     const mounted = mount(App)
     expect(mounted.find('p').text()).toBe('Loading...')

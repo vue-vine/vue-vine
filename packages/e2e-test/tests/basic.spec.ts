@@ -1,6 +1,6 @@
 import type { E2EPlaywrightContext } from '../utils/test-utils'
 import { describe, expect, it } from 'vitest'
-import { createBrowserContext, getAssetUrl, getColor } from '../utils/test-utils'
+import { createBrowserContext, getAssetUrl, getColor, untilUpdated } from '../utils/test-utils'
 
 function runTestAtPage(
   page: string,
@@ -64,4 +64,23 @@ describe('test basic functionality', async () => {
       },
     ),
   )
+
+  it('should work with vibe', runTestAtPage(
+    '/vibe',
+    browserCtx,
+    async () => {
+      expect(await browserCtx.page!.textContent('.child-comp-1 p')).toBe('Count: 0')
+      expect(await browserCtx.page!.textContent('.child-comp-2 p')).toBe('Data: ')
+
+      await untilUpdated(
+        () => browserCtx.page!.textContent('.child-comp-2 p'),
+        'Data: mock data',
+      )
+
+      for (let i = 0; i < 10; i++) {
+        await browserCtx.page!.click('.child-comp-1 button')
+      }
+      expect(await browserCtx.page!.textContent('.child-comp-1 p')).toBe('Count: 10')
+    },
+  ))
 })
