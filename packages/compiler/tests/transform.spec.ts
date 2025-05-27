@@ -409,9 +409,6 @@ export {
   it('should transform negative bool props', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'development',
-      vueCompilerOptions: {
-        transformNegativeBool: true,
-      },
     })
     const specContent = `
 function MyComp(props: {

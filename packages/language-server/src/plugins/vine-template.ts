@@ -317,6 +317,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                   attributes.push(
                     { name: prop },
                     { name: `:${prop}` },
+                    { name: `!${prop}` },
                     { name: `v-bind:${prop}` },
                   )
                 }

@@ -31,11 +31,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    VineVitePlugin({
-      vueCompilerOptions: {
-        transformNegativeBool: true
-      }
-    }),
+    VineVitePlugin(),
     vueJSX(),
     Inspect(),
     UnoCSS(),

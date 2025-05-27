@@ -365,7 +365,7 @@
     },
     "tag-generic-attribute": {
       "name": "entity.other.attribute-name.vine-vue-template",
-      "match": "(?<=[^=])\\b([a-zA-Z0-9:\\-_]+)(=)?",
+      "match": "(?<=[^=])(?:\\b|!)([!]?[a-zA-Z0-9:\\-_]+)(=)?",
       "captures": {
         "2": {
           "name": "punctuation.separator.key-value.vine-vue-template"

@@ -96,7 +96,9 @@ function TestCompTwo() {
 
 
 // #region Test vineExpose and component ref
-function TargetComp() {
+function TargetComp(props: {
+  foo: boolean
+}) {
   const count = ref(0)
 
 
@@ -120,7 +122,7 @@ export function TestCompRef() {
 
   return vine`
     <div>
-      <TargetComp ref="target" />
+      <TargetComp ref="target" !foo />
     </div>
   `
 }

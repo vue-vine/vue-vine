@@ -19,6 +19,7 @@ import type {
 } from '@babel/types'
 import type {
   CompilerOptions,
+  ConstantTypes,
   RootNode,
   BindingTypes as VueBindingTypes,
   SourceLocation as VueSourceLocation,
@@ -80,7 +81,8 @@ export interface VineCompilerOptions {
   envMode?: string // 'development' | 'production'
   inlineTemplate?: boolean
   vueCompilerOptions?: CompilerOptions & {
-    transformNegativeBool?: boolean
+    /** @internal */
+    __transformNegativeBool?: boolean | { constType: ConstantTypes }
   }
   preprocessOptions?: Record<string, any>
   postcssOptions?: any

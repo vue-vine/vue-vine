@@ -6,7 +6,8 @@ import { PageHeader } from '../components/page-header.vine'
 
 function TestSlotContainer({ fizz, bar = 1 }: {
   fizz: string,
-  bar?: number
+  bar?: number,
+  other?: boolean,
 }) {
   // const fizz = vineProp<string>()
   vineEmits<{ emitCamel: [bar: string] }>()
@@ -79,10 +80,11 @@ export function AboutPage() {
       ref="slotContainerRef"
       fizz="bazz"
       :bar="10"
+      !other
       @emit-camel="handleEmitCamel"
       v-model="testSlotContainerText"
     >
-    <template #slotCamel="{ foo }">
+      <template #slotCamel="{ foo }">
         <p>in slot: {{ foo }}</p>
       </template>
     </TestSlotContainer>

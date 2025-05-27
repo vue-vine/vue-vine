@@ -20,6 +20,9 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
       cacheHandlers: false,
       prefixIdentifiers: false,
       scopeId: null,
+      __transformNegativeBool: {
+        constType: 0, // satisfies `ConstantTypes.NOT_CONSTANT`
+      },
     },
   })
   const vineCompileErrs: VineDiagnostic[] = []

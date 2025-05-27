@@ -1,6 +1,6 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { AttributeNode, BindingTypes, CodegenResult, CompilerOptions, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
-import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
+import type { AttributeNode, BindingTypes, CodegenResult, CompilerOptions, NodeTransform, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
@@ -8,7 +8,7 @@ import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
-import { appendRestArray, appendToMapArray } from '../utils'
+import { appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
 import { transformBooleanProp } from './transform-negative-bool'
 import { walkVueTemplateAst } from './walk'
@@ -30,6 +30,16 @@ export function postProcessForRenderCodegen(codegen: string): string {
     )
 }
 
+function getTransformNegativeBoolPlugin(
+  transformNegativeBool: Required<VineCompilerOptions>['vueCompilerOptions']['__transformNegativeBool'],
+): NodeTransform[] {
+  if (typeof transformNegativeBool === 'object') {
+    return [transformBooleanProp({ constType: transformNegativeBool.constType })]
+  }
+
+  return [transformBooleanProp()]
+}
+
 export function compileVineTemplate(
   compilerHooks: VineCompilerHooks,
   source: string,
@@ -44,13 +54,6 @@ export function compileVineTemplate(
 ) | null {
   const _compile = ssr ? ssrCompile : compile
 
-  const isTransformNegativeBoolEnabled = (
-    compilerHooks.getCompilerCtx()
-      ?.options
-      ?.vueCompilerOptions
-      ?.transformNegativeBool ?? false
-  )
-
   try {
     return {
       ..._compile(source, {
@@ -61,9 +64,11 @@ export function compileVineTemplate(
         inline: true,
         nodeTransforms: [
           transformAssetUrl,
-          ...appendRestArray(
-            isTransformNegativeBoolEnabled,
-            [transformBooleanProp],
+          ...getTransformNegativeBoolPlugin(
+            compilerHooks.getCompilerCtx()
+              ?.options
+              ?.vueCompilerOptions
+              ?.__transformNegativeBool,
           ),
         ],
         ...params,

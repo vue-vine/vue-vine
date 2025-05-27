@@ -497,17 +497,14 @@ $el: __VINE_VLS_RootEl;
 return vine\`\` as any as VueVineComponent;
 
 }
-type __VINE_VLS_TargetComp_props__ = {}
-
 // #endregion
 
 
 // #region Test vineExpose and component ref
-function TargetComp(
-  props: __VINE_VLS_TargetComp_props__  & __VINE_VLS_VineComponentCommonProps, 
-context: {
+function TargetComp(props: {
+  foo: boolean
+} & __VINE_VLS_VineComponentCommonProps, context: {
   expose: __VINE_VLS_PickComponentExpose<typeof TargetComp>,
-  
 }) {
   
 type TargetComp_Props = Parameters<typeof TargetComp>[0];
@@ -541,7 +538,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
-  /* No props formal params */
+  ...props,
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
 type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
@@ -629,9 +626,11 @@ TargetComp;
 // @ts-ignore
 const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
 ref: "target",
+foo: (false),
 }));
 const __VINE_VLS_2 = __VINE_VLS_1({
 ref: "target",
+foo: (false),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 /** @type {typeof __VINE_VLS_ctx.target} */;
 var __VINE_VLS_4 = {} as (Parameters<NonNullable<typeof __VINE_VLS_3['expose']>>[0] | null);
