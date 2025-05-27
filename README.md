@@ -32,7 +32,7 @@ Use interactive commands(`create-vue-vine`) to create your first project. Look h
 
 Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
 
-## Relavant packages
+## Relevant packages
 
 | Category | Package | Version | Description |
 | --- | --- | --- | --- |
