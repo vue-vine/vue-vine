@@ -23,6 +23,11 @@
     },
     "./macros": {
       "types": "./types/macros.d.ts"
+    },
+    "./slidev": {
+      "vine": "./src/slidev/index.ts",
+      "types": "./types/slidev.d.ts",
+      "default": "./dist/slidev.js"
     }
   },
   "files": [
