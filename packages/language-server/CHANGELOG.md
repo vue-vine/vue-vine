@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.3.3
+
+### Patch Changes
+
+- Support Slidev auto import by providing a plugin from Vue Vine.
+- Updated dependencies
+  - @vue-vine/compiler@1.3.3
+  - @vue-vine/language-service@1.3.3
+
 ## 1.3.2
 
 ### Patch Changes
