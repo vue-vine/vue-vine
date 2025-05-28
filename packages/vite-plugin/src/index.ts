@@ -212,7 +212,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       if (tsMorphCache) {
         // Update the source file in the project to reflect the latest changes
         const { project } = tsMorphCache
-        const sourceFile = project.getSourceFileOrThrow(ctx.file)
+        const sourceFile = project.getSourceFile(ctx.file)
+        if (!sourceFile) {
+          return
+        }
 
         // Read the updated file content
         const updatedContent = await ctx.read()

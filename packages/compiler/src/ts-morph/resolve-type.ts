@@ -102,11 +102,18 @@ export function resolveVineCompFnProps(params: {
   vineCompFnCtx: VineCompFnCtx
   defaultsFromDestructuredProps: Record<string, BabelNode>
 }): Record<string, VinePropMeta> {
-  const { tsMorphCache, vineCompFnCtx, defaultsFromDestructuredProps } = params
+  const {
+    tsMorphCache,
+    vineCompFnCtx,
+    defaultsFromDestructuredProps,
+  } = params
   const { typeChecker, project } = tsMorphCache
-  const sourceFile = project.getSourceFileOrThrow(vineCompFnCtx.fileCtx.fileId)
-  const propsInfo: Record<string, VinePropMeta> = {}
+  const sourceFile = project.getSourceFile(vineCompFnCtx.fileCtx.fileId)
+  if (!sourceFile) {
+    return {}
+  }
 
+  const propsInfo: Record<string, VinePropMeta> = {}
   const targetFn = sourceFile.getFirstDescendant(
     tsAstFindVineCompFn(vineCompFnCtx.fnName),
   ) as (FunctionDeclaration | VariableDeclaration | undefined)
