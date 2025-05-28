@@ -114,6 +114,26 @@ create-vue-vine my-vine-project
    Happy hacking!
 ```
 
+## Slidev 插件 <VersionTip version="v1.3.3+" /> {#slidev-plugin}
+
+Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组件到你的 Slidev 项目中。
+
+要安装这个插件，你需要在 Slidev 项目中添加一个 `setup/main.ts` 文件来设置 Vue 应用，更多细节请参考 [Slidev 文档](https://sli.dev/custom/config-vue)。
+
+```ts
+import { VueVineSlidevPlugin } from 'vue-vine/slidev'
+import { defineAppSetup } from '@slidev/types'
+
+export default defineAppSetup(({ app }) => {
+  app.use(
+    VueVineSlidevPlugin(
+      // 确保这个 glob 路径是相对于这个 `setup/main.ts` 文件的
+      import.meta.glob('./components/*.vine.ts', { eager: true })
+    )
+  )
+})
+```
+
 ## 可能遇到的问题 {#common-issues}
 
 ### 与 UnoCSS Attribute Mode 冲突 {#conflict-with-unocss-attribute-mode}
