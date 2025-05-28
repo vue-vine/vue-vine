@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.3.5
+
+### Patch Changes
+
+- Fix panic when Vite hot update and ts-morph can't get source file (in Slidev .md case).
+- Updated dependencies
+  - @vue-vine/compiler@1.3.5
+
 ## 1.3.4
 
 ### Patch Changes
