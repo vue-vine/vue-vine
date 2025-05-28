@@ -121,8 +121,8 @@ Vine also provides a plugin for Slidev, you can use it to register Vine componen
 To install the plugin, you should add a `setup/main.ts` file in your Slidev project for setup Vue application, find more details in [Slidev documentation](https://sli.dev/custom/config-vue).
 
 ```ts
-import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 import { defineAppSetup } from '@slidev/types'
+import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 
 export default defineAppSetup(({ app }) => {
   app.use(

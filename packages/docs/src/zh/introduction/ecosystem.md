@@ -121,8 +121,8 @@ Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组�
 要安装这个插件，你需要在 Slidev 项目中添加一个 `setup/main.ts` 文件来设置 Vue 应用，更多细节请参考 [Slidev 文档](https://sli.dev/custom/config-vue)。
 
 ```ts
-import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 import { defineAppSetup } from '@slidev/types'
+import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 
 export default defineAppSetup(({ app }) => {
   app.use(
