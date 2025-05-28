@@ -260,6 +260,7 @@ export function MyComp() {
           );
         }
         __vine.render = __sfc_render;
+        __vine.__vue_vine = true;
         __vine.__hmrId = "01d6e3a5";
 
         return __vine;
