@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.3.4
+
+### Patch Changes
+
+- Support an additional option for user-given tsconfig file path
+- Updated dependencies
+  - @vue-vine/language-service@1.3.4
+
 ## 1.3.3
 
 ### Patch Changes

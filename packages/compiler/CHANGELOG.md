@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.3.4
+
+### Patch Changes
+
+- Support an additional option for user-given tsconfig file path
+
 ## 1.3.3
 
 ### Patch Changes

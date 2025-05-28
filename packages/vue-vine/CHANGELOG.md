@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.3.4
+
+### Patch Changes
+
+- Support an additional option for user-given tsconfig file path
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.3.4
+
 ## 1.3.3
 
 ### Patch Changes
