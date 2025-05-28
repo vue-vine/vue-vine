@@ -4,6 +4,7 @@ const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig({
   entry: {
     index: './src/index.ts',
     vite: './src/vite/index.ts',
+    slidev: './src/slidev/index.ts',
   },
   external: [
     '@vue-vine/vite-plugin',

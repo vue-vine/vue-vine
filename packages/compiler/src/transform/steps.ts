@@ -723,6 +723,9 @@ export function generateVineFactory(
       }\n__vine.${ssr ? 'ssrRender' : 'render'} = ${ssr ? '__sfc_ssr_render' : '__sfc_render'}`
   }\n`)
 
+  // Add special tag for Vine component
+  ms.appendRight(lastStmt.end!, `__vine.__vue_vine = true;\n`)
+
   if (vineFileCtx.styleDefine[vineCompFnCtx.scopeId]) {
     ms.appendRight(lastStmt.end!, `__vine.__scopeId = 'data-v-${vineCompFnCtx.scopeId}';\n`)
   }

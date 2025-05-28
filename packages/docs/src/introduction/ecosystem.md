@@ -114,6 +114,26 @@ You may seen the following output:
    Happy hacking!
 ```
 
+## Slidev plugin <VersionTip version="v1.3.3+" />
+
+Vine also provides a plugin for Slidev, you can use it to register Vine components in your Slidev project.
+
+To install the plugin, you should add a `setup/main.ts` file in your Slidev project for setup Vue application, find more details in [Slidev documentation](https://sli.dev/custom/config-vue).
+
+```ts
+import { VueVineSlidevPlugin } from 'vue-vine/slidev'
+import { defineAppSetup } from '@slidev/types'
+
+export default defineAppSetup(({ app }) => {
+  app.use(
+    VueVineSlidevPlugin(
+      // Make sure this glob path is relative to this `setup/main.ts` file
+      import.meta.glob('./components/*.vine.ts', { eager: true })
+    )
+  )
+})
+```
+
 ## Common issues
 
 ### Conflict with UnoCSS Attribute Mode
