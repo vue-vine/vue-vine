@@ -10,7 +10,6 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
   vineCompileWarns: VineDiagnostic[]
 } {
   const compilerCtx = createCompilerCtx({
-    disableTsMorph: true, // No need ts-morph to analyze props
     envMode: 'module',
     vueCompilerOptions: {
       // 'module' will break Volar virtual code's mapping
@@ -23,6 +22,9 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
       __transformNegativeBool: {
         constType: 0, // satisfies `ConstantTypes.NOT_CONSTANT`
       },
+    },
+    tsMorphOptions: {
+      disabled: true, // No need ts-morph to analyze props
     },
   })
   const vineCompileErrs: VineDiagnostic[] = []

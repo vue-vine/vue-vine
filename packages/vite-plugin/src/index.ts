@@ -183,9 +183,9 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
         return compiledStyle
       }
     },
-    async transform(code, id, opt) {
+    async transform(code, fileId, opt) {
       const ssr = opt?.ssr === true
-      const { filePath, query } = parseQuery(id)
+      const { filePath, query } = parseQuery(fileId)
       if (
         !filePath.endsWith('.vine.ts')
         || query.type === QUERY_TYPE_STYLE
@@ -197,10 +197,14 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       transformPluginContext = this
 
       if (!tsMorphCache) {
-        tsMorphCache = createTsMorph(id)
+        const { tsConfigPath } = compilerHooks.getCompilerCtx().options.tsMorphOptions ?? {}
+        tsMorphCache = createTsMorph({
+          fileId,
+          tsConfigPath,
+        })
       }
 
-      return runCompileScript(code, id, ssr)
+      return runCompileScript(code, fileId, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
       // Before executing HMR, TypeScript project (by ts-morph) should be updated

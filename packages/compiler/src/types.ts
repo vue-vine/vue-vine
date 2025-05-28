@@ -87,7 +87,10 @@ export interface VineCompilerOptions {
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
   postcssPlugins?: any[]
-  disableTsMorph?: boolean
+  tsMorphOptions?: {
+    disabled?: boolean
+    tsConfigPath?: string
+  }
 }
 
 export interface VineStyleMeta {

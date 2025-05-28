@@ -3,11 +3,32 @@ import { dirname, isAbsolute, resolve } from 'node:path'
 import { getTsconfig } from 'get-tsconfig'
 import { Project } from 'ts-morph'
 
-function createByConfigFile(fileId: string) {
-  const tsconfig = getTsconfig(dirname(fileId))
+interface CreateTsMorphOptions {
+  fileId?: string
+  tsConfigPath?: string
+}
 
+function resolveTsConfigResult(options: CreateTsMorphOptions) {
+  const { fileId, tsConfigPath } = options
+  try {
+    return (
+      tsConfigPath
+        ? getTsconfig(dirname(tsConfigPath))
+        : fileId
+          ? getTsconfig(dirname(fileId))
+          : undefined
+    )
+  }
+  catch (err) {
+    console.error(err)
+    return undefined
+  }
+}
+
+function createByConfigFile(options: CreateTsMorphOptions) {
+  const tsconfig = resolveTsConfigResult(options)
   if (!tsconfig) {
-    throw new Error('Cannot locate project\'s tsconfig.json')
+    return
   }
 
   const project = new Project({
@@ -30,12 +51,11 @@ function createByConfigFile(fileId: string) {
   return project
 }
 
-export function createTsMorph(fileId: string): TsMorphCache {
-  const project = (
-    fileId
-      ? createByConfigFile(fileId)
-      : new Project()
-  )
+export function createTsMorph(options: CreateTsMorphOptions): TsMorphCache {
+  const project = createByConfigFile(options)
+  if (!project) {
+    throw new Error('[Vue Vine] Failed to create ts-morph project')
+  }
 
   const typeChecker = project.getTypeChecker()
   return {

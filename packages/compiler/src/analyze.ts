@@ -379,7 +379,7 @@ function getVineStyleSource(vineStyleArg: VineStyleValidArg) {
 function getTsMorph(
   vineCompilerHooks: VineCompilerHooks,
 ): TsMorphCache | undefined {
-  const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.disableTsMorph
+  const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.tsMorphOptions?.disabled
   if (isTsMorphDisabled) {
     return
   }
@@ -457,6 +457,7 @@ const analyzeVineProps: AnalyzeRunner = (
     const isContainsGenericTypeParams = (fnItselfNode.typeParameters as TSTypeParameterDeclaration | Nil)
       ? (fnItselfNode.typeParameters as TSTypeParameterDeclaration).params.length > 0
       : false
+    const isTsMorphDisabled = vineCompilerHooks.getCompilerCtx().options.tsMorphOptions?.disabled
     let tsMorphAnalyzedPropsInfo: Record<string, VinePropMeta> | undefined
     let tsMorphCache: TsMorphCache | undefined
 
@@ -515,7 +516,7 @@ const analyzeVineProps: AnalyzeRunner = (
       vineCompFnCtx.props = tsMorphAnalyzedPropsInfo
     }
     // If ts-morph is enabled, missing props info is unexpected!
-    else if (!vineCompilerHooks.getCompilerCtx().options.disableTsMorph) {
+    else if (!isTsMorphDisabled) {
       vineCompilerHooks.onError(
         vineErr({ vineFileCtx, vineCompFnCtx }, {
           msg: `Failed to analyze props type info of '${vineCompFnCtx.fnName}'`,
