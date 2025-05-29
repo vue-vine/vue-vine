@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.4.0
+
+### Minor Changes
+
+- Fix default value issue for boolean props.
+
 ## 1.3.5
 
 ### Patch Changes

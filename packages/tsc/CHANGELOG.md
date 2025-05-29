@@ -1,5 +1,16 @@
 # vue-vine-tsc
 
+## 1.4.0
+
+### Minor Changes
+
+- Fix default value issue for boolean props.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/language-service@1.4.0
+
 ## 1.3.5
 
 ### Patch Changes
