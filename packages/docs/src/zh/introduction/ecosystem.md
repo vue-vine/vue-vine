@@ -114,7 +114,7 @@ create-vue-vine my-vine-project
    Happy hacking!
 ```
 
-## Slidev 插件 <VersionTip version="v1.3.3+" /> {#slidev-plugin}
+## Slidev 插件 <VersionTip version="v1.4.0+" /> {#slidev-plugin}
 
 Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组件到你的 Slidev 项目中。
 

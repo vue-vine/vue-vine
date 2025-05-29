@@ -1,6 +1,6 @@
 import type { E2EPlaywrightContext } from '../utils/test-utils'
 import { describe, expect, it } from 'vitest'
-import { createBrowserContext, getAssetUrl, getColor, untilUpdated } from '../utils/test-utils'
+import { createBrowserContext, getAssetUrl, getColor, getJustifyContent, untilUpdated } from '../utils/test-utils'
 
 function runTestAtPage(
   page: string,
@@ -81,6 +81,15 @@ describe('test basic functionality', async () => {
         await browserCtx.page!.click('.child-comp-1 button')
       }
       expect(await browserCtx.page!.textContent('.child-comp-1 p')).toBe('Count: 10')
+    },
+  ))
+
+  it('should get correct boolean default', runTestAtPage(
+    '/use-defaults',
+    browserCtx,
+    async () => {
+      expect(await getJustifyContent(browserCtx, '.line-1')).toBe('center')
+      expect(await getJustifyContent(browserCtx, '.line-2')).toBe('center')
     },
   ))
 })

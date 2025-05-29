@@ -801,6 +801,11 @@ export function generatePropsOptions(
     }
     if (propMeta.isMaybeBool) {
       metaFields.push('type: Boolean')
+      if (propMeta.default) {
+        metaFields.push(`default: ${
+          vineFileCtx.getAstNodeContent(propMeta.default)
+        }`)
+      }
     }
     if (propMeta.validator) {
       metaFields.push(`validator: ${

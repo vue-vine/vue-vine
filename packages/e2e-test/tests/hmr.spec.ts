@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { createBrowserCtxEnvironment, editFile, getColor, getDisplayStyle, untilUpdated } from '../utils/test-utils'
+import { createBrowserCtxEnvironment, editFile, getColor, getDisplayStyle, untilUpdated, wait } from '../utils/test-utils'
 
 afterEach(() => {
   // reset
@@ -45,6 +45,8 @@ describe('hmr', () => {
       () => browserCtx.page!.textContent('.counter'),
       'Count: 2',
     )
+
+    await wait(500)
     editFile('hmr.vine.ts', code => code.replace('color: black', 'color: blue'))
     await untilUpdated(() => getColor(browserCtx, 'button.test-btn'), 'rgb(0, 0, 255)')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
@@ -54,6 +56,8 @@ describe('hmr', () => {
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
+
+    await wait(500)
     editFile('hmr.vine.ts', code => code.replace('text111', 'text222'))
     await untilUpdated(() => browserCtx.page!.textContent('.text-for-replace'), 'text222')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
@@ -63,6 +67,8 @@ describe('hmr', () => {
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
+
+    await wait(500)
     editFile('hmr.vine.ts', code =>
       code.replace(
         '<div class="name">{{name}}</div>',
@@ -77,6 +83,8 @@ describe('hmr', () => {
     await browserCtx.page?.click('button.test-btn')
     await untilUpdated(() => browserCtx.page!.textContent('.counter'), 'Count: 2')
     editFile('hmr.vine.ts', code => code.replace('ref(\'vine\')', 'ref(\'vue\')'))
+
+    await wait(500)
     await untilUpdated(() => browserCtx.page!.textContent('.name'), 'vue')
     expect(await browserCtx.page!.textContent('.counter')).toBe('Count: 0')
   }))

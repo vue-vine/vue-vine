@@ -518,13 +518,30 @@ export function createVueVineVirtualCode(
     return contextFormalParam
   }
 
-  function generatePropsExtra(vineCompFn: VineCompFn) {
-    const commonProps = ' & __VLS_VineComponentCommonProps'
+  function generatePropsType(
+    type: 'param' | 'macro',
+    vineCompFn: VineCompFn,
+  ) {
+    let propTypeBase = ''
+    if (type === 'macro') {
+      propTypeBase = `__VLS_VineComponentCommonProps & __VLS_${vineCompFn.fnName}_props__,`
+    }
+    else {
+      // User provide a `props` formal parameter in the component function,
+      // we should keep it in virtual code, and generate `context: ...` after it,
+      const formalParamTypeNode = vineCompFn.propsFormalParamType
+      if (formalParamTypeNode) {
+        generateScriptUntil(formalParamTypeNode.start!)
+        // Insert common props before the user provided props type
+        tsCodeSegments.push('__VLS_VineComponentCommonProps & ')
+        generateScriptUntil(formalParamTypeNode.end!)
+      }
+    }
 
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
     return [
-      commonProps,
+      propTypeBase,
       emitProps,
       modelProps,
     ].filter(Boolean).join(' ')
@@ -554,10 +571,8 @@ export function createVueVineVirtualCode(
     if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
       // Define props by `vineProp`, no `props` formal parameter,
       // generate a `props` formal parameter in virtual code
-      const propsParam = `\n  props: __VLS_${vineCompFn.fnName}_props__ ${
-        generatePropsExtra(vineCompFn)
-      }, `
-      tsCodeSegments.push(propsParam)
+      tsCodeSegments.push('\n  props: ')
+      tsCodeSegments.push(generatePropsType('macro', vineCompFn))
 
       // Generate `context: { ... }` after `props: ...`
       tsCodeSegments.push(
@@ -565,17 +580,11 @@ export function createVueVineVirtualCode(
       )
     }
     else {
-      // User provide a `props` formal parameter in the component function,
-      // we should keep it in virtual code, and generate `context: ...` after it,
-      const formalParamTypeNode = vineCompFn.propsFormalParamType
-      if (formalParamTypeNode) {
-        generateScriptUntil(formalParamTypeNode.end!)
-      }
+      tsCodeSegments.push(generatePropsType('param', vineCompFn))
+      tsCodeSegments.push(', ')
 
       // Generate `context: { ... }` after `props: ...`
-      tsCodeSegments.push(`${
-        generatePropsExtra(vineCompFn)
-      }, ${generateContextFormalParam(vineCompFn, {
+      tsCodeSegments.push(`${generateContextFormalParam(vineCompFn, {
         tabNum: 2,
         lineWrapAtStart: false,
       })}`)

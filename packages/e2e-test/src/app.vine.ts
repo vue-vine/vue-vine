@@ -5,6 +5,7 @@ const routes = [
   { path: '/transform-asset-url', label: 'Transform Asset Url' },
   { path: '/props-destructure', label: 'Props Destructure' },
   { path: '/vibe', label: 'Vibe' },
+  { path: '/use-defaults', label: 'Use Defaults' },
 ]
 
 export function NavList() {
