@@ -9,7 +9,7 @@
       "args": [
         "--inspector",
         "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-ext",
-        "--folder-uri=${workspaceRoot}/packages/playground"
+        "--folder-uri=${workspaceRoot}/packages/e2e-test"
       ],
       "outFiles": [
         "${workspaceFolder}/packages/vscode-ext/node_modules/@vue-vine/typescript-plugin/**/*",

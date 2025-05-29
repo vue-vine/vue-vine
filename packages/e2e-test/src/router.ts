@@ -4,6 +4,7 @@ import { HmrApp } from './hmr.vine'
 import { TestDestructurePropsPage } from './props-destructure.vine'
 import { TestStyleOrder } from './style-order.vine'
 import { TestTransformAssetUrl } from './transform-asset-url.vine'
+import { TestUseDefaults } from './use-defaults.vine'
 import { TestVibe } from './vibe.vine'
 
 const routes = [
@@ -13,6 +14,7 @@ const routes = [
   { path: '/transform-asset-url', component: TestTransformAssetUrl },
   { path: '/props-destructure', component: TestDestructurePropsPage },
   { path: '/vibe', component: TestVibe },
+  { path: '/use-defaults', component: TestUseDefaults },
 ]
 
 const router = createRouter({

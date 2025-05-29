@@ -114,7 +114,7 @@ You may seen the following output:
    Happy hacking!
 ```
 
-## Slidev plugin <VersionTip version="v1.3.3+" />
+## Slidev plugin <VersionTip version="v1.4.0+" />
 
 Vine also provides a plugin for Slidev, you can use it to register Vine components in your Slidev project.
 

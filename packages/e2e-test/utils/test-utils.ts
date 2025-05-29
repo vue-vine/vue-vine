@@ -26,7 +26,7 @@ export interface E2EPlaywrightContext {
   targetRoute?: string
 }
 
-const timeout = (n: number) => new Promise(resolve => setTimeout(resolve, n))
+export const wait = (n: number) => new Promise(resolve => setTimeout(resolve, n))
 
 async function startDefaultServe(e2eTestCtx: E2EPlaywrightContext) {
   const e2eRoot = resolve(import.meta.dirname, '..')
@@ -134,7 +134,7 @@ export async function untilUpdated(
       break
     }
     else {
-      await timeout(50)
+      await wait(50)
     }
   }
 }
@@ -188,6 +188,24 @@ export async function getAssetUrl(
         return null
       }
       return el.getAttribute('src')
+    },
+    selector,
+  )
+}
+
+export async function getJustifyContent(
+  e2eTestCtx: E2EPlaywrightContext,
+  selector: string,
+  page?: Page,
+) {
+  const pageCtx = page ?? e2eTestCtx.page
+  return await pageCtx?.evaluate(
+    (selector: string) => {
+      const el = document.querySelector(selector)
+      if (!el) {
+        return null
+      }
+      return getComputedStyle(el).justifyContent
     },
     selector,
   )
