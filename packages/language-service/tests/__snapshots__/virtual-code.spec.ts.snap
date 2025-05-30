@@ -1,5 +1,331 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`verify Volar virtual code snapshots > should match with about.vine.ts virtual code 1`] = `
+"/// <reference types=".vue-global-types/vine_vue_99_true" />
+
+import { ref, Ref } from 'vue'
+//           ^^^^ Deliberately import an extra useless type item here
+//                - For ESLint rules to catch it
+//                - Test if it broke compilation in JS runtime
+import { PageHeader } from '../components/page-header.vine'
+
+
+type __VINE_VLS_TestSlotContainer_emits__ = __VINE_VLS_NormalizeEmits<VueDefineEmits<{ emitCamel: [bar: string] }>>;
+function TestSlotContainer({ fizz, bar = 1 }: __VINE_VLS_VineComponentCommonProps & {
+  fizz: string,
+  bar?: number,
+  other?: boolean,
+} & {
+    /* __LINKED_CODE_LEFT__#11 */onEmitCamel: __VINE_VLS_TestSlotContainer_emits__['emitCamel']
+}  & {
+    modelValue: string
+}, context: {
+  slots: {
+    default: unknown, 
+    /* __LINKED_CODE_LEFT__#9 */slotCamel: (props: { foo: number }) => any
+  },
+  expose: __VINE_VLS_PickComponentExpose<typeof TestSlotContainer>,
+}) {
+  // const fizz = vineProp<string>()
+  
+type TestSlotContainer_Props = Parameters<typeof TestSlotContainer>[0];
+
+vineEmits<{ /* __LINKED_CODE_RIGHT__#9 */emitCamel: [bar: string] }>()
+  vineSlots<{ /* __LINKED_CODE_RIGHT__#9 */slotCamel(props: { foo: number }): any }>()
+
+  vineValidators<TestSlotContainer_Props>({
+    fizz: (val) => val.startsWith('vine:')
+  })
+
+  const r = reactive({
+    x: 3,
+    y: 4,
+  })
+
+  const num = ref(1)
+  const text = vineModel<string>({ default: '' })
+
+  watch(() => bar, (newVal) => {
+    console.log('bar changed', newVal)
+  })
+
+  const __VINE_VLS_ComponentExpose__ = {
+    r,
+  };
+vineExpose(__VINE_VLS_ComponentExpose__)
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#4 */fizz: /* __LINKED_CODE_RIGHT__#4 */fizz,
+  /* __LINKED_CODE_LEFT__#3 */bar: /* __LINKED_CODE_RIGHT__#3 */bar,
+  /* __LINKED_CODE_LEFT__#4 */text: /* __LINKED_CODE_RIGHT__#4 */text,
+  /* __LINKED_CODE_LEFT__#1 */r: /* __LINKED_CODE_RIGHT__#1 */r,
+  /* __LINKED_CODE_LEFT__#3 */num: /* __LINKED_CODE_RIGHT__#3 */num,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#3 */Ref: /* __LINKED_CODE_RIGHT__#3 */Ref,
+  /* __LINKED_CODE_LEFT__#10 */PageHeader: /* __LINKED_CODE_RIGHT__#10 */PageHeader,
+  /* __LINKED_CODE_LEFT__#17 */TestSlotContainer: /* __LINKED_CODE_RIGHT__#17 */TestSlotContainer,
+  /* __LINKED_CODE_LEFT__#12 */TestGenerics: /* __LINKED_CODE_RIGHT__#12 */TestGenerics,
+  /* __LINKED_CODE_LEFT__#9 */AboutPage: /* __LINKED_CODE_RIGHT__#9 */AboutPage,
+  /* No need to list destructured props here */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+...{ onClick: (...[$event]) => {
+__VINE_VLS_ctx.num++;
+// @ts-ignore
+[num,];
+}},
+...{ class: "test-slot-container mt-6 cursor-pointer select-none" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.input)({
+...{ class: "h-10 w-60 border-none bg-zinc-100 rounded-md p-2 outline-none mb-4" },
+type: "text",
+value: (__VINE_VLS_ctx.text),
+});
+// @ts-ignore
+[text,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+( fizz );
+( bar );
+__VINE_VLS_asFunctionalSlot(context.slots.slotCamel)({
+foo: (__VINE_VLS_ctx.num),
+});
+// @ts-ignore
+[num,];
+/** @type {__VINE_VLS_StyleScopedClasses['test-slot-container']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['mt-6']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['cursor-pointer']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['select-none']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['h-10']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['w-60']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-none']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['bg-zinc-100']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['rounded-md']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['p-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['outline-none']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['mb-4']} */;
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VINE_VLS_ComponentExpose__>) };
+
+}
+
+function TestGenerics<T extends boolean>(props: __VINE_VLS_VineComponentCommonProps & {
+  foo: T
+}, context: {}) {
+  
+type TestGenerics_Props = Parameters<typeof TestGenerics>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#3 */Ref: /* __LINKED_CODE_RIGHT__#3 */Ref,
+  /* __LINKED_CODE_LEFT__#10 */PageHeader: /* __LINKED_CODE_RIGHT__#10 */PageHeader,
+  /* __LINKED_CODE_LEFT__#17 */TestSlotContainer: /* __LINKED_CODE_RIGHT__#17 */TestSlotContainer,
+  /* __LINKED_CODE_LEFT__#12 */TestGenerics: /* __LINKED_CODE_RIGHT__#12 */TestGenerics,
+  /* __LINKED_CODE_LEFT__#9 */AboutPage: /* __LINKED_CODE_RIGHT__#9 */AboutPage,
+  ...props,
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+( __VINE_VLS_ctx.foo );
+// @ts-ignore
+[foo,];
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+type __VINE_VLS_AboutPage_props__ = {}
+
+
+export function AboutPage(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_AboutPage_props__,
+context: {}) {
+  
+type AboutPage_Props = Parameters<typeof AboutPage>[0];
+
+const handleEmitCamel = (bar: string) => {
+    console.log(bar)
+  }
+  const testBool = ref(true)
+  const testSlotContainerText = ref('')
+  const slotContainerRef = useTemplateRef<__VINE_VLS_TemplateRefs['slotContainerRef'], keyof __VINE_VLS_TemplateRefs>('slotContainerRef')
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#10 */PageHeader: /* __LINKED_CODE_RIGHT__#10 */PageHeader,
+  /* __LINKED_CODE_LEFT__#12 */TestGenerics: /* __LINKED_CODE_RIGHT__#12 */TestGenerics,
+  /* __LINKED_CODE_LEFT__#17 */TestSlotContainer: /* __LINKED_CODE_RIGHT__#17 */TestSlotContainer,
+  /* __LINKED_CODE_LEFT__#15 */handleEmitCamel: /* __LINKED_CODE_RIGHT__#15 */handleEmitCamel,
+  /* __LINKED_CODE_LEFT__#8 */testBool: /* __LINKED_CODE_RIGHT__#8 */testBool,
+  /* __LINKED_CODE_LEFT__#21 */testSlotContainerText: /* __LINKED_CODE_RIGHT__#21 */testSlotContainerText,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#3 */Ref: /* __LINKED_CODE_RIGHT__#3 */Ref,
+  /* __LINKED_CODE_LEFT__#9 */AboutPage: /* __LINKED_CODE_RIGHT__#9 */AboutPage,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'PageHeader', __VINE_VLS_LocalComponents, void, 'PageHeader', 'PageHeader', 'PageHeader'>).PageHeader;
+/** @type {[typeof __VINE_VLS_components.PageHeader, ]} */;
+// @ts-ignore
+PageHeader;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.h2, __VINE_VLS_intrinsicElements.h2)({
+});
+const __VINE_VLS_4 = ({} as __VINE_VLS_WithComponent<'TestGenerics', __VINE_VLS_LocalComponents, void, 'TestGenerics', 'TestGenerics', 'TestGenerics'>).TestGenerics;
+/** @type {[typeof __VINE_VLS_components.TestGenerics, ]} */;
+// @ts-ignore
+TestGenerics;
+// @ts-ignore
+const __VINE_VLS_5 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_4, new __VINE_VLS_4({
+foo: (__VINE_VLS_ctx.testBool),
+}));
+const __VINE_VLS_6 = __VINE_VLS_5({
+foo: (__VINE_VLS_ctx.testBool),
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_5));
+// @ts-ignore
+[testBool,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+...{ class: "my-4" },
+});
+( __VINE_VLS_ctx.testSlotContainerText ?? "__Empty__" );
+// @ts-ignore
+[testSlotContainerText,];
+const __VINE_VLS_8 = ({} as __VINE_VLS_WithComponent<'TestSlotContainer', __VINE_VLS_LocalComponents, void, 'TestSlotContainer', 'TestSlotContainer', 'TestSlotContainer'>).TestSlotContainer;
+/** @type {[typeof __VINE_VLS_components.TestSlotContainer, typeof __VINE_VLS_components.TestSlotContainer, ]} */;
+// @ts-ignore
+TestSlotContainer;
+// @ts-ignore
+const __VINE_VLS_9 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_8, new __VINE_VLS_8({
+...{ 'onEmitCamel': {} as any },
+ref: "slotContainerRef",
+fizz: "bazz",
+bar: (10),
+other: (false),
+modelValue: (__VINE_VLS_ctx.testSlotContainerText),
+}));
+const __VINE_VLS_10 = __VINE_VLS_9({
+...{ 'onEmitCamel': {} as any },
+ref: "slotContainerRef",
+fizz: "bazz",
+bar: (10),
+other: (false),
+modelValue: (__VINE_VLS_ctx.testSlotContainerText),
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_9));
+let __VINE_VLS_12!: typeof __VINE_VLS_11.emit;
+let __VINE_VLS_13!: __VINE_VLS_NormalizeEmits<typeof __VINE_VLS_12>;
+let __VINE_VLS_14!: __VINE_VLS_FunctionalComponentProps<typeof __VINE_VLS_9, typeof __VINE_VLS_10>;
+const __VINE_VLS_15: __VINE_VLS_NormalizeComponentEvent<typeof __VINE_VLS_14, typeof __VINE_VLS_13, 'onEmitCamel', 'emit-camel', 'emitCamel'> = {
+onEmitCamel: (__VINE_VLS_ctx.handleEmitCamel)};
+/** @type {typeof __VINE_VLS_ctx.slotContainerRef} */;
+var __VINE_VLS_16 = {} as (Parameters<NonNullable<typeof __VINE_VLS_11['expose']>>[0] | null);
+__VINE_VLS_11.slots!.default;
+{
+const { slotCamel: __VINE_VLS_thisSlot } = __VINE_VLS_11.slots!;
+const [{ foo }] = __VINE_VLS_getSlotParams(__VINE_VLS_thisSlot);
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+});
+( foo );
+// @ts-ignore
+[testSlotContainerText,handleEmitCamel,];
+}
+var __VINE_VLS_11!: __VINE_VLS_PickFunctionalComponentCtx<typeof __VINE_VLS_8, typeof __VINE_VLS_10>;
+/** @type {__VINE_VLS_StyleScopedClasses['my-4']} */;
+// @ts-ignore
+var __VINE_VLS_17 = __VINE_VLS_16, ;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+slotContainerRef: typeof __VINE_VLS_17,
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+
+const __VINE_VLS_ComponentsReferenceMap = {
+  TestSlotContainer: TestSlotContainer,
+  TestGenerics: TestGenerics,
+  AboutPage: AboutPage,
+  PageHeader: PageHeader
+};
+
+const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
+`;
+
 exports[`verify Volar virtual code snapshots > should match with fixture.vine.ts virtual code 1`] = `
 "/// <reference types=".vue-global-types/vine_vue_99_true" />
 

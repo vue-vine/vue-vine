@@ -1,0 +1,150 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`verify global types generation > should match with fixture.vine.ts virtual code 1`] = `
+"
+; declare global {
+  const VUE_VINE_COMPONENT: unique symbol;
+  type __StrictIsAny<T> = [unknown] extends [T]
+    ? ([T] extends [unknown] ? true : false)
+    : false;
+  type __OmitAny<T> = {
+    [K in keyof T as __StrictIsAny<T[K]> extends true ? never : K]: T[K]
+  }
+  type MakeVLSCtx<T extends object> = {
+    [K in keyof T]: T[K]
+  }
+  const __createVineVLSCtx: <T>(ctx: T) => MakeVLSCtx<import('vue').UnwrapRef<T>>;
+  type VueVineComponent = __VINE_VLS_Element;
+
+  // From vuejs 'runtime-core.d.ts':
+  type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+  type RecordToUnion<T extends Record<string, any>> = T[keyof T];
+  type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<Exclude<RecordToUnion<{
+      [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
+  }>, undefined>>;
+
+  type __VINE_VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends VueVineComponent & {
+    exposed: infer E
+  } ? (exposed: E) => void : never;
+
+  type __VINE_VLS_VineComponentCommonProps = import('vue').HTMLAttributes & {
+    key?: PropertyKey
+    ref?: string | import('vue').Ref | ((ref: Element | import('vue').ComponentPublicInstance | null, refs: Record<string, any>) => void);
+  }
+    
+	const __VINE_VLS_intrinsicElements: __VINE_VLS_IntrinsicElements;
+	const __VINE_VLS_directiveBindingRestFields: { instance: null, oldValue: null, modifiers: any, dir: any };
+	const __VINE_VLS_unref: typeof import('vue').unref;
+	const __VINE_VLS_placeholder: any;
+
+	type __VINE_VLS_NativeElements = __VINE_VLS_SpreadMerge<SVGElementTagNameMap, HTMLElementTagNameMap>;
+	type __VINE_VLS_IntrinsicElements = import('vue/jsx-runtime').JSX.IntrinsicElements;
+	type __VINE_VLS_Element = import('vue/jsx-runtime').JSX.Element & { [VUE_VINE_COMPONENT]: true };
+	type __VINE_VLS_GlobalComponents = import('vue').GlobalComponents;
+	type __VINE_VLS_GlobalDirectives = import('vue').GlobalDirectives;
+	type __VINE_VLS_IsAny<T> = 0 extends 1 & T ? true : false;
+	type __VINE_VLS_PickNotAny<A, B> = __VINE_VLS_IsAny<A> extends true ? B : A;
+	type __VINE_VLS_SpreadMerge<A, B> = Omit<A, keyof B> & B;
+	type __VINE_VLS_WithComponent<N0 extends string, LocalComponents, Self, N1 extends string, N2 extends string, N3 extends string> =
+		N1 extends keyof LocalComponents ? N1 extends N0 ? Pick<LocalComponents, N0 extends keyof LocalComponents ? N0 : never> : { [K in N0]: LocalComponents[N1] } :
+		N2 extends keyof LocalComponents ? N2 extends N0 ? Pick<LocalComponents, N0 extends keyof LocalComponents ? N0 : never> : { [K in N0]: LocalComponents[N2] } :
+		N3 extends keyof LocalComponents ? N3 extends N0 ? Pick<LocalComponents, N0 extends keyof LocalComponents ? N0 : never> : { [K in N0]: LocalComponents[N3] } :
+		Self extends object ? { [K in N0]: Self } :
+		N1 extends keyof __VINE_VLS_GlobalComponents ? N1 extends N0 ? Pick<__VINE_VLS_GlobalComponents, N0 extends keyof __VINE_VLS_GlobalComponents ? N0 : never> : { [K in N0]: __VINE_VLS_GlobalComponents[N1] } :
+		N2 extends keyof __VINE_VLS_GlobalComponents ? N2 extends N0 ? Pick<__VINE_VLS_GlobalComponents, N0 extends keyof __VINE_VLS_GlobalComponents ? N0 : never> : { [K in N0]: __VINE_VLS_GlobalComponents[N2] } :
+		N3 extends keyof __VINE_VLS_GlobalComponents ? N3 extends N0 ? Pick<__VINE_VLS_GlobalComponents, N0 extends keyof __VINE_VLS_GlobalComponents ? N0 : never> : { [K in N0]: __VINE_VLS_GlobalComponents[N3] } :
+		{};
+	type __VINE_VLS_FunctionalComponentProps<T, K> =
+		'__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}> ? K extends { __ctx?: { props?: infer P } } ? NonNullable<P> : never
+		: T extends (props: infer P, ...args: any) => any ? P :
+		{};
+	type __VINE_VLS_IsFunction<T, K> = K extends keyof T
+		? __VINE_VLS_IsAny<T[K]> extends false
+		? unknown extends T[K]
+		? false
+		: true
+		: false
+		: false;
+	type __VINE_VLS_NormalizeComponentEvent<Props, Events, onEvent extends keyof Props, Event extends keyof Events, CamelizedEvent extends keyof Events> = (
+		__VINE_VLS_IsFunction<Props, onEvent> extends true
+			? Props
+			: __VINE_VLS_IsFunction<Events, Event> extends true
+				? { [K in onEvent]?: Events[Event] }
+				: __VINE_VLS_IsFunction<Events, CamelizedEvent> extends true
+					? { [K in onEvent]?: Events[CamelizedEvent] }
+					: Props
+	);
+	// fix https://github.com/vuejs/language-tools/issues/926
+	type __VINE_VLS_UnionToIntersection<U> = (U extends unknown ? (arg: U) => unknown : never) extends ((arg: infer P) => unknown) ? P : never;
+	type __VINE_VLS_OverloadUnionInner<T, U = unknown> = U & T extends (...args: infer A) => infer R
+		? U extends T
+		? never
+		: __VINE_VLS_OverloadUnionInner<T, Pick<T, keyof T> & U & ((...args: A) => R)> | ((...args: A) => R)
+		: never;
+	type __VINE_VLS_OverloadUnion<T> = Exclude<
+		__VINE_VLS_OverloadUnionInner<(() => never) & T>,
+		T extends () => never ? never : () => never
+	>;
+	type __VINE_VLS_ConstructorOverloads<T> = __VINE_VLS_OverloadUnion<T> extends infer F
+		? F extends (event: infer E, ...args: infer A) => any
+		? { [K in E & string]: (...args: A) => void; }
+		: never
+		: never;
+	type __VINE_VLS_NormalizeEmits<T> = __VINE_VLS_PrettifyGlobal<
+		__VINE_VLS_UnionToIntersection<
+			__VINE_VLS_ConstructorOverloads<T> & {
+				[K in keyof T]: T[K] extends any[] ? { (...args: T[K]): void } : never
+			}
+		>
+	>;
+	type __VINE_VLS_PrettifyGlobal<T> = { [K in keyof T]: T[K]; } & {};
+	type __VINE_VLS_PickFunctionalComponentCtx<T, K> = NonNullable<__VINE_VLS_PickNotAny<
+		'__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}> ? K extends { __ctx?: infer Ctx } ? Ctx : never : any
+		, T extends (props: any, ctx: infer Ctx) => any ? Ctx : any
+	>>;
+	type __VINE_VLS_UseTemplateRef<T> = Readonly<import('vue').ShallowRef<T | null>>;
+
+	function __VINE_VLS_getVForSourceType<T extends number | string | any[] | Iterable<any>>(source: T): [
+		item: T extends number ? number
+			: T extends string ? string
+			: T extends any[] ? T[number]
+			: T extends Iterable<infer T1> ? T1
+			: any,
+		index: number,
+	][];
+	function __VINE_VLS_getVForSourceType<T>(source: T): [
+		item: T[keyof T],
+		key: keyof T,
+		index: number,
+	][];
+	// @ts-ignore
+	function __VINE_VLS_getSlotParams<T>(slot: T): Parameters<__VINE_VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>;
+	// @ts-ignore
+	function __VINE_VLS_getSlotParam<T>(slot: T): Parameters<__VINE_VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>[0];
+	function __VINE_VLS_asFunctionalDirective<T>(dir: T): T extends import('vue').ObjectDirective
+		? NonNullable<T['created' | 'beforeMount' | 'mounted' | 'beforeUpdate' | 'updated' | 'beforeUnmount' | 'unmounted']>
+		: T extends (...args: any) => any
+			? T
+			: (arg1: unknown, arg2: unknown, arg3: unknown, arg4: unknown) => void;
+	function __VINE_VLS_makeOptional<T>(t: T): { [K in keyof T]?: T[K] };
+	function __VINE_VLS_asFunctionalComponent<T, K = T extends new (...args: any) => any ? InstanceType<T> : unknown>(t: T, instance?: K):
+		T extends new (...args: any) => any
+		? (props: (K extends { $props: infer Props } ? Props : any), ctx?: any) => __VINE_VLS_Element & {
+			__ctx?: {
+				attrs?: any;
+				slots?: K extends { $slots: infer Slots } ? Slots : any;
+				emit?: K extends { $emit: infer Emit } ? Emit : any;
+				expose?(exposed: K): void;
+				props?: (K extends { $props: infer Props } ? Props : any);
+			}
+		}
+		: T extends () => any ? (props: {}, ctx?: any) => ReturnType<T>
+		: T extends (...args: any) => any ? T
+		: (_: {}, ctx?: any) => { __ctx?: { attrs?: any, expose?: any, slots?: any, emit?: any, props?: {} } };
+	function __VINE_VLS_functionalComponentArgsRest<T extends (...args: any) => any>(t: T): 2 extends Parameters<T>['length'] ? [any] : [];
+	function __VINE_VLS_asFunctionalElement<T>(tag: T, endTag?: T): (attrs: T) => void;
+	function __VINE_VLS_asFunctionalSlot<S>(slot: S): S extends () => infer R ? (props: {}) => R : NonNullable<S>;
+	function __VINE_VLS_tryAsConstant<const T>(t: T): T;
+}
+"
+`;

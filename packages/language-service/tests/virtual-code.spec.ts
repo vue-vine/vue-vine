@@ -24,4 +24,23 @@ describe('verify Volar virtual code snapshots', () => {
       virtualCode.snapshot.getLength(),
     )).toMatchSnapshot()
   })
+
+  it('should match with about.vine.ts virtual code', () => {
+    const aboutFilePath = join(import.meta.dirname, '../../playground/src/pages/about.vine.ts')
+    const aboutContent = readFileSync(aboutFilePath, 'utf-8')
+
+    const virtualCode = createVueVineVirtualCode(
+      ts,
+      aboutFilePath,
+      aboutContent,
+      {},
+      getDefaultCompilerOptions(),
+      'extension',
+    )
+
+    expect(virtualCode.snapshot.getText(
+      0,
+      virtualCode.snapshot.getLength(),
+    )).toMatchSnapshot()
+  })
 })

@@ -74,7 +74,7 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
     exposed: infer E
   } ? (exposed: E) => void : never;
 
-  type __VLS_VineComponentCommonProps = HTMLAttributes & {
+  type __VLS_VineComponentCommonProps = import('vue').HTMLAttributes & {
     key?: PropertyKey
     ref?: string | import('vue').Ref | ((ref: Element | import('vue').ComponentPublicInstance | null, refs: Record<string, any>) => void);
   }

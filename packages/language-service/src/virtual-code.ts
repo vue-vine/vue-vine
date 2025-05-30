@@ -538,8 +538,10 @@ export function createVueVineVirtualCode(
       }
     }
 
-    const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateEmitProps(vineCompFn)) ? '' : `& ${generateEmitProps(vineCompFn)}`
-    const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generateModelProps(vineCompFn)) ? '' : `& ${generateModelProps(vineCompFn)}`
+    const generatedEmitProps = generateEmitProps(vineCompFn)
+    const generatedModelProps = generateModelProps(vineCompFn)
+    const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedEmitProps) ? '' : ` & ${generatedEmitProps}`
+    const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedModelProps) ? '' : ` & ${generatedModelProps}`
     return [
       propTypeBase,
       emitProps,
