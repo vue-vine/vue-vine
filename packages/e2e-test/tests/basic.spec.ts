@@ -1,6 +1,6 @@
-import type { E2EPlaywrightContext } from '../utils/test-utils'
+import type { E2EPlaywrightContext } from '../utils/types'
 import { describe, expect, it } from 'vitest'
-import { createBrowserContext, getAssetUrl, getColor, getJustifyContent, untilUpdated } from '../utils/test-utils'
+import { createBrowserContext, createEvaluator, untilUpdated } from '../utils/test-utils'
 
 function runTestAtPage(
   page: string,
@@ -15,6 +15,7 @@ function runTestAtPage(
 
 describe('test basic functionality', async () => {
   const browserCtx = await createBrowserContext()
+  const evaluator = createEvaluator(browserCtx)
 
   it(
     'should be aligned with SFC style order',
@@ -22,8 +23,8 @@ describe('test basic functionality', async () => {
       '/style-order',
       browserCtx,
       async () => {
-        expect(await getColor(browserCtx, '.test-style-order h2.test')).toBe('rgb(255, 0, 0)')
-        expect(await getColor(browserCtx, '.child-comp span.test')).toBe('rgb(255, 0, 0)')
+        expect(await evaluator.getColor('.test-style-order h2.test')).toBe('rgb(255, 0, 0)')
+        expect(await evaluator.getColor('.child-comp span.test')).toBe('rgb(255, 0, 0)')
       },
     ),
   )
@@ -34,8 +35,8 @@ describe('test basic functionality', async () => {
       '/external-style-import',
       browserCtx,
       async () => {
-        expect(await getColor(browserCtx, '.container .test-me')).toBe('rgb(0, 0, 0)')
-        expect(await getColor(browserCtx, '.child-comp .test-me')).toBe('rgb(255, 0, 0)')
+        expect(await evaluator.getColor('.container .test-me')).toBe('rgb(0, 0, 0)')
+        expect(await evaluator.getColor('.child-comp .test-me')).toBe('rgb(255, 0, 0)')
       },
     ),
   )
@@ -46,7 +47,7 @@ describe('test basic functionality', async () => {
       '/transform-asset-url',
       browserCtx,
       async () => {
-        expect(await getAssetUrl(browserCtx, '.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
+        expect(await evaluator.getAssetUrl('.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
       },
     ),
   )
@@ -57,10 +58,10 @@ describe('test basic functionality', async () => {
       '/props-destructure',
       browserCtx,
       async () => {
-        expect(await browserCtx.page!.textContent('#item-1')).toBe('foo: hello')
-        expect(await browserCtx.page!.textContent('#item-2')).toBe('bar: 1')
-        expect(await browserCtx.page!.textContent('#item-3')).toBe('other: true')
-        expect(await browserCtx.page!.textContent('#item-4')).toBe('doubleBar: 2')
+        expect(await evaluator.getTextContent('#item-1')).toBe('foo: hello')
+        expect(await evaluator.getTextContent('#item-2')).toBe('bar: 1')
+        expect(await evaluator.getTextContent('#item-3')).toBe('other: true')
+        expect(await evaluator.getTextContent('#item-4')).toBe('doubleBar: 2')
       },
     ),
   )
@@ -69,18 +70,18 @@ describe('test basic functionality', async () => {
     '/vibe',
     browserCtx,
     async () => {
-      expect(await browserCtx.page!.textContent('.child-comp-1 p')).toBe('Count: 0')
-      expect(await browserCtx.page!.textContent('.child-comp-2 p')).toBe('Data: ')
+      expect(await evaluator.getTextContent('.child-comp-1 p')).toBe('Count: 0')
+      expect(await evaluator.getTextContent('.child-comp-2 p')).toBe('Data: ')
 
       await untilUpdated(
-        () => browserCtx.page!.textContent('.child-comp-2 p'),
+        () => evaluator.getTextContent('.child-comp-2 p'),
         'Data: mock data',
       )
 
       for (let i = 0; i < 10; i++) {
         await browserCtx.page!.click('.child-comp-1 button')
       }
-      expect(await browserCtx.page!.textContent('.child-comp-1 p')).toBe('Count: 10')
+      expect(await evaluator.getTextContent('.child-comp-1 p')).toBe('Count: 10')
     },
   ))
 
@@ -88,8 +89,23 @@ describe('test basic functionality', async () => {
     '/use-defaults',
     browserCtx,
     async () => {
-      expect(await getJustifyContent(browserCtx, '.line-1')).toBe('center')
-      expect(await getJustifyContent(browserCtx, '.line-2')).toBe('center')
+      expect(await evaluator.getJustifyContent('.line-1')).toBe('center')
+      expect(await evaluator.getJustifyContent('.line-2')).toBe('center')
+    },
+  ))
+
+  it('should work with vine model', runTestAtPage(
+    '/vine-model',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.simple-msg')).toBe('')
+      expect(await evaluator.getTextContent('.special-msg')).toBe('')
+
+      await browserCtx.page?.fill('.simple-input', 'hello')
+      await browserCtx.page?.fill('.special-input', 'world')
+
+      expect(await evaluator.getTextContent('.simple-msg')).toBe('hello')
+      expect(await evaluator.getTextContent('.special-msg')).toBe('world')
     },
   ))
 })

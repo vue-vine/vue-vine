@@ -1,12 +1,10 @@
-import type { Browser, BrowserContext, Page } from 'playwright-chromium'
-import type { InlineConfig, ViteDevServer } from 'vite'
+import type { InlineConfig } from 'vite'
+import type { E2EPlaywrightContext, Nil } from './types'
 import fs from 'node:fs'
 import path, { resolve } from 'node:path'
 import process from 'node:process'
 import {
-
   chromium,
-
 } from 'playwright-chromium'
 import {
   createServer,
@@ -14,17 +12,7 @@ import {
   mergeConfig,
 } from 'vite'
 import { expect } from 'vitest'
-
-type Nil = null | undefined
-
-export interface E2EPlaywrightContext {
-  browser: Browser | undefined
-  browserCtx: BrowserContext | undefined
-  page: Page | undefined
-  viteServer: ViteDevServer | undefined
-  viteTestUrl: string
-  targetRoute?: string
-}
+import { createTestEvaluator } from './evaluator'
 
 export const wait = (n: number) => new Promise(resolve => setTimeout(resolve, n))
 
@@ -112,16 +100,6 @@ export async function freeBrowserContext(ctx: E2EPlaywrightContext) {
   }
 }
 
-export function editFile(
-  filename: string,
-  replacer: (str: string) => string,
-): void {
-  filename = path.resolve('./src', filename)
-  const content = fs.readFileSync(filename, 'utf-8')
-  const modified = replacer(content)
-  fs.writeFileSync(filename, modified)
-}
-
 export async function untilUpdated(
   poll: () => (string | Nil) | Promise<(string | Nil)>,
   expected: string,
@@ -139,76 +117,13 @@ export async function untilUpdated(
   }
 }
 
-export async function getColor(
-  e2eTestCtx: E2EPlaywrightContext,
-  selector: string,
-  page?: Page,
-) {
-  const pageCtx = page ?? e2eTestCtx.page
-  return await pageCtx?.evaluate(
-    (selector: string) => {
-      const el = document.querySelector(selector)
-      if (!el) {
-        return null
-      }
-      return getComputedStyle(el).color
-    },
-    selector,
-  )
-}
-
-export async function getDisplayStyle(
-  e2eTestCtx: E2EPlaywrightContext,
-  selector: string,
-  page?: Page,
-) {
-  const pageCtx = page ?? e2eTestCtx.page
-  return await pageCtx?.evaluate(
-    (selector: string) => {
-      const el = document.querySelector(selector)
-      if (!el) {
-        return null
-      }
-      return getComputedStyle(el).display
-    },
-    selector,
-  )
-}
-
-export async function getAssetUrl(
-  e2eTestCtx: E2EPlaywrightContext,
-  selector: string,
-  page?: Page,
-) {
-  const pageCtx = page ?? e2eTestCtx.page
-  return await pageCtx?.evaluate(
-    (selector: string) => {
-      const el = document.querySelector(selector)
-      if (!el) {
-        return null
-      }
-      return el.getAttribute('src')
-    },
-    selector,
-  )
-}
-
-export async function getJustifyContent(
-  e2eTestCtx: E2EPlaywrightContext,
-  selector: string,
-  page?: Page,
-) {
-  const pageCtx = page ?? e2eTestCtx.page
-  return await pageCtx?.evaluate(
-    (selector: string) => {
-      const el = document.querySelector(selector)
-      if (!el) {
-        return null
-      }
-      return getComputedStyle(el).justifyContent
-    },
-    selector,
-  )
+/**
+ * Create an evaluator instance for page element property and style evaluation
+ * @param e2eTestCtx - E2E test context
+ * @returns Evaluator instance
+ */
+export function createEvaluator(e2eTestCtx: E2EPlaywrightContext) {
+  return createTestEvaluator(e2eTestCtx)
 }
 
 export function createBrowserCtxEnvironment(
@@ -228,4 +143,14 @@ export function createBrowserCtxEnvironment(
       await freeBrowserContext(browserCtx)
     }
   }
+}
+
+export function editFile(
+  filename: string,
+  replacer: (str: string) => string,
+): void {
+  filename = path.resolve('./src', filename)
+  const content = fs.readFileSync(filename, 'utf-8')
+  const modified = replacer(content)
+  fs.writeFileSync(filename, modified)
 }

@@ -6,6 +6,7 @@ const routes = [
   { path: '/props-destructure', label: 'Props Destructure' },
   { path: '/vibe', label: 'Vibe' },
   { path: '/use-defaults', label: 'Use Defaults' },
+  { path: '/vine-model', label: 'Vine Model' },
 ]
 
 export function NavList() {
@@ -13,20 +14,26 @@ export function NavList() {
     .e2e-test-nav {
       width: fit-content;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      flex-direction: row;
+      gap: 1rem;
+      list-style: none;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
     }
     .e2e-test-nav-item {
       cursor: pointer;
+      padding: 0.25rem 1rem;
+      background-color: #dddddd55;
+      white-space: nowrap;
     }
     .e2e-test-nav-item:hover {
-      background-color: #f0f0f0;
+      background-color: #aaaaaa55;
     }
     .e2e-test-nav-item a {
       display: block;
       width: 100%;
       text-decoration: none;
-      color: inherit;
+      color: cadetblue;
     }
   `)
 
