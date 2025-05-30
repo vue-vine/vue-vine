@@ -1,4 +1,4 @@
-import type { SassPreprocessorOptions } from 'vite'
+import type { CSSOptions, SassPreprocessorOptions } from 'vite'
 import path from 'node:path'
 import vueJSX from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
@@ -7,7 +7,10 @@ import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import { VineVitePlugin } from 'vue-vine/vite'
 
-const configForSassAndScss = {
+type PreprocessorOptionsMap = Exclude<CSSOptions['preprocessorOptions'], undefined>
+type SharedPreprocessorOptions = PreprocessorOptionsMap[keyof PreprocessorOptionsMap]
+
+const configForSassAndScss: SharedPreprocessorOptions = {
   api: 'modern-compiler',
   silenceDeprecations: [
     'legacy-js-api',
