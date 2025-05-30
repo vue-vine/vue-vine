@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.4.1
+
+### Patch Changes
+
+- Fix HTMLAttributes type by import from vue.
+- Updated dependencies
+  - vue-vine@1.4.1
+
 ## 1.4.0
 
 ### Minor Changes

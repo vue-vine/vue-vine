@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.4.1
+
+### Patch Changes
+
+- Fix HTMLAttributes type by import from vue.
+
 ## 1.4.0
 
 ### Minor Changes
