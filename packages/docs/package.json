@@ -14,6 +14,7 @@
   "devDependencies": {
     "@iconify-json/logos": "catalog:icons",
     "@iconify-json/twemoji": "catalog:icons",
+    "rolldown-vite": "catalog:vite-ecosystem",
     "unocss": "catalog:styles",
     "vitepress": "catalog:docs"
   }
