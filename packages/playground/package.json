@@ -22,7 +22,6 @@
     "@vue-vine/eslint-config": "workspace:*",
     "eslint": "catalog:lint-libs",
     "less": "catalog:styles",
-    "rolldown-vite": "catalog:vite-ecosystem",
     "sass": "catalog:styles",
     "unocss": "catalog:styles",
     "unplugin-auto-import": "catalog:vite-ecosystem",

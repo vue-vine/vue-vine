@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/hash-sum": "catalog:types",
+    "rolldown": "catalog:vite-ecosystem",
     "rollup": "catalog:cli"
   },
   "publishConfig": {

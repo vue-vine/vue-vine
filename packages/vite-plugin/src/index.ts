@@ -5,7 +5,7 @@ import type {
   VineProcessorLang,
   VineQuery,
 } from '@vue-vine/compiler'
-import type { TransformPluginContext } from 'rollup'
+import type { TransformPluginContext } from 'rolldown'
 import type { HmrContext, PluginOption, TransformResult } from 'vite'
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
