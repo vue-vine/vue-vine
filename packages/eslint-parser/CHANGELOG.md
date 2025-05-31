@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.1
+
+### Patch Changes
+
+- Fix eslint parser option for using ECMAScript latest as default.
+
 ## 1.1.0
 
 ### Minor Changes
