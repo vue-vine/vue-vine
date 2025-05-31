@@ -112,6 +112,7 @@ catalogs:
     '@vitejs/plugin-vue': ^5.2.4
     '@vitejs/plugin-vue-jsx': ^4.2.0
     rolldown: latest
+    rolldown-vite: latest
     unplugin-auto-import: ^19.3.0
     vite: ^6.3.5
     vite-plugin-inspect: ^11.1.0

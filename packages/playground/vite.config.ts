@@ -23,8 +23,8 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      sass: configForSassAndScss as SassPreprocessorOptions,
-      scss: configForSassAndScss as SassPreprocessorOptions,
+      sass: configForSassAndScss,
+      scss: configForSassAndScss,
     },
   },
   resolve: {

@@ -10,25 +10,25 @@ function ToDoAction() {
     <div class="flex items-center">
       <div
         v-if="state === 'complete'"
-        class="complete i-mdi-check-circle text-3xl cursor-default text-#7eff84"
+        class="complete i-mdi-check-circle text-3xl cursor-default text-green-500"
       />
       <div
         v-else-if="state === 'cancel'"
-        class="cancel i-mdi-close text-3xl cursor-default text-#dc2626"
+        class="cancel i-mdi-close text-3xl cursor-default text-red-500"
       />
       <div v-else class="flex items-center">
         <div
-          class="todo-checkbox dark:bg-coolgray-100:20 rounded-5px hover:dark:bg-coolgray-100:10 cursor-pointer mr-2"
+          class="todo-checkbox bg-coolgray-200:50 rounded-5px bg-coolgray-400:50 cursor-pointer mr-2"
           @click="emits('complete')"
         />
         <div
-          class="i-mdi-cancel text-3xl text-#898989 cursor-pointer ml-2"
+          class="i-mdi-cancel text-3xl text-zinc-500 cursor-pointer ml-2"
           @click="emits('cancel')"
         />
       </div>
       <div
         v-if="showDelete"
-        class="complete i-mdi-delete-circle text-3xl text-#89898b ml-2"
+        class="complete i-mdi-delete-circle text-3xl text-zinc-500 ml-2"
         @click="emits('delete')"
       />
     </div>
@@ -47,11 +47,11 @@ function TodoContent() {
         <div
           v-for="d in piniaStore.todoList"
           :key="d.id"
-          class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer"
+          class="todo-item flex items-center justify-center p-15px rounded-10px bg-coolgray-300:30 cursor-pointer"
         >
           <div class="todo-item-content flex items-center justify-between">
             <div class="todo-item-text">
-              <div class="text-lg text-gray-100">{{ d.title }}</div>
+              <div class="text-lg">{{ d.title }}</div>
             </div>
             <ToDoAction
               @complete="piniaStore.completeTodo(d)"
@@ -68,11 +68,11 @@ function TodoContent() {
         <div
           v-for="d in piniaStore.handledList"
           :key="d.id"
-          class="todo-item flex items-center justify-center p-15px rounded-10px dark:bg-coolgray-100:20 cursor-pointer complete"
+          class="todo-item flex items-center justify-center p-15px rounded-10px bg-coolgray-200:50 cursor-pointer complete"
         >
           <div class="todo-item-content flex items-center justify-between">
             <div class="todo-item-text">
-              <div class="text-lg text-gray-100">{{ d.title }}</div>
+              <div class="text-lg">{{ d.title }}</div>
             </div>
             <ToDoAction
               @delete="piniaStore.deleteTodo(d)"
@@ -118,7 +118,7 @@ function TodoInput() {
   return vine`
     <input
       type="text"
-      class="todo-input dark:bg-coolgray-100:20 pl-5 hover:dark:bg-coolgray-100:10"
+      class="todo-input bg-coolgray-200:50 pl-5 hover:bg-coolgray-200:50"
       v-model="todoContent"
     />
     <TodoAdd @addItem="onAddItem()" />

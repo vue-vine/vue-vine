@@ -15,7 +15,7 @@ import {
   createCompilerCtx,
   createTsMorph,
 } from '@vue-vine/compiler'
-import { createLogger, transformWithEsbuild } from 'vite'
+import { createLogger, transformWithOxc } from 'vite'
 import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
 import { addHMRHelperCode, vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
@@ -80,12 +80,14 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
     // Since we skipped using vite:esbuild built-in plugin to transform .vine.ts files,
     // we need to transform them manually here.
-    const { code: compiledCode, map } = await transformWithEsbuild(
+    // @ts-expect-error - oxc transform result is still in experimental
+    const transformResult: TransformResult = await transformWithOxc(
       vineFileCtx.fileMagicCode.toString(),
       fileId,
       {
-        loader: 'ts',
+        lang: 'ts',
         target: 'esnext',
+        sourcemap: true,
       },
       vineFileCtx.fileMagicCode.generateMap({
         includeContent: true,
@@ -94,10 +96,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       }),
     )
 
-    return {
-      code: compiledCode,
-      map,
-    }
+    return transformResult
   }
   const runCompileStyle = async (
     styleSource: string,

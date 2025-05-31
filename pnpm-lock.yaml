@@ -283,6 +283,9 @@ catalogs:
     rolldown:
       specifier: latest
       version: 1.0.0-beta.10
+    rolldown-vite:
+      specifier: latest
+      version: 6.3.14
     unplugin-auto-import:
       specifier: ^19.3.0
       version: 19.3.0
@@ -588,6 +591,9 @@ importers:
       jsdom:
         specifier: catalog:vitest-libs
         version: 26.1.0
+      rolldown-vite:
+        specifier: catalog:vite-ecosystem
+        version: 6.3.14(@types/node@22.15.21)(esbuild@0.25.4)(jiti@2.4.2)(less@4.3.0)(sass@1.89.0)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)
       vite-plugin-inspect:
         specifier: catalog:vite-ecosystem
         version: 11.1.0(@nuxt/kit@3.17.4(magicast@0.3.5))(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(less@4.3.0)(lightningcss@1.30.1)(sass@1.89.0)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))
@@ -885,6 +891,9 @@ importers:
       less:
         specifier: catalog:styles
         version: 4.3.0
+      rolldown-vite:
+        specifier: catalog:vite-ecosystem
+        version: 6.3.14(@types/node@22.15.21)(esbuild@0.25.4)(jiti@2.4.2)(less@4.3.0)(sass@1.89.0)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)
       sass:
         specifier: catalog:styles
         version: 1.89.0
@@ -931,6 +940,9 @@ importers:
       rollup:
         specifier: catalog:cli
         version: 4.41.1
+      vite:
+        specifier: npm:rolldown-vite@latest
+        version: rolldown-vite@6.3.14(@types/node@22.15.21)(esbuild@0.25.4)(jiti@2.4.2)(less@4.3.0)(sass@1.89.0)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)
 
   packages/vscode-ext:
     devDependencies:
