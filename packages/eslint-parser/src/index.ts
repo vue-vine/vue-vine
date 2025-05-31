@@ -30,7 +30,8 @@ export function parseForESLint(
       loc: true,
       range: true,
       tokens: true,
-    },
+      ecmaVersion: 'latest',
+    } as VineESLintParserOptions,
     parserOptions || {},
   )
 
