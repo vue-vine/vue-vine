@@ -1,6 +1,5 @@
-
 <div align="center">
-  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner.png">
+  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner-cn.png">
 </div>
 <br>
 <br>

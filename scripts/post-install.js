@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
-import { runCommand, r } from './utils'
+import { r, runCommand } from './utils'
 
 async function buildESLintParser() {
   if (typeof process.stdin.setRawMode !== 'function') {
