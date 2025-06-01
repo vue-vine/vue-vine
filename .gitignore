@@ -12,4 +12,5 @@ tsconfig.tsbuildinfo
 *.virtual.ts
 auto-imports.d.ts
 .temp
+node-compile-cache/
 
