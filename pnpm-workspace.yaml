@@ -26,7 +26,7 @@ catalogs:
     rollup: ^4.41.1
     simple-git-hooks: ^2.13.0
     tree-kill: ^1.2.2
-    tsdown: ^0.12.3
+    tsdown: ^0.12.6
     tsx: ^4.19.4
     typescript: ~5.8.3
     yoctocolors: ^2.1.1

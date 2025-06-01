@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
-import { r, runCommand } from './utils'
+import { cliExec, r } from './utils'
 
 async function buildESLintParser() {
   if (typeof process.stdin.setRawMode !== 'function') {
@@ -26,7 +26,7 @@ async function buildESLintParser() {
     return
   }
 
-  runCommand('pnpm run build:eslint')
+  cliExec('pnpm run build:eslint')
 }
 
 buildESLintParser()

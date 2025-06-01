@@ -61,6 +61,23 @@ export function cliExec(cmd) {
     })
   }
 
+  // Add listener for child process exit
+  child.on('close', (code) => {
+    // Restore stdin to normal mode
+    process.stdin.setRawMode(false)
+    process.stdin.pause()
+
+    // Exit with the same code as child process
+    process.exit(code)
+  })
+
+  child.on('error', (err) => {
+    console.error('Child process error:', err)
+    process.stdin.setRawMode(false)
+    process.stdin.pause()
+    process.exit(1)
+  })
+
   process.stdin.on('data', (key) => {
     if (key === 'q') {
       exitAll(child.pid)
