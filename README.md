@@ -1,4 +1,9 @@
-# Vue Vine
+
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner.png">
+</div>
+<br>
+<br>
 
 - [Contribution Guide](./CONTRIBUTING.md)
 - [中文 README](./README-CN.md)
