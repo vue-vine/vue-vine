@@ -83,12 +83,12 @@ function getIndexOfFnDeclLeftParen(
               node.async
                 ? 5 // 'async'.length
                 : 0
-                + (
-                  node.generator
-                    ? 9 // 'function*'.length
-                    : 8 // 'function'.length
-                )
-                + (node.id?.name?.length ?? 0)
+                  + (
+                    node.generator
+                      ? 9 // 'function*'.length
+                      : 8 // 'function'.length
+                  )
+                  + (node.id?.name?.length ?? 0)
             )
           ),
         )?.start ?? Number.NaN
@@ -291,9 +291,9 @@ export function createVueVineVirtualCode(
 
       // clear the template string
       tsCodeSegments.push(`\`\` as any as VueVineComponent${vineCompFn.expose
-          ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>) }`
-          : ''
-        };\n`)
+        ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>) }`
+        : ''
+      };\n`)
       currentOffset.value = vineCompFn.templateStringNode.quasi.end!
     }
 
@@ -310,7 +310,7 @@ export function createVueVineVirtualCode(
     })
   })
   tsCodeSegments.push(`\nconst __VLS_ComponentsReferenceMap = {\n${[...usedComponents].map(compName => `  '${compName}': ${compName}`).join(',\n')
-    }\n};\n`)
+  }\n};\n`)
   tsCodeSegments.push(`\nconst __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;`)
 
   // Add a 'VINE' prefix to all '__VLS_'
@@ -380,10 +380,10 @@ export function createVueVineVirtualCode(
         slot === 'default'
           ? ''
           : createLinkedCodeTag('left', slot.length)
-        }${slot}: ${slotPropTypeLiteralNode
-          ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
-          : 'unknown'
-        }`
+      }${slot}: ${slotPropTypeLiteralNode
+        ? `(props: ${vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
+        : 'unknown'
+      }`
     }).join(', ')}\n${' '.repeat(tabNum)}},`
 
     return slotsParam
@@ -397,9 +397,9 @@ export function createVueVineVirtualCode(
     const emitsOptionalKeys = (emitsTypeParam?.members?.map(
       member => (
         member.type === 'TSPropertySignature'
-          && member.key
-          && isIdentifier(member.key)
-          && member.optional
+        && member.key
+        && isIdentifier(member.key)
+        && member.optional
           ? member.key.name
           : null
       ),
@@ -419,10 +419,10 @@ export function createVueVineVirtualCode(
         vineCompFn.emitsTypeParam
           ? createLinkedCodeTag('left', onEmit.length)
           : ''
-        }${onEmit}${isOptional ? '?' : ''
-        }: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
+      }${onEmit}${isOptional ? '?' : ''
+      }: __VLS_${vineCompFn.fnName}_emits__['${emit}']`
     }).filter(Boolean).join(', ')
-      }\n}`
+    }\n}`
 
     return emitParam
   }
@@ -435,7 +435,7 @@ export function createVueVineVirtualCode(
       const { typeParameter } = model
       return `\n${' '.repeat(tabNum + 2)}${modelName}: ${typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'}`
     }).join(', ')
-      }\n}`
+    }\n}`
     return modelProps
   }
 
@@ -456,11 +456,11 @@ export function createVueVineVirtualCode(
     tsCodeSegments.push(
       vineCompFn.expose
         ? [
-          vineFileCtx.getAstNodeContent(vineCompFn.expose.paramObj),
-          undefined,
-          vineCompFn.expose.paramObj.start!,
-          FULL_FEATURES,
-        ]
+            vineFileCtx.getAstNodeContent(vineCompFn.expose.paramObj),
+            undefined,
+            vineCompFn.expose.paramObj.start!,
+            FULL_FEATURES,
+          ]
         : '{}',
     )
     tsCodeSegments.push(';\n')
@@ -552,7 +552,7 @@ export function createVueVineVirtualCode(
     }
     if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
-        }>>;\n`)
+      }>>;\n`)
     }
 
     // Gurantee the component function has a `props` formal parameter in virtual code,
