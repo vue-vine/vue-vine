@@ -21,13 +21,13 @@ function TestSlotContainer({ fizz, bar = 1 }: __VINE_VLS_VineComponentCommonProp
     modelValue: string
 }, context: {
   slots: {
-    default: unknown, 
+    default: unknown,
     /* __LINKED_CODE_LEFT__#9 */slotCamel: (props: { foo: number }) => any
   },
   expose: __VINE_VLS_PickComponentExpose<typeof TestSlotContainer>,
 }) {
   // const fizz = vineProp<string>()
-  
+
 type TestSlotContainer_Props = Parameters<typeof TestSlotContainer>[0];
 
 vineEmits<{ /* __LINKED_CODE_RIGHT__#9 */emitCamel: [bar: string] }>()
@@ -54,7 +54,7 @@ vineEmits<{ /* __LINKED_CODE_RIGHT__#9 */emitCamel: [bar: string] }>()
   };
 vineExpose(__VINE_VLS_ComponentExpose__)
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -118,7 +118,7 @@ foo: (__VINE_VLS_ctx.num),
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -136,7 +136,7 @@ return vine\`\` as any as VueVineComponent & { exposed: (import('vue').ShallowUn
 function TestGenerics<T extends boolean>(props: __VINE_VLS_VineComponentCommonProps & {
   foo: T
 }, context: {}) {
-  
+
 type TestGenerics_Props = Parameters<typeof TestGenerics>[0];
 
 
@@ -170,7 +170,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -190,7 +190,7 @@ type __VINE_VLS_AboutPage_props__ = {}
 export function AboutPage(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_AboutPage_props__,
 context: {}) {
-  
+
 type AboutPage_Props = Parameters<typeof AboutPage>[0];
 
 const handleEmitCamel = (bar: string) => {
@@ -200,7 +200,7 @@ const handleEmitCamel = (bar: string) => {
   const testSlotContainerText = ref('')
   const slotContainerRef = useTemplateRef<__VINE_VLS_TemplateRefs['slotContainerRef'], keyof __VINE_VLS_TemplateRefs>('slotContainerRef')
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -317,10 +317,10 @@ return vine\`\` as any as VueVineComponent;
 }
 
 const __VINE_VLS_ComponentsReferenceMap = {
-  TestSlotContainer: TestSlotContainer,
-  TestGenerics: TestGenerics,
-  AboutPage: AboutPage,
-  PageHeader: PageHeader
+  'TestSlotContainer': TestSlotContainer,
+  'TestGenerics': TestGenerics,
+  'AboutPage': AboutPage,
+  'PageHeader': PageHeader
 };
 
 const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
@@ -339,12 +339,12 @@ type __VINE_VLS_Comp_props__ = {
 function Comp(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_Comp_props__,
 context: {}) {
-  
+
 type Comp_Props = Parameters<typeof Comp>[0];
 
 const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp<string>()
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -381,7 +381,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -405,7 +405,7 @@ type __VINE_VLS_SampleOne_props__ = {
 export function SampleOne(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_SampleOne_props__,
 context: {}) {
-  
+
 type SampleOne_Props = Parameters<typeof SampleOne>[0];
 
 const count = ref(0)
@@ -416,7 +416,7 @@ const count = ref(0)
     name: 'ESLintErrsSample'
   })
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -474,7 +474,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -496,13 +496,13 @@ type __VINE_VLS_SampleTwo_props__ = {}
 export function SampleTwo(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_SampleTwo_props__,
 context: {}) {
-  
+
 type SampleTwo_Props = Parameters<typeof SampleTwo>[0];
 
 let count = ref('0x' + Foo + 'CAFE')
   let type = ref('primary')
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -544,7 +544,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -565,7 +565,7 @@ export function TestPlainTextTemplate(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestPlainTextTemplate_props__,
 context: {}) {
   // This should not report any formatting warning
-  
+
 type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
 
 
@@ -618,7 +618,7 @@ type __VINE_VLS_TestUnoCssAttributeMode_props__ = {}
 export function TestUnoCssAttributeMode(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestUnoCssAttributeMode_props__,
 context: {}) {
-  
+
 type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[0];
 
 
@@ -657,7 +657,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -684,13 +684,13 @@ type __VINE_VLS_TestCompOne_props__ = {
 function TestCompOne(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestCompOne_props__,
 context: {}) {
-  
+
 type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
 
 const /* __LINKED_CODE_RIGHT__#3 */zee = vineProp<string>()
   const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -749,12 +749,12 @@ type __VINE_VLS_TestCompTwo_props__ = {}
 function TestCompTwo(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestCompTwo_props__,
 context: {}) {
-  
+
 type TestCompTwo_Props = Parameters<typeof TestCompTwo>[0];
 
 const bar = ref('123')
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -832,7 +832,7 @@ function TargetComp(props: __VINE_VLS_VineComponentCommonProps & {
 }, context: {
   expose: __VINE_VLS_PickComponentExpose<typeof TargetComp>,
 }) {
-  
+
 type TargetComp_Props = Parameters<typeof TargetComp>[0];
 
 const count = ref(0)
@@ -846,7 +846,7 @@ const count = ref(0)
   };
 vineExpose(__VINE_VLS_ComponentExpose__)
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -909,14 +909,14 @@ type __VINE_VLS_TestCompRef_props__ = {}
 export function TestCompRef(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestCompRef_props__,
 context: {}) {
-  
+
 type TestCompRef_Props = Parameters<typeof TestCompRef>[0];
 
 const target = useTemplateRef<__VINE_VLS_TemplateRefs['target'], keyof __VINE_VLS_TemplateRefs>('target')
 
   console.log('target count: ', target.value?.count)
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -968,7 +968,7 @@ type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 target: typeof __VINE_VLS_5,
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -990,12 +990,12 @@ type __VINE_VLS_TestNoVforKeyOnChild_props__ = {}
 export function TestNoVforKeyOnChild(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestNoVforKeyOnChild_props__,
 context: {}) {
-  
+
 type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
 
 interface User { id: string; name: string }
   const users = ref<User[]>([])
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -1039,7 +1039,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -1062,7 +1062,7 @@ declare const doSomethingAsync: () => Promise<void>
 export async function TestNoLifecycleHookAfterAwait(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestNoLifecycleHookAfterAwait_props__,
 context: {}) {
-  
+
 type TestNoLifecycleHookAfterAwait_Props = Parameters<typeof TestNoLifecycleHookAfterAwait>[0];
 
 await doSomethingAsync()
@@ -1071,7 +1071,7 @@ await doSomethingAsync()
     // ...
   })
 
-  
+
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -1104,7 +1104,7 @@ type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
 };
-type __VINE_VLS_RootEl = 
+type __VINE_VLS_RootEl =
 | __VINE_VLS_NativeElements['p'];
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -1121,18 +1121,18 @@ return vine\`\` as any as VueVineComponent;
 // #endregion
 
 const __VINE_VLS_ComponentsReferenceMap = {
-  Comp: Comp,
-  SampleOne: SampleOne,
-  SampleTwo: SampleTwo,
-  TestPlainTextTemplate: TestPlainTextTemplate,
-  TestUnoCssAttributeMode: TestUnoCssAttributeMode,
-  TestCompOne: TestCompOne,
-  TestCompTwo: TestCompTwo,
-  UnknownComp: UnknownComp,
-  TargetComp: TargetComp,
-  TestCompRef: TestCompRef,
-  TestNoVforKeyOnChild: TestNoVforKeyOnChild,
-  TestNoLifecycleHookAfterAwait: TestNoLifecycleHookAfterAwait
+  'Comp': Comp,
+  'SampleOne': SampleOne,
+  'SampleTwo': SampleTwo,
+  'TestPlainTextTemplate': TestPlainTextTemplate,
+  'TestUnoCssAttributeMode': TestUnoCssAttributeMode,
+  'TestCompOne': TestCompOne,
+  'TestCompTwo': TestCompTwo,
+  'UnknownComp': UnknownComp,
+  'TargetComp': TargetComp,
+  'TestCompRef': TestCompRef,
+  'TestNoVforKeyOnChild': TestNoVforKeyOnChild,
+  'TestNoLifecycleHookAfterAwait': TestNoLifecycleHookAfterAwait
 };
 
 const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
