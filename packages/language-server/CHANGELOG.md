@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.4.2
+
+### Patch Changes
+
+- Fix language service for component reference name.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.2
+  - @vue-vine/language-service@1.4.2
+
 ## 1.4.1
 
 ### Patch Changes

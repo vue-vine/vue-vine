@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.4.2
+
+### Patch Changes
+
+- Fix language service for component reference name.
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.4.2
+
 ## 1.4.1
 
 ### Patch Changes
