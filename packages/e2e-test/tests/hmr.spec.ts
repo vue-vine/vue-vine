@@ -29,6 +29,7 @@ describe('hmr', () => {
   const createHmrEnvironment = (
     runner: Parameters<typeof createBrowserCtxEnvironment>[0],
   ) => createBrowserCtxEnvironment(async (browserCtx) => {
+    await wait(100)
     await runner(browserCtx)
   }, {
     targetRoute: '/hmr',
@@ -74,8 +75,8 @@ describe('hmr', () => {
     await wait(500)
     editFile('hmr.vine.ts', code =>
       code.replace(
-        '<div class="name">{{name}}</div>',
-        '<span class="name">{{name}}</span>',
+        '<div class="name">{{ name }}</div>',
+        '<span class="name">{{ name }}</span>',
       ))
     await untilUpdated(() => evaluator.getTextContent('span.name'), 'vine')
     await untilUpdated(() => evaluator.getTextContent('.counter'), 'Count: 2')

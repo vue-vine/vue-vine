@@ -18,6 +18,12 @@ export interface Evaluator {
   getDisplayStyle: (selector: string, page?: Page) => Promise<string | Nil>
   getAssetUrl: (selector: string, page?: Page) => Promise<string | Nil>
   getJustifyContent: (selector: string, page?: Page) => Promise<string | Nil>
+  getElementCount: (selector: string, page?: Page) => Promise<number>
+  
+  // Actions
+  clearLocalStorage: (page?: Page) => Promise<void>
+  inputText: (selector: string, text: string, page?: Page) => Promise<void>
+  click: (selector: string, page?: Page) => Promise<void>
 }
 
 export type EvaluateType =

@@ -64,17 +64,17 @@ function ToDoAction() {
       />
       <div v-else class="flex items-center">
         <div
-          class="todo-checkbox bg-coolgray-200:50 rounded-5px bg-coolgray-400:50 cursor-pointer mr-2"
+          class="todo-complete-btn bg-coolgray-200:50 rounded-5px bg-coolgray-400:50 cursor-pointer mr-2"
           @click="emits('complete')"
         />
         <div
-          class="i-mdi-cancel text-3xl text-zinc-500 cursor-pointer ml-2"
+          class="todo-cancel-btn i-mdi-cancel text-3xl text-zinc-500 cursor-pointer ml-2"
           @click="emits('cancel')"
         />
       </div>
       <div
         v-if="showDelete"
-        class="complete i-mdi-delete-circle text-3xl text-zinc-500 ml-2"
+        class="todo-delete-btn i-mdi-delete-circle text-3xl text-zinc-500 ml-2"
         @click="emits('delete')"
       />
     </div>
@@ -141,7 +141,7 @@ function TodoAdd(){
   return vine`
     <div
       @click="addTodo"
-      class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer"
+      class="todo-add-btn icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer"
     >
       <div class="i-mdi-add text-3xl" />
     </div>

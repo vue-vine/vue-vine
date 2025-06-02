@@ -154,3 +154,15 @@ export function editFile(
   const modified = replacer(content)
   fs.writeFileSync(filePath, modified)
 }
+
+export function runTestAtPage(
+  page: string,
+  browserCtx: E2EPlaywrightContext,
+  testRunner: () => Promise<void>,
+) {
+  return async () => {
+    await browserCtx.page?.goto(`${browserCtx.viteTestUrl}${page}`)
+    await wait(500)
+    await testRunner()
+  }
+}

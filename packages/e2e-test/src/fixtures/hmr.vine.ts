@@ -34,7 +34,7 @@ export function HmrApp() {
   `)
 
   return vine`
-    <div class="name">{{ name }}</div>
+    <span class="name">{{ name }}</span>
     <button class="test-btn" @click="inc">Increase count</button>
     <p class="text-for-replace">text111</p>
     <div class="counter">Count: {{ count }}</div>

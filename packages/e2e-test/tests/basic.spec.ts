@@ -1,17 +1,5 @@
-import type { E2EPlaywrightContext } from '../utils/types'
 import { describe, expect, it } from 'vitest'
-import { createBrowserContext, createEvaluator, untilUpdated, wait } from '../utils/test-utils'
-
-function runTestAtPage(
-  page: string,
-  browserCtx: E2EPlaywrightContext,
-  testRunner: () => Promise<void>,
-) {
-  return async () => {
-    await browserCtx.page?.goto(`${browserCtx.viteTestUrl}${page}`)
-    await testRunner()
-  }
-}
+import { createBrowserContext, createEvaluator, runTestAtPage, untilUpdated } from '../utils/test-utils'
 
 describe('test basic functionality', async () => {
   const browserCtx = await createBrowserContext()
@@ -109,45 +97,47 @@ describe('test basic functionality', async () => {
     },
   ))
 
-  it('should report console warning by validators', runTestAtPage(
-    '/vine-validators',
-    browserCtx,
-    async () => {
-      // Collect console warnings
-      const consoleWarnings: string[] = []
-      browserCtx.page!.on('console', (msg) => {
-        if (msg.type() === 'warning') {
-          consoleWarnings.push(msg.text())
-        }
-      })
+  it('should report console warning by validators', async () => {
+    // Collect console warnings
+    const consoleWarnings: string[] = []
+    browserCtx.page!.on('console', (msg) => {
+      if (msg.type() === 'warning') {
+        consoleWarnings.push(msg.text())
+      }
+    })
 
-      // Check that we got console warnings from validators
-      expect(consoleWarnings.length).toMatchInlineSnapshot(`4`)
-      
-      // Check for specific validation warnings
-      const warningText = consoleWarnings.join('\n')
-      expect(warningText).toMatchInlineSnapshot(`
-        "[Vue warn]: Invalid prop: custom validator check failed for prop "foo". 
-          at <ChildCompOne foo="hello" bar=5 > 
-          at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
-          at <RouterView> 
-          at <App>
-        [Vue warn]: Invalid prop: custom validator check failed for prop "bar". 
-          at <ChildCompOne foo="hello" bar=5 > 
-          at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
-          at <RouterView> 
-          at <App>
-        [Vue warn]: Invalid prop: custom validator check failed for prop "zig". 
-          at <ChildCompTwo zig="world" zag=6 > 
-          at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
-          at <RouterView> 
-          at <App>
-        [Vue warn]: Invalid prop: custom validator check failed for prop "zag". 
-          at <ChildCompTwo zig="world" zag=6 > 
-          at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
-          at <RouterView> 
-          at <App>"
-      `)
-    },
-  ))
+    await runTestAtPage(
+      '/vine-validators',
+      browserCtx,
+      async () => {
+        // Check that we got console warnings from validators
+        expect(consoleWarnings.length).toMatchInlineSnapshot(`4`)
+        
+        // Check for specific validation warnings
+        const warningText = consoleWarnings.join('\n')
+        expect(warningText).toMatchInlineSnapshot(`
+          "[Vue warn]: Invalid prop: custom validator check failed for prop "foo". 
+            at <ChildCompOne foo="hello" bar=5 > 
+            at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
+            at <RouterView> 
+            at <App>
+          [Vue warn]: Invalid prop: custom validator check failed for prop "bar". 
+            at <ChildCompOne foo="hello" bar=5 > 
+            at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
+            at <RouterView> 
+            at <App>
+          [Vue warn]: Invalid prop: custom validator check failed for prop "zig". 
+            at <ChildCompTwo zig="world" zag=6 > 
+            at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
+            at <RouterView> 
+            at <App>
+          [Vue warn]: Invalid prop: custom validator check failed for prop "zag". 
+            at <ChildCompTwo zig="world" zag=6 > 
+            at <TestVineValidatorsPage onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< undefined > > 
+            at <RouterView> 
+            at <App>"
+        `)
+      },
+    )
+  })
 })
