@@ -1,4 +1,4 @@
-import './styles/atom.css'
+import '../styles/atom.css'
 
 interface LineProps {
   center?: boolean

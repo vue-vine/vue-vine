@@ -5,42 +5,30 @@ import ts from 'typescript'
 import { describe, expect, it } from 'vitest'
 import { createVueVineVirtualCode } from '../src'
 
+function testSnapshotForFile(relativePath: string) {
+  const filePath = join(import.meta.dirname, relativePath)
+  const content = readFileSync(filePath, 'utf-8')
+
+  const virtualCode = createVueVineVirtualCode(
+    ts,
+    filePath,
+    content,
+    {},
+    getDefaultCompilerOptions(),
+    'extension',
+  )
+
+  expect(virtualCode.snapshot.getText(
+    0,
+    virtualCode.snapshot.getLength(),
+  )).toMatchSnapshot()
+}
+
 describe('verify Volar virtual code snapshots', () => {
-  it('should match with fixture.vine.ts virtual code', () => {
-    const fixturesFilePath = join(import.meta.dirname, '../../playground/src/components/fixtures.vine.ts')
-    const fixturesContent = readFileSync(fixturesFilePath, 'utf-8')
-
-    const virtualCode = createVueVineVirtualCode(
-      ts,
-      fixturesFilePath,
-      fixturesContent,
-      {},
-      getDefaultCompilerOptions(),
-      'extension',
-    )
-
-    expect(virtualCode.snapshot.getText(
-      0,
-      virtualCode.snapshot.getLength(),
-    )).toMatchSnapshot()
+  it('bad-cases.vine.ts', () => {
+    testSnapshotForFile('../../e2e-test/src/fixtures/bad-cases.vine.ts')
   })
-
-  it('should match with about.vine.ts virtual code', () => {
-    const aboutFilePath = join(import.meta.dirname, '../../playground/src/pages/about.vine.ts')
-    const aboutContent = readFileSync(aboutFilePath, 'utf-8')
-
-    const virtualCode = createVueVineVirtualCode(
-      ts,
-      aboutFilePath,
-      aboutContent,
-      {},
-      getDefaultCompilerOptions(),
-      'extension',
-    )
-
-    expect(virtualCode.snapshot.getText(
-      0,
-      virtualCode.snapshot.getLength(),
-    )).toMatchSnapshot()
+  it('vine-model.vine.ts', () => {
+    testSnapshotForFile('../../e2e-test/src/fixtures/vine-model.vine.ts')
   })
 })

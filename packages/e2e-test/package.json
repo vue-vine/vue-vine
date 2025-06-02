@@ -4,16 +4,27 @@
   "private": "true",
   "scripts": {
     "test": "vitest",
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
+    "@iconify-json/carbon": "catalog:icons",
+    "@iconify-json/mdi": "catalog:icons",
     "@types/jsdom": "catalog:types",
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue": "catalog:vite-ecosystem",
+    "@vitejs/plugin-vue-jsx": "catalog:vite-ecosystem",
+    "@vue-vine/eslint-config": "workspace:*",
     "@vue/test-utils": "catalog:vue-libs",
+    "@vueuse/core": "catalog:vue-libs",
     "element-plus": "catalog:miscs",
     "jsdom": "catalog:vitest-libs",
+    "pinia": "catalog:vue-libs",
     "rolldown-vite": "catalog:vite-ecosystem",
+    "sass": "catalog:styles",
+    "unocss": "catalog:styles",
+    "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
     "vue-router": "catalog:vue-libs",
     "vue-tsc": "catalog:vue-libs",

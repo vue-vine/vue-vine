@@ -7,6 +7,10 @@ const routes = [
   { path: '/vibe', label: 'Vibe' },
   { path: '/use-defaults', label: 'Use Defaults' },
   { path: '/vine-model', label: 'Vine Model' },
+  { path: '/vine-validators', label: 'Vine Validators' },
+  { path: '/todo-list', label: 'Todo List' },
+  { path: '/mix-with-jsx', label: 'Mix With JSX' },
+  { path: '/ts-morph-complex-external', label: 'Ts Morph Complex External' },
 ]
 
 export function NavList() {
@@ -46,7 +50,7 @@ export function NavList() {
   `
 }
 
-export function E2EApp() {
+export function App() {
   return vine`
     <NavList />
     <router-view />

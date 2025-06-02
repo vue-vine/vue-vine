@@ -90,5 +90,39 @@ export function createTestEvaluator(
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'style', 'justifyContent')
     },
+
+    /**
+     * Clear localStorage
+     */
+    async clearLocalStorage(page?: Page): Promise<void> {
+      const pageCtx = page ?? e2eTestCtx.page
+      await pageCtx?.evaluate(() => {
+        localStorage.clear()
+      })
+    },
+
+    /**
+     * Get element count
+     */
+    async getElementCount(selector: string, page?: Page): Promise<number> {
+      const pageCtx = page ?? e2eTestCtx.page
+      return await pageCtx?.evaluate(selector => document.querySelectorAll(selector).length, selector) ?? 0
+    },
+
+    /**
+     * Input text
+     */
+    async inputText(selector: string, text: string, page?: Page): Promise<void> {
+      const pageCtx = page ?? e2eTestCtx.page
+      await pageCtx?.fill(selector, text)
+    },
+
+    /**
+     * Click element
+     */
+    async click(selector: string, page?: Page): Promise<void> {
+      const pageCtx = page ?? e2eTestCtx.page
+      await pageCtx?.click(selector)
+    },
   }
 }

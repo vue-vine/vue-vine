@@ -518,7 +518,7 @@ export function createVueVineVirtualCode(
   ) {
     let propTypeBase = ''
     if (type === 'macro') {
-      propTypeBase = `__VLS_VineComponentCommonProps & __VLS_${vineCompFn.fnName}_props__,`
+      propTypeBase = `__VLS_VineComponentCommonProps & __VLS_${vineCompFn.fnName}_props__`
     }
     else {
       // User provide a `props` formal parameter in the component function,
@@ -536,11 +536,11 @@ export function createVueVineVirtualCode(
     const generatedModelProps = generateModelProps(vineCompFn)
     const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedEmitProps) ? '' : ` & ${generatedEmitProps}`
     const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedModelProps) ? '' : ` & ${generatedModelProps}`
-    return [
+    return `${[
       propTypeBase,
       emitProps,
       modelProps,
-    ].filter(Boolean).join(' ')
+    ].filter(Boolean).join(' ')},`
   }
 
   function generateComponentPropsAndContext(vineCompFn: VineCompFn) {
@@ -576,7 +576,6 @@ export function createVueVineVirtualCode(
     }
     else {
       tsCodeSegments.push(generatePropsType('param', vineCompFn))
-      tsCodeSegments.push(', ')
 
       // Generate `context: { ... }` after `props: ...`
       tsCodeSegments.push(`${generateContextFormalParam(vineCompFn, {

@@ -1,5 +1,51 @@
-import { PageHeader } from '../components/page-header.vine';
-import { useTodoStore } from '../store/todoList'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export interface TodoItem {
+  id: number
+  title: string
+  state: 'todo' | 'complete' | 'cancel'
+}
+export interface TodoState {
+  todoList: TodoItem[]
+  handledList: TodoItem[]
+}
+
+export const useTodoStore = defineStore('todoList', {
+  state: (): TodoState => {
+    return {
+      todoList: JSON.parse(((localStorage.getItem('todoList')!))) as TodoItem[] || [],
+      handledList: JSON.parse(((localStorage.getItem('handledList')!))) as TodoItem[] || [],
+    }
+  },
+  actions: {
+    addTodo(todoData: TodoItem) {
+      this.todoList.push(todoData)
+      localStorage.setItem('todoList', JSON.stringify(this.todoList))
+    },
+    cancelTodo(todoData: TodoItem) {
+      todoData.state = 'cancel'
+      this.handledList.push(todoData)
+      const index = this.todoList.findIndex(v => v.id === todoData.id)
+      this.todoList.splice(index, 1)
+      localStorage.setItem('handledList', JSON.stringify(this.handledList))
+      localStorage.setItem('todoList', JSON.stringify(this.todoList))
+    },
+    completeTodo(todoData: TodoItem) {
+      this.handledList.push(todoData)
+      const index = this.todoList.findIndex(v => v.id === todoData.id)
+      this.todoList.splice(index, 1)
+      todoData.state = 'complete'
+      localStorage.setItem('handledList', JSON.stringify(this.handledList))
+      localStorage.setItem('todoList', JSON.stringify(this.todoList))
+    },
+    deleteTodo(todoData: TodoItem) {
+      const index = this.handledList.findIndex(v => v.id === todoData.id)
+      this.handledList.splice(index, 1)
+      localStorage.setItem('handledList', JSON.stringify(this.handledList))
+    },
+  },
+})
 
 function ToDoAction() {
   const state = vineProp<string>()
@@ -18,17 +64,17 @@ function ToDoAction() {
       />
       <div v-else class="flex items-center">
         <div
-          class="todo-checkbox bg-coolgray-200:50 rounded-5px bg-coolgray-400:50 cursor-pointer mr-2"
+          class="todo-complete-btn bg-coolgray-200:50 rounded-5px bg-coolgray-400:50 cursor-pointer mr-2"
           @click="emits('complete')"
         />
         <div
-          class="i-mdi-cancel text-3xl text-zinc-500 cursor-pointer ml-2"
+          class="todo-cancel-btn i-mdi-cancel text-3xl text-zinc-500 cursor-pointer ml-2"
           @click="emits('cancel')"
         />
       </div>
       <div
         v-if="showDelete"
-        class="complete i-mdi-delete-circle text-3xl text-zinc-500 ml-2"
+        class="todo-delete-btn i-mdi-delete-circle text-3xl text-zinc-500 ml-2"
         @click="emits('delete')"
       />
     </div>
@@ -95,7 +141,7 @@ function TodoAdd(){
   return vine`
     <div
       @click="addTodo"
-      class="icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer"
+      class="todo-add-btn icon flex items-center justify-center ml-5px dark:bg-coolgray-100:20 px-10px rounded-10px ml-10px hover:dark:bg-coolgray-100:10 cursor-pointer"
     >
       <div class="i-mdi-add text-3xl" />
     </div>
@@ -136,11 +182,10 @@ function TodoHeader() {
   `;
 }
 
-export default function TodoList() {
-  vineStyle.import('~/styles/todo-list.scss');
+export function TodoList() {
+  vineStyle.import('../styles/todo-list.scss');
 
   return vine`
-    <PageHeader />
     <div
       class="todo-container container xl flex items-center justify-center flex-col"
     >
@@ -149,3 +194,4 @@ export default function TodoList() {
     </div>
   `;
 }
+

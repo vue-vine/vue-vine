@@ -1,3 +1,5 @@
+import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
+
 const Foo = 123
 
 // #region Fixures for ESLint show warns and errors in VSCode

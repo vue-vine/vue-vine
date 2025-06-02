@@ -44,6 +44,7 @@ catalogs:
   docs:
     vitepress: ^1.6.3
   icons:
+    '@iconify-json/carbon': ^1.2.8
     '@iconify-json/logos': ^1.2.4
     '@iconify-json/mdi': ^1.2.3
     '@iconify-json/twemoji': ^1.2.2
@@ -74,8 +75,6 @@ catalogs:
     '@nuxt/test-utils': ^3.19.1
     nuxt: ^3.17.4
   styles:
-    '@iconify-json/carbon': ^1.2.8
-    less: ^4.3.0
     sass: ^1.89.0
     tailwindcss: ^4.1.7
     unocss: ^66.1.2
