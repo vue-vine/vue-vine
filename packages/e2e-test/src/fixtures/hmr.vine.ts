@@ -1,6 +1,5 @@
-
+import type { TestProps, WatermarkProps } from '../types';
 import { computed, ref } from 'vue'
-import type { TestProps, WatermarkProps } from './types';
 
 export function TestTsMorph(props: TestProps) {
   return vine`
@@ -35,17 +34,12 @@ export function HmrApp() {
   `)
 
   return vine`
-    <div class="name">{{name}}</div>
+    <div class="name">{{ name }}</div>
     <button class="test-btn" @click="inc">Increase count</button>
     <p class="text-for-replace">text111</p>
-    <div class="counter">Count: {{count}}</div>
+    <div class="counter">Count: {{ count }}</div>
 
     <TestTsMorph :foo="123" />
-    <TestComplexTsMorph
-      :z-index="12"
-      :content
-      :rotate="0"
-      :gap="[10, 10]"
-    />
+    <TestComplexTsMorph :z-index="12" :content :rotate="0" :gap="[10, 10]" />
   `
 }

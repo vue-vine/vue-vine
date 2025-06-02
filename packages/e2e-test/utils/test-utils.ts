@@ -1,7 +1,7 @@
 import type { InlineConfig } from 'vite'
 import type { E2EPlaywrightContext, Nil } from './types'
 import fs from 'node:fs'
-import path, { resolve } from 'node:path'
+import { resolve } from 'node:path'
 import process from 'node:process'
 import {
   chromium,
@@ -149,8 +149,8 @@ export function editFile(
   filename: string,
   replacer: (str: string) => string,
 ): void {
-  filename = path.resolve('./src', filename)
-  const content = fs.readFileSync(filename, 'utf-8')
+  const filePath = resolve(import.meta.dirname, '../src/fixtures', filename)
+  const content = fs.readFileSync(filePath, 'utf-8')
   const modified = replacer(content)
-  fs.writeFileSync(filename, modified)
+  fs.writeFileSync(filePath, modified)
 }

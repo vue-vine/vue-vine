@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import './styles/atom.css'
+import '../styles/atom.css'
 
 export function SimpleInput() {
   const value = vineModel()
@@ -51,7 +51,7 @@ export function TestVineModel() {
         <div class="show-msg simple-msg">{{ simpleMsg }}</div>
       </div>
 
-      <NamedModelInput v-model="specialMsg" />
+      <NamedModelInput v-model:special="specialMsg" />
       <div class="row-flex">
         Named Model Input:
         <div class="show-msg special-msg">{{ specialMsg }}</div>

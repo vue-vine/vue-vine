@@ -10,13 +10,13 @@
     "up": "taze major -I"
   },
   "dependencies": {
-    "@iconify-json/mdi": "catalog:icons",
     "@vueuse/core": "catalog:vue-libs",
     "pinia": "catalog:vue-libs",
     "vue-router": "catalog:vue-libs"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "catalog:styles",
+    "@iconify-json/carbon": "catalog:icons",
+    "@iconify-json/mdi": "catalog:icons",
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue-jsx": "catalog:vite-ecosystem",
     "@vue-vine/eslint-config": "workspace:*",

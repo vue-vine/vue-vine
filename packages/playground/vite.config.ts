@@ -1,4 +1,4 @@
-import type { CSSOptions, SassPreprocessorOptions } from 'vite'
+import type { CSSOptions } from 'vite'
 import path from 'node:path'
 import vueJSX from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
