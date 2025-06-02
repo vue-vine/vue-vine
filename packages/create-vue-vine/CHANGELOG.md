@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.4.3
+
+### Patch Changes
+
+- Fix virtual code generation incorrectly on props intersection type.
+
 ## 1.4.2
 
 ### Patch Changes

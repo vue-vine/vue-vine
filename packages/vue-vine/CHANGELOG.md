@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.4.3
+
+### Patch Changes
+
+- Fix virtual code generation incorrectly on props intersection type.
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.4.3
+
 ## 1.4.2
 
 ### Patch Changes
