@@ -75,7 +75,6 @@ catalogs:
     '@nuxt/test-utils': ^3.19.1
     nuxt: ^3.17.4
   styles:
-    less: ^4.3.0
     sass: ^1.89.0
     tailwindcss: ^4.1.7
     unocss: ^66.1.2

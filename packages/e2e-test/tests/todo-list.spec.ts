@@ -45,6 +45,6 @@ describe('test todo list', async () => {
         await evaluator.click('.todo-item:nth-child(2) .todo-cancel-btn')
         expect(await evaluator.getElementCount('.todo-item')).toBe(2)
       },
-    )
+    ),
   )
 })

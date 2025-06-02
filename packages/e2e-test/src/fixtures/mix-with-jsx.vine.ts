@@ -1,4 +1,4 @@
-import { JsxComp } from '../components/jsx-comp'
+import { JsxComp } from '../components/mix-with-jsx/jsx-comp'
 
 export function TestVineWithJsx() {
   return vine`

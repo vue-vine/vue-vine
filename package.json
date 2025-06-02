@@ -2,7 +2,7 @@
   "name": "vue-vine-workspace",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/vue-vine/vue-vine.git"
   },
   "scripts": {
-    "play": "pnpm --filter @vue-vine/playground run dev",
+    "dev": "pnpm --filter @vue-vine/e2e-test run dev",
     "build": "NODE_ENV=production tsdown && pnpm --filter=\"./packages/*\" --stream build",
     "build:compiler": "NODE_ENV=production pnpm tsdown -F packages/compiler",
     "build:eslint": "tsdown -F packages/eslint-parser -F packages/eslint-plugin -F packages/eslint-config",

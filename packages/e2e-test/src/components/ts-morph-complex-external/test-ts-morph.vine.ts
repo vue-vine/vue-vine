@@ -1,33 +1,31 @@
-import type { TestProps } from '../types';
+import type { TestProps } from './types';
 
 interface T1 {
   step?: number
 }
 function TestPropsDestruct({ step = 3 }: T1) {
   return vine`
-    <div class="flex flex-col">
+    <div class="test-props-destruct flex flex-col">
       <h4>Test props destruct</h4>
-      <div class="text-zinc-500">Step: {{ step }}</div>
-      <p class="text-zinc-600">should be 3</p>
+      <div class="step text-zinc-500">Step: {{ step }}</div>
     </div>
   `
 }
 
 export function TestTsMorphChild(props: TestProps) {
   return vine`
-    <div class="p-2 bg-black text-white rounded-lg my-2">
-      <h3>Title: {{ title }}</h3>
+    <div class="test-ts-morph-child p-2 bg-black text-white rounded-lg my-2">
+      <h3 class="title">Title: {{ title }}</h3>
       <h4>Variant: {{ variant }}</h4>
-      <p v-if="message">message: {{ message }}</p>
-      <p v-if="errorCode">err code: {{ errorCode }}</p>
+      <p class="message" v-if="message">message: {{ message }}</p>
+      <p class="error-code" v-if="errorCode">err code: {{ errorCode }}</p>
     </div>
   `
 }
 
-export function TestTsMorph() {
+export function TestTsMorphComplexExternal() {
   return vine`
-    <PageHeader />
-    <div>
+    <div class="test-ts-morph-complex-external">
       <h3>Test Ts Morph</h3>
       <div class="flex-row">
         <TestTsMorphChild

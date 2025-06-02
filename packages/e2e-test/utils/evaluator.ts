@@ -106,7 +106,7 @@ export function createTestEvaluator(
      */
     async getElementCount(selector: string, page?: Page): Promise<number> {
       const pageCtx = page ?? e2eTestCtx.page
-      return await pageCtx?.evaluate((selector) => document.querySelectorAll(selector).length, selector) ?? 0
+      return await pageCtx?.evaluate(selector => document.querySelectorAll(selector).length, selector) ?? 0
     },
 
     /**

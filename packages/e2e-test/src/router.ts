@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { TestTsMorphComplexExternal } from './components/ts-morph-complex-external/test-ts-morph.vine'
 import { TestExternalStyleImport } from './fixtures/external-style-import.vine'
 import { HmrApp } from './fixtures/hmr.vine'
+import { TestVineWithJsx } from './fixtures/mix-with-jsx.vine'
 import { TestDestructurePropsPage } from './fixtures/props-destructure.vine'
 import { TestStyleOrder } from './fixtures/style-order.vine'
 import { TodoList } from './fixtures/todo-list.vine'
@@ -9,8 +11,10 @@ import { TestUseDefaults } from './fixtures/use-defaults.vine'
 import { TestVibe } from './fixtures/vibe.vine'
 import { TestVineModel } from './fixtures/vine-model.vine'
 import { TestVineValidatorsPage } from './fixtures/vine-validators.vine'
+import Welcome from './welcome.vine'
 
 const routes = [
+  { path: '/', component: Welcome },
   { path: '/hmr', component: HmrApp },
   { path: '/style-order', component: TestStyleOrder },
   { path: '/external-style-import', component: TestExternalStyleImport },
@@ -21,6 +25,8 @@ const routes = [
   { path: '/vine-model', component: TestVineModel },
   { path: '/vine-validators', component: TestVineValidatorsPage },
   { path: '/todo-list', component: TodoList },
+  { path: '/mix-with-jsx', component: TestVineWithJsx },
+  { path: '/ts-morph-complex-external', component: TestTsMorphComplexExternal },
 ]
 
 const router = createRouter({
