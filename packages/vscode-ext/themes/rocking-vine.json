@@ -19,7 +19,7 @@
     "titleBar.activeForeground": "#f2e5bc",
 
     "tab.inactiveBackground": "#1C1D26",
-    "tab.activeBackground": "#21222d",
+    "tab.activeBackground": "#98998930",
     "editorGroupHeader.tabsBackground": "#1C1D26",
 
     "focusBorder": "#3e588c",
