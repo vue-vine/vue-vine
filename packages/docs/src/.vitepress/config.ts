@@ -9,7 +9,7 @@ const vineGrammar = JSON.parse(
   readFileSync(join(__dirname, './vine-ts.tmLanguage.json'), 'utf-8'),
 )
 const vineRequiredLangs = [
-  'vue-html',
+  // 'vue-html',
   'css',
   'scss',
   'sass',
@@ -141,8 +141,8 @@ export default defineConfig({
   },
   markdown: {
     theme: {
-      light: 'vitesse-light',
-      dark: 'vitesse-dark',
+      light: 'catppuccin-latte',
+      dark: 'tokyo-night',
     },
     languages: [
       ...vineRequiredLangs,
