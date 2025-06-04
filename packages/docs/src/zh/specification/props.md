@@ -43,7 +43,11 @@ function MyComponent({ foo, bar, ...rest }: {
 }) {
 
   watchEffect(() => {
-    console.log('foo: ', foo, ', bar: ', bar, ', rest: ', rest)
+    console.log(
+      'foo: ', foo,
+      ', bar: ', bar,
+      ', rest: ', rest
+    )
   })
 
   return vine`...`
@@ -59,7 +63,11 @@ import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
 
   const rest = _createPropsRestProxy(props, ['foo', 'bar'])
   watchEffect(() => {
-    console.log('foo: ', props.foo, ', bar: ', props.bar, ', rest: ', rest)
+    console.log(
+      'foo: ', props.foo,
+      ', bar: ', props.bar,
+      ', rest: ', rest
+    )
   })
 
 // ...

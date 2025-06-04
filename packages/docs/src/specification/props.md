@@ -43,7 +43,11 @@ function MyComponent({ foo, bar, ...rest }: {
 }) {
 
   watchEffect(() => {
-    console.log('foo: ', foo, ', bar: ', bar, rest: ', rest)
+    console.log(
+      'foo: ', foo,
+      ', bar: ', bar,
+      ', rest: ', rest
+    )
   })
 
   return vine`...`
@@ -59,7 +63,11 @@ import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
 
   const rest = _createPropsRestProxy(props, ['foo', 'bar'])
   watchEffect(() => {
-    console.log('foo: ', props.foo, ', bar: ', props.bar, ', rest: ', rest)
+    console.log(
+      'foo: ', props.foo,
+      ', bar: ', props.bar,
+      ', rest: ', rest
+    )
   })
 
 // ...
@@ -91,7 +99,7 @@ function MyComponent(props: SomeExternalType) {
 }
 ```
 
-If you found any bad case, [please raise an issue for us](https://github.com/vue-vine/vue-vine/issues/new).
+If you found any bad case, [please raise an issue](https://github.com/vue-vine/vue-vine/issues/new).
 
 Additionally, there's one special case for boolean props, see below:
 
@@ -101,7 +109,7 @@ In compile time, we must know whether a prop is a boolean or not, in order to de
 
 So when you're using object literal type annotation for props, you must specify any boolean props with a **literal** `boolean` annotation, it's not allowed to use other named type here even it's finally computed to a boolean.
 
-<VersionTip style="font-size: 14px" version="v0.2.0+" /> For ts-morph analysis case i.e. `props: SomeTypeName`, it'll automatically infer if some prop is boolean or not, but we can't guarantee the correctness, if you found any bad case, [please raise an issue for us too](https://github.com/vue-vine/vue-vine/issues/new).
+<VersionTip style="font-size: 14px" version="v0.2.0+" /> For ts-morph analysis case i.e. `props: SomeTypeName`, it'll automatically infer if some prop is boolean or not, but we can't guarantee the correctness, if you found any bad case, [please raise an issue](https://github.com/vue-vine/vue-vine/issues/new).
 
 ```vue-vine
 function MyComponent(props: {
