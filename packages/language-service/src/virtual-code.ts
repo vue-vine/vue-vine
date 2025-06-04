@@ -327,7 +327,7 @@ export function createVueVineVirtualCode(
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,
     id: 'root',
-    languageId: 'ts',
+    languageId: 'typescript',
     snapshot: {
       getLength() {
         return tsCode.length

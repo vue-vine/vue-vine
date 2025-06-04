@@ -40,14 +40,13 @@ connection.onInitialize(async (params) => {
     createEmmetService(),
     // Vine plugins:
     createVineDiagnosticsPlugin(),
-    createVineFoldingRangesPlugin(),
+    createVineFoldingRangesPlugin(
+      createTypeScriptServices(tsdk.typescript)
+        .find(plugin => plugin.name === 'typescript-syntactic'),
+    ),
     // HTML Service is included here ↓
     createVineTemplatePlugin(),
   ]
-  plugins.push(
-    ...createTypeScriptServices(tsdk.typescript)
-      .filter(plugin => plugin.name === 'typescript-syntactic'),
-  )
 
   const result = await server.initialize(
     params,
