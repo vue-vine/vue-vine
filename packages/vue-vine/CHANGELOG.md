@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.4.4
+
+### Patch Changes
+
+- Fix language service for vine file folding ranges.
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.4.4
+
 ## 1.4.3
 
 ### Patch Changes
