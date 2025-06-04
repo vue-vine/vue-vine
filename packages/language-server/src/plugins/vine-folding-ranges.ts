@@ -53,7 +53,9 @@ function addAllRangesForFnDecl(
   )
 }
 
-export function createVineFoldingRangesPlugin(): LanguageServicePlugin {
+export function createVineFoldingRangesPlugin(
+  tsSyntacticService?: LanguageServicePlugin,
+): LanguageServicePlugin {
   return {
     name: 'vue-vine-folding-ranges',
     capabilities: {
@@ -61,12 +63,15 @@ export function createVineFoldingRangesPlugin(): LanguageServicePlugin {
     },
     create(context) {
       return {
-        provideFoldingRanges(document) {
+        provideFoldingRanges(document, token) {
           if (document.languageId !== 'typescript' && document.languageId !== 'ts') {
             return
           }
 
-          const foldingRanges: FoldingRange[] = []
+          // Get typescript original analyzed folding ranges
+          const providedFoldingRanges = tsSyntacticService?.create(context)?.provideFoldingRanges?.(document, token)
+
+          const foldingRanges = (providedFoldingRanges ?? []) as FoldingRange[]
 
           const docUri = URI.parse(document.uri)
           const decoded = context.decodeEmbeddedDocumentUri(docUri)
