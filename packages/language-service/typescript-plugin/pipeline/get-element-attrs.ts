@@ -1,11 +1,11 @@
-import type { PipelineContext, PipelineRequestInstance } from '../types'
+import type { PipelineRequestInstance, PipelineServerContext } from '../types'
 import { isVueVineVirtualCode } from '../../src'
 import { pipelineResponse } from '../utils'
 import { getElementAttrs } from '../visitors'
 
 export function handleGetElementAttrs(
   request: PipelineRequestInstance<'getElementAttrsRequest'>,
-  context: PipelineContext,
+  context: PipelineServerContext,
 ): void {
   const { ws, language } = context
   const { fileName, tagName, requestId } = request
@@ -20,7 +20,7 @@ export function handleGetElementAttrs(
   try {
     const attrs = getElementAttrs(context, vineCode, tagName)
     ws.send(
-      pipelineResponse({
+      pipelineResponse(context, {
         type: 'getElementAttrsResponse',
         requestId,
         tagName,
@@ -32,7 +32,7 @@ export function handleGetElementAttrs(
   catch (err) {
     context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
     ws.send(
-      pipelineResponse({
+      pipelineResponse(context, {
         type: 'getElementAttrsResponse',
         requestId,
         tagName,

@@ -22,6 +22,7 @@ import { getElementAttrsFromPipeline } from '../pipeline/get-element-attrs'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
+const DIRECTIVE_LOWER_CAMEL_CASE_PREFIX = /v[A-Z]/
 
 function getVueVineVirtualCode(
   document: TextDocument,
@@ -304,6 +305,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
               for (const prop of props) {
                 const isEvent = prop.startsWith('on-') || CAMEL_CASE_EVENT_PREFIX.test(prop)
+                const isDirective = DIRECTIVE_LOWER_CAMEL_CASE_PREFIX.test(prop)
 
                 if (isEvent) {
                   const propNameBase = prop.startsWith('on-')
@@ -314,6 +316,9 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                     { name: `v-on:${propNameBase}` },
                     { name: `@${propNameBase}` },
                   )
+                }
+                else if (isDirective) {
+                  attributes.push({ name: hyphenateAttr(prop) })
                 }
                 else {
                   attributes.push(

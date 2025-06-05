@@ -1,11 +1,11 @@
-import type { PipelineContext, PipelineRequestInstance } from '../types'
+import type { PipelineRequestInstance, PipelineServerContext } from '../types'
 import { isVueVineVirtualCode } from '../../src'
 import { pipelineResponse } from '../utils'
 import { getComponentDirectives } from '../visitors'
 
 export function handleGetComponentDirectives(
   request: PipelineRequestInstance<'getComponentDirectivesRequest'>,
-  context: PipelineContext,
+  context: PipelineServerContext,
 ): void {
   const { ws, language } = context
   const { fileName, triggerAtFnName, requestId } = request
@@ -18,10 +18,9 @@ export function handleGetComponentDirectives(
   const vineCode = volarFile.generated.root
 
   try {
-    const debugLogs: string[] = []
-    const directives = getComponentDirectives(context, vineCode, triggerAtFnName, debugLogs)
+    const directives = getComponentDirectives(context, vineCode, triggerAtFnName)
     ws.send(
-      pipelineResponse({
+      pipelineResponse(context, {
         type: 'getComponentDirectivesResponse',
         requestId,
         triggerAtFnName,
@@ -33,7 +32,7 @@ export function handleGetComponentDirectives(
   catch (err) {
     context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
     ws.send(
-      pipelineResponse({
+      pipelineResponse(context, {
         type: 'getComponentDirectivesResponse',
         requestId,
         triggerAtFnName,

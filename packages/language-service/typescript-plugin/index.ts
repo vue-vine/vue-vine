@@ -8,6 +8,7 @@ import { detect } from 'detect-port'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
 import { createVueVinePipelineServer } from './pipeline'
 import { proxyLanguageServiceForVine } from './proxy-ts-lang-service'
+import { createPipelineLogger } from './utils'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownComponents = true
@@ -17,14 +18,7 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
 }
 
 const DEFAULT_PIPELINE_PORT = 15193
-const logger = {
-  info: (...msg: any[]) => {
-    console.log(`${new Date().toLocaleString()}: [INFO]`, ...msg)
-  },
-  error: (...msg: any[]) => {
-    console.error(`${new Date().toLocaleString()}: [ERROR]`, ...msg)
-  },
-}
+const logger = createPipelineLogger({ enabled: true })
 
 let pipelineServer: WebSocketServer | undefined
 
