@@ -2,6 +2,7 @@ import type { Language } from '@volar/language-server'
 import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
 import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
+import { handleGetComponentDirectives } from './pipeline/get-component-directives'
 import { handleGetComponentProps } from './pipeline/get-component-props'
 import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 
@@ -71,6 +72,9 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineContex
         break
       case 'getElementAttrsRequest':
         handleGetElementAttrs(request, context)
+        break
+      case 'getComponentDirectivesRequest':
+        handleGetComponentDirectives(request, context)
         break
     }
   }

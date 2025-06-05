@@ -16,6 +16,7 @@ import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { URI } from 'vscode-uri'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
+import { getComponentDirectivesFromPipeline } from '../pipeline/get-component-directives'
 import { getComponentPropsFromPipeline } from '../pipeline/get-component-props'
 import { getElementAttrsFromPipeline } from '../pipeline/get-element-attrs'
 
@@ -267,18 +268,18 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             provideAttributes: (tag) => {
               const tagAttrs: IAttributeData[] = []
               let tagInfo = tagInfos.get(tag)
-              const triggerAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
+              const findAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
                 (compFn) => {
                   return compFn.fnName === tag
                 },
               )
 
-              if (triggerAtVineCompFn?.propsDefinitionBy === VinePropsDefinitionBy.typeLiteral) {
+              if (findAtVineCompFn?.propsDefinitionBy === VinePropsDefinitionBy.typeLiteral) {
                 // If trigger on a tag that references a local component(in current file),
                 // we recompute tagInfo
                 tagInfo = {
-                  props: Object.keys(triggerAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
-                  events: triggerAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
+                  props: Object.keys(findAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
+                  events: findAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
                 }
                 tagInfos.set(tag, tagInfo)
               }
@@ -289,6 +290,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                 try {
                   getComponentPropsFromPipeline(tag, pipelineClientContext)
                   getElementAttrsFromPipeline(tag, pipelineClientContext)
+                  getComponentDirectivesFromPipeline(tag, triggerAtVineCompFn.fnName, pipelineClientContext)
                 }
                 catch (err) {
                   console.error(`Failed to fetch info for tag ${tag} from pipeline:`, err)

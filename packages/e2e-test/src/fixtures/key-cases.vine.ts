@@ -1,3 +1,4 @@
+import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
 const Foo = 123
@@ -38,7 +39,7 @@ export function SampleOne() {
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo() {
-  let count = ref('0x' + Foo + 'CAFE')
+  let count = ref(`0x${Foo}CAFE`)
   let type = ref('primary')
 
   return vine`
@@ -59,7 +60,21 @@ export function TestPlainTextTemplate() {
   `
 }
 
+/**
+ This needs to be configured in shims.d.ts with:
+  declare module 'vue' {
+    interface HTMLAttributes {
+      border?: string
+    }
+  }
+ */
 export function TestUnoCssAttributeMode() {
+  const vBounce: Directive<HTMLElement> = {
+    mounted(el) {
+      el.classList.add('bounce')
+    }
+  }
+
   return vine`
     <div border="1px solid red">
       <span>foo</span>

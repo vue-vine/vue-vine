@@ -71,7 +71,11 @@ export function getComponentProps(
   compName: string,
 ): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
-  const program = tsPluginInfo.languageService.getProgram()!
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
   const tsSourceFile = program.getSourceFile(vineCode.fileName)
   if (!tsSourceFile) {
     return []
@@ -115,9 +119,13 @@ export function getElementAttrs(
   tagName: string,
 ): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
-  const program = tsPluginInfo.languageService.getProgram()!
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
   const checker = program.getTypeChecker()
-  const elements = getVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
+  const elements = getGlobalVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
   if (!elements) {
     return []
   }
@@ -132,9 +140,61 @@ export function getElementAttrs(
   return result
 }
 
+export function getComponentDirectives(
+  context: PipelineContext,
+  vineCode: VueVineVirtualCode,
+  triggerAtFnName: string,
+  debugLogs: string[],
+): string[] {
+  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
+  const checker = program.getTypeChecker()
+  const directives = getGlobalVariableType(ts, tsPluginInfo.languageService, vineCode, '__VLS_directives')
+  if (!directives) {
+    debugLogs.push('No __VLS_directives found')
+    return []
+  }
+
+  // Find vine component function that is referenced by the triggerAtFnName
+  const tsSourceFile = program.getSourceFile(vineCode.fileName)
+  if (!tsSourceFile) {
+    debugLogs.push('No tsSourceFile found')
+    return []
+  }
+
+  const triggerAtFnNode = searchFunctionDeclInRoot(ts, tsSourceFile, triggerAtFnName)
+  if (!triggerAtFnNode) {
+    debugLogs.push('No triggerAtFnNode found')
+    return []
+  }
+
+  // Search `__VLS_directives` in the triggerAtFnNode,
+  // this variable is generated for every vine component function
+  const vlsDirectivesNode = searchVarDeclInCompFn(ts, triggerAtFnNode, '__VLS_directives')
+  if (!vlsDirectivesNode) {
+    debugLogs.push('No vlsDirectivesNode found')
+    return []
+  }
+
+  const directivesType = checker.getTypeAtLocation(vlsDirectivesNode)
+  debugLogs.push('directivesType', checker.typeToString(directivesType))
+
+  const directivesNames = directivesType?.getProperties()
+    .map(({ name }) => name)
+    .filter(name => name.startsWith('v') && name.length >= 2 && name[1] === name[1].toUpperCase())
+    .filter(name => !['vBind', 'vIf', 'vOn', 'VOnce', 'vShow', 'VSlot'].includes(name)) ?? []
+
+  tsPluginLogger.info('Pipeline: Got component directives', `[ ${directivesNames.join(', ')} ]`)
+  return directivesNames
+}
+
 function searchVariableDeclarationNode(
   ts: typeof import('typescript'),
-  sourceFile: ts.SourceFile,
+  sourceFile: ts.Node,
   name: string,
 ): ts.Node | undefined {
   let result: ts.Node | undefined
@@ -155,7 +215,7 @@ function searchVariableDeclarationNode(
   }
 }
 
-export function getVariableType(
+export function getGlobalVariableType(
   ts: typeof import('typescript'),
   languageService: ts.LanguageService,
   vueCode: VueVineVirtualCode,
@@ -164,7 +224,10 @@ export function getVariableType(
   node: ts.Node
   type: ts.Type
 } | undefined {
-  const program = languageService.getProgram()!
+  const program = languageService.getProgram()
+  if (!program) {
+    return
+  }
 
   const tsSourceFile = program.getSourceFile(vueCode.fileName)
   if (tsSourceFile) {
