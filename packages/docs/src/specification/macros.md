@@ -6,6 +6,14 @@ This solution's basic idea is to use specific functions in the source code to ma
 
 The type definition of these macros can be found in [our Github repo](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts).
 
+::: warning Notice
+
+All macros must be written in `.vine.ts` files! The compiler cannot recognize them.
+
+You may try to move them into a composition function, but it's not allowed to move these special compile macros to other `.ts` files.
+
+:::
+
 ## `vineValidators` <VersionTip version="v0.4.0+" />
 
 When using macros to define props, `vineProp` provides users with the ability to define validators.

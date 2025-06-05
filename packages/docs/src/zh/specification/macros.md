@@ -6,6 +6,14 @@
 
 这些宏的类型定义可以在 [我们的 Github 仓库](https://github.com/vue-vine/vue-vine/blob/main/packages/vue-vine/types/macros.d.ts) 中找到。
 
+::: warning 注意
+
+Vine 当中的所有宏都必须写在 `.vine.ts` 文件当中！编译器无法识别到它们。
+
+你可能会试图将其封装进某个组合函数中，但实际上不可以将这些特殊的编译宏移动到其他 `.ts` 文件中。
+
+:::
+
 ## `vineValidators` <VersionTip version="v0.4.0+" /> {#vinevalidators}
 
 当使用宏定义 props 时，`vineProp` 提供了定义校验器的能力。
