@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.4.5
+
+### Patch Changes
+
+- Feature support for referencing directives in language service.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.5
+  - @vue-vine/language-service@1.4.5
+
 ## 1.4.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.4.5
+
+### Patch Changes
+
+- Feature support for referencing directives in language service.
+
 ## 1.4.4
 
 ### Patch Changes

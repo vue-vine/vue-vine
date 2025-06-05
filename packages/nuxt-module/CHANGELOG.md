@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.4.5
+
+### Patch Changes
+
+- Feature support for referencing directives in language service.
+- Updated dependencies
+  - vue-vine@1.4.5
+
 ## 1.4.4
 
 ### Patch Changes
