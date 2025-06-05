@@ -1,6 +1,6 @@
 import type * as ts from 'typescript'
 import type { VueVineVirtualCode } from '../src'
-import type { PipelineContext } from './types'
+import type { PipelineServerContext } from './types'
 
 export function searchFunctionDeclInRoot(
   ts: typeof import('typescript'),
@@ -66,12 +66,16 @@ export function searchVarDeclInCompFn(
  * we only need to return all props names here.
  */
 export function getComponentProps(
-  context: PipelineContext,
+  context: PipelineServerContext,
   vineCode: VueVineVirtualCode,
   compName: string,
 ): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
-  const program = tsPluginInfo.languageService.getProgram()!
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
   const tsSourceFile = program.getSourceFile(vineCode.fileName)
   if (!tsSourceFile) {
     return []
@@ -110,14 +114,18 @@ export function getComponentProps(
 }
 
 export function getElementAttrs(
-  context: PipelineContext,
+  context: PipelineServerContext,
   vineCode: VueVineVirtualCode,
   tagName: string,
 ): string[] {
   const { ts, tsPluginInfo, tsPluginLogger } = context
-  const program = tsPluginInfo.languageService.getProgram()!
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
   const checker = program.getTypeChecker()
-  const elements = getVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
+  const elements = getGlobalVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
   if (!elements) {
     return []
   }
@@ -132,9 +140,54 @@ export function getElementAttrs(
   return result
 }
 
+export function getComponentDirectives(
+  context: PipelineServerContext,
+  vineCode: VueVineVirtualCode,
+  triggerAtFnName: string,
+): string[] {
+  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const program = tsPluginInfo.languageService.getProgram()
+  if (!program) {
+    return []
+  }
+
+  // Find vine component function that is referenced by the triggerAtFnName
+  const tsSourceFile = program.getSourceFile(vineCode.fileName)
+  if (!tsSourceFile) {
+    tsPluginLogger.info('No tsSourceFile found')
+    return []
+  }
+
+  const triggerAtFnNode = searchFunctionDeclInRoot(ts, tsSourceFile, triggerAtFnName)
+  if (!triggerAtFnNode) {
+    tsPluginLogger.info('No triggerAtFnNode found')
+    return []
+  }
+
+  // Search `__VINE_VLS_directives` in the triggerAtFnNode,
+  // this variable is generated for every vine component function
+  const vlsDirectivesNode = searchVarDeclInCompFn(ts, triggerAtFnNode, '__VINE_VLS_directives')
+  if (!vlsDirectivesNode) {
+    tsPluginLogger.info('No vlsDirectivesNode found')
+    return []
+  }
+
+  const checker = program.getTypeChecker()
+  const directivesType = checker.getTypeAtLocation(vlsDirectivesNode)
+  tsPluginLogger.info('directivesType', checker.typeToString(directivesType))
+
+  const directivesNames = directivesType?.getProperties()
+    .map(({ name }) => name)
+    .filter(name => name.startsWith('v') && name.length >= 2 && name[1] === name[1].toUpperCase())
+    .filter(name => !['vBind', 'vIf', 'vOn', 'VOnce', 'vShow', 'VSlot'].includes(name)) ?? []
+
+  tsPluginLogger.info('Pipeline: Got component directives', `[ ${directivesNames.join(', ')} ]`)
+  return directivesNames
+}
+
 function searchVariableDeclarationNode(
   ts: typeof import('typescript'),
-  sourceFile: ts.SourceFile,
+  sourceFile: ts.Node,
   name: string,
 ): ts.Node | undefined {
   let result: ts.Node | undefined
@@ -155,7 +208,7 @@ function searchVariableDeclarationNode(
   }
 }
 
-export function getVariableType(
+export function getGlobalVariableType(
   ts: typeof import('typescript'),
   languageService: ts.LanguageService,
   vueCode: VueVineVirtualCode,
@@ -164,7 +217,10 @@ export function getVariableType(
   node: ts.Node
   type: ts.Type
 } | undefined {
-  const program = languageService.getProgram()!
+  const program = languageService.getProgram()
+  if (!program) {
+    return
+  }
 
   const tsSourceFile = program.getSourceFile(vueCode.fileName)
   if (tsSourceFile) {

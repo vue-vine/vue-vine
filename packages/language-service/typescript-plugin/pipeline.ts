@@ -1,7 +1,8 @@
 import type { Language } from '@volar/language-server'
-import type { PipelineContext, PipelineLogger, PipelineRequest, TsPluginInfo, TypeScriptSdk } from './types'
+import type { PipelineLogger, PipelineRequest, PipelineServerContext, TsPluginInfo, TypeScriptSdk } from './types'
 import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
+import { handleGetComponentDirectives } from './pipeline/get-component-directives'
 import { handleGetComponentProps } from './pipeline/get-component-props'
 import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 
@@ -63,7 +64,7 @@ export function createVueVinePipelineServer(
   return wss
 }
 
-function handlePipelineRequest(request: PipelineRequest, context: PipelineContext): void {
+function handlePipelineRequest(request: PipelineRequest, context: PipelineServerContext): void {
   try {
     switch (request.type) {
       case 'getComponentPropsRequest':
@@ -71,6 +72,9 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineContex
         break
       case 'getElementAttrsRequest':
         handleGetElementAttrs(request, context)
+        break
+      case 'getComponentDirectivesRequest':
+        handleGetComponentDirectives(request, context)
         break
     }
   }

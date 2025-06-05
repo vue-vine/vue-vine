@@ -159,6 +159,8 @@ ${notPropsBindings.map(([name]) => {
 });
 const __VLS_localComponents = __VLS_ctx;
 type __VLS_LocalComponents = __OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __OmitAny<typeof __VLS_ctx>;
+let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
   ...__VLS_localComponents as __VLS_LocalComponents,

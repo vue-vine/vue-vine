@@ -25,8 +25,8 @@ function testSnapshotForFile(relativePath: string) {
 }
 
 describe('verify Volar virtual code snapshots', () => {
-  it('bad-cases.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/bad-cases.vine.ts')
+  it('key-cases.vine.ts', () => {
+    testSnapshotForFile('../../e2e-test/src/fixtures/key-cases.vine.ts')
   })
   it('vine-model.vine.ts', () => {
     testSnapshotForFile('../../e2e-test/src/fixtures/vine-model.vine.ts')

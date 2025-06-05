@@ -15,14 +15,19 @@ type _pipelineResp<T extends { type: string }> = {
 export type PipelineRequest =
   | (_pipelineReq<{ type: 'getComponentPropsRequest', fileName: string, componentName: string }>)
   | (_pipelineReq<{ type: 'getElementAttrsRequest', fileName: string, tagName: string }>)
+  | (_pipelineReq<{ type: 'getComponentDirectivesRequest', fileName: string, triggerAtFnName: string }>)
 export type PipelineRequestInstance<T extends PipelineRequest['type']> = PipelineRequest & { type: T }
 
 export type PipelineResponse =
   | (_pipelineResp<{ type: 'getComponentPropsResponse', componentName: string, fileName: string, props: string[] }>)
   | (_pipelineResp<{ type: 'getElementAttrsResponse', fileName: string, tagName: string, attrs: string[] }>)
-export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & { type: T }
+  | (_pipelineResp<{ type: 'getComponentDirectivesResponse', fileName: string, triggerAtFnName: string, directives: string[] }>)
+export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & {
+  type: T
+  debugLogs: string[]
+}
 
-export interface PipelineContext {
+export interface PipelineServerContext {
   ts: TypeScriptSdk
   language: Language
   tsPluginInfo: TsPluginInfo
@@ -31,6 +36,8 @@ export interface PipelineContext {
 }
 
 export interface PipelineLogger {
+  enabled: boolean
+  messages: string[]
   info: (...msg: any[]) => void
   error: (...msg: any[]) => void
 }
