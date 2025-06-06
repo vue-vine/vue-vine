@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.4.6
+
+### Patch Changes
+
+- Revert using transformWithOxc to avoid breaking in legacy Vite.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.6
+  - @vue-vine/language-service@1.4.6
+
 ## 1.4.5
 
 ### Patch Changes

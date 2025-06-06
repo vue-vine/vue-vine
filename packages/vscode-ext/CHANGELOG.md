@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.4.6
+
+### Patch Changes
+
+- Revert using transformWithOxc to avoid breaking in legacy Vite.
+
 ## 1.4.5
 
 ### Patch Changes
