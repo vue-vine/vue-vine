@@ -56,64 +56,6 @@ pnpm i -D vue-vine-tsc
 }
 ```
 
-## 项目模板 {#project-starter-template}
-
-你可以渐进式地将 Vue Vine 集成到现有的 Vue 3 项目中，但如果你想要启动一个新项目，放弃 SFC，只使用 Vue Vine，我们也为你提供了一个创建项目模板的脚手架工具。
-
-**可选：** 运行以下命令全局安装 CLI：
-
-```bash
-pnpm i -g create-vue-vine
-```
-
-接着，运行以下命令来创建一个新项目：
-
-```bash
-# 你没有全局安装 CLI 的话
-pnpx create-vue-vine my-vine-project
-
-# 你已经全局安装 CLI 的话
-create-vue-vine my-vine-project
-```
-
-你可能会看到以下输出：
-
-```text
-> pnpx create-vue-vine my-vine-project
-
-...
-
-┌  Vue Vine - Another style of writing Vue components
-│
-◇  Use Vue Router?
-│  Yes
-│
-◇  Use Pinia as state management?
-│  Yes
-│
-◇  Using atomized css?
-│  - UnoCSS
-│  - Tailwind
-│  - No
-│
-◇  Install all dependencies for the project now?
-│  Yes
-│
-◇  Project created at: /path/to/my-vine-project
-│
-
-...
-
-◇  Dependencies installed!
-│
-└  You're all set! Now run:
-
-   cd my-vine-project
-   pnpm dev
-
-   Happy hacking!
-```
-
 ## Slidev 插件 <VersionTip version="v1.4.0+" /> {#slidev-plugin}
 
 Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组件到你的 Slidev 项目中。
@@ -134,7 +76,7 @@ export default defineAppSetup(({ app }) => {
 })
 ```
 
-## 可能遇到的问题 {#common-issues}
+## 常见问题 {#common-questions}
 
 ### 与 UnoCSS Attribute Mode 冲突 {#conflict-with-unocss-attribute-mode}
 

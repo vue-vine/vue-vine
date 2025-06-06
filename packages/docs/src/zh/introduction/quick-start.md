@@ -36,6 +36,70 @@ export default defineConfig({
 })
 ```
 
+## 通过项目脚手架创建项目 {#create-project-with-cli}
+
+你可以渐进式地将 Vue Vine 集成到现有的 Vue 3 项目中，但如果你想要启动一个新项目，放弃 SFC，只想使用 Vue Vine，我们也为你提供了一个创建项目模板的脚手架工具。
+
+运行以下命令来创建一个新项目：
+
+```bash
+# 你没有全局安装 CLI 的话
+pnpx create-vue-vine my-vine-project
+
+# 你已经全局安装 CLI 的话
+create-vue-vine my-vine-project
+```
+
+<details>
+<summary class="text-sm text-gray-500 cursor-pointer"><b>或者：</b>也可以选择全局安装 CLI</summary>
+
+```bash
+pnpm i -g create-vue-vine
+```
+
+</details>
+
+<details>
+<summary class="text-sm text-gray-500 cursor-pointer">点击这里预览运行 CLI 后的后续操作</summary>
+
+```text
+> pnpx create-vue-vine my-vine-project
+
+...
+
+┌  Vue Vine - Another style of writing Vue components
+│
+◇  Use Vue Router?
+│  Yes
+│
+◇  Use Pinia as state management?
+│  Yes
+│
+◇  Using atomized css?
+│  - UnoCSS
+│  - Tailwind
+│  - No
+│
+◇  Install all dependencies for the project now?
+│  Yes
+│
+◇  Project created at: /path/to/my-vine-project
+│
+
+...
+
+◇  Dependencies installed!
+│
+└  You're all set! Now run:
+
+   cd my-vine-project
+   pnpm dev
+
+   Happy hacking!
+```
+
+</details>
+
 ## 安装 VSCode 扩展 {#install-vscode-extension}
 
 在市场中搜索 "Vue Vine" 并安装。

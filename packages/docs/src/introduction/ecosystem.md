@@ -56,64 +56,6 @@ Then, you may replace the `vue-tsc -b && ...` command in `"build"` script of `pa
 }
 ```
 
-## Project starter template
-
-You're able to progressively integrate Vue Vine in existing Vue 3 projects, but if you want to start a new project, abandon SFC and just using Vue Vine, we provide a project starter template for you.
-
-**(Optional)** Install the CLI globally:
-
-```bash
-pnpm i -g create-vue-vine
-```
-
-Then, run the following command to create a new project:
-
-```bash
-# If you didn't install the CLI globally
-pnpx create-vue-vine my-vine-project
-
-# If you installed the CLI globally
-create-vue-vine my-vine-project
-```
-
-You may seen the following output:
-
-```text
-> pnpx create-vue-vine my-vine-project
-
-...
-
-┌  Vue Vine - Another style of writing Vue components
-│
-◇  Use Vue Router?
-│  Yes
-│
-◇  Use Pinia as state management?
-│  Yes
-│
-◇  Using atomized css?
-│  - UnoCSS
-│  - Tailwind
-│  - No
-│
-◇  Install all dependencies for the project now?
-│  Yes
-│
-◇  Project created at: /path/to/my-vine-project
-│
-
-...
-
-◇  Dependencies installed!
-│
-└  You're all set! Now run:
-
-   cd my-vine-project
-   pnpm dev
-
-   Happy hacking!
-```
-
 ## Slidev plugin <VersionTip version="v1.4.0+" />
 
 Vine also provides a plugin for Slidev, you can use it to register Vine components in your Slidev project.
@@ -134,9 +76,9 @@ export default defineAppSetup(({ app }) => {
 })
 ```
 
-## Common issues
+## Common questions
 
-### Conflict with UnoCSS Attribute Mode
+### UnoCSS Attribute Mode
 
 Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode. To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
 
