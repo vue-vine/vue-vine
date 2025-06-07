@@ -141,7 +141,7 @@ export default defineConfig({
   },
   markdown: {
     theme: {
-      light: 'catppuccin-latte',
+      light: 'min-light',
       dark: 'tokyo-night',
     },
     languages: [

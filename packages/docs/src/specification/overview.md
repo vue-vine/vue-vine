@@ -8,7 +8,7 @@ We'll talk about all the basic concepts of Vue Vine in this chapter.
 
 ## File extension and semantics
 
-Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, any valid grammar in TypeScript is also valid for Vine.
+Vine uses `.vine.ts` as the file extension, so you know that you're actually writing TypeScript, unless otherwise specified in this document, any valid grammar in TypeScript is also valid for Vine.
 
 ## Vine component function
 
@@ -59,6 +59,8 @@ function InvalidComponent() {
 ```
 
 It's worth mentioning that in Vue's template there might be JS expressions inside `v-bind` or <code v-text="'{{' + ' ... ' + '}}'" />, so theoretically there might be template strings with interpolation expressions, but in Vine, this is not allowed.
+
+We recommend you to define this string as a variable or `computed`, and then use it in the template.
 
 ```ts
 function MyComponent() {

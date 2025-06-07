@@ -8,7 +8,7 @@ outline: deep
 
 ## 文件扩展名 {#file-extension-and-semantics}
 
-Vine 使用 `.vine.ts` 作为文件扩展名，因此您知道您实际上是在编写 TypeScript，TypeScript 中的任何有效语法在 Vine 中也是合法的。
+Vine 使用 `.vine.ts` 作为文件扩展名，因此您知道您实际上是在编写 TypeScript，除非本文档内另有说明，否则 TypeScript 中的任何有效语法在 Vine 中也都是合法的。
 
 ## Vine 组件函数 {#vine-component-function}
 
@@ -25,7 +25,7 @@ function MyComponent() {
 const AnotherComponent = () => vine`<div>Hello World</div>`
 ```
 
-> 你可能会好奇这个没头没脑的 vine 是从哪里导入的，它实际上只是通过函数签名来声明，完全没有实现，通过类型定义文件（`macros.d.ts`）写入在 global 环境上，使得在编译时可用。
+> 你可能会好奇这个没头没脑的 vine 是从哪里导入的，它实际上只是一个函数签名声明，完全没有实现，是通过类型定义文件（`macros.d.ts`）写入在 global 环境上，使得在编译时可用。
 
 Vine 编译器将在底层将这种函数转换为 Vue 组件对象。
 
@@ -59,6 +59,8 @@ function InvalidComponent() {
 ```
 
 值得注意的是，在 Vue 模板中或许会有 `v-bind` 或 <code v-text="'{{' + ' ... ' + '}}'" /> 中包含 JS 表达式的情况，因此理论上也存在有插值表达式的可能性，但 Vine 中不允许这样做。
+
+推荐的做法是将这个字符串定义为一个变量或是 `computed`，再在模板中使用它。
 
 ```ts
 function MyComponent() {
