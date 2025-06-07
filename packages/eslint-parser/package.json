@@ -30,7 +30,6 @@
   ],
   "scripts": {
     "test": "vitest",
-    "test:dev": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

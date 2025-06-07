@@ -2,7 +2,9 @@ type PropTypeMapper<T extends 't1' | 't2'> = T extends 't1' ? string : boolean
 
 function mayGetBoolean() {
   const randomNumber = Math.random()
-  if (randomNumber > 0.5) {
+  // Actually it always returns true,
+  // we just build a function may returns boolean or string
+  if (randomNumber > 0) {
     return true
   }
   return 'false'

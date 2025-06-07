@@ -1,6 +1,6 @@
 import type { TSESTree } from '@typescript-eslint/types'
 import type { RuleModule } from '../../utils'
-import { createEslintRule, notVineCompFn } from '../../utils'
+import { checkPascalCase, createEslintRule, notVineCompFn } from '../../utils'
 
 const RULE_NAME = 'format-vine-component-name' as const
 
@@ -126,10 +126,6 @@ const HTML_BUILT_IN_ELEMENTS: string[] = [
   'video',
   'wbr',
 ]
-
-function checkPascalCase(fnName: string) {
-  return /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/.test(fnName)
-}
 
 const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
   name: RULE_NAME,

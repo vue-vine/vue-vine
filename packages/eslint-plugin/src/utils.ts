@@ -245,3 +245,7 @@ export function isCustomComponent(node: VElement, ignoreElementNamespaces = fals
     || (isMathElementNode(node) && !isMathName)
   )
 }
+
+export function checkPascalCase(fnName: string): boolean {
+  return /^[A-Z][a-zA-Z0-9]*$/.test(fnName)
+}
