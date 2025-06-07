@@ -32,7 +32,7 @@
 
 ## 尝试示例
 
-使用交互式命令(`create-vue-vine`)创建您的第一个项目。看这里: [项目启动模板](https://vue-vine.dev/zh/introduction/ecosystem.html#project-starter-template)
+使用交互式命令(`create-vue-vine`)创建您的第一个项目。看这里: [项目启动模板](https://vue-vine.dev/zh/introduction/quick-start.html#create-project-with-cli)
 
 或者你可以在线上尝试: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
 
