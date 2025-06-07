@@ -11,21 +11,21 @@ function mayGetBoolean() {
 }
 
 function ChildComp() {
-  const p1 = vineProp<string>()
-  const p2 = vineProp.withDefault('bar')
-  const p3 = vineProp<boolean>()
-  const p4 = vineProp.withDefault(false)
-  const p5 = vineProp<PropTypeMapper<'t2'>>()
-  const p6 = vineProp.withDefault(mayGetBoolean())
+  const prop1 = vineProp<string>()
+  const prop2 = vineProp.withDefault('bar')
+  const prop3 = vineProp<boolean>()
+  const prop4 = vineProp.withDefault(false)
+  const prop5 = vineProp<PropTypeMapper<'t2'>>()
+  const prop6 = vineProp.withDefault(mayGetBoolean())
 
   return vine`
     <div class="child-comp col-flex gap-2">
-      <p>p1: {{ p1 }}</p>
-      <p>p2: {{ p2 }}</p>
-      <p>p3: {{ p3 }}</p>
-      <p>p4: {{ p4 }}</p>
-      <p>p5: {{ p5 }}</p>
-      <p>typeof p6: {{ typeof p6 }}</p>
+      <p>prop1: {{ prop1 }}</p>
+      <p>prop2: {{ prop2 }}</p>
+      <p>prop3: {{ prop3 }}</p>
+      <p>prop4: {{ prop4 }}</p>
+      <p>prop5: {{ prop5 }}</p>
+      <p>typeof prop6: {{ typeof prop6 }}</p>
     </div>
   `
 }
@@ -34,7 +34,7 @@ export function TestVinePropPage() {
 
   return vine`
     <div class="test-vine-prop-page col-flex">
-      <ChildComp p1="hello" p2="world" :p3="false" :p4="true" p5 />
+      <ChildComp prop1="hello" prop2="world" :prop3="false" :prop4="true" prop5 />
     </div>
   `
 }

@@ -87,6 +87,7 @@ export function TestUnoCssAttributeMode() {
 
 // #region Fixtures for testing component reference & props check in VSCode
 function TestCompOne() {
+  /** @description zee is a string! */
   const zee = vineProp<string>()
   const foo = vineProp.withDefault(0)
 
@@ -129,6 +130,7 @@ function TargetComp(props: {
   return vine`
     <div @click="count++">Hello I'm target</div>
     <p>count: {{ count }}</p>
+    <TestCompOne zee="123" :foo="456" />
   `
 }
 

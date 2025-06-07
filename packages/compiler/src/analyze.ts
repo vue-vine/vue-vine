@@ -531,7 +531,7 @@ const analyzeVineProps: AnalyzeRunner = (
     // No formal parameters, analyze props by macro calls
     const allVinePropMacroCalls = getAllVinePropMacroCall(fnItselfNode)
 
-    allVinePropMacroCalls.forEach(([macroCall, propVarIdentifier]) => {
+    allVinePropMacroCalls.forEach(({ macroCall, identifier: propVarIdentifier, jsDocComments }) => {
       // Collect prop's information
       const propName = propVarIdentifier.name
       const macroCalleeName = getVineMacroCalleeName(macroCall) as VINE_MACRO_NAMES
@@ -541,6 +541,7 @@ const analyzeVineProps: AnalyzeRunner = (
         isMaybeBool: false,
         typeAnnotationRaw: 'any',
         macroDeclaredIdentifier: propVarIdentifier,
+        jsDocComments: jsDocComments ?? [],
       }
       vineCompFnCtx.props[propName] = propMeta
       vineCompFnCtx.bindings[propName] = VineBindingTypes.SETUP_REF
@@ -1220,19 +1221,23 @@ function buildVineCompFnCtx(
     getPropsTypeRecordStr({
       joinStr = ', ',
       isNeedLinkedCodeTag = false,
+      isNeedJsDoc = false,
     } = {}): string {
       const fields = Object
         .entries(this.props)
         .map(
-          ([propName, propMeta]) => `${
-            (
+          ([propName, propMeta]) => {
+            const leadingJsDoc = isNeedJsDoc
+              ? `${propMeta.jsDocComments?.map(comment => `/*${comment.value}*/`).join('\n')}\n`
+              : ''
+            const propNameKey = (
               isNeedLinkedCodeTag
                 ? `${createLinkedCodeTag('left', propName.length)}${propName}`
                 : propName
-            ) + (
-              propMeta.isRequired ? '' : '?'
-            )
-          }: ${propMeta.typeAnnotationRaw ?? 'any'}`,
+            ) + (propMeta.isRequired ? '' : '?')
+
+            return `${leadingJsDoc}${propNameKey}: ${propMeta.typeAnnotationRaw ?? 'any'}`
+          },
         )
         .filter(Boolean)
         .join(joinStr)

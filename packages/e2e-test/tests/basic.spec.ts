@@ -172,12 +172,12 @@ describe('test basic functionality', async () => {
     '/vine-prop',
     browserCtx,
     async () => {
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(1)')).toBe('p1: hello')
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(2)')).toBe('p2: world')
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(3)')).toBe('p3: false')
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(4)')).toBe('p4: true')
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(5)')).toBe('p5: true')
-      expect(await evaluator.getTextContent('.child-comp p:nth-child(6)')).toBe('typeof p6: boolean')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(1)')).toBe('prop1: hello')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(2)')).toBe('prop2: world')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(3)')).toBe('prop3: false')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(4)')).toBe('prop4: true')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(5)')).toBe('prop5: true')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(6)')).toBe('typeof prop6: boolean')
     },
   ))
 

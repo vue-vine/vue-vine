@@ -197,8 +197,21 @@ export function createVueVineVirtualCode(
     if (isVineCompHasFnBlock) {
       // Generate until the first function body statement
       const firstStmt = (vineCompFn.fnItselfNode?.body as BlockStatement).body[0]
-      generateScriptUntil(firstStmt.start!)
+      let blockStartPos = firstStmt.start!
+
+      // If the first statement has JSDoc,
+      // the start position should be the start of the JSDoc
+      if (firstStmt.leadingComments?.length) {
+        const jsDocStartPos = firstStmt.leadingComments[0].start!
+        if (jsDocStartPos < blockStartPos) {
+          blockStartPos = jsDocStartPos
+        }
+      }
+
+      generateScriptUntil(blockStartPos)
       generatePrefixVirtualCode(vineCompFn)
+
+      // Generate function body statements
       generateVirtualCodeByAstPositionSorted(vineCompFn, {
         excludeBindings,
       })
@@ -548,6 +561,7 @@ export function createVueVineVirtualCode(
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
         joinStr: ',\n',
+        isNeedJsDoc: true,
       })}\n`)
     }
     if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {

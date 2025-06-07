@@ -381,6 +381,7 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "isFromMacroDefine": true,
     "isMaybeBool": true,
     "isRequired": false,
+    "jsDocComments": [],
     "macroDeclaredIdentifier": Node {
       "end": 74,
       "loc": SourceLocation {
@@ -408,6 +409,7 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "isFromMacroDefine": true,
     "isMaybeBool": false,
     "isRequired": true,
+    "jsDocComments": [],
     "macroDeclaredIdentifier": Node {
       "end": 36,
       "loc": SourceLocation {
@@ -459,6 +461,7 @@ exports[`test Vine compiler analyze > analyze vine component props by macro call
     "isFromMacroDefine": true,
     "isMaybeBool": false,
     "isRequired": false,
+    "jsDocComments": [],
     "macroDeclaredIdentifier": Node {
       "end": 119,
       "loc": SourceLocation {

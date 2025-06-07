@@ -19,6 +19,7 @@ import type {
   VINE_MACRO_NAMES,
   VineBabelRoot,
   VineFnPickedInfo,
+  VinePropMacroInfo,
 } from '../types'
 import {
   isArrowFunctionExpression,
@@ -338,13 +339,15 @@ export function getTSTypeLiteralPropertySignatureName(tsTypeLit: TSPropertySigna
       : ''
 }
 
-export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes): [CallExpression, Identifier][] {
-  const allVinePropMacroCalls: [CallExpression, Identifier][] = [] // [macro Call, defined prop name]
+export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes): VinePropMacroInfo[] {
+  const allVinePropMacroCalls: VinePropMacroInfo[] = [] // [macro Call, defined prop name]
   traverse(fnItselfNode.body, {
     enter(node, parent) {
       if (!isVineMacroOf('vineProp')(node)) {
         return
       }
+
+      const statement = parent.find(ancestor => isVariableDeclaration(ancestor.node))
       const propVarDeclarator = parent.find(ancestor => (
         isVariableDeclarator(ancestor.node)
         && isIdentifier(ancestor.node.id)
@@ -353,9 +356,18 @@ export function getAllVinePropMacroCall(fnItselfNode: BabelFunctionNodeTypes): [
         return
       }
       const propVarIdentifier = (propVarDeclarator.node as VariableDeclarator).id as Identifier
-      allVinePropMacroCalls.push([node, propVarIdentifier])
+      allVinePropMacroCalls.push({
+        macroCall: node,
+        identifier: propVarIdentifier,
+        jsDocComments: statement
+          ?.node
+          .leadingComments
+          ?.filter(comment => comment.type === 'CommentBlock')
+          ?? [],
+      })
     },
   })
+
   return allVinePropMacroCalls
 }
 
