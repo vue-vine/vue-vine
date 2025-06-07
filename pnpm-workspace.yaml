@@ -148,7 +148,6 @@ catalogs:
     vue: *vue
     vue-router: ^4.5.1
     vue-tsc: *vue-lang-tools
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'

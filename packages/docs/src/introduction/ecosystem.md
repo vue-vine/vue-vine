@@ -56,9 +56,9 @@ Then, you may replace the `vue-tsc -b && ...` command in `"build"` script of `pa
 }
 ```
 
-## Slidev plugin <VersionTip version="v1.4.0+" />
+## Slidev plugin
 
-Vine also provides a plugin for Slidev, you can use it to register Vine components in your Slidev project.
+Since v1.4.0, Vine also provides a plugin for Slidev, you can use it to register Vine components in your Slidev project.
 
 To install the plugin, you should add a `setup/main.ts` file in your Slidev project for setup Vue application, find more details in [Slidev documentation](https://sli.dev/custom/config-vue).
 

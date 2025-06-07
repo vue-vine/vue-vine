@@ -30,7 +30,7 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-### 解构 `props` 形参 <VersionTip version="v0.3.0+" /> {#destructure-props-parameter}
+### 解构 `props` 形参 {#destructure-props-parameter}
 
 从 Vue Vine v0.3.0 版本开始，您可以解构 `props` 形参，并使用解构后的变量来访问 props 的属性。
 
@@ -86,7 +86,7 @@ function MyComponent({
 }
 ```
 
-### 使用更复杂的类型 <VersionTip version="v0.2.0+" /> {#using-complex-type-v0-2-0}
+### 使用更复杂的类型 {#using-complex-type}
 
 从 Vue Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
 
@@ -103,13 +103,19 @@ function MyComponent(props: SomeExternalType) {
 
 另外，在定义 props 的类型注解时，有一些特殊情况需要注意，比如布尔型的 props，见下文：
 
+::: warning 💡 注意
+
+ts-morph 在 Vue Vine 中是按需启用的，当您以 `TSTypeLiteral` 形式声明 props 类型时，ts-morph 默认不会启用。但当您的 props 类型包含泛型类型参数时，ts-morph 会自动启用。
+
+:::
+
 ### 布尔型转换机制 {#boolean-cast-mechanism}
 
 在编译时，我们必须知道一个属性是否为布尔型，以确定如何处理这样的属性传递：`<MyComponent foo />`。在 Web 标准 HTML 中，属性 `foo` 的值实际上是一个空字符串。
 
 因此，在使用对象字面量类型注解定义 props 时，你必须使用**字面量** `boolean` 注解来指定任何布尔型属性，不允许在这里使用其他在别处定义的类型，即使它最终的结果是布尔类型。
 
-<code version-tip style="font-size: 14px">v0.2.0+</code> 而对于使用 ts-morph 分析的情况，即形如 `props: SomeTypeName`，它将自动推断出某些属性是否为布尔型，但我们不能保证其完全正确，如果您发现任何异常情况，[同样请在 Github 上向我们提交此类问题](https://github.com/vue-vine/vue-vine/issues/new)。
+而对于使用 ts-morph 分析的情况，即形如 `props: SomeTypeName`，它将自动推断出某些属性是否为布尔型，但我们不能保证其完全正确，如果您发现任何异常情况，[同样请在 Github 上向我们提交此类问题](https://github.com/vue-vine/vue-vine/issues/new)。
 
 ```vue-vine
 function MyComponent(props: {

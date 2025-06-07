@@ -14,7 +14,7 @@ Vine 当中的所有宏都必须写在 `.vine.ts` 文件当中！编译器无法
 
 :::
 
-## `vineValidators` <VersionTip version="v0.4.0+" /> {#vinevalidators}
+## `vineValidators` {#vinevalidators}
 
 当使用宏定义 props 时，`vineProp` 提供了定义校验器的能力。
 

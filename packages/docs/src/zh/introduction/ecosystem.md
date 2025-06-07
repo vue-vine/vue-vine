@@ -56,9 +56,9 @@ pnpm i -D vue-vine-tsc
 }
 ```
 
-## Slidev 插件 <VersionTip version="v1.4.0+" /> {#slidev-plugin}
+## Slidev 插件 {#slidev-plugin}
 
-Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组件到你的 Slidev 项目中。
+自 v1.4.0 起，Vine 还提供了一个 Slidev 的插件，你可以使用它来注册 Vine 组件到你的 Slidev 项目中。
 
 要安装这个插件，你需要在 Slidev 项目中添加一个 `setup/main.ts` 文件来设置 Vue 应用，更多细节请参考 [Slidev 文档](https://sli.dev/custom/config-vue)。
 
@@ -78,7 +78,7 @@ export default defineAppSetup(({ app }) => {
 
 ## 常见问题 {#common-questions}
 
-### 与 UnoCSS Attribute Mode 冲突 {#conflict-with-unocss-attribute-mode}
+### 使用 UnoCSS Attribute Mode {#conflict-with-unocss-attribute-mode}
 
 因为 Vue Vine 的模板类型检查开启了 Vue language tools 的严格模式，所以本身是不允许随便在模板的 HTML 标签上使用任意名称的属性的，而这会影响到使用 UnoCSS Attribute Mode 的场景。为了解决此类问题，请你在项目 `tsconfig.json` 所包含（`include`）的范围内，添加一个 `shims.d.ts` 文件，并写入以下内容：
 

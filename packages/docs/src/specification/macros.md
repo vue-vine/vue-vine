@@ -14,7 +14,7 @@ You may try to move them into a composition function, but it's not allowed to mo
 
 :::
 
-## `vineValidators` <VersionTip version="v0.4.0+" />
+## `vineValidators`
 
 When using macros to define props, `vineProp` provides users with the ability to define validators.
 

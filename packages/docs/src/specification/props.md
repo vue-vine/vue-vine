@@ -30,7 +30,7 @@ function MyComponent(props: {
 }) { ... }
 ```
 
-### Destructure `props` parameter <VersionTip version="v0.3.0+" />
+### Destructure `props` parameter
 
 Since Vue Vine v0.3.0, you can destructure the `props` parameter, and use the destructured variables to access a single prop or a subset of props.
 
@@ -86,9 +86,9 @@ function MyComponent({
 }
 ```
 
-### Using more complex type <VersionTip version="v0.2.0+" />
+### Using more complex type
 
-Since Vue Vine v0.2.0, we introduced ts-morph to resolve props type annotation, so you're able to use any type instead of only `TSTypeLiteral`.
+Since Vue Vine v0.2.0, we introduced [ts-morph](https://github.com/dsherret/ts-morph) to resolve props type annotation, so you're able to use any type instead of only `TSTypeLiteral`.
 
 ```vue-vine
 import type { SomeExternalType } from '../path/to/somewhere'
@@ -103,13 +103,19 @@ If you found any bad case, [please raise an issue](https://github.com/vue-vine/v
 
 Additionally, there's one special case for boolean props, see below:
 
+::: warning 💡 Mention
+
+ts-morph in Vue Vine is enabled on demand, it's not enabled by default when you declared your props type in `TSTypeLiteral`. But if your props type contains generic type parameters, ts-morph will be enabled automatically.
+
+:::
+
 ### Boolean cast mechanism
 
 In compile time, we must know whether a prop is a boolean or not, in order to determine how to handle a prop passing like this: `<MyComponent foo />`. In Web standard HTML, the value of attribute `foo` is actually an empty string.
 
 So when you're using object literal type annotation for props, you must specify any boolean props with a **literal** `boolean` annotation, it's not allowed to use other named type here even it's finally computed to a boolean.
 
-<VersionTip style="font-size: 14px" version="v0.2.0+" /> For ts-morph analysis case i.e. `props: SomeTypeName`, it'll automatically infer if some prop is boolean or not, but we can't guarantee the correctness, if you found any bad case, [please raise an issue](https://github.com/vue-vine/vue-vine/issues/new).
+For ts-morph analysis case i.e. `props: SomeTypeName`, it'll automatically infer if some prop is boolean or not, but we can't guarantee the correctness, if you found any bad case, [please raise an issue](https://github.com/vue-vine/vue-vine/issues/new).
 
 ```vue-vine
 function MyComponent(props: {
