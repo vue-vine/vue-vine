@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.2
+
+### Patch Changes
+
+- Fix PascalCase check in eslint rules.
+
 ## 1.1.1
 
 ### Patch Changes

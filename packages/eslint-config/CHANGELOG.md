@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 1.1.2
+
+### Patch Changes
+
+- Fix PascalCase check in eslint rules.
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.2
+
 ## 1.1.1
 
 ### Patch Changes

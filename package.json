@@ -51,7 +51,6 @@
     "@baiwusanyu/utils-log": "catalog:utils",
     "@changesets/cli": "catalog:cli",
     "@types/node": "catalog:types",
-    "@vue-vine/eslint-parser": "workspace:*",
     "del": "catalog:cli",
     "eslint": "catalog:lint-libs",
     "lint-staged": "catalog:cli",
