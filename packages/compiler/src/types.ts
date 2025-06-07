@@ -2,6 +2,7 @@ import type { ParseResult, ParserOptions } from '@babel/parser'
 import type {
   ArrowFunctionExpression,
   CallExpression,
+  CommentBlock,
   ExportNamedDeclaration,
   File,
   FunctionDeclaration,
@@ -103,6 +104,12 @@ export interface VineStyleMeta {
   compCtx: VineCompFnCtx
 }
 
+export interface VinePropMacroInfo {
+  macroCall: CallExpression
+  identifier: Identifier
+  jsDocComments?: CommentBlock[]
+}
+
 export interface VinePropMeta {
   typeAnnotationRaw?: string
   isFromMacroDefine: boolean
@@ -116,6 +123,7 @@ export interface VinePropMeta {
   macroDeclaredIdentifier?: Identifier
   /** Whether the prop name needs to be quoted */
   nameNeedQuoted?: boolean
+  jsDocComments?: CommentBlock[]
 }
 
 export interface VineCompilerCtx {
@@ -254,6 +262,7 @@ export interface VineCompFnCtx {
   getPropsTypeRecordStr: (options?: {
     joinStr?: string
     isNeedLinkedCodeTag?: boolean
+    isNeedJsDoc?: boolean
   }) => string
 }
 

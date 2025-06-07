@@ -11,6 +11,7 @@ const Foo = 123
 // #region Fixures for ESLint show warns and errors in VSCode
 
 type __VINE_VLS_Comp_props__ = {
+
 /* __LINKED_CODE_LEFT__#3 */foo: string
 }
 function Comp(
@@ -79,6 +80,7 @@ return vine\`\` as any as VueVineComponent;
 
 }
 type __VINE_VLS_SampleOne_props__ = {
+
 /* __LINKED_CODE_LEFT__#2 */p1: string
 }
 
@@ -259,11 +261,11 @@ type __VINE_VLS_TestPlainTextTemplate_props__ = {}
 export function TestPlainTextTemplate(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestPlainTextTemplate_props__,
 context: {}) {
-  // This should not report any formatting warning
   
 type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
 
-
+// This should not report any formatting warning
+  
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
@@ -397,7 +399,9 @@ return vine\`\` as any as VueVineComponent;
 
 }
 type __VINE_VLS_TestCompOne_props__ = {
+/** @description zee is a string! */
 /* __LINKED_CODE_LEFT__#3 */zee: string,
+
 /* __LINKED_CODE_LEFT__#3 */foo?: number
 }
 
@@ -412,7 +416,8 @@ context: {}) {
   
 type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
 
-const /* __LINKED_CODE_RIGHT__#3 */zee = vineProp<string>()
+/** @description zee is a string! */
+  const /* __LINKED_CODE_RIGHT__#3 */zee = vineProp<string>()
   const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
 
   
@@ -587,6 +592,7 @@ vineExpose(__VINE_VLS_ComponentExpose__)
 // --- Start: Template virtual code
 
 const __VINE_VLS_ctx = __createVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -598,7 +604,6 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
   /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
   /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
-  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
   /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
   /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
@@ -629,6 +634,19 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrin
 ( __VINE_VLS_ctx.count );
 // @ts-ignore
 [count,];
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'TestCompOne', __VINE_VLS_LocalComponents, void, 'TestCompOne', 'TestCompOne', 'TestCompOne'>).TestCompOne;
+/** @type {[typeof __VINE_VLS_components.TestCompOne, ]} */;
+// @ts-ignore
+TestCompOne;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+zee: "123",
+foo: (456),
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+zee: "123",
+foo: (456),
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {
