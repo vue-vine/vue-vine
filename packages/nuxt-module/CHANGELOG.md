@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.4.7
+
+### Patch Changes
+
+- Support showing JSDoc for vineProp declaration.
+- Updated dependencies
+  - vue-vine@1.4.7
+
 ## 1.4.6
 
 ### Patch Changes

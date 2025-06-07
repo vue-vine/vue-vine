@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.4.7
+
+### Patch Changes
+
+- Support showing JSDoc for vineProp declaration.
+
 ## 1.4.6
 
 ### Patch Changes

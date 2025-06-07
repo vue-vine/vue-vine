@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/language-server",
   "type": "module",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "author": "Ray <i@mk1.io> (@so1ve)",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
