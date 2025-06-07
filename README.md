@@ -32,7 +32,7 @@ Another style of writing Vue components.
 
 ## Try the demo
 
-Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/ecosystem.html#project-starter-template)
+Use interactive commands(`create-vue-vine`) to create your first project. Look here: [Project starter template](https://vue-vine.dev/introduction/quick-start.html#create-project-with-cli)
 
 Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.com/vue-vine/stackblitz-playground)
 
