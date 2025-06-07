@@ -153,7 +153,7 @@ const title = vineProp<string>(value => value.startsWith('#'))
 
   由于 TypeScript 能够自动推断出默认值的类型，您不需要将类型参数传递给它。
 
-就像我们上面在 “布尔型转换机制” 部分所提到的，当您确实需要一个布尔型 prop 时，类型参数应该是一个字面量 `boolean`，并且不应该将变量作为默认值传递，而只能传递 `true` 或 `false` 字面量。尽管 TypeScript 可以从变量中推断出类型，但 Vine 编译器并没有嵌入 TypeScript 编译器来得知这个 prop 是布尔型的。
+- 同样你也应该特别注意布尔型 prop 的定义，可以参考下面给出的完整示例：
 
 ```vue-vine
 const foo = vineProp.withDefault('bar') // 默认值可以自动推导出类型

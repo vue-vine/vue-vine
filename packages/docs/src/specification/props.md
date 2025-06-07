@@ -153,7 +153,7 @@ const title = vineProp<string>(value => value.startsWith('#'))
 
   Because of the ability of TypeScript to infer the type of default value, you don't need to pass the type argument to it.
 
-As we said in the "Boolean cast mechanism" section above, you should also notice that when you do need a boolean prop, the type parameter should be a literal `boolean`, and you should not pass a variable as default value, but only `true` or `false` literals. Although TypeScript can infer from the variable, but Vine compiler doesn't embed TypeScript compiler to know this prop is boolean.
+- You should be aware of boolean props as well, see more complete examples below:
 
 ```vue-vine
 const foo = vineProp.withDefault('bar') // Default value can be automatically inferred
