@@ -1,6 +1,6 @@
 # 缘起 {#why-vine}
 
-### 痛点：来回跳转 {#the-pain-point-of-navigating}
+### 闹心的来回跳转 {#annoying-navigation-between-files}
 
 我曾经看到很多关于支持 **"一个 SFC 文件中写多个组件"** 的讨论，但说实话，SFC 是为一个文件一个组件设计的，相关的工具链也是基于这个逻辑不断迭代的。因此，基于这个设计理念，直接在一个 SFC 文件中支持多个组件并不合适。
 

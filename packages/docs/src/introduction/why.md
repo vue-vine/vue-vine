@@ -1,6 +1,6 @@
 # Why Vine
 
-## The pain point of navigating
+## Annoying navigation between files
 
 I've seen lots of discussions about supporting **"Multiple components in one SFC file"**, but to be honest, SFC was designed for one component per file, and the related toolchain is also based on this logic and continuously iterated during the development of Vue. Therefore, it is obviously unreasonable to directly support multiple components in one file based on this concept.
 
