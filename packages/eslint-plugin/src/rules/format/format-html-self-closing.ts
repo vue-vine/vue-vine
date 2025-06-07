@@ -6,9 +6,9 @@ import { createEslintRule, isCustomComponent, isHtmlElementNode, isHtmlVoidEleme
 
 const messageId = 'format-html-self-closing' as const
 const disallowSelfClosingMessageId = 'disallow-html-self-closing' as const
-export type MessageIds =
-  typeof messageId
-  | typeof disallowSelfClosingMessageId
+export type MessageIds
+  = typeof messageId
+    | typeof disallowSelfClosingMessageId
 
 interface Option {
   html: {

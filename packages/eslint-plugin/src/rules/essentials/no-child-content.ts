@@ -6,9 +6,9 @@ const RULE_NAME = 'no-child-content' as const
 const SUGGEST_REMOVE_CHILD_CONTENT = 'remove-child-content'
 const DEFAULT_CATCH_NAMES = ['html', 'text']
 
-export type MessageIds =
-  | typeof RULE_NAME
-  | typeof SUGGEST_REMOVE_CHILD_CONTENT
+export type MessageIds
+  = | typeof RULE_NAME
+    | typeof SUGGEST_REMOVE_CHILD_CONTENT
 export type Options = [{
   directives: string[]
 }]

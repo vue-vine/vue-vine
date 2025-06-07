@@ -4,8 +4,8 @@ import { createEslintRule } from '../../utils'
 
 const RULE_NAME = 'no-dupe-attributes'
 
-export type MessageIds =
-  | typeof RULE_NAME
+export type MessageIds
+  = | typeof RULE_NAME
 export type Options = []
 
 /**

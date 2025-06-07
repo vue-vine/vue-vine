@@ -5,9 +5,9 @@ import { createEslintRule } from '../../utils'
 
 const messageId = 'format-prefer-template' as const
 const inTemplateMessageId = 'format-prefer-template-inside-vine-template' as const
-export type MessageIds =
-  | typeof messageId
-  | typeof inTemplateMessageId
+export type MessageIds
+  = | typeof messageId
+    | typeof inTemplateMessageId
 export type Options = []
 type Context = RuleContext<MessageIds, Options>
 

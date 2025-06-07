@@ -93,8 +93,8 @@ function isSubset(operandsA: AndOperands, operandsB: AndOperands, sourceCode: So
 
 const RULE_NAME = 'no-dupe-else-if'
 
-export type MessageIds =
-  | typeof RULE_NAME
+export type MessageIds
+  = | typeof RULE_NAME
 export type Options = []
 
 const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({

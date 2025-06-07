@@ -26,7 +26,7 @@ export interface Evaluator {
   click: (selector: string, page?: Page) => Promise<void>
 }
 
-export type EvaluateType =
-  | 'style'
-  | 'attribute'
-  | 'textContent'
+export type EvaluateType
+  = | 'style'
+    | 'attribute'
+    | 'textContent'

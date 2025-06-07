@@ -20,9 +20,9 @@ export interface EnhancedParserObject<R = ESLintExtendedProgram> {
 /**
  * The type of ESLint (custom) parsers.
  */
-export type ParserObject<R1 = ESLintExtendedProgram, R2 = ESLintProgram> =
-  | EnhancedParserObject<R1>
-  | BasicParserObject<R2>
+export type ParserObject<R1 = ESLintExtendedProgram, R2 = ESLintProgram>
+  = | EnhancedParserObject<R1>
+    | BasicParserObject<R2>
 
 export function isParserObject<R1, R2>(
   value: ParserObject<R1, R2> | unknown | undefined | null,

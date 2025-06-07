@@ -41,24 +41,24 @@ export type CountingMacros = Exclude<
   | 'vineProp.withDefault'
   | 'vineModel'
 >
-export type MacrosInfoForVolar =
-  | { macroType: 'vineProp', macroCall: CallExpression, macroMeta: VinePropMeta }
-  | { macroType: 'vineEmits', macroCall: CallExpression }
-  | { macroType: 'vineSlots', macroCall: CallExpression }
-  | { macroType: 'vineExpose', macroCall: CallExpression }
-  | { macroType: 'vineValidators', macroCall: CallExpression }
-  | { macroType: 'useTemplateRef', macroCall: CallExpression }
-  | { macroType: 'vineStyle', macroCall: CallExpression }
+export type MacrosInfoForVolar
+  = | { macroType: 'vineProp', macroCall: CallExpression, macroMeta: VinePropMeta }
+    | { macroType: 'vineEmits', macroCall: CallExpression }
+    | { macroType: 'vineSlots', macroCall: CallExpression }
+    | { macroType: 'vineExpose', macroCall: CallExpression }
+    | { macroType: 'vineValidators', macroCall: CallExpression }
+    | { macroType: 'useTemplateRef', macroCall: CallExpression }
+    | { macroType: 'vineStyle', macroCall: CallExpression }
 export type VineStyleValidArg = StringLiteral | TemplateLiteral | TaggedTemplateExpression
 
 export type VineProcessorLang = 'scss' | 'sass' | 'less' | 'stylus'
 export type VineStyleLang = 'css' | 'postcss' | VineProcessorLang
 export type VineTemplateBindings = Record<string, VueBindingTypes>
 
-export type BabelFunctionNodeTypes =
-  | FunctionDeclaration
-  | FunctionExpression
-  | ArrowFunctionExpression
+export type BabelFunctionNodeTypes
+  = | FunctionDeclaration
+    | FunctionExpression
+    | ArrowFunctionExpression
 export type BabelFunctionParams = BabelFunctionNodeTypes['params']
 
 export type HMRCompFnsName = string | null

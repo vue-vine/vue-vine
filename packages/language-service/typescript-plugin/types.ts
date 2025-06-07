@@ -12,16 +12,16 @@ type _pipelineResp<T extends { type: string }> = {
   requestId: string
 } & T
 
-export type PipelineRequest =
-  | (_pipelineReq<{ type: 'getComponentPropsRequest', fileName: string, componentName: string }>)
-  | (_pipelineReq<{ type: 'getElementAttrsRequest', fileName: string, tagName: string }>)
-  | (_pipelineReq<{ type: 'getComponentDirectivesRequest', fileName: string, triggerAtFnName: string }>)
+export type PipelineRequest
+  = | (_pipelineReq<{ type: 'getComponentPropsRequest', fileName: string, componentName: string }>)
+    | (_pipelineReq<{ type: 'getElementAttrsRequest', fileName: string, tagName: string }>)
+    | (_pipelineReq<{ type: 'getComponentDirectivesRequest', fileName: string, triggerAtFnName: string }>)
 export type PipelineRequestInstance<T extends PipelineRequest['type']> = PipelineRequest & { type: T }
 
-export type PipelineResponse =
-  | (_pipelineResp<{ type: 'getComponentPropsResponse', componentName: string, fileName: string, props: string[] }>)
-  | (_pipelineResp<{ type: 'getElementAttrsResponse', fileName: string, tagName: string, attrs: string[] }>)
-  | (_pipelineResp<{ type: 'getComponentDirectivesResponse', fileName: string, triggerAtFnName: string, directives: string[] }>)
+export type PipelineResponse
+  = | (_pipelineResp<{ type: 'getComponentPropsResponse', componentName: string, fileName: string, props: string[] }>)
+    | (_pipelineResp<{ type: 'getElementAttrsResponse', fileName: string, tagName: string, attrs: string[] }>)
+    | (_pipelineResp<{ type: 'getComponentDirectivesResponse', fileName: string, triggerAtFnName: string, directives: string[] }>)
 export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & {
   type: T
   debugLogs: string[]

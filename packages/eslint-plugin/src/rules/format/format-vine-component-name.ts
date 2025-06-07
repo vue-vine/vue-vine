@@ -9,9 +9,9 @@ const NOT_PASCAL_CASE = 'format-vine-component-name-not-pascal-case' as const
 const CONFLICT_WITH_HTML_BUILT_IN_MSG = 'Vue Vine component function name must not conflict with HTML built-in tag names'
 const NOT_PASCAL_CASE_MSG = 'Vue Vine component function name must be in PascalCase'
 
-export type MessageIds =
-  | typeof CONFLICT_WITH_HTML_BUILT_IN
-  | typeof NOT_PASCAL_CASE
+export type MessageIds
+  = | typeof CONFLICT_WITH_HTML_BUILT_IN
+    | typeof NOT_PASCAL_CASE
 export type Options = []
 
 const HTML_BUILT_IN_ELEMENTS: string[] = [

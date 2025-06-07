@@ -19,25 +19,25 @@ export interface HasParent {
 /**
  * The union type for all nodes.
  */
-export type Node =
-  | ESLintNode
-  | VNode
-  | VForExpression
-  | VOnExpression
-  | VSlotScopeExpression
-  | VFilterSequenceExpression
-  | VFilter
+export type Node
+  = | ESLintNode
+    | VNode
+    | VForExpression
+    | VOnExpression
+    | VSlotScopeExpression
+    | VFilterSequenceExpression
+    | VFilter
 
 /**
  * The union type for all template nodes.
  */
-export type VTemplateNode =
-  | VNode
-  | VForExpression
-  | VOnExpression
-  | VSlotScopeExpression
-  | VFilterSequenceExpression
-  | VFilter
+export type VTemplateNode
+  = | VNode
+    | VForExpression
+    | VOnExpression
+    | VSlotScopeExpression
+    | VFilterSequenceExpression
+    | VFilter
 
 // ------------------------------------------------------------------------------
 // Script
@@ -46,30 +46,30 @@ export type VTemplateNode =
 /**
  * The union type for ESLint nodes.
  */
-export type ESLintNode =
-  | ESLintIdentifier
-  | ESLintLiteral
-  | ESLintProgram
-  | ESLintSwitchCase
-  | ESLintCatchClause
-  | ESLintVariableDeclarator
-  | ESLintStatement
-  | ESLintExpression
-  | ESLintProperty
-  | ESLintAssignmentProperty
-  | ESLintSuper
-  | ESLintTemplateElement
-  | ESLintSpreadElement
-  | ESLintPattern
-  | ESLintClassBody
-  | ESLintMethodDefinition
-  | ESLintPropertyDefinition
-  | ESLintStaticBlock
-  | ESLintPrivateIdentifier
-  | ESLintModuleDeclaration
-  | ESLintModuleSpecifier
-  | ESLintImportExpression
-  | ESLintLegacyRestProperty
+export type ESLintNode
+  = | ESLintIdentifier
+    | ESLintLiteral
+    | ESLintProgram
+    | ESLintSwitchCase
+    | ESLintCatchClause
+    | ESLintVariableDeclarator
+    | ESLintStatement
+    | ESLintExpression
+    | ESLintProperty
+    | ESLintAssignmentProperty
+    | ESLintSuper
+    | ESLintTemplateElement
+    | ESLintSpreadElement
+    | ESLintPattern
+    | ESLintClassBody
+    | ESLintMethodDefinition
+    | ESLintPropertyDefinition
+    | ESLintStaticBlock
+    | ESLintPrivateIdentifier
+    | ESLintModuleDeclaration
+    | ESLintModuleSpecifier
+    | ESLintImportExpression
+    | ESLintLegacyRestProperty
 
 /**
  * The parsing result of ESLint custom parsers.
@@ -91,27 +91,27 @@ export interface ESLintProgram extends HasLocation, HasParent {
   errors?: ParseError[]
 }
 
-export type ESLintStatement =
-  | ESLintExpressionStatement
-  | ESLintDirective
-  | ESLintBlockStatement
-  | ESLintEmptyStatement
-  | ESLintDebuggerStatement
-  | ESLintWithStatement
-  | ESLintReturnStatement
-  | ESLintLabeledStatement
-  | ESLintBreakStatement
-  | ESLintContinueStatement
-  | ESLintIfStatement
-  | ESLintSwitchStatement
-  | ESLintThrowStatement
-  | ESLintTryStatement
-  | ESLintWhileStatement
-  | ESLintDoWhileStatement
-  | ESLintForStatement
-  | ESLintForInStatement
-  | ESLintForOfStatement
-  | ESLintDeclaration
+export type ESLintStatement
+  = | ESLintExpressionStatement
+    | ESLintDirective
+    | ESLintBlockStatement
+    | ESLintEmptyStatement
+    | ESLintDebuggerStatement
+    | ESLintWithStatement
+    | ESLintReturnStatement
+    | ESLintLabeledStatement
+    | ESLintBreakStatement
+    | ESLintContinueStatement
+    | ESLintIfStatement
+    | ESLintSwitchStatement
+    | ESLintThrowStatement
+    | ESLintTryStatement
+    | ESLintWhileStatement
+    | ESLintDoWhileStatement
+    | ESLintForStatement
+    | ESLintForInStatement
+    | ESLintForOfStatement
+    | ESLintDeclaration
 
 export interface ESLintEmptyStatement extends HasLocation, HasParent {
   type: 'EmptyStatement'
@@ -236,10 +236,10 @@ export interface ESLintDebuggerStatement extends HasLocation, HasParent {
   type: 'DebuggerStatement'
 }
 
-export type ESLintDeclaration =
-  | ESLintFunctionDeclaration
-  | ESLintVariableDeclaration
-  | ESLintClassDeclaration
+export type ESLintDeclaration
+  = | ESLintFunctionDeclaration
+    | ESLintVariableDeclaration
+    | ESLintClassDeclaration
 
 export interface ESLintFunctionDeclaration extends HasLocation, HasParent {
   type: 'FunctionDeclaration'
@@ -307,17 +307,17 @@ export interface ESLintPrivateIdentifier extends HasLocation, HasParent {
   name: string
 }
 
-export type ESLintModuleDeclaration =
-  | ESLintImportDeclaration
-  | ESLintExportNamedDeclaration
-  | ESLintExportDefaultDeclaration
-  | ESLintExportAllDeclaration
+export type ESLintModuleDeclaration
+  = | ESLintImportDeclaration
+    | ESLintExportNamedDeclaration
+    | ESLintExportDefaultDeclaration
+    | ESLintExportAllDeclaration
 
-export type ESLintModuleSpecifier =
-  | ESLintImportSpecifier
-  | ESLintImportDefaultSpecifier
-  | ESLintImportNamespaceSpecifier
-  | ESLintExportSpecifier
+export type ESLintModuleSpecifier
+  = | ESLintImportSpecifier
+    | ESLintImportDefaultSpecifier
+    | ESLintImportNamespaceSpecifier
+    | ESLintExportSpecifier
 
 export interface ESLintImportDeclaration extends HasLocation, HasParent {
   type: 'ImportDeclaration'
@@ -374,31 +374,31 @@ export interface ESLintExportAllDeclaration extends HasLocation, HasParent {
   source: ESLintLiteral
 }
 
-export type ESLintExpression =
-  | ESLintThisExpression
-  | ESLintArrayExpression
-  | ESLintObjectExpression
-  | ESLintFunctionExpression
-  | ESLintArrowFunctionExpression
-  | ESLintYieldExpression
-  | ESLintLiteral
-  | ESLintUnaryExpression
-  | ESLintUpdateExpression
-  | ESLintBinaryExpression
-  | ESLintAssignmentExpression
-  | ESLintLogicalExpression
-  | ESLintMemberExpression
-  | ESLintConditionalExpression
-  | ESLintCallExpression
-  | ESLintNewExpression
-  | ESLintSequenceExpression
-  | ESLintTemplateLiteral
-  | ESLintTaggedTemplateExpression
-  | ESLintClassExpression
-  | ESLintMetaProperty
-  | ESLintIdentifier
-  | ESLintAwaitExpression
-  | ESLintChainExpression
+export type ESLintExpression
+  = | ESLintThisExpression
+    | ESLintArrayExpression
+    | ESLintObjectExpression
+    | ESLintFunctionExpression
+    | ESLintArrowFunctionExpression
+    | ESLintYieldExpression
+    | ESLintLiteral
+    | ESLintUnaryExpression
+    | ESLintUpdateExpression
+    | ESLintBinaryExpression
+    | ESLintAssignmentExpression
+    | ESLintLogicalExpression
+    | ESLintMemberExpression
+    | ESLintConditionalExpression
+    | ESLintCallExpression
+    | ESLintNewExpression
+    | ESLintSequenceExpression
+    | ESLintTemplateLiteral
+    | ESLintTaggedTemplateExpression
+    | ESLintClassExpression
+    | ESLintMetaProperty
+    | ESLintIdentifier
+    | ESLintAwaitExpression
+    | ESLintChainExpression
 
 export interface ESLintIdentifier extends HasLocation, HasParent {
   type: 'Identifier'
@@ -447,13 +447,13 @@ export interface ESLintBigIntLiteral extends ESLintLiteralBase {
   regex?: undefined
   bigint: string
 }
-export type ESLintLiteral =
-  | ESLintStringLiteral
-  | ESLintBooleanLiteral
-  | ESLintNullLiteral
-  | ESLintNumberLiteral
-  | ESLintRegExpLiteral
-  | ESLintBigIntLiteral
+export type ESLintLiteral
+  = | ESLintStringLiteral
+    | ESLintBooleanLiteral
+    | ESLintNullLiteral
+    | ESLintNumberLiteral
+    | ESLintRegExpLiteral
+    | ESLintBigIntLiteral
 
 export interface ESLintThisExpression extends HasLocation, HasParent {
   type: 'ThisExpression'
@@ -656,14 +656,14 @@ export interface ESLintMetaProperty extends HasLocation, HasParent {
   property: ESLintIdentifier
 }
 
-export type ESLintPattern =
-  | ESLintIdentifier
-  | ESLintObjectPattern
-  | ESLintArrayPattern
-  | ESLintRestElement
-  | ESLintAssignmentPattern
-  | ESLintMemberExpression
-  | ESLintLegacyRestProperty
+export type ESLintPattern
+  = | ESLintIdentifier
+    | ESLintObjectPattern
+    | ESLintArrayPattern
+    | ESLintRestElement
+    | ESLintAssignmentPattern
+    | ESLintMemberExpression
+    | ESLintLegacyRestProperty
 
 export interface ESLintObjectPattern extends HasLocation, HasParent {
   type: 'ObjectPattern'
@@ -751,13 +751,13 @@ export const NS: Readonly<{
 /**
  * Type of namespaces.
  */
-export type Namespace =
-  | typeof NS.HTML
-  | typeof NS.MathML
-  | typeof NS.SVG
-  | typeof NS.XLink
-  | typeof NS.XML
-  | typeof NS.XMLNS
+export type Namespace
+  = | typeof NS.HTML
+    | typeof NS.MathML
+    | typeof NS.SVG
+    | typeof NS.XLink
+    | typeof NS.XML
+    | typeof NS.XMLNS
 
 /**
  * Type of variable definitions.
@@ -832,25 +832,25 @@ export interface VFilter extends HasLocation, HasParent {
 /**
  * The union type of any nodes.
  */
-export type VNode =
-  | VAttribute
-  | VDirective
-  | VDirectiveKey
-  | VTemplateRoot
-  | VElement
-  | VEndTag
-  | VExpressionContainer
-  | VIdentifier
-  | VLiteral
-  | VStartTag
-  | VText
+export type VNode
+  = | VAttribute
+    | VDirective
+    | VDirectiveKey
+    | VTemplateRoot
+    | VElement
+    | VEndTag
+    | VExpressionContainer
+    | VIdentifier
+    | VLiteral
+    | VStartTag
+    | VText
 
-export type VExpression =
-  | ESLintExpression
-  | VFilterSequenceExpression
-  | VForExpression
-  | VOnExpression
-  | VSlotScopeExpression
+export type VExpression
+  = | ESLintExpression
+    | VFilterSequenceExpression
+    | VForExpression
+    | VOnExpression
+    | VSlotScopeExpression
 
 /**
  * Text nodes.
