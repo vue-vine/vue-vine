@@ -10,6 +10,7 @@ import { TestTransformAssetUrl } from './fixtures/transform-asset-url.vine'
 import { TestUseDefaults } from './fixtures/use-defaults.vine'
 import { TestVibe } from './fixtures/vibe.vine'
 import { TestVineModel } from './fixtures/vine-model.vine'
+import { TestVinePropPage } from './fixtures/vine-prop.vine'
 import { TestVineValidatorsPage } from './fixtures/vine-validators.vine'
 import Welcome from './welcome.vine'
 
@@ -27,6 +28,7 @@ const routes = [
   { path: '/todo-list', component: TodoList },
   { path: '/mix-with-jsx', component: TestVineWithJsx },
   { path: '/ts-morph-complex-external', component: TestTsMorphComplexExternal },
+  { path: '/vine-prop', component: TestVinePropPage },
 ]
 
 const router = createRouter({

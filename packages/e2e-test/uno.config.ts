@@ -14,4 +14,8 @@ export default defineConfig({
       ],
     },
   },
+  shortcuts: {
+    'col-flex': 'flex flex-col',
+    'row-flex': 'flex flex-row items-center',
+  },
 })

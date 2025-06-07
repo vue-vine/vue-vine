@@ -11,6 +11,7 @@ const routes = [
   { path: '/todo-list', label: 'Todo List' },
   { path: '/mix-with-jsx', label: 'Mix With JSX' },
   { path: '/ts-morph-complex-external', label: 'Ts Morph Complex External' },
+  { path: '/vine-prop', label: 'vineProp macro' },
 ]
 
 export function NavList() {

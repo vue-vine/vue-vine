@@ -167,4 +167,17 @@ describe('test basic functionality', async () => {
       expect(await evaluator.getTextContent('.test-ts-morph-child:nth-child(2) .error-code')).toBe('err code: 404')
     },
   ))
+
+  it('should support various kinds of props type declaration', runTestAtPage(
+    '/vine-prop',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(1)')).toBe('p1: hello')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(2)')).toBe('p2: world')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(3)')).toBe('p3: false')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(4)')).toBe('p4: true')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(5)')).toBe('p5: true')
+      expect(await evaluator.getTextContent('.child-comp p:nth-child(6)')).toBe('typeof p6: boolean')
+    },
+  ))
 })

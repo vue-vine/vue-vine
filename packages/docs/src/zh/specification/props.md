@@ -155,16 +155,15 @@ const title = vineProp<string>(value => value.startsWith('#'))
 
 就像我们上面在 “布尔型转换机制” 部分所提到的，当您确实需要一个布尔型 prop 时，类型参数应该是一个字面量 `boolean`，并且不应该将变量作为默认值传递，而只能传递 `true` 或 `false` 字面量。尽管 TypeScript 可以从变量中推断出类型，但 Vine 编译器并没有嵌入 TypeScript 编译器来得知这个 prop 是布尔型的。
 
-这一条限制在 Vue Vine v0.2.0 引入了 ts-morph 后也依然存在，因为我们在 vineProp 这种定义方式中并未启用 ts-morph 来解析类型，按照设计，这条限制并不会太多影响日常使用，我们推荐您对于布尔型 prop 始终显式标注出类型。
-
 ```vue-vine
-// 正确示例
 const foo = vineProp.withDefault('bar') // 默认值可以自动推导出类型
 const biz = vineProp.withDefault(someStringVariable) // 默认值可以自动推导出类型
-const dar = vineProp<boolean>() // 明确指定为布尔型
-const bool = vineProp.withDefault(false) // 指定布尔型只能是 true 或 false
 
-// 错误示例
-const bad1 = vineProp<SomeBooleanType>() // 错误，因为 Vine 编译器不能解析出是布尔型
-const bad2 = vineProp.withDefault(someBooleanVariable) // 错误，因为 Vine 编译器不能解析出是布尔型
+// 明确指定为布尔型
+const dar = vineProp<boolean>()
+const bool = vineProp.withDefault(false)
+
+// 推导复杂类型
+const bad1 = vineProp<SomeBooleanType>() // Vine 编译器使用 ts-morph 解析出是布尔型
+const bad2 = vineProp.withDefault(someBooleanVariable) // Vine 编译器使用 ts-morph 推导出是布尔型
 ```
