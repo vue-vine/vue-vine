@@ -1,0 +1,83 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+项目背景：
+
+- 此项目是为了创造一种全新的编写 Vue 组件的方式，和 Vue 官方的 SFC 可以同时使用。
+- Vine 的使用方式示例：
+
+```ts
+// app.vine.ts
+import { ref, computed } from 'vue'
+
+export function App() {
+  const count = ref(0)
+  const double = computed(() => count.value * 2)
+
+  vineStyle.scoped(scss`
+    .app {
+      display: flex;
+      flex-direction: column;
+
+      .btn {
+        color: blue;
+      }
+    }
+  `)
+
+  return vine`
+    <div class="app">
+      <p> Count: {{ count }} </p>
+      <p> Double: {{ double }} </p>
+      <button class="btn" @click="count += 1"> Increment </button>
+    </div>
+  `
+}
+```
+
+1. Vine 仅会处理文件名后缀为 `.vine.ts` 的文件
+2. 此类文件中的所有函数，只要满足条件：“返回值是一个 tagged template string 且标签名必须是 `vine` 的字符串”，都将被视为一个组件函数
+
+
+- 此项目的结构分为以下两个组成部分：
+
+  1. main：
+     - 涉及组件的编译、VSCode 当中的语言服务和在 Vite 当中构建
+       以及周边生态的建设：创建项目的脚手架 [index.ts](mdc:packages/create-vue-vine/src/index.ts)、命令行中的类型检查器 [index.ts](mdc:packages/tsc/src/index.ts)、Nuxt 模块插件 [module.ts](mdc:packages/nuxt-module/src/module.ts)
+     - main 之下的所有包都会一同升级、统一版本号
+
+     下面介绍几个主要包：
+     - packages/compiler
+       1. 使用 Babel 作为 AST 解析器
+       2. 使用 @vue/compiler-dom 作为 Vue 模板的编译器
+       3. 编译流程是：
+          1. 读取文件内容
+          2. validate: 校验文件
+          3. analyze: 分析文件获取 Vine 组件函数上下文
+          4. transform: 转换文件，将 Vine 组件函数转换为 Vue 组件对象的 JS 代码
+
+     - packages/vite-plugin
+       1. 依赖 compiler 对 .vine.ts 当中的 Vine 组件函数和样式代码进行转换 [index.ts](mdc:packages/vite-plugin/src/index.ts)
+       2. 支持 HMR [hot-update.ts](mdc:packages/vite-plugin/src/hot-update.ts)
+
+     - packages/language-service
+       1. 创建 TypeScript Plugin
+       2. 基于 Volar.js 的虚拟代码机制 [virtual-code.ts](mdc:packages/language-service/src/virtual-code.ts) 将 Vine 组件函数返回值上的 Vue 模板转换为虚拟代码
+       3. 在全局 TS 模块上下文中注入全局代码 + 注入组件自己的局部上下文 [injectTypes.ts](mdc:packages/language-service/src/injectTypes.ts)
+       4. 因为 VSCode 中的 TS 语言服务已经拥有了一份项目的类型上下文，因而设立基于 WebSocket 的管道服务，通过 TypeScript Plugin 桥接从中获取各种信息 [pipeline.ts](mdc:packages/language-service/typescript-plugin/pipeline.ts)
+
+     - packages/language-server
+       1. 通过 Volar.js 进一步封装的 API 创建 VSCode Language Server，载入 TypeScript plugin [index.ts](mdc:packages/language-server/src/index.ts)
+       2. 装载其他 vscode 的语言服务插件，例如 createCssService / createEmmetService ...
+
+     - packages/vue-vine
+       1. 项目主入口包，导出各用例：一些核心方法（如 useDefaults） / Vite 插件 / Slidev 插件
+       2. 提供全新的跨组件状态管理方案：Vibe [defineVibe.ts](mdc:packages/vue-vine/src/defineVibe.ts)
+
+
+2. eslint：
+   - 涉及通过 ESLint 规范化 Vue Vine 使用写法
+   - 提供 ESLint 自定义 parser [index.ts](mdc:packages/eslint-parser/src/index.ts)、ESLint 规则集 [index.ts](mdc:packages/eslint-plugin/src/index.ts)、最后封装入 ESLint 配置包 [index.ts](mdc:packages/eslint-config/src/index.ts)
+
