@@ -579,7 +579,6 @@ type TargetComp_Props = Parameters<typeof TargetComp>[0];
 
 const count = ref(0)
 
-
   watchEffect(() => {
     console.log('count: ', count.value)
   })

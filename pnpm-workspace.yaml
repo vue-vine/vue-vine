@@ -8,9 +8,6 @@ defines:
   - &volar ~2.4.14
   - &volar-service ~0.0.64
 
-overrides:
-  vite: npm:rolldown-vite@latest
-
 catalogs:
   cli:
     '@changesets/cli': ^2.29.4
@@ -118,7 +115,7 @@ catalogs:
   vitest-libs:
     jsdom: ^26.1.0
     playwright-chromium: ^1.52.0
-    vitest: ^3.2.0
+    vitest: ^3.2.3
   volar:
     '@volar/language-core': *volar
     '@volar/language-server': *volar

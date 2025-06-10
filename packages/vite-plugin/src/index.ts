@@ -81,6 +81,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
     // Since we skipped using vite:esbuild built-in plugin to transform .vine.ts files,
     // we need to transform them manually here.
+    // @ts-expect-error - Rolldown-vite will support this in the future
     if (vite.rolldownVersion) {
       // @ts-expect-error - oxc transform result is still in experimental
       const transformResult: TransformResult = await vite.transformWithOxc(
@@ -211,6 +212,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
         return
       }
 
+      // @ts-expect-error - Rolldown-vite types will be compatible in the future
       // eslint-disable-next-line ts/no-this-alias
       transformPluginContext = this
 
