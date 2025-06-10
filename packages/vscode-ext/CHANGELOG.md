@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.4.8
+
+### Patch Changes
+
+- Reconciliation version for fixing messed up dependencies.
+
 ## 1.4.7
 
 ### Patch Changes

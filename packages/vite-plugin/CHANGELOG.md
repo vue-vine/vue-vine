@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.4.8
+
+### Patch Changes
+
+- Reconciliation version for fixing messed up dependencies.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.8
+
 ## 1.4.7
 
 ### Patch Changes
