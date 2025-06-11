@@ -30,7 +30,7 @@
   "scripts": {
     "test": "vitest",
     "test:verbose": "VINE_DEV_VITEST=true vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@babel/parser": "catalog:compiler",
@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/hash-sum": "catalog:types",
     "@types/line-column": "catalog:types",
+    "@typescript/native-preview": "catalog:compiler",
     "estree-walker": "catalog:compiler",
     "prettier": "catalog:lint-libs",
     "source-map-js": "catalog:compiler"
