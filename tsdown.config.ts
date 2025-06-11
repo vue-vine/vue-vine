@@ -8,9 +8,7 @@ const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
     include: ['packages/*'],
     exclude: ['packages/docs', 'packages/e2e-test', 'packages/nuxt-module', 'packages/playground'],
   },
-  dts: {
-    tsgo: true,
-  },
+  dts: true,
   tsconfig: join(import.meta.dirname, 'tsconfig.json'),
   entry: ['src/index.ts'],
   sourcemap: isDev,
