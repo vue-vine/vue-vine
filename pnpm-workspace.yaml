@@ -41,6 +41,7 @@ catalogs:
     ts-morph: ^26.0.0
   docs:
     vitepress: ^1.6.3
+    vitepress-plugin-group-icons: ^1.6.0
   icons:
     '@iconify-json/carbon': ^1.2.8
     '@iconify-json/logos': ^1.2.4

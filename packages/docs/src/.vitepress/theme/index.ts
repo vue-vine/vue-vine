@@ -4,6 +4,7 @@ import { h } from 'vue'
 import Recommend from './components/recommend.vue'
 import Sponsors from './components/sponsors.vue'
 import VersionTip from './components/version-tip.vue'
+import 'virtual:group-icons.css'
 
 import 'uno.css'
 import './style.css'

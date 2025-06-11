@@ -15,6 +15,7 @@
     "@iconify-json/logos": "catalog:icons",
     "@iconify-json/twemoji": "catalog:icons",
     "unocss": "catalog:styles",
-    "vitepress": "catalog:docs"
+    "vitepress": "catalog:docs",
+    "vitepress-plugin-group-icons": "catalog:docs"
   }
 }

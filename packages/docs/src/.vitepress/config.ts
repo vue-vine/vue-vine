@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const vineGrammar = JSON.parse(
@@ -151,10 +152,14 @@ export default defineConfig({
         ...vineGrammar,
       },
     ],
+    config(md) {
+      md.use(groupIconMdPlugin)
+    },
   },
   vite: {
     plugins: [
       UnoCSS(),
+      groupIconVitePlugin(),
     ],
   },
 })
