@@ -73,6 +73,8 @@ async function getLatestVineVersion(dep: string): Promise<string | undefined> {
       signal: controller.signal,
     })
     const pkg = await res.json()
+    // eslint-disable-next-line ts/ban-ts-comment
+    // @ts-ignore tsgo error
     return pkg.version
   }
   finally {
