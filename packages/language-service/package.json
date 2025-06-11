@@ -46,7 +46,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@volar/language-core": "catalog:volar",
@@ -65,6 +65,7 @@
     "@babel/types": "catalog:compiler",
     "@types/node": "catalog:types",
     "@types/ws": "catalog:types",
+    "@typescript/native-preview": "catalog:compiler",
     "vscode-uri": "catalog:vscode"
   }
 }

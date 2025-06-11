@@ -33,10 +33,13 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@vue-vine/eslint-plugin": "workspace:*",
     "eslint": "catalog:lint-libs"
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "catalog:compiler"
   }
 }

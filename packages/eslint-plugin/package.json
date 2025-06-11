@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@antfu/utils": "catalog:utils",
@@ -49,6 +49,7 @@
     "@typescript-eslint/types": "catalog:lint-libs",
     "@typescript-eslint/typescript-estree": "catalog:lint-libs",
     "@typescript-eslint/utils": "catalog:lint-libs",
+    "@typescript/native-preview": "catalog:compiler",
     "eslint": "catalog:lint-libs",
     "eslint-vitest-rule-tester": "catalog:lint-libs"
   }
