@@ -78,7 +78,7 @@ export default defineAppSetup(({ app }) => {
 
 ## 常见问题 {#common-questions}
 
-### 使用 UnoCSS Attribute Mode {#conflict-with-unocss-attribute-mode}
+### 使用 UnoCSS Attribute Mode {#unocss-attribute-mode}
 
 :::warning 💡注意
 
