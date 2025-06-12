@@ -56,7 +56,7 @@ function MyComponent({ foo, bar, ...rest }: {
 
 The code above will be transformed to the following equivalent code:
 
-```vue-vine
+```js
 import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
 
 // ...

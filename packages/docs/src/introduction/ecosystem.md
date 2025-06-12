@@ -80,7 +80,15 @@ export default defineAppSetup(({ app }) => {
 
 ### UnoCSS Attribute Mode
 
-Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode. To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
+:::warning 💡Note
+
+Currently, we can only partially solve this problem, i.e. only support using attribute mode on HTML tags, but not on component tags.
+
+:::
+
+Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode.
+
+To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
 
 ```ts [shims.d.ts]
 declare module 'vue' {
