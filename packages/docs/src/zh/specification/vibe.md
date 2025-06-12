@@ -34,8 +34,7 @@ Vibe 的英语单词意思是 “氛围”，选择这个名字我们希望创�
 
 你可以配置 `unplugin-auto-import` 来自动导入 `defineVibe` 函数。
 
-```ts
-// vite.config.ts
+```ts [vite.config.ts]
 import AutoImport from 'unplugin-auto-import/vite'
 
 export default defineConfig({

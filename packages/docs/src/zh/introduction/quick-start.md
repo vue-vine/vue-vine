@@ -25,7 +25,7 @@ Vine 提供了 Vite 插件和 VSCode 扩展来支持基础功能。
 
 在 `vite.config.ts` 中导入插件：
 
-```ts
+```ts [vite.config.ts]
 import { VineVitePlugin } from 'vue-vine/vite'
 
 export default defineConfig({
@@ -110,7 +110,7 @@ pnpm i -g create-vue-vine
 
 Vine 提供了一个 typescript 声明文件，以帮助你使用宏时获得智能提示。
 
-```json
+```json [tsconfig.json]
 {
   "compilerOptions": {
     "types": ["vue-vine/macros"]

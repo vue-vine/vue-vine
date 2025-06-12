@@ -25,7 +25,7 @@ Besides, we also provide some other libraries that you might need during develop
 
 Use the plugin in `vite.config.ts`:
 
-```ts
+```ts [vite.config.ts]
 import { VineVitePlugin } from 'vue-vine/vite'
 
 export default defineConfig({
@@ -97,7 +97,7 @@ Search "Vue Vine" in the marketplace and install it.
 
 Vine provides a typescript declaration file to help you write macros with intellisense.
 
-```json
+```json [tsconfig.json]
 {
   "compilerOptions": {
     "types": ["vue-vine/macros"]

@@ -35,8 +35,7 @@ You can import the `defineVibe` function from `vue-vine` to define a data store.
 
 You can configure in `unplugin-auto-import` to automatically import the `defineVibe` function.
 
-```ts
-// vite.config.ts
+```ts [vite.config.ts]
 import AutoImport from 'unplugin-auto-import/vite'
 
 export default defineConfig({

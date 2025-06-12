@@ -18,7 +18,7 @@ pnpm i -D @vue-vine/eslint-config
 
 接着，请将以下配置添加到你的 `eslint.config.js` 文件中：
 
-```js
+```js [eslint.config.js]
 import antfu from '@antfu/eslint-config'
 
 // `VueVine()` 返回一个 ESLint flat config
@@ -47,7 +47,7 @@ pnpm i -D vue-vine-tsc
 
 接着，在 `package.json` 的 `"build"` 脚本中，你可以将 `vue-tsc -b && ...` 替换为：
 
-```diff
+```diff [package.json]
 {
   "scripts": {
 -    "build": "vue-tsc -b && vite build",
@@ -62,7 +62,7 @@ pnpm i -D vue-vine-tsc
 
 要安装这个插件，你需要在 Slidev 项目中添加一个 `setup/main.ts` 文件来设置 Vue 应用，更多细节请参考 [Slidev 文档](https://sli.dev/custom/config-vue)。
 
-```ts
+```ts [setup/main.ts]
 import { defineAppSetup } from '@slidev/types'
 import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 
@@ -82,7 +82,7 @@ export default defineAppSetup(({ app }) => {
 
 因为 Vue Vine 的模板类型检查开启了 Vue language tools 的严格模式，所以本身是不允许随便在模板的 HTML 标签上使用任意名称的属性的，而这会影响到使用 UnoCSS Attribute Mode 的场景。为了解决此类问题，请你在项目 `tsconfig.json` 所包含（`include`）的范围内，添加一个 `shims.d.ts` 文件，并写入以下内容：
 
-```ts
+```ts [shims.d.ts]
 declare module 'vue' {
   interface HTMLAttributes {
     [key: string]: any

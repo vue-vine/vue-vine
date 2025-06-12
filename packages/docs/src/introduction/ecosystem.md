@@ -18,7 +18,7 @@ pnpm i -D @vue-vine/eslint-config
 
 Then, add the following configuration to your `eslint.config.js`:
 
-```js
+```js [eslint.config.js]
 import antfu from '@antfu/eslint-config'
 
 // `VueVine()` returns an ESLint flat config
@@ -47,7 +47,7 @@ pnpm i -D vue-vine-tsc
 
 Then, you may replace the `vue-tsc -b && ...` command in `"build"` script of `package.json`:
 
-```diff
+```diff [package.json]
 {
   "scripts": {
 -    "build": "vue-tsc -b && vite build",
@@ -62,7 +62,7 @@ Since v1.4.0, Vine also provides a plugin for Slidev, you can use it to register
 
 To install the plugin, you should add a `setup/main.ts` file in your Slidev project for setup Vue application, find more details in [Slidev documentation](https://sli.dev/custom/config-vue).
 
-```ts
+```ts [setup/main.ts]
 import { defineAppSetup } from '@slidev/types'
 import { VueVineSlidevPlugin } from 'vue-vine/slidev'
 
@@ -82,7 +82,7 @@ export default defineAppSetup(({ app }) => {
 
 Because Vue Vine's template type checking enabled the strict mode of Vue language tools, so it is not allowed to use arbitrary attributes on the HTML tags in the template. This will affect the scenario of using UnoCSS Attribute Mode. To solve this problem, please add a `shims.d.ts` file to the project `tsconfig.json` (the `include` option) and write the following content:
 
-```ts
+```ts [shims.d.ts]
 declare module 'vue' {
   interface HTMLAttributes {
     [key: string]: any
