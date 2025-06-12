@@ -61,14 +61,17 @@ import { createPropsRestProxy as _createPropsRestProxy } from 'vue'
 
 // ...
 
-  const rest = _createPropsRestProxy(props, ['foo', 'bar'])
-  watchEffect(() => {
-    console.log(
-      'foo: ', props.foo,
-      ', bar: ', props.bar,
-      ', rest: ', rest
-    )
-  })
+const rest = _createPropsRestProxy(props, ['foo', 'bar'])
+watchEffect(() => {
+  console.log(
+    'foo: ',
+    props.foo,
+    ', bar: ',
+    props.bar,
+    ', rest: ',
+    rest
+  )
+})
 
 // ...
 ```
