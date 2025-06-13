@@ -21,6 +21,14 @@ export const messages: Record<string, string> = {
   [REPLACE]: 'Replace `{{ deleteText }}` with `{{ insertText }}`',
 }
 
+export const defaultPrettierOptions: Partial<PrettierOptions> = {
+  objectWrap: 'preserve',
+  experimentalOperatorPosition: 'start',
+  printWidth: 100,
+  semi: false,
+  singleQuote: true,
+}
+
 let formatRunner: (code: string, options: PrettierOptions) => string
 
 const rule: RuleModule<Options> = createEslintRule<Options, string>({
@@ -77,6 +85,7 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             {
               parser: 'vue',
               filepath: context.filename,
+              ...defaultPrettierOptions,
               ...formatOptions,
             },
           )
