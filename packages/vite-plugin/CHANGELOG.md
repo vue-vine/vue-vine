@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.4.9
+
+### Patch Changes
+
+- Fix virtual code generation strategy and generics type issue.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.9
+
 ## 1.4.8
 
 ### Patch Changes

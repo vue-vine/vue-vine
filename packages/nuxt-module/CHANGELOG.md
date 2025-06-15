@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.4.9
+
+### Patch Changes
+
+- Fix virtual code generation strategy and generics type issue.
+- Updated dependencies
+  - vue-vine@1.4.9
+
 ## 1.4.8
 
 ### Patch Changes

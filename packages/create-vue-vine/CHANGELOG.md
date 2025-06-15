@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.4.9
+
+### Patch Changes
+
+- Fix virtual code generation strategy and generics type issue.
+
 ## 1.4.8
 
 ### Patch Changes
