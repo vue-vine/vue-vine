@@ -83,6 +83,8 @@ export interface VineCompilerOptions {
   inlineTemplate?: boolean
   vueCompilerOptions?: CompilerOptions & {
     /** @internal */
+    __enableTransformAssetsURL?: boolean
+    /** @internal */
     __transformNegativeBool?: boolean | { constType: ConstantTypes }
   }
   preprocessOptions?: Record<string, any>

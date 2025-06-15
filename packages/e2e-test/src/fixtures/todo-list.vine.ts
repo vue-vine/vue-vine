@@ -120,11 +120,7 @@ function TodoContent() {
             <div class="todo-item-text">
               <div class="text-lg">{{ d.title }}</div>
             </div>
-            <ToDoAction
-              @delete="piniaStore.deleteTodo(d)"
-              :state="d.state"
-              show-delete
-            />
+            <ToDoAction @delete="piniaStore.deleteTodo(d)" :state="d.state" show-delete />
           </div>
         </div>
       </div>
@@ -186,11 +182,9 @@ export function TodoList() {
   vineStyle.import('../styles/todo-list.scss');
 
   return vine`
-    <div
-      class="todo-container container xl flex items-center justify-center flex-col"
-    >
+    <div class="todo-container container xl flex items-center justify-center flex-col">
       <TodoHeader />
-      <TodoContent />
+    <TodoContent />
     </div>
   `;
 }

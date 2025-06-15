@@ -33,7 +33,6 @@ export function proxyLanguageServiceForVine(
 
 const hiddenCompletions = [
   'VUE_VINE_COMPONENT',
-  '__createVineVLSCtx',
 ]
 function vineGetCompletionsAtPosition(
   originalGetCompletionsAtPosition: ts.LanguageService['getCompletionsAtPosition'],
