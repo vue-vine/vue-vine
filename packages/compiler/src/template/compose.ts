@@ -53,6 +53,12 @@ export function compileVineTemplate(
   & { templateParsedAst?: ReturnType<typeof parse> }
 ) | null {
   const _compile = ssr ? ssrCompile : compile
+  const {
+    __enableTransformAssetsURL = true,
+    __transformNegativeBool,
+  } = compilerHooks.getCompilerCtx()
+    ?.options
+    ?.vueCompilerOptions ?? {}
 
   try {
     return {
@@ -63,12 +69,12 @@ export function compileVineTemplate(
         prefixIdentifiers: true,
         inline: true,
         nodeTransforms: [
-          transformAssetUrl,
+          ...(__enableTransformAssetsURL
+            ? [transformAssetUrl]
+            : []
+          ),
           ...getTransformNegativeBoolPlugin(
-            compilerHooks.getCompilerCtx()
-              ?.options
-              ?.vueCompilerOptions
-              ?.__transformNegativeBool,
+            __transformNegativeBool,
           ),
         ],
         ...params,

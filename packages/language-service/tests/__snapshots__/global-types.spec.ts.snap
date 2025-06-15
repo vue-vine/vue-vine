@@ -4,22 +4,22 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 "
 ; declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  type __StrictIsAny<T> = [unknown] extends [T]
+  type __VINE_VLS_StrictIsAny<T> = [unknown] extends [T]
     ? ([T] extends [unknown] ? true : false)
     : false;
-  type __OmitAny<T> = {
-    [K in keyof T as __StrictIsAny<T[K]> extends true ? never : K]: T[K]
+  type __VINE_VLS_OmitAny<T> = {
+    [K in keyof T as __VINE_VLS_StrictIsAny<T[K]> extends true ? never : K]: T[K]
   }
-  type MakeVLSCtx<T extends object> = {
+  type __VINE_VLS_MakeVLSCtx<T extends object> = {
     [K in keyof T]: T[K]
   }
-  const __createVineVLSCtx: <T>(ctx: T) => MakeVLSCtx<import('vue').UnwrapRef<T>>;
+  const __VINE_VLS_CreateVineVLSCtx: <T>(ctx: T) => __VINE_VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
   type VueVineComponent = __VINE_VLS_Element;
 
   // From vuejs 'runtime-core.d.ts':
-  type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-  type RecordToUnion<T extends Record<string, any>> = T[keyof T];
-  type VueDefineEmits<T extends Record<string, any>> = UnionToIntersection<Exclude<RecordToUnion<{
+  type __VINE_VLS_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+  type __VINE_VLS_RecordToUnion<T extends Record<string, any>> = T[keyof T];
+  type __VINE_VLS_VueDefineEmits<T extends Record<string, any>> = __VINE_VLS_UnionToIntersection<Exclude<__VINE_VLS_RecordToUnion<{
       [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
   }>, undefined>>;
 

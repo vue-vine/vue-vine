@@ -25,7 +25,7 @@ const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp<string>()
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -44,6 +44,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -52,7 +53,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -104,7 +105,7 @@ const count = ref(0)
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
   /* __LINKED_CODE_LEFT__#2 */p1: /* __LINKED_CODE_RIGHT__#2 */p1,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
@@ -125,6 +126,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -133,7 +135,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -196,7 +198,7 @@ let count = ref('0x' + Foo + 'CAFE')
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#4 */type: /* __LINKED_CODE_RIGHT__#4 */type,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
@@ -216,6 +218,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -224,7 +227,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -268,7 +271,7 @@ type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -286,6 +289,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -294,7 +298,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -341,7 +345,7 @@ const vBounce: Directive<HTMLElement> = {
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#7 */vBounce: /* __LINKED_CODE_RIGHT__#7 */vBounce,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -360,6 +364,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -368,7 +373,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -423,7 +428,7 @@ type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */zee: /* __LINKED_CODE_RIGHT__#3 */zee,
   /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
@@ -443,6 +448,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -451,7 +457,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -493,7 +499,7 @@ const bar = ref('123')
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */UnknownComp: /* __LINKED_CODE_RIGHT__#11 */UnknownComp,
   /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#3 */bar: /* __LINKED_CODE_RIGHT__#3 */bar,
@@ -513,6 +519,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -521,7 +528,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -590,7 +597,7 @@ vineExpose(__VINE_VLS_ComponentExpose__)
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
@@ -609,6 +616,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   ...props,
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -617,7 +625,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -679,7 +687,7 @@ const target = useTemplateRef<__VINE_VLS_TemplateRefs['target'], keyof __VINE_VL
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -697,6 +705,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -705,7 +714,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -764,7 +773,7 @@ interface User { id: string; name: string }
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */users: /* __LINKED_CODE_RIGHT__#5 */users,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -783,6 +792,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -791,7 +801,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -846,7 +856,7 @@ await doSomethingAsync()
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -864,6 +874,7 @@ const __VINE_VLS_ctx = __createVineVLSCtx({
   /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
   /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
   /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
@@ -872,7 +883,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
@@ -898,6 +909,80 @@ return vine\`\` as any as VueVineComponent;
 }
 // #endregion
 
+// #region Test generics on Vine component function 
+
+export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
+  props: __VINE_VLS_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {}
+) {
+  
+type TestGenericComp1_Props = Parameters<typeof TestGenericComp1>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#9 */component: /* __LINKED_CODE_RIGHT__#9 */component,
+  /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
+  /* __LINKED_CODE_LEFT__#11 */watchEffect: /* __LINKED_CODE_RIGHT__#11 */watchEffect,
+  /* __LINKED_CODE_LEFT__#3 */Foo: /* __LINKED_CODE_RIGHT__#3 */Foo,
+  /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
+  /* __LINKED_CODE_LEFT__#9 */SampleOne: /* __LINKED_CODE_RIGHT__#9 */SampleOne,
+  /* __LINKED_CODE_LEFT__#9 */SampleTwo: /* __LINKED_CODE_RIGHT__#9 */SampleTwo,
+  /* __LINKED_CODE_LEFT__#21 */TestPlainTextTemplate: /* __LINKED_CODE_RIGHT__#21 */TestPlainTextTemplate,
+  /* __LINKED_CODE_LEFT__#23 */TestUnoCssAttributeMode: /* __LINKED_CODE_RIGHT__#23 */TestUnoCssAttributeMode,
+  /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
+  /* __LINKED_CODE_LEFT__#11 */TestCompTwo: /* __LINKED_CODE_RIGHT__#11 */TestCompTwo,
+  /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
+  /* __LINKED_CODE_LEFT__#11 */TestCompRef: /* __LINKED_CODE_RIGHT__#11 */TestCompRef,
+  /* __LINKED_CODE_LEFT__#20 */TestNoVforKeyOnChild: /* __LINKED_CODE_RIGHT__#20 */TestNoVforKeyOnChild,
+  /* __LINKED_CODE_LEFT__#16 */doSomethingAsync: /* __LINKED_CODE_RIGHT__#16 */doSomethingAsync,
+  /* __LINKED_CODE_LEFT__#29 */TestNoLifecycleHookAfterAwait: /* __LINKED_CODE_RIGHT__#29 */TestNoLifecycleHookAfterAwait,
+  /* __LINKED_CODE_LEFT__#16 */TestGenericComp1: /* __LINKED_CODE_RIGHT__#16 */TestGenericComp1,
+  ...props,
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+const __VINE_VLS_0 = ((__VINE_VLS_ctx.as));
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+var __VINE_VLS_4 = {} as (Parameters<NonNullable<typeof __VINE_VLS_3['expose']>>[0] | null);
+// @ts-ignore
+[as,];
+var __VINE_VLS_3!: __VINE_VLS_PickFunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+};
+type __VINE_VLS_RootEl = 
+| NonNullable<typeof __VINE_VLS_4>['$el'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as VueVineComponent;
+
+}
+
+// #endregion
+
 const __VINE_VLS_ComponentsReferenceMap = {
   'Comp': Comp,
   'SampleOne': SampleOne,
@@ -910,7 +995,9 @@ const __VINE_VLS_ComponentsReferenceMap = {
   'TargetComp': TargetComp,
   'TestCompRef': TestCompRef,
   'TestNoVforKeyOnChild': TestNoVforKeyOnChild,
-  'TestNoLifecycleHookAfterAwait': TestNoLifecycleHookAfterAwait
+  'TestNoLifecycleHookAfterAwait': TestNoLifecycleHookAfterAwait,
+  'TestGenericComp1': TestGenericComp1,
+  'component': component
 };
 
 const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
@@ -937,7 +1024,7 @@ const value = vineModel()
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */value: /* __LINKED_CODE_RIGHT__#5 */value,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
@@ -951,7 +1038,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {}
@@ -999,7 +1086,7 @@ const value = vineModel('special')
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */value: /* __LINKED_CODE_RIGHT__#5 */value,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
@@ -1013,7 +1100,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {}
@@ -1063,7 +1150,7 @@ const simpleMsg = ref('')
   
 // --- Start: Template virtual code
 
-const __VINE_VLS_ctx = __createVineVLSCtx({
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
   /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
   /* __LINKED_CODE_LEFT__#9 */simpleMsg: /* __LINKED_CODE_RIGHT__#9 */simpleMsg,
@@ -1078,7 +1165,7 @@ type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
-  ...__VINE_VLS_localComponents as __VINE_VLS_LocalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
 };
 
 type __VINE_VLS_StyleScopedClasses = {}
