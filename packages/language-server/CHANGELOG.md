@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.4.10
+
+### Patch Changes
+
+- Supplement missing VLS prefix for OmitAny.
+- Updated dependencies
+  - @vue-vine/compiler@1.4.10
+  - @vue-vine/language-service@1.4.10
+
 ## 1.4.9
 
 ### Patch Changes

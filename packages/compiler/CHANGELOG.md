@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.4.10
+
+### Patch Changes
+
+- Supplement missing VLS prefix for OmitAny.
+
 ## 1.4.9
 
 ### Patch Changes

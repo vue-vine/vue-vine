@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.4.10
+
+### Patch Changes
+
+- Supplement missing VLS prefix for OmitAny.
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.4.10
+
 ## 1.4.9
 
 ### Patch Changes
