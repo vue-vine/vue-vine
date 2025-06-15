@@ -14,7 +14,7 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
     [K in keyof T]: T[K]
   }
   const __VINE_VLS_CreateVineVLSCtx: <T>(ctx: T) => __VINE_VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
-  type VueVineComponent = __VINE_VLS_Element;
+  type __VINE_VLS_VueVineComponent = __VINE_VLS_Element;
 
   // From vuejs 'runtime-core.d.ts':
   type __VINE_VLS_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
@@ -23,7 +23,7 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
       [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
   }>, undefined>>;
 
-  type __VINE_VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends VueVineComponent & {
+  type __VINE_VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends __VINE_VLS_VueVineComponent & {
     exposed: infer E
   } ? (exposed: E) => void : never;
 

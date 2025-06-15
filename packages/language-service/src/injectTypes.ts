@@ -61,7 +61,7 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
     [K in keyof T]: T[K]
   }
   const __VLS_CreateVineVLSCtx: <T>(ctx: T) => __VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
-  type VueVineComponent = __VLS_Element;
+  type __VLS_VueVineComponent = __VLS_Element;
 
   // From vuejs 'runtime-core.d.ts':
   type __VLS_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
@@ -70,7 +70,7 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
       [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
   }>, undefined>>;
 
-  type __VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends VueVineComponent & {
+  type __VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends __VLS_VueVineComponent & {
     exposed: infer E
   } ? (exposed: E) => void : never;
 
@@ -158,8 +158,8 @@ ${notPropsBindings.map(([name]) => {
   }
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,

@@ -48,8 +48,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -130,8 +130,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -222,8 +222,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -293,8 +293,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -368,8 +368,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -452,8 +452,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -523,8 +523,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -620,8 +620,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   ...props,
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -709,8 +709,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -796,8 +796,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -878,8 +878,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -943,8 +943,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   ...props,
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -1033,8 +1033,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -1095,8 +1095,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
@@ -1160,8 +1160,8 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VINE_VLS_localComponents = __VINE_VLS_ctx;
-type __VINE_VLS_LocalComponents = __OmitAny<typeof __VINE_VLS_localComponents>;
-type __VINE_VLS_LocalDirectives = __OmitAny<typeof __VINE_VLS_ctx>;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
 let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
 const __VINE_VLS_components = {
   ...{} as __VINE_VLS_GlobalComponents,
