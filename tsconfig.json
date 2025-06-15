@@ -24,7 +24,6 @@
     "**/dist",
     "packages/nuxt-module",
     "packages/e2e-test",
-    "packages/create-vue-vine/template",
-    "packages/e2e-test/src/*.vine.ts"
+    "packages/create-vue-vine/template"
   ]
 }

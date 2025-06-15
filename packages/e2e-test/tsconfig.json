@@ -25,7 +25,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "src"
+    "src",
+    "tests"
   ],
   "exclude": [
     "dist",
