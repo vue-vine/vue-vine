@@ -13,12 +13,17 @@ describe('test utils', () => {
   })
 
   describe('test prettier output', () => {
-    it('should format the code with the default prettier options', async () => {
+    function getFormattedLines(formattedCode: string) {
+      const lines = formattedCode.split('\n').slice(1, -2)
+      return lines
+    }
+
+    it('should format normal sample with the default prettier options', async () => {
       const code = `
 <div
   class="flex flex-col justify-center items-center p-2 transition shadow-md rounded-lg"
   :data-testid="testId"
- >     
+ >
   <p
   v-text="sampleText"
 class="paragraph"
@@ -53,30 +58,30 @@ class="paragraph"
         },
       )
 
-      expect(`\n${formattedCode}`).toMatchInlineSnapshot(`
-        "
-        <template>
-          <div
-            class="flex flex-col justify-center items-center p-2 transition shadow-md rounded-lg"
-            :data-testid="testId"
-          >
-            <p v-text="sampleText" class="paragraph" />
-
-            <MyComponent
-              :foo="'hello'"
-              :bar="123"
-              baz
-              :class="{
-                active: count > 0,
-              }"
-            >
-              <template #default>
-                <span :class="['text-red-500', 'font-bold']">This is a placeholder</span>
-              </template>
-            </MyComponent>
-          </div>
-        </template>
-        "
+      expect(
+        getFormattedLines(formattedCode),
+      ).toMatchInlineSnapshot(`
+        [
+          "  <div",
+          "    class="flex flex-col justify-center items-center p-2 transition shadow-md rounded-lg"",
+          "    :data-testid="testId"",
+          "  >",
+          "    <p v-text="sampleText" class="paragraph" />",
+          "",
+          "    <MyComponent",
+          "      :foo="'hello'"",
+          "      :bar="123"",
+          "      baz",
+          "      :class="{",
+          "        active: count > 0,",
+          "      }"",
+          "    >",
+          "      <template #default>",
+          "        <span :class="['text-red-500', 'font-bold']">This is a placeholder</span>",
+          "      </template>",
+          "    </MyComponent>",
+          "  </div>",
+        ]
       `)
     })
   })

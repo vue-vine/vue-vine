@@ -57,9 +57,9 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
   type __VLS_OmitAny<T> = {
     [K in keyof T as __VLS_StrictIsAny<T[K]> extends true ? never : K]: T[K]
   }
-  type __VLS_MakeVLSCtx<T extends object> = {
-    [K in keyof T]: T[K]
-  }
+  type __VLS_MakeVLSCtx<T extends object> =
+    & T
+    & import('vue').ComponentPublicInstance
   const __VLS_CreateVineVLSCtx: <T>(ctx: T) => __VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
   type __VLS_VueVineComponent = __VLS_Element;
 

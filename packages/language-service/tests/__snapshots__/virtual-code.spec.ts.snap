@@ -2,7 +2,6 @@
 
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
 "/// <reference types=".vue-global-types/vine_vue_99_true" />
-
 import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
@@ -909,7 +908,7 @@ return vine\`\` as any as VueVineComponent;
 }
 // #endregion
 
-// #region Test generics on Vine component function 
+// #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
   props: __VINE_VLS_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {}
@@ -1005,7 +1004,6 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
 "/// <reference types=".vue-global-types/vine_vue_99_true" />
-
 import { ref } from 'vue'
 import '../styles/atom.css'
 
