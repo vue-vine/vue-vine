@@ -13,6 +13,8 @@ import { transformAssetUrl } from './transform-asset-url'
 import { transformBooleanProp } from './transform-negative-bool'
 import { walkVueTemplateAst } from './walk'
 
+const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[^>/]+)$/
+
 function toPascalCase(str: string) {
   return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
 }
@@ -41,8 +43,8 @@ function getTransformNegativeBoolPlugin(
 }
 
 export function compileVineTemplate(
+  vineCompFnCtx: VineCompFnCtx,
   compilerHooks: VineCompilerHooks,
-  source: string,
   params: Partial<CompilerOptions>,
   { ssr, getParsedAst = false }: {
     ssr: boolean
@@ -56,13 +58,22 @@ export function compileVineTemplate(
   const {
     __enableTransformAssetsURL = true,
     __transformNegativeBool,
+    __shouldAddTemplateSuffix,
   } = compilerHooks.getCompilerCtx()
     ?.options
     ?.vueCompilerOptions ?? {}
 
   try {
+    // vue/language-tools / #4583:
+    if (
+      __shouldAddTemplateSuffix
+      && SHOULD_ADD_SUFFIX_REGEXP.test(vineCompFnCtx.templateSource)
+    ) {
+      vineCompFnCtx.templateSource += '>'
+    }
+
     return {
-      ..._compile(source, {
+      ..._compile(vineCompFnCtx.templateSource, {
         mode: 'module',
         hoistStatic: true,
         cacheHandlers: true,
@@ -81,7 +92,7 @@ export function compileVineTemplate(
       }),
       templateParsedAst: (
         getParsedAst
-          ? parse(source, {
+          ? parse(vineCompFnCtx.templateSource, {
               parseMode: 'base',
               prefixIdentifiers: true,
               expressionPlugins: [
@@ -111,7 +122,6 @@ export interface TemplateCompileComposer {
   compileSetupFnReturns: (params: {
     vineFileCtx: VineFileCtx
     vineCompFnCtx: VineCompFnCtx
-    templateSource: string
     mergedImportsMap: MergedImportsMap
     bindingMetadata: Record<string, BindingTypes>
   }) => string
@@ -301,14 +311,13 @@ export function createSeparatedTemplateComposer(
     compileSetupFnReturns: ({
       vineFileCtx,
       vineCompFnCtx,
-      templateSource,
       mergedImportsMap,
       bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
+        vineCompFnCtx,
         compilerHooks,
-        templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           inline: false,
@@ -474,14 +483,13 @@ export function createInlineTemplateComposer(
     compileSetupFnReturns: ({
       vineFileCtx,
       vineCompFnCtx,
-      templateSource,
       mergedImportsMap,
       bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
+        vineCompFnCtx,
         compilerHooks,
-        templateSource,
         {
           scopeId: `data-v-${vineCompFnCtx.scopeId}`,
           bindingMetadata,

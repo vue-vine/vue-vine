@@ -157,6 +157,7 @@ export function createVueVineVirtualCode(
   const compileTime = (performance.now() - compileStartTime).toFixed(2)
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
+
   if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
     const globalTypes = vueCompilerOptions.__setupedGlobalTypes
     let relativePath = path.relative(
@@ -170,10 +171,10 @@ export function createVueVineVirtualCode(
     ) {
       relativePath = `./${relativePath}`
     }
-    tsCodeSegments.push(`/// <reference types="${relativePath}" />\n\n`)
+    tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n\n`)
+    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n`)
   }
 
   let currentOffset = { value: 0 }

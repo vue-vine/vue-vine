@@ -73,6 +73,11 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             templatePositionInfo,
           } = templateInfo
 
+          if (templateRawContent.trim() === '') {
+            // Skip formatting when given template is empty
+            return
+          }
+
           const formatOptions = context.options?.[0] ?? {}
           const lineStartIndex = context.sourceCode.getIndexFromLoc({
             line: templatePositionInfo.templateStartLine,

@@ -350,7 +350,6 @@ export function generateSetupReturns(
   const setupFnReturns = compileSetupFnReturns({
     vineFileCtx,
     vineCompFnCtx,
-    templateSource: vineCompFnCtx.templateSource,
     mergedImportsMap,
     bindingMetadata: vineCompFnCtx.bindings,
   })
