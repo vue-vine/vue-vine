@@ -908,7 +908,7 @@ return vine\`\` as any as VueVineComponent;
 }
 // #endregion
 
-// #region Test generics on Vine component function 
+// #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
   props: __VINE_VLS_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {}

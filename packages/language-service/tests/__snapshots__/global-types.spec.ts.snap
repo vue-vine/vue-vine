@@ -10,9 +10,9 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
   type __VINE_VLS_OmitAny<T> = {
     [K in keyof T as __VINE_VLS_StrictIsAny<T[K]> extends true ? never : K]: T[K]
   }
-  type __VINE_VLS_MakeVLSCtx<T extends object> = {
-    [K in keyof T]: T[K]
-  }
+  type __VINE_VLS_MakeVLSCtx<T extends object> =
+    & T
+    & import('vue').ComponentPublicInstance
   const __VINE_VLS_CreateVineVLSCtx: <T>(ctx: T) => __VINE_VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
   type __VINE_VLS_VueVineComponent = __VINE_VLS_Element;
 
