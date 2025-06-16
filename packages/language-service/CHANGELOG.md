@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.4.11
+
+### Patch Changes
+
+- Fix eslint formatting for template when it's totally empty, Add missing import not working when referencing component tag name, Add import('vue').ComponentPublicInstance to support $xx in template
+- Updated dependencies
+  - @vue-vine/compiler@1.4.11
+
 ## 1.4.10
 
 ### Patch Changes

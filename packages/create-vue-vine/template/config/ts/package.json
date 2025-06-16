@@ -7,6 +7,6 @@
   "devDependencies": {
     "npm-run-all": "^4.1.5",
     "typescript": "^5.6.3",
-    "vue-vine-tsc": "^1.4.10"
+    "vue-vine-tsc": "^1.4.11"
   }
 }

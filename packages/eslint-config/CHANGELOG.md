@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 1.1.3
+
+### Patch Changes
+
+- Fix eslint formatting for template when it's totally empty, Add missing import not working when referencing component tag name, Add import('vue').ComponentPublicInstance to support $xx in template
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.3
+
 ## 1.1.2
 
 ### Patch Changes
