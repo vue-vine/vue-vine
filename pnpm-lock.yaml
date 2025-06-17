@@ -152,6 +152,9 @@ catalogs:
       specifier: ^1.0.0
       version: 1.0.0
   miscs:
+    '@umami/node':
+      specifier: ^0.4.0
+      version: 0.4.0
     element-plus:
       specifier: ^2.9.11
       version: 2.10.1
@@ -958,6 +961,9 @@ importers:
       '@typescript/native-preview':
         specifier: catalog:compiler
         version: 7.0.0-dev.20250610.1
+      '@umami/node':
+        specifier: catalog:miscs
+        version: 0.4.0
       '@volar/vscode':
         specifier: catalog:volar
         version: 2.4.14
@@ -3273,6 +3279,9 @@ packages:
   '@typespec/ts-http-runtime@0.2.2':
     resolution: {integrity: sha512-Gz/Sm64+Sq/vklJu1tt9t+4R2lvnud8NbTD/ZfpZtMiUX7YeVpCA8j6NSW8ptwcoLL+NmYANwqP8DV0q/bwl2w==}
     engines: {node: '>=18.0.0'}
+
+  '@umami/node@0.4.0':
+    resolution: {integrity: sha512-pyphprbiF7KiDSc+SWZ4/rVM8B5vU27zIiFfEPj2lEqczpI4xAKSp+dM3tlzyRAWJL32fcbCfAaLGhJZQV13Rg==}
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
@@ -11297,6 +11306,8 @@ snapshots:
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
+
+  '@umami/node@0.4.0': {}
 
   '@ungap/structured-clone@1.3.0': {}
 

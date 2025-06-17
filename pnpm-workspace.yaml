@@ -62,6 +62,7 @@ catalogs:
     prettier: ^3.5.3
     prettier-linter-helpers: ^1.0.0
   miscs:
+    '@umami/node': ^0.4.0
     element-plus: ^2.9.11
     synckit: ^0.11.6
     ws: ^8.18.2

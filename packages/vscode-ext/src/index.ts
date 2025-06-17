@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type {
   LabsInfo,
 } from '@volar/vscode'
@@ -8,10 +7,14 @@ import {
   getTsdk,
 } from '@volar/vscode'
 import * as lsp from '@volar/vscode/node'
+import { useOutputChannel } from 'reactive-vscode'
 import * as vscode from 'vscode'
-import { useVineExtensionViewFeatures } from './view-features'
+import { useExtensionConfigs } from './config'
+import { Track } from './track'
+import { useDataTrackWarning, useVineExtensionViewFeatures } from './view-features'
 
 let client: lsp.BaseLanguageClient
+let track: Track
 
 export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
   const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js')
@@ -46,10 +49,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
     clientOptions,
   )
 
-  console.log('Starting Vine Language Server ...')
+  const outputChannel = useOutputChannel('Vue Vine Extension')
+
+  outputChannel.appendLine('Starting Vine Language Server ...')
 
   await client.start()
-  console.log('Vine language server started')
+  outputChannel.appendLine('Vine language server started')
 
   // support for auto close tag
   activateAutoInsertion(['typescript'], client)
@@ -57,7 +62,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
   const labsInfo = createLabsInfo()
   labsInfo.addLanguageClient(client)
 
-  useVineExtensionViewFeatures(client)
+  // Start track
+  const extensionConfigs = useExtensionConfigs()
+  useDataTrackWarning(extensionConfigs)
+  track = new Track({
+    extensionConfigs,
+    vscodeVersion: vscode.version,
+    extensionVersion: context.extension.packageJSON.version,
+    machineId: vscode.env.machineId,
+    outputChannel,
+  })
+  await track.trackEvent('extension_activated')
+
+  useVineExtensionViewFeatures(client, track)
 
   return labsInfo.extensionExports
 }
