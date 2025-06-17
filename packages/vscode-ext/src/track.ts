@@ -1,6 +1,5 @@
 import type { OutputChannel } from 'vscode'
 import { Umami } from '@umami/node'
-import { nanoid } from 'nanoid'
 
 export type TrackEvent
   = | 'extension_activated'
@@ -13,7 +12,6 @@ export class Track {
   private _websiteId: string
   private _hostUrl: string
   private _client: Umami
-  private _sessionId: string
   private _outputChannel: OutputChannel
 
   constructor({
@@ -33,15 +31,12 @@ export class Track {
     this._extensionVersion = extensionVersion
     this._machineId = machineId
     this._outputChannel = outputChannel
-    this._sessionId = nanoid()
     this._client = new Umami({
       websiteId: this._websiteId,
       hostUrl: this._hostUrl,
-      userAgent: `vscode/${this._vscodeVersion}, vue-vine/${this._extensionVersion}`,
     })
 
     outputChannel.appendLine(`\n[Vue Vine] track:\n${[
-      `- sessionId: ${this._sessionId}`,
       `- vscodeVersion: ${this._vscodeVersion}`,
       `- extensionVersion: ${this._extensionVersion}`,
       `- machineId: ${this._machineId}`,
@@ -51,7 +46,7 @@ export class Track {
   public async identify(): Promise<void> {
     try {
       await this._client.identify({
-        sessionId: this._sessionId,
+        sessionId: this._machineId,
       })
       this._outputChannel.appendLine(`[Vue Vine] ${new Date().toLocaleString()} - identify success`)
     }

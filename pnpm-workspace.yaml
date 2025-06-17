@@ -64,7 +64,6 @@ catalogs:
   miscs:
     '@umami/node': ^0.4.0
     element-plus: ^2.9.11
-    nanoid: ^5.1.5
     synckit: ^0.11.6
     ws: ^8.18.2
   nuxt-libs:

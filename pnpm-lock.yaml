@@ -158,9 +158,6 @@ catalogs:
     element-plus:
       specifier: ^2.9.11
       version: 2.10.1
-    nanoid:
-      specifier: ^5.1.5
-      version: 5.1.5
     synckit:
       specifier: ^0.11.6
       version: 0.11.8
@@ -979,9 +976,6 @@ importers:
       '@vue-vine/language-service':
         specifier: workspace:*
         version: link:../language-service
-      nanoid:
-        specifier: catalog:miscs
-        version: 5.1.5
       ovsx:
         specifier: catalog:cli
         version: 0.10.4

@@ -111,7 +111,6 @@
     "@vscode/vsce": "catalog:vscode",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
-    "nanoid": "catalog:miscs",
     "ovsx": "catalog:cli",
     "reactive-vscode": "catalog:vscode"
   }
