@@ -1,12 +1,18 @@
 import type * as lsp from '@volar/vscode/node'
+import type { Track } from './track'
 import { executeCommand, useCommand, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
 import * as vscode from 'vscode'
 
-export function useVineExtensionViewFeatures(client: lsp.BaseLanguageClient): void {
+export function useVineExtensionViewFeatures(
+  client: lsp.BaseLanguageClient,
+  track: Track,
+): void {
   useCommand('vine.action.restartServer', async () => {
     await executeCommand('typescript.restartTsServer')
     await client.stop()
     await client.start()
+
+    await track.trackEvent('restart_server')
   })
 
   // Register a button in the bottom of the window,

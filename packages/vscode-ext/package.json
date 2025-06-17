@@ -102,15 +102,16 @@
     "publish:osvx": "ovsx publish",
     "typecheck": "tsgo --noEmit"
   },
-  "dependencies": {},
   "devDependencies": {
     "@changesets/changelog-github": "catalog:utils",
     "@types/vscode": "catalog:types",
     "@typescript/native-preview": "catalog:compiler",
+    "@umami/node": "catalog:miscs",
     "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "catalog:vscode",
     "@vue-vine/language-server": "workspace:*",
     "@vue-vine/language-service": "workspace:*",
+    "nanoid": "catalog:miscs",
     "ovsx": "catalog:cli",
     "reactive-vscode": "catalog:vscode"
   }
