@@ -30,8 +30,7 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'true' }],
     ['link', { href: 'https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
-    ['script', { 'defer': '', 'data-domain': 'vue-vine.dev', 'src': 'https://stats.dokduk.cc/js/script.hash.outbound-links.js' }],
-    ['script', {}, 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }'],
+    ['script', { 'defer': '', 'data-website-id': '5c1907e9-d51e-4b5b-a1cc-f05ece324544', 'src': 'https://stats.dokduk.cc/script.js' }],
   ],
   lang: 'en-US',
   themeConfig: {
