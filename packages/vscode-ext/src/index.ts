@@ -9,8 +9,9 @@ import {
 import * as lsp from '@volar/vscode/node'
 import { useOutputChannel } from 'reactive-vscode'
 import * as vscode from 'vscode'
+import { useExtensionConfigs } from './config'
 import { Track } from './track'
-import { useVineExtensionViewFeatures } from './view-features'
+import { useDataTrackWarning, useVineExtensionViewFeatures } from './view-features'
 
 let client: lsp.BaseLanguageClient
 let track: Track
@@ -62,13 +63,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
   labsInfo.addLanguageClient(client)
 
   // Start track
+  const extensionConfigs = useExtensionConfigs()
+  useDataTrackWarning(extensionConfigs)
   track = new Track({
+    extensionConfigs,
     vscodeVersion: vscode.version,
     extensionVersion: context.extension.packageJSON.version,
     machineId: vscode.env.machineId,
     outputChannel,
   })
-  await track.identify()
   await track.trackEvent('extension_activated')
 
   useVineExtensionViewFeatures(client, track)

@@ -93,6 +93,23 @@
         "title": "Restart Vue Vine and TS servers",
         "category": "Vue Vine"
       }
+    ],
+    "configuration": [
+      {
+        "title": "Vue Vine",
+        "properties": {
+          "vue-vine.dataTrack": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to collect event data such as extension activating, language server restarting, etc."
+          },
+          "vue-vine.hideDataTrackWarning": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to hide the data track warning."
+          }
+        }
+      }
     ]
   },
   "scripts": {

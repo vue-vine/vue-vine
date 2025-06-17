@@ -184,7 +184,7 @@ export function TodoList() {
   return vine`
     <div class="todo-container container xl flex items-center justify-center flex-col">
       <TodoHeader />
-    <TodoContent />
+      <TodoContent />
     </div>
   `;
 }

@@ -1,11 +1,14 @@
 import type { OutputChannel } from 'vscode'
+import type { useExtensionConfigs } from './config'
 import { Umami } from '@umami/node'
+import { watchEffect } from 'reactive-vscode'
 
 export type TrackEvent
   = | 'extension_activated'
     | 'restart_server'
 
 export class Track {
+  private _isDisabled: boolean = false
   private _vscodeVersion: string
   private _extensionVersion: string
   private _machineId: string
@@ -15,11 +18,13 @@ export class Track {
   private _outputChannel: OutputChannel
 
   constructor({
+    extensionConfigs,
     vscodeVersion,
     extensionVersion,
     machineId,
     outputChannel,
   }: {
+    extensionConfigs: ReturnType<typeof useExtensionConfigs>
     vscodeVersion: string
     extensionVersion: string
     machineId: string
@@ -34,6 +39,7 @@ export class Track {
     this._client = new Umami({
       websiteId: this._websiteId,
       hostUrl: this._hostUrl,
+      sessionId: this._machineId,
     })
 
     outputChannel.appendLine(`\n[Vue Vine] track:\n${[
@@ -41,35 +47,36 @@ export class Track {
       `- extensionVersion: ${this._extensionVersion}`,
       `- machineId: ${this._machineId}`,
     ].join('\n')}`)
-  }
 
-  public async identify(): Promise<void> {
-    try {
-      await this._client.identify({
-        sessionId: this._machineId,
-      })
-      this._outputChannel.appendLine(`[Vue Vine] ${new Date().toLocaleString()} - identify success`)
-    }
-    catch (error) {
-      this._outputChannel.appendLine(`[Vue Vine] ${new Date().toLocaleString()} - identify failed: ${error}`)
-    }
+    watchEffect(() => {
+      this._isDisabled = !extensionConfigs.dataTrack.value
+    })
   }
 
   public async trackEvent(
     event: TrackEvent,
-    data: Record<string, string | number | Date> = {},
   ): Promise<void> {
+    if (this._isDisabled)
+      return
+
     try {
-      await this._client.track(event, {
-        vscodeVersion: this._vscodeVersion,
-        extensionVersion: this._extensionVersion,
-        machineId: this._machineId,
-        ...data,
-      })
+      await this._client.send({
+        website: this._websiteId,
+        name: event,
+        data: {
+          vscodeVersion: this._vscodeVersion,
+          extensionVersion: this._extensionVersion,
+          machineId: this._machineId,
+        },
+      }, 'event')
       this._outputChannel.appendLine(`[Vue Vine] ${new Date().toLocaleString()} - '${event}' event has been sent`)
     }
     catch (error) {
       this._outputChannel.appendLine(`[Vue Vine] ${new Date().toLocaleString()} - '${event}' track failed: ${error}`)
     }
+  }
+
+  public disable(): void {
+    this._isDisabled = true
   }
 }
