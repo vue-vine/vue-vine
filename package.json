@@ -42,7 +42,8 @@
     "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
     "typecheck": "pnpm --parallel -r typecheck",
     "upgrade-template-deps": "pnpm tsx scripts/upgrade-template-deps.js",
-    "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack --local",
+    "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack",
+    "local-pack-ext:bump": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack --bump",
     "verify": "pnpm build && pnpm test && pnpm typecheck && pnpm lint && pnpm lint-staged",
     "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build"
   },

@@ -60,7 +60,7 @@ async function pack() {
 }
 
 async function run() {
-  const isLocalPack = process.argv.includes('--local')
+  const isBumpPack = process.argv.includes('--bump')
 
   const replaceOptions = {
     depVersionReplacer: ({ pkgName, packageJSON }) => {
@@ -69,7 +69,7 @@ async function run() {
       }
     },
   }
-  if (isLocalPack) {
+  if (isBumpPack) {
     replaceOptions.pkgVersionReplacer = ({ packageJSON }) => {
       return semver.inc(packageJSON.version, 'patch')
     }
