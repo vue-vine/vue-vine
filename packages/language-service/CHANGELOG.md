@@ -1,5 +1,16 @@
 # @vue-vine/language-service
 
+## 1.5.0
+
+### Minor Changes
+
+- Support events data collection in VSCode extension.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/compiler@1.5.0
+
 ## 1.4.11
 
 ### Patch Changes

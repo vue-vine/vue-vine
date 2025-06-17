@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.5.0
+
+### Minor Changes
+
+- Support events data collection in VSCode extension.
+
 ## 1.4.11
 
 ### Patch Changes
