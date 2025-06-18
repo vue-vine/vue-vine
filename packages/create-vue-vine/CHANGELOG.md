@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.5.1
+
+### Patch Changes
+
+- Support new track event for virtual code generation.
+
 ## 1.5.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.5.1
+
+### Patch Changes
+
+- Support new track event for virtual code generation.
+- Updated dependencies
+  - @vue-vine/language-service@1.5.1
+
 ## 1.5.0
 
 ### Minor Changes
