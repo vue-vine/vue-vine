@@ -67,7 +67,7 @@ export const AnotherComp = (() => {
                   "div",
                   null,
                   "AnotherComp",
-                  -1 /* HOISTED */,
+                  -1 /* CACHED */,
                 )),
               _createElementVNode(
                 "p",
@@ -188,7 +188,7 @@ export const MyProfile = (() => {
                   alt: "sample",
                 },
                 null,
-                -1 /* HOISTED */,
+                -1 /* CACHED */,
               )),
           ])
         );
@@ -229,7 +229,7 @@ export const MyApp = (() => {
                 "h2",
                 null,
                 "Hello world",
-                -1 /* HOISTED */,
+                -1 /* CACHED */,
               )),
             _createVNode(MyProfile, {
               name: "Tomy",
@@ -332,7 +332,7 @@ export const AnotherComp = (() => {
                   "div",
                   null,
                   "AnotherComp",
-                  -1 /* HOISTED */,
+                  -1 /* CACHED */,
                 )),
               _createElementVNode(
                 "p",
@@ -452,7 +452,7 @@ export const MyProfile = (() => {
                   alt: "sample",
                 },
                 null,
-                -1 /* HOISTED */,
+                -1 /* CACHED */,
               )),
           ])
         );
@@ -492,7 +492,7 @@ export const MyApp = (() => {
                 "h2",
                 null,
                 "Hello world",
-                -1 /* HOISTED */,
+                -1 /* CACHED */,
               )),
             _createVNode(MyProfile, {
               name: "Tomy",
@@ -587,7 +587,7 @@ export const AnotherComp = (() => {
               "div",
               null,
               "AnotherComp",
-              -1 /* HOISTED */,
+              -1 /* CACHED */,
             )),
           _createElementVNode(
             "p",
@@ -723,7 +723,7 @@ export const MyProfile = (() => {
               alt: "sample",
             },
             null,
-            -1 /* HOISTED */,
+            -1 /* CACHED */,
           )),
       ])
     );
@@ -765,7 +765,7 @@ export const MyApp = (() => {
             "h2",
             null,
             "Hello world",
-            -1 /* HOISTED */,
+            -1 /* CACHED */,
           )),
         _createVNode($setup["MyProfile"], {
           name: "Tomy",
@@ -1128,7 +1128,7 @@ export const About = (() => {
             null,
             _cache[0] ||
               (_cache[0] = [
-                _createElementVNode("h2", null, "About page", -1 /* HOISTED */),
+                _createElementVNode("h2", null, "About page", -1 /* CACHED */),
               ]),
           )
         );
