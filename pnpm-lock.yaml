@@ -823,6 +823,9 @@ importers:
 
   packages/language-service:
     dependencies:
+      '@umami/node':
+        specifier: catalog:miscs
+        version: 0.4.0
       '@volar/language-core':
         specifier: catalog:volar
         version: 2.4.14
@@ -961,9 +964,6 @@ importers:
       '@typescript/native-preview':
         specifier: catalog:compiler
         version: 7.0.0-dev.20250610.1
-      '@umami/node':
-        specifier: catalog:miscs
-        version: 0.4.0
       '@volar/vscode':
         specifier: catalog:volar
         version: 2.4.14

@@ -1,6 +1,6 @@
 import type * as lsp from '@volar/vscode/node'
+import type { Track } from '@vue-vine/language-service'
 import type { useExtensionConfigs } from './config'
-import type { Track } from './track'
 import { executeCommand, useCommand, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
 import * as vscode from 'vscode'
 
