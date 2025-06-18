@@ -49,6 +49,7 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
+    "@umami/node": "catalog:miscs",
     "@volar/language-core": "catalog:volar",
     "@volar/language-server": "catalog:volar",
     "@volar/typescript": "catalog:volar",

@@ -15,6 +15,7 @@ import { create as createTypeScriptServices } from 'volar-service-typescript'
 import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
 import { createVineFoldingRangesPlugin } from './plugins/vine-folding-ranges'
 import { createVineTemplatePlugin } from './plugins/vine-template'
+import { track } from './track'
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -86,6 +87,7 @@ connection.onInitialize(async (params) => {
           compilerOptions,
           vueCompilerOptions,
           target: 'extension',
+          track,
         },
       ),
     ]
