@@ -24,12 +24,12 @@ export async function compileVineStyle(
     onWarn?: (msg: string) => void
   },
 ): Promise<{
-    code: string
-    map?: RawSourceMap
-    errors: Error[]
-    rawResult?: Result
-    dependencies: Set<string>
-  }> {
+  code: string
+  map?: RawSourceMap
+  errors: Error[]
+  rawResult?: Result
+  dependencies: Set<string>
+}> {
   let { source } = params
   const {
     vineFileId,

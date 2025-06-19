@@ -24,10 +24,10 @@ function collectParts(
   context: Context,
   node: TSESTree.Node,
 ): Array<{
-    type: 'string' | 'expression'
-    value: string
-    raw?: string
-  }> {
+  type: 'string' | 'expression'
+  value: string
+  raw?: string
+}> {
   if (node.type === 'BinaryExpression' && node.operator === '+') {
     return [
       ...collectParts(context, node.left),
