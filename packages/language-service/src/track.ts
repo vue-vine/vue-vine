@@ -61,6 +61,7 @@ export class Track {
 
   public async trackEvent(
     event: TrackEvent,
+    data: Record<string, any> = {},
   ): Promise<void> {
     if (this._isDisabled)
       return
@@ -68,14 +69,16 @@ export class Track {
     try {
       await this._client.send({
         website: this._websiteId,
-        name: event,
+        url: `/${event}`,
+        referrer: `https://${this._machineId}.extension-user.vue-vine.dev`,
         data: {
           vscodeVersion: this._vscodeVersion,
           extensionVersion: this._extensionVersion,
           machineId: this._machineId,
+          ...data,
         },
-      }, 'event')
-      this._outputChannel.appendLine(`${getLogTimeLabel()} - '${event}' event has been sent`)
+      })
+      this._outputChannel.appendLine(`${getLogTimeLabel()} - event '${event}' has been sent`)
     }
     catch (error) {
       this._outputChannel.appendLine(`${getLogTimeLabel()} - '${event}' track failed: ${error}`)
