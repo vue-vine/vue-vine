@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.5.3
+
+### Patch Changes
+
+- Revert track methods to just use events to report.
+- Updated dependencies
+  - vue-vine@1.5.3
+
 ## 1.5.2
 
 ### Patch Changes

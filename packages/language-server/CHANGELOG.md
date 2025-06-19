@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.5.3
+
+### Patch Changes
+
+- Revert track methods to just use events to report.
+- Updated dependencies
+  - @vue-vine/compiler@1.5.3
+  - @vue-vine/language-service@1.5.3
+
 ## 1.5.2
 
 ### Patch Changes

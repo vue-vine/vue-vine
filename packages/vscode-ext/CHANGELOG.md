@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.5.3
+
+### Patch Changes
+
+- Revert track methods to just use events to report.
+
 ## 1.5.2
 
 ### Patch Changes
