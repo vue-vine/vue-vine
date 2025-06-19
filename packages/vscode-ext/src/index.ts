@@ -80,6 +80,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
     `  - extensionVersion: ${envInfo.extensionVersion}`,
     `  - machineId: ${envInfo.machineId}`,
   ].join('\n')}`)
+
   await track.trackEvent('extension_activated')
 
   useVineExtensionViewFeatures(client, track)

@@ -45,7 +45,7 @@ export class Track {
     machineId: string
     outputChannel: TrackOutputChannel
   }) {
-    this._websiteId = 'dc82842c-bd27-4bdd-8305-2f5558695020'
+    this._websiteId = '492c7ab5-02b6-4776-8d48-9aa8eb661e75'
     this._hostUrl = 'https://stats.dokduk.cc'
     this._isDisabled = isTrackDisabled
     this._vscodeVersion = vscodeVersion
@@ -67,17 +67,19 @@ export class Track {
       return
 
     try {
-      await this._client.send({
+      const payload: any = {
         website: this._websiteId,
-        url: `/${event}`,
-        referrer: `https://${this._machineId}.extension-user.vue-vine.dev`,
+        name: event,
         data: {
+          ...data,
+          machineId: this._machineId,
           vscodeVersion: this._vscodeVersion,
           extensionVersion: this._extensionVersion,
-          machineId: this._machineId,
-          ...data,
         },
-      })
+      }
+      const res = await this._client.send(payload)
+      const respData = await res.json()
+      this._outputChannel.appendLine(`${getLogTimeLabel()} - track event '${event}' response: ${JSON.stringify(respData)}`)
       this._outputChannel.appendLine(`${getLogTimeLabel()} - event '${event}' has been sent`)
     }
     catch (error) {
