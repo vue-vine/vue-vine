@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.5.2
+
+### Patch Changes
+
+- Improve event track to a more clear view.
+- Updated dependencies
+  - @vue-vine/compiler@1.5.2
+
 ## 1.5.1
 
 ### Patch Changes

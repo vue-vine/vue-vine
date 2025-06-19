@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.5.2
+
+### Patch Changes
+
+- Improve event track to a more clear view.
+
 ## 1.5.1
 
 ### Patch Changes
