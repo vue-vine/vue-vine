@@ -8,7 +8,7 @@ const inTemplateMessageId = 'format-prefer-template-inside-vine-template' as con
 export type MessageIds
   = | typeof messageId
     | typeof inTemplateMessageId
-export type Options = []
+export type Options = [{ allowInTemplate?: boolean }]
 type Context = RuleContext<MessageIds, Options>
 
 function isConcatingString(node: TSESTree.BinaryExpression): boolean {
@@ -70,13 +70,23 @@ const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
       description: 'Require template literals instead of string concatenation.',
     },
     fixable: 'code',
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          allowInTemplate: {
+            type: 'boolean',
+            default: false,
+          },
+        },
+      },
+    ],
     messages: {
       [messageId]: 'Unexpected string concatenation. Please use template literals.',
       [inTemplateMessageId]: 'Not recommend string concatenation in vine template. Please extract it to a variable or computed.',
     },
   },
-  defaultOptions: [],
+  defaultOptions: [{ allowInTemplate: false }],
   create(context) {
     return {
       'VTemplateRoot BinaryExpression': (node: TSESTree.BinaryExpression) => {
@@ -85,6 +95,11 @@ const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
 
         // Report error to show 'not recommend' for string concatenation in vine template
         // But don't autofix it
+        const isAllowInTemplate = context.options[0]?.allowInTemplate ?? false
+        if (isAllowInTemplate) {
+          return
+        }
+
         context.report({
           node,
           messageId: inTemplateMessageId,

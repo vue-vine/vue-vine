@@ -76,7 +76,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_SampleOne_props__ = {
@@ -177,7 +177,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_SampleTwo_props__ = {}
@@ -254,7 +254,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestPlainTextTemplate_props__ = {}
@@ -315,7 +315,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestUnoCssAttributeMode_props__ = {}
@@ -399,7 +399,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestCompOne_props__ = {
@@ -481,7 +481,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestCompTwo_props__ = {}
@@ -568,7 +568,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 // #endregion
@@ -667,7 +667,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VINE_VLS_ComponentExpose__>) };
+return vine\`\` as any as __VINE_VLS_VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VINE_VLS_ComponentExpose__>) };
 
 }
 type __VINE_VLS_TestCompRef_props__ = {}
@@ -753,7 +753,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestNoVforKeyOnChild_props__ = {}
@@ -831,7 +831,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestNoLifecycleHookAfterAwait_props__ = {}
@@ -903,7 +903,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 // #endregion
@@ -976,7 +976,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 
@@ -1066,7 +1066,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_NamedModelInput_props__ = {}
@@ -1128,7 +1128,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 type __VINE_VLS_TestVineModel_props__ = {}
@@ -1241,7 +1241,7 @@ $el: __VINE_VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as VueVineComponent;
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
 
