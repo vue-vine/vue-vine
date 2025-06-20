@@ -1,5 +1,3 @@
-// @ts-check
-
 import antfu from '@antfu/eslint-config'
 import VueVine from '@vue-vine/eslint-config'
 
