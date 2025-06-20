@@ -304,7 +304,7 @@ export function createVueVineVirtualCode(
       generateScriptUntil(vineCompFn.templateStringNode.quasi.start!)
 
       // clear the template string
-      tsCodeSegments.push(`\`\` as any as VueVineComponent${vineCompFn.expose
+      tsCodeSegments.push(`\`\` as any as __VLS_VueVineComponent${vineCompFn.expose
         ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_ComponentExpose__>) }`
         : ''
       };\n`)
