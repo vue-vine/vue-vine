@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.4
+
+### Patch Changes
+
+- Fix JSX compatibility regression issue and give option to turn off 'format-prefer-template' in vine template
+
 ## 1.1.3
 
 ### Patch Changes

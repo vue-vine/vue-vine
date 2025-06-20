@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 1.1.4
+
+### Patch Changes
+
+- Fix JSX compatibility regression issue and give option to turn off 'format-prefer-template' in vine template
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.4
+
 ## 1.1.3
 
 ### Patch Changes

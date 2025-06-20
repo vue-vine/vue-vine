@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.5.4
+
+### Patch Changes
+
+- Fix JSX compatibility regression issue and give option to turn off 'format-prefer-template' in vine template
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.5.4
+
 ## 1.5.3
 
 ### Patch Changes
