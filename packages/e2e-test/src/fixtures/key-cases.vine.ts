@@ -86,7 +86,7 @@ export function TestUnoCssAttributeMode() {
 
 
 // #region Fixtures for testing component reference & props check in VSCode
-function TestCompOne() {
+export function TestCompOne() {
   /** @description zee is a string! */
   const zee = vineProp<string>()
   const foo = vineProp.withDefault(0)

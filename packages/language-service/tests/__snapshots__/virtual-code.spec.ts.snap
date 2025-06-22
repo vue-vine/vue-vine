@@ -414,7 +414,7 @@ type __VINE_VLS_TestCompOne_props__ = {
 
 
 // #region Fixtures for testing component reference & props check in VSCode
-function TestCompOne(
+export function TestCompOne(
   props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestCompOne_props__,
 context: {}) {
   
