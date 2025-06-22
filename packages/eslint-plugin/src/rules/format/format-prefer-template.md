@@ -4,6 +4,16 @@ This rule is a fork of ESLint built-in rule [prefer-template](https://eslint.org
 
 In case of forbidding to nest template string inside Vue Vine template inner JS expression, so the original autofix may break Vine template, so we make a Vine specific version of this rule.
 
+## Options
+
+```ts
+type Options = [{
+  allowInTemplate?: boolean
+}]
+```
+
+- `allowInTemplate`: Whether to allow string concatenation in Vue Vine template.
+
 ## Rule Details
 
 <!-- eslint-skip -->
