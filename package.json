@@ -2,7 +2,7 @@
   "name": "vue-vine-workspace",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.12.3",
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
