@@ -6,5 +6,6 @@
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",
+  "ignore": ["vue-vine-docs"],
   "updateInternalDependencies": "patch"
 }
