@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.5.5
+
+### Patch Changes
+
+- Fix VSCode extension for not showing 'Channel has been closed' error
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.5.5
+
 ## 1.5.4
 
 ### Patch Changes

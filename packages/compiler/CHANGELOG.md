@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.5.5
+
+### Patch Changes
+
+- Fix VSCode extension for not showing 'Channel has been closed' error
+
 ## 1.5.4
 
 ### Patch Changes

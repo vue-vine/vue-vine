@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.5.5
+
+### Patch Changes
+
+- Fix VSCode extension for not showing 'Channel has been closed' error
+- Updated dependencies
+  - @vue-vine/compiler@1.5.5
+  - @vue-vine/language-service@1.5.5
+
 ## 1.5.4
 
 ### Patch Changes
