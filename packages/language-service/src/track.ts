@@ -1,9 +1,8 @@
 import { Umami } from '@umami/node'
 
 export type TrackEvent
-  = | 'extension_activated'
-    | 'restart_server'
-    | 'virtual_code_created'
+  = | 'restart_server'
+// ... TODO: add more events
 
 const logFormat = new Intl.DateTimeFormat('zh-CN', {
   hour12: false,
@@ -45,7 +44,7 @@ export class Track {
     machineId: string
     outputChannel: TrackOutputChannel
   }) {
-    this._websiteId = '492c7ab5-02b6-4776-8d48-9aa8eb661e75'
+    this._websiteId = '4f9d14cd-73fa-46e1-8ef2-460fedb1fb0c'
     this._hostUrl = 'https://stats.dokduk.cc'
     this._isDisabled = isTrackDisabled
     this._vscodeVersion = vscodeVersion
