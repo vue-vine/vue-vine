@@ -103,6 +103,12 @@ function mayNeedPropsAlias(vineCompFn: VineFnCompCtx) {
   return `/* No need to list destructured props here */`
 }
 
+function toPascalCase(name: string) {
+  return name.split('-').map(
+    part => part[0].toUpperCase() + part.slice(1),
+  ).join('')
+}
+
 interface GenerateVLSContextOptions {
   excludeBindings?: Set<string>
 }
@@ -140,9 +146,7 @@ ${notPropsBindings.map(([name]) => {
   // `name` maybe 'router-view' format,
   // so we need to convert it to PascalCase: `RouterView`
   if (name.includes('-')) {
-    name = name.split('-').map(
-      part => part[0].toUpperCase() + part.slice(1),
-    ).join('')
+    name = toPascalCase(name)
   }
 
   return `  ${

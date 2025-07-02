@@ -5,8 +5,8 @@ import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelFunctionNodeTypes, BabelToken, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
 import path from 'node:path/posix'
-import { isBlockStatement, isCallExpression, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
-import { _breakableTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
+import { isBlockStatement, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
+import { _breakableTraverse, exitTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'
 import { createLinkedCodeTag, generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
@@ -641,7 +641,7 @@ export function createVueVineVirtualCode(
               break
             case 'useTemplateRef':
               generateUseTemplateRefTypeParams(
-                vineCompFn,
+                macroInfo.macroCall,
                 excludeBindings,
               )
               break
@@ -777,25 +777,39 @@ export function createVueVineVirtualCode(
   }
 
   function generateUseTemplateRefTypeParams(
-    vineCompFn: VineCompFn,
+    call: CallExpression,
     excludeBindings: Set<string>,
   ) {
-    const fnBody = vineCompFn.fnItselfNode?.body
-    if (!fnBody) {
+    const templateRefName = call.arguments[0]
+    if (!isStringLiteral(templateRefName)) {
       return
     }
+    const refName = templateRefName.value
 
-    const useTemplateRefCalls: CallExpression[] = []
+    let genCursor = call.callee.end!
+    generateScriptUntil(genCursor)
+
+    // Always generate __VLS_TemplateRefs to maintain virtual code mapping for navigation
+    tsCodeSegments.push(`<__VLS_TemplateRefs[`)
+    tsCodeSegments.push([
+      `'${refName}'`,
+      undefined,
+      templateRefName.start!, // inside the string literal
+      FULL_FEATURES,
+    ])
+    tsCodeSegments.push(`], keyof __VLS_TemplateRefs>`)
+
+    // Skip the original type parameters if user provided them
+    if (call.typeParameters && call.typeParameters.params.length > 0) {
+      currentOffset.value = call.typeParameters.end!
+    }
+
+    // Find the variable declaration for this useTemplateRef call to add to excludeBindings
+    // We need to traverse up the AST to find the parent variable declaration
     _breakableTraverse(
-      fnBody,
+      vineFileCtx.root,
       (node, ancestors) => {
-        if (
-          isCallExpression(node)
-          && isIdentifier(node.callee)
-          && node.callee.name === 'useTemplateRef'
-        ) {
-          useTemplateRefCalls.push(node)
-
+        if (node === call) {
           const varDecl = ancestors.find(
             item => (
               isVariableDeclaration(item.node)
@@ -808,34 +822,10 @@ export function createVueVineVirtualCode(
               (varDecl.declarations[0].id as Identifier).name,
             )
           }
+          throw exitTraverse
         }
       },
     )
-
-    for (const call of useTemplateRefCalls) {
-      const templateRefName = call.arguments[0]
-      if (!isStringLiteral(templateRefName)) {
-        continue
-      }
-      const refName = templateRefName.value
-
-      let genCursor = call.callee.end!
-      generateScriptUntil(genCursor)
-
-      // Ignore the original type parameters,
-      // because we will generate a new type later.
-      if (call.typeParameters) {
-        genCursor = call.typeParameters.end!
-      }
-      tsCodeSegments.push(`<__VLS_TemplateRefs[`)
-      tsCodeSegments.push([
-        `'${refName}'`,
-        undefined,
-        genCursor + 1, // after '('
-        FULL_FEATURES,
-      ])
-      tsCodeSegments.push(`], keyof __VLS_TemplateRefs>`)
-    }
   }
 
   function* createStyleEmbeddedCodes(): Generator<VirtualCode> {

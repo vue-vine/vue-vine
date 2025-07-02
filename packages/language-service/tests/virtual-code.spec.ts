@@ -31,4 +31,7 @@ describe('verify Volar virtual code snapshots', () => {
   it('vine-model.vine.ts', () => {
     testSnapshotForFile('../../e2e-test/src/fixtures/vine-model.vine.ts')
   })
+  it('use-template-ref-virtual-code.vine.ts', () => {
+    testSnapshotForFile('../../e2e-test/src/fixtures/use-template-ref-virtual-code.vine.ts')
+  })
 })

@@ -1002,6 +1002,74 @@ const __VINE_VLS_ComponentsReferenceMap = {
 const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
+exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
+"/// <reference types=".vue-global-types/vine_vue_99_true" />
+import { useTemplateRef } from 'vue'
+
+
+type __VINE_VLS_TestUseTemplateRefVirtualCode_props__ = {}
+export function TestUseTemplateRefVirtualCode(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestUseTemplateRefVirtualCode_props__,
+context: {}) {
+  
+type TestUseTemplateRefVirtualCode_Props = Parameters<typeof TestUseTemplateRefVirtualCode>[0];
+
+const container1Ref = useTemplateRef<__VINE_VLS_TemplateRefs['container1Ref'], keyof __VINE_VLS_TemplateRefs>('container1Ref')
+  const container2Ref = useTemplateRef<__VINE_VLS_TemplateRefs['container2Ref'], keyof __VINE_VLS_TemplateRefs>('container2Ref')
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
+  /* __LINKED_CODE_LEFT__#29 */TestUseTemplateRefVirtualCode: /* __LINKED_CODE_RIGHT__#29 */TestUseTemplateRefVirtualCode,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+ref: "container1Ref",
+});
+/** @type {typeof __VINE_VLS_ctx.container1Ref} */;
+__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+ref: "container2Ref",
+});
+/** @type {typeof __VINE_VLS_ctx.container2Ref} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {
+container1Ref: __VINE_VLS_NativeElements['div'],
+container2Ref: __VINE_VLS_NativeElements['div'],
+};
+type __VINE_VLS_RootEl = any;
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
+
+}
+
+const __VINE_VLS_ComponentsReferenceMap = {
+  'TestUseTemplateRefVirtualCode': TestUseTemplateRefVirtualCode
+};
+
+const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
+`;
+
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
 "/// <reference types=".vue-global-types/vine_vue_99_true" />
 import { ref } from 'vue'
