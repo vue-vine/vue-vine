@@ -60,7 +60,6 @@ export function createVueVineLanguagePlugin(
   const {
     compilerOptions,
     vueCompilerOptions,
-    track,
     target = 'extension',
   } = options
 
@@ -95,7 +94,6 @@ export function createVueVineLanguagePlugin(
             vueCompilerOptions,
             target,
           )
-          track?.trackEvent('virtual_code_created')
           return virtualCode
         }
         catch (err) {

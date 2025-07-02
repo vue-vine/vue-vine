@@ -1,7 +1,15 @@
 import type * as lsp from '@volar/vscode/node'
 import type { Track } from '@vue-vine/language-service'
+import type { ShallowRef } from 'reactive-vscode'
 import type { useExtensionConfigs } from './config'
-import { executeCommand, useCommand, useStatusBarItem, useVisibleTextEditors, watchEffect } from 'reactive-vscode'
+import {
+  executeCommand,
+  nextTick,
+  useCommand,
+  useStatusBarItem,
+  useVisibleTextEditors,
+  watchEffect,
+} from 'reactive-vscode'
 import * as vscode from 'vscode'
 
 export async function useDataTrackWarning(
@@ -34,14 +42,20 @@ export async function useDataTrackWarning(
 
 export function useVineExtensionViewFeatures(
   client: lsp.BaseLanguageClient,
-  track: Track,
+  trackRef: ShallowRef<Track | null>,
+  outputChannelRef: ShallowRef<vscode.OutputChannel | null>,
 ): void {
   useCommand('vine.action.restartServer', async () => {
     await executeCommand('typescript.restartTsServer')
     await client.stop()
     await client.start()
 
-    await track.trackEvent('restart_server')
+    // After restart, the output channel is re-generated,
+    // so we need to update it
+    outputChannelRef.value = client.outputChannel
+
+    await nextTick()
+    await trackRef.value?.trackEvent('restart_server')
   })
 
   // Register a button in the bottom of the window,

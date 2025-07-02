@@ -1,30 +1,38 @@
+import type { ShallowRef } from 'reactive-vscode'
 import type { OutputChannel } from 'vscode'
 import type { useExtensionConfigs } from './config'
 import { Track } from '@vue-vine/language-service'
-import { watch } from 'reactive-vscode'
+import { shallowRef, watch, watchEffect } from 'reactive-vscode'
 import { useDataTrackWarning } from './view-features'
 
-export async function useDataTrack(
+export function useDataTrack(
   extensionConfigs: ReturnType<typeof useExtensionConfigs>,
-  outputChannel: OutputChannel,
+  outputChannelRef: ShallowRef<OutputChannel | null>,
   envInfo: {
     vscodeVersion: string
     extensionVersion: string
     machineId: string
     isTrackDisabled: boolean
   },
-): Promise<Track> {
+): ShallowRef<Track | null> {
+  // Show data collection warning
   useDataTrackWarning(extensionConfigs)
-  const track = new Track({
-    outputChannel,
-    ...envInfo,
-  })
+
+  const trackRef: ShallowRef<Track | null> = shallowRef<Track | null>(null)
   watch(
     extensionConfigs.dataTrack,
     (isDisabled) => {
-      track.toggleDisabled(isDisabled)
+      trackRef.value?.toggleDisabled(isDisabled)
     },
   )
+  watchEffect(() => {
+    if (!outputChannelRef.value)
+      return
+    trackRef.value = new Track({
+      outputChannel: outputChannelRef.value,
+      ...envInfo,
+    })
+  })
 
-  return track
+  return trackRef
 }
