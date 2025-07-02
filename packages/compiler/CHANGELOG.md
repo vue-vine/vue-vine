@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.5.6
+
+### Patch Changes
+
+- Fix conflict when user giving useTemplateRef type param.
+
 ## 1.5.5
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.5.6
+
+### Patch Changes
+
+- Fix conflict when user giving useTemplateRef type param.
+- Updated dependencies
+  - vue-vine@1.5.6
+
 ## 1.5.5
 
 ### Patch Changes
