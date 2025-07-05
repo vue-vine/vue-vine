@@ -9,6 +9,8 @@
 
 Another style of writing Vue components.
 
+[![CI](https://github.com/vue-vine/vue-vine/actions/workflows/ci.yml/badge.svg)](https://github.com/vue-vine/vue-vine/actions/workflows/ci.yml)
+
 - NPM version: &nbsp; [![NPM Version](https://img.shields.io/npm/v/vue-vine)](https://www.npmjs.com/package/vue-vine)
 - VSCode extension: &nbsp; [![VSCode ext version](https://img.shields.io/visual-studio-marketplace/v/shenqingchuan.vue-vine-extension)](https://marketplace.visualstudio.com/items?itemName=shenqingchuan.vue-vine-extension)
 - Open VSX extension: &nbsp; [![Open VSX ext version](https://img.shields.io/open-vsx/v/shenqingchuan/vue-vine-extension)](https://open-vsx.org/extension/shenqingchuan/vue-vine-extension)
