@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.5
+
+### Patch Changes
+
+- Fix ESLint format autofix for style/indent rule.
+
 ## 1.1.4
 
 ### Patch Changes

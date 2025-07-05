@@ -13,8 +13,7 @@ const configs = await antfu(
 
 run({
   name: 'Compatible with vue-vine/format-vine-template',
-  recursive: false,
-  verifyAfterFix: false,
+  verifyAfterFix: true,
   languageOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
@@ -37,7 +36,7 @@ export function TestComp(_props: {
     {
       description: 'should correctly fix props type object literal fields indent in vine TS file',
       code: `
-function TestComp(props: {
+export function TestComp(props: {
 foo: string
 bar: number
 }) {
@@ -58,7 +57,7 @@ bar: number
         expect(prettierSnapshot(result)).toMatchInlineSnapshot(`
           "
            ┌────┬────────────────────────────────
-           │  1 │function TestComp(props: {
+           │  1 │export function TestComp(props: {
            │  2 │  foo: string
            │  3 │  bar: number
            │  4 │}) {
@@ -70,6 +69,34 @@ bar: number
            │ 10 │}
            │ 11 │
            └────┴────────────────────────────────
+            "
+        `)
+      },
+    },
+    {
+      description: 'should correctly fix content indent inside vine template',
+      code: `
+export function TestComp() {
+return vine\`
+  <div>
+    <p>Hello</p>
+  </div>
+\`
+}\n`.trimStart(),
+      filename: 'test.vine.ts',
+      output(result) {
+        expect(prettierSnapshot(result)).toMatchInlineSnapshot(`
+          "
+           ┌───┬────────────────────────────────
+           │ 1 │export function TestComp() {
+           │ 2 │  return vine\`
+           │ 3 │    <div>
+           │ 4 │      <p>Hello</p>
+           │ 5 │    </div>
+           │ 6 │  \`
+           │ 7 │}
+           │ 8 │
+           └───┴────────────────────────────────
             "
         `)
       },

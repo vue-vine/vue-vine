@@ -32,7 +32,6 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
     ref?: string | import('vue').Ref | ((ref: Element | import('vue').ComponentPublicInstance | null, refs: Record<string, any>) => void);
   }
     
-	const __VINE_VLS_intrinsicElements: __VINE_VLS_IntrinsicElements;
 	const __VINE_VLS_directiveBindingRestFields: { instance: null, oldValue: null, modifiers: any, dir: any };
 	const __VINE_VLS_unref: typeof import('vue').unref;
 	const __VINE_VLS_placeholder: any;
@@ -54,10 +53,31 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 		N2 extends keyof __VINE_VLS_GlobalComponents ? N2 extends N0 ? Pick<__VINE_VLS_GlobalComponents, N0 extends keyof __VINE_VLS_GlobalComponents ? N0 : never> : { [K in N0]: __VINE_VLS_GlobalComponents[N2] } :
 		N3 extends keyof __VINE_VLS_GlobalComponents ? N3 extends N0 ? Pick<__VINE_VLS_GlobalComponents, N0 extends keyof __VINE_VLS_GlobalComponents ? N0 : never> : { [K in N0]: __VINE_VLS_GlobalComponents[N3] } :
 		{};
-	type __VINE_VLS_FunctionalComponentProps<T, K> =
-		'__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}> ? K extends { __ctx?: { props?: infer P } } ? NonNullable<P> : never
-		: T extends (props: infer P, ...args: any) => any ? P :
-		{};
+	type __VINE_VLS_FunctionalComponentCtx<T, K> = __VINE_VLS_PickNotAny<'__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}>
+		? K extends { __ctx?: infer Ctx } ? NonNullable<Ctx> : never : any
+		, T extends (props: any, ctx: infer Ctx) => any ? Ctx : any
+	>;
+	type __VINE_VLS_FunctionalComponentProps<T, K> = '__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}>
+		? K extends { __ctx?: { props?: infer P } } ? NonNullable<P> : never
+		: T extends (props: infer P, ...args: any) => any ? P
+		: {};
+	type __VINE_VLS_FunctionalComponent<T> = (props: (T extends { $props: infer Props } ? Props : {}), ctx?: any) => __VINE_VLS_Element & {
+		__ctx?: {
+			attrs?: any,
+			slots?: T extends { $slots: infer Slots } ? Slots : Record<string, any>,
+			emit?: T extends { $emit: infer Emit } ? Emit : {},
+			props?: (T extends { $props: infer Props } ? Props : {}),
+			expose?: (exposed: T) => void,
+		}
+	};
+	type __VINE_VLS_NormalizeSlotReturns<S, R = NonNullable<S> extends (...args: any) => infer K ? K : any> = R extends any[] ? {
+		[K in keyof R]: R[K] extends infer V
+			? V extends Element ? V
+			: V extends new (...args: any) => infer R ? ReturnType<__VINE_VLS_FunctionalComponent<R>>
+			: V extends (...args: any) => infer R ? R
+			: any
+			: never
+	} : R;
 	type __VINE_VLS_IsFunction<T, K> = K extends keyof T
 		? __VINE_VLS_IsAny<T[K]> extends false
 		? unknown extends T[K]
@@ -65,13 +85,13 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 		: true
 		: false
 		: false;
-	type __VINE_VLS_NormalizeComponentEvent<Props, Events, onEvent extends keyof Props, Event extends keyof Events, CamelizedEvent extends keyof Events> = (
+	type __VINE_VLS_NormalizeComponentEvent<Props, Emits, onEvent extends keyof Props, Event extends keyof Emits, CamelizedEvent extends keyof Emits> = (
 		__VINE_VLS_IsFunction<Props, onEvent> extends true
 			? Props
-			: __VINE_VLS_IsFunction<Events, Event> extends true
-				? { [K in onEvent]?: Events[Event] }
-				: __VINE_VLS_IsFunction<Events, CamelizedEvent> extends true
-					? { [K in onEvent]?: Events[CamelizedEvent] }
+			: __VINE_VLS_IsFunction<Emits, Event> extends true
+				? { [K in onEvent]?: Emits[Event] }
+				: __VINE_VLS_IsFunction<Emits, CamelizedEvent> extends true
+					? { [K in onEvent]?: Emits[CamelizedEvent] }
 					: Props
 	);
 	// fix https://github.com/vuejs/language-tools/issues/926
@@ -97,11 +117,16 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 			}
 		>
 	>;
-	type __VINE_VLS_PrettifyGlobal<T> = { [K in keyof T]: T[K]; } & {};
-	type __VINE_VLS_PickFunctionalComponentCtx<T, K> = NonNullable<__VINE_VLS_PickNotAny<
-		'__ctx' extends keyof __VINE_VLS_PickNotAny<K, {}> ? K extends { __ctx?: infer Ctx } ? Ctx : never : any
-		, T extends (props: any, ctx: infer Ctx) => any ? Ctx : any
-	>>;
+	type __VINE_VLS_ResolveEmits<
+		Comp,
+		Emits,
+		TypeEmits = Comp extends { __typeEmits?: infer T } ? unknown extends T ? {} : import('vue').ShortEmitsToObject<T> : {},
+		NormalizedEmits = __VINE_VLS_NormalizeEmits<Emits> extends infer E ? string extends keyof E ? {} : E : never,
+	> = __VINE_VLS_SpreadMerge<NormalizedEmits, TypeEmits>;
+	type __VINE_VLS_ResolveDirectives<T> = {
+		[K in Exclude<keyof T, keyof __VINE_VLS_GlobalDirectives> & string as \`v\${Capitalize<K>}\`]: T[K];
+	};
+	type __VINE_VLS_PrettifyGlobal<T> = { [K in keyof T as K]: T[K]; } & {};
 	type __VINE_VLS_UseTemplateRef<T> = Readonly<import('vue').ShallowRef<T | null>>;
 
 	function __VINE_VLS_getVForSourceType<T extends number | string | any[] | Iterable<any>>(source: T): [
@@ -117,10 +142,8 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 		key: keyof T,
 		index: number,
 	][];
-	// @ts-ignore
-	function __VINE_VLS_getSlotParams<T>(slot: T): Parameters<__VINE_VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>;
-	// @ts-ignore
-	function __VINE_VLS_getSlotParam<T>(slot: T): Parameters<__VINE_VLS_PickNotAny<NonNullable<T>, (...args: any[]) => any>>[0];
+	function __VINE_VLS_getSlotParameters<S, D extends S>(slot: S, decl?: D):
+		__VINE_VLS_PickNotAny<NonNullable<D>, (...args: any) => any> extends (...args: infer P) => any ? P : any[];
 	function __VINE_VLS_asFunctionalDirective<T>(dir: T): T extends import('vue').ObjectDirective
 		? NonNullable<T['created' | 'beforeMount' | 'mounted' | 'beforeUpdate' | 'updated' | 'beforeUnmount' | 'unmounted']>
 		: T extends (...args: any) => any
@@ -128,19 +151,10 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 			: (arg1: unknown, arg2: unknown, arg3: unknown, arg4: unknown) => void;
 	function __VINE_VLS_makeOptional<T>(t: T): { [K in keyof T]?: T[K] };
 	function __VINE_VLS_asFunctionalComponent<T, K = T extends new (...args: any) => any ? InstanceType<T> : unknown>(t: T, instance?: K):
-		T extends new (...args: any) => any
-		? (props: (K extends { $props: infer Props } ? Props : any), ctx?: any) => __VINE_VLS_Element & {
-			__ctx?: {
-				attrs?: any;
-				slots?: K extends { $slots: infer Slots } ? Slots : any;
-				emit?: K extends { $emit: infer Emit } ? Emit : any;
-				expose?(exposed: K): void;
-				props?: (K extends { $props: infer Props } ? Props : any);
-			}
-		}
+		T extends new (...args: any) => any ? __VINE_VLS_FunctionalComponent<K>
 		: T extends () => any ? (props: {}, ctx?: any) => ReturnType<T>
 		: T extends (...args: any) => any ? T
-		: (_: {}, ctx?: any) => { __ctx?: { attrs?: any, expose?: any, slots?: any, emit?: any, props?: {} } };
+		: __VINE_VLS_FunctionalComponent<{}>;
 	function __VINE_VLS_functionalComponentArgsRest<T extends (...args: any) => any>(t: T): 2 extends Parameters<T>['length'] ? [any] : [];
 	function __VINE_VLS_asFunctionalElement<T>(tag: T, endTag?: T): (attrs: T) => void;
 	function __VINE_VLS_asFunctionalSlot<S>(slot: S): S extends () => infer R ? (props: {}) => R : NonNullable<S>;

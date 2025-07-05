@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.5.7
+
+### Patch Changes
+
+- Fix ESLint format autofix for style/indent rule.
+- Updated dependencies
+  - vue-vine@1.5.7
+
 ## 1.5.6
 
 ### Patch Changes

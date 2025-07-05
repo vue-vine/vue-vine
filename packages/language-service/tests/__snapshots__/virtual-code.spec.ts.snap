@@ -56,15 +56,14 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 });
 ( __VINE_VLS_ctx.foo );
 // @ts-ignore
 [foo,];
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -138,17 +137,19 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ style: {} },
 ...{ style: ({
         color: __VINE_VLS_ctx.count > 5 ? 'red' : 'blue',
       }) },
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+// @ts-ignore
+[count,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
 });
 __VINE_VLS_asFunctionalDirective(__VINE_VLS_directives.vText)(null!, { ...__VINE_VLS_directiveBindingRestFields, value: (__VINE_VLS_ctx.msg) }, null!, null!);
 // @ts-ignore
-[count,vText,msg,];
+[vText,msg,];
 const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'Comp', __VINE_VLS_LocalComponents, void, 'Comp', 'Comp', 'Comp'>).Comp;
 /** @type {[typeof __VINE_VLS_components.Comp, ]} */;
 // @ts-ignore
@@ -164,8 +165,7 @@ foo: ('222'),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -230,19 +230,20 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: (['btn', 'btn' + __VINE_VLS_ctx.type]) },
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.span, __VINE_VLS_intrinsicElements.span)({
+// @ts-ignore
+[type,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.span, __VINE_VLS_elements.span)({
 });
 ( __VINE_VLS_ctx.count );
 // @ts-ignore
-[type,count,];
+[count,];
 /** @type {__VINE_VLS_StyleScopedClasses['btn']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -303,8 +304,7 @@ const __VINE_VLS_components = {
 type __VINE_VLS_StyleScopedClasses = {};
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = any;
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -376,18 +376,17 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 border: "1px solid red",
 });
 __VINE_VLS_asFunctionalDirective(__VINE_VLS_directives.vBounce)(null!, { ...__VINE_VLS_directiveBindingRestFields,  }, null!, null!);
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.span, __VINE_VLS_intrinsicElements.span)({
-});
 // @ts-ignore
 [vBounce,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.span, __VINE_VLS_elements.span)({
+});
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -460,17 +459,16 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
 });
 ( __VINE_VLS_ctx.foo );
 // @ts-ignore
 [foo,];
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = any;
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -531,7 +529,7 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 });
 ( __VINE_VLS_ctx.bar );
 // @ts-ignore
@@ -545,19 +543,18 @@ const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_V
 }));
 const __VINE_VLS_2 = __VINE_VLS_1({
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
-const __VINE_VLS_4 = ({} as __VINE_VLS_WithComponent<'TestCompOne', __VINE_VLS_LocalComponents, void, 'TestCompOne', 'TestCompOne', 'TestCompOne'>).TestCompOne;
+const __VINE_VLS_5 = ({} as __VINE_VLS_WithComponent<'TestCompOne', __VINE_VLS_LocalComponents, void, 'TestCompOne', 'TestCompOne', 'TestCompOne'>).TestCompOne;
 /** @type {[typeof __VINE_VLS_components.TestCompOne, ]} */;
 // @ts-ignore
 TestCompOne;
 // @ts-ignore
-const __VINE_VLS_5 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_4, new __VINE_VLS_4({
+const __VINE_VLS_6 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_5, new __VINE_VLS_5({
 }));
-const __VINE_VLS_6 = __VINE_VLS_5({
-}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_5));
+const __VINE_VLS_7 = __VINE_VLS_6({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_6));
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = any;
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -628,14 +625,14 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ onClick: (...[$event]) => {
 __VINE_VLS_ctx.count++;
 // @ts-ignore
 [count,];
 }},
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
 });
 ( __VINE_VLS_ctx.count );
 // @ts-ignore
@@ -655,8 +652,7 @@ foo: (456),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = any;
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -717,7 +713,7 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 });
 const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'TargetComp', __VINE_VLS_LocalComponents, void, 'TargetComp', 'TargetComp', 'TargetComp'>).TargetComp;
 /** @type {[typeof __VINE_VLS_components.TargetComp, ]} */;
@@ -734,14 +730,13 @@ foo: (false),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 /** @type {typeof __VINE_VLS_ctx.target} */;
 var __VINE_VLS_4 = {} as (Parameters<NonNullable<typeof __VINE_VLS_3['expose']>>[0] | null);
-var __VINE_VLS_3!: __VINE_VLS_PickFunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+var __VINE_VLS_3!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
 // @ts-ignore
 var __VINE_VLS_5 = __VINE_VLS_4, ;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-target: typeof __VINE_VLS_5,
-};
+type __VINE_VLS_TemplateRefs = {}
+& { target: typeof __VINE_VLS_5 };
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -804,22 +799,21 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "user-list" },
 });
 for (const [user] of __VINE_VLS_getVForSourceType((__VINE_VLS_ctx.users)!)) {
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+// @ts-ignore
+[users,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 key: (user.id),
 });
 ( user.name );
-// @ts-ignore
-[users,];
 }
 /** @type {__VINE_VLS_StyleScopedClasses['user-list']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {
@@ -886,12 +880,11 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.p, __VINE_VLS_intrinsicElements.p)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
 });
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['p'];
 var __VINE_VLS_dollars!: {
@@ -960,11 +953,10 @@ const __VINE_VLS_2 = __VINE_VLS_1({
 var __VINE_VLS_4 = {} as (Parameters<NonNullable<typeof __VINE_VLS_3['expose']>>[0] | null);
 // @ts-ignore
 [as,];
-var __VINE_VLS_3!: __VINE_VLS_PickFunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+var __VINE_VLS_3!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | NonNullable<typeof __VINE_VLS_4>['$el'];
 var __VINE_VLS_dollars!: {
@@ -1035,20 +1027,19 @@ const __VINE_VLS_components = {
 };
 
 type __VINE_VLS_StyleScopedClasses = {};
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ref: "container1Ref",
 });
 /** @type {typeof __VINE_VLS_ctx.container1Ref} */;
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ref: "container2Ref",
 });
 /** @type {typeof __VINE_VLS_ctx.container2Ref} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-container1Ref: __VINE_VLS_NativeElements['div'],
-container2Ref: __VINE_VLS_NativeElements['div'],
-};
+type __VINE_VLS_TemplateRefs = {}
+& { container1Ref: __VINE_VLS_NativeElements['div'] }
+& { container2Ref: __VINE_VLS_NativeElements['div'] };
 type __VINE_VLS_RootEl = any;
 var __VINE_VLS_dollars!: {
 $slots: __VINE_VLS_Slots;
@@ -1111,7 +1102,7 @@ type __VINE_VLS_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.input)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.input)({
 ...{ class: "simple-input" },
 type: "text",
 value: (__VINE_VLS_ctx.value),
@@ -1121,8 +1112,7 @@ value: (__VINE_VLS_ctx.value),
 /** @type {__VINE_VLS_StyleScopedClasses['simple-input']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['input'];
 var __VINE_VLS_dollars!: {
@@ -1173,7 +1163,7 @@ type __VINE_VLS_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.input)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.input)({
 ...{ class: "special-input" },
 type: "text",
 value: (__VINE_VLS_ctx.value),
@@ -1183,8 +1173,7 @@ value: (__VINE_VLS_ctx.value),
 /** @type {__VINE_VLS_StyleScopedClasses['special-input']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['input'];
 var __VINE_VLS_dollars!: {
@@ -1238,10 +1227,10 @@ type __VINE_VLS_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "container" },
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.h2, __VINE_VLS_intrinsicElements.h2)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.h2, __VINE_VLS_elements.h2)({
 });
 const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'SimpleInput', __VINE_VLS_LocalComponents, void, 'SimpleInput', 'SimpleInput', 'SimpleInput'>).SimpleInput;
 /** @type {[typeof __VINE_VLS_components.SimpleInput, ]} */;
@@ -1256,32 +1245,32 @@ modelValue: (__VINE_VLS_ctx.simpleMsg),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
 // @ts-ignore
 [simpleMsg,];
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "row-flex" },
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "show-msg simple-msg" },
 });
 ( __VINE_VLS_ctx.simpleMsg );
 // @ts-ignore
 [simpleMsg,];
-const __VINE_VLS_4 = ({} as __VINE_VLS_WithComponent<'NamedModelInput', __VINE_VLS_LocalComponents, void, 'NamedModelInput', 'NamedModelInput', 'NamedModelInput'>).NamedModelInput;
+const __VINE_VLS_5 = ({} as __VINE_VLS_WithComponent<'NamedModelInput', __VINE_VLS_LocalComponents, void, 'NamedModelInput', 'NamedModelInput', 'NamedModelInput'>).NamedModelInput;
 /** @type {[typeof __VINE_VLS_components.NamedModelInput, ]} */;
 // @ts-ignore
 NamedModelInput;
 // @ts-ignore
-const __VINE_VLS_5 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_4, new __VINE_VLS_4({
+const __VINE_VLS_6 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_5, new __VINE_VLS_5({
 special: (__VINE_VLS_ctx.specialMsg),
 }));
-const __VINE_VLS_6 = __VINE_VLS_5({
+const __VINE_VLS_7 = __VINE_VLS_6({
 special: (__VINE_VLS_ctx.specialMsg),
-}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_5));
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_6));
 // @ts-ignore
 [specialMsg,];
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "row-flex" },
 });
-__VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intrinsicElements.div)({
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "show-msg special-msg" },
 });
 ( __VINE_VLS_ctx.specialMsg );
@@ -1296,8 +1285,7 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_intrinsicElements.div, __VINE_VLS_intr
 /** @type {__VINE_VLS_StyleScopedClasses['special-msg']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
-type __VINE_VLS_TemplateRefs = {
-};
+type __VINE_VLS_TemplateRefs = {};
 type __VINE_VLS_RootEl = 
 | __VINE_VLS_NativeElements['div'];
 var __VINE_VLS_dollars!: {

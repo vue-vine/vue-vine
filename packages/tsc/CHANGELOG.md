@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.5.7
+
+### Patch Changes
+
+- Fix ESLint format autofix for style/indent rule.
+- Updated dependencies
+  - @vue-vine/language-service@1.5.7
+
 ## 1.5.6
 
 ### Patch Changes

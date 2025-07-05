@@ -1151,7 +1151,10 @@ function validatePropsForSingelFC(
     }
 
     const theOnlyFormalParamTypeAnnotation = (
-      isIdentifier(theOnlyFormalParam)
+      (
+        'typeAnnotation' in theOnlyFormalParam
+        && theOnlyFormalParam.typeAnnotation
+      )
         ? theOnlyFormalParam.typeAnnotation
         : null
     )

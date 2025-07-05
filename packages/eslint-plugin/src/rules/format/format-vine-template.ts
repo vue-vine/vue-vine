@@ -118,12 +118,14 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
               // Apply consistent base indentation to all lines
               // Skip empty lines
               if (line.trim() === '') {
-                // Skip the first line
-                return i === 0 ? '' : baseIndent
+                // For the first line (empty line before content), return empty string
+                // For the last line (empty line after content), return base indentation
+                return i === 0 ? '' : (i === formattedLines.length - 1 ? baseIndent : '')
               }
-              // Remove any existing indentation and apply base indentation
+              // Rebuild indentation and apply content indentation
+              const rawIndent = line.match(/^\s*/)?.[0] ?? ''
               const cleanLine = line.replace(/^\s*/, '')
-              return `${contentIndent}${cleanLine}`
+              return `${baseIndent}${rawIndent}${cleanLine}`
             })
             .join('\n')
 

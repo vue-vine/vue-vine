@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.5.7
+
+### Patch Changes
+
+- Fix ESLint format autofix for style/indent rule.
+- Updated dependencies
+  - @vue-vine/compiler@1.5.7
+
 ## 1.5.6
 
 ### Patch Changes
