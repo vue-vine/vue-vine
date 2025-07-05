@@ -1150,7 +1150,11 @@ function validatePropsForSingelFC(
       }
     }
 
-    const theOnlyFormalParamTypeAnnotation = theOnlyFormalParam.typeAnnotation
+    const theOnlyFormalParamTypeAnnotation = (
+      isIdentifier(theOnlyFormalParam)
+        ? theOnlyFormalParam.typeAnnotation
+        : null
+    )
     if (!theOnlyFormalParamTypeAnnotation) {
       vineCompilerHooks.onError(
         vineErr(

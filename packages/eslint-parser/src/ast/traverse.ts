@@ -1,12 +1,16 @@
-import type { VisitorKeys } from 'eslint-visitor-keys'
 import type { Node } from './nodes'
-import * as Evk from 'eslint-visitor-keys'
 
 // ------------------------------------------------------------------------------
 // Helpers
 // ------------------------------------------------------------------------------
 
-const VineVisitorKeys: VisitorKeys = {
+interface VisitorKeys {
+  readonly [type: string]: readonly string[]
+}
+
+// Only export Vue template visitor keys, don't merge with standard ESLint keys
+// to avoid overriding TypeScript visitor keys
+export const KEYS: VisitorKeys = {
   VAttribute: ['key', 'value'],
   VDirectiveKey: ['name', 'argument', 'modifiers'],
   VTemplateRoot: ['children'],
@@ -23,8 +27,6 @@ const VineVisitorKeys: VisitorKeys = {
   VStartTag: ['attributes'],
   VText: [],
 }
-
-export const KEYS: VisitorKeys = Evk.unionWith(VineVisitorKeys)
 
 /**
  * Check that the given key should be traversed or not.

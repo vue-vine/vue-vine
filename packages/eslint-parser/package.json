@@ -52,7 +52,6 @@
     "@typescript-eslint/types": "catalog:lint-libs",
     "@typescript/native-preview": "catalog:compiler",
     "eslint": "catalog:lint-libs",
-    "eslint-visitor-keys": "catalog:lint-libs",
     "lodash": "catalog:utils"
   }
 }

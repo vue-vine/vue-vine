@@ -3,15 +3,13 @@
 import type { VTemplateRoot } from '@vue-vine/eslint-parser'
 import type { Options as PrettierOptions } from 'prettier'
 import type { RuleModule } from '../../utils'
-import { join } from 'node:path'
 import { generateDifferences, showInvisibles } from 'prettier-linter-helpers'
-import { createSyncFn } from 'synckit'
+import syncPrettier from '../../sync-prettier'
 import { createEslintRule } from '../../utils'
-import { workerDir } from '../../worker-dir'
 
 const messageId = 'format-vine-template' as const
 export type MessageIds = typeof messageId
-export type Options = [PrettierOptions]
+export type Options = [{ indent: number }]
 
 const { INSERT, DELETE, REPLACE } = generateDifferences
 
@@ -28,8 +26,6 @@ export const defaultPrettierOptions: Partial<PrettierOptions> = {
   semi: false,
   singleQuote: true,
 }
-
-let formatRunner: (code: string, options: PrettierOptions) => string
 
 const rule: RuleModule<Options> = createEslintRule<Options, string>({
   name: messageId,
@@ -55,14 +51,14 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
     ],
     messages,
   },
-  defaultOptions: [{}],
+  defaultOptions: [{ indent: 2 }],
   create(context) {
     return {
-      VTemplateRoot: (node: VTemplateRoot) => {
+      VTemplateRoot: async (node: VTemplateRoot) => {
         try {
-          if (!formatRunner) {
-            formatRunner = createSyncFn(join(workerDir, 'prettier.mjs')) as any
-          }
+          // if (!formatRunner) {
+          //   formatRunner = createSyncFn(join(workerDir, 'prettier.mjs')) as any
+          // }
 
           const { templateInfo } = node
           if (!templateInfo) {
@@ -83,9 +79,15 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             line: templatePositionInfo.templateStartLine,
             column: 0,
           })
-          const baseIndent = context.sourceCode.text.slice(lineStartIndex).match(/^\s*/)?.[0] ?? ''
+
+          const baseIndent = (
+            context.sourceCode.text
+              .slice(lineStartIndex)
+              .match(/^\s*/)?.[0] ?? ''
+          )
+          const contentIndent = baseIndent + ' '.repeat(formatOptions.indent ?? 2)
           // Remove '<template>' and '</template>' line
-          const formattedRaw = formatRunner(
+          const formattedRaw = syncPrettier.format(
             `<template>\n${templateRawContent}</template>`,
             {
               parser: 'vue',
@@ -102,7 +104,7 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             // 2|
             // ```
             // Then we should remove '<template>' and '</template>' by RegExp
-            formattedLines[0] = baseIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
+            formattedLines[0] = contentIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
             formattedLines.unshift('') // Add an empty leading line
           }
           else {
@@ -111,18 +113,17 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             formattedLines.push('') // Add an empty trailing line
           }
 
-          const rawLines = templateRawContent.split('\n')
-
           let formatted = formattedLines
             .map((line, i) => {
-              const rawLine = rawLines[i] ?? ''
-              // If line's indent is not equal to rawLines[i]'s indent,
-              // then we should make their indent the same.
-              const rawIndent = (rawLine.match(/^\s*/)?.[0] ?? '').length
-              const formattedIndent = (line.match(/^\s*/)?.[0] ?? '').length
-              return `${
-                formattedIndent !== rawIndent ? baseIndent : ''
-              }${line}`
+              // Apply consistent base indentation to all lines
+              // Skip empty lines
+              if (line.trim() === '') {
+                // Skip the first line
+                return i === 0 ? '' : baseIndent
+              }
+              // Remove any existing indentation and apply base indentation
+              const cleanLine = line.replace(/^\s*/, '')
+              return `${contentIndent}${cleanLine}`
             })
             .join('\n')
 

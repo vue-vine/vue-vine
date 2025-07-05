@@ -39,11 +39,12 @@
   "dependencies": {
     "@antfu/utils": "catalog:utils",
     "@vue-vine/eslint-parser": "workspace:*",
+    "make-synchronized": "catalog:miscs",
     "prettier": "catalog:lint-libs",
-    "prettier-linter-helpers": "catalog:lint-libs",
-    "synckit": "catalog:miscs"
+    "prettier-linter-helpers": "catalog:lint-libs"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "catalog:lint-libs",
     "@types/eslint": "catalog:types",
     "@types/prettier-linter-helpers": "catalog:types",
     "@typescript-eslint/types": "catalog:lint-libs",

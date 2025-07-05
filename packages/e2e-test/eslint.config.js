@@ -7,7 +7,6 @@ export default antfu(
   {
     // Override Antfu's default settings
     vue: true,
-    stylistic: false,
   },
   {
     rules: {

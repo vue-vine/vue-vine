@@ -172,9 +172,9 @@ export function extractForVineTemplate(
 export function prepareTemplate(
   templateNode: TSESTree.TaggedTemplateExpression,
 ): {
-    templatePositionInfo: VineTemplatePositionInfo
-    templateRawContent: string
-  } {
+  templatePositionInfo: VineTemplatePositionInfo
+  templateRawContent: string
+} {
   const { quasi: { quasis } } = templateNode
 
   // This `TemplateElement` node still contains two quotes.

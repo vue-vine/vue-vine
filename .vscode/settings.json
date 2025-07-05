@@ -61,6 +61,5 @@
   "cSpell.words": [
     "todolist"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.disableWorkspaceWarning": true
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
