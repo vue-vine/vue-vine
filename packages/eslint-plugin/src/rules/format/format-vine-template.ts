@@ -27,6 +27,8 @@ export const defaultPrettierOptions: Partial<PrettierOptions> = {
   singleQuote: true,
 }
 
+const PREFIX_SPACE_REGEXP = /^\s*/
+
 const rule: RuleModule<Options> = createEslintRule<Options, string>({
   name: messageId,
   meta: {
@@ -80,12 +82,14 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             column: 0,
           })
 
+          const rawLines = templateRawContent.split('\n')
+
+          // The indent of `return ...` statement line
           const baseIndent = (
             context.sourceCode.text
               .slice(lineStartIndex)
               .match(/^\s*/)?.[0] ?? ''
           )
-          const contentIndent = baseIndent + ' '.repeat(formatOptions.indent ?? 2)
           // Remove '<template>' and '</template>' line
           const formattedRaw = syncPrettier.format(
             `<template>\n${templateRawContent}</template>`,
@@ -104,7 +108,7 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             // 2|
             // ```
             // Then we should remove '<template>' and '</template>' by RegExp
-            formattedLines[0] = contentIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
+            formattedLines[0] = baseIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
             formattedLines.unshift('') // Add an empty leading line
           }
           else {
@@ -113,19 +117,38 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
             formattedLines.push('') // Add an empty trailing line
           }
 
+          let firstFormattedLineIndent = ''
           let formatted = formattedLines
-            .map((line, i) => {
-              // Apply consistent base indentation to all lines
-              // Skip empty lines
-              if (line.trim() === '') {
-                // For the first line (empty line before content), return empty string
-                // For the last line (empty line after content), return base indentation
-                return i === 0 ? '' : (i === formattedLines.length - 1 ? baseIndent : '')
+            .map((formattedLine, i) => {
+              const rawIndent = rawLines[i].match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
+              const formattedIndent = formattedLine.match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
+              if (i === 1) {
+                firstFormattedLineIndent = formattedIndent
               }
-              // Rebuild indentation and apply content indentation
-              const rawIndent = line.match(/^\s*/)?.[0] ?? ''
-              const cleanLine = line.replace(/^\s*/, '')
-              return `${baseIndent}${rawIndent}${cleanLine}`
+
+              if (formattedIndent === rawIndent) {
+                return (
+                  formattedLine.trimStart().startsWith('<')
+                    ? `${baseIndent}${formattedLine}`
+                    : formattedLine
+                )
+              }
+
+              // Last line should have base indent for the end quote
+              if (i === formattedLines.length - 1) {
+                return `${baseIndent}${formattedLine}`
+              }
+              if (formattedIndent.length === baseIndent.length) {
+                return `${baseIndent}${formattedLine}`
+              }
+              if (
+                firstFormattedLineIndent
+                && formattedIndent.length > firstFormattedLineIndent.length
+              ) {
+                return `${baseIndent}${formattedLine}`
+              }
+
+              return formattedLine
             })
             .join('\n')
 

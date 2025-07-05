@@ -1,4 +1,4 @@
-import { computed } from "vue"
+import { computed } from 'vue'
 
 interface TestDestructureProps {
   foo: string
@@ -9,7 +9,7 @@ interface TestDestructureProps {
 function MyComponent({
   foo,
   bar = 1,
-  other
+  other,
 }: TestDestructureProps) {
   const doubleBar = computed(() => bar * 2)
 
@@ -33,10 +33,7 @@ export function TestDestructurePropsPage() {
 
   return vine`
     <div class="container">
-      <MyComponent
-        foo="hello"
-        other
-      />
+      <MyComponent foo="hello" other />
     </div>
   `
 }

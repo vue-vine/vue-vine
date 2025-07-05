@@ -12,6 +12,8 @@ const configs = await antfu(
 ).toConfigs()
 
 run({
+  recursive: Number.POSITIVE_INFINITY,
+  verifyFixChanges: true,
   name: 'Compatible with vue-vine/format-vine-template',
   verifyAfterFix: true,
   languageOptions: {
@@ -75,11 +77,11 @@ bar: number
       description: 'should correctly fix content indent inside vine template',
       code: `
 export function TestComp() {
-return vine\`
-  <div>
+  return vine\`
+    <div>
     <p>Hello</p>
-  </div>
-\`
+    </div>
+  \`
 }\n`.trimStart(),
       filename: 'test.vine.ts',
       output(result) {
@@ -95,6 +97,44 @@ return vine\`
  │ 8 │
  └───┴────────────────────────────────
   `.trim())
+      },
+    },
+    {
+      description: 'bad case for infinite fix loop',
+      code: `
+function SampleTwo() {
+  const count = ref(0)
+
+  return vine\`
+    <div class="test">
+      <span>{{ count }}</span>
+      <!-- <div
+        :data-count="count"
+        :data-type="type"
+      /> -->
+    </div>
+  \`
+}\n`.trimStart(),
+      filename: 'test.vine.ts',
+      output(result) {
+        expect(prettierSnapshot(result)).toBe(`
+ ┌────┬────────────────────────────────
+ │  1 │function SampleTwo() {
+ │  2 │  const count = ref(0)
+ │  3 │
+ │  4 │  return vine\`
+ │  5 │    <div class="test">
+ │  6 │      <span>{{ count }}</span>
+ │  7 │      <!-- <div
+ │  8 │        :data-count="count"
+ │  9 │        :data-type="type"
+ │ 10 │      /> -->
+ │ 11 │    </div>
+ │ 12 │  \`
+ │ 13 │}
+ │ 14 │
+ └────┴────────────────────────────────
+      `.trim())
       },
     },
   ],

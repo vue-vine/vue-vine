@@ -66,7 +66,7 @@ export function ScopedSlotComponent() {
   const items = ref([
     { id: 1, name: 'Apple', price: 1.5 },
     { id: 2, name: 'Banana', price: 0.8 },
-    { id: 3, name: 'Orange', price: 2.0 }
+    { id: 3, name: 'Orange', price: 2.0 },
   ])
 
   vineStyle.scoped(`
@@ -117,12 +117,10 @@ export function SlotWithFallbackComponent() {
     <div class="slot-with-fallback-wrapper">
       <div class="slot-label">Conditional Slot with Fallback:</div>
       <slot>
-        <div class="fallback">
-          This is fallback content when no slot is provided
-        </div>
+        <div class="fallback">This is fallback content when no slot is provided</div>
       </slot>
     </div>
-`
+  `
 }
 
 export function TestVineSlots() {

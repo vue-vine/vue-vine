@@ -1,4 +1,4 @@
-import type { TestProps, WatermarkProps } from '../types';
+import type { TestProps, WatermarkProps } from '../types'
 import { computed, ref } from 'vue'
 
 export function TestTsMorph(props: TestProps) {

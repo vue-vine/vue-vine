@@ -31,7 +31,6 @@ function ChildComp() {
 }
 
 export function TestVinePropPage() {
-
   return vine`
     <div class="test-vine-prop-page col-flex">
       <ChildComp prop1="hello" prop2="world" :prop3="false" :prop4="true" prop5 />

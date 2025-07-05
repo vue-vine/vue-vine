@@ -1,10 +1,10 @@
 function ChildCompOne(props: {
-  foo: string,
+  foo: string
   bar: number
 }) {
   vineValidators({
-    foo: (val) => val.startsWith('foo'),
-    bar: (val) => val > 10,
+    foo: val => val.startsWith('foo'),
+    bar: val => val > 10,
   })
 
   return vine`
@@ -17,8 +17,8 @@ function ChildCompOne(props: {
 }
 
 function ChildCompTwo() {
-  const zig = vineProp<string>((val) => val.startsWith('zig'))
-  const zag = vineProp<number>((val) => val > 10)
+  const zig = vineProp<string>(val => val.startsWith('zig'))
+  const zag = vineProp<number>(val => val > 10)
 
   return vine`
     <div>

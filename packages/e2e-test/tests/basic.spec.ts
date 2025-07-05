@@ -200,7 +200,7 @@ describe('test basic functionality', async () => {
 
       // slot with fallback
       expect(await evaluator.getTextContent('.slot-with-fallback .slot-with-fallback-wrapper:nth-child(2) .custom-content')).toMatchInlineSnapshot(`"Custom content provided!"`)
-      expect(await evaluator.getTextContent('.slot-with-fallback .slot-with-fallback-wrapper:nth-child(3) .fallback')).toMatchInlineSnapshot(`" This is fallback content when no slot is provided "`)
+      expect(await evaluator.getTextContent('.slot-with-fallback .slot-with-fallback-wrapper:nth-child(3) .fallback')).toMatchInlineSnapshot(`"This is fallback content when no slot is provided"`)
     },
   ))
 })

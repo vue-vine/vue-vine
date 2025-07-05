@@ -78,7 +78,7 @@ function ToDoAction() {
         @click="emits('delete')"
       />
     </div>
-  `;
+  `
 }
 
 function TodoContent() {
@@ -125,12 +125,12 @@ function TodoContent() {
         </div>
       </div>
     </div>
-  `;
+  `
 }
 
-function TodoAdd(){
+function TodoAdd() {
   const emits = vineEmits(['addItem'])
-  function addTodo(){
+  function addTodo() {
     emits('addItem')
   }
 
@@ -141,7 +141,7 @@ function TodoAdd(){
     >
       <div class="i-mdi-add text-3xl" />
     </div>
-  `;
+  `
 }
 
 function TodoInput() {
@@ -152,7 +152,7 @@ function TodoInput() {
     piniaStore.addTodo({
       id: Date.now(),
       title: todoContent.value,
-      state: 'todo'
+      state: 'todo',
     })
     todoContent.value = ''
   }
@@ -164,7 +164,7 @@ function TodoInput() {
       v-model="todoContent"
     />
     <TodoAdd @addItem="onAddItem()" />
-  `;
+  `
 }
 
 function TodoHeader() {
@@ -175,17 +175,16 @@ function TodoHeader() {
         <TodoInput />
       </div>
     </div>
-  `;
+  `
 }
 
 export function TodoList() {
-  vineStyle.import('../styles/todo-list.scss');
+  vineStyle.import('../styles/todo-list.scss')
 
   return vine`
     <div class="todo-container container xl flex items-center justify-center flex-col">
       <TodoHeader />
       <TodoContent />
     </div>
-  `;
+  `
 }
-

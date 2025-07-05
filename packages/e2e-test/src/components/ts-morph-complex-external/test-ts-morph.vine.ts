@@ -1,4 +1,4 @@
-import type { TestProps } from './types';
+import type { TestProps } from './types'
 
 interface T1 {
   step?: number
@@ -28,11 +28,7 @@ export function TestTsMorphComplexExternal() {
     <div class="test-ts-morph-complex-external">
       <h3>Test Ts Morph</h3>
       <div class="flex-row">
-        <TestTsMorphChild
-          variant="success"
-          title="hello"
-          message="Hello, world!"
-        />
+        <TestTsMorphChild variant="success" title="hello" message="Hello, world!" />
         <TestTsMorphChild variant="error" title="error" errorCode="404" />
       </div>
       <h3 class="mt-6">Another:</h3>
