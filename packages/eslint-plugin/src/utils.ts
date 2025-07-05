@@ -249,3 +249,14 @@ export function isCustomComponent(node: VElement, ignoreElementNamespaces = fals
 export function checkPascalCase(fnName: string): boolean {
   return /^[A-Z][a-zA-Z0-9]*$/.test(fnName)
 }
+
+export function prettierSnapshot(result: string) {
+  const resultLines = result.split('\n')
+  const maxLineNumLength = String(resultLines.length - 1).length
+
+  return `
+ ┌${'─'.repeat(maxLineNumLength + 2)}┬────────────────────────────────
+${resultLines.map((line, i) => ` │ ${String(i + 1).padStart(maxLineNumLength)} │${line}`).join('\n')}
+ └${'─'.repeat(maxLineNumLength + 2)}┴────────────────────────────────
+  `
+}

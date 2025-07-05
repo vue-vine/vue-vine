@@ -145,7 +145,7 @@ export function createVueVineVirtualCode(
   snapshotContent: string,
   compilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
-  target: 'extension' | 'tsc',
+  _target: 'extension' | 'tsc',
 ): VueVineVirtualCode {
   // Compile `.vine.ts` with Vine's own compiler
   const compileStartTime = performance.now()
@@ -258,7 +258,6 @@ export function createVueVineVirtualCode(
           },
           scriptSetupBindingNames: new Set(),
           scriptSetupImportComponentNames: new Set(),
-          edited: target === 'extension',
           inheritAttrs: false,
           templateRefNames,
           destructuredPropNames,

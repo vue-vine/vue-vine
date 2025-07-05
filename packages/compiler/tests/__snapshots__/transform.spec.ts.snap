@@ -1083,7 +1083,7 @@ export const MyComp = (() => {
       const props = __props;
 
       return (_ctx, _cache) => {
-        return _openBlock(), _createElementBlock("div", null, "Test");
+        return (_openBlock(), _createElementBlock("div", null, "Test"));
       };
     },
   });
@@ -1376,9 +1376,9 @@ export const MyComp = (() => {
       __expose();
       let __temp, __restore;
       const props = __props;
-      ([__temp, __restore] = _withAsyncContext(() => someAsyncFunction())),
+      (([__temp, __restore] = _withAsyncContext(() => someAsyncFunction())),
         await __temp,
-        __restore();
+        __restore());
       const data =
         (([__temp, __restore] = _withAsyncContext(() =>
           fetch("https://test-api.com"),
@@ -1398,7 +1398,7 @@ export const MyComp = (() => {
       });
 
       return (_ctx, _cache) => {
-        return _openBlock(), _createElementBlock("div", null, "Test");
+        return (_openBlock(), _createElementBlock("div", null, "Test"));
       };
     },
   });

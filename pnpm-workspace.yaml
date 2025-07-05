@@ -4,8 +4,8 @@ packages:
 
 defines:
   - &vue ^3.5.15
-  - &vue-lang-tools ~2.2.10
-  - &volar ~2.4.14
+  - &vue-lang-tools ~3.0.1
+  - &volar ~2.4.17
   - &volar-service ~0.0.64
 
 catalogs:
@@ -48,7 +48,8 @@ catalogs:
     '@iconify-json/mdi': ^1.2.3
     '@iconify-json/twemoji': ^1.2.2
   lint-libs:
-    '@antfu/eslint-config': ^4.13.2
+    '@antfu/eslint-config': ^4.16.2
+    '@stylistic/eslint-plugin': ^5.1.0
     '@typescript-eslint/parser': ~8.32.1
     '@typescript-eslint/scope-manager': ~8.32.1
     '@typescript-eslint/types': ~8.33.0
@@ -56,7 +57,6 @@ catalogs:
     '@typescript-eslint/utils': ~8.32.1
     eslint: ~9.27.0
     eslint-scope: ^8.3.0
-    eslint-visitor-keys: ^4.2.0
     eslint-vitest-rule-tester: ^2.2.0
     espree: ^10.3.0
     prettier: ^3.5.3
@@ -64,11 +64,11 @@ catalogs:
   miscs:
     '@umami/node': ^0.4.0
     element-plus: ^2.9.11
-    synckit: ^0.11.6
+    make-synchronized: ^0.8.0
     ws: ^8.18.2
   nuxt-libs:
     '@nuxt/devtools': ^2.4.1
-    '@nuxt/eslint-config': ^1.4.1
+    '@nuxt/eslint-config': ^1.5.2
     '@nuxt/kit': ^3.17.4
     '@nuxt/module-builder': ^1.0.1
     '@nuxt/schema': ^3.17.4

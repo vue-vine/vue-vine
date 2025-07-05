@@ -40,6 +40,9 @@
     "eslint": "catalog:lint-libs"
   },
   "devDependencies": {
-    "@typescript/native-preview": "catalog:compiler"
+    "@antfu/eslint-config": "catalog:lint-libs",
+    "@stylistic/eslint-plugin": "catalog:lint-libs",
+    "@typescript/native-preview": "catalog:compiler",
+    "eslint-vitest-rule-tester": "catalog:lint-libs"
   }
 }
