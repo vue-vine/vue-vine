@@ -31,19 +31,17 @@ run({
       description: 'should correctly fix Vue Vine template',
       code,
       output(result) {
-        expect(prettierSnapshot(result)).toMatchInlineSnapshot(`
-          "
-           ┌───┬────────────────────────────────
-           │ 1 │function TestComp() {
-           │ 2 │  return vine\`
-           │ 3 │    <div>HelloWorld</div>
-           │ 4 │    <!-- TEST COMMENT -->
-           │ 5 │    <p>Chaos</p>
-           │ 6 │  \`
-           │ 7 │}
-           └───┴────────────────────────────────
-            "
-        `)
+        expect(prettierSnapshot(result)).toBe(`
+ ┌───┬────────────────────────────────
+ │ 1 │function TestComp() {
+ │ 2 │  return vine\`
+ │ 3 │    <div>HelloWorld</div>
+ │ 4 │    <!-- TEST COMMENT -->
+ │ 5 │    <p>Chaos</p>
+ │ 6 │  \`
+ │ 7 │}
+ └───┴────────────────────────────────
+        `.trim())
       },
     },
   ],

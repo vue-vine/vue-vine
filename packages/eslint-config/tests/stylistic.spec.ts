@@ -54,23 +54,21 @@ bar: number
         // This test demonstrates a known compatibility issue
         // between Vue Vine ESLint parser and @stylistic's 'style/indent'.
         // The indent of props type object literal fields is not correctly fixed.
-        expect(prettierSnapshot(result)).toMatchInlineSnapshot(`
-          "
-           ┌────┬────────────────────────────────
-           │  1 │export function TestComp(props: {
-           │  2 │  foo: string
-           │  3 │  bar: number
-           │  4 │}) {
-           │  5 │  return vine\`
-           │  6 │    <div>HelloWorld</div>
-           │  7 │    <!-- TEST COMMENT -->
-           │  8 │    <p>Chaos</p>
-           │  9 │  \`
-           │ 10 │}
-           │ 11 │
-           └────┴────────────────────────────────
-            "
-        `)
+        expect(prettierSnapshot(result)).toBe(`
+ ┌────┬────────────────────────────────
+ │  1 │export function TestComp(props: {
+ │  2 │  foo: string
+ │  3 │  bar: number
+ │  4 │}) {
+ │  5 │  return vine\`
+ │  6 │    <div>HelloWorld</div>
+ │  7 │    <!-- TEST COMMENT -->
+ │  8 │    <p>Chaos</p>
+ │  9 │  \`
+ │ 10 │}
+ │ 11 │
+ └────┴────────────────────────────────
+  `.trim())
       },
     },
     {
@@ -85,20 +83,18 @@ return vine\`
 }\n`.trimStart(),
       filename: 'test.vine.ts',
       output(result) {
-        expect(prettierSnapshot(result)).toMatchInlineSnapshot(`
-          "
-           ┌───┬────────────────────────────────
-           │ 1 │export function TestComp() {
-           │ 2 │  return vine\`
-           │ 3 │    <div>
-           │ 4 │      <p>Hello</p>
-           │ 5 │    </div>
-           │ 6 │  \`
-           │ 7 │}
-           │ 8 │
-           └───┴────────────────────────────────
-            "
-        `)
+        expect(prettierSnapshot(result)).toBe(`
+ ┌───┬────────────────────────────────
+ │ 1 │export function TestComp() {
+ │ 2 │  return vine\`
+ │ 3 │    <div>
+ │ 4 │      <p>Hello</p>
+ │ 5 │    </div>
+ │ 6 │  \`
+ │ 7 │}
+ │ 8 │
+ └───┴────────────────────────────────
+  `.trim())
       },
     },
   ],
