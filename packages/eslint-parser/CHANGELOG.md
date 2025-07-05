@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.6
+
+### Patch Changes
+
+- Fix indent format infinite loop
+
 ## 1.1.5
 
 ### Patch Changes
