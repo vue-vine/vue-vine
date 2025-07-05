@@ -309,7 +309,7 @@ catalogs:
       specifier: ^1.52.0
       version: 1.53.2
     vitest:
-      specifier: ^3.2.3
+      specifier: ^3.2.4
       version: 3.2.4
   volar:
     '@volar/language-core':

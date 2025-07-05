@@ -118,7 +118,7 @@ catalogs:
   vitest-libs:
     jsdom: ^26.1.0
     playwright-chromium: ^1.52.0
-    vitest: ^3.2.3
+    vitest: ^3.2.4
   volar:
     '@volar/language-core': *volar
     '@volar/language-server': *volar
