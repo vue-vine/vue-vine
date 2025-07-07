@@ -1,5 +1,16 @@
 # vue-vine-tsc
 
+## 1.6.0
+
+### Minor Changes
+
+- Update new typing and functionality of initVibe.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/language-service@1.6.0
+
 ## 1.5.7
 
 ### Patch Changes

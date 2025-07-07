@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.6.0
+
+### Minor Changes
+
+- Update new typing and functionality of initVibe.
+
 ## 1.5.7
 
 ### Patch Changes
