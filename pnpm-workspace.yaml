@@ -3,99 +3,100 @@ packages:
   - packages/*
 
 defines:
-  - &vue ^3.5.15
+  - &vue ^3.5.17
   - &vue-lang-tools ~3.0.1
   - &volar ~2.4.17
   - &volar-service ~0.0.64
 
 catalogs:
   cli:
-    '@changesets/cli': ^2.29.4
+    '@changesets/cli': ^2.29.5
     '@clack/prompts': ^0.11.0
     clerc: ^0.44.0
     consola: ^3.4.2
     debug: ^4.4.1
     del: ^8.0.0
     execa: ^9.6.0
-    lint-staged: ^16.0.0
+    lint-staged: ^16.1.2
     ovsx: latest
-    pkg-dir: ^8.0.0
-    rollup: ^4.41.1
+    pkg-dir: ^9.0.0
+    rollup: ^4.44.2
     simple-git-hooks: ^2.13.0
     tree-kill: ^1.2.2
-    tsdown: ^0.12.6
-    tsx: ^4.19.4
+    tsdown: ^0.12.9
+    tsx: ^4.20.3
     typescript: ~5.8.3
     yoctocolors: ^2.1.1
   compiler:
-    '@babel/parser': ^7.27.2
-    '@babel/types': ^7.27.1
+    '@babel/parser': ^7.28.0
+    '@babel/types': ^7.28.0
     '@typescript/native-preview': latest
     estree-walker: ^3.0.3
     get-tsconfig: ^4.10.1
     magic-string: ^0.30.17
     merge-source-map: ^1.1.0
-    postcss: ^8.5.3
+    postcss: ^8.5.6
     postcss-selector-parser: ^7.1.0
     source-map-js: ^1.2.1
     ts-morph: ^26.0.0
   docs:
+    shiki: ^3.7.0
     vitepress: ^1.6.3
-    vitepress-plugin-group-icons: ^1.6.0
+    vitepress-plugin-group-icons: ^1.6.1
   icons:
-    '@iconify-json/carbon': ^1.2.8
+    '@iconify-json/carbon': ^1.2.10
     '@iconify-json/logos': ^1.2.4
     '@iconify-json/mdi': ^1.2.3
     '@iconify-json/twemoji': ^1.2.2
   lint-libs:
     '@antfu/eslint-config': ^4.16.2
     '@stylistic/eslint-plugin': ^5.1.0
-    '@typescript-eslint/parser': ~8.32.1
-    '@typescript-eslint/scope-manager': ~8.32.1
-    '@typescript-eslint/types': ~8.33.0
-    '@typescript-eslint/typescript-estree': ~8.32.1
-    '@typescript-eslint/utils': ~8.32.1
-    eslint: ~9.27.0
-    eslint-scope: ^8.3.0
+    '@typescript-eslint/parser': ~8.35.1
+    '@typescript-eslint/scope-manager': ~8.35.1
+    '@typescript-eslint/types': ~8.35.1
+    '@typescript-eslint/typescript-estree': ~8.35.1
+    '@typescript-eslint/utils': ~8.35.1
+    eslint: ~9.30.1
+    eslint-scope: ^8.4.0
     eslint-vitest-rule-tester: ^2.2.0
-    espree: ^10.3.0
-    prettier: ^3.5.3
+    espree: ^10.4.0
+    prettier: ^3.6.2
     prettier-linter-helpers: ^1.0.0
   miscs:
     '@umami/node': ^0.4.0
-    element-plus: ^2.9.11
+    element-plus: ^2.10.3
     make-synchronized: ^0.8.0
-    ws: ^8.18.2
+    ws: ^8.18.3
   nuxt-libs:
-    '@nuxt/devtools': ^2.4.1
+    '@nuxt/devtools': ^2.6.2
     '@nuxt/eslint-config': ^1.5.2
-    '@nuxt/kit': ^3.17.4
+    '@nuxt/kit': ^3.17.6
     '@nuxt/module-builder': ^1.0.1
-    '@nuxt/schema': ^3.17.4
-    '@nuxt/test-utils': ^3.19.1
-    nuxt: ^3.17.4
+    '@nuxt/schema': ^3.17.6
+    '@nuxt/test-utils': ^3.19.2
+    nuxt: ^3.17.6
   styles:
-    sass: ^1.89.0
-    tailwindcss: ^4.1.7
-    unocss: ^66.1.2
+    sass: ^1.89.2
+    tailwindcss: ^4.1.11
+    unocss: ^66.3.3
   types:
     '@types/debug': ^4.1.12
     '@types/eslint': ^9.6.1
-    '@types/estree': ^1.0.7
+    '@types/estree': ^1.0.8
     '@types/hash-sum': ^1.0.2
     '@types/jsdom': ^21.1.7
     '@types/line-column': ^1.0.2
-    '@types/lodash': ^4.17.17
-    '@types/node': ^22.15.21
+    '@types/lodash': ^4.17.20
+    '@types/node': ^22.16.0
     '@types/prettier-linter-helpers': ^1.0.4
     '@types/semver': ^7.7.0
-    '@types/vscode': ~1.100.0
+    '@types/vscode': ~1.101.0
     '@types/ws': ^8.18.1
   utils:
     '@antfu/utils': ^9.2.0
     '@baiwusanyu/utils-log': ^1.1.2
     '@changesets/changelog-github': ^0.5.1
-    changelogen: ^0.6.1
+    changelogen: ^0.6.2
     destr: ^2.0.5
     detect-port: ^2.1.0
     hash-sum: ^2.0.0
@@ -107,17 +108,17 @@ catalogs:
     semver: ^7.7.2
     yaml: ^2.8.0
   vite-ecosystem:
-    '@tailwindcss/vite': ^4.1.7
-    '@vitejs/plugin-vue': ^5.2.4
-    '@vitejs/plugin-vue-jsx': ^4.2.0
+    '@tailwindcss/vite': ^4.1.11
+    '@vitejs/plugin-vue': ^6.0.0
+    '@vitejs/plugin-vue-jsx': ^5.0.1
     rolldown: latest
     rolldown-vite: latest
     unplugin-auto-import: ^19.3.0
-    vite: ^6.3.5
-    vite-plugin-inspect: ^11.1.0
+    vite: ^7.0.2
+    vite-plugin-inspect: ^11.3.0
   vitest-libs:
     jsdom: ^26.1.0
-    playwright-chromium: ^1.52.0
+    playwright-chromium: ^1.53.2
     vitest: ^3.2.4
   volar:
     '@volar/language-core': *volar
@@ -131,8 +132,8 @@ catalogs:
     volar-service-typescript: *volar-service
   vscode:
     '@vscode/vsce': latest
-    reactive-vscode: ^0.2.17
-    vscode-html-languageservice: ^5.4.0
+    reactive-vscode: ^0.3.1
+    vscode-html-languageservice: ^5.5.1
     vscode-languageserver-protocol: ^3.17.5
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
@@ -143,8 +144,8 @@ catalogs:
     '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue
     '@vue/test-utils': ^2.4.6
-    '@vueuse/core': ^13.2.0
-    pinia: ^3.0.2
+    '@vueuse/core': ^13.5.0
+    pinia: ^3.0.3
     vue: *vue
     vue-router: ^4.5.1
     vue-tsc: *vue-lang-tools

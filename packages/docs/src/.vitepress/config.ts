@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import minLight from 'shiki/themes/min-light.mjs'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
@@ -141,7 +142,12 @@ export default defineConfig({
   },
   markdown: {
     theme: {
-      light: 'min-light',
+      light: {
+        ...minLight,
+        colorReplacements: {
+          '#c2c3c5': '#ababab',
+        },
+      },
       dark: 'tokyo-night',
     },
     languages: [

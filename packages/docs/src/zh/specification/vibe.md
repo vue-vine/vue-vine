@@ -16,7 +16,6 @@ Vibe 是一种在 Vue Vine 中所推荐的状态管理代码组织方式。在�
 
 | 功能需求 | Pinia | 可组合函数 | Provide/Inject | Vibe |
 | -------- | ----- | ------------ | -------------- | ---- |
-| DevTools | ✅ | ❌ | ❌ | ❌ |
 | 可以直接解构 | ❌ | ✅ | ✅ | ✅ |
 | SSR 内存泄漏 | ✅ | ❌ | ✅ | ✅ |
 | SSR 状态污染 | ✅ | ❌ | ✅ | ✅ |
@@ -90,8 +89,9 @@ const [useProductStore, initProductStore] = defineVibe('products', () => {
 })
 
 function App() {
-  initProductStore(async () => {
-    await fetchProducts()
+  initProductStore(async ({ productList, fetchProducts }) => {
+    const resp = await fetchProducts()
+    productList.value = resp.data
   })
 
   return vine`...`
@@ -102,7 +102,23 @@ function App() {
 
 > 调用 `initProductStore` 这样的 Vibe 初始化方法，是为了使用 Vue 的 [`provide`](https://cn.vuejs.org/api/composition-api-dependency-injection.html#provide) API 将数据提供给下层组件。
 
+::: tip 提示
+
+你可以在初始化执行器中解构数据仓库对象，这样你就可以在组件中使用数据仓库对象。
+
+```vue-vine
+function App() {
+  const { productList } = initProductStore(/* ...*/)
+
+  // 你可以在 “相对顶层” 组件中使用 ref `productList`。
+
+  return vine`...`
+}
+```
+
 我们强力推荐你在创建数据仓库模型时对状态都使用 `ref` 来定义，这样你就可以方便地在初始化执行器中从参数上解构出它们，而不会像 Pinia 那样丢失响应性。
+
+:::
 
 ::: warning 需要注意的细节
 
@@ -110,7 +126,7 @@ function App() {
 
 因此你应该对执行器中可能会更新的状态值保持警惕，在组件中使用时应该为其设置兜底方案，比如设置一个加载动画等视觉方案。
 
-如果你坚持要在组件 `setup` 逻辑中等待这个 `initVibe` 方法执行完毕，你可以在前面加上 `await`，但这也意味着你的组件 `setup` 函数会变成异步的，Vue 要求你后续必须用 `Suspense` 组件包裹你的组件。
+如果你坚持要在组件 `setup` 逻辑中等待这个 `initVibe` 方法执行完毕，你可以在前面加上 `await`，但这也意味着你的组件 `setup` 函数会变成异步的，Vue 要求你后续必须用 `Suspense` 组件包裹这样的组件。
 
 :::
 

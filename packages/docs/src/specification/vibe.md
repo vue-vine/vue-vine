@@ -17,7 +17,6 @@ We compare the following features of the solutions:
 
 | Feature | Pinia | Composables | Provide/Inject | Vibe |
 | -------- | ----- | ------------ | -------------- | ---- |
-| DevTools | ✅ | ❌ | ❌ | ❌ |
 | Directly destructuring | ❌ | ✅ | ✅ | ✅ |
 | SSR memory leak | ✅ | ❌ | ✅ | ✅ |
 | SSR-safe | ✅ | ❌ | ✅ | ✅ |
@@ -91,8 +90,9 @@ const [useProductStore, initProductStore] = defineVibe('products', () => {
 })
 
 function App() {
-  initProductStore(async () => {
-    await fetchProducts()
+  initProductStore(async ({ productList, fetchProducts }) => {
+    const resp = await fetchProducts()
+    productList.value = resp.data
   })
 
   return vine`...`
@@ -103,7 +103,23 @@ When initializing the data store, you can call it directly without parameters, o
 
 > Calling `initProductStore` like this is to use Vue's [`provide`](https://cn.vuejs.org/api/composition-api-dependency-injection.html#provide) API to provide the data to the lower-level components.
 
-We strongly recommend that you use `ref` to define the state in the data store model, so you can easily destructure them from the parameters in the initialization executor and avoid losing reactivity like Pinia.
+::: tip Tips
+
+You can destructure the data store returned by `initVibe`, because you may also want to access the data store in the provider component level.
+
+```vue-vine
+function App() {
+  const { productList } = initProductStore(/* ...*/)
+
+  // You can use the ref `productList` in the "relatively top-level" component.
+
+  return vine`...`
+}
+```
+
+So, we strongly recommend that you use `ref` to define the state in the data store model, so you can easily destructure them from the parameters in the initialization executor and avoid losing reactivity like Pinia.
+
+:::
 
 ::: warning Details aware
 
