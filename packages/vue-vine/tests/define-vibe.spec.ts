@@ -61,7 +61,7 @@ describe('defineVibe', () => {
         return { data }
       },
       template: `
-        <div>
+        <div class="counter">
           <p v-if="!data">Loading...</p>
           <p v-else>Data: {{ data }}</p>
         </div>
@@ -71,19 +71,26 @@ describe('defineVibe', () => {
     const App = defineComponent({
       components: { Counter },
       setup() {
-        initAsyncData(async ({ data }) => {
+        // Initialize is the start of providing the vibe store,
+        // but user may still want to access the data in store at the provider component level.
+        const { data } = initAsyncData(async ({ data }) => {
           const resp = await mockDataFetch()
           data.value = resp.data
         })
+        return { data }
       },
       template: `
-        <Counter />
+        <div class="app">
+          <Counter />
+          <p>Data: {{ data }}</p>
+        </div>
       `,
     })
 
     const mounted = mount(App)
-    expect(mounted.find('p').text()).toBe('Loading...')
+    expect(mounted.find('.counter > p').text()).toBe('Loading...')
     await new Promise(resolve => setTimeout(resolve, 1000))
-    expect(mounted.find('p').text()).toBe('Data: mock data')
+    expect(mounted.find('.counter > p').text()).toBe('Data: mock data')
+    expect(mounted.find('.app > p').text()).toBe('Data: mock data')
   })
 })

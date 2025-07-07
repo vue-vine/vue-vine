@@ -4,8 +4,17 @@ import { inject, provide } from 'vue'
 type MaybePromise<T> = T | Promise<T>
 
 type DefineVibeResult<T> = [
+  /**
+   * Use the vibe store.
+   */
   useVibe: () => T,
-  initVibe: (initFn?: (store: T) => MaybePromise<void>) => MaybePromise<void>,
+
+  /**
+   * Initialize the vibe store.
+   */
+  initVibe: (
+    initFn?: (store: T) => MaybePromise<void>
+  ) => T,
 ]
 
 function uniqueId() {
@@ -102,9 +111,11 @@ export function defineVibe<T>(
   const key = Symbol(`vibe-${uniqueId()}:${name}`) as InjectionKey<T>
 
   const initVibe = (initFn?: (store: T) => MaybePromise<void>) => {
-    const factoryResult = factory()
-    provide(key, factoryResult)
-    return initFn?.(factoryResult)
+    const vibeStore = factory()
+    provide(key, vibeStore)
+    initFn?.(vibeStore)
+
+    return vibeStore
   }
 
   const useVibe = () => {

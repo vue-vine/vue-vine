@@ -162,7 +162,7 @@ export function runTestAtPage(
 ) {
   return async () => {
     await browserCtx.page?.goto(`${browserCtx.viteTestUrl}${page}`)
-    await wait(500)
+    await wait(800)
     await testRunner()
   }
 }
