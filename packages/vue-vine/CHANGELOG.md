@@ -1,5 +1,13 @@
 # vue-vine
 
+## 1.6.1
+
+### Patch Changes
+
+- Fix the missing feature support of custom elements.
+- Updated dependencies
+  - @vue-vine/vite-plugin@1.6.1
+
 ## 1.6.0
 
 ### Minor Changes

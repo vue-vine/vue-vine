@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.6.1
+
+### Patch Changes
+
+- Fix the missing feature support of custom elements.
+
 ## 1.6.0
 
 ### Minor Changes

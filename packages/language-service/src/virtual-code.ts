@@ -5,7 +5,15 @@ import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelFunctionNodeTypes, BabelToken, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
 import path from 'node:path/posix'
-import { isBlockStatement, isIdentifier, isStringLiteral, isTSTypeLiteral, isVariableDeclaration } from '@babel/types'
+import {
+  isBlockStatement,
+  isExportNamedDeclaration,
+  isFunctionDeclaration,
+  isIdentifier,
+  isStringLiteral,
+  isTSTypeLiteral,
+  isVariableDeclaration,
+} from '@babel/types'
 import { _breakableTraverse, exitTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { replaceAll, toString } from 'muggle-string'

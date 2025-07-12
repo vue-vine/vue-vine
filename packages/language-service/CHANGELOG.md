@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.6.1
+
+### Patch Changes
+
+- Fix the missing feature support of custom elements.
+- Updated dependencies
+  - @vue-vine/compiler@1.6.1
+
 ## 1.6.0
 
 ### Minor Changes
