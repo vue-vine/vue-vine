@@ -1,7 +1,13 @@
 import type { VineCompilerCtx, VineCompilerHooks, VineCompilerOptions } from '../src/types'
 import { createCompilerCtx } from '../src/index'
 
-export function createMockTransformCtx(option: VineCompilerOptions = {}): {
+export function createMockTransformCtx(
+  option: VineCompilerOptions = {
+    vueCompilerOptions: {
+      isCustomElement: tag => tag.startsWith('vi-'),
+    },
+  },
+): {
   mockCompilerHooks: VineCompilerHooks
   mockCompilerCtx: VineCompilerCtx
 } {

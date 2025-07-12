@@ -2,8 +2,16 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Maple Mono NF CN';
 }
 
 body {
   padding: 1rem;
+}
+
+button {
+  border: none;
+  background-color: darkolivegreen;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
 }

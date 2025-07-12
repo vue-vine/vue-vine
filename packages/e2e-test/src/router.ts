@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { TestTsMorphComplexExternal } from './components/ts-morph-complex-external/test-ts-morph.vine'
+import { TestCustomElement } from './fixtures/custom-elements.vine'
 import { TestExternalStyleImport } from './fixtures/external-style-import.vine'
 import { HmrApp } from './fixtures/hmr.vine'
 import { TestVineWithJsx } from './fixtures/mix-with-jsx.vine'
@@ -31,6 +32,7 @@ const routes = [
   { path: '/ts-morph-complex-external', component: TestTsMorphComplexExternal },
   { path: '/vine-prop', component: TestVinePropPage },
   { path: '/vine-slots', component: TestVineSlots },
+  { path: '/custom-elements', component: TestCustomElement },
 ]
 
 const router = createRouter({

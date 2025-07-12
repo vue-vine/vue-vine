@@ -179,3 +179,41 @@ const count = vineModel('count', { default: 0 }) // count 的类型是 Ref<numbe
 // 在被修改时，触发 "update:count" 事件
 count.value++
 ```
+
+## `vineCustomElement` {#vinecustomelement}
+
+这个宏用于将 Vue Vine 组件标记为自定义元素构造函数。
+
+```vue-vine
+function SampleCustomElement() {
+  vineCustomElement()
+
+  return vine`...`
+}
+
+function WhereYouUseIt() {
+  customElements.define('my-custom-element', SampleCustomElement)
+
+  return vine`
+    <my-custom-element />
+  `
+}
+```
+
+同时，你需要配置 `compilerOptions.customElement` 选项，让 Vue 识别到自定义元素。
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import { VineVitePlugin } from 'vue-vine/vite'
+
+export default defineConfig({
+  plugins: [
+    VineVitePlugin({
+      vueCompilerOptions: {
+        isCustomElement: tag => tag.startsWith('my-'),
+      },
+    })
+  ],
+})
+```

@@ -5,13 +5,14 @@ exports[`test transform > inline mode output result 1`] = `
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
+  defineCustomElement as _defineCustomElement,
   useCssVars as _useCssVars,
   unref as _unref,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
   createElementVNode as _createElementVNode,
   toDisplayString as _toDisplayString,
   Fragment as _Fragment,
-  openBlock as _openBlock,
-  createElementBlock as _createElementBlock,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -40,6 +41,35 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const SampleCustomElement = (() => {
+  const __vine = _defineComponent({
+    name: "SampleCustomElement",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock("div", null, "SampleCustomElement")
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "10115e21";
+  __vine.styles = [
+    typeof __samplecustomelement_styles === "undefined"
+      ? null
+      : __samplecustomelement_styles,
+  ].filter(Boolean);
+
+  return _defineCustomElement(__vine);
+})();
+
 export const AnotherComp = (() => {
   const __vine = _defineComponent({
     name: "AnotherComp",
@@ -54,6 +84,8 @@ export const AnotherComp = (() => {
     setup(__props, { expose: __expose }) {
       __expose();
       const props = __props;
+
+      customElements.define("vi-sample-custom-element", SampleCustomElement);
 
       return (_ctx, _cache) => {
         return (
@@ -81,6 +113,13 @@ export const AnotherComp = (() => {
                 "bar:" + _toDisplayString(__props.bar),
                 1 /* TEXT */,
               ),
+              _cache[1] ||
+                (_cache[1] = _createElementVNode(
+                  "vi-sample-custom-element",
+                  null,
+                  null,
+                  -1 /* CACHED */,
+                )),
             ],
             64 /* STABLE_FRAGMENT */,
           )
@@ -253,6 +292,12 @@ export const MyApp = (() => {
 })();
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(
+    SampleCustomElement.__hmrId,
+    SampleCustomElement,
+  );
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
@@ -270,13 +315,16 @@ exports[`test transform > not output HMR content in non-dev mode 1`] = `
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
+  defineCustomElement as _defineCustomElement,
   useCssVars as _useCssVars,
   unref as _unref,
-  createElementVNode as _createElementVNode,
-  toDisplayString as _toDisplayString,
-  Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  resolveComponent as _resolveComponent,
+  createVNode as _createVNode,
+  Fragment as _Fragment,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -284,7 +332,6 @@ import {
   vShow as _vShow,
   withDirectives as _withDirectives,
   withAsyncContext as _withAsyncContext,
-  createVNode as _createVNode,
 } from "vue";
 
 import "testNoHMRContentOnProduction?type=vine-style&vineFileId=testNoHMRContentOnProduction&scopeId=3b48c990&comp=MyProfile&lang=css&index=0&virtual.css";
@@ -305,6 +352,34 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const SampleCustomElement = (() => {
+  const __vine = _defineComponent({
+    name: "SampleCustomElement",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock("div", null, "SampleCustomElement")
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.styles = [
+    typeof __samplecustomelement_styles === "undefined"
+      ? null
+      : __samplecustomelement_styles,
+  ].filter(Boolean);
+
+  return _defineCustomElement(__vine);
+})();
+
 export const AnotherComp = (() => {
   const __vine = _defineComponent({
     name: "AnotherComp",
@@ -320,7 +395,14 @@ export const AnotherComp = (() => {
       __expose();
       const props = __props;
 
+      customElements.define("vi-sample-custom-element", SampleCustomElement);
+
       return (_ctx, _cache) => {
+        const _component_vi_sample_custom_element =
+          typeof ViSampleCustomElement === "undefined"
+            ? _resolveComponent("vi-sample-custom-element")
+            : ViSampleCustomElement;
+
         return (
           _openBlock(),
           _createElementBlock(
@@ -346,6 +428,7 @@ export const AnotherComp = (() => {
                 "bar:" + _toDisplayString(__props.bar),
                 1 /* TEXT */,
               ),
+              _createVNode(_component_vi_sample_custom_element),
             ],
             64 /* STABLE_FRAGMENT */,
           )
@@ -523,12 +606,15 @@ exports[`test transform > separated mode output result 1`] = `
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
+  defineCustomElement as _defineCustomElement,
   useCssVars as _useCssVars,
-  createElementVNode as _createElementVNode,
-  toDisplayString as _toDisplayString,
-  Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
+  createElementVNode as _createElementVNode,
+  toDisplayString as _toDisplayString,
+  resolveComponent as _resolveComponent,
+  createVNode as _createVNode,
+  Fragment as _Fragment,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -536,7 +622,6 @@ import {
   vShow as _vShow,
   withDirectives as _withDirectives,
   withAsyncContext as _withAsyncContext,
-  createVNode as _createVNode,
 } from "vue";
 
 import "testTransformSeparatedResult?type=vine-style&vineFileId=testTransformSeparatedResult&scopeId=25e4e706&comp=MyProfile&lang=css&index=0&virtual.css";
@@ -557,6 +642,36 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const SampleCustomElement = (() => {
+  const __vine = _defineComponent({
+    name: "SampleCustomElement",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return (
+      _openBlock(),
+      _createElementBlock("div", null, "SampleCustomElement")
+    );
+  }
+  __vine.render = __sfc_render;
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "d91bba3e";
+  __vine.styles = [
+    typeof __samplecustomelement_styles === "undefined"
+      ? null
+      : __samplecustomelement_styles,
+  ].filter(Boolean);
+
+  return _defineCustomElement(__vine);
+})();
+
 export const AnotherComp = (() => {
   const __vine = _defineComponent({
     name: "AnotherComp",
@@ -572,10 +687,17 @@ export const AnotherComp = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, AnotherComp, MyProfile, MyApp };
+      customElements.define("vi-sample-custom-element", SampleCustomElement);
+
+      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_vi_sample_custom_element =
+      typeof ViSampleCustomElement === "undefined"
+        ? _resolveComponent("vi-sample-custom-element")
+        : ViSampleCustomElement;
+
     return (
       _openBlock(),
       _createElementBlock(
@@ -601,6 +723,7 @@ export const AnotherComp = (() => {
             "bar:" + _toDisplayString($props.bar),
             1 /* TEXT */,
           ),
+          _createVNode(_component_vi_sample_custom_element),
         ],
         64 /* STABLE_FRAGMENT */,
       )
@@ -682,6 +805,7 @@ export const MyProfile = (() => {
         handleRefresh,
         v1,
         v2,
+        SampleCustomElement,
         AnotherComp,
         MyProfile,
         MyApp,
@@ -753,7 +877,15 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
+      return {
+        data,
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -787,6 +919,12 @@ export const MyApp = (() => {
 })();
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(
+    SampleCustomElement.__hmrId,
+    SampleCustomElement,
+  );
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
@@ -803,15 +941,17 @@ exports[`test transform > separated mode output result by ssr 1`] = `
 "import _imports_0 from "@/assets/sample.png";
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
+  ssrRenderAttrs as _ssrRenderAttrs,
+  ssrRenderComponent as _ssrRenderComponent,
   ssrInterpolate as _ssrInterpolate,
   ssrRenderStyle as _ssrRenderStyle,
   ssrRenderAttr as _ssrRenderAttr,
-  ssrRenderAttrs as _ssrRenderAttrs,
-  ssrRenderComponent as _ssrRenderComponent,
 } from "vue/server-renderer";
 import {
   defineComponent as _defineComponent,
+  defineCustomElement as _defineCustomElement,
   useCssVars as _useCssVars,
+  resolveComponent as _resolveComponent,
   useSlots as _useSlots,
   useModel as _useModel,
   toRefs as _toRefs,
@@ -837,6 +977,44 @@ const v2 = ref(0);
 
 someExternalFunction2();
 
+export const SampleCustomElement = (() => {
+  const __vine = _defineComponent({
+    name: "SampleCustomElement",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+    },
+  });
+  function __sfc_ssr_render(
+    _ctx,
+    _push,
+    _parent,
+    _attrs,
+    $props,
+    $setup,
+    $data,
+    $options,
+  ) {
+    _push(
+      \`<div\${_ssrRenderAttrs(_attrs)} data-v-d91bba3e>SampleCustomElement</div>\`,
+    );
+  }
+  __vine.ssrRender = __sfc_ssr_render;
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "d91bba3e";
+  __vine.styles = [
+    typeof __samplecustomelement_styles === "undefined"
+      ? null
+      : __samplecustomelement_styles,
+  ].filter(Boolean);
+
+  return _defineCustomElement(__vine);
+})();
+
 export const AnotherComp = (() => {
   const __vine = _defineComponent({
     name: "AnotherComp",
@@ -852,7 +1030,9 @@ export const AnotherComp = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, AnotherComp, MyProfile, MyApp };
+      customElements.define("vi-sample-custom-element", SampleCustomElement);
+
+      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
     },
   });
   function __sfc_ssr_render(
@@ -865,11 +1045,25 @@ export const AnotherComp = (() => {
     $data,
     $options,
   ) {
+    const _component_vi_sample_custom_element =
+      typeof ViSampleCustomElement === "undefined"
+        ? _resolveComponent("vi-sample-custom-element")
+        : ViSampleCustomElement;
+
     _push(
       \`<!--[--><div data-v-93184a5c>AnotherComp</div><p data-v-93184a5c>foo:\${_ssrInterpolate(
         $props.foo,
-      )}</p><p data-v-93184a5c>bar:\${_ssrInterpolate($props.bar)}</p><!--]-->\`,
+      )}</p><p data-v-93184a5c>bar:\${_ssrInterpolate($props.bar)}</p>\`,
     );
+    _push(
+      _ssrRenderComponent(
+        _component_vi_sample_custom_element,
+        null,
+        null,
+        _parent,
+      ),
+    );
+    _push(\`<!--]-->\`);
   }
   __vine.ssrRender = __sfc_ssr_render;
   __vine.__vue_vine = true;
@@ -946,6 +1140,7 @@ export const MyProfile = (() => {
         handleRefresh,
         v1,
         v2,
+        SampleCustomElement,
         AnotherComp,
         MyProfile,
         MyApp,
@@ -1003,7 +1198,15 @@ export const MyApp = (() => {
         __restore(),
         __temp);
 
-      return { data, v1, v2, AnotherComp, MyProfile, MyApp };
+      return {
+        data,
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_ssr_render(
@@ -1050,6 +1253,12 @@ export const MyApp = (() => {
 
   return __vine;
 })();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(
+    SampleCustomElement.__hmrId,
+    SampleCustomElement,
+  );
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(AnotherComp.__hmrId, AnotherComp);

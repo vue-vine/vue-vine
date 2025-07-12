@@ -16,6 +16,14 @@ const v2 = ref(0)
 
 someExternalFunction2()
 
+export function SampleCustomElement() {
+  vineCustomElement()
+
+  return vine\`
+    <div>SampleCustomElement</div>
+  \`
+}
+
 function AnotherComp(props: {
   foo: string;
   bar: number;
@@ -25,10 +33,13 @@ function AnotherComp(props: {
     bar: (val: number) => val > 5,
   })
 
+  customElements.define('vi-sample-custom-element', SampleCustomElement)
+
   return vine\`
     <div>AnotherComp</div>
     <p>foo:{{ foo }}</p>
     <p>bar:{{ bar }}</p>
+    <vi-sample-custom-element />
   \`
 }
 

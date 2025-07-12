@@ -311,6 +311,9 @@ export function createVueVineVirtualCode(
     }
 
     generateScriptUntil(vineCompFn.fnDeclNode!.end!)
+    if (vineCompFn.isCustomElement) {
+      tsCodeSegments.push(' as CustomElementConstructor);\n')
+    }
   }
   generateScriptUntil(snapshotContent.length)
 
@@ -567,6 +570,40 @@ export function createVueVineVirtualCode(
     if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
       tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
       }>>;\n`)
+    }
+
+    // For custom element, we need to convert to the function declaration
+    // to `const FnName = function () { ... } as CustomElementConstructor`
+    if (vineCompFn.isCustomElement) {
+      let declNode: any = vineCompFn.fnDeclNode
+      if (isExportNamedDeclaration(declNode)) {
+        declNode = declNode.declaration
+      }
+      if (
+        isFunctionDeclaration(declNode)
+        && declNode.id
+        && declNode.body
+      ) {
+        // Remove the identifier, make this function declaration to a function expression,
+        // then append `as CustomElementConstructor` in the end of expression
+        generateScriptUntil(declNode.start!)
+        tsCodeSegments.push(`const ${vineCompFn.fnName} = (function `)
+        // Move cursor to the end of identifier,
+        // to remain its original parameters
+        currentOffset.value = declNode.id.end!
+      }
+      else if (
+        isVariableDeclaration(declNode)
+        && declNode.declarations
+      ) {
+        const decl = declNode.declarations[0]
+        if (decl.init) {
+          // since here is already a variable declaration,
+          // we just need to append `as CustomElementConstructor` in the end of expression
+          generateScriptUntil(decl.init.start!)
+          tsCodeSegments.push('(')
+        }
+      }
     }
 
     // Gurantee the component function has a `props` formal parameter in virtual code,

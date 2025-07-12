@@ -203,4 +203,24 @@ describe('test basic functionality', async () => {
       expect(await evaluator.getTextContent('.slot-with-fallback .slot-with-fallback-wrapper:nth-child(3) .fallback')).toMatchInlineSnapshot(`"This is fallback content when no slot is provided"`)
     },
   ))
+
+  it('should support vineCustomElement', runTestAtPage(
+    '/custom-elements',
+    browserCtx,
+    async () => {
+      const sampleCustomElement = await browserCtx.page?.locator('vi-sample-custom-element')
+      expect(sampleCustomElement).toBeDefined()
+
+      // Find .text-content in shadow DOM
+      expect(await sampleCustomElement?.locator('.text-content').textContent()).toMatchInlineSnapshot(`"Count: 0"`)
+
+      // Find .add-count-btn in shadow DOM
+      const addCountBtn = await sampleCustomElement?.locator('.add-count-btn')
+      expect(addCountBtn).toBeDefined()
+
+      // Click the button
+      await addCountBtn?.click()
+      expect(await sampleCustomElement?.locator('.text-content').textContent()).toMatchInlineSnapshot(`"Count: 1"`)
+    },
+  ))
 })

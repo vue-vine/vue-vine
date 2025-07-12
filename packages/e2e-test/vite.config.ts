@@ -36,6 +36,10 @@ export default defineConfig({
         'src/components',
       ],
     }),
-    VineVitePlugin() as PluginOption,
+    VineVitePlugin({
+      vueCompilerOptions: {
+        isCustomElement: tag => tag.startsWith('vi-'),
+      },
+    }) as PluginOption,
   ],
 })
