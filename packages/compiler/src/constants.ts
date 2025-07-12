@@ -1,6 +1,7 @@
 import type { BindingTypes as VueBindingTypes } from '@vue/compiler-dom'
 
 export const DEFINE_COMPONENT_HELPER = 'defineComponent'
+export const DEFINE_CUSTOM_ELEMENT_HELPER = 'defineCustomElement'
 export const USE_DEFAULTS_HELPER = 'useDefaults'
 export const TO_REFS_HELPER = 'toRefs'
 export const USE_MODEL_HELPER = 'useModel'

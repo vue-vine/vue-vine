@@ -279,7 +279,7 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
           && isIdentifier(decl.id)
         ) {
           pickedInfo.push({
-            fnDeclNode: fnDecl,
+            fnDeclNode: fnDecl, // VariableDeclarator
             fnItselfNode: decl.init,
             fnName: decl.id.name,
           })
@@ -292,7 +292,7 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
 
   if (isFunctionDeclaration(target)) {
     pickedInfo.push({
-      fnDeclNode: fnDecl,
+      fnDeclNode: fnDecl, // FunctionDeclaration
       fnItselfNode: target,
       fnName: target.id?.name ?? '',
     })

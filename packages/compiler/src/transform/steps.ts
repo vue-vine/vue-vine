@@ -13,6 +13,7 @@ import {
   CREATE_PROPS_REST_PROXY_HELPER,
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
+  DEFINE_CUSTOM_ELEMENT_HELPER,
   TO_REFS_HELPER,
   UN_REF_HELPER,
   USE_DEFAULTS_HELPER,
@@ -69,6 +70,9 @@ export function createVueImportsSpecs(
   const vueImportsSpecs = (vueImportsMeta as NamedImportSpecifierMeta).specs
   if (!vueImportsSpecs.has(DEFINE_COMPONENT_HELPER)) {
     vueImportsSpecs.set(DEFINE_COMPONENT_HELPER, `_${DEFINE_COMPONENT_HELPER}`)
+  }
+  if (vineCompFnCtx.isCustomElement && !vueImportsSpecs.has(DEFINE_CUSTOM_ELEMENT_HELPER)) {
+    vueImportsSpecs.set(DEFINE_CUSTOM_ELEMENT_HELPER, `_${DEFINE_CUSTOM_ELEMENT_HELPER}`)
   }
   // add useCssVars
   if (!vueImportsSpecs.has(CSS_VARS_HELPER) && vineCompFnCtx.cssBindings) {
@@ -735,10 +739,17 @@ export function generateVineFactory(
 
   // handle Web Component styles
   if (vineCompFnCtx.isCustomElement) {
-    ms.appendRight(lastStmt.end!, `__vine.styles = [__${vineCompFnCtx.fnName.toLowerCase()}_styles];\n`)
+    const compStyle = `__${vineCompFnCtx.fnName.toLowerCase()}_styles`
+    ms.appendRight(lastStmt.end!, `__vine.styles = [${
+      `typeof ${compStyle} === 'undefined' ? null : ${compStyle}`
+    }].filter(Boolean);\n`)
   }
 
-  ms.appendRight(lastStmt.end!, `\nreturn __vine\n})();`)
+  ms.appendRight(lastStmt.end!, `\nreturn ${
+    vineCompFnCtx.isCustomElement
+      ? `_${DEFINE_CUSTOM_ELEMENT_HELPER}(__vine)`
+      : '__vine'
+  }\n})();`)
 
   // Record component function to HMR
   if (isDev) {
@@ -763,7 +774,7 @@ export function generateDefineComponentWrapper(
   const { firstStmt, lastStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
-  ms.prependLeft(firstStmt.start!, `const __vine = _defineComponent({\n`)
+  ms.prependLeft(firstStmt.start!, `const __vine = _${DEFINE_COMPONENT_HELPER}({\n`)
   ms.appendRight(lastStmt.end!, '\n})')
 }
 

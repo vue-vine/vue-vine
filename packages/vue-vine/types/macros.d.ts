@@ -70,6 +70,8 @@ declare global {
     }
   ): Ref<T>
 
+  function vineCustomElement(): void
+
   const vineStyle: VineStyleMacro
 
   const vine: (template: TemplateStringsArray) => VueVineComponent

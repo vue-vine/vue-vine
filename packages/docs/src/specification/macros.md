@@ -180,3 +180,41 @@ const count = vineModel('count', { default: 0 }) // count's type is Ref<number>
 // When it's modified, the "update:count" event is triggered
 count.value++
 ```
+
+## `vineCustomElement`
+
+This macro is used to mark a Vue Vine component as a custom element constructor.
+
+```vue-vine
+function SampleCustomElement() {
+  vineCustomElement()
+
+  return vine`...`
+}
+
+function WhereYouUseIt() {
+  customElements.define('my-custom-element', SampleCustomElement)
+
+  return vine`
+    <my-custom-element />
+  `
+}
+```
+
+You should configure the `compilerOptions.customElement` option to let Vue recognize custom elements.
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import { VineVitePlugin } from 'vue-vine/vite'
+
+export default defineConfig({
+  plugins: [
+    VineVitePlugin({
+      vueCompilerOptions: {
+        isCustomElement: tag => tag.startsWith('my-'),
+      },
+    })
+  ],
+})
+```
