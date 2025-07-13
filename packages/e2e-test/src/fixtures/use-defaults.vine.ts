@@ -14,6 +14,7 @@ function Line({ center = true }: LineProps) {
 
 export function TestUseDefaults() {
   return vine`
+    <div class="justify-center w-full row-flex text-zinc-500">All lines below should be centered</div>
     <!-- No explicit given center, should be true by fallback to true as default -->
     <Line class="line-1">
       <p>Hello world</p>

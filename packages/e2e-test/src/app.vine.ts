@@ -1,3 +1,5 @@
+import { useRoute } from 'vue-router'
+
 const routes = [
   { path: '/hmr', label: 'HMR' },
   { path: '/style-order', label: 'Style Order' },
@@ -17,6 +19,9 @@ const routes = [
 ]
 
 export function NavList() {
+  const currentRoute = useRoute()
+  const isActive = (path: string) => currentRoute.path === path
+
   vineStyle.scoped(`
     .e2e-test-nav {
       width: fit-content;
@@ -33,6 +38,9 @@ export function NavList() {
       background-color: #dddddd55;
       white-space: nowrap;
     }
+    .e2e-test-nav-item-active {
+      background-color: #aaaaaa55;
+    }
     .e2e-test-nav-item:hover {
       background-color: #aaaaaa55;
     }
@@ -46,8 +54,13 @@ export function NavList() {
 
   return vine`
     <ul class="e2e-test-nav">
-      <li v-for="route in routes" :key="route.path" class="e2e-test-nav-item">
-        <router-link :to="route.path">{{ route.label }}</router-link>
+      <li
+        v-for="route in routes"
+        :key="route.path"
+        class="e2e-test-nav-item"
+        :class="{ 'e2e-test-nav-item-active': isActive(route.path) }"
+      >
+        <router-link :to="route.path" class="e2e-test-nav-item-link">{{ route.label }}</router-link>
       </li>
     </ul>
   `
