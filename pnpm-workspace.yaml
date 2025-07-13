@@ -3,7 +3,7 @@ packages:
   - packages/*
 
 defines:
-  - &vue ^3.5.17
+  - &vue ^3.6.0-alpha.1
   - &vue-lang-tools ~3.0.1
   - &volar ~2.4.17
   - &volar-service ~0.0.64
@@ -138,8 +138,10 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
   vue-libs:
+    '@vue/compiler-core': *vue
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
+    '@vue/compiler-vapor': *vue
     '@vue/language-core': *vue-lang-tools
     '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue

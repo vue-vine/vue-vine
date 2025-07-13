@@ -92,6 +92,7 @@ import {
   isVineSlots,
   isVineStyle,
   isVineValidators,
+  isVineVaporTaggedTemplateString,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
 import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
@@ -1193,6 +1194,7 @@ function buildVineCompFnCtx(
     isExportDefault: isExportDefaultDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
     isCustomElement: false,
+    isVapor: isVineVaporTaggedTemplateString(templateStringNode),
     fnName,
     scopeId,
     fnDeclNode,
