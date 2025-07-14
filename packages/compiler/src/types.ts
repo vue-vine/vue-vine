@@ -79,6 +79,7 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
+  volar?: boolean
   envMode?: string // 'development' | 'production'
   inlineTemplate?: boolean
   vueCompilerOptions?: CompilerOptions & {

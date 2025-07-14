@@ -254,7 +254,7 @@ export function createVueVineVirtualCode(
           template: {
             // @ts-expect-error - Todo: Vue language tool's dependency "@vue/compiler-core"
             // is not upgraded in Vapor alpha stage
-            ast: vineCompFn.isVapor ? vineCompFn.templateAst : void 0,
+            ast: vineCompFn.templateAst,
             errors: [],
             warnings: [],
             name: 'template',

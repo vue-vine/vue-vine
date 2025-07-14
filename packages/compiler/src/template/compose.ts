@@ -139,6 +139,7 @@ export function compileVineTemplate(
   (VDOMCodegenResult | VaporCodegenResult)
   & { templateParsedAst?: RootNode }
 ) | null {
+  const { volar = false } = compilerHooks.getCompilerCtx()?.options ?? {}
   const {
     __enableTransformAssetsURL = true,
     __transformNegativeBool,
@@ -177,7 +178,7 @@ export function compileVineTemplate(
       )
     }
 
-    if (vineCompFnCtx.isVapor) {
+    if (vineCompFnCtx.isVapor && !volar) {
       return compileForVapor(
         vineCompFnCtx,
         {

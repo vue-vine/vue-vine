@@ -10,7 +10,7 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
   vineCompileWarns: VineDiagnostic[]
 } {
   const compilerCtx = createCompilerCtx({
-    envMode: 'module',
+    volar: true,
     vueCompilerOptions: {
       // 'module' will break Volar virtual code's mapping
       mode: 'function',
