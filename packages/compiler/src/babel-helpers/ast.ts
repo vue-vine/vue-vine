@@ -132,11 +132,7 @@ export function isDescendant(node: Node, potentialDescendant: Node): boolean {
   return false
 }
 
-export function isVineVaporTaggedTemplateString(node: Node | null | undefined): node is TaggedTemplateExpression {
-  if (!isTaggedTemplateExpression(node)) {
-    return false
-  }
-
+export function isVineVaporTaggedTemplateString(node: TaggedTemplateExpression): boolean {
   return (
     isMemberExpression(node.tag)
     && isIdentifier(node.tag.object)

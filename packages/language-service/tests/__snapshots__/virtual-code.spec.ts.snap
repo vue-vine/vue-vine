@@ -1276,6 +1276,257 @@ const __VINE_VLS_ComponentsReferenceMap = {
 const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
+exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
+"/// <reference types=".vue-global-types/vine_vue_99_true" />
+import { ref } from 'vue'
+
+
+type __VINE_VLS_VirtualDOMComp_props__ = {}
+function VirtualDOMComp(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_VirtualDOMComp_props__,
+context: {}) {
+  
+type VirtualDOMComp_Props = Parameters<typeof VirtualDOMComp>[0];
+
+const msg = ref('')
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */msg: /* __LINKED_CODE_RIGHT__#3 */msg,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
+...{ class: "test-vdom-comp col-flex gap-2 p-2 border-1 border-solid border-blue-400 rounded-md" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.h3, __VINE_VLS_elements.h3)({
+...{ class: "text-zinc-500" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.input)({
+});
+(__VINE_VLS_ctx.msg);
+// @ts-ignore
+[msg,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
+});
+( __VINE_VLS_ctx.msg );
+// @ts-ignore
+[msg,];
+/** @type {__VINE_VLS_StyleScopedClasses['test-vdom-comp']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['p-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-1']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-solid']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-blue-400']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['rounded-md']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['text-zinc-500']} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
+
+}
+type __VINE_VLS_TestVaporComp_props__ = {}
+
+
+function TestVaporComp(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestVaporComp_props__,
+context: {}) {
+  
+type TestVaporComp_Props = Parameters<typeof TestVaporComp>[0];
+
+const count = ref(0)
+  const add = () => count.value++
+  const sub = () => count.value--
+
+  
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#3 */add: /* __LINKED_CODE_RIGHT__#3 */add,
+  /* __LINKED_CODE_LEFT__#3 */sub: /* __LINKED_CODE_RIGHT__#3 */sub,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
+...{ class: "test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.h3, __VINE_VLS_elements.h3)({
+...{ class: "text-zinc-500" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
+...{ class: "row-flex gap-2" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.button, __VINE_VLS_elements.button)({
+...{ onClick: (__VINE_VLS_ctx.add)},
+});
+// @ts-ignore
+[add,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.button, __VINE_VLS_elements.button)({
+...{ onClick: (__VINE_VLS_ctx.sub)},
+});
+// @ts-ignore
+[sub,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
+});
+( __VINE_VLS_ctx.count );
+// @ts-ignore
+[count,];
+var __VINE_VLS_0 = {
+};
+/** @type {__VINE_VLS_StyleScopedClasses['test-vapor-comp']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['p-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-1']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-solid']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-orange-400']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['rounded-md']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['text-zinc-500']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['row-flex']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
+// @ts-ignore
+var __VINE_VLS_1 = __VINE_VLS_0, ;
+type __VINE_VLS_Slots = {}
+& { default?: (props: typeof __VINE_VLS_1) => any };
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine.vapor\`\` as any as __VINE_VLS_VueVineComponent;
+
+}
+type __VINE_VLS_VaporTestContainer_props__ = {}
+
+
+export function VaporTestContainer(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_VaporTestContainer_props__,
+context: {}) {
+  
+type VaporTestContainer_Props = Parameters<typeof VaporTestContainer>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
+...{ class: "vapor-test-container col-flex" },
+});
+const __VINE_VLS_0 = ({} as __VINE_VLS_WithComponent<'TestVaporComp', __VINE_VLS_LocalComponents, void, 'TestVaporComp', 'TestVaporComp', 'TestVaporComp'>).TestVaporComp;
+/** @type {[typeof __VINE_VLS_components.TestVaporComp, typeof __VINE_VLS_components.TestVaporComp, ]} */;
+// @ts-ignore
+TestVaporComp;
+// @ts-ignore
+const __VINE_VLS_1 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_0, new __VINE_VLS_0({
+}));
+const __VINE_VLS_2 = __VINE_VLS_1({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+const { default: __VINE_VLS_4 } = __VINE_VLS_3.slots!;
+const __VINE_VLS_5 = ({} as __VINE_VLS_WithComponent<'VirtualDOMComp', __VINE_VLS_LocalComponents, void, 'VirtualDOMComp', 'VirtualDOMComp', 'VirtualDOMComp'>).VirtualDOMComp;
+/** @type {[typeof __VINE_VLS_components.VirtualDOMComp, ]} */;
+// @ts-ignore
+VirtualDOMComp;
+// @ts-ignore
+const __VINE_VLS_6 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_5, new __VINE_VLS_5({
+}));
+const __VINE_VLS_7 = __VINE_VLS_6({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_6));
+var __VINE_VLS_3!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+/** @type {__VINE_VLS_StyleScopedClasses['vapor-test-container']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
+
+}
+
+const __VINE_VLS_ComponentsReferenceMap = {
+  'VirtualDOMComp': VirtualDOMComp,
+  'TestVaporComp': TestVaporComp,
+  'VaporTestContainer': VaporTestContainer
+};
+
+const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
+`;
+
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
 "/// <reference types=".vue-global-types/vine_vue_99_true" />
 import { ref } from 'vue'
