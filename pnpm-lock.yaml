@@ -1019,8 +1019,8 @@ importers:
         specifier: workspace:^
         version: link:../vite-plugin
       vue:
-        specifier: '>=3.2'
-        version: 3.5.17(typescript@5.8.3)
+        specifier: catalog:vue-libs
+        version: 3.6.0-alpha.1(typescript@5.8.3)
     devDependencies:
       '@typescript/native-preview':
         specifier: catalog:compiler
