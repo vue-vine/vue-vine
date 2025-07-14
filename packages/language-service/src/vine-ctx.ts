@@ -20,7 +20,6 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
       prefixIdentifiers: false,
       scopeId: null,
       __enableTransformAssetsURL: false,
-      __shouldAddTemplateSuffix: true,
       __transformNegativeBool: {
         constType: 0, // satisfies `ConstantTypes.NOT_CONSTANT`
       },

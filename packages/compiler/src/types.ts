@@ -87,8 +87,6 @@ export interface VineCompilerOptions {
     __enableTransformAssetsURL?: boolean
     /** @internal */
     __transformNegativeBool?: boolean | { constType: ConstantTypes }
-    /** @internal */
-    __shouldAddTemplateSuffix?: boolean // Add '>' when the last tag is not complete
   }
   preprocessOptions?: Record<string, any>
   postcssOptions?: any

@@ -26,6 +26,8 @@ function TestVaporComp() {
       </div>
       <p>Count: {{ count }}</p>
 
+      <img class="w-60" src="@/assets/sample.jpg" alt="sample-img-in-vapor-comp" />
+
       <slot />
     </div>
   `

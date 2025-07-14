@@ -1,0 +1,115 @@
+diff --git a/dist/compiler-core.cjs.js b/dist/compiler-core.cjs.js
+index ed73f86cf03aa89c271b3b296aaa47193e0c631d..e21144747a54e8f973a0e6bc2e2f8728a0afabb8 100644
+--- a/dist/compiler-core.cjs.js
++++ b/dist/compiler-core.cjs.js
+@@ -18,68 +18,68 @@ const TELEPORT = Symbol(`Teleport` );
+ const SUSPENSE = Symbol(`Suspense` );
+ const KEEP_ALIVE = Symbol(`KeepAlive` );
+ const BASE_TRANSITION = Symbol(
+-  `BaseTransition` 
++  `BaseTransition`
+ );
+ const OPEN_BLOCK = Symbol(`openBlock` );
+ const CREATE_BLOCK = Symbol(`createBlock` );
+ const CREATE_ELEMENT_BLOCK = Symbol(
+-  `createElementBlock` 
++  `createElementBlock`
+ );
+ const CREATE_VNODE = Symbol(`createVNode` );
+ const CREATE_ELEMENT_VNODE = Symbol(
+-  `createElementVNode` 
++  `createElementVNode`
+ );
+ const CREATE_COMMENT = Symbol(
+-  `createCommentVNode` 
++  `createCommentVNode`
+ );
+ const CREATE_TEXT = Symbol(
+-  `createTextVNode` 
++  `createTextVNode`
+ );
+ const CREATE_STATIC = Symbol(
+-  `createStaticVNode` 
++  `createStaticVNode`
+ );
+ const RESOLVE_COMPONENT = Symbol(
+-  `resolveComponent` 
++  `resolveComponent`
+ );
+ const RESOLVE_DYNAMIC_COMPONENT = Symbol(
+-  `resolveDynamicComponent` 
++  `resolveDynamicComponent`
+ );
+ const RESOLVE_DIRECTIVE = Symbol(
+-  `resolveDirective` 
++  `resolveDirective`
+ );
+ const RESOLVE_FILTER = Symbol(
+-  `resolveFilter` 
++  `resolveFilter`
+ );
+ const WITH_DIRECTIVES = Symbol(
+-  `withDirectives` 
++  `withDirectives`
+ );
+ const RENDER_LIST = Symbol(`renderList` );
+ const RENDER_SLOT = Symbol(`renderSlot` );
+ const CREATE_SLOTS = Symbol(`createSlots` );
+ const TO_DISPLAY_STRING = Symbol(
+-  `toDisplayString` 
++  `toDisplayString`
+ );
+ const MERGE_PROPS = Symbol(`mergeProps` );
+ const NORMALIZE_CLASS = Symbol(
+-  `normalizeClass` 
++  `normalizeClass`
+ );
+ const NORMALIZE_STYLE = Symbol(
+-  `normalizeStyle` 
++  `normalizeStyle`
+ );
+ const NORMALIZE_PROPS = Symbol(
+-  `normalizeProps` 
++  `normalizeProps`
+ );
+ const GUARD_REACTIVE_PROPS = Symbol(
+-  `guardReactiveProps` 
++  `guardReactiveProps`
+ );
+ const TO_HANDLERS = Symbol(`toHandlers` );
+ const CAMELIZE = Symbol(`camelize` );
+ const CAPITALIZE = Symbol(`capitalize` );
+ const TO_HANDLER_KEY = Symbol(
+-  `toHandlerKey` 
++  `toHandlerKey`
+ );
+ const SET_BLOCK_TRACKING = Symbol(
+-  `setBlockTracking` 
++  `setBlockTracking`
+ );
+ const PUSH_SCOPE_ID = Symbol(`pushScopeId` );
+ const POP_SCOPE_ID = Symbol(`popScopeId` );
+@@ -1540,6 +1540,9 @@ Use a v-bind binding combined with a v-on listener that emits update:x event ins
+ };
+ 
+ function walkIdentifiers(root, onIdentifier, includeAll = false, parentStack = [], knownIds = /* @__PURE__ */ Object.create(null)) {
++  if (!root) {
++    return;
++  }
+   const rootExp = root.type === "Program" ? root.body[0].type === "ExpressionStatement" && root.body[0].expression : root;
+   estreeWalker.walk(root, {
+     enter(node, parent) {
+diff --git a/dist/compiler-core.cjs.prod.js b/dist/compiler-core.cjs.prod.js
+index a5de7a327f89ceaf2d339d47d678587d46e5ab10..46e77190fbfcf50a669c69cddcef8dcf1fcd08ba 100644
+--- a/dist/compiler-core.cjs.prod.js
++++ b/dist/compiler-core.cjs.prod.js
+@@ -1536,6 +1536,9 @@ Use a v-bind binding combined with a v-on listener that emits update:x event ins
+ };
+ 
+ function walkIdentifiers(root, onIdentifier, includeAll = false, parentStack = [], knownIds = /* @__PURE__ */ Object.create(null)) {
++  if (!root) {
++    return;
++  }
+   const rootExp = root.type === "Program" ? root.body[0].type === "ExpressionStatement" && root.body[0].expression : root;
+   estreeWalker.walk(root, {
+     enter(node, parent) {

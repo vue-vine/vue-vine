@@ -234,6 +234,8 @@ describe('test basic functionality', async () => {
       await browserCtx.page?.fill('.test-vdom-comp input', 'hello')
       expect(await evaluator.getTextContent('.test-vdom-comp p')).toBe('hello')
 
+      expect(await evaluator.getAssetUrl('img[alt="sample-img-in-vapor-comp"]')).toBe('/src/assets/sample.jpg')
+
       expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 0')
       await browserCtx.page?.click('.test-vapor-comp button')
       expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 1')

@@ -1,0 +1,71 @@
+diff --git a/dist/compiler-vapor.cjs.js b/dist/compiler-vapor.cjs.js
+index 872db5bf9abc62e9996050167377d8a3fff2e6b5..2d6fcde5092c2060e9ad401c8922119293f35188 100644
+--- a/dist/compiler-vapor.cjs.js
++++ b/dist/compiler-vapor.cjs.js
+@@ -205,6 +205,7 @@ function transform(node, options = {}) {
+     node,
+     source: node.source,
+     template: [],
++    imports: [],
+     component: /* @__PURE__ */ new Set(),
+     directive: /* @__PURE__ */ new Set(),
+     block: newBlock(node),
+@@ -490,7 +491,7 @@ function genExpression(node, context, assignment) {
+   ast === false || isConstantExpression(node)) {
+     return [[content, -2, loc], assignment && ` = ${assignment}`];
+   }
+-  if (ast === null) {
++  if (ast == null) {
+     return genIdentifier(content, context, loc, assignment);
+   }
+   const ids = [];
+@@ -790,7 +791,7 @@ function processRepeatedExpressions(context, expressions, varDeclarations, updat
+   const declarations = [];
+   const seenExp = expressions.reduce(
+     (acc, exp) => {
+-      const variables = expToVariableMap.get(exp).map((v) => v.name);
++      const variables = expToVariableMap.get(exp)?.map((v) => v.name);
+       if (exp.ast && exp.ast.type !== "Identifier" && !(variables && variables.some((v) => updatedVariable.has(v)))) {
+         acc[exp.content] = (acc[exp.content] || 0) + 1;
+       }
+@@ -2392,7 +2393,8 @@ function generate(ir, options = {}) {
+   const delegates = genDelegates(context);
+   const templates = genTemplates(ir.template, ir.rootTemplateIndex, context);
+   const imports = genHelperImports(context);
+-  const preamble = imports + templates + delegates;
++  const assetImports = genAssetImports(ir.imports);
++  const preamble = imports + assetImports + templates + delegates;
+   const newlineCount = [...preamble].filter((c) => c === "\n").length;
+   if (newlineCount && !inline) {
+     frag.unshift(...new Array(newlineCount).fill(LF));
+@@ -2423,6 +2425,12 @@ function genHelperImports({ helpers, helper, options }) {
+   }
+   return imports;
+ }
++function genAssetImports(importsOptions) {
++  if (!importsOptions || !importsOptions.length) {
++    return "";
++  }
++  return importsOptions.map((i) => `import ${i.exp.content} from '${i.path}';`).join("\n") + "\n";
++}
+ 
+ const transformChildren = (node, context) => {
+   const isFragment = node.type === 0 || node.type === 1 && (node.tagType === 3 || node.tagType === 1);
+diff --git a/dist/compiler-vapor.d.ts b/dist/compiler-vapor.d.ts
+index 859fdda9a4beaf1ea4ea6a7e7c9a80b284452c24..ffb057173ff372de3fd25076ef907f9fa3f4822f 100644
+--- a/dist/compiler-vapor.d.ts
++++ b/dist/compiler-vapor.d.ts
+@@ -1,4 +1,4 @@
+-import { SimpleExpressionNode, RootNode, TemplateChildNode, DirectiveNode, CompoundExpressionNode, AllNode, ElementNode, CompilerCompatOptions, CommentNode, TransformOptions as TransformOptions$1, CodegenOptions as CodegenOptions$1, BaseCodegenResult, SourceLocation, CodegenSourceMapGenerator, TemplateNode, CompilerOptions as CompilerOptions$1, CompilerError } from '@vue/compiler-dom';
++import { SimpleExpressionNode, RootNode, TemplateChildNode, DirectiveNode, CompoundExpressionNode, AllNode, ElementNode, CompilerCompatOptions, CommentNode, TransformOptions as TransformOptions$1, CodegenOptions as CodegenOptions$1, BaseCodegenResult, SourceLocation, CodegenSourceMapGenerator, TemplateNode, CompilerOptions as CompilerOptions$1, CompilerError, ImportItem } from '@vue/compiler-dom';
+ export { parse } from '@vue/compiler-dom';
+ import * as packages_runtime_vapor_src from 'packages/runtime-vapor/src';
+ import * as packages_runtime_dom_src from 'packages/runtime-dom/src';
+@@ -98,6 +98,7 @@ export interface RootIRNode {
+     node: RootNode;
+     source: string;
+     template: string[];
++    imports: ImportItem[];
+     rootTemplateIndex?: number;
+     component: Set<string>;
+     directive: Set<string>;
