@@ -5,7 +5,7 @@
   "patterns": [
     {
       "name": "source.vine-vue-template.embedded.ts",
-      "begin": "vine(`)",
+      "begin": "(?:vine|vine\\.vapor)(`)",
       "beginCaptures": {
         "0": { "name": "entity.name.function.macro.vine-template.ts" },
         "1": { "name": "punctuation.definition.string.begin.vine-template.ts" }

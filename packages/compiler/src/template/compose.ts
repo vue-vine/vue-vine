@@ -1,11 +1,12 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
+import type { RootNode } from '@vue/compiler-core'
 import type { AttributeNode, BindingTypes, CompilerOptions, NodeTransform, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { CompilerOptions as CompilerOptionsVapor, VaporCodegenResult } from '@vue/compiler-vapor'
 import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
-import { compile as compileVDOM, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
+import { compile as compileVDOM, ElementTypes, NodeTypes, parse as vdomParse } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
-import { compile as compileVapor } from '@vue/compiler-vapor'
+import { compile as compileVapor, parse as vaporParse } from '@vue/compiler-vapor'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
@@ -60,8 +61,12 @@ function getTemplateParsedAst(
     return
   }
 
+  const _parse = vineCompFnCtx.isVapor
+    ? vaporParse
+    : vdomParse
+
   return {
-    templateParsedAst: parse(vineCompFnCtx.templateSource, {
+    templateParsedAst: _parse(vineCompFnCtx.templateSource, {
       parseMode: 'base',
       prefixIdentifiers: true,
       expressionPlugins: ['typescript'],
@@ -132,7 +137,7 @@ export function compileVineTemplate(
   },
 ): (
   (VDOMCodegenResult | VaporCodegenResult)
-  & { templateParsedAst?: ReturnType<typeof parse> }
+  & { templateParsedAst?: RootNode }
 ) | null {
   const {
     __enableTransformAssetsURL = true,

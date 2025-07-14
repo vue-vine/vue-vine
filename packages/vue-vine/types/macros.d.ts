@@ -74,7 +74,10 @@ declare global {
 
   const vineStyle: VineStyleMacro
 
-  const vine: (template: TemplateStringsArray) => VueVineComponent
+  const vine: {
+    (template: TemplateStringsArray): VueVineComponent
+    vapor: (template: TemplateStringsArray) => VueVineComponent
+  }
 
   // CSS lang types helpers
   const css: (style: TemplateStringsArray) => VineStyle
