@@ -1194,7 +1194,7 @@ function buildVineCompFnCtx(
     isExportDefault: isExportDefaultDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
     isCustomElement: false,
-    isVapor: isVineVaporTaggedTemplateString(templateStringNode),
+    isVapor: templateStringNode ? isVineVaporTaggedTemplateString(templateStringNode) : false,
     fnName,
     scopeId,
     fnDeclNode,

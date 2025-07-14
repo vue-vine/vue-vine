@@ -143,7 +143,7 @@ export function isVineVaporTaggedTemplateString(node: TaggedTemplateExpression):
 }
 
 export function isVineTaggedTemplateString(node: Node | null | undefined): node is TaggedTemplateExpression {
-  if (!isTaggedTemplateExpression(node)) {
+  if (!node || !isTaggedTemplateExpression(node)) {
     return false
   }
 
