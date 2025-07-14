@@ -223,4 +223,20 @@ describe('test basic functionality', async () => {
       expect(await sampleCustomElement?.locator('.text-content').textContent()).toMatchInlineSnapshot(`"Count: 1"`)
     },
   ))
+
+  it('should work in vapor interop mode', runTestAtPage(
+    '/vapor-interop',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.test-vapor-comp h3')).toBe('Vapor Component in Virtual DOM component')
+      expect(await evaluator.getTextContent('.test-vdom-comp h3')).toBe('Virtual DOM Component in Vapor slot')
+
+      await browserCtx.page?.fill('.test-vdom-comp input', 'hello')
+      expect(await evaluator.getTextContent('.test-vdom-comp p')).toBe('hello')
+
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 0')
+      await browserCtx.page?.click('.test-vapor-comp button')
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 1')
+    },
+  ))
 })
