@@ -17,7 +17,7 @@ import { transformAssetUrl } from './transform-asset-url'
 import { getTransformNegativeBoolPlugin } from './transform-negative-bool'
 import { walkVueTemplateAst } from './walk'
 
-const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[^>/]+)$/
+const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[a-z][^>/]*)$/i
 const basicCompilerOptions = {
   mode: 'module',
   hoistStatic: true,

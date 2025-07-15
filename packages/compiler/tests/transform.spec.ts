@@ -452,4 +452,66 @@ export function App() {
     )
     expect(formated).toMatchSnapshot()
   })
+
+  it('should be able to correctly add suffix to template in volar environment', async () => {
+    const shouldBeSuffixedSamples = [
+      '<div',
+      '<MyComp',
+      '<my-comp',
+      '<div class="foo"',
+      '<div\n  class="foo"',
+      '<div id="app" class="container"',
+      '<div class="a" \n v-if="b"',
+    ]
+
+    const shouldNotBeSuffixedSamples = [
+      '<div>',
+      '<div />',
+      '<div class="foo"> bar',
+      'const a = 1 < 2',
+      '<',
+      '<MyComp></MyComp>',
+      '',
+      'abc',
+      ' <',
+    ]
+
+    const runTest = (template: string, compilerOptions: any) => {
+      const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx(compilerOptions)
+      const content = `
+function MyComp() {
+  return vine\`${template}\`
+}
+    `
+      compileVineTypeScriptFile(content, 'test-volar-suffix', { compilerHooks: mockCompilerHooks })
+      const fileCtx = mockCompilerCtx.fileCtxMap.get('test-volar-suffix')
+      return fileCtx?.vineCompFns[0].templateSource ?? ''
+    }
+
+    // Test with volar: true
+    for (const sample of shouldBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: true,
+      })
+      expect(updatedSource).toBe(`${sample}>`)
+    }
+
+    for (const sample of shouldNotBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: true,
+      })
+      expect(updatedSource).toBe(sample)
+    }
+
+    // Test with volar: false
+    for (const sample of shouldBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: false,
+      })
+      expect(updatedSource).toBe(sample)
+    }
+  })
 })

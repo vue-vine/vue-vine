@@ -809,6 +809,7 @@ export const MyProfile = (() => {
         AnotherComp,
         MyProfile,
         MyApp,
+        _imports_0,
       };
     },
   });
@@ -1144,6 +1145,7 @@ export const MyProfile = (() => {
         AnotherComp,
         MyProfile,
         MyApp,
+        _imports_0,
       };
     },
   });

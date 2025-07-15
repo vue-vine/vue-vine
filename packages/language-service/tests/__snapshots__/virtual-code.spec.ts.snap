@@ -1413,6 +1413,11 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.p, __VINE_VLS_elements.p)({
 ( __VINE_VLS_ctx.count );
 // @ts-ignore
 [count,];
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.img)({
+...{ class: "w-60" },
+src: "@/assets/sample.jpg",
+alt: "sample-img-in-vapor-comp",
+});
 var __VINE_VLS_0 = {
 };
 /** @type {__VINE_VLS_StyleScopedClasses['test-vapor-comp']} */;
@@ -1426,6 +1431,7 @@ var __VINE_VLS_0 = {
 /** @type {__VINE_VLS_StyleScopedClasses['text-zinc-500']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['row-flex']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['w-60']} */;
 // @ts-ignore
 var __VINE_VLS_1 = __VINE_VLS_0, ;
 type __VINE_VLS_Slots = {}
