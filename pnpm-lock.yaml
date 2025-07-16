@@ -46,8 +46,8 @@ catalogs:
       specifier: ^1.2.2
       version: 1.2.2
     tsdown:
-      specifier: ^0.12.9
-      version: 0.12.9
+      specifier: ^0.13.0-beta.1
+      version: 0.13.0-beta.1
     tsx:
       specifier: ^4.20.3
       version: 4.20.3
@@ -449,7 +449,7 @@ importers:
         version: 1.2.2
       tsdown:
         specifier: catalog:cli
-        version: 0.12.9(@typescript/native-preview@7.0.0-dev.20250705.1)(typescript@5.8.3)
+        version: 0.13.0-beta.1(@typescript/native-preview@7.0.0-dev.20250705.1)(typescript@5.8.3)
       tsx:
         specifier: catalog:cli
         version: 4.20.3
@@ -4531,7 +4531,7 @@ packages:
     engines: {node: '>=10'}
 
   dts-resolver@2.1.1:
-    resolution: {integrity: sha512-3BiGFhB6mj5Kv+W2vdJseQUYW+SKVzAFJL6YNP6ursbrwy1fXHRotfHi3xLNxe4wZl/K8qbAFeCDjZLjzqxxRw==}
+    resolution: {integrity: sha512-3BiGFhB6mj5Kv+W2vdJseQUYW+SKVzAFJL6YNP6ursbrwy1fXHRotfHi3xLNxe4wZl/K8qbAFeCDjZLjzqxxRw==, tarball: https://registry.npmjs.org/dts-resolver/-/dts-resolver-2.1.1.tgz}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       oxc-resolver: '>=11.0.0'
@@ -4588,7 +4588,7 @@ packages:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
 
   empathic@2.0.0:
-    resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==}
+    resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==, tarball: https://registry.npmjs.org/empathic/-/empathic-2.0.0.tgz}
     engines: {node: '>=14'}
 
   enabled@2.0.0:
@@ -7159,7 +7159,7 @@ packages:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
   rolldown-plugin-dts@0.13.13:
-    resolution: {integrity: sha512-Nchx9nQoa4IpfQ/BJzodKMvtJ3H3dT322siAJSp3uvQJ+Pi1qgEjOp7hSQwGSQRhaC5gC+9hparbWEH5oiAL9Q==}
+    resolution: {integrity: sha512-Nchx9nQoa4IpfQ/BJzodKMvtJ3H3dT322siAJSp3uvQJ+Pi1qgEjOp7hSQwGSQRhaC5gC+9hparbWEH5oiAL9Q==, tarball: https://registry.npmjs.org/rolldown-plugin-dts/-/rolldown-plugin-dts-0.13.13.tgz}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       '@typescript/native-preview': '>=7.0.0-dev.20250601.1'
@@ -7764,9 +7764,9 @@ packages:
       typescript:
         optional: true
 
-  tsdown@0.12.9:
-    resolution: {integrity: sha512-MfrXm9PIlT3saovtWKf/gCJJ/NQCdE0SiREkdNC+9Qy6UHhdeDPxnkFaBD7xttVUmgp0yUHtGirpoLB+OVLuLA==}
-    engines: {node: '>=18.0.0'}
+  tsdown@0.13.0-beta.1:
+    resolution: {integrity: sha512-/RlQWJLKYmRsFztmB3HMgcKZHB1AEvxP4FGj5/Mpkw8QvO9Q8LBBa4KQm48qG6LDMFUunsm9cZTPhz7oRnJZEA==, tarball: https://registry.npmjs.org/tsdown/-/tsdown-0.13.0-beta.1.tgz}
+    engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
@@ -16566,7 +16566,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  tsdown@0.12.9(@typescript/native-preview@7.0.0-dev.20250705.1)(typescript@5.8.3):
+  tsdown@0.13.0-beta.1(@typescript/native-preview@7.0.0-dev.20250705.1)(typescript@5.8.3):
     dependencies:
       ansis: 4.1.0
       cac: 6.7.14
