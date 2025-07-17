@@ -15,6 +15,7 @@ import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
 import { getTransformNegativeBoolPlugin } from './transform-negative-bool'
+import { transformSrcset } from './transform-srcset'
 import { walkVueTemplateAst } from './walk'
 
 const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[a-z][^>/]*)$/i
@@ -103,7 +104,7 @@ export function compileVineTemplate(
 
     const nodeTransforms = [
       ...(__enableTransformAssetsURL
-        ? [transformAssetUrl]
+        ? [transformAssetUrl, transformSrcset]
         : []
       ),
       getTransformNegativeBoolPlugin(

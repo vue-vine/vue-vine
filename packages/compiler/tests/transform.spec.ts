@@ -514,4 +514,28 @@ function MyComp() {
       expect(updatedSource).toBe(sample)
     }
   })
+
+  it('should transform asset url src & srcset', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+function MyComp() {
+  return vine\`
+    <img src="@/assets/sample.png" alt="sample-src" />
+    <img srcset="@/assets/sample.png 1x, @/assets/sample@2x.png 2x" alt="sample-srcset" />
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformAssetUrlSrcSet', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformAssetUrlSrcSet')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
 })

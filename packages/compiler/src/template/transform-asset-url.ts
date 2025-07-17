@@ -9,22 +9,8 @@ export interface AssetURLTagConfig {
   [name: string]: string[]
 }
 
-export interface AssetURLOptions {
-  /**
-   * If base is provided, instead of transforming relative asset urls into
-   * imports, they will be directly rewritten to absolute urls.
-   */
-  base?: string | null
-  /**
-   * If true, also processes absolute urls.
-   */
-  includeAbsolute?: boolean
-  tags?: AssetURLTagConfig
-}
-
-export const assetUrlOptions: Required<AssetURLOptions> = {
+export const defaultAssetUrlOptions = {
   base: null,
-  includeAbsolute: false,
   tags: {
     video: ['src', 'poster'],
     source: ['src'],
@@ -32,7 +18,7 @@ export const assetUrlOptions: Required<AssetURLOptions> = {
     image: ['xlink:href', 'href'],
     use: ['xlink:href', 'href'],
   },
-}
+} as const
 
 export const transformAssetUrl: NodeTransform = (
   node,
@@ -54,14 +40,13 @@ export const transformAssetUrl: NodeTransform = (
     ? (context as unknown as VaporTransformContext).options.bindingMetadata
     : context.bindingMetadata
 
-  const tags = assetUrlOptions.tags
-  const attrs = tags[node.tag]
-  const wildCardAttrs = tags['*']
-  if (!attrs && !wildCardAttrs) {
+  const tags = defaultAssetUrlOptions.tags
+  const attrs = tags[node.tag as keyof typeof tags]
+  if (!attrs) {
     return
   }
 
-  const assetAttrs = (attrs || []).concat(wildCardAttrs || [])
+  const assetAttrs = (attrs || []) as readonly string[]
   node.props.forEach((attr, index) => {
     if (
       attr.type !== NodeTypes.ATTRIBUTE
