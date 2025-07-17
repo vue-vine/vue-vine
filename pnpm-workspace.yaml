@@ -2,7 +2,6 @@ packages:
   - packages/*
 
 patchedDependencies:
-  '@vue/compiler-core@3.6.0-alpha.1': patches/@vue__compiler-core@3.6.0-alpha.1.patch
   '@vue/compiler-vapor': patches/@vue__compiler-vapor.patch
 
 catalogs:

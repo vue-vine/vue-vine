@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`test transform > inline mode output result 1`] = `
-"import _imports_0 from "@/assets/sample.png";
+"import _imports_bb0c5ba8 from "@/assets/sample.png";
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
@@ -223,7 +223,7 @@ export const MyProfile = (() => {
               (_cache[0] = _createElementVNode(
                 "img",
                 {
-                  src: _imports_0,
+                  src: _imports_bb0c5ba8,
                   alt: "sample",
                 },
                 null,
@@ -311,7 +311,7 @@ export default MyApp;
 `;
 
 exports[`test transform > not output HMR content in non-dev mode 1`] = `
-"import _imports_0 from "@/assets/sample.png";
+"import _imports_bb0c5ba8 from "@/assets/sample.png";
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
@@ -531,7 +531,7 @@ export const MyProfile = (() => {
               (_cache[0] = _createElementVNode(
                 "img",
                 {
-                  src: _imports_0,
+                  src: _imports_bb0c5ba8,
                   alt: "sample",
                 },
                 null,
@@ -602,7 +602,7 @@ export default MyApp;
 `;
 
 exports[`test transform > separated mode output result 1`] = `
-"import _imports_0 from "@/assets/sample.png";
+"import _imports_bb0c5ba8 from "@/assets/sample.png";
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   defineComponent as _defineComponent,
@@ -809,7 +809,7 @@ export const MyProfile = (() => {
         AnotherComp,
         MyProfile,
         MyApp,
-        _imports_0,
+        _imports_bb0c5ba8,
       };
     },
   });
@@ -844,7 +844,7 @@ export const MyProfile = (() => {
           (_cache[0] = _createElementVNode(
             "img",
             {
-              src: _imports_0,
+              src: _imports_bb0c5ba8,
               alt: "sample",
             },
             null,
@@ -939,7 +939,7 @@ export default MyApp;
 `;
 
 exports[`test transform > separated mode output result by ssr 1`] = `
-"import _imports_0 from "@/assets/sample.png";
+"import _imports_bb0c5ba8 from "@/assets/sample.png";
 import { useDefaults as _useDefaults } from "vue-vine";
 import {
   ssrRenderAttrs as _ssrRenderAttrs,
@@ -1145,7 +1145,7 @@ export const MyProfile = (() => {
         AnotherComp,
         MyProfile,
         MyApp,
-        _imports_0,
+        _imports_bb0c5ba8,
       };
     },
   });
@@ -1172,7 +1172,7 @@ export const MyProfile = (() => {
         $setup.bio,
       )}</p><button data-v-25e4e706>Refresh</button><img\${_ssrRenderAttr(
         "src",
-        _imports_0,
+        _imports_bb0c5ba8,
       )} alt="sample" data-v-25e4e706></div>\`,
     );
   }
@@ -1396,8 +1396,10 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 `;
 
 exports[`test transform > should transform asset url src & srcset 1`] = `
-"import _imports_1 from "@/assets/sample@2x.png";
-import _imports_0 from "@/assets/sample.png";
+"import _imports_104caf2d from "@/vapor-assets/test@2x.png";
+import _imports_01fb0ae2 from "@/vapor-assets/test.png";
+import _imports_656d5320 from "@/assets/sample@2x.png";
+import _imports_bb0c5ba8 from "@/assets/sample.png";
 import {
   defineComponent as _defineComponent,
   useCssVars as _useCssVars,
@@ -1406,10 +1408,12 @@ import {
   Fragment as _Fragment,
   openBlock as _openBlock,
   createElementBlock as _createElementBlock,
+  defineVaporComponent as _defineVaporComponent,
+  template as _template,
 } from "vue";
 
 export const MyComp = (() => {
-  const _hoisted_1 = _imports_0 + " 1x, " + _imports_1 + " 2x";
+  const _hoisted_1 = _imports_bb0c5ba8 + " 1x, " + _imports_656d5320 + " 2x";
   const __vine = _defineComponent({
     name: "MyComp",
     /* No props */
@@ -1429,7 +1433,7 @@ export const MyComp = (() => {
                 (_cache[0] = _createElementVNode(
                   "img",
                   {
-                    src: _imports_0,
+                    src: _imports_bb0c5ba8,
                     alt: "sample-src",
                   },
                   null,
@@ -1459,8 +1463,38 @@ export const MyComp = (() => {
   return __vine;
 })();
 
+export const MyVaporComp = (() => {
+  const t0 = _template(
+    \`<img data-v-13042d92 src="\${_imports_01fb0ae2}" alt="vapor-sample-src">\`,
+  );
+  const t1 = _template(
+    \`<img data-v-13042d92 srcset="\${_imports_01fb0ae2 + " 1x, " + _imports_104caf2d + " 2x"}" alt="vapor-sample-srcset">\`,
+  );
+  const __vine = _defineVaporComponent({
+    name: "MyVaporComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      const n0 = t0();
+      const n1 = t1();
+      return [n0, n1];
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "13042d92";
+
+  return __vine;
+})();
+
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyVaporComp.__hmrId, MyVaporComp);
 "
 `;
 

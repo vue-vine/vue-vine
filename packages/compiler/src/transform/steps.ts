@@ -363,7 +363,11 @@ export function generateSetupReturns(
   })
 
   // Insert setup function's return statement
-  ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
+  ms.appendRight(lastStmt.end!, `\n${
+    transformCtx.inline && vineCompFnCtx.isVapor
+      ? '' // Vapor mode has already generated return statement
+      : 'return '
+  }${setupFnReturns};`)
 }
 
 export function generatePropsDestructure(

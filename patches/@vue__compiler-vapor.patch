@@ -1,71 +1,457 @@
 diff --git a/dist/compiler-vapor.cjs.js b/dist/compiler-vapor.cjs.js
-index 872db5bf9abc62e9996050167377d8a3fff2e6b5..2d6fcde5092c2060e9ad401c8922119293f35188 100644
+index 872db5bf9abc62e9996050167377d8a3fff2e6b5..99202141717b7d5392f69c3d89749ad121a9878d 100644
 --- a/dist/compiler-vapor.cjs.js
 +++ b/dist/compiler-vapor.cjs.js
-@@ -205,6 +205,7 @@ function transform(node, options = {}) {
-     node,
-     source: node.source,
-     template: [],
-+    imports: [],
-     component: /* @__PURE__ */ new Set(),
-     directive: /* @__PURE__ */ new Set(),
-     block: newBlock(node),
-@@ -490,7 +491,7 @@ function genExpression(node, context, assignment) {
+@@ -89,6 +89,12 @@ function getLiteralExpressionValue(exp) {
+   }
+   return exp.isStatic ? exp.content : null;
+ }
++function getAssetImports(ctx) {
++  const imports = ctx instanceof TransformContext ? ctx.imports : ctx.node.imports;
++  return imports.map(
++    (i) => typeof i === "string" ? i : i.exp.content
++  );
++}
+ 
+ class TransformContext {
+   constructor(ir, node, options = {}) {
+@@ -101,6 +107,7 @@ class TransformContext {
+     this.template = "";
+     this.childrenTemplate = [];
+     this.dynamic = this.ir.block.dynamic;
++    this.imports = [];
+     this.inVOnce = false;
+     this.inVFor = 0;
+     this.comment = [];
+@@ -212,6 +219,7 @@ function transform(node, options = {}) {
+   };
+   const context = new TransformContext(ir, node, options);
+   transformNode(context);
++  ir.node.imports = context.imports;
+   return ir;
+ }
+ function transformNode(context) {
+@@ -482,7 +490,19 @@ function genPrependNode(oper, { helper }) {
+ }
+ 
+ function genExpression(node, context, assignment) {
++  if (node.type === 8) {
++    const [frag, push] = buildCodeFragment();
++    for (const child of node.children) {
++      if (shared.isString(child)) {
++        push([child, -3]);
++      } else {
++        push(...genExpression(child, context));
++      }
++    }
++    return frag;
++  }
+   const { content, ast, isStatic, loc } = node;
++  const imports = getAssetImports(context.ir);
+   if (isStatic) {
+     return [[JSON.stringify(content), -2, loc]];
+   }
+@@ -490,7 +510,7 @@ function genExpression(node, context, assignment) {
    ast === false || isConstantExpression(node)) {
      return [[content, -2, loc], assignment && ` = ${assignment}`];
    }
 -  if (ast === null) {
-+  if (ast == null) {
++  if (ast === null || imports.includes(content)) {
      return genIdentifier(content, context, loc, assignment);
    }
    const ids = [];
-@@ -790,7 +791,7 @@ function processRepeatedExpressions(context, expressions, varDeclarations, updat
-   const declarations = [];
-   const seenExp = expressions.reduce(
-     (acc, exp) => {
--      const variables = expToVariableMap.get(exp).map((v) => v.name);
-+      const variables = expToVariableMap.get(exp)?.map((v) => v.name);
-       if (exp.ast && exp.ast.type !== "Identifier" && !(variables && variables.some((v) => updatedVariable.has(v)))) {
-         acc[exp.content] = (acc[exp.content] || 0) + 1;
-       }
-@@ -2392,7 +2393,8 @@ function generate(ir, options = {}) {
+@@ -623,6 +643,8 @@ function canPrefix(name) {
+   return true;
+ }
+ function processExpressions(context, expressions, shouldDeclare) {
++  const imports = getAssetImports(context.ir);
++  expressions = expressions.filter((exp) => !imports.includes(exp.content));
+   const {
+     seenVariable,
+     variableToExpMap,
+@@ -2176,13 +2198,15 @@ function genInsertionState(operation, context) {
+   ];
+ }
+ 
++function escapeTemplate(str) {
++  return str.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
++}
+ function genTemplates(templates, rootIndex, { helper }) {
+-  return templates.map(
+-    (template, i) => `const t${i} = ${helper("template")}(${JSON.stringify(
+-      template
+-    )}${i === rootIndex ? ", true" : ""})
+-`
+-  ).join("");
++  return templates.map((template, i) => {
++    const escaped = escapeTemplate(template);
++    return `const t${i} = ${helper("template")}(\`${escaped}\`${i === rootIndex ? ", true" : ""})
++`;
++  }).join("");
+ }
+ function genSelf(dynamic, context) {
+   const [frag, push] = buildCodeFragment();
+@@ -2391,7 +2415,7 @@ function generate(ir, options = {}) {
+   }
    const delegates = genDelegates(context);
    const templates = genTemplates(ir.template, ir.rootTemplateIndex, context);
-   const imports = genHelperImports(context);
--  const preamble = imports + templates + delegates;
-+  const assetImports = genAssetImports(ir.imports);
-+  const preamble = imports + assetImports + templates + delegates;
+-  const imports = genHelperImports(context);
++  const imports = genHelperImports(context) + genAssetImports(context);
+   const preamble = imports + templates + delegates;
    const newlineCount = [...preamble].filter((c) => c === "\n").length;
    if (newlineCount && !inline) {
-     frag.unshift(...new Array(newlineCount).fill(LF));
-@@ -2423,6 +2425,12 @@ function genHelperImports({ helpers, helper, options }) {
+@@ -2423,6 +2447,17 @@ function genHelperImports({ helpers, helper, options }) {
    }
    return imports;
  }
-+function genAssetImports(importsOptions) {
-+  if (!importsOptions || !importsOptions.length) {
-+    return "";
++function genAssetImports({ ir, helper, options }) {
++  const assetImports = ir.node.imports;
++  let imports = "";
++  for (const assetImport of assetImports) {
++    const exp = assetImport.exp;
++    const name = exp.content;
++    imports += `import ${name} from '${assetImport.path}';
++`;
 +  }
-+  return importsOptions.map((i) => `import ${i.exp.content} from '${i.path}';`).join("\n") + "\n";
++  return imports;
 +}
  
  const transformChildren = (node, context) => {
    const isFragment = node.type === 0 || node.type === 1 && (node.tagType === 3 || node.tagType === 1);
+@@ -2638,22 +2673,74 @@ function transformNativeElement(node, propsResult, singleRoot, context, getEffec
+   } else {
+     for (const prop of propsResult[1]) {
+       const { key, values } = prop;
+-      if (key.isStatic && values.length === 1 && values[0].isStatic) {
++      if (key.isStatic && values.length === 1 && values[0].type === 4 && values[0].isStatic) {
+         template += ` ${key.content}`;
+-        if (values[0].content) template += `="${values[0].content}"`;
++        if (values[0].content)
++          template += `="${values[0].content}"`;
+       } else {
+-        dynamicProps.push(key.content);
+-        context.registerEffect(
+-          values,
+-          {
+-            type: 2,
+-            element: context.reference(),
+-            prop,
+-            root: singleRoot,
+-            tag
+-          },
+-          getEffectIndex
+-        );
++        const isHoistable = (node2) => {
++          if (typeof node2 === "string" || typeof node2 === "symbol") {
++            return true;
++          }
++          if (node2.type === 4) {
++            return getAssetImports(context).includes(node2.content);
++          }
++          if (node2.type === 8) {
++            return node2.children.every(
++              (child) => typeof child === "string" || isHoistable(child)
++            );
++          }
++          if (node2.type === 5) {
++            return isHoistable(node2.content);
++          }
++          return false;
++        };
++        const canBeHoisted = values.length > 0 && values.every(isHoistable);
++        if (canBeHoisted) {
++          const buildHoistableExpression = (node2) => {
++            if (typeof node2 === "string" || typeof node2 === "symbol") {
++              return String(node2);
++            }
++            if (node2.type === 4) {
++              return node2.content;
++            }
++            if (node2.type === 8) {
++              return node2.children.map(buildHoistableExpression).join("");
++            }
++            return "";
++          };
++          const jsValueExpression = buildHoistableExpression(values[0]);
++          template += ` ${key.content}="\${${jsValueExpression}}"`;
++        } else {
++          dynamicProps.push(key.content);
++          const reactiveExpressions = [];
++          const unpackExpressions = (node2) => {
++            if (typeof node2 === "string" || typeof node2 === "symbol") {
++              return;
++            }
++            if (node2.type === 4) {
++              reactiveExpressions.push(node2);
++            } else if (node2.type === 8) {
++              for (const child of node2.children) {
++                unpackExpressions(child);
++              }
++            }
++          };
++          for (const v of values) {
++            unpackExpressions(v);
++          }
++          context.registerEffect(
++            reactiveExpressions,
++            {
++              type: 2,
++              element: context.reference(),
++              prop,
++              root: singleRoot,
++              tag
++            },
++            getEffectIndex
++          );
++        }
+       }
+     }
+   }
+@@ -2907,7 +2994,7 @@ const transformVBind = (dir, node, context) => {
+   let arg = dir.arg;
+   const modifiersString = modifiers.map((s) => s.content);
+   if (!exp) exp = normalizeBindShorthand(arg, context);
+-  if (!exp.content.trim()) {
++  if (exp.type === 4 && !exp.content.trim()) {
+     context.options.onError(
+       compilerDom.createCompilerError(34, loc)
+     );
 diff --git a/dist/compiler-vapor.d.ts b/dist/compiler-vapor.d.ts
-index 859fdda9a4beaf1ea4ea6a7e7c9a80b284452c24..ffb057173ff372de3fd25076ef907f9fa3f4822f 100644
+index 859fdda9a4beaf1ea4ea6a7e7c9a80b284452c24..6e2507d23b272678db74d256499b1614eec69a92 100644
 --- a/dist/compiler-vapor.d.ts
 +++ b/dist/compiler-vapor.d.ts
 @@ -1,4 +1,4 @@
 -import { SimpleExpressionNode, RootNode, TemplateChildNode, DirectiveNode, CompoundExpressionNode, AllNode, ElementNode, CompilerCompatOptions, CommentNode, TransformOptions as TransformOptions$1, CodegenOptions as CodegenOptions$1, BaseCodegenResult, SourceLocation, CodegenSourceMapGenerator, TemplateNode, CompilerOptions as CompilerOptions$1, CompilerError } from '@vue/compiler-dom';
-+import { SimpleExpressionNode, RootNode, TemplateChildNode, DirectiveNode, CompoundExpressionNode, AllNode, ElementNode, CompilerCompatOptions, CommentNode, TransformOptions as TransformOptions$1, CodegenOptions as CodegenOptions$1, BaseCodegenResult, SourceLocation, CodegenSourceMapGenerator, TemplateNode, CompilerOptions as CompilerOptions$1, CompilerError, ImportItem } from '@vue/compiler-dom';
++import { ExpressionNode, SimpleExpressionNode, RootNode, TemplateChildNode, DirectiveNode, CompoundExpressionNode, AllNode, ElementNode, CompilerCompatOptions, CommentNode, TransformOptions as TransformOptions$1, CodegenOptions as CodegenOptions$1, BaseCodegenResult, SourceLocation, CodegenSourceMapGenerator, TemplateNode, CompilerOptions as CompilerOptions$1, CompilerError, ImportItem } from '@vue/compiler-dom';
  export { parse } from '@vue/compiler-dom';
  import * as packages_runtime_vapor_src from 'packages/runtime-vapor/src';
  import * as packages_runtime_dom_src from 'packages/runtime-dom/src';
-@@ -98,6 +98,7 @@ export interface RootIRNode {
+@@ -98,6 +98,10 @@ export interface RootIRNode {
      node: RootNode;
      source: string;
      template: string[];
-+    imports: ImportItem[];
++    imports: {
++      exp: string | ExpressionNode;
++      path: string;
++  }[];
      rootTemplateIndex?: number;
      component: Set<string>;
      directive: Set<string>;
+diff --git a/dist/compiler-vapor.esm-browser.js b/dist/compiler-vapor.esm-browser.js
+index f7f8552c70dfb90118e3cc3ceaadc8521d770263..e983a513383dbfc0edbf5b838f8a43484627dc52 100644
+--- a/dist/compiler-vapor.esm-browser.js
++++ b/dist/compiler-vapor.esm-browser.js
+@@ -21431,6 +21431,12 @@ function getLiteralExpressionValue(exp) {
+   }
+   return exp.isStatic ? exp.content : null;
+ }
++function getAssetImports(ctx) {
++  const imports = ctx instanceof TransformContext ? ctx.imports : ctx.node.imports;
++  return imports.map(
++    (i) => typeof i === "string" ? i : i.exp.content
++  );
++}
+ 
+ class TransformContext {
+   constructor(ir, node, options = {}) {
+@@ -21443,6 +21449,7 @@ class TransformContext {
+     this.template = "";
+     this.childrenTemplate = [];
+     this.dynamic = this.ir.block.dynamic;
++    this.imports = [];
+     this.inVOnce = false;
+     this.inVFor = 0;
+     this.comment = [];
+@@ -21554,6 +21561,7 @@ function transform(node, options = {}) {
+   };
+   const context = new TransformContext(ir, node, options);
+   transformNode(context);
++  ir.node.imports = context.imports;
+   return ir;
+ }
+ function transformNode(context) {
+@@ -21824,7 +21832,19 @@ function genPrependNode(oper, { helper }) {
+ }
+ 
+ function genExpression(node, context, assignment) {
++  if (node.type === 8) {
++    const [frag, push] = buildCodeFragment();
++    for (const child of node.children) {
++      if (isString(child)) {
++        push([child, -3]);
++      } else {
++        push(...genExpression(child, context));
++      }
++    }
++    return frag;
++  }
+   const { content, ast, isStatic, loc } = node;
++  const imports = getAssetImports(context.ir);
+   if (isStatic) {
+     return [[JSON.stringify(content), -2, loc]];
+   }
+@@ -21832,7 +21852,7 @@ function genExpression(node, context, assignment) {
+   ast === false || isConstantExpression(node)) {
+     return [[content, -2, loc], assignment && ` = ${assignment}`];
+   }
+-  if (ast === null) {
++  if (ast === null || imports.includes(content)) {
+     return genIdentifier(content, context, loc, assignment);
+   }
+   const ids = [];
+@@ -21965,6 +21985,8 @@ function canPrefix(name) {
+   return true;
+ }
+ function processExpressions(context, expressions, shouldDeclare) {
++  const imports = getAssetImports(context.ir);
++  expressions = expressions.filter((exp) => !imports.includes(exp.content));
+   const {
+     seenVariable,
+     variableToExpMap,
+@@ -34704,13 +34726,15 @@ function genInsertionState(operation, context) {
+   ];
+ }
+ 
++function escapeTemplate(str) {
++  return str.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
++}
+ function genTemplates(templates, rootIndex, { helper }) {
+-  return templates.map(
+-    (template, i) => `const t${i} = ${helper("template")}(${JSON.stringify(
+-      template
+-    )}${i === rootIndex ? ", true" : ""})
+-`
+-  ).join("");
++  return templates.map((template, i) => {
++    const escaped = escapeTemplate(template);
++    return `const t${i} = ${helper("template")}(\`${escaped}\`${i === rootIndex ? ", true" : ""})
++`;
++  }).join("");
+ }
+ function genSelf(dynamic, context) {
+   const [frag, push] = buildCodeFragment();
+@@ -34919,7 +34943,7 @@ function generate(ir, options = {}) {
+   }
+   const delegates = genDelegates(context);
+   const templates = genTemplates(ir.template, ir.rootTemplateIndex, context);
+-  const imports = genHelperImports(context);
++  const imports = genHelperImports(context) + genAssetImports(context);
+   const preamble = imports + templates + delegates;
+   const newlineCount = [...preamble].filter((c) => c === "\n").length;
+   if (newlineCount && !inline) {
+@@ -34951,6 +34975,17 @@ function genHelperImports({ helpers, helper, options }) {
+   }
+   return imports;
+ }
++function genAssetImports({ ir, helper, options }) {
++  const assetImports = ir.node.imports;
++  let imports = "";
++  for (const assetImport of assetImports) {
++    const exp = assetImport.exp;
++    const name = exp.content;
++    imports += `import ${name} from '${assetImport.path}';
++`;
++  }
++  return imports;
++}
+ 
+ const transformChildren = (node, context) => {
+   const isFragment = node.type === 0 || node.type === 1 && (node.tagType === 3 || node.tagType === 1);
+@@ -35166,22 +35201,74 @@ function transformNativeElement(node, propsResult, singleRoot, context, getEffec
+   } else {
+     for (const prop of propsResult[1]) {
+       const { key, values } = prop;
+-      if (key.isStatic && values.length === 1 && values[0].isStatic) {
++      if (key.isStatic && values.length === 1 && values[0].type === 4 && values[0].isStatic) {
+         template += ` ${key.content}`;
+-        if (values[0].content) template += `="${values[0].content}"`;
++        if (values[0].content)
++          template += `="${values[0].content}"`;
+       } else {
+-        dynamicProps.push(key.content);
+-        context.registerEffect(
+-          values,
+-          {
+-            type: 2,
+-            element: context.reference(),
+-            prop,
+-            root: singleRoot,
+-            tag
+-          },
+-          getEffectIndex
+-        );
++        const isHoistable = (node2) => {
++          if (typeof node2 === "string" || typeof node2 === "symbol") {
++            return true;
++          }
++          if (node2.type === 4) {
++            return getAssetImports(context).includes(node2.content);
++          }
++          if (node2.type === 8) {
++            return node2.children.every(
++              (child) => typeof child === "string" || isHoistable(child)
++            );
++          }
++          if (node2.type === 5) {
++            return isHoistable(node2.content);
++          }
++          return false;
++        };
++        const canBeHoisted = values.length > 0 && values.every(isHoistable);
++        if (canBeHoisted) {
++          const buildHoistableExpression = (node2) => {
++            if (typeof node2 === "string" || typeof node2 === "symbol") {
++              return String(node2);
++            }
++            if (node2.type === 4) {
++              return node2.content;
++            }
++            if (node2.type === 8) {
++              return node2.children.map(buildHoistableExpression).join("");
++            }
++            return "";
++          };
++          const jsValueExpression = buildHoistableExpression(values[0]);
++          template += ` ${key.content}="\${${jsValueExpression}}"`;
++        } else {
++          dynamicProps.push(key.content);
++          const reactiveExpressions = [];
++          const unpackExpressions = (node2) => {
++            if (typeof node2 === "string" || typeof node2 === "symbol") {
++              return;
++            }
++            if (node2.type === 4) {
++              reactiveExpressions.push(node2);
++            } else if (node2.type === 8) {
++              for (const child of node2.children) {
++                unpackExpressions(child);
++              }
++            }
++          };
++          for (const v of values) {
++            unpackExpressions(v);
++          }
++          context.registerEffect(
++            reactiveExpressions,
++            {
++              type: 2,
++              element: context.reference(),
++              prop,
++              root: singleRoot,
++              tag
++            },
++            getEffectIndex
++          );
++        }
+       }
+     }
+   }
+@@ -35424,7 +35511,7 @@ const transformVBind = (dir, node, context) => {
+   let arg = dir.arg;
+   const modifiersString = modifiers.map((s) => s.content);
+   if (!exp) exp = normalizeBindShorthand(arg, context);
+-  if (!exp.content.trim()) {
++  if (exp.type === 4 && !exp.content.trim()) {
+     context.options.onError(
+       createCompilerError(34, loc)
+     );

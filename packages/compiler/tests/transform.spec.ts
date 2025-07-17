@@ -526,6 +526,13 @@ function MyComp() {
     <img srcset="@/assets/sample.png 1x, @/assets/sample@2x.png 2x" alt="sample-srcset" />
   \`
 }
+
+function MyVaporComp() {
+  return vine.vapor\`
+    <img src="@/vapor-assets/test.png" alt="vapor-sample-src" />
+    <img srcset="@/vapor-assets/test.png 1x, @/vapor-assets/test@2x.png 2x" alt="vapor-sample-srcset" />
+  \`
+}
     `
     compileVineTypeScriptFile(specContent, 'testTransformAssetUrlSrcSet', { compilerHooks: mockCompilerHooks })
     expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)

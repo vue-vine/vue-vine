@@ -5,6 +5,7 @@ import {
   createSimpleExpression,
   NodeTypes,
 } from '@vue/compiler-core'
+import hashId from 'hash-sum'
 import {
   isDataUrl,
   isExternalUrl,
@@ -26,114 +27,118 @@ export const transformSrcset: NodeTransform = (
   node,
   context,
 ) => {
-  if (node.type === NodeTypes.ELEMENT) {
-    if (srcsetTags.includes(node.tag) && node.props.length) {
-      node.props.forEach((attr, index) => {
-        if (attr.name === 'srcset' && attr.type === NodeTypes.ATTRIBUTE) {
-          if (!attr.value)
-            return
-          const value = attr.value.content
-          if (!value)
-            return
-          const imageCandidates: ImageCandidate[] = value.split(',').map((s) => {
-            // The attribute value arrives here with all whitespace, except
-            // normal spaces, represented by escape sequences
-            const [url, descriptor] = s
-              .replace(escapedSpaceCharacters, ' ')
-              .trim()
-              .split(' ', 2)
-            return { url, descriptor }
-          })
+  if (node.type !== NodeTypes.ELEMENT) {
+    return
+  }
+  if (!srcsetTags.includes(node.tag) && node.props.length) {
+    return
+  }
 
-          // data urls contains comma after the encoding so we need to re-merge
-          // them
-          for (let i = 0; i < imageCandidates.length; i++) {
-            const { url } = imageCandidates[i]
-            if (isDataUrl(url)) {
-              imageCandidates[i + 1].url
-                = `${url},${imageCandidates[i + 1].url}`
-              imageCandidates.splice(i, 1)
-            }
-          }
+  node.props.forEach((attr, index) => {
+    if (attr.name === 'srcset' && attr.type === NodeTypes.ATTRIBUTE) {
+      if (!attr.value)
+        return
+      const value = attr.value.content
+      if (!value)
+        return
+      const imageCandidates: ImageCandidate[] = value.split(',').map((s) => {
+        // The attribute value arrives here with all whitespace, except
+        // normal spaces, represented by escape sequences
+        const [url, descriptor] = s
+          .replace(escapedSpaceCharacters, ' ')
+          .trim()
+          .split(' ', 2)
+        return { url, descriptor }
+      })
 
-          const shouldProcessUrl = (url: string) => {
-            return (
-              !isExternalUrl(url)
-              && !isDataUrl(url)
-              && isRelativeUrl(url)
+      // data urls contains comma after the encoding so we need to re-merge
+      // them
+      for (let i = 0; i < imageCandidates.length; i++) {
+        const { url } = imageCandidates[i]
+        if (isDataUrl(url)) {
+          imageCandidates[i + 1].url
+            = `${url},${imageCandidates[i + 1].url}`
+          imageCandidates.splice(i, 1)
+        }
+      }
+
+      const shouldProcessUrl = (url: string) => {
+        return (
+          !isExternalUrl(url)
+          && !isDataUrl(url)
+          && isRelativeUrl(url)
+        )
+      }
+      // When srcset does not contain any qualified URLs, skip transforming
+      if (!imageCandidates.some(({ url }) => shouldProcessUrl(url))) {
+        return
+      }
+
+      const compoundExpression = createCompoundExpression([], attr.loc)
+      imageCandidates.forEach(({ url, descriptor }, index) => {
+        if (shouldProcessUrl(url)) {
+          const { path } = parseUrl(url)
+          let exp: SimpleExpressionNode
+          if (path) {
+            const pathHashId = hashId(path)
+            const existingImportsIndex = context.imports.findIndex(
+              i => i.path === path,
             )
-          }
-          // When srcset does not contain any qualified URLs, skip transforming
-          if (!imageCandidates.some(({ url }) => shouldProcessUrl(url))) {
-            return
-          }
-
-          const compoundExpression = createCompoundExpression([], attr.loc)
-          imageCandidates.forEach(({ url, descriptor }, index) => {
-            if (shouldProcessUrl(url)) {
-              const { path } = parseUrl(url)
-              let exp: SimpleExpressionNode
-              if (path) {
-                const existingImportsIndex = context.imports.findIndex(
-                  i => i.path === path,
-                )
-                if (existingImportsIndex > -1) {
-                  exp = createSimpleExpression(
-                    `_imports_${existingImportsIndex}`,
-                    false,
-                    attr.loc,
-                    ConstantTypes.CAN_STRINGIFY,
-                  )
-                }
-                else {
-                  exp = createSimpleExpression(
-                    `_imports_${context.imports.length}`,
-                    false,
-                    attr.loc,
-                    ConstantTypes.CAN_STRINGIFY,
-                  )
-                  context.imports.push({ exp, path })
-                }
-                compoundExpression.children.push(exp)
-              }
-            }
-            else {
-              const exp = createSimpleExpression(
-                `"${url}"`,
+            if (existingImportsIndex > -1) {
+              exp = createSimpleExpression(
+                `_imports_${pathHashId}`,
                 false,
                 attr.loc,
                 ConstantTypes.CAN_STRINGIFY,
               )
-              compoundExpression.children.push(exp)
             }
-            const isNotLast = imageCandidates.length - 1 > index
-            if (descriptor && isNotLast) {
-              compoundExpression.children.push(` + ' ${descriptor}, ' + `)
+            else {
+              exp = createSimpleExpression(
+                `_imports_${pathHashId}`,
+                false,
+                attr.loc,
+                ConstantTypes.CAN_STRINGIFY,
+              )
+              context.imports.push({ exp, path })
             }
-            else if (descriptor) {
-              compoundExpression.children.push(` + ' ${descriptor}'`)
-            }
-            else if (isNotLast) {
-              compoundExpression.children.push(` + ', ' + `)
-            }
-          })
-
-          let exp: ExpressionNode = compoundExpression
-          if (context.hoistStatic) {
-            exp = context.hoist(compoundExpression)
-            exp.constType = ConstantTypes.CAN_STRINGIFY
-          }
-
-          node.props[index] = {
-            type: NodeTypes.DIRECTIVE,
-            name: 'bind',
-            arg: createSimpleExpression('srcset', true, attr.loc),
-            exp,
-            modifiers: [],
-            loc: attr.loc,
+            compoundExpression.children.push(exp)
           }
         }
+        else {
+          const exp = createSimpleExpression(
+            `"${url}"`,
+            false,
+            attr.loc,
+            ConstantTypes.CAN_STRINGIFY,
+          )
+          compoundExpression.children.push(exp)
+        }
+        const isNotLast = imageCandidates.length - 1 > index
+        if (descriptor && isNotLast) {
+          compoundExpression.children.push(` + ' ${descriptor}, ' + `)
+        }
+        else if (descriptor) {
+          compoundExpression.children.push(` + ' ${descriptor}'`)
+        }
+        else if (isNotLast) {
+          compoundExpression.children.push(` + ', ' + `)
+        }
       })
+
+      let exp: ExpressionNode = compoundExpression
+      if (context.hoistStatic) {
+        exp = context.hoist(compoundExpression)
+        exp.constType = ConstantTypes.CAN_STRINGIFY
+      }
+
+      node.props[index] = {
+        type: NodeTypes.DIRECTIVE,
+        name: 'bind',
+        arg: createSimpleExpression('srcset', true, attr.loc),
+        exp,
+        modifiers: [],
+        loc: attr.loc,
+      }
     }
-  }
+  })
 }
