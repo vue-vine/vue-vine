@@ -76,6 +76,24 @@ function MyComponent() {
 }
 ```
 
+### Vapor mode <version-tip version="1.7.0" />
+
+Since Vue 3.6, Vue provides a non-virtual DOM based rendering mechanism.
+
+You can turn on this mode in Vue SFC by appending `vapor` like this:
+
+```diff
+- <script setup>
++ <script setup vapor>
+```
+
+in Vue Vine, you can just use `vine.vapor` instead of `vine` to turn on this mode.
+
+```diff
+- return vine`...`
++ return vine.vapor`...`
+```
+
 ### setup
 
 ::: info 💡 TIPS

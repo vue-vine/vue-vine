@@ -35,8 +35,10 @@
   "dependencies": {
     "@babel/parser": "catalog:compiler",
     "@babel/types": "catalog:compiler",
+    "@vue/compiler-core": "catalog:vue-libs",
     "@vue/compiler-dom": "catalog:vue-libs",
     "@vue/compiler-ssr": "catalog:vue-libs",
+    "@vue/compiler-vapor": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
     "get-tsconfig": "catalog:compiler",
     "hash-sum": "catalog:utils",
