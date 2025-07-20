@@ -4,6 +4,7 @@ import { safeDestr } from 'destr'
 import { WebSocketServer } from 'ws'
 import { handleGetComponentDirectives } from './pipeline/get-component-directives'
 import { handleGetComponentProps } from './pipeline/get-component-props'
+import { handleGetDocumentHighlight } from './pipeline/get-document-highlight'
 import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 
 interface PipelineServerCreateParams {
@@ -75,6 +76,9 @@ function handlePipelineRequest(request: PipelineRequest, context: PipelineServer
         break
       case 'getComponentDirectivesRequest':
         handleGetComponentDirectives(request, context)
+        break
+      case 'getDocumentHighlightRequest':
+        handleGetDocumentHighlight(request, context)
         break
     }
   }

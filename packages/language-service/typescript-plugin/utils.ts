@@ -11,7 +11,6 @@ export function pipelineResponse<T extends PipelineResponse>(
 ): string {
   return JSON.stringify({
     ...data,
-    debugLogs: context.tsPluginLogger.messages,
   })
 }
 
