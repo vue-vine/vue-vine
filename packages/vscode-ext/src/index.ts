@@ -1,12 +1,23 @@
 import type { LabsInfo } from '@volar/vscode'
 import { activateAutoInsertion, createLabsInfo, getTsdk } from '@volar/vscode'
 import * as lsp from '@volar/vscode/node'
-import { getLogTimeLabel } from '@vue-vine/language-service'
 import * as vscode from 'vscode'
 import { useExtensionConfigs } from './config'
 import { useVineOutputChannel } from './output-channel'
-import { useDataTrack } from './track'
 import { useVineExtensionViewFeatures } from './view-features'
+
+const logFormat = new Intl.DateTimeFormat('zh-CN', {
+  hour12: false,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+export function getLogTimeLabel(): string {
+  // Format: `2025-06-18 10:00:00`
+  return logFormat.format(new Date())
+}
 
 let client: lsp.BaseLanguageClient
 
@@ -58,13 +69,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
   )
 
   const outputChannelRef = useVineOutputChannel(client)
-  const trackRef = useDataTrack(
-    extensionConfigs,
-    outputChannelRef,
-    envInfo,
-  )
-
-  useVineExtensionViewFeatures(client, trackRef, outputChannelRef)
+  useVineExtensionViewFeatures(client, outputChannelRef)
 
   const outputChannel = client.outputChannel
   outputChannel.appendLine(`${getLogTimeLabel()} - Starting Vine Language Server ...`)
@@ -78,7 +83,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
   const labsInfo = createLabsInfo()
   labsInfo.addLanguageClient(client)
 
-  outputChannel.appendLine(`${getLogTimeLabel()} - Track setup:\n${[
+  outputChannel.appendLine(`${getLogTimeLabel()} - Environment info:\n${[
     `  - vscodeVersion: ${envInfo.vscodeVersion}`,
     `  - extensionVersion: ${envInfo.extensionVersion}`,
     `  - machineId: ${envInfo.machineId}`,
