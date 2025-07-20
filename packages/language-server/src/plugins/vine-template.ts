@@ -1,45 +1,27 @@
 import type {
   Diagnostic,
   Disposable,
-  LanguageServiceContext,
   LanguageServicePlugin,
 } from '@volar/language-service'
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineVirtualCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
-import type { PipelineClientContext } from '../pipeline/shared'
 import type { HtmlTagInfo } from '../types'
 import { VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
 import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
-import { URI } from 'vscode-uri'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 import { getComponentDirectivesFromPipeline } from '../pipeline/get-component-directives'
 import { getComponentPropsFromPipeline } from '../pipeline/get-component-props'
 import { getElementAttrsFromPipeline } from '../pipeline/get-element-attrs'
+import { createPipelineClientContext } from '../pipeline/shared'
+import { getVueVineVirtualCode } from '../utils'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
 const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
 const DIRECTIVE_LOWER_CAMEL_CASE_PREFIX = /v[A-Z]/
-
-function getVueVineVirtualCode(
-  document: TextDocument,
-  context: LanguageServiceContext,
-) {
-  const docUri = URI.parse(document.uri)
-  const [sourceScriptId] = context.decodeEmbeddedDocumentUri(docUri) ?? []
-  const sourceScript = sourceScriptId && context.language.scripts.get(sourceScriptId)
-  const vineVirtualCode = sourceScript?.generated?.root
-
-  return {
-    docUri,
-    sourceScriptId,
-    sourceScript,
-    vineVirtualCode,
-  }
-}
 
 export function transformVineDiagnostic(
   document: TextDocument,
@@ -213,13 +195,12 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
         const vineVolarContextProvider = createVineTemplateDataProvider()
         const tsConfigFileName = context.project.typescript!.configFileName!
         const tsHost = context.project.typescript!.sys
-        const pipelineClientContext: PipelineClientContext = {
-          tagInfos,
-          vineVirtualCode,
-          pendingRequests: new Map(),
+        const pipelineClientContext = createPipelineClientContext(
           tsConfigFileName,
           tsHost,
-        }
+        )
+        pipelineClientContext.vineVirtualCode = vineVirtualCode
+        pipelineClientContext.tagInfos = tagInfos
 
         updateCustomData([
           templateBuiltIn,

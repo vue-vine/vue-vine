@@ -1,5 +1,4 @@
 import type * as lsp from '@volar/vscode/node'
-import type { Track } from '@vue-vine/language-service'
 import type { ShallowRef } from 'reactive-vscode'
 import type { useExtensionConfigs } from './config'
 import {
@@ -42,7 +41,6 @@ export async function useDataTrackWarning(
 
 export function useVineExtensionViewFeatures(
   client: lsp.BaseLanguageClient,
-  trackRef: ShallowRef<Track | null>,
   outputChannelRef: ShallowRef<vscode.OutputChannel | null>,
 ): void {
   useCommand('vine.action.restartServer', async () => {
@@ -55,7 +53,6 @@ export function useVineExtensionViewFeatures(
     outputChannelRef.value = client.outputChannel
 
     await nextTick()
-    await trackRef.value?.trackEvent('restart_server')
   })
 
   // Register a button in the bottom of the window,

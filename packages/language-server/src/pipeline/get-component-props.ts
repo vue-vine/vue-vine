@@ -17,13 +17,13 @@ export function getComponentPropsFromPipeline(
             type: 'getComponentPropsRequest',
             requestId,
             componentName: tag,
-            fileName: context.vineVirtualCode.fileName,
+            fileName: context.vineVirtualCode?.fileName ?? '',
           }),
         )
       },
       onMessageData: (response) => {
-        const currentTagInfo = context.tagInfos.get(tag)
-        context.tagInfos.set(tag, mergeTagInfo(currentTagInfo, {
+        const currentTagInfo = context.tagInfos?.get(tag)
+        context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
           props: [...response.props],
           events: [],
         }))

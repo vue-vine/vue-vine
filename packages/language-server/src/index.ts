@@ -13,9 +13,9 @@ import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
 import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
+import { createDocumentHighlightForward } from './plugins/vine-document-highlight'
 import { createVineFoldingRangesPlugin } from './plugins/vine-folding-ranges'
 import { createVineTemplatePlugin } from './plugins/vine-template'
-import { track } from './track'
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -45,6 +45,7 @@ connection.onInitialize(async (params) => {
       createTypeScriptServices(tsdk.typescript)
         .find(plugin => plugin.name === 'typescript-syntactic'),
     ),
+    createDocumentHighlightForward(),
     // HTML Service is included here ↓
     createVineTemplatePlugin(),
   ]
@@ -87,7 +88,6 @@ connection.onInitialize(async (params) => {
           compilerOptions,
           vueCompilerOptions,
           target: 'extension',
-          track,
         },
       ),
     ]
