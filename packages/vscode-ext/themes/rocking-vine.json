@@ -1,4 +1,5 @@
 {
+  "$schema": "vscode://schemas/color-theme",
   "name": "Rocking Vine",
   "type": "dark",
   "colors": {
@@ -43,12 +44,15 @@
 
     "editor.selectionBackground": "#60daff47",
     "editor.inactiveSelectionBackground": "#ffffff22",
-    "editor.selectionHighlightBackground": "#FFFFBE55",
+    "editor.selectionHighlightBackground": "#60daff47",
 
-    "editor.wordHighlightStrongBackground": "#090e3577",
-    "editor.wordHighlightBackground": "#00000033",
+    "editor.symbolHighlightBackground": "#60daff31",
+    "editor.wordHighlightTextBackground": "#60daff31",
 
-    "editorCursor.foreground": "##EB8888FF",
+    "editor.wordHighlightStrongBackground": "#60daff31",
+    "editor.wordHighlightBackground": "#60daff31",
+
+    "editorCursor.foreground": "#EB8888FF",
 
     "editor.findMatchBackground": "#ffffff22",
     "editor.findMatchHighlightBackground": "#FFFFBE55",
@@ -69,12 +73,12 @@
     "gitDecoration.modifiedResourceForeground": "#FDC54DFF",
     "gitDecoration.untrackedResourceForeground": "#7ec16e",
     "gitDecoration.ignoredResourceForeground": "#3e588c",
-    "gitDecoration.conflictingResourceForeground": "##EB8888FF",
+    "gitDecoration.conflictingResourceForeground": "#EB8888FF",
 
     "terminal.ansiBlack": "#1d2021",
     "terminal.ansiBrightBlack": "#928374",
     "terminal.ansiRed": "#cc241d",
-    "terminal.ansiBrightRed": "##EB8888FF",
+    "terminal.ansiBrightRed": "#EB8888FF",
     "terminal.ansiGreen": "#98971a",
     "terminal.ansiBrightGreen": "#b8bb26",
     "terminal.ansiYellow": "#d79921",
@@ -607,5 +611,6 @@
         "foreground": "#74A5CAFF"
       }
     }
-  ]
+  ],
+  "semanticHighlighting": true
 }

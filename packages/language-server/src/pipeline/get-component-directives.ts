@@ -18,13 +18,13 @@ export function getComponentDirectivesFromPipeline(
             type: 'getComponentDirectivesRequest',
             requestId,
             triggerAtFnName,
-            fileName: context.vineVirtualCode.fileName,
+            fileName: context.vineVirtualCode?.fileName ?? '',
           }),
         )
       },
       onMessageData: (response) => {
-        const currentTagInfo = context.tagInfos.get(tag)
-        context.tagInfos.set(tag, mergeTagInfo(currentTagInfo, {
+        const currentTagInfo = context.tagInfos?.get(tag)
+        context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
           props: [...response.directives],
           events: [],
         }))

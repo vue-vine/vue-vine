@@ -368,6 +368,7 @@ export function createVueVineVirtualCode(
     mappings: tsCodeMappings,
     linkedCodeMappings,
     embeddedCodes: [
+      ...createSourceVirtualCode(),
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
     ],
@@ -957,6 +958,27 @@ export function createVueVineVirtualCode(
         ],
         embeddedCodes: [],
       }
+    }
+  }
+
+  function* createSourceVirtualCode(): Generator<VirtualCode> {
+    yield {
+      id: 'source',
+      languageId: 'typescript',
+      snapshot: {
+        getText: (start, end) => snapshotContent.slice(start, end),
+        getLength: () => snapshotContent.length,
+        getChangeRange: () => undefined,
+      },
+      mappings: [
+        {
+          sourceOffsets: [0],
+          generatedOffsets: [0],
+          lengths: [snapshotContent.length],
+          data: FULL_FEATURES,
+        },
+      ],
+      embeddedCodes: [],
     }
   }
 }

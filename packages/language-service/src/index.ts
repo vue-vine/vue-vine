@@ -3,7 +3,6 @@ import type {
   VueCompilerOptions,
 } from '@vue/language-core'
 import type * as ts from 'typescript'
-import type { Track } from './track'
 import {
   forEachEmbeddedCode,
 } from '@volar/language-core'
@@ -35,14 +34,6 @@ export type {
 } from './shared'
 
 export {
-  getLogTimeLabel,
-  Track,
-} from './track'
-export type {
-  TrackOutputChannel,
-} from './track'
-
-export {
   createVueVineVirtualCode,
 } from './virtual-code'
 
@@ -50,7 +41,6 @@ interface VineLanguagePluginOptions {
   compilerOptions: ts.CompilerOptions
   vueCompilerOptions: VueCompilerOptions
   target?: 'extension' | 'tsc'
-  track?: Track
 }
 
 export function createVueVineLanguagePlugin(

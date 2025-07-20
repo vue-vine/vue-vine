@@ -13,14 +13,29 @@ function getResponseName<N extends PipelineRequest['type']>(requestName: N) {
 }
 
 export interface PipelineClientContext {
-  vineVirtualCode: VueVineVirtualCode
-  tagInfos: Map<string, HtmlTagInfo>
   pendingRequests: Map<string, Promise<void>>
   tsConfigFileName: string
   tsHost: ts.System
+
+  // Template completions
+  vineVirtualCode?: VueVineVirtualCode
+  tagInfos?: Map<string, HtmlTagInfo>
+
+  // Document highlight
+  documentHighlights?: ts.DocumentHighlights[]
 }
 export interface PipelineClientInstance {
   debounceCache: Set<PipelineRequest['type']>
+}
+export function createPipelineClientContext(
+  tsConfigFileName: string,
+  tsHost: ts.System,
+): PipelineClientContext {
+  return {
+    pendingRequests: new Map(),
+    tsConfigFileName,
+    tsHost,
+  }
 }
 
 const REQUEST_TIMEOUT = 10000
@@ -31,13 +46,23 @@ const pipelineClient: PipelineClientInstance = {
 export function handlePipelineResponse<Req extends PipelineRequest['type']>(
   context: PipelineClientContext,
   params: {
+    showConsoleLog?: boolean
     requestName: Req
     onSend: (ws: WebSocket, requestId: string) => void
     onMessageData: (response: PipelineResponseInstance<RequestNameToResponseName<Req>>) => void
   },
 ): Promise<void> {
-  const { tsConfigFileName, tsHost, pendingRequests } = context
-  const { requestName, onSend, onMessageData } = params
+  const {
+    tsHost,
+    tsConfigFileName,
+    pendingRequests,
+  } = context
+  const {
+    onSend,
+    requestName,
+    onMessageData,
+    showConsoleLog = true,
+  } = params
 
   const port = getPipelineServerPort(tsConfigFileName, tsHost)
   const pipelineWebSocket = new WebSocket(`ws://localhost:${port}`)
@@ -74,7 +99,9 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
         return
       }
 
-      console.log(`Pipeline: Got message for ${resp.type}`)
+      if (showConsoleLog) {
+        console.log(`Pipeline: Got message for ${resp.type}`)
+      }
 
       // ensure this response is for our request
       if (
@@ -88,7 +115,9 @@ export function handlePipelineResponse<Req extends PipelineRequest['type']>(
         pendingRequests.delete(requestId)
         // Close WebSocket connection and resolve Promise
         pipelineWebSocket.close()
-        console.log(`Pipeline: Request '${requestName}' completed!`)
+        if (showConsoleLog) {
+          console.log(`Pipeline: Request '${requestName}' completed!`)
+        }
 
         resolve()
         clearTimeout(timeout)
