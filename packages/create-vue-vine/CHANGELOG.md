@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.6.2
+
+### Patch Changes
+
+- Support document symbol semantic highlighting
+
 ## 1.6.1
 
 ### Patch Changes

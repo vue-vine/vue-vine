@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.6.2
+
+### Patch Changes
+
+- Support document symbol semantic highlighting
+- Updated dependencies
+  - @vue-vine/compiler@1.6.2
+
 ## 1.6.1
 
 ### Patch Changes
