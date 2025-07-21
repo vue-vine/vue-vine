@@ -1,5 +1,23 @@
 # @vue-vine/compiler
 
+## 1.6.4
+
+### Patch Changes
+
+- Fix regressions of VLS_elements type missing
+
+## 1.6.3
+
+### Patch Changes
+
+- Fix extension broken on toPascalCase transform
+
+## 1.6.2
+
+### Patch Changes
+
+- Support document symbol semantic highlighting
+
 ## 1.6.1
 
 ### Patch Changes

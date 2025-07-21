@@ -1,5 +1,29 @@
 # @vue-vine/nuxt
 
+## 1.6.4
+
+### Patch Changes
+
+- Fix regressions of VLS_elements type missing
+- Updated dependencies
+  - vue-vine@1.6.4
+
+## 1.6.3
+
+### Patch Changes
+
+- Fix extension broken on toPascalCase transform
+- Updated dependencies
+  - vue-vine@1.6.3
+
+## 1.6.2
+
+### Patch Changes
+
+- Support document symbol semantic highlighting
+- Updated dependencies
+  - vue-vine@1.6.2
+
 ## 1.6.1
 
 ### Patch Changes
