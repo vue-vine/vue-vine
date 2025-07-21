@@ -104,7 +104,7 @@ function mayNeedPropsAlias(vineCompFn: VineFnCompCtx) {
 }
 
 function toPascalCase(name: string) {
-  return name.split('-').map(
+  return name.split('-').filter(Boolean).map(
     part => part[0].toUpperCase() + part.slice(1),
   ).join('')
 }

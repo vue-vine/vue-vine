@@ -23,7 +23,6 @@ export function getDocumentHighlightFromPipeline(
         }))
       },
       onMessageData: (response) => {
-        console.log(`[DEBUG] response: `, response)
         context.documentHighlights = response.result
       },
     },

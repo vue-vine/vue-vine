@@ -28,7 +28,6 @@ export async function runCommand(command, options = {}) {
     proc.on('close', resolve)
     proc.on('exit', resolve)
     proc.on('error', (err) => {
-      console.log(`[DEBUG] on error: ${err}`)
       log('error', String(err), `${colorful(
         `${options.title ? ` ${options.title} ` : ' '}`,
         ['black', 'bgRed', 'bold'],

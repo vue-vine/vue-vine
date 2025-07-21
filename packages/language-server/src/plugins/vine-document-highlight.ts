@@ -32,7 +32,6 @@ export function createDocumentHighlightForward(): LanguageServicePlugin {
           )
 
           const result = pipelineClientContext.documentHighlights
-          console.log(`[DEBUG] result: `, result)
           return result
             ?.filter(({ fileName }) => fileName === vineVirtualCode.fileName)
             .flatMap(({ highlightSpans }) => highlightSpans)
