@@ -82,16 +82,26 @@ Since Vue 3.6, Vue provides a non-virtual DOM based rendering mechanism.
 
 You can turn on this mode in Vue SFC by appending `vapor` like this:
 
-```diff
-- <script setup>
-+ <script setup vapor>
+```vue
+<script setup> // [!code --]
+<script setup vapor> // [!code ++]
 ```
 
 in Vue Vine, you can just use `vine.vapor` instead of `vine` to turn on this mode.
 
-```diff
-- return vine`...`
-+ return vine.vapor`...`
+```vue-vine
+return vine`...` // [!code --]
+return vine.vapor`...` // [!code ++]
+```
+
+Or you can use the directive syntax like this:
+
+```vue-vine
+function MyComponent() {
+  'use vapor' // [!code ++]
+
+  return vine`...`
+}
 ```
 
 ### setup

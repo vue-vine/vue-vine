@@ -82,16 +82,26 @@ function MyComponent() {
 
 您可以在 Vue SFC 中通过添加 `vapor` 后缀来启用此模式：
 
-```diff
-- <script setup>
-+ <script setup vapor>
+```vue
+<script setup> // [!code --]
+<script setup vapor> // [!code ++]
 ```
 
 在 Vue Vine 中，请使用 `vine.vapor` 替代 `vine` 即可启用此模式。
 
-```diff
-- return vine`...`
-+ return vine.vapor`...`
+```vue-vine
+return vine`...` // [!code --]
+return vine.vapor`...` // [!code ++]
+```
+
+或者采用下面这样的指令语法：
+
+```vue-vine
+function MyComponent() {
+  'use vapor' // [!code ++]
+
+  return vine`...`
+}
 ```
 
 ### setup {#setup}

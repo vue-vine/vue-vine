@@ -239,6 +239,8 @@ describe('test basic functionality', async () => {
       expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 0')
       await browserCtx.page?.click('.test-vapor-comp button')
       expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 1')
+
+      expect(await evaluator.getTextContent('.test-another-vapor-comp span')).toBe('Another Vapor Component')
     },
   ))
 })

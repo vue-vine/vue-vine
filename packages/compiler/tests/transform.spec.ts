@@ -527,10 +527,17 @@ function MyComp() {
   \`
 }
 
-function MyVaporComp() {
+function MyVaporCompOne() {
   return vine.vapor\`
     <img src="@/vapor-assets/test.png" alt="vapor-sample-src" />
     <img srcset="@/vapor-assets/test.png 1x, @/vapor-assets/test@2x.png 2x" alt="vapor-sample-srcset" />
+  \`
+}
+
+function MyVaporCompTwo() {
+  'use vapor'
+  return vine.vapor\`
+    <div>This is another vapor component</div>
   \`
 }
     `

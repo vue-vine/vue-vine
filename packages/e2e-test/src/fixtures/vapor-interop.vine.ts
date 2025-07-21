@@ -33,12 +33,23 @@ function TestVaporComp() {
   `
 }
 
+function TestAnotherVaporComp() {
+  'use vapor'
+
+  return vine`
+    <div class="test-another-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-green-400 rounded-md">
+      <span class="text-zinc-500">Another Vapor Component</span>
+    </div>
+  `
+}
+
 export function VaporTestContainer() {
   return vine`
     <div class="vapor-test-container col-flex">
       <TestVaporComp>
         <VirtualDOMComp />
       </TestVaporComp>
+      <TestAnotherVaporComp />
     </div>
   `
 }

@@ -8,7 +8,7 @@ export default antfu(
       'dist',
       'pnpm-lock.yaml',
 
-      'packages/docs/.vitepress/cache',
+      'packages/docs/**/*',
       'packages/e2e-test/**/*.vine.ts',
       'packages/create-vue-vine/template/**/*',
       'packages/nuxt-module/playground/*',

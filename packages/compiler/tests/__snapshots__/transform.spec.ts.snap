@@ -1463,15 +1463,15 @@ export const MyComp = (() => {
   return __vine;
 })();
 
-export const MyVaporComp = (() => {
+export const MyVaporCompOne = (() => {
   const t0 = _template(
-    \`<img data-v-13042d92 src="\${_imports_01fb0ae2}" alt="vapor-sample-src">\`,
+    \`<img data-v-19977118 src="\${_imports_01fb0ae2}" alt="vapor-sample-src">\`,
   );
   const t1 = _template(
-    \`<img data-v-13042d92 srcset="\${_imports_01fb0ae2 + " 1x, " + _imports_104caf2d + " 2x"}" alt="vapor-sample-srcset">\`,
+    \`<img data-v-19977118 srcset="\${_imports_01fb0ae2 + " 1x, " + _imports_104caf2d + " 2x"}" alt="vapor-sample-srcset">\`,
   );
   const __vine = _defineVaporComponent({
-    name: "MyVaporComp",
+    name: "MyVaporCompOne",
     /* No props */
     /* No emits */
     setup(__props, { expose: __expose }) {
@@ -1485,7 +1485,31 @@ export const MyVaporComp = (() => {
   });
 
   __vine.__vue_vine = true;
-  __vine.__hmrId = "13042d92";
+  __vine.__hmrId = "19977118";
+
+  return __vine;
+})();
+
+export const MyVaporCompTwo = (() => {
+  const t0 = _template(
+    \`<div data-v-1997494c>This is another vapor component</div>\`,
+    true,
+  );
+  const __vine = _defineVaporComponent({
+    name: "MyVaporCompTwo",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      const n0 = t0();
+      return n0;
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "1997494c";
 
   return __vine;
 })();
@@ -1494,7 +1518,10 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
   __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
 
 typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
-  __VUE_HMR_RUNTIME__.createRecord(MyVaporComp.__hmrId, MyVaporComp);
+  __VUE_HMR_RUNTIME__.createRecord(MyVaporCompOne.__hmrId, MyVaporCompOne);
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyVaporCompTwo.__hmrId, MyVaporCompTwo);
 "
 `;
 

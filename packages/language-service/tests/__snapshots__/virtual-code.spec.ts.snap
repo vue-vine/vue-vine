@@ -1298,6 +1298,7 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
   /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
   /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
   /* No props formal params */
 });
@@ -1376,6 +1377,7 @@ const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
   /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
   /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
   /* No props formal params */
 });
@@ -1452,6 +1454,70 @@ $el: __VINE_VLS_RootEl;
 return vine.vapor\`\` as any as __VINE_VLS_VueVineComponent;
 
 }
+type __VINE_VLS_TestAnotherVaporComp_props__ = {}
+
+
+function TestAnotherVaporComp(
+  props: __VINE_VLS_VineComponentCommonProps & __VINE_VLS_TestAnotherVaporComp_props__,
+context: {}) {
+  'use vapor'
+
+  
+type TestAnotherVaporComp_Props = Parameters<typeof TestAnotherVaporComp>[0];
+
+
+// --- Start: Template virtual code
+
+const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
+  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
+  /* No props formal params */
+});
+const __VINE_VLS_localComponents = __VINE_VLS_ctx;
+type __VINE_VLS_LocalComponents = __VINE_VLS_OmitAny<typeof __VINE_VLS_localComponents>;
+type __VINE_VLS_LocalDirectives = __VINE_VLS_OmitAny<typeof __VINE_VLS_ctx>;
+let __VINE_VLS_directives!: __VINE_VLS_LocalDirectives & __VINE_VLS_GlobalDirectives;
+const __VINE_VLS_components = {
+  ...{} as __VINE_VLS_GlobalComponents,
+  ...__VINE_VLS_localComponents as unknown as __VINE_VLS_LocalComponents,
+};
+
+type __VINE_VLS_StyleScopedClasses = {};
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
+...{ class: "test-another-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-green-400 rounded-md" },
+});
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.span, __VINE_VLS_elements.span)({
+...{ class: "text-zinc-500" },
+});
+/** @type {__VINE_VLS_StyleScopedClasses['test-another-vapor-comp']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['p-2']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-1']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-solid']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['border-green-400']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['rounded-md']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['text-zinc-500']} */;
+type __VINE_VLS_Slots = {};
+type __VINE_VLS_InheritedAttrs = {};
+type __VINE_VLS_TemplateRefs = {};
+type __VINE_VLS_RootEl = 
+| __VINE_VLS_NativeElements['div'];
+var __VINE_VLS_dollars!: {
+$slots: __VINE_VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VINE_VLS_InheritedAttrs>;
+$refs: __VINE_VLS_TemplateRefs;
+$el: __VINE_VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as __VINE_VLS_VueVineComponent;
+
+}
 type __VINE_VLS_VaporTestContainer_props__ = {}
 
 
@@ -1467,6 +1533,7 @@ type VaporTestContainer_Props = Parameters<typeof VaporTestContainer>[0];
 const __VINE_VLS_ctx = __VINE_VLS_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
   /* No props formal params */
@@ -1504,6 +1571,15 @@ const __VINE_VLS_6 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_5, new __VINE_V
 const __VINE_VLS_7 = __VINE_VLS_6({
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_6));
 var __VINE_VLS_3!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
+const __VINE_VLS_10 = ({} as __VINE_VLS_WithComponent<'TestAnotherVaporComp', __VINE_VLS_LocalComponents, void, 'TestAnotherVaporComp', 'TestAnotherVaporComp', 'TestAnotherVaporComp'>).TestAnotherVaporComp;
+/** @type {[typeof __VINE_VLS_components.TestAnotherVaporComp, ]} */;
+// @ts-ignore
+TestAnotherVaporComp;
+// @ts-ignore
+const __VINE_VLS_11 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_10, new __VINE_VLS_10({
+}));
+const __VINE_VLS_12 = __VINE_VLS_11({
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_11));
 /** @type {__VINE_VLS_StyleScopedClasses['vapor-test-container']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
 type __VINE_VLS_Slots = {};
@@ -1527,6 +1603,7 @@ return vine\`\` as any as __VINE_VLS_VueVineComponent;
 const __VINE_VLS_ComponentsReferenceMap = {
   'VirtualDOMComp': VirtualDOMComp,
   'TestVaporComp': TestVaporComp,
+  'TestAnotherVaporComp': TestAnotherVaporComp,
   'VaporTestContainer': VaporTestContainer
 };
 
