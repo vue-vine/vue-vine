@@ -15,6 +15,7 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
     & import('vue').ComponentPublicInstance
   const __VINE_VLS_CreateVineVLSCtx: <T>(ctx: T) => __VINE_VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
   type __VINE_VLS_VueVineComponent = __VINE_VLS_Element;
+  const __VINE_VLS_elements: import('vue/jsx-runtime').JSX.IntrinsicElements;
 
   // From vuejs 'runtime-core.d.ts':
   type __VINE_VLS_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;

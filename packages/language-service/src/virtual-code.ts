@@ -576,8 +576,11 @@ export function createVueVineVirtualCode(
         isNeedJsDoc: true,
       })}\n`)
     }
-    if (vineCompFn.emits.length > 0 && vineCompFn.emitsTypeParam) {
-      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<VueDefineEmits<${vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+    if (vineCompFn.emits.length > 0) {
+      tsCodeSegments.push(`\ntype __VLS_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<__VLS_VueDefineEmits<${
+        vineCompFn.emitsTypeParam
+          ? vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+          : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
       }>>;\n`)
     }
 
