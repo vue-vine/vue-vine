@@ -2,6 +2,10 @@
   "$schema": "vscode://schemas/color-theme",
   "name": "Rocking Vine",
   "type": "dark",
+  // We don't enable semantic highlighting by default
+  // Because we want to take more control over token colors.
+  // We plan to provide semantic modifiers in language service in the future.
+  "semanticHighlighting": false,
   "colors": {
     "activityBar.background": "#1C1D26",
     "activityBar.foreground": "#f2e5bc",
@@ -78,7 +82,7 @@
     "terminal.ansiBlack": "#1d2021",
     "terminal.ansiBrightBlack": "#928374",
     "terminal.ansiRed": "#cc241d",
-    "terminal.ansiBrightRed": "#EB8888FF",
+    "terminal.ansiBrightRed": "#ec6f6f",
     "terminal.ansiGreen": "#98971a",
     "terminal.ansiBrightGreen": "#b8bb26",
     "terminal.ansiYellow": "#d79921",
@@ -315,7 +319,7 @@
     {
       "scope": "string.escape",
       "settings": {
-        "foreground": "##EB8888FF"
+        "foreground": "#EB8888FF"
       }
     },
     {
@@ -537,7 +541,7 @@
     {
       "scope": "storage.type.class",
       "settings": {
-        "foreground": "##EB8888FF"
+        "foreground": "#EB8888FF"
       }
     },
     {
@@ -549,9 +553,19 @@
     },
     {
       "name": "CSS propperty value",
-      "scope": ["meta.property-group", "support.constant.property-value.css"],
+      "scope": [
+        "meta.property-group",
+        "support.constant.property-value.css"
+      ],
       "settings": {
-        "foreground": "#b8bb26"
+        "foreground": "#d7d7c9"
+      }
+    },
+    {
+      "name": "CSS Unit",
+      "scope": "keyword.other.unit",
+      "settings": {
+        "foreground": "#d3869b"
       }
     },
     {
@@ -570,10 +584,11 @@
     {
       "scope": "punctuation.quasi",
       "settings": {
-        "foreground": "##EB8888FF"
+        "foreground": "#EB8888FF"
       }
     },
 
+    // Vine specific colors overrides
     {
       "scope": "support.class.component",
       "settings": {
@@ -611,6 +626,5 @@
         "foreground": "#74A5CAFF"
       }
     }
-  ],
-  "semanticHighlighting": true
+  ]
 }
