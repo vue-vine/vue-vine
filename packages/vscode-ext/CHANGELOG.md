@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.6.3
+
+### Patch Changes
+
+- Fix extension broken on toPascalCase transform
+
 ## 1.6.2
 
 ### Patch Changes

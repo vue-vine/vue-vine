@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.6.3
+
+### Patch Changes
+
+- Fix extension broken on toPascalCase transform
+- Updated dependencies
+  - @vue-vine/compiler@1.6.3
+  - @vue-vine/language-service@1.6.3
+
 ## 1.6.2
 
 ### Patch Changes

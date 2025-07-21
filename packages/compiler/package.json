@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/compiler",
   "type": "module",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
