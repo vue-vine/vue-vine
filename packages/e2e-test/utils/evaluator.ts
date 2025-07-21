@@ -1,5 +1,5 @@
 import type { Page } from 'playwright-chromium'
-import type { E2EPlaywrightContext, EvaluateType, Evaluator, Nil } from './types'
+import type { E2EPlaywrightContext, EvaluateResult, EvaluateType, Evaluator, Nil } from './types'
 
 /**
  * Generic element property/style/content evaluation function
@@ -14,7 +14,7 @@ async function evaluateElement(
   selector: string,
   evaluationType: EvaluateType,
   property?: string,
-): Promise<string | Nil> {
+): Promise<string | boolean | Nil> {
   if (!page) {
     return null
   }
@@ -26,17 +26,18 @@ async function evaluateElement(
         return null
       }
 
-      if (evaluationType === 'style') {
-        return getComputedStyle(el)[property as any]
+      switch (evaluationType) {
+        case 'style':
+          return getComputedStyle(el)[property as any]
+        case 'attribute':
+          return el.getAttribute(property!)
+        case 'textContent':
+          return el.textContent
+        case 'isImageLoaded':
+          return (el as HTMLImageElement).naturalWidth > 0
+        default:
+          return null
       }
-      else if (evaluationType === 'attribute') {
-        return el.getAttribute(property!)
-      }
-      else if (evaluationType === 'textContent') {
-        return el.textContent
-      }
-
-      return null
     },
     { selector, evaluationType, property },
   )
@@ -54,7 +55,7 @@ export function createTestEvaluator(
     /**
      * Get element's text content
      */
-    async getTextContent(selector: string, page?: Page): Promise<string | Nil> {
+    async getTextContent(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'textContent')
     },
@@ -62,7 +63,7 @@ export function createTestEvaluator(
     /**
      * Get element's color style
      */
-    async getColor(selector: string, page?: Page): Promise<string | Nil> {
+    async getColor(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'style', 'color')
     },
@@ -70,7 +71,7 @@ export function createTestEvaluator(
     /**
      * Get element's display style
      */
-    async getDisplayStyle(selector: string, page?: Page): Promise<string | Nil> {
+    async getDisplayStyle(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'style', 'display')
     },
@@ -78,7 +79,7 @@ export function createTestEvaluator(
     /**
      * Get element's src attribute (usually for images, videos and other assets)
      */
-    async getAssetUrl(selector: string, page?: Page): Promise<string | Nil> {
+    async getAssetUrl(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'attribute', 'src')
     },
@@ -86,7 +87,7 @@ export function createTestEvaluator(
     /**
      * Get element's justify-content style
      */
-    async getJustifyContent(selector: string, page?: Page): Promise<string | Nil> {
+    async getJustifyContent(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'style', 'justifyContent')
     },
@@ -123,6 +124,14 @@ export function createTestEvaluator(
     async click(selector: string, page?: Page): Promise<void> {
       const pageCtx = page ?? e2eTestCtx.page
       await pageCtx?.click(selector)
+    },
+
+    /**
+     * Check if image is successfully loaded
+     */
+    async isImageLoaded(selector: string, page?: Page): Promise<EvaluateResult> {
+      const pageCtx = page ?? e2eTestCtx.page
+      return await evaluateElement(pageCtx, selector, 'isImageLoaded')
     },
   }
 }
