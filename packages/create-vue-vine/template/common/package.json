@@ -16,6 +16,6 @@
   "devDependencies": {
     "@types/node": "^20.17.6",
     "vite": "^6.0.0",
-    "vue-vine": "^1.6.3"
+    "vue-vine": "^1.6.4"
   }
 }

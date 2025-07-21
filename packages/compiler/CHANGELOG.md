@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.6.4
+
+### Patch Changes
+
+- Fix regressions of VLS_elements type missing
+
 ## 1.6.3
 
 ### Patch Changes

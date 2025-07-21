@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.6.4
+
+### Patch Changes
+
+- Fix regressions of VLS_elements type missing
+- Updated dependencies
+  - vue-vine@1.6.4
+
 ## 1.6.3
 
 ### Patch Changes

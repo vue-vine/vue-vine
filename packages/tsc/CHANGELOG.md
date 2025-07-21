@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.6.4
+
+### Patch Changes
+
+- Fix regressions of VLS_elements type missing
+- Updated dependencies
+  - @vue-vine/language-service@1.6.4
+
 ## 1.6.3
 
 ### Patch Changes
