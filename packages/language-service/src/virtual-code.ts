@@ -179,6 +179,8 @@ export function createVueVineVirtualCode(
     ) {
       relativePath = `./${relativePath}`
     }
+    // Normalize the path to posix path
+    relativePath = relativePath.replace(/\\/g, '/')
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
