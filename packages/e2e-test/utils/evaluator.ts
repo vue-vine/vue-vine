@@ -33,8 +33,6 @@ async function evaluateElement(
           return el.getAttribute(property!)
         case 'textContent':
           return el.textContent
-        case 'isImageLoaded':
-          return (el as HTMLImageElement).naturalWidth > 0
         default:
           return null
       }
@@ -131,7 +129,20 @@ export function createTestEvaluator(
      */
     async isImageLoaded(selector: string, page?: Page): Promise<EvaluateResult> {
       const pageCtx = page ?? e2eTestCtx.page
-      return await evaluateElement(pageCtx, selector, 'isImageLoaded')
+      if (!pageCtx) {
+        return null
+      }
+      try {
+        await pageCtx.waitForFunction((selector) => {
+          const img = document.querySelector(selector) as HTMLImageElement
+          // An image is considered loaded if it's "complete" and has a natural width > 0.
+          return img && img.complete && img.naturalWidth > 0
+        }, selector)
+        return true
+      }
+      catch {
+        return false
+      }
     },
   }
 }

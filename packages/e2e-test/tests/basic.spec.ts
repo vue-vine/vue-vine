@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createBrowserContext, createEvaluator, runTestAtPage, untilUpdated, wait } from '../utils/test-utils'
+import { createBrowserContext, createEvaluator, runTestAtPage, untilUpdated } from '../utils/test-utils'
 
 describe('test basic functionality', async () => {
   const browserCtx = await createBrowserContext()
@@ -38,7 +38,6 @@ describe('test basic functionality', async () => {
         expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="sample"]')).toBe('/src/assets/sample.jpg')
         expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="placeholder"]')).toBe('https://placehold.co/200x100')
 
-        await wait(1000)
         expect(await evaluator.isImageLoaded('.test-transform-asset-url img[alt="sample"]')).toBe(true)
         expect(await evaluator.isImageLoaded('.test-transform-asset-url img[alt="placeholder"]')).toBe(true)
       },
