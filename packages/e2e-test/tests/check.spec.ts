@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 function removePlatformConflictLines(output: string) {
   return output.split('\n').map((line) => {
-    const pathStartIndex = line.indexOf('/packages/e2e-test/')
+    const pathStartIndex = line.indexOf(['', 'packages', 'e2e-test', ''].join(path.sep))
     if (pathStartIndex > -1) {
       return ''
     }
