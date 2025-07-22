@@ -1,6 +1,6 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
-import { dirname, posix as path } from 'node:path'
+import { dirname, join } from 'node:path'
 import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 
@@ -15,14 +15,14 @@ function findGlobalTypesPath(
   vueOptions: VueCompilerOptions,
 ) {
   let dir = dirname(fileName)
-  while (!host.fileExists(path.join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
-    const parentDir = path.dirname(dir)
+  while (!host.fileExists(join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
+    const parentDir = dirname(dir)
     if (dir === parentDir) {
       throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
     }
     dir = parentDir
   }
-  const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
+  const globalTypesPath = join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
   return globalTypesPath
 }
 
@@ -55,7 +55,6 @@ export function setupGlobalTypes(
       return globalTypesPath
     }
     catch {
-      console.error('[Vue Vine] Failed to setup global types')
       return void 0
     }
   }
