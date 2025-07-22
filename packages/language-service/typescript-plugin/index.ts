@@ -1,7 +1,7 @@
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
 import type { WebSocketServer } from 'ws'
-import { dirname, posix as path } from 'node:path'
+import { dirname, join } from 'node:path'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
 import { detect } from 'detect-port'
@@ -118,7 +118,7 @@ function writePipelineServerPortToFile(
 
   // Find the `node_modules` directory that contains `vue-vine`
   let dir = rootDir
-  while (!host.fileExists(path.join(dir, 'node_modules', 'vue-vine', 'package.json'))) {
+  while (!host.fileExists(join(dir, 'node_modules', 'vue-vine', 'package.json'))) {
     const parentDir = dirname(dir)
     if (parentDir === dir) {
       throw new Error('Failed to find `node_modules` directory that contains \'vue-vine\'')
@@ -127,7 +127,7 @@ function writePipelineServerPortToFile(
   }
 
   host.writeFile(
-    path.join(dir, 'node_modules', '.vine-pipeline-port'),
+    join(dir, 'node_modules', '.vine-pipeline-port'),
     port.toString(),
   )
 }
