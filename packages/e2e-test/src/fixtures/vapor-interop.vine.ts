@@ -18,7 +18,9 @@ function TestVaporComp() {
   const sub = () => count.value--
 
   return vine.vapor`
-    <div class="test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md">
+    <div
+      class="test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md"
+    >
       <h3 class="text-zinc-500">Vapor Component in Virtual DOM component</h3>
       <div class="row-flex gap-2">
         <button @click="add">+</button>
@@ -30,17 +32,19 @@ function TestVaporComp() {
 
       <slot />
     </div>
-  `
+`
 }
 
 function TestAnotherVaporComp() {
   'use vapor'
 
   return vine`
-    <div class="test-another-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-green-400 rounded-md">
+    <div
+      class="test-another-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-green-400 rounded-md"
+    >
       <span class="text-zinc-500">Another Vapor Component</span>
     </div>
-  `
+`
 }
 
 export function VaporTestContainer() {

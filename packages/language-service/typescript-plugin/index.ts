@@ -46,14 +46,10 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
     ensureStrictTemplatesCheck(vueOptions)
 
     if (isConfiguredTsProject) {
-      const globalTypesFilePath = setupGlobalTypes(
-        configFileName,
+      vueOptions.globalTypesPath = setupGlobalTypes(
         vueOptions,
         ts.sys,
       )
-      if (globalTypesFilePath) {
-        vueOptions.__setupedGlobalTypes = globalTypesFilePath
-      }
     }
 
     const vueVinePlugin = createVueVineLanguagePlugin(

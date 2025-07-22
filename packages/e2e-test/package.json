@@ -6,7 +6,9 @@
     "test": "vitest",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-types": "vue-vine-tsc --noEmit",
+    "check-lint": "eslint ."
   },
   "devDependencies": {
     "@iconify-json/carbon": "catalog:icons",

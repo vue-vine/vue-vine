@@ -120,8 +120,8 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
           let firstFormattedLineIndent = ''
           let formatted = formattedLines
             .map((formattedLine, i) => {
-              const rawIndent = rawLines[i].match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
-              const formattedIndent = formattedLine.match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
+              const rawIndent = rawLines[i]?.match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
+              const formattedIndent = formattedLine?.match(PREFIX_SPACE_REGEXP)?.[0] ?? ''
               if (i === 1) {
                 firstFormattedLineIndent = formattedIndent
               }

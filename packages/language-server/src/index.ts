@@ -1,14 +1,11 @@
-import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
-import path from 'node:path'
 import {
   createConnection,
   createServer,
   createTypeScriptProject,
   loadTsdkByPath,
 } from '@volar/language-server/node'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
-import { getDefaultCompilerOptions } from '@vue/language-core'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
@@ -16,6 +13,7 @@ import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
 import { createDocumentHighlightForward } from './plugins/vine-document-highlight'
 import { createVineFoldingRangesPlugin } from './plugins/vine-folding-ranges'
 import { createVineTemplatePlugin } from './plugins/vine-template'
+import { getDefaultVueCompilerOptions } from './utils'
 
 const connection = createConnection()
 const server = createServer(connection)
@@ -62,24 +60,9 @@ connection.onInitialize(async (params) => {
 
   return result
 
-  function getLanguagePlugins(configFileName: string | undefined) {
+  function getLanguagePlugins(_configFileName: string | undefined) {
     const compilerOptions: ts.CompilerOptions = {}
-    const vueCompilerOptions: VueCompilerOptions = getDefaultCompilerOptions(
-      (void 0),
-      (void 0),
-      true, // enable strict templates by default
-    )
-
-    if (configFileName) {
-      const vineGlobalTypesPath = setupGlobalTypes(
-        path.dirname(configFileName),
-        vueCompilerOptions,
-        tsdk.typescript.sys,
-      )
-      if (vineGlobalTypesPath) {
-        vueCompilerOptions.__setupedGlobalTypes = vineGlobalTypesPath
-      }
-    }
+    const vueCompilerOptions = getDefaultVueCompilerOptions(tsdk.typescript.sys)
 
     return [
       createVueVineLanguagePlugin(

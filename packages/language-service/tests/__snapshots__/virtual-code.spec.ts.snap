@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
-"/// <reference types=".vue-global-types/vine_vue_99_true" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 
 type __VINE_VLS_SampleCustomElement_props__ = {}
 export const SampleCustomElement = (function (
@@ -216,7 +216,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
-"/// <reference types=".vue-global-types/vine_vue_99_true" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
@@ -1210,7 +1210,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
-"/// <reference types=".vue-global-types/vine_vue_99_true" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { useTemplateRef } from 'vue'
 
 
@@ -1277,7 +1277,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
-"/// <reference types=".vue-global-types/vine_vue_99_true" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { ref } from 'vue'
 
 
@@ -1611,7 +1611,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
-"/// <reference types=".vue-global-types/vine_vue_99_true" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { ref } from 'vue'
 import '../styles/atom.css'
 
@@ -1792,8 +1792,15 @@ modelValue: (__VINE_VLS_ctx.simpleMsg),
 const __VINE_VLS_2 = __VINE_VLS_1({
 modelValue: (__VINE_VLS_ctx.simpleMsg),
 }, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_1));
+let __VINE_VLS_4!: __VINE_VLS_ResolveEmits<typeof __VINE_VLS_0, typeof __VINE_VLS_3.emit>;
+let __VINE_VLS_5!: __VINE_VLS_FunctionalComponentProps<typeof __VINE_VLS_1, typeof __VINE_VLS_2>;
+const __VINE_VLS_6: __VINE_VLS_NormalizeComponentEvent<typeof __VINE_VLS_5, typeof __VINE_VLS_4, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = (
+{ 'onUpdate:modelValue': (...[$event]) => {
+__VINE_VLS_ctx.simpleMsg = $event;
+}});
 // @ts-ignore
 [simpleMsg,];
+var __VINE_VLS_3!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_0, typeof __VINE_VLS_2>;
 __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "row-flex" },
 });
@@ -1803,19 +1810,26 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)
 ( __VINE_VLS_ctx.simpleMsg );
 // @ts-ignore
 [simpleMsg,];
-const __VINE_VLS_5 = ({} as __VINE_VLS_WithComponent<'NamedModelInput', __VINE_VLS_LocalComponents, void, 'NamedModelInput', 'NamedModelInput', 'NamedModelInput'>).NamedModelInput;
+const __VINE_VLS_8 = ({} as __VINE_VLS_WithComponent<'NamedModelInput', __VINE_VLS_LocalComponents, void, 'NamedModelInput', 'NamedModelInput', 'NamedModelInput'>).NamedModelInput;
 /** @type {[typeof __VINE_VLS_components.NamedModelInput, ]} */;
 // @ts-ignore
 NamedModelInput;
 // @ts-ignore
-const __VINE_VLS_6 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_5, new __VINE_VLS_5({
+const __VINE_VLS_9 = __VINE_VLS_asFunctionalComponent(__VINE_VLS_8, new __VINE_VLS_8({
 special: (__VINE_VLS_ctx.specialMsg),
 }));
-const __VINE_VLS_7 = __VINE_VLS_6({
+const __VINE_VLS_10 = __VINE_VLS_9({
 special: (__VINE_VLS_ctx.specialMsg),
-}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_6));
+}, ...__VINE_VLS_functionalComponentArgsRest(__VINE_VLS_9));
+let __VINE_VLS_12!: __VINE_VLS_ResolveEmits<typeof __VINE_VLS_8, typeof __VINE_VLS_11.emit>;
+let __VINE_VLS_13!: __VINE_VLS_FunctionalComponentProps<typeof __VINE_VLS_9, typeof __VINE_VLS_10>;
+const __VINE_VLS_14: __VINE_VLS_NormalizeComponentEvent<typeof __VINE_VLS_13, typeof __VINE_VLS_12, 'onUpdate:special', 'update:special', 'update:special'> = (
+{ 'onUpdate:special': (...[$event]) => {
+__VINE_VLS_ctx.specialMsg = $event;
+}});
 // @ts-ignore
 [specialMsg,];
+var __VINE_VLS_11!: __VINE_VLS_FunctionalComponentCtx<typeof __VINE_VLS_8, typeof __VINE_VLS_10>;
 __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)({
 ...{ class: "row-flex" },
 });

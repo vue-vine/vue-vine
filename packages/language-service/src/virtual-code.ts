@@ -166,14 +166,14 @@ export function createVueVineVirtualCode(
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
 
-  if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
-    const globalTypes = vueCompilerOptions.__setupedGlobalTypes
+  const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
+  if (globalTypesPath) {
     let relativePath = path.relative(
       path.dirname(vineFileCtx.fileId),
-      globalTypes.absolutePath,
+      globalTypesPath,
     )
     if (
-      relativePath !== globalTypes.absolutePath
+      relativePath !== globalTypesPath
       && !relativePath.startsWith('./')
       && !relativePath.startsWith('../')
     ) {
@@ -182,7 +182,7 @@ export function createVueVineVirtualCode(
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n`)
+    console.error('[Vue Vine] Failed to setup global types')
   }
 
   let currentOffset = { value: 0 }
