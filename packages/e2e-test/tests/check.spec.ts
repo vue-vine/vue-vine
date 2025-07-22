@@ -25,7 +25,7 @@ describe('vue-vine-tsc typecheck result', () => {
       })
     }
     catch (err: any) {
-      output = err.stdout
+      output = err.stdout || err.stderr || ''
     }
     expect(output).toMatchSnapshot()
   })
@@ -40,7 +40,7 @@ describe('vue-vine-tsc typecheck result', () => {
       })
     }
     catch (err: any) {
-      output = err.stdout
+      output = err.stdout || err.stderr || ''
     }
     expect(removeUselessPrefix(output)).toMatchSnapshot()
   })

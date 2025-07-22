@@ -25,6 +25,8 @@ export function run(): void {
         let vueOptions: VueCompilerOptions
         if (typeof configFilePath === 'string') {
           vueOptions = createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/')).vueOptions
+          // enable strict templates by default
+          vueOptions.checkUnknownComponents = true
           vueOptions.globalTypesPath = setupGlobalTypes(
             vueOptions,
             ts.sys,
