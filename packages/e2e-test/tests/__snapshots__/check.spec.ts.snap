@@ -6,7 +6,7 @@ exports[`vue-vine-tsc typecheck result > should find lint errors in key-cases.vi
 > eslint .
 
 
-/Users/admin/research/vue-vine/packages/e2e-test/src/fixtures/key-cases.vine.ts
+/packages/e2e-test/src/fixtures/key-cases.vine.ts
    21:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading
    21:9   error  'p1' is assigned a value but never used. Allowed unused vars must match /^_/u                     unused-imports/no-unused-vars
    22:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading

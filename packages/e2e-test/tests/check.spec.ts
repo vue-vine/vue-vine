@@ -2,6 +2,16 @@ import { execSync } from 'node:child_process'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
+function removeUselessPrefix(output: string) {
+  return output.split('\n').map((line) => {
+    const pathStartIndex = line.indexOf('/packages/e2e-test/')
+    if (pathStartIndex > -1) {
+      return line.slice(pathStartIndex)
+    }
+    return line
+  }).join('\n')
+}
+
 describe('vue-vine-tsc typecheck result', () => {
   const e2eTestDir = path.resolve(import.meta.dirname, '..')
 
@@ -32,6 +42,6 @@ describe('vue-vine-tsc typecheck result', () => {
     catch (err: any) {
       output = err.stdout
     }
-    expect(output).toMatchSnapshot()
+    expect(removeUselessPrefix(output)).toMatchSnapshot()
   })
 })
