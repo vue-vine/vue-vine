@@ -61,6 +61,8 @@ async function pack() {
 
 async function run() {
   const isBumpPack = process.argv.includes('--bump')
+  const isBumpMinor = process.argv.includes('--minor')
+  const isBumpMajor = process.argv.includes('--major')
 
   const replaceOptions = {
     depVersionReplacer: ({ pkgName, packageJSON }) => {
@@ -69,9 +71,19 @@ async function run() {
       }
     },
   }
-  if (isBumpPack) {
+
+  const bumpType = (
+    isBumpPack
+      ? 'patch'
+      : isBumpMinor
+        ? 'minor'
+        : isBumpMajor
+          ? 'major'
+          : null
+  )
+  if (bumpType) {
     replaceOptions.pkgVersionReplacer = ({ packageJSON }) => {
-      return semver.inc(packageJSON.version, 'patch')
+      return semver.inc(packageJSON.version, bumpType)
     }
   }
 
