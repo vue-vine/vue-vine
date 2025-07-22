@@ -4,7 +4,7 @@ import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelFunctionNodeTypes, BabelToken, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
-import path from 'node:path/posix'
+import { dirname, relative } from 'node:path'
 import {
   isBlockStatement,
   isExportNamedDeclaration,
@@ -168,14 +168,14 @@ export function createVueVineVirtualCode(
 
   const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
   if (globalTypesPath) {
-    let relativePath = path.relative(
-      path.dirname(vineFileCtx.fileId),
+    let relativePath = relative(
+      dirname(vineFileCtx.fileId),
       globalTypesPath,
     )
     if (
       relativePath !== globalTypesPath
-      && !relativePath.startsWith('./')
-      && !relativePath.startsWith('../')
+      && !relativePath.startsWith('.')
+      && !relativePath.startsWith('..')
     ) {
       relativePath = `./${relativePath}`
     }
