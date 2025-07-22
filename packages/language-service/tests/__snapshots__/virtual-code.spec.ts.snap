@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 
 type __VINE_VLS_SampleCustomElement_props__ = {}
 export const SampleCustomElement = (function (
@@ -216,7 +216,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
@@ -1210,7 +1210,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { useTemplateRef } from 'vue'
 
 
@@ -1277,7 +1277,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { ref } from 'vue'
 
 
@@ -1492,6 +1492,11 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.div, __VINE_VLS_elements.div)
 __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.span, __VINE_VLS_elements.span)({
 ...{ class: "text-zinc-500" },
 });
+__VINE_VLS_asFunctionalElement(__VINE_VLS_elements.img)({
+...{ class: "w-60" },
+src: "https://placehold.co/200x100",
+alt: "remote-img-as-placeholder",
+});
 /** @type {__VINE_VLS_StyleScopedClasses['test-another-vapor-comp']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['col-flex']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['gap-2']} */;
@@ -1501,6 +1506,7 @@ __VINE_VLS_asFunctionalElement(__VINE_VLS_elements.span, __VINE_VLS_elements.spa
 /** @type {__VINE_VLS_StyleScopedClasses['border-green-400']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['rounded-md']} */;
 /** @type {__VINE_VLS_StyleScopedClasses['text-zinc-500']} */;
+/** @type {__VINE_VLS_StyleScopedClasses['w-60']} */;
 type __VINE_VLS_Slots = {};
 type __VINE_VLS_InheritedAttrs = {};
 type __VINE_VLS_TemplateRefs = {};
@@ -1611,7 +1617,7 @@ const __VINE_VLS_IntrinsicElements = {} as __VINE_VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import { ref } from 'vue'
 import '../styles/atom.css'
 

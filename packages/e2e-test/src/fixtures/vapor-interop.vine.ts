@@ -43,6 +43,7 @@ function TestAnotherVaporComp() {
       class="test-another-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-green-400 rounded-md"
     >
       <span class="text-zinc-500">Another Vapor Component</span>
+      <img class="w-60" src="https://placehold.co/200x100" alt="remote-img-as-placeholder" />
     </div>
 `
 }

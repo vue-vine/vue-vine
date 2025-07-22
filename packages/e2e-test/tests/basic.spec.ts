@@ -35,7 +35,11 @@ describe('test basic functionality', async () => {
       '/transform-asset-url',
       browserCtx,
       async () => {
-        expect(await evaluator.getAssetUrl('.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
+        expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="sample"]')).toBe('/src/assets/sample.jpg')
+        expect(await evaluator.isImageLoaded('img[alt="sample"]')).toBe(true)
+
+        expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="placeholder"]')).toBe('https://placehold.co/600x400')
+        expect(await evaluator.isImageLoaded('img[alt="placeholder"]')).toBe(true)
       },
     ),
   )
@@ -242,6 +246,9 @@ describe('test basic functionality', async () => {
 
       expect(await evaluator.getAssetUrl('img[alt="sample-img-in-vapor-comp"]')).toBe('/src/assets/sample.jpg')
       expect(await evaluator.isImageLoaded('img[alt="sample-img-in-vapor-comp"]')).toBe(true)
+
+      expect(await evaluator.getAssetUrl('img[alt="remote-img-as-placeholder"]')).toBe('https://placehold.co/200x100')
+      expect(await evaluator.isImageLoaded('img[alt="remote-img-as-placeholder"]')).toBe(true)
     },
   ))
 })

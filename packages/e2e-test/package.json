@@ -28,6 +28,7 @@
     "unocss": "catalog:styles",
     "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
+    "vue": "catalog:vue-libs",
     "vue-router": "catalog:vue-libs",
     "vue-tsc": "catalog:vue-libs",
     "vue-vine": "workspace:*",
