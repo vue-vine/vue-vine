@@ -1,12 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`vue-vine-tsc typecheck result > should find lint errors in key-cases.vine.ts 1`] = `
-"
-> check-lint
+"> check-lint
 > eslint .
-
-
-/packages/e2e-test/src/fixtures/key-cases.vine.ts
    21:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading
    21:9   error  'p1' is assigned a value but never used. Allowed unused vars must match /^_/u                     unused-imports/no-unused-vars
    22:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading
@@ -27,11 +23,8 @@ exports[`vue-vine-tsc typecheck result > should find lint errors in key-cases.vi
   156:14  error  The key of the <template v-for> should be placed on the <template> tag                            vue-vine/essentials-no-v-for-key-on-child
   170:3   error  Lifecycle hooks should be registered synchronously before await expressions                       vue-vine/essentials-no-lifecycle-hook-after-await
   183:55  error  Missing trailing comma                                                                            style/comma-dangle
-
 ✖ 19 problems (19 errors, 0 warnings)
-  9 errors and 0 warnings potentially fixable with the \`--fix\` option.
-
-"
+  9 errors and 0 warnings potentially fixable with the \`--fix\` option."
 `;
 
 exports[`vue-vine-tsc typecheck result > should find type errors in key-cases.vine.ts 1`] = `

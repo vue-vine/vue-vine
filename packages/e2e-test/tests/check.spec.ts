@@ -2,14 +2,14 @@ import { execSync } from 'node:child_process'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-function removeUselessPrefix(output: string) {
+function removePlatformConflictLines(output: string) {
   return output.split('\n').map((line) => {
     const pathStartIndex = line.indexOf('/packages/e2e-test/')
     if (pathStartIndex > -1) {
-      return line.slice(pathStartIndex)
+      return ''
     }
     return line
-  }).join('\n')
+  }).filter(Boolean).join('\n')
 }
 
 describe('vue-vine-tsc typecheck result', () => {
@@ -42,6 +42,8 @@ describe('vue-vine-tsc typecheck result', () => {
     catch (err: any) {
       output = err.stdout || err.stderr || ''
     }
-    expect(removeUselessPrefix(output)).toMatchSnapshot()
+    expect(
+      removePlatformConflictLines(output),
+    ).toMatchSnapshot()
   })
 })
