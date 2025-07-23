@@ -9,6 +9,7 @@ const routes = [
   { path: '/vibe', label: 'Vibe' },
   { path: '/use-defaults', label: 'Use Defaults' },
   { path: '/vine-model', label: 'Vine Model' },
+  { path: '/vine-emits', label: 'Vine Emits' },
   { path: '/vine-validators', label: 'Vine Validators' },
   { path: '/todo-list', label: 'Todo List' },
   { path: '/mix-with-jsx', label: 'Mix With JSX' },
