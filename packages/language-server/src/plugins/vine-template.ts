@@ -97,9 +97,6 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
       return {
         ...baseServiceInstance,
-        dispose() {
-          baseServiceInstance.dispose?.()
-        },
         async provideCompletionItems(document, position, completionContext, triggerCharToken) {
           if (document.languageId !== 'html') {
             return

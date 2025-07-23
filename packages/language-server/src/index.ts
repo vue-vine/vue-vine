@@ -9,9 +9,9 @@ import {
 } from '@volar/language-server/node'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import { getDefaultCompilerOptions } from '@vue/language-core'
-import { create as createCssService } from 'volar-service-css'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
+import { createVineCssService } from './plugins/vine-css-service'
 import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
 import { createDocumentHighlightForward } from './plugins/vine-document-highlight'
 import { createVineFoldingRangesPlugin } from './plugins/vine-folding-ranges'
@@ -37,7 +37,7 @@ connection.onInitialize(async (params) => {
   )
 
   const plugins = [
-    createCssService(),
+    createVineCssService(),
     createEmmetService(),
     // Vine plugins:
     createVineDiagnosticsPlugin(),

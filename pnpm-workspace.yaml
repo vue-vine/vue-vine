@@ -133,6 +133,7 @@ catalogs:
   vscode:
     '@vscode/vsce': latest
     reactive-vscode: ^0.3.1
+    vscode-css-languageservice: ^6.3.7
     vscode-html-languageservice: ^5.5.1
     vscode-languageserver-protocol: ^3.17.5
     vscode-languageserver-textdocument: ^1.0.12
