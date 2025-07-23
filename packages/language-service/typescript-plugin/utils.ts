@@ -32,16 +32,15 @@ export function createPipelineLogger({ enabled = false }: {
 } = {}): PipelineLogger {
   const logger: PipelineLogger = {
     enabled,
-    messages: [] as string[],
     info: (...msg: string[]) => {
       if (!logger.enabled)
         return
-      logger.messages.push(`[INFO] ${new Date().toLocaleString()}: ${msg.join(' ')}`)
+      console.log(`[INFO] ${new Date().toLocaleString()}: `, ...msg)
     },
     error: (...msg: string[]) => {
       if (!logger.enabled)
         return
-      logger.messages.push(`[ERROR] ${new Date().toLocaleString()}: ${msg.join(' ')}`)
+      console.error(`[ERROR] ${new Date().toLocaleString()}: `, ...msg)
     },
   }
   return logger
