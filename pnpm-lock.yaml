@@ -349,6 +349,9 @@ catalogs:
     reactive-vscode:
       specifier: ^0.3.1
       version: 0.3.1
+    vscode-css-languageservice:
+      specifier: ^6.3.7
+      version: 6.3.7
     vscode-html-languageservice:
       specifier: ^5.5.1
       version: 5.5.1
@@ -800,6 +803,9 @@ importers:
 
   packages/language-server:
     dependencies:
+      '@volar/language-core':
+        specifier: catalog:volar
+        version: 2.4.20
       '@volar/language-server':
         specifier: catalog:volar
         version: 2.4.20
@@ -830,6 +836,9 @@ importers:
       volar-service-typescript:
         specifier: catalog:volar
         version: 0.0.65(@volar/language-service@2.4.20)
+      vscode-css-languageservice:
+        specifier: catalog:vscode
+        version: 6.3.7
       vscode-languageserver-protocol:
         specifier: catalog:vscode
         version: 3.17.5
