@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.6.5
+
+### Patch Changes
+
+- Fix incorrect caching in props completions list
+
 ## 1.6.4
 
 ### Patch Changes

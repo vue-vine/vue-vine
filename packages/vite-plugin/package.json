@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/vite-plugin",
   "type": "module",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",

@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.6.5
+
+### Patch Changes
+
+- Fix incorrect caching in props completions list
+- Updated dependencies
+  - vue-vine@1.6.5
+
 ## 1.6.4
 
 ### Patch Changes
