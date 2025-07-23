@@ -247,25 +247,12 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             provideAttributes: (tag) => {
               const tagAttrs: IAttributeData[] = []
               let tagInfo = tagInfos.get(tag)
-              const findAtVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
-                (compFn) => {
-                  return compFn.fnName === tag
-                },
-              )
 
-              if (findAtVineCompFn?.propsDefinitionBy === VinePropsDefinitionBy.typeLiteral) {
-                // If trigger on a tag that references a local component(in current file),
-                // we recompute tagInfo
-                tagInfo = {
-                  props: Object.keys(findAtVineCompFn.props).map(prop => hyphenateAttr(prop)),
-                  events: findAtVineCompFn.emits.map(emit => hyphenateAttr(emit)),
-                }
-                tagInfos.set(tag, tagInfo)
-              }
-              else if (!tagInfo) {
-                // Trigger on a tag that may be:
-                //  - a native HTML element
-                //  - references a external component, that we need to fetch props from pipeline
+              // Trigger on a tag that may be:
+              //  - a native HTML element
+              //  - references a local component that has complex props type
+              //  - references an external component
+              if (!tagInfo) {
                 try {
                   getComponentPropsFromPipeline(tag, pipelineClientContext)
                   getElementAttrsFromPipeline(tag, pipelineClientContext)
@@ -276,6 +263,21 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                 }
 
                 return tagAttrs
+              }
+
+              const foundLocalVineCompFn = vineVirtualCode.vineMetaCtx.vineFileCtx.vineCompFns.find(
+                compFn => compFn.fnName === tag,
+              )
+              // If trigger on a tag that references a local component(in current file),
+              // we can use as much as possible existing information to fill `tagInfo`
+              if (foundLocalVineCompFn) {
+                const hasEmits = foundLocalVineCompFn.emits.length > 0
+                if (foundLocalVineCompFn?.propsDefinitionBy === VinePropsDefinitionBy.typeLiteral) {
+                  tagInfo.props = Object.keys(foundLocalVineCompFn.props).map(prop => hyphenateAttr(prop))
+                }
+                if (hasEmits) {
+                  tagInfo.events = foundLocalVineCompFn.emits.map(emit => hyphenateAttr(emit))
+                }
               }
 
               const { props, events } = tagInfo
@@ -299,14 +301,18 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
                   attributes.push({ name: hyphenateAttr(prop) })
                 }
                 else {
+                  const hyphenatedProp = hyphenateAttr(prop)
                   attributes.push(
-                    { name: prop },
-                    { name: `:${prop}` },
-                    { name: `!${prop}` },
-                    { name: `v-bind:${prop}` },
+                    { name: hyphenatedProp },
+                    { name: `:${hyphenatedProp}` },
+                    { name: `!${hyphenatedProp}` },
+                    { name: `v-bind:${hyphenatedProp}` },
                   )
                 }
               }
+
+              // Just keep robustness for events
+              // because this has actually not been used
               for (const event of events) {
                 const name = hyphenateAttr(event)
 

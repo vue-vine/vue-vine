@@ -39,7 +39,6 @@ export interface PipelineServerContext {
 
 export interface PipelineLogger {
   enabled: boolean
-  messages: string[]
   info: (...msg: any[]) => void
   error: (...msg: any[]) => void
 }
