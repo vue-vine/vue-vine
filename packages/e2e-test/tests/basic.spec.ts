@@ -181,6 +181,20 @@ describe('test basic functionality', async () => {
     },
   ))
 
+  it('should support vineEmits', runTestAtPage(
+    '/vine-emits',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.result')).toBe('count: 0')
+
+      await browserCtx.page?.click('.emits-defined-by-types')
+      expect(await evaluator.getTextContent('.result')).toBe('count: 1')
+
+      await browserCtx.page?.click('.emits-defined-by-names')
+      expect(await evaluator.getTextContent('.result')).toBe('count: 2')
+    },
+  ))
+
   it('should support vineSlots different use cases', runTestAtPage(
     '/vine-slots',
     browserCtx,
