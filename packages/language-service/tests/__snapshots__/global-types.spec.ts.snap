@@ -1,7 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`verify global types generation > should match with fixture.vine.ts virtual code 1`] = `
-"
+"// @ts-nocheck
+export {};
+
 ; declare global {
   const VUE_VINE_COMPONENT: unique symbol;
   type __VINE_VLS_StrictIsAny<T> = [unknown] extends [T]
@@ -71,14 +73,6 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 			expose?: (exposed: T) => void,
 		}
 	};
-	type __VINE_VLS_NormalizeSlotReturns<S, R = NonNullable<S> extends (...args: any) => infer K ? K : any> = R extends any[] ? {
-		[K in keyof R]: R[K] extends infer V
-			? V extends Element ? V
-			: V extends new (...args: any) => infer R ? ReturnType<__VINE_VLS_FunctionalComponent<R>>
-			: V extends (...args: any) => infer R ? R
-			: any
-			: never
-	} : R;
 	type __VINE_VLS_IsFunction<T, K> = K extends keyof T
 		? __VINE_VLS_IsAny<T[K]> extends false
 		? unknown extends T[K]
@@ -144,7 +138,7 @@ exports[`verify global types generation > should match with fixture.vine.ts virt
 		index: number,
 	][];
 	function __VINE_VLS_getSlotParameters<S, D extends S>(slot: S, decl?: D):
-		__VINE_VLS_PickNotAny<NonNullable<D>, (...args: any) => any> extends (...args: infer P) => any ? P : any[];
+		D extends (...args: infer P) => any ? P : any[];
 	function __VINE_VLS_asFunctionalDirective<T>(dir: T): T extends import('vue').ObjectDirective
 		? NonNullable<T['created' | 'beforeMount' | 'mounted' | 'beforeUpdate' | 'updated' | 'beforeUnmount' | 'unmounted']>
 		: T extends (...args: any) => any

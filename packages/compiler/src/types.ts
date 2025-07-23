@@ -79,6 +79,7 @@ export interface VineCompilerHooks {
 }
 
 export interface VineCompilerOptions {
+  volar?: boolean
   envMode?: string // 'development' | 'production'
   inlineTemplate?: boolean
   vueCompilerOptions?: CompilerOptions & {
@@ -86,8 +87,6 @@ export interface VineCompilerOptions {
     __enableTransformAssetsURL?: boolean
     /** @internal */
     __transformNegativeBool?: boolean | { constType: ConstantTypes }
-    /** @internal */
-    __shouldAddTemplateSuffix?: boolean // Add '>' when the last tag is not complete
   }
   preprocessOptions?: Record<string, any>
   postcssOptions?: any
@@ -224,6 +223,7 @@ export interface VineCompFnCtx {
   templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
+  isVapor: boolean
   /** is web component (customElement) */
   isCustomElement: boolean
   fnName: string

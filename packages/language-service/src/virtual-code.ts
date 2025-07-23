@@ -4,7 +4,7 @@ import type { CodeInformation, Mapping, VirtualCode, VueCompilerOptions } from '
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { BabelFunctionNodeTypes, BabelToken, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
-import path from 'node:path/posix'
+import { dirname, relative } from 'node:path'
 import {
   isBlockStatement,
   isExportNamedDeclaration,
@@ -166,23 +166,25 @@ export function createVueVineVirtualCode(
 
   const tsCodeSegments: Segment<VineCodeInformation>[] = []
 
-  if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
-    const globalTypes = vueCompilerOptions.__setupedGlobalTypes
-    let relativePath = path.relative(
-      path.dirname(vineFileCtx.fileId),
-      globalTypes.absolutePath,
+  const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
+  if (globalTypesPath) {
+    let relativePath = relative(
+      dirname(vineFileCtx.fileId),
+      globalTypesPath,
     )
     if (
-      relativePath !== globalTypes.absolutePath
-      && !relativePath.startsWith('./')
-      && !relativePath.startsWith('../')
+      relativePath !== globalTypesPath
+      && !relativePath.startsWith('.')
+      && !relativePath.startsWith('..')
     ) {
       relativePath = `./${relativePath}`
     }
+    // Normalize the path to posix path
+    relativePath = relativePath.replace(/\\/g, '/')
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n`)
+    console.error('[Vue Vine] Failed to setup global types')
   }
 
   let currentOffset = { value: 0 }
@@ -252,6 +254,8 @@ export function createVueVineVirtualCode(
           compilerOptions,
           vueCompilerOptions,
           template: {
+            // @ts-expect-error - Todo: Vue language tool's dependency "@vue/compiler-core"
+            // is not upgraded in Vapor alpha stage
             ast: vineCompFn.templateAst,
             errors: [],
             warnings: [],
