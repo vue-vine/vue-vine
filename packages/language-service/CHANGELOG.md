@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.6.5
+
+### Patch Changes
+
+- Fix incorrect caching in props completions list
+- Updated dependencies
+  - @vue-vine/compiler@1.6.5
+
 ## 1.6.4
 
 ### Patch Changes

@@ -51,7 +51,6 @@ export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vin
 
 export function createVineTemplatePlugin(): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
-  const tagInfosMap = new Map<string, Map<string, HtmlTagInfo>>()
 
   const onDidChangeCustomDataListeners = new Set<() => void>()
   const onDidChangeCustomData = (listener: () => void): Disposable => {
@@ -113,14 +112,7 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
             return
           }
 
-          let tagInfos: Map<string, HtmlTagInfo>
-          if (!tagInfosMap.has(vineVirtualCode.fileName)) {
-            tagInfos = new Map()
-            tagInfosMap.set(vineVirtualCode.fileName, tagInfos)
-          }
-          else {
-            tagInfos = tagInfosMap.get(vineVirtualCode.fileName)!
-          }
+          const tagInfos = new Map<string, HtmlTagInfo>()
 
           // Set up HTML data providers before requesting completions
           const { sync } = provideHtmlData(
