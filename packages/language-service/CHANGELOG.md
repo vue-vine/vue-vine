@@ -1,5 +1,16 @@
 # @vue-vine/language-service
 
+## 1.7.0
+
+### Minor Changes
+
+- Rename compiler option for transform bare attribute to boolean props.
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-vine/compiler@1.7.0
+
 ## 1.6.5
 
 ### Patch Changes

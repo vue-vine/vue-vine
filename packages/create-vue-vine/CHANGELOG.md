@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.7.0
+
+### Minor Changes
+
+- Rename compiler option for transform bare attribute to boolean props.
+
 ## 1.6.5
 
 ### Patch Changes
