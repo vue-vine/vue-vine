@@ -366,9 +366,11 @@ export function createVueVineVirtualCode(
     mappings: tsCodeMappings,
     linkedCodeMappings,
     embeddedCodes: [
-      ...createSourceVirtualCode(),
+      // TemplateHTML must be the first one,
+      // in order to avoid emmet feature lost
       ...createTemplateHTMLEmbeddedCodes(),
       ...createStyleEmbeddedCodes(),
+      ...createSourceVirtualCode(),
     ],
     vineMetaCtx: {
       vineCompileErrs,
