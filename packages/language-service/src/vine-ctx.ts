@@ -21,7 +21,8 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
       scopeId: null,
       __enableTransformAssetsURL: false,
       __shouldAddTemplateSuffix: true,
-      __transformNegativeBool: {
+      __enableTransformBareAttrAsBool: {
+        transformNegativeBool: true,
         constType: 0, // satisfies `ConstantTypes.NOT_CONSTANT`
       },
     },

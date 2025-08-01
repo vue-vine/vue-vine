@@ -33,13 +33,29 @@ export function postProcessForRenderCodegen(codegen: string): string {
 }
 
 function getTransformNegativeBoolPlugin(
-  transformNegativeBool: Required<VineCompilerOptions>['vueCompilerOptions']['__transformNegativeBool'],
+  enableTransformBareAttrAsBool: Required<VineCompilerOptions>['vueCompilerOptions']['__enableTransformBareAttrAsBool'],
 ): NodeTransform[] {
-  if (typeof transformNegativeBool === 'object') {
-    return [transformBooleanProp({ constType: transformNegativeBool.constType })]
+  if (enableTransformBareAttrAsBool === false) {
+    return []
   }
 
-  return [transformBooleanProp()]
+  return [
+    transformBooleanProp(
+      enableTransformBareAttrAsBool?.transformNegativeBool
+        ? { constType: enableTransformBareAttrAsBool.constType }
+        : undefined,
+    ),
+  ]
+}
+
+function getTransformBareAttrAsBoolPlugin(
+  enableTransformAssetsURL: Required<VineCompilerOptions>['vueCompilerOptions']['__enableTransformAssetsURL'],
+): NodeTransform[] {
+  return (
+    enableTransformAssetsURL
+      ? [transformAssetUrl]
+      : []
+  )
 }
 
 export function compileVineTemplate(
@@ -57,7 +73,7 @@ export function compileVineTemplate(
   const _compile = ssr ? ssrCompile : compile
   const {
     __enableTransformAssetsURL = true,
-    __transformNegativeBool,
+    __enableTransformBareAttrAsBool = { transformNegativeBool: true },
     __shouldAddTemplateSuffix,
   } = compilerHooks.getCompilerCtx()
     ?.options
@@ -80,13 +96,8 @@ export function compileVineTemplate(
         prefixIdentifiers: true,
         inline: true,
         nodeTransforms: [
-          ...(__enableTransformAssetsURL
-            ? [transformAssetUrl]
-            : []
-          ),
-          ...getTransformNegativeBoolPlugin(
-            __transformNegativeBool,
-          ),
+          ...getTransformBareAttrAsBoolPlugin(__enableTransformAssetsURL),
+          ...getTransformNegativeBoolPlugin(__enableTransformBareAttrAsBool),
         ],
         ...params,
       }),
