@@ -79,6 +79,8 @@ function getPrettierFormatted(
         return formattedLine
       if (i === formattedLines.length - 1)
         return `${baseIndent}${formattedLine}`
+      if (formattedLine.trim() === '')
+        return formattedLine // Don't change anything if it's empty, avoid conflicting with other stylistic rules
 
       if (
         formattedLine.includes('<!--') // Open a comment node
