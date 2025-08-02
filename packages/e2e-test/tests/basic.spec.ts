@@ -35,7 +35,11 @@ describe('test basic functionality', async () => {
       '/transform-asset-url',
       browserCtx,
       async () => {
-        expect(await evaluator.getAssetUrl('.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
+        expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="sample"]')).toBe('/src/assets/sample.jpg')
+        expect(await evaluator.getAssetUrl('.test-transform-asset-url img[alt="placeholder"]')).toBe('https://placehold.co/200x100')
+
+        expect(await evaluator.isImageLoaded('.test-transform-asset-url img[alt="sample"]')).toBe(true)
+        expect(await evaluator.isImageLoaded('.test-transform-asset-url img[alt="placeholder"]')).toBe(true)
       },
     ),
   )
@@ -249,6 +253,30 @@ describe('test basic functionality', async () => {
       // Click the button
       await addCountBtn?.click()
       expect(await sampleCustomElement?.locator('.text-content').textContent()).toMatchInlineSnapshot(`"Count: 1"`)
+    },
+  ))
+
+  it('should work in vapor interop mode', runTestAtPage(
+    '/vapor-interop',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.test-vapor-comp h3')).toBe('Vapor Component in Virtual DOM component')
+      expect(await evaluator.getTextContent('.test-vdom-comp h3')).toBe('Virtual DOM Component in Vapor slot')
+
+      await browserCtx.page?.fill('.test-vdom-comp input', 'hello')
+      expect(await evaluator.getTextContent('.test-vdom-comp p')).toBe('hello')
+
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 0')
+      await browserCtx.page?.click('.test-vapor-comp button')
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 1')
+
+      expect(await evaluator.getTextContent('.test-another-vapor-comp span')).toBe('Another Vapor Component')
+
+      expect(await evaluator.getAssetUrl('img[alt="sample-img-in-vapor-comp"]')).toBe('/src/assets/sample.jpg')
+      expect(await evaluator.isImageLoaded('img[alt="sample-img-in-vapor-comp"]')).toBe(true)
+
+      expect(await evaluator.getAssetUrl('img[alt="remote-img-as-placeholder"]')).toBe('https://placehold.co/200x100')
+      expect(await evaluator.isImageLoaded('img[alt="remote-img-as-placeholder"]')).toBe(true)
     },
   ))
 })
