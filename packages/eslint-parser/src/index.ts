@@ -7,6 +7,7 @@ import { name, version } from '../package.json'
 import { runParse } from './parse'
 
 export * from './ast'
+export * from './types'
 
 export const meta: ESLint.ObjectMetaProperties = {
   name,
