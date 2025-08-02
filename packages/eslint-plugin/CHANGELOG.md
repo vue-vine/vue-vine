@@ -1,5 +1,13 @@
 # @vue-vine/eslint-plugin
 
+## 1.1.7
+
+### Patch Changes
+
+- Improve template formatting to align with Prettier result and add base indent.
+- Updated dependencies
+  - @vue-vine/eslint-parser@1.1.7
+
 ## 1.1.6
 
 ### Patch Changes
