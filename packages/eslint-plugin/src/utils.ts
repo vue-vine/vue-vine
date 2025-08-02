@@ -4,6 +4,7 @@ import type { Node, VAttribute, VDirective, VElement } from '@vue-vine/eslint-pa
 import type { Rule } from 'eslint'
 import type { VineESLintDocs } from './types'
 import { NS } from '@vue-vine/eslint-parser'
+import { expect } from 'vitest'
 import HTML_ELEMENTS from './data/html-elements.json'
 import MATH_ELEMENTS from './data/math-elements.json'
 import SVG_ELEMENTS from './data/svg-elements.json'
@@ -252,11 +253,15 @@ export function checkPascalCase(fnName: string): boolean {
 
 export function prettierSnapshot(result: string): string {
   const resultLines = result.split('\n')
-  const maxLineNumLength = String(resultLines.length - 1).length
+  const maxLineNumLength = String(resultLines.length).length
 
   return `
  ┌${'─'.repeat(maxLineNumLength + 2)}┬────────────────────────────────
 ${resultLines.map((line, i) => ` │ ${String(i + 1).padStart(maxLineNumLength)} │${line}`).join('\n')}
  └${'─'.repeat(maxLineNumLength + 2)}┴────────────────────────────────
   `.trim()
+}
+
+export function expectSnapshot(rawResult: string, expectedSnapshot: string): void {
+  return expect(prettierSnapshot(rawResult)).toBe(expectedSnapshot.trim())
 }
