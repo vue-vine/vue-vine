@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/eslint-plugin",
   "type": "module",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "ESLint plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",

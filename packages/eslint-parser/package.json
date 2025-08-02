@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/eslint-parser",
   "type": "module",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "ESLint parser for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
