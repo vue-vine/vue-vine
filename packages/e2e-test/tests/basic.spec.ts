@@ -58,6 +58,20 @@ describe('test basic functionality', async () => {
     ),
   )
 
+  it('should transform bare attr as bool', runTestAtPage(
+    '/boolean-cast',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.positive .aaa')).toBe('aaa = true (boolean)')
+      expect(await evaluator.getTextContent('.positive .bbb')).toBe('bbb = true (boolean)')
+      expect(await evaluator.getTextContent('.positive .ccc')).toBe('ccc = true (boolean)')
+
+      expect(await evaluator.getTextContent('.negative .aaa')).toBe('aaa = false (boolean)')
+      expect(await evaluator.getTextContent('.negative .bbb')).toBe('bbb = false (boolean)')
+      expect(await evaluator.getTextContent('.negative .ccc')).toBe('ccc = false (boolean)')
+    },
+  ))
+
   it('should work with vibe', runTestAtPage(
     '/vibe',
     browserCtx,

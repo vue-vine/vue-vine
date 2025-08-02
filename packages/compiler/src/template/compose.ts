@@ -1,8 +1,8 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import type { BaseCodegenResult, CompilerOptions, RootNode, SimpleExpressionNode } from '@vue/compiler-core'
-import type { AttributeNode, BindingTypes, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { AttributeNode, BindingTypes, NodeTransform, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VaporCodegenResult } from '@vue/compiler-vapor'
-import type { VineCompFnCtx, VineCompilerHooks, VineFileCtx } from '../types'
+import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
 import type { ImportItem } from './transform-asset-url'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import { compile as compileVDOM, ElementTypes, NodeTypes, parse as vdomParse } from '@vue/compiler-dom'
@@ -14,7 +14,7 @@ import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
-import { getTransformNegativeBoolPlugin } from './transform-negative-bool'
+import { transformBooleanProp } from './transform-negative-bool'
 import { transformSrcset } from './transform-srcset'
 import { walkVueTemplateAst } from './walk'
 
@@ -66,6 +66,32 @@ function getTemplateParsedAst(
   }
 }
 
+function getTransformNegativeBoolPlugin(
+  enableTransformBareAttrAsBool: Required<VineCompilerOptions>['vueCompilerOptions']['__enableTransformBareAttrAsBool'],
+): NodeTransform[] {
+  if (enableTransformBareAttrAsBool === false) {
+    return []
+  }
+
+  return [
+    transformBooleanProp(
+      enableTransformBareAttrAsBool?.transformNegativeBool
+        ? { constType: enableTransformBareAttrAsBool.constType }
+        : undefined,
+    ),
+  ]
+}
+
+function getTransformAssetsUrlPlugin(
+  enableTransformAssetsURL: Required<VineCompilerOptions>['vueCompilerOptions']['__enableTransformAssetsURL'],
+): NodeTransform[] {
+  return (
+    enableTransformAssetsURL
+      ? [transformAssetUrl, transformSrcset]
+      : []
+  )
+}
+
 type TemplateCompileFn = (
   src: string | RootNode,
   options?: CompilerOptions
@@ -91,7 +117,7 @@ export function compileVineTemplate(
   const { volar = false } = compilerHooks.getCompilerCtx()?.options ?? {}
   const {
     __enableTransformAssetsURL = true,
-    __transformNegativeBool,
+    __enableTransformBareAttrAsBool = { transformNegativeBool: true },
   } = compilerHooks.getCompilerCtx()
     ?.options
     ?.vueCompilerOptions ?? {}
@@ -103,13 +129,8 @@ export function compileVineTemplate(
     }
 
     const nodeTransforms = [
-      ...(__enableTransformAssetsURL
-        ? [transformAssetUrl, transformSrcset]
-        : []
-      ),
-      getTransformNegativeBoolPlugin(
-        __transformNegativeBool,
-      ),
+      ...getTransformAssetsUrlPlugin(__enableTransformAssetsURL),
+      ...getTransformNegativeBoolPlugin(__enableTransformBareAttrAsBool),
     ]
 
     const compile = (

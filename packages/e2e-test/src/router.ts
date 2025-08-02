@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { TestTsMorphComplexExternal } from './components/ts-morph-complex-external/test-ts-morph.vine'
+import { TestBoolCastPage } from './fixtures/boolean-cast.vine'
 import { TestCustomElement } from './fixtures/custom-elements.vine'
 import { TestExternalStyleImport } from './fixtures/external-style-import.vine'
 import { HmrApp } from './fixtures/hmr.vine'
@@ -24,6 +25,7 @@ const routes = [
   { path: '/style-order', component: TestStyleOrder },
   { path: '/external-style-import', component: TestExternalStyleImport },
   { path: '/transform-asset-url', component: TestTransformAssetUrl },
+  { path: '/boolean-cast', component: TestBoolCastPage },
   { path: '/props-destructure', component: TestDestructurePropsPage },
   { path: '/vibe', component: TestVibe },
   { path: '/use-defaults', component: TestUseDefaults },

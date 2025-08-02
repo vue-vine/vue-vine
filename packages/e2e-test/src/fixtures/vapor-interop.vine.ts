@@ -32,7 +32,7 @@ function TestVaporComp() {
 
       <slot />
     </div>
-`
+  `
 }
 
 function TestAnotherVaporComp() {
@@ -45,7 +45,7 @@ function TestAnotherVaporComp() {
       <span class="text-zinc-500">Another Vapor Component</span>
       <img class="w-60" src="https://placehold.co/200x100" alt="remote-img-as-placeholder" />
     </div>
-`
+  `
 }
 
 export function VaporTestContainer() {

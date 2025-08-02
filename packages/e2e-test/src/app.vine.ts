@@ -6,6 +6,7 @@ const routes = [
   { path: '/external-style-import', label: 'External Style Import' },
   { path: '/transform-asset-url', label: 'Transform Asset Url' },
   { path: '/props-destructure', label: 'Props Destructure' },
+  { path: '/boolean-cast', label: 'Boolean Cast' },
   { path: '/vibe', label: 'Vibe' },
   { path: '/use-defaults', label: 'Use Defaults' },
   { path: '/vine-model', label: 'Vine Model' },

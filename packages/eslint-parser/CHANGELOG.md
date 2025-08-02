@@ -1,5 +1,17 @@
 # @vue-vine/eslint-parser
 
+## 1.1.8
+
+### Patch Changes
+
+- Don't apply format change on empty line of template.
+
+## 1.1.7
+
+### Patch Changes
+
+- Improve template formatting to align with Prettier result and add base indent.
+
 ## 1.1.6
 
 ### Patch Changes

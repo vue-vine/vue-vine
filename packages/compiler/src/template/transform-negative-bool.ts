@@ -3,7 +3,6 @@ import type {
   NodeTransform,
   NodeTypes,
 } from '@vue/compiler-core'
-import type { VineCompilerOptions } from '../types'
 
 // Copied from https://github.com/vue-macros/vue-macros/blob/main/packages/boolean-prop/src/core/transformer.ts - MIT License
 export function transformBooleanProp({
@@ -56,14 +55,4 @@ export function transformBooleanProp({
       }
     }
   }
-}
-
-export function getTransformNegativeBoolPlugin(
-  transformNegativeBool: Required<VineCompilerOptions>['vueCompilerOptions']['__transformNegativeBool'],
-): NodeTransform {
-  if (typeof transformNegativeBool === 'object') {
-    return transformBooleanProp({ constType: transformNegativeBool.constType })
-  }
-
-  return transformBooleanProp()
 }
