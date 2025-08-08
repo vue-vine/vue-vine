@@ -355,7 +355,6 @@ export function generateSetupReturns(
     vineFileCtx,
     vineCompFnCtx,
     mergedImportsMap,
-    bindingMetadata: vineCompFnCtx.bindings,
   })
 
   // Insert setup function's return statement

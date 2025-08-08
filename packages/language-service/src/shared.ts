@@ -3,11 +3,11 @@ import type { VirtualCode } from '@volar/language-server/node'
 import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import type { VueCodeInformation } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
-import type { compileVineForVirtualCode } from './vine-ctx'
+import type { analyzeVineForVirtualCode } from './vine-ctx'
 
 export type VineCodeInformation = VueCodeInformation
 export type Code = Segment<VineCodeInformation>
-export type VineCompFn = ReturnType<typeof compileVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
+export type VineCompFn = ReturnType<typeof analyzeVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
 export type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 
 export interface BabelToken {
@@ -26,14 +26,12 @@ export const VUE_VINE_VIRTUAL_CODE_ID = 'vue-vine-virtual-code'
 
 export interface VueVineVirtualCode extends VirtualCode {
   __VUE_VINE_VIRTUAL_CODE__: true
+  fileName: string
   vineMetaCtx: {
     vineCompileErrs: VineDiagnostic[]
     vineCompileWarns: VineDiagnostic[]
     vineFileCtx: VineFileCtx
   }
-
-  get fileName(): string
-  get compileTime(): string
 }
 
 export function turnBackToCRLF(code: string): string {

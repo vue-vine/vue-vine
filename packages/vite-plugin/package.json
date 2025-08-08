@@ -35,7 +35,6 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@types/hash-sum": "catalog:types",
     "@typescript/native-preview": "catalog:compiler",
     "rolldown": "catalog:vite-ecosystem",
     "rollup": "catalog:cli",

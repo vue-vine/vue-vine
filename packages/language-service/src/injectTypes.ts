@@ -51,38 +51,37 @@ export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
     /declare global\s*\{/,
     `declare global {
   const VUE_VINE_COMPONENT: unique symbol;
-  type __VLS_StrictIsAny<T> = [unknown] extends [T]
+  type __VLS_VINE_StrictIsAny<T> = [unknown] extends [T]
     ? ([T] extends [unknown] ? true : false)
     : false;
-  type __VLS_OmitAny<T> = {
-    [K in keyof T as __VLS_StrictIsAny<T[K]> extends true ? never : K]: T[K]
+  type __VLS_VINE_OmitAny<T> = {
+    [K in keyof T as __VLS_VINE_StrictIsAny<T[K]> extends true ? never : K]: T[K]
   }
-  type __VLS_MakeVLSCtx<T extends object> =
+  type __VLS_VINE_MakeVLSCtx<T extends object> =
     & T
     & import('vue').ComponentPublicInstance
-  const __VLS_CreateVineVLSCtx: <T>(ctx: T) => __VLS_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
-  type __VLS_VueVineComponent = __VLS_Element;
+  const __VLS_VINE_CreateVineVLSCtx: <T>(ctx: T) => __VLS_VINE_MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>;
+  type __VLS_VINE_VueVineComponent = __VLS_Element;
   const __VLS_elements: import('vue/jsx-runtime').JSX.IntrinsicElements;
 
   // From vuejs 'runtime-core.d.ts':
-  type __VLS_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-  type __VLS_RecordToUnion<T extends Record<string, any>> = T[keyof T];
-  type __VLS_VueDefineEmits<T extends Record<string, any>> = __VLS_UnionToIntersection<Exclude<__VLS_RecordToUnion<{
+  type __VLS_VINE_UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+  type __VLS_VINE_RecordToUnion<T extends Record<string, any>> = T[keyof T];
+  type __VLS_VINE_VueDefineEmits<T extends Record<string, any>> = __VLS_VINE_UnionToIntersection<Exclude<__VLS_VINE_RecordToUnion<{
       [K in keyof T]: (evt: K, ...args: Exclude<T[K], undefined>) => void;
   }>, undefined>>;
 
-  type __VLS_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends __VLS_VueVineComponent & {
+  type __VLS_VINE_PickComponentExpose<F extends (...args: any[]) => any> = ReturnType<F> extends __VLS_VINE_VueVineComponent & {
     exposed: infer E
   } ? (exposed: E) => void : never;
 
-  type __VLS_VineComponentCommonProps = import('vue').HTMLAttributes & {
+  type __VLS_VINE_VineComponentCommonProps = import('vue').HTMLAttributes & {
     key?: PropertyKey
     ref?: string | import('vue').Ref | ((ref: Element | import('vue').ComponentPublicInstance | null, refs: Record<string, any>) => void);
   }
     `,
   )
 
-  globalTypes = globalTypes.replace(/__VLS_/g, '__VINE_VLS_')
   return globalTypes
 }
 
@@ -142,7 +141,7 @@ export function generateVLSContext(
   )
 
   const __VINE_CONTEXT_TYPES = `
-const __VLS_ctx = __VLS_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
 ${notPropsBindings.map(([name]) => {
   // `name` maybe 'router-view' format,
   // so we need to convert it to PascalCase: `RouterView`
@@ -163,8 +162,8 @@ ${notPropsBindings.map(([name]) => {
   }
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
