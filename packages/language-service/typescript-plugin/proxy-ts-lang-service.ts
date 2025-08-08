@@ -40,11 +40,11 @@ function vineGetCompletionsAtPosition(
   return (fileName, position, options, formattingSettings) => {
     const result = originalGetCompletionsAtPosition(fileName, position, options, formattingSettings)
     if (result) {
-      // Filter all `__VINE_VLS_` items
+      // Filter all `__VLS_` items
       result.entries = result.entries.filter(
         entry => (
-          !entry.name.includes('__VINE_VLS_')
-          && !entry.labelDetails?.description?.includes('__VINE_VLS_')
+          !entry.name.includes('__VLS_')
+          && !entry.labelDetails?.description?.includes('__VLS_')
           && !hiddenCompletions.includes(entry.name)
         ),
       )

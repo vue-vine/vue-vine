@@ -81,7 +81,7 @@ export function getComponentProps(
     return []
   }
 
-  const vlsCompsMapNode = searchVarDeclInCompFn(ts, tsSourceFile, '__VINE_VLS_ComponentsReferenceMap')
+  const vlsCompsMapNode = searchVarDeclInCompFn(ts, tsSourceFile, '__VLS_VINE_ComponentsReferenceMap')
   const checker = program.getTypeChecker()
   if (!vlsCompsMapNode) {
     return []
@@ -125,7 +125,7 @@ export function getElementAttrs(
   }
 
   const checker = program.getTypeChecker()
-  const elements = getGlobalVariableType(ts, tsPluginInfo.languageService, vineCode, '__VINE_VLS_IntrinsicElements')
+  const elements = getGlobalVariableType(ts, tsPluginInfo.languageService, vineCode, '__VLS_IntrinsicElements')
   if (!elements) {
     return []
   }
@@ -164,9 +164,9 @@ export function getComponentDirectives(
     return []
   }
 
-  // Search `__VINE_VLS_directives` in the triggerAtFnNode,
+  // Search `__VLS_directives` in the triggerAtFnNode,
   // this variable is generated for every vine component function
-  const vlsDirectivesNode = searchVarDeclInCompFn(ts, triggerAtFnNode, '__VINE_VLS_directives')
+  const vlsDirectivesNode = searchVarDeclInCompFn(ts, triggerAtFnNode, '__VLS_directives')
   if (!vlsDirectivesNode) {
     tsPluginLogger.info('No vlsDirectivesNode found')
     return []

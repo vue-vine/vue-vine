@@ -4,6 +4,7 @@ import MagicString from 'magic-string'
 import { analyzeVine } from './analyze'
 import { findAllExportNamedDeclarations, findVineCompFnDecls } from './babel-helpers/ast'
 import { babelParse } from './babel-helpers/parse'
+import { compileVineTemplate, createTemplateCompileOptions } from './template/compose'
 import { transformFile } from './transform'
 import { createLinkedCodeTag } from './utils'
 import { validateVine } from './validate'
@@ -35,6 +36,7 @@ export {
 } from './types'
 export type {
   HMRCompFnsName,
+  VineCompileCtx,
   VineCompilerCtx,
   VineCompilerHooks,
   VineCompilerOptions,
@@ -146,7 +148,6 @@ export function compileVineTypeScriptFile(
 ): VineFileCtx {
   const { compilerHooks } = vineCompileCtx
   const compilerOptions = compilerHooks.getCompilerCtx().options
-  // Using babel to validate vine declarations
   const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, vineCompileCtx)
   compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
 
@@ -165,6 +166,52 @@ export function compileVineTypeScriptFile(
     compilerOptions?.inlineTemplate ?? true,
     ssr,
   )
+
+  compilerHooks.onEnd?.()
+
+  return vineFileCtx
+}
+
+/**
+ * Analyze .vine.ts for language service.
+ *
+ * @param code - The `.vine.ts` source code.
+ * @param fileId - The file id.
+ * @param vineCompileCtx - The vine compile context.
+ * @returns Vue Vine file context.
+ */
+export function analyzeVineTypeScriptFile(
+  code: string,
+  fileId: string,
+  vineCompileCtx: VineCompileCtx,
+): VineFileCtx {
+  const { compilerHooks } = vineCompileCtx
+  const vineFileCtx: VineFileCtx = createVineFileCtx(code, fileId, vineCompileCtx)
+  compilerHooks.onBindFileCtx?.(fileId, vineFileCtx)
+
+  const vineCompFnDecls = findVineCompFnDecls(vineFileCtx.root)
+
+  // 1. Validate all vine restrictions
+  doValidateVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+
+  // 2. Analysis
+  doAnalyzeVine(compilerHooks, vineFileCtx, vineCompFnDecls)
+
+  // 3. Compile template AST
+  for (const vineCompFnCtx of vineFileCtx.vineCompFns) {
+    const templateCompileOptions = createTemplateCompileOptions(
+      vineFileCtx,
+      vineCompFnCtx,
+      compilerHooks,
+      false,
+    )
+    compileVineTemplate(
+      vineCompFnCtx,
+      compilerHooks,
+      templateCompileOptions,
+      { ssr: false, getParsedAst: true },
+    )
+  }
 
   compilerHooks.onEnd?.()
 
