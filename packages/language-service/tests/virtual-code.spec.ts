@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { getDefaultCompilerOptions } from '@vue/language-core'
 import ts from 'typescript'
 import { describe, expect, it } from 'vitest'
+import { getDefaultVueCompilerOptions } from '../../language-server/src/utils'
 import { createVueVineVirtualCode } from '../src'
 
 function testSnapshotForFile(relativePath: string) {
@@ -14,7 +14,7 @@ function testSnapshotForFile(relativePath: string) {
     filePath,
     content,
     {},
-    getDefaultCompilerOptions(),
+    getDefaultVueCompilerOptions(ts.sys),
     'extension',
   )
 
@@ -36,5 +36,8 @@ describe('verify Volar virtual code snapshots', () => {
   })
   it('custom-elements.vine.ts', () => {
     testSnapshotForFile('../../e2e-test/src/fixtures/custom-elements.vine.ts')
+  })
+  it('vapor-interop.vine.ts', () => {
+    testSnapshotForFile('../../e2e-test/src/fixtures/vapor-interop.vine.ts')
   })
 })

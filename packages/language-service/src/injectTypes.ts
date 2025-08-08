@@ -1,38 +1,62 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueCompilerOptions } from '@vue/language-core'
-import { posix as path } from 'node:path'
+import { dirname, join } from 'node:path'
 import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
 
-export function setupGlobalTypes(
-  rootDir: string,
+interface SystemHost {
+  fileExists: (path: string) => boolean
+  writeFile?: (path: string, data: string) => void
+}
+
+function findGlobalTypesPath(
+  host: SystemHost,
+  fileName: string,
   vueOptions: VueCompilerOptions,
-  host: {
-    fileExists: (path: string) => boolean
-    writeFile?: (path: string, data: string) => void
-  },
-): VueCompilerOptions['__setupedGlobalTypes'] {
+) {
+  let dir = dirname(fileName)
+  while (!host.fileExists(join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
+    const parentDir = dirname(dir)
+    if (dir === parentDir) {
+      throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
+    }
+    dir = parentDir
+  }
+  const globalTypesPath = join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
+  return globalTypesPath
+}
+
+function writeGlobalTypes(
+  host: SystemHost,
+  globalTypesPath: string,
+  vueOptions: VueCompilerOptions,
+) {
   if (!host.writeFile) {
-    return void 0
+    return
   }
-  try {
-    let dir = rootDir
-    while (!host.fileExists(path.join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
-      const parentDir = path.dirname(dir)
-      if (dir === parentDir) {
-        throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
+
+  const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions)}`
+  host.writeFile(globalTypesPath, globalTypesContents)
+}
+
+export function setupGlobalTypes(
+  vueOptions: VueCompilerOptions,
+  host: SystemHost,
+): VueCompilerOptions['globalTypesPath'] {
+  return (fileName) => {
+    try {
+      const globalTypesPath = findGlobalTypesPath(host, fileName, vueOptions)
+      const isGlobalTypesExists = host.fileExists(globalTypesPath)
+
+      if (!isGlobalTypesExists) {
+        writeGlobalTypes(host, globalTypesPath, vueOptions)
       }
-      dir = parentDir
+
+      return globalTypesPath
     }
-    const globalTypesPath = path.join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
-    const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions)}`
-    host.writeFile(globalTypesPath, globalTypesContents)
-    return {
-      absolutePath: globalTypesPath,
+    catch {
+      return void 0
     }
-  }
-  catch {
-    console.error('[Vue Vine] Failed to setup global types')
   }
 }
 

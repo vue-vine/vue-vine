@@ -3,7 +3,7 @@ import type { Mapping, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { VineCodeInformation, VueVineVirtualCode } from './shared'
-import path from 'node:path/posix'
+import { dirname, relative } from 'node:path'
 import { isBlockStatement } from '@babel/types'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
@@ -117,23 +117,25 @@ export function createVueVineVirtualCode(
     snapshotContent,
   }
 
-  if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
-    const globalTypes = vueCompilerOptions.__setupedGlobalTypes
-    let relativePath = path.relative(
-      path.dirname(vineFileCtx.fileId),
-      globalTypes.absolutePath,
+  const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
+  if (globalTypesPath) {
+    let relativePath = relative(
+      dirname(vineFileCtx.fileId),
+      globalTypesPath,
     )
     if (
-      relativePath !== globalTypes.absolutePath
-      && !relativePath.startsWith('./')
-      && !relativePath.startsWith('../')
+      relativePath !== globalTypesPath
+      && !relativePath.startsWith('.')
+      && !relativePath.startsWith('..')
     ) {
       relativePath = `./${relativePath}`
     }
+    // Normalize the path to posix path
+    relativePath = relativePath.replace(/\\/g, '/')
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n`)
+    console.error('[Vue Vine] Failed to setup global types')
   }
 
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
@@ -202,6 +204,7 @@ export function createVueVineVirtualCode(
           compilerOptions,
           vueCompilerOptions,
           template: {
+            // @ts-expect-error - vue language tools upstream issue
             ast: vineCompFn.templateAst,
             errors: [],
             warnings: [],

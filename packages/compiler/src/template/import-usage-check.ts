@@ -35,7 +35,7 @@ function resolveTemplateUsedIdentifiers(
 
   const ids = new Set<string>()
 
-  templateParsedAst!.children.forEach(walk)
+  templateParsedAst?.children.forEach(walk)
 
   function walk(node: TemplateChildNode) {
     switch (node.type) {
