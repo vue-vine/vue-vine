@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.1
+
+### Patch Changes
+
+- Improve language service performance by decreasing virtual code generation time cost.
+- Updated dependencies
+  - vue-vine@1.7.1
+
 ## 1.7.0
 
 ### Minor Changes

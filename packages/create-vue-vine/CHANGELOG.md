@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.7.1
+
+### Patch Changes
+
+- Improve language service performance by decreasing virtual code generation time cost.
+
 ## 1.7.0
 
 ### Minor Changes
