@@ -8,7 +8,7 @@ Learn more in [vue-vine.dev](https://vue-vine.dev/).
 
 ```bash
 # If you didn't install `@antfu/ni` yet, I highly recommend you to install it.
-ni -D vue-vine
+ni vue-vine
 ```
 
 Use the plugin in `vite.config.ts`:

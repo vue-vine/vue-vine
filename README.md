@@ -57,7 +57,7 @@ Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.
 
 ```bash
 # If you didn't install `@antfu/ni` yet, I highly recommend you to install it.
-ni -D vue-vine
+ni vue-vine
 ```
 
 Use the plugin in `vite.config.ts`:

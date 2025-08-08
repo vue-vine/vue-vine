@@ -14,7 +14,7 @@
 首先请在你的项目中安装 Vue Vine ![npm](https://img.shields.io/npm/v/vue-vine)：
 
 ```bash
-pnpm i -D vue-vine
+pnpm i vue-vine
 ```
 
 Vine 提供了 Vite 插件和 VSCode 扩展来支持基础功能。
