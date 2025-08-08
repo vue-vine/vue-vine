@@ -1,6 +1,6 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
 import type { BaseCodegenResult, CompilerOptions, RootNode, SimpleExpressionNode } from '@vue/compiler-core'
-import type { AttributeNode, BindingTypes, NodeTransform, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { AttributeNode, NodeTransform, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
 import type { VaporCodegenResult } from '@vue/compiler-vapor'
 import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
 import type { ImportItem } from './transform-asset-url'
@@ -29,20 +29,6 @@ const basicCompilerOptions = {
 
 function toPascalCase(str: string) {
   return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
-}
-
-export function postProcessForRenderCodegen(codegen: string): string {
-  return codegen
-    // https://github.com/vue-vine/vue-vine/issues/171
-    // Replace all `= _resolveComponent('...')`, '...' is the component name,
-    // to `= (typeof <toPascalCase('...')> === 'undefined' ? _resolveComponent('...') : <toPascalCase('...')>)`
-    .replace(
-      /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
-      (match, componentName) => {
-        const pascalComponentName = toPascalCase(componentName)
-        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName});`
-      },
-    )
 }
 
 function getTemplateParsedAst(
@@ -162,11 +148,14 @@ export function compileVineTemplate(
         ? ((codegenResult as VaporCodegenResult).ast).imports
         : (codegenResult as VDOMCodegenResult).ast.imports
 
-      return {
+      const result = {
         ...codegenResult,
         imports,
         ...templateParsedAst,
       }
+      setVineTemplateAst(vineCompFnCtx, result)
+
+      return result
     }
     catch (error) {
       compilerHooks.onError(
@@ -201,7 +190,6 @@ export interface TemplateCompileComposer {
     vineFileCtx: VineFileCtx
     vineCompFnCtx: VineCompFnCtx
     mergedImportsMap: MergedImportsMap
-    bindingMetadata: Record<string, BindingTypes>
   }) => string
   templateCompileResults: WeakMap<VineCompFnCtx, string>
   generatedPreambleStmts: WeakMap<VineCompFnCtx, string[]>
@@ -385,6 +373,44 @@ function setVineTemplateAst(
   })
 }
 
+export function createTemplateCompileOptions(
+  vineFileCtx: VineFileCtx,
+  vineCompFnCtx: VineCompFnCtx,
+  compilerHooks: VineCompilerHooks,
+  inline: boolean = true,
+): Partial<CompilerOptions> {
+  return {
+    inline,
+    scopeId: `data-v-${vineCompFnCtx.scopeId}`,
+    bindingMetadata: vineCompFnCtx.bindings,
+    ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
+    onError: (e) => {
+      compilerHooks.onError(
+        vineErr(
+          { vineFileCtx, vineCompFnCtx },
+          {
+            msg: `[Vine template compile error] ${e.message}`,
+            location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+            rawVueTemplateLocation: e.loc,
+          },
+        ),
+      )
+    },
+    onWarn: (e) => {
+      compilerHooks.onWarn(
+        vineWarn(
+          { vineFileCtx, vineCompFnCtx },
+          {
+            msg: `[Vine template compile warning] ${e.message}`,
+            location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
+            rawVueTemplateLocation: e.loc,
+          },
+        ),
+      )
+    },
+  }
+}
+
 export function createSeparatedTemplateComposer(
   compilerHooks: VineCompilerHooks,
   ssr: boolean,
@@ -399,43 +425,17 @@ export function createSeparatedTemplateComposer(
       vineFileCtx,
       vineCompFnCtx,
       mergedImportsMap,
-      bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
         vineCompFnCtx,
         compilerHooks,
-        {
-          scopeId: `data-v-${vineCompFnCtx.scopeId}`,
-          inline: false,
-          bindingMetadata,
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
-          onError: (e) => {
-            hasTemplateCompileErr = true
-            compilerHooks.onError(
-              vineErr(
-                { vineFileCtx, vineCompFnCtx },
-                {
-                  msg: `[Vine template compile error] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
-                  rawVueTemplateLocation: e.loc,
-                },
-              ),
-            )
-          },
-          onWarn: (e) => {
-            compilerHooks.onWarn(
-              vineWarn(
-                { vineFileCtx, vineCompFnCtx },
-                {
-                  msg: `[Vine template compile warning] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
-                  rawVueTemplateLocation: e.loc,
-                },
-              ),
-            )
-          },
-        },
+        createTemplateCompileOptions(
+          vineFileCtx,
+          vineCompFnCtx,
+          compilerHooks,
+          false,
+        ),
         {
           ssr,
           // Separate mode needs template's original AST,
@@ -446,9 +446,6 @@ export function createSeparatedTemplateComposer(
       if (!compileResult) {
         return ''
       }
-
-      // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, compileResult)
 
       if (hasTemplateCompileErr) {
         return ''
@@ -518,7 +515,7 @@ export function createSeparatedTemplateComposer(
       // is combining all the bindings from user imports and all declarations.
       // non-inline mode, or has manual render in normal <script>
       // return bindings from script and script setup
-      const allBindings: Record<string, any> = { ...bindingMetadata }
+      const allBindings: Record<string, any> = { ...vineCompFnCtx.bindings }
       for (const key in vineFileCtx.userImports) {
         const isType = vineFileCtx.userImports[key].isType
         const isUsedInTemplate = vineFileCtx.userImports[key].isUsedInTemplate?.(vineCompFnCtx)
@@ -536,7 +533,7 @@ export function createSeparatedTemplateComposer(
       for (const key in allBindings) {
         if (
           allBindings[key] === false
-          || (bindingMetadata[key] === VineBindingTypes.PROPS)
+          || (vineCompFnCtx.bindings[key] === VineBindingTypes.PROPS)
         ) {
           // skip unused bindings
         }
@@ -549,7 +546,7 @@ export function createSeparatedTemplateComposer(
           // skip vue imports since we know they will never change
           setupFnReturns += `get ${key}() { return ${key} }, `
         }
-        else if (bindingMetadata[key] === VineBindingTypes.SETUP_LET) {
+        else if (vineCompFnCtx.bindings[key] === VineBindingTypes.SETUP_LET) {
           // local let binding, also add setter
           const setArg = key === 'v' ? '_v' : 'v'
           setupFnReturns += (
@@ -581,45 +578,17 @@ export function createInlineTemplateComposer(
       vineFileCtx,
       vineCompFnCtx,
       mergedImportsMap,
-      bindingMetadata,
     }) => {
       let hasTemplateCompileErr = false
       const compileResult = compileVineTemplate(
         vineCompFnCtx,
         compilerHooks,
-        {
-          scopeId: `data-v-${vineCompFnCtx.scopeId}`,
-          bindingMetadata,
-          ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
-          onError: (e) => {
-            if (hasTemplateCompileErr) {
-              return
-            }
-            hasTemplateCompileErr = true
-            compilerHooks.onError(
-              vineErr(
-                { vineFileCtx, vineCompFnCtx },
-                {
-                  msg: `[Vine template compile error] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
-                  rawVueTemplateLocation: e.loc,
-                },
-              ),
-            )
-          },
-          onWarn: (e) => {
-            compilerHooks.onWarn(
-              vineWarn(
-                { vineFileCtx, vineCompFnCtx },
-                {
-                  msg: `[Vine template compile warning] ${e.message}`,
-                  location: e.loc && computeTemplateErrLocation(vineFileCtx, vineCompFnCtx, e.loc),
-                  rawVueTemplateLocation: e.loc,
-                },
-              ),
-            )
-          },
-        },
+        createTemplateCompileOptions(
+          vineFileCtx,
+          vineCompFnCtx,
+          compilerHooks,
+          true,
+        ),
         { ssr },
       )
       if (!compileResult) {
@@ -627,9 +596,6 @@ export function createInlineTemplateComposer(
       }
 
       const { preamble, code } = compileResult
-
-      // Store the template AST
-      setVineTemplateAst(vineCompFnCtx, compileResult)
 
       if (hasTemplateCompileErr) {
         return ''
@@ -665,4 +631,18 @@ export function createInlineTemplateComposer(
       return finalCode
     },
   }
+}
+
+export function postProcessForRenderCodegen(codegen: string): string {
+  return codegen
+    // https://github.com/vue-vine/vue-vine/issues/171
+    // Replace all `= _resolveComponent('...')`, '...' is the component name,
+    // to `= (typeof <toPascalCase('...')> === 'undefined' ? _resolveComponent('...') : <toPascalCase('...')>)`
+    .replace(
+      /=\s*_resolveComponent\(['"](.+?)['"]\)/g,
+      (match, componentName) => {
+        const pascalComponentName = toPascalCase(componentName)
+        return `= (typeof ${pascalComponentName} === 'undefined' ? _resolveComponent('${componentName}') : ${pascalComponentName});`
+      },
+    )
 }

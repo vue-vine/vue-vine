@@ -1,10 +1,10 @@
 import type { VineCompilerHooks, VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import {
-  compileVineTypeScriptFile,
+  analyzeVineTypeScriptFile,
   createCompilerCtx,
 } from '@vue-vine/compiler'
 
-export function compileVineForVirtualCode(fileId: string, source: string): {
+export function analyzeVineForVirtualCode(fileId: string, source: string): {
   vineFileCtx: VineFileCtx
   vineCompileErrs: VineDiagnostic[]
   vineCompileWarns: VineDiagnostic[]
@@ -37,7 +37,7 @@ export function compileVineForVirtualCode(fileId: string, source: string): {
     onWarn: warn => vineCompileWarns.push(warn),
     getCompilerCtx: () => compilerCtx,
   }
-  const vineFileCtx = compileVineTypeScriptFile(
+  const vineFileCtx = analyzeVineTypeScriptFile(
     source,
     fileId,
     {

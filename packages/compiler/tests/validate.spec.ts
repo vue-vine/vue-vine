@@ -273,9 +273,14 @@ function TestComp() {
 }`
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testTemplateTopLevelTags', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(1)
-    expect(mockCompilerCtx.vineCompileErrors[0].msg)
-      .toMatchInlineSnapshot('"[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates."')
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`2`)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
+      .toMatchInlineSnapshot(`
+        [
+          "[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates.",
+          "[Vine template compile error] Tags with side effect (<script> and <style>) are ignored in client component templates.",
+        ]
+      `)
   })
 
   it('should report props destructuring errors', () => {

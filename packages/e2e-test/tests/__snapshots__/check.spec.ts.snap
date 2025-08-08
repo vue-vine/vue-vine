@@ -34,9 +34,7 @@ exports[`vue-vine-tsc typecheck result > should find type errors in key-cases.vi
 
 src/fixtures/key-cases.vine.ts(34,24): error TS1117: An object literal cannot have multiple properties with the same name.
 src/fixtures/key-cases.vine.ts(105,6): error TS2339: Property 'UnknownComp' does not exist on type '{}'.
-src/fixtures/key-cases.vine.ts(108,6): error TS2345: Argument of type '{}' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VINE_VLS_TestCompOne_props__'.
-  Property 'zee' is missing in type '{}' but required in type '__VINE_VLS_TestCompOne_props__'.
-src/fixtures/use-template-ref-virtual-code.vine.ts(4,9): error TS6133: 'container1Ref' is declared but its value is never read.
-src/fixtures/use-template-ref-virtual-code.vine.ts(5,9): error TS6133: 'container2Ref' is declared but its value is never read.
+src/fixtures/key-cases.vine.ts(108,6): error TS2345: Argument of type '{}' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__'.
+  Property 'zee' is missing in type '{}' but required in type '__VLS_VINE_TestCompOne_props__'.
 "
 `;

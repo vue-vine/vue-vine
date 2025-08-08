@@ -23,6 +23,7 @@ import type {
 } from '../types'
 import {
   isArrowFunctionExpression,
+  isBlockStatement,
   isCallExpression,
   isExportDefaultDeclaration,
   isExportNamedDeclaration,
@@ -41,7 +42,6 @@ import {
 } from '@babel/types'
 import { TS_NODE_TYPES } from '@vue/compiler-dom'
 import {
-  EXPECTED_ERROR,
   VINE_MACROS,
   VUE_REACTIVITY_APIS,
 } from '../constants'
@@ -55,36 +55,44 @@ export function isVineCompFnDecl(target: Node): boolean {
     ) && target.declaration) {
     target = target.declaration
   }
-  if (
-    isFunctionDeclaration(target)
-    || isVariableDeclaration(target)
-  ) {
-    try {
-      traverse(target, (node) => {
-        if (
-          isReturnStatement(node)
-          && node.argument
-          && isVineTaggedTemplateString(node.argument)
-        ) {
-          throw new Error(EXPECTED_ERROR)
-        }
 
-        // issue#100: simple function component like () => vine`...`
-        if (
-          isArrowFunctionExpression(node)
-          && isVineTaggedTemplateString(node.body)
-        ) {
-          throw new Error(EXPECTED_ERROR)
-        }
-      })
+  if (isFunctionDeclaration(target)) {
+    const returnStmt = target.body?.body.find(node => isReturnStatement(node))
+    if (!returnStmt) {
+      return false
     }
-    catch (error: any) {
-      if (error.message === EXPECTED_ERROR) {
-        return true
-      }
-      throw error
-    }
+    return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
   }
+
+  if (isVariableDeclaration(target)) {
+    const declValue = target.declarations[0].init
+    if (!declValue) {
+      return false
+    }
+
+    if (isFunctionExpression(declValue)) {
+      const returnStmt = declValue.body?.body.find(node => isReturnStatement(node))
+      if (!returnStmt) {
+        return false
+      }
+      return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
+    }
+
+    if (isArrowFunctionExpression(declValue)) {
+      const arrowFnReturns = (
+        isBlockStatement(declValue.body)
+          ? declValue.body.body.find(node => isReturnStatement(node))
+          : declValue.body
+      )
+      if (isReturnStatement(arrowFnReturns)) {
+        return !!(arrowFnReturns.argument && isVineTaggedTemplateString(arrowFnReturns.argument))
+      }
+      return isVineTaggedTemplateString(arrowFnReturns)
+    }
+
+    return false
+  }
+
   return false
 }
 

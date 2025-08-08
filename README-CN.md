@@ -57,7 +57,7 @@
 
 ```bash
 # 如果你还没有安装 `@antfu/ni`，我强烈建议你安装它。
-ni -D vue-vine
+ni vue-vine
 ```
 
 在 `vite.config.ts` 中使用插件：
