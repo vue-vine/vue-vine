@@ -38,7 +38,13 @@ jobs:
         run: pnpm typecheck
 
   unit_tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node: [lts/*]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
@@ -46,10 +52,10 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4.1.0
 
-      - name: Set node
+      - name: Set node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node }}
           cache: pnpm
 
       - name: Install
@@ -72,11 +78,12 @@ jobs:
                            run test --run
 
   e2e_tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         test-group: [basic, hmr, todo]
+        os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
 
     steps:
