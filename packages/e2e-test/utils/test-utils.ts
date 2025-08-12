@@ -105,16 +105,40 @@ export async function untilUpdated(
   expected: string,
 ) {
   const maxTries = process.env.CI ? 200 : 50
+  let consecutiveErrors = 0
+  const maxConsecutiveErrors = 5
+
   for (let tries = 0; tries < maxTries; tries++) {
-    const actual = (await poll()) ?? ''
-    if (actual.includes(expected) || tries === maxTries - 1) {
-      expect(actual).toMatch(expected)
-      break
+    try {
+      const actual = (await poll()) ?? ''
+      consecutiveErrors = 0 // Reset error count on successful poll
+
+      if (actual.includes(expected) || tries === maxTries - 1) {
+        expect(actual).toMatch(expected)
+        break
+      }
+      else {
+        // Dynamic wait time: longer delays early on (for HMR/page reload), shorter delays later (for fast polling)
+        const waitTime = tries < 10 ? 200 : tries < 30 ? 100 : 50
+        await wait(waitTime)
+      }
     }
-    else {
-      // Dynamic wait time: longer delays early on (for HMR/page reload), shorter delays later (for fast polling)
-      const waitTime = tries < 10 ? 200 : tries < 30 ? 100 : 50
-      await wait(waitTime)
+    catch (error) {
+      consecutiveErrors++
+
+      // If execution context is destroyed, wait longer for page reload
+      if ((error as Error).message?.includes('Execution context was destroyed')) {
+        console.warn(`Execution context destroyed on try ${tries}, waiting longer...`)
+        await wait(1500) // Wait for page reload to complete
+
+        if (consecutiveErrors >= maxConsecutiveErrors) {
+          throw new Error(`Too many consecutive execution context errors (${consecutiveErrors})`)
+        }
+        continue
+      }
+
+      // Re-throw other errors immediately
+      throw error
     }
   }
 }
