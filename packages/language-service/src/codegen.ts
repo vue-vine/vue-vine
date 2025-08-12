@@ -15,6 +15,43 @@ import { _breakableTraverse, exitTraverse, VinePropsDefinitionBy } from '@vue-vi
 import { createLinkedCodeTag } from './injectTypes'
 import { parseCssClassNames, turnBackToCRLF, wrapWith } from './shared'
 
+/**
+ * Convert emit event name to Vue component props name (on-prefixed camelCase)
+ * @param emit Original emit event name
+ * @returns Converted props name
+ *
+ * @example
+ * convertEmitToOnHandler('update:modelValue') // 'onUpdate:modelValue'
+ * convertEmitToOnHandler('my-event') // 'onMyEvent'
+ * convertEmitToOnHandler('custom_event') // 'onCustom_event'
+ */
+export function convertEmitToOnHandler(emit: string): string {
+  // Check if the emit name contains special characters that need to be quoted (colon, underscore, dot, etc., but not including hyphens)
+  const hasSpecialChars = /[:_.]/.test(emit) && !/^[a-z0-9\-]+$/i.test(emit)
+
+  if (hasSpecialChars) {
+    // For complex property names, keep the original format, add only the on prefix and capitalize the first letter
+    const firstChar = emit.charAt(0).toUpperCase()
+    return `on${firstChar}${emit.slice(1)}`
+  }
+  else {
+    // For simple property names (including those with hyphens), perform camel case conversion
+    const camelCaseEmit = emit.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+    return `on${camelCaseEmit.charAt(0).toUpperCase()}${camelCaseEmit.slice(1)}`
+  }
+}
+
+/**
+ * Check if a property name needs to be quoted in object literal
+ * @param propName Property name to check
+ * @returns true if the property name needs quotes
+ */
+export function needsQuotes(propName: string): boolean {
+  // Check if property name is a valid JavaScript identifier
+  // If it contains special characters or starts with a number, it needs quotes
+  return !/^[a-z_$][\w$]*$/i.test(propName)
+}
+
 const FULL_FEATURES = {
   completion: true,
   format: true,
@@ -121,20 +158,21 @@ export function generateEmitProps(
   ).filter(Boolean) ?? []) as string[]
 
   const emitParam = `{${vineCompFn.emits.map((emit) => {
-    // Convert `emit` to a camelCase Name
-    const camelCaseEmit = emit.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-    const onEmit = `on${camelCaseEmit.charAt(0).toUpperCase()}${camelCaseEmit.slice(1)}`
+    const onEmit = convertEmitToOnHandler(emit)
     const isOptional = (
       vineCompFn.emitsDefinitionByNames
       || (emitsOptionalKeys.length && emitsOptionalKeys.includes(emit))
     )
+
+    // Check if the property name needs quotes in object literal
+    const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
 
     return `\n${' '.repeat(tabNum + 2)}${
       // '/* left linkCodeTag here ... */'
       vineCompFn.emitsTypeParam
         ? createLinkedCodeTag('left', onEmit.length)
         : ''
-    }${onEmit}${isOptional ? '?' : ''
+    }${quotedPropName}${isOptional ? '?' : ''
     }: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
   }).filter(Boolean).join(', ')
   }\n}`

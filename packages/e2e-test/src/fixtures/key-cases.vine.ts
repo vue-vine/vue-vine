@@ -20,7 +20,7 @@ export function SampleOne() {
 
   const p1 = vineProp<string>()
   vineOptions({
-    name: 'ESLintErrsSample'
+    name: 'ESLintErrsSample',
   })
 
   return vine`
@@ -72,7 +72,7 @@ export function TestUnoCssAttributeMode() {
   const vBounce: Directive<HTMLElement> = {
     mounted(el) {
       el.classList.add('bounce')
-    }
+    },
   }
 
   return vine`
@@ -84,15 +84,18 @@ export function TestUnoCssAttributeMode() {
 
 // #endregion
 
-
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne() {
   /** @description zee is a string! */
   const zee = vineProp<string>()
   const foo = vineProp.withDefault(0)
 
+  const emits = vineEmits<{
+    'click:comp-one': [boolean]
+  }>()
+
   return vine`
-    <div>This is Comp1</div>
+    <div @click="emits('click:comp-one', true)">This is Comp1</div>
     <p>foo: {{ foo }}</p>
   `
 }
@@ -106,12 +109,11 @@ function TestCompTwo() {
     <!-- ^^^ It should reports error here -->
     <!-- due to unknown component 'UnknownComp' -->
     <TestCompOne />
-    <!--     ^^^ It should reports error here -->
+
     <!-- due to missing required prop 'zee' but not for 'foo' -->
   `
 }
 // #endregion
-
 
 // #region Test vineExpose and component ref
 function TargetComp(props: {
@@ -119,17 +121,21 @@ function TargetComp(props: {
 }) {
   const count = ref(0)
 
+  const onClickCompOne = (foo: boolean) => {
+    console.log('onClickCompOne: ', foo)
+  }
+
   watchEffect(() => {
     console.log('count: ', count.value)
   })
   vineExpose({
-    count
+    count,
   })
 
   return vine`
     <div @click="count++">Hello I'm target</div>
     <p>count: {{ count }}</p>
-    <TestCompOne zee="123" :foo="456" />
+    <TestCompOne zee="123" :foo="456" @click:comp-one="onClickCompOne" />
   `
 }
 
@@ -148,7 +154,7 @@ export function TestCompRef() {
 
 // #region Test ESLint rule: no-v-for-key-on-child
 export function TestNoVforKeyOnChild() {
-  interface User { id: string; name: string }
+  interface User { id: string, name: string }
   const users = ref<User[]>([])
   return vine`
     <div class="user-list">
@@ -180,7 +186,7 @@ export async function TestNoLifecycleHookAfterAwait() {
 // #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
-  props: Partial<HTMLElementTagNameMap[T]> & { as: T }
+  props: Partial<HTMLElementTagNameMap[T]> & { as: T },
 ) {
   return vine`
     <component :is="as" />
