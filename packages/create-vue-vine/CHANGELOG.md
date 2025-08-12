@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.7.3
+
+### Patch Changes
+
+- Fix HMR not working when using a component imported from new .vine.ts file in template.
+
 ## 1.7.2
 
 ### Patch Changes

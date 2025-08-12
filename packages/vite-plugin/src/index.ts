@@ -232,16 +232,24 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       if (tsMorphCache) {
         // Update the source file in the project to reflect the latest changes
         const { project } = tsMorphCache
-        const sourceFile = project.getSourceFile(ctx.file)
+        let sourceFile = project.getSourceFile(ctx.file)
+
         if (!sourceFile) {
-          return
+          // Handle new files: add them to the ts-morph project
+          const updatedContent = await ctx.read()
+          sourceFile = project.createSourceFile(ctx.file, updatedContent, { overwrite: false })
+
+          // Ensure the new file is also in Vite's module graph
+          const moduleNode = ctx.server.moduleGraph.getModuleById(ctx.file)
+          if (!moduleNode) {
+            await ctx.server.moduleGraph.ensureEntryFromUrl(ctx.file)
+          }
         }
-
-        // Read the updated file content
-        const updatedContent = await ctx.read()
-
-        // Update the source file with the new content
-        sourceFile.replaceWithText(updatedContent)
+        else {
+          // Update existing file content
+          const updatedContent = await ctx.read()
+          sourceFile.replaceWithText(updatedContent)
+        }
         // Project's type checker will automatically update with the new content
       }
 
