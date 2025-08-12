@@ -155,6 +155,18 @@ export function editFile(
   fs.writeFileSync(filePath, modified)
 }
 
+export function createFile(filename: string, content: string): void {
+  const filePath = resolve(import.meta.dirname, '../src/fixtures', filename)
+  fs.writeFileSync(filePath, content)
+}
+
+export function deleteFile(filename: string): void {
+  const filePath = resolve(import.meta.dirname, '../src/fixtures', filename)
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath)
+  }
+}
+
 export function runTestAtPage(
   page: string,
   browserCtx: E2EPlaywrightContext,
