@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.2
+
+### Patch Changes
+
+- Fix stablity issue of language service and improve virtual code for emit event names.
+- Updated dependencies
+  - vue-vine@1.7.2
+
 ## 1.7.1
 
 ### Patch Changes
