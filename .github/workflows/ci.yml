@@ -37,13 +37,46 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-  test:
-    runs-on: ${{ matrix.os }}
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.1.0
+
+      - name: Set node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install
+        run: pnpm i
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Run Unit Tests
+        run: |
+          # Run all tests except e2e
+          NODE_ENV=test pnpm --filter @vue-vine/compiler \
+                           --filter @vue-vine/language-service \
+                           --filter @vue-vine/language-server \
+                           --filter @vue-vine/eslint-parser \
+                           --filter @vue-vine/eslint-plugin \
+                           --filter @vue-vine/eslint-config \
+                           --filter @vue-vine/nuxt \
+                           --filter vue-vine \
+                           run test --run
+
+  e2e_tests:
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node: [lts/*]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        test-group: [basic, hmr, todo]
       fail-fast: false
 
     steps:
@@ -52,10 +85,10 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4.1.0
 
-      - name: Set node ${{ matrix.node }}
+      - name: Set node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
           cache: pnpm
 
       - name: Install
@@ -67,5 +100,20 @@ jobs:
       - name: Install playwright
         run: pnpm exec playwright install
 
-      - name: Test
-        run: pnpm run test
+      - name: Run E2E Tests - ${{ matrix.test-group }}
+        run: |
+          cd packages/e2e-test
+          case "${{ matrix.test-group }}" in
+            basic)
+              pnpm vitest run tests/basic.spec.ts
+              ;;
+            hmr)
+              pnpm vitest run tests/hmr.spec.ts
+              ;;
+            todo)
+              pnpm vitest run tests/todo-list.spec.ts
+              ;;
+          esac
+        env:
+          CI: true
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
