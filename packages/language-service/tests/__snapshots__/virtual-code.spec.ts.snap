@@ -312,7 +312,7 @@ const count = ref(0)
 
   const /* __LINKED_CODE_RIGHT__#2 */p1 = vineProp<string>()
   vineOptions({
-    name: 'ESLintErrsSample'
+    name: 'ESLintErrsSample',
   })
 
   
@@ -553,7 +553,7 @@ type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[
 const vBounce: Directive<HTMLElement> = {
     mounted(el) {
       el.classList.add('bounce')
-    }
+    },
   }
 
   
@@ -623,13 +623,18 @@ type __VLS_VINE_TestCompOne_props__ = {
 /* __LINKED_CODE_LEFT__#3 */foo?: number
 }
 
+type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE_VueDefineEmits<{
+    'click:comp-one': [boolean]
+  }>>;
+
 
 // #endregion
 
-
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCompOne_props__,
+  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
+    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE_TestCompOne_emits__['click:comp-one']
+},
 context: {}) {
   
 type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
@@ -638,12 +643,17 @@ type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
   const /* __LINKED_CODE_RIGHT__#3 */zee = vineProp<string>()
   const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
 
+  const emits = vineEmits<{
+    'click:comp-one': [boolean]
+  }>()
+
   
 // --- Start: Template virtual code
 
 const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */zee: /* __LINKED_CODE_RIGHT__#3 */zee,
   /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
+  /* __LINKED_CODE_LEFT__#5 */emits: /* __LINKED_CODE_RIGHT__#5 */emits,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -675,6 +685,11 @@ const __VLS_components = {
 
 type __VLS_VINE_StyleScopedClasses = {};
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
+...{ onClick: (...[$event]) => {
+__VLS_ctx.emits('click:comp-one', true);
+// @ts-ignore
+[emits,];
+}},
 });
 __VLS_asFunctionalElement(__VLS_elements.p, __VLS_elements.p)({
 });
@@ -785,7 +800,6 @@ return vine\`\` as any as __VLS_VINE_VueVineComponent;
 }
 // #endregion
 
-
 // #region Test vineExpose and component ref
 function TargetComp(props: __VLS_VINE_VineComponentCommonProps & {
   foo: boolean
@@ -797,11 +811,15 @@ type TargetComp_Props = Parameters<typeof TargetComp>[0];
 
 const count = ref(0)
 
+  const onClickCompOne = (foo: boolean) => {
+    console.log('onClickCompOne: ', foo)
+  }
+
   watchEffect(() => {
     console.log('count: ', count.value)
   })
   const __VLS_VINE_ComponentExpose__ = {
-    count
+    count,
   };
 vineExpose(__VLS_VINE_ComponentExpose__)
 
@@ -811,6 +829,7 @@ vineExpose(__VLS_VINE_ComponentExpose__)
 const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#14 */onClickCompOne: /* __LINKED_CODE_RIGHT__#14 */onClickCompOne,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -858,13 +877,23 @@ const __VLS_0 = ({} as __VLS_WithComponent<'TestCompOne', __VLS_LocalComponents,
 TestCompOne;
 // @ts-ignore
 const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({
+...{ 'onClick:compOne': {} as any },
 zee: "123",
 foo: (456),
 }));
 const __VLS_2 = __VLS_1({
+...{ 'onClick:compOne': {} as any },
 zee: "123",
 foo: (456),
 }, ...__VLS_functionalComponentArgsRest(__VLS_1));
+let __VLS_4!: __VLS_ResolveEmits<typeof __VLS_0, typeof __VLS_3.emit>;
+let __VLS_5!: __VLS_FunctionalComponentProps<typeof __VLS_1, typeof __VLS_2>;
+const __VLS_6: __VLS_NormalizeComponentEvent<typeof __VLS_5, typeof __VLS_4, 'onClick:compOne', 'click:comp-one', 'click:compOne'> = (
+{ 'click:compOne': {} as any } as typeof __VLS_4,
+{ 'onClick:compOne': (__VLS_ctx.onClickCompOne)});
+// @ts-ignore
+[onClickCompOne,];
+var __VLS_3!: __VLS_FunctionalComponentCtx<typeof __VLS_0, typeof __VLS_2>;
 type __VLS_Slots = {};
 type __VLS_InheritedAttrs = {};
 type __VLS_TemplateRefs = {};
@@ -977,7 +1006,7 @@ context: {}) {
   
 type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
 
-interface User { id: string; name: string }
+interface User { id: string, name: string }
   const users = ref<User[]>([])
   
 // --- Start: Template virtual code
@@ -1119,7 +1148,7 @@ return vine\`\` as any as __VLS_VINE_VueVineComponent;
 // #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
-  props: __VLS_VINE_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {}
+  props: __VLS_VINE_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {},
 ) {
   
 type TestGenericComp1_Props = Parameters<typeof TestGenericComp1>[0];

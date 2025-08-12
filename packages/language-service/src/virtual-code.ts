@@ -34,6 +34,9 @@ function getLinkedCodeMappings(tsCode: string): Mapping[] {
   for (let i = 0; i < linkedCodeLeftFounds.length; i++) {
     const foundLeft = linkedCodeLeftFounds[i]
     const foundRight = linkedCodeRightFounds[i]
+    if (!foundLeft || !foundRight) {
+      continue
+    }
 
     const start = foundLeft.index + foundLeft.tagLength
     const end = foundRight.index + foundRight.tagLength
