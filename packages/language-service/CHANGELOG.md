@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.7.3
+
+### Patch Changes
+
+- Fix HMR not working when using a component imported from new .vine.ts file in template.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.3
+
 ## 1.7.2
 
 ### Patch Changes
