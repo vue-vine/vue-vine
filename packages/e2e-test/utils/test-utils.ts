@@ -112,7 +112,9 @@ export async function untilUpdated(
       break
     }
     else {
-      await wait(50)
+      // Dynamic wait time: longer delays early on (for HMR/page reload), shorter delays later (for fast polling)
+      const waitTime = tries < 10 ? 200 : tries < 30 ? 100 : 50
+      await wait(waitTime)
     }
   }
 }
