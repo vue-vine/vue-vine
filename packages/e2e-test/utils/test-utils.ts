@@ -74,7 +74,22 @@ export async function createBrowserContext(context: Partial<E2EPlaywrightContext
     viteTestUrl: '',
     ...context,
   }
-  e2eBrowserCtx.browser = await chromium.launch()
+
+  // Use memory-optimized browser arguments in CI environment
+  const launchOptions = process.env.CI
+    ? {
+        args: [
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--disable-web-security',
+          '--memory-pressure-off',
+          '--max_old_space_size=512', // Limit each renderer process
+        ],
+      }
+    : {}
+
+  e2eBrowserCtx.browser = await chromium.launch(launchOptions)
   e2eBrowserCtx.browserCtx = await e2eBrowserCtx.browser.newContext()
   e2eBrowserCtx.page = await e2eBrowserCtx.browserCtx.newPage()
   await startDefaultServe(e2eBrowserCtx)
@@ -84,7 +99,16 @@ export async function createBrowserContext(context: Partial<E2EPlaywrightContext
 
 export async function freeBrowserContext(ctx: E2EPlaywrightContext) {
   try {
-    await ctx.page?.close()
+    // Force cleanup page memory before closing
+    if (ctx.page && !ctx.page.isClosed()) {
+      await ctx.page.evaluate(() => {
+        // Clear global objects and force garbage collection
+        if (window.gc)
+          window.gc()
+      })
+      await ctx.page.close()
+    }
+
     if (ctx.browserCtx) {
       await ctx.browserCtx.close()
     }
@@ -94,6 +118,10 @@ export async function freeBrowserContext(ctx: E2EPlaywrightContext) {
     if (ctx.viteServer) {
       await ctx.viteServer.close()
     }
+
+    // Force garbage collection
+    if (globalThis.gc)
+      globalThis.gc()
   }
   catch (error) {
     console.error('Error closing resources:', error)

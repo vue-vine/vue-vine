@@ -29,6 +29,10 @@ afterEach(() => {
 
   // clean up any test files that may have been created
   deleteFile('new-component.vine.ts')
+
+  // Force garbage collection after each test
+  if (globalThis.gc)
+    globalThis.gc()
 })
 
 describe('hmr', () => {
