@@ -159,9 +159,6 @@ export function NewTestComponent() {
         )
     })
 
-    // Wait for HMR to complete and component to render
-    await wait(1000)
-
     // Use untilUpdated to wait for the component to appear
     await untilUpdated(
       () => evaluator.getTextContent('.new-test-component p'),
