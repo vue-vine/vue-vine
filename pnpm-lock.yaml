@@ -378,10 +378,10 @@ catalogs:
       specifier: ^3.6.0-alpha.2
       version: 3.6.0-alpha.2
     '@vue/language-core':
-      specifier: ~3.0.3
+      specifier: 3.0.3
       version: 3.0.3
     '@vue/language-service':
-      specifier: ~3.0.3
+      specifier: 3.0.3
       version: 3.0.3
     '@vue/shared':
       specifier: ^3.6.0-alpha.2
@@ -402,7 +402,7 @@ catalogs:
       specifier: ^4.5.1
       version: 4.5.1
     vue-tsc:
-      specifier: ~3.0.3
+      specifier: 3.0.3
       version: 3.0.3
 
 patchedDependencies:

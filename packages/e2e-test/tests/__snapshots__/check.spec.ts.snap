@@ -6,25 +6,16 @@ exports[`vue-vine-tsc typecheck result > should find lint errors in key-cases.vi
    21:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading
    21:9   error  'p1' is assigned a value but never used. Allowed unused vars must match /^_/u                     unused-imports/no-unused-vars
    22:3   error  Move vine macro to the leading of component function body                                         vue-vine/format-vine-macros-leading
-   23:29  error  Missing trailing comma                                                                            style/comma-dangle
    33:23  error  Child content is disallowed because it will be overwritten by directive v-text                    vue-vine/essentials-no-child-content
    34:23  error  Duplicate attribute 'foo'                                                                         vue-vine/essentials-no-dupe-attributes
    42:19  error  Unexpected string concatenation. Please use template literals                                     vue-vine/format-prefer-template
    46:26  error  Not recommend string concatenation in vine template. Please extract it to a variable or computed  vue-vine/format-prefer-template
-   75:6   error  Missing trailing comma                                                                            style/comma-dangle
-   87:1   error  More than 1 blank line not allowed                                                                style/no-multiple-empty-lines
-   91:9   error  'zee' is assigned a value but never used. Allowed unused vars must match /^_/u                    unused-imports/no-unused-vars
-  100:10  error  'TestCompTwo' is defined but never used. Allowed unused vars must match /^_/u                     unused-imports/no-unused-vars
-  109:5   error  Multiple spaces found before '
-    '                                                              style/no-multi-spaces
-  115:1   error  More than 1 blank line not allowed                                                                style/no-multiple-empty-lines
-  126:10  error  Missing trailing comma                                                                            style/comma-dangle
-  151:31  error  Expected a comma                                                                                  style/member-delimiter-style
-  156:14  error  The key of the <template v-for> should be placed on the <template> tag                            vue-vine/essentials-no-v-for-key-on-child
-  170:3   error  Lifecycle hooks should be registered synchronously before await expressions                       vue-vine/essentials-no-lifecycle-hook-after-await
-  183:55  error  Missing trailing comma                                                                            style/comma-dangle
-✖ 19 problems (19 errors, 0 warnings)
-  9 errors and 0 warnings potentially fixable with the \`--fix\` option."
+   90:9   error  'zee' is assigned a value but never used. Allowed unused vars must match /^_/u                    unused-imports/no-unused-vars
+  103:10  error  'TestCompTwo' is defined but never used. Allowed unused vars must match /^_/u                     unused-imports/no-unused-vars
+  162:14  error  The key of the <template v-for> should be placed on the <template> tag                            vue-vine/essentials-no-v-for-key-on-child
+  176:3   error  Lifecycle hooks should be registered synchronously before await expressions                       vue-vine/essentials-no-lifecycle-hook-after-await
+✖ 11 problems (11 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the \`--fix\` option."
 `;
 
 exports[`vue-vine-tsc typecheck result > should find type errors in key-cases.vine.ts 1`] = `
@@ -32,9 +23,13 @@ exports[`vue-vine-tsc typecheck result > should find type errors in key-cases.vi
 > check-types
 > vue-vine-tsc --noEmit
 
+src/fixtures/import-external.vine.ts(6,8): error TS2345: Argument of type '{ zee: string; foo: number; }' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
+  Property ''onClick:comp-one'' is missing in type '{ zee: string; foo: number; }' but required in type '{ 'onClick:comp-one': (args_0: boolean) => void; }'.
 src/fixtures/key-cases.vine.ts(34,24): error TS1117: An object literal cannot have multiple properties with the same name.
-src/fixtures/key-cases.vine.ts(105,6): error TS2339: Property 'UnknownComp' does not exist on type '{}'.
-src/fixtures/key-cases.vine.ts(108,6): error TS2345: Argument of type '{}' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__'.
+src/fixtures/key-cases.vine.ts(108,6): error TS2339: Property 'UnknownComp' does not exist on type '{}'.
+src/fixtures/key-cases.vine.ts(111,6): error TS2345: Argument of type '{}' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
   Property 'zee' is missing in type '{}' but required in type '__VLS_VINE_TestCompOne_props__'.
+src/fixtures/key-cases.vine.ts(138,6): error TS2345: Argument of type '{ zee: string; foo: number; 'onClick:compOne': any; }' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
+  Property ''onClick:comp-one'' is missing in type '{ zee: string; foo: number; 'onClick:compOne': any; }' but required in type '{ 'onClick:comp-one': (args_0: boolean) => void; }'.
 "
 `;

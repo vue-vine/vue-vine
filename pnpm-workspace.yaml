@@ -6,7 +6,7 @@ patchedDependencies:
 
 defines:
   - &vue ^3.6.0-alpha.2
-  - &vue-lang-tools ~3.0.3
+  - &vue-lang-tools 3.0.3
   - &volar ~2.4.20
   - &volar-service ~0.0.65
 
