@@ -65,7 +65,7 @@ jobs:
         run: pnpm run build
 
       - name: Run Unit Tests
-        run: NODE_ENV=test pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config --filter @vue-vine/nuxt --filter vue-vine run test --run
+        run: pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config --filter @vue-vine/nuxt --filter vue-vine run test --run
 
   e2e_tests:
     runs-on: ${{ matrix.os }}
