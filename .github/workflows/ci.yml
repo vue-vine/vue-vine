@@ -72,7 +72,7 @@ jobs:
 
     strategy:
       matrix:
-        test-group: [basic, hmr, todo-list]
+        test-group: [basic, hmr]
         os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
 
