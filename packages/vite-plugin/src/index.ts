@@ -23,6 +23,8 @@ import { parseQuery } from './parse-query'
 
 type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
 
+const isTsFileRegex = /\.[cm]?tsx?$/
+
 function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   const compilerCtx = createCompilerCtx({
     ...options,
@@ -227,9 +229,10 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       return runCompileScript(code, fileId, ssr)
     },
     async handleHotUpdate(ctx: HmrContext) {
-      // Before executing HMR, TypeScript project (by ts-morph) should be updated
-      // to make sure the latest type information is available
-      if (tsMorphCache) {
+      // - Before executing HMR, TypeScript project (by ts-morph) should be updated
+      //   to make sure the latest type information is available
+      // - If the updating file is not a .vine.ts file, then don't need to use ts-morph
+      if (tsMorphCache && isTsFileRegex.test(ctx.file)) {
         // Update the source file in the project to reflect the latest changes
         const { project } = tsMorphCache
         let sourceFile = project.getSourceFile(ctx.file)
