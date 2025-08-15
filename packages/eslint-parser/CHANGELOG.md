@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.9
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+
 ## 1.1.8
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.7.4
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.4
+
 ## 1.7.3
 
 ### Patch Changes

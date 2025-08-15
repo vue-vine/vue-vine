@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.4
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+- Updated dependencies
+  - @vue-vine/language-service@1.7.4
+
 ## 1.7.3
 
 ### Patch Changes

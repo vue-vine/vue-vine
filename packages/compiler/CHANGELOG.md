@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.4
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+
 ## 1.7.3
 
 ### Patch Changes
