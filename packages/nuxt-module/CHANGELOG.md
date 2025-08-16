@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.5
+
+### Patch Changes
+
+- Add try-catch for ts-morph actions on HMR to prevent panic.
+- Updated dependencies
+  - vue-vine@1.7.5
+
 ## 1.7.4
 
 ### Patch Changes

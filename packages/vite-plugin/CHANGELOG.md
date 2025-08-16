@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.7.5
+
+### Patch Changes
+
+- Add try-catch for ts-morph actions on HMR to prevent panic.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.5
+
 ## 1.7.4
 
 ### Patch Changes
