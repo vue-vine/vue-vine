@@ -232,28 +232,33 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
       // - Before executing HMR, TypeScript project (by ts-morph) should be updated
       //   to make sure the latest type information is available
       // - If the updating file is not a .vine.ts file, then don't need to use ts-morph
-      if (tsMorphCache && isTsFileRegex.test(ctx.file)) {
-        // Update the source file in the project to reflect the latest changes
-        const { project } = tsMorphCache
-        let sourceFile = project.getSourceFile(ctx.file)
+      try {
+        if (tsMorphCache && isTsFileRegex.test(ctx.file)) {
+          // Update the source file in the project to reflect the latest changes
+          const { project } = tsMorphCache
+          let sourceFile = project.getSourceFile(ctx.file)
 
-        if (!sourceFile) {
-          // Handle new files: add them to the ts-morph project
-          const updatedContent = await ctx.read()
-          sourceFile = project.createSourceFile(ctx.file, updatedContent, { overwrite: false })
+          if (!sourceFile) {
+            // Handle new files: add them to the ts-morph project
+            const updatedContent = await ctx.read()
+            sourceFile = project.createSourceFile(ctx.file, updatedContent, { overwrite: false })
 
-          // Ensure the new file is also in Vite's module graph
-          const moduleNode = ctx.server.moduleGraph.getModuleById(ctx.file)
-          if (!moduleNode) {
-            await ctx.server.moduleGraph.ensureEntryFromUrl(ctx.file)
+            // Ensure the new file is also in Vite's module graph
+            const moduleNode = ctx.server.moduleGraph.getModuleById(ctx.file)
+            if (!moduleNode) {
+              await ctx.server.moduleGraph.ensureEntryFromUrl(ctx.file)
+            }
           }
+          else {
+            // Update existing file content
+            const updatedContent = await ctx.read()
+            sourceFile.replaceWithText(updatedContent)
+          }
+          // Project's type checker will automatically update with the new content
         }
-        else {
-          // Update existing file content
-          const updatedContent = await ctx.read()
-          sourceFile.replaceWithText(updatedContent)
-        }
-        // Project's type checker will automatically update with the new content
+      }
+      catch (err) {
+        this.error(`[vue vine] Error on ts-morph action: ${err instanceof Error ? err.message : String(err)}`)
       }
 
       const affectedModules = await vineHMR(ctx, compilerCtx, compilerHooks)
