@@ -1,7 +1,7 @@
 {
   "name": "vue-vine",
   "type": "module",
-  "version": "1.7.3",
+  "version": "1.7.5",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",

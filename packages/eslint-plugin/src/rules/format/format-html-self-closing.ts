@@ -151,8 +151,12 @@ const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
               name: node.rawName,
             },
             fix: (fixer) => {
-              const startTag = node.startTag as any as TSESTree.Node
-              const endTag = node.endTag as any as TSESTree.Node
+              const startTag = node.startTag as any as (TSESTree.Node | undefined)
+              const endTag = node.endTag as any as (TSESTree.Node | undefined)
+              if (!startTag || !endTag) {
+                return []
+              }
+
               return [
                 // Replace '>' of startTag with '/>'
                 fixer.replaceText(startTag, context.sourceCode.getText(startTag).replace('>', '/>')),

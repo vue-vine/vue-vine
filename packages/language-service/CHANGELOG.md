@@ -1,5 +1,21 @@
 # @vue-vine/language-service
 
+## 1.7.5
+
+### Patch Changes
+
+- Add try-catch for ts-morph actions on HMR to prevent panic.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.5
+
+## 1.7.4
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.4
+
 ## 1.7.3
 
 ### Patch Changes

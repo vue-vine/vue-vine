@@ -1,5 +1,13 @@
 # @vue-vine/eslint-plugin
 
+## 1.1.9
+
+### Patch Changes
+
+- Fix eslint format autofix and HMR stablity.
+- Updated dependencies
+  - @vue-vine/eslint-parser@1.1.9
+
 ## 1.1.8
 
 ### Patch Changes
