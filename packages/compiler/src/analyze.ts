@@ -816,7 +816,7 @@ const analyzeVineBindings: AnalyzeRunner = (
       vineCompFnCtx.bindings[declStmt.id.name] = VineBindingTypes.LITERAL_CONST
     }
     else if (isTSEnumDeclaration(declStmt)) {
-      vineCompFnCtx.bindings[declStmt.id!.name] = VineBindingTypes.LITERAL_CONST
+      vineCompFnCtx.bindings[declStmt.id!.name] ??= VineBindingTypes.LITERAL_CONST
     }
   }
 }
