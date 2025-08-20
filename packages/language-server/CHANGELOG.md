@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.7.6
+
+### Patch Changes
+
+- Fix compiler for separated mode setup returns to contain top level declarations.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.6
+  - @vue-vine/language-service@1.7.6
+
 ## 1.7.5
 
 ### Patch Changes

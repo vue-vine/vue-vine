@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.6
+
+### Patch Changes
+
+- Fix compiler for separated mode setup returns to contain top level declarations.
+
 ## 1.7.5
 
 ### Patch Changes
