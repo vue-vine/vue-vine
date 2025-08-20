@@ -59,6 +59,7 @@ import {
   isStringLiteral,
   isTaggedTemplateExpression,
   isTemplateLiteral,
+  isTSEnumDeclaration,
   isTSMethodSignature,
   isTSPropertySignature,
   isTSTypeAnnotation,
@@ -330,12 +331,8 @@ function analyzeVineFnBodyStmtForBindings(
       isAllLiteral = analyzeVariableDeclarationForBindings(analyzeCtx, stmt)
       break
     case 'TSEnumDeclaration':
-      isAllLiteral = stmt.members.every(
-        member => !member.initializer || isStaticNode(member.initializer),
-      )
-      vineCompFnCtx.bindings[stmt.id!.name] = isAllLiteral
-        ? VineBindingTypes.LITERAL_CONST
-        : VineBindingTypes.SETUP_CONST
+      // Enum should always be a literal const
+      vineCompFnCtx.bindings[stmt.id!.name] = VineBindingTypes.LITERAL_CONST
       break
     case 'FunctionDeclaration':
     case 'ClassDeclaration':
@@ -804,6 +801,9 @@ const analyzeVineBindings: AnalyzeRunner = (
       ) && declStmt.id
     ) {
       vineCompFnCtx.bindings[declStmt.id.name] = VineBindingTypes.LITERAL_CONST
+    }
+    else if (isTSEnumDeclaration(declStmt)) {
+      vineCompFnCtx.bindings[declStmt.id!.name] = VineBindingTypes.LITERAL_CONST
     }
   }
 }

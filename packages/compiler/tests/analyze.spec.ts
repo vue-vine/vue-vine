@@ -396,6 +396,7 @@ export function MyComp() {
         "MyComp": "setup-const",
         "MyOutSideFunc": "literal-const",
         "MyOutsideClass": "literal-const",
+        "MyOutsideEnum": "literal-const",
         "MyOutsideVar": "literal-const",
         "count": "setup-ref",
         "prop1": "setup-ref",
@@ -612,5 +613,55 @@ function MyBox() {
         prop1?: number, prop2: string, p3?: boolean
         }"
       `)
+  })
+})
+
+describe('test component bindings analysis', () => {
+  it('should contain top level declarations', () => {
+    const content = `
+import { ref } from 'vue'
+
+const arrowFunc = () => { console.log('arrow func') }
+function plainFunc() { console.log('plain func') }
+class MyClass {
+  constructor() { console.log('class constructor') }
+}
+enum MyEnum {
+  A = 1,
+}
+const myInstance = new MyClass()
+
+function MyComp() {
+  const count = ref(1)
+  return vine\`
+    <div>Test top level declarations {{ count }}</div>
+    <ul>
+      <li>arrow func = {{ arrowFunc() }}</li>
+      <li>plain func = {{ plainFunc() }}</li>
+      <li>class = {{ MyClass.getFoo() }}</li>
+      <li>enum = {{ MyEnum.A }}</li>
+      <li>instance = {{ myInstance.num() }}</li>
+    </ul>
+  \`
+}
+    `
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testTopLevelDeclarations', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTopLevelDeclarations')
+    const MyComp = fileCtx?.vineCompFns[0]
+    expect(MyComp?.bindings).toMatchInlineSnapshot(`
+      {
+        "MyClass": "literal-const",
+        "MyComp": "setup-const",
+        "MyEnum": "literal-const",
+        "arrowFunc": "literal-const",
+        "count": "setup-ref",
+        "myInstance": "literal-const",
+        "plainFunc": "literal-const",
+        "ref": "setup-const",
+      }
+    `)
   })
 })
