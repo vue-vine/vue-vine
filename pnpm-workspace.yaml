@@ -1,5 +1,10 @@
+shellEmulator: true
+
 packages:
   - packages/*
+
+overrides:
+  vite: npm:rolldown-vite@latest
 
 patchedDependencies:
   '@vue/compiler-vapor': patches/@vue__compiler-vapor.patch
@@ -42,8 +47,9 @@ catalogs:
     source-map-js: ^1.2.1
     ts-morph: ^26.0.0
   docs:
+    oxc-minify: ^0.82.2
     shiki: ^3.7.0
-    vitepress: ^2.0.0-alpha.8
+    vitepress: ^v2.0.0-alpha.11
     vitepress-plugin-group-icons: ^1.6.1
   icons:
     '@iconify-json/carbon': ^1.2.10
@@ -165,5 +171,3 @@ onlyBuiltDependencies:
   - simple-git-hooks
   - unrs-resolver
   - vue-demi
-
-shellEmulator: true

@@ -47,6 +47,7 @@ import {
   isClassDeclaration,
   isDeclaration,
   isExportDefaultDeclaration,
+  isExportNamedDeclaration,
   isFunctionDeclaration,
   isIdentifier,
   isImportDefaultSpecifier,
@@ -60,6 +61,7 @@ import {
   isStringLiteral,
   isTaggedTemplateExpression,
   isTemplateLiteral,
+  isTSEnumDeclaration,
   isTSMethodSignature,
   isTSPropertySignature,
   isTSTypeAnnotation,
@@ -332,12 +334,8 @@ function analyzeVineFnBodyStmtForBindings(
       isAllLiteral = analyzeVariableDeclarationForBindings(analyzeCtx, stmt)
       break
     case 'TSEnumDeclaration':
-      isAllLiteral = stmt.members.every(
-        member => !member.initializer || isStaticNode(member.initializer),
-      )
-      vineCompFnCtx.bindings[stmt.id!.name] = isAllLiteral
-        ? VineBindingTypes.LITERAL_CONST
-        : VineBindingTypes.SETUP_CONST
+      // Enum should always be a literal const
+      vineCompFnCtx.bindings[stmt.id!.name] = VineBindingTypes.LITERAL_CONST
       break
     case 'FunctionDeclaration':
     case 'ClassDeclaration':
@@ -785,17 +783,59 @@ const analyzeVineBindings: AnalyzeRunner = (
   // to know how to resolve them.
   const allTopLevelDeclStmts = vineFileCtx.root.program.body
     .filter((stmt): stmt is Declaration => isDeclaration(stmt))
-  for (const declStmt of allTopLevelDeclStmts) {
+  for (let declStmt of allTopLevelDeclStmts) {
     if (isVineCompFnDecl(declStmt)) {
       const pickedInfos = getFunctionPickedInfos(declStmt)
       pickedInfos.forEach(({ fnName }) => {
         vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
       })
+      continue
     }
-    else if (isVariableDeclaration(declStmt)) {
+
+    if (
+      (isExportDefaultDeclaration(declStmt)
+        || isExportNamedDeclaration(declStmt))
+      && isDeclaration(declStmt.declaration)
+    ) {
+      declStmt = declStmt.declaration
+    }
+
+    if (isVariableDeclaration(declStmt)) {
       for (const decl of declStmt.declarations) {
-        if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
-          vineCompFnCtx.bindings[decl.id.name] = VineBindingTypes.LITERAL_CONST
+        if (isVariableDeclarator(decl)) {
+          if (isIdentifier(decl.id)) {
+            const name = decl.id.name
+            vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+              ? VineBindingTypes.LITERAL_CONST
+              : VineBindingTypes.SETUP_LET
+          }
+          // Support destructured top-level declarations
+          else if (isObjectPattern(decl.id)) {
+            for (const p of decl.id.properties) {
+              if (p.type === 'ObjectProperty' && isIdentifier(p.key)) {
+                const name = p.key.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+              else if (p.type === 'RestElement' && isIdentifier(p.argument)) {
+                const name = p.argument.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+            }
+          }
+          else if (isArrayPattern(decl.id)) {
+            decl.id.elements.forEach((el) => {
+              if (el && el.type === 'Identifier') {
+                const name = el.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+            })
+          }
         }
       }
     }
@@ -806,6 +846,9 @@ const analyzeVineBindings: AnalyzeRunner = (
       ) && declStmt.id
     ) {
       vineCompFnCtx.bindings[declStmt.id.name] = VineBindingTypes.LITERAL_CONST
+    }
+    else if (isTSEnumDeclaration(declStmt)) {
+      vineCompFnCtx.bindings[declStmt.id!.name] ??= VineBindingTypes.LITERAL_CONST
     }
   }
 }

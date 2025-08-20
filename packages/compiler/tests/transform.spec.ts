@@ -1,3 +1,4 @@
+import type { VineCompilerOptions } from '../src/index'
 import { format } from 'prettier'
 import { describe, expect, it } from 'vitest'
 import { compileVineTypeScriptFile } from '../src/index'
@@ -115,6 +116,24 @@ export default async function MyApp() {
     </div>
   \`
 }`
+
+async function getFormatedCodegenResult(
+  specContent: string,
+  options?: VineCompilerOptions,
+) {
+  const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+    ...options,
+  })
+  compileVineTypeScriptFile(specContent, 'testTransformSeparatedResult', { compilerHooks: mockCompilerHooks })
+  expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+  const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformSeparatedResult')
+  const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+  const formated = await format(
+    transformed,
+    { parser: 'babel-ts' },
+  )
+  return formated
+}
 
 describe('test transform', () => {
   it('inline mode output result', async () => {
@@ -551,5 +570,53 @@ function MyVaporCompTwo() {
       { parser: 'babel-ts' },
     )
     expect(formated).toMatchSnapshot()
+  })
+
+  it('should generate top level declaration bindings in setup returns', async () => {
+    const specContent = `
+import { ref } from 'vue'
+import { magicFn1, magicFn2 } from './other'
+
+export const [x, y] = magicFn1()
+export const arrowFunc = () => { console.log('arrow func') }
+export function plainFunc() { console.log('plain func') }
+class MyClass {
+  constructor() { console.log('class constructor') }
+  num() { return Math.random() * 100 }
+  static getFoo() { return 'foo' }
+}
+export enum MyEnum {
+  A = 1,
+}
+const myInstance = new MyClass()
+let myLet = '111'
+export let { a, b } = magicFn2()
+
+function MyComp() {
+  const count = ref(1)
+  return vine\`
+    <div>Test top level declarations {{ count }}</div>
+    <ul>
+      <li>arrow func = {{ arrowFunc() }}</li>
+      <li>plain func = {{ plainFunc() }}</li>
+      <li>class = {{ MyClass.getFoo() }}</li>
+      <li>enum = {{ MyEnum.A }}</li>
+      <li>instance = {{ myInstance.num() }}</li>
+      <li>myLet = {{ myLet }}</li>
+      <li>x = {{ x }}, y = {{ y }}</li>
+      <li>a = {{ a }}, b = {{ b }}</li>
+    </ul>
+  \`
+}
+    `
+    const inlineModeResult = await getFormatedCodegenResult(specContent, {
+      inlineTemplate: true,
+    })
+    const separatedModeResult = await getFormatedCodegenResult(specContent, {
+      inlineTemplate: false,
+    })
+
+    expect(inlineModeResult).toMatchSnapshot()
+    expect(separatedModeResult).toMatchSnapshot()
   })
 })
