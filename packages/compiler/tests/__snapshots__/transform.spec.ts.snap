@@ -1356,6 +1356,305 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 "
 `;
 
+exports[`test transform > should generate top level declaration bindings in setup returns 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toDisplayString as _toDisplayString,
+  createElementVNode as _createElementVNode,
+  Fragment as _Fragment,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+import { ref } from "vue";
+import { magicFn1, magicFn2 } from "./other";
+
+export const [x, y] = magicFn1();
+export const arrowFunc = () => {
+  console.log("arrow func");
+};
+export function plainFunc() {
+  console.log("plain func");
+}
+class MyClass {
+  constructor() {
+    console.log("class constructor");
+  }
+  num() {
+    return Math.random() * 100;
+  }
+  static getFoo() {
+    return "foo";
+  }
+}
+export enum MyEnum {
+  A = 1,
+}
+const myInstance = new MyClass();
+let myLet = "111";
+export let { a, b } = magicFn2();
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+      const count = ref(1);
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            _Fragment,
+            null,
+            [
+              _createElementVNode(
+                "div",
+                null,
+                "Test top level declarations " + _toDisplayString(count.value),
+                1 /* TEXT */,
+              ),
+              _createElementVNode("ul", null, [
+                _createElementVNode(
+                  "li",
+                  null,
+                  "arrow func = " + _toDisplayString(arrowFunc()),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "plain func = " + _toDisplayString(plainFunc()),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "class = " + _toDisplayString(MyClass.getFoo()),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "enum = " + _toDisplayString(MyEnum.A),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "instance = " + _toDisplayString(myInstance.num()),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "myLet = " + _toDisplayString(_unref(myLet)),
+                  1 /* TEXT */,
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "x = " + _toDisplayString(x) + ", y = " + _toDisplayString(y),
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "a = " +
+                    _toDisplayString(_unref(a)) +
+                    ", b = " +
+                    _toDisplayString(_unref(b)),
+                  1 /* TEXT */,
+                ),
+              ]),
+            ],
+            64 /* STABLE_FRAGMENT */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "6832868a";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
+exports[`test transform > should generate top level declaration bindings in setup returns 2`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  toDisplayString as _toDisplayString,
+  createElementVNode as _createElementVNode,
+  Fragment as _Fragment,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+import { ref } from "vue";
+import { magicFn1, magicFn2 } from "./other";
+
+export const [x, y] = magicFn1();
+export const arrowFunc = () => {
+  console.log("arrow func");
+};
+export function plainFunc() {
+  console.log("plain func");
+}
+class MyClass {
+  constructor() {
+    console.log("class constructor");
+  }
+  num() {
+    return Math.random() * 100;
+  }
+  static getFoo() {
+    return "foo";
+  }
+}
+export enum MyEnum {
+  A = 1,
+}
+const myInstance = new MyClass();
+let myLet = "111";
+export let { a, b } = magicFn2();
+
+export const MyComp = (() => {
+  const __vine = _defineComponent({
+    name: "MyComp",
+    /* No props */
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+      const count = ref(1);
+
+      return {
+        count,
+        x,
+        y,
+        arrowFunc,
+        plainFunc,
+        MyClass,
+        MyEnum,
+        myInstance,
+        get myLet() {
+          return myLet;
+        },
+        set myLet(v) {
+          myLet = v;
+        },
+        get a() {
+          return a;
+        },
+        set a(v) {
+          a = v;
+        },
+        get b() {
+          return b;
+        },
+        set b(v) {
+          b = v;
+        },
+        MyComp,
+      };
+    },
+  });
+  function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return (
+      _openBlock(),
+      _createElementBlock(
+        _Fragment,
+        null,
+        [
+          _createElementVNode(
+            "div",
+            null,
+            "Test top level declarations " + _toDisplayString($setup.count),
+            1 /* TEXT */,
+          ),
+          _createElementVNode("ul", null, [
+            _createElementVNode(
+              "li",
+              null,
+              "arrow func = " + _toDisplayString($setup.arrowFunc()),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "plain func = " + _toDisplayString($setup.plainFunc()),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "class = " + _toDisplayString($setup.MyClass.getFoo()),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "enum = " + _toDisplayString($setup.MyEnum.A),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "instance = " + _toDisplayString($setup.myInstance.num()),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "myLet = " + _toDisplayString($setup.myLet),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "x = " +
+                _toDisplayString($setup.x) +
+                ", y = " +
+                _toDisplayString($setup.y),
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "a = " +
+                _toDisplayString($setup.a) +
+                ", b = " +
+                _toDisplayString($setup.b),
+              1 /* TEXT */,
+            ),
+          ]),
+        ],
+        64 /* STABLE_FRAGMENT */,
+      )
+    );
+  }
+  __vine.render = __sfc_render;
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "6832868a";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
 exports[`test transform > should not export on function delcaration when already exported in somewhere 2`] = `
 "import {
   defineComponent as _defineComponent,

@@ -1,4 +1,5 @@
 shellEmulator: true
+
 packages:
   - packages/*
 
@@ -7,6 +8,9 @@ defines:
   - &vue-lang-tools 3.0.1
   - &volar 2.4.17
   - &volar-service 0.0.64
+
+overrides:
+  vite: npm:rolldown-vite@latest
 
 catalogs:
   cli:
@@ -40,8 +44,9 @@ catalogs:
     source-map-js: ^1.2.1
     ts-morph: ^26.0.0
   docs:
+    oxc-minify: ^0.82.2
     shiki: ^3.7.0
-    vitepress: ^1.6.3
+    vitepress: ^v2.0.0-alpha.11
     vitepress-plugin-group-icons: ^1.6.1
   icons:
     '@iconify-json/carbon': ^1.2.10
@@ -150,6 +155,7 @@ catalogs:
     vue: *vue
     vue-router: ^4.5.1
     vue-tsc: *vue-lang-tools
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
