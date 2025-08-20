@@ -1369,7 +1369,9 @@ exports[`test transform > should generate top level declaration bindings in setu
 } from "vue";
 
 import { ref } from "vue";
+import { magicFn1, magicFn2 } from "./other";
 
+export const [x, y] = magicFn1();
 export const arrowFunc = () => {
   console.log("arrow func");
 };
@@ -1392,6 +1394,7 @@ export enum MyEnum {
 }
 const myInstance = new MyClass();
 let myLet = "111";
+export let { a, b } = magicFn2();
 
 export const MyComp = (() => {
   const __vine = _defineComponent({
@@ -1453,6 +1456,20 @@ export const MyComp = (() => {
                   "myLet = " + _toDisplayString(_unref(myLet)),
                   1 /* TEXT */,
                 ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "x = " + _toDisplayString(x) + ", y = " + _toDisplayString(y),
+                ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "a = " +
+                    _toDisplayString(_unref(a)) +
+                    ", b = " +
+                    _toDisplayString(_unref(b)),
+                  1 /* TEXT */,
+                ),
               ]),
             ],
             64 /* STABLE_FRAGMENT */,
@@ -1485,7 +1502,9 @@ exports[`test transform > should generate top level declaration bindings in setu
 } from "vue";
 
 import { ref } from "vue";
+import { magicFn1, magicFn2 } from "./other";
 
+export const [x, y] = magicFn1();
 export const arrowFunc = () => {
   console.log("arrow func");
 };
@@ -1508,6 +1527,7 @@ export enum MyEnum {
 }
 const myInstance = new MyClass();
 let myLet = "111";
+export let { a, b } = magicFn2();
 
 export const MyComp = (() => {
   const __vine = _defineComponent({
@@ -1521,6 +1541,8 @@ export const MyComp = (() => {
 
       return {
         count,
+        x,
+        y,
         arrowFunc,
         plainFunc,
         MyClass,
@@ -1531,6 +1553,18 @@ export const MyComp = (() => {
         },
         set myLet(v) {
           myLet = v;
+        },
+        get a() {
+          return a;
+        },
+        set a(v) {
+          a = v;
+        },
+        get b() {
+          return b;
+        },
+        set b(v) {
+          b = v;
         },
         MyComp,
       };
@@ -1584,6 +1618,23 @@ export const MyComp = (() => {
               "li",
               null,
               "myLet = " + _toDisplayString($setup.myLet),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "x = " +
+                _toDisplayString($setup.x) +
+                ", y = " +
+                _toDisplayString($setup.y),
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "a = " +
+                _toDisplayString($setup.a) +
+                ", b = " +
+                _toDisplayString($setup.b),
               1 /* TEXT */,
             ),
           ]),

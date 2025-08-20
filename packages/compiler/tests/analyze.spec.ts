@@ -621,16 +621,20 @@ describe('test component bindings analysis', () => {
     const content = `
 import { ref } from 'vue'
 
+export const [x, y] = magicFn1()
 export const arrowFunc = () => { console.log('arrow func') }
 export function plainFunc() { console.log('plain func') }
 class MyClass {
   constructor() { console.log('class constructor') }
+  num() { return Math.random() * 100 }
+  static getFoo() { return 'foo' }
 }
 export enum MyEnum {
   A = 1,
 }
 const myInstance = new MyClass()
 let myLet = '111'
+export let { a, b } = magicFn2()
 
 function MyComp() {
   const count = ref(1)
@@ -642,6 +646,8 @@ function MyComp() {
       <li>class = {{ MyClass.getFoo() }}</li>
       <li>enum = {{ MyEnum.A }}</li>
       <li>instance = {{ myInstance.num() }}</li>
+      <li>x = {{ x }}, y = {{ y }}</li>
+      <li>a = {{ a }}, b = {{ b }}</li>
     </ul>
   \`
 }
@@ -657,12 +663,16 @@ function MyComp() {
         "MyClass": "literal-const",
         "MyComp": "setup-const",
         "MyEnum": "literal-const",
+        "a": "setup-let",
         "arrowFunc": "literal-const",
+        "b": "setup-let",
         "count": "setup-ref",
         "myInstance": "literal-const",
         "myLet": "setup-let",
         "plainFunc": "literal-const",
         "ref": "setup-const",
+        "x": "literal-const",
+        "y": "literal-const",
       }
     `)
   })

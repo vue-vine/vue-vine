@@ -800,10 +800,40 @@ const analyzeVineBindings: AnalyzeRunner = (
 
     if (isVariableDeclaration(declStmt)) {
       for (const decl of declStmt.declarations) {
-        if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
-          vineCompFnCtx.bindings[decl.id.name] = declStmt.kind === 'const'
-            ? VineBindingTypes.LITERAL_CONST
-            : VineBindingTypes.SETUP_LET
+        if (isVariableDeclarator(decl)) {
+          if (isIdentifier(decl.id)) {
+            const name = decl.id.name
+            vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+              ? VineBindingTypes.LITERAL_CONST
+              : VineBindingTypes.SETUP_LET
+          }
+          // Support destructured top-level declarations
+          else if (isObjectPattern(decl.id)) {
+            for (const p of decl.id.properties) {
+              if (p.type === 'ObjectProperty' && isIdentifier(p.key)) {
+                const name = p.key.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+              else if (p.type === 'RestElement' && isIdentifier(p.argument)) {
+                const name = p.argument.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+            }
+          }
+          else if (isArrayPattern(decl.id)) {
+            decl.id.elements.forEach((el) => {
+              if (el && el.type === 'Identifier') {
+                const name = el.name
+                vineCompFnCtx.bindings[name] ??= declStmt.kind === 'const'
+                  ? VineBindingTypes.LITERAL_CONST
+                  : VineBindingTypes.SETUP_LET
+              }
+            })
+          }
         }
       }
     }

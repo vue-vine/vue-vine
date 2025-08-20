@@ -475,7 +475,9 @@ export function App() {
   it('should generate top level declaration bindings in setup returns', async () => {
     const specContent = `
 import { ref } from 'vue'
+import { magicFn1, magicFn2 } from './other'
 
+export const [x, y] = magicFn1()
 export const arrowFunc = () => { console.log('arrow func') }
 export function plainFunc() { console.log('plain func') }
 class MyClass {
@@ -488,6 +490,7 @@ export enum MyEnum {
 }
 const myInstance = new MyClass()
 let myLet = '111'
+export let { a, b } = magicFn2()
 
 function MyComp() {
   const count = ref(1)
@@ -500,6 +503,8 @@ function MyComp() {
       <li>enum = {{ MyEnum.A }}</li>
       <li>instance = {{ myInstance.num() }}</li>
       <li>myLet = {{ myLet }}</li>
+      <li>x = {{ x }}, y = {{ y }}</li>
+      <li>a = {{ a }}, b = {{ b }}</li>
     </ul>
   \`
 }
