@@ -1370,10 +1370,10 @@ exports[`test transform > should generate top level declaration bindings in setu
 
 import { ref } from "vue";
 
-const arrowFunc = () => {
+export const arrowFunc = () => {
   console.log("arrow func");
 };
-function plainFunc() {
+export function plainFunc() {
   console.log("plain func");
 }
 class MyClass {
@@ -1387,10 +1387,11 @@ class MyClass {
     return "foo";
   }
 }
-enum MyEnum {
+export enum MyEnum {
   A = 1,
 }
 const myInstance = new MyClass();
+let myLet = "111";
 
 export const MyComp = (() => {
   const __vine = _defineComponent({
@@ -1446,6 +1447,12 @@ export const MyComp = (() => {
                   "instance = " + _toDisplayString(myInstance.num()),
                   1 /* TEXT */,
                 ),
+                _createElementVNode(
+                  "li",
+                  null,
+                  "myLet = " + _toDisplayString(_unref(myLet)),
+                  1 /* TEXT */,
+                ),
               ]),
             ],
             64 /* STABLE_FRAGMENT */,
@@ -1479,10 +1486,10 @@ exports[`test transform > should generate top level declaration bindings in setu
 
 import { ref } from "vue";
 
-const arrowFunc = () => {
+export const arrowFunc = () => {
   console.log("arrow func");
 };
-function plainFunc() {
+export function plainFunc() {
   console.log("plain func");
 }
 class MyClass {
@@ -1496,10 +1503,11 @@ class MyClass {
     return "foo";
   }
 }
-enum MyEnum {
+export enum MyEnum {
   A = 1,
 }
 const myInstance = new MyClass();
+let myLet = "111";
 
 export const MyComp = (() => {
   const __vine = _defineComponent({
@@ -1518,6 +1526,12 @@ export const MyComp = (() => {
         MyClass,
         MyEnum,
         myInstance,
+        get myLet() {
+          return myLet;
+        },
+        set myLet(v) {
+          myLet = v;
+        },
         MyComp,
       };
     },
@@ -1564,6 +1578,12 @@ export const MyComp = (() => {
               "li",
               null,
               "instance = " + _toDisplayString($setup.myInstance.num()),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "li",
+              null,
+              "myLet = " + _toDisplayString($setup.myLet),
               1 /* TEXT */,
             ),
           ]),

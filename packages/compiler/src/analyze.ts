@@ -46,6 +46,7 @@ import {
   isClassDeclaration,
   isDeclaration,
   isExportDefaultDeclaration,
+  isExportNamedDeclaration,
   isFunctionDeclaration,
   isIdentifier,
   isImportDefaultSpecifier,
@@ -780,17 +781,29 @@ const analyzeVineBindings: AnalyzeRunner = (
   // to know how to resolve them.
   const allTopLevelDeclStmts = vineFileCtx.root.program.body
     .filter((stmt): stmt is Declaration => isDeclaration(stmt))
-  for (const declStmt of allTopLevelDeclStmts) {
+  for (let declStmt of allTopLevelDeclStmts) {
     if (isVineCompFnDecl(declStmt)) {
       const pickedInfos = getFunctionPickedInfos(declStmt)
       pickedInfos.forEach(({ fnName }) => {
         vineCompFnCtx.bindings[fnName] = VineBindingTypes.SETUP_CONST
       })
+      continue
     }
-    else if (isVariableDeclaration(declStmt)) {
+
+    if (
+      (isExportDefaultDeclaration(declStmt)
+        || isExportNamedDeclaration(declStmt))
+      && isDeclaration(declStmt.declaration)
+    ) {
+      declStmt = declStmt.declaration
+    }
+
+    if (isVariableDeclaration(declStmt)) {
       for (const decl of declStmt.declarations) {
         if (isVariableDeclarator(decl) && isIdentifier(decl.id)) {
-          vineCompFnCtx.bindings[decl.id.name] = VineBindingTypes.LITERAL_CONST
+          vineCompFnCtx.bindings[decl.id.name] = declStmt.kind === 'const'
+            ? VineBindingTypes.LITERAL_CONST
+            : VineBindingTypes.SETUP_LET
         }
       }
     }

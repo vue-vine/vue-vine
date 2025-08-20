@@ -476,17 +476,18 @@ export function App() {
     const specContent = `
 import { ref } from 'vue'
 
-const arrowFunc = () => { console.log('arrow func') }
-function plainFunc() { console.log('plain func') }
+export const arrowFunc = () => { console.log('arrow func') }
+export function plainFunc() { console.log('plain func') }
 class MyClass {
   constructor() { console.log('class constructor') }
   num() { return Math.random() * 100 }
   static getFoo() { return 'foo' }
 }
-enum MyEnum {
+export enum MyEnum {
   A = 1,
 }
 const myInstance = new MyClass()
+let myLet = '111'
 
 function MyComp() {
   const count = ref(1)
@@ -498,6 +499,7 @@ function MyComp() {
       <li>class = {{ MyClass.getFoo() }}</li>
       <li>enum = {{ MyEnum.A }}</li>
       <li>instance = {{ myInstance.num() }}</li>
+      <li>myLet = {{ myLet }}</li>
     </ul>
   \`
 }

@@ -621,15 +621,16 @@ describe('test component bindings analysis', () => {
     const content = `
 import { ref } from 'vue'
 
-const arrowFunc = () => { console.log('arrow func') }
-function plainFunc() { console.log('plain func') }
+export const arrowFunc = () => { console.log('arrow func') }
+export function plainFunc() { console.log('plain func') }
 class MyClass {
   constructor() { console.log('class constructor') }
 }
-enum MyEnum {
+export enum MyEnum {
   A = 1,
 }
 const myInstance = new MyClass()
+let myLet = '111'
 
 function MyComp() {
   const count = ref(1)
@@ -659,6 +660,7 @@ function MyComp() {
         "arrowFunc": "literal-const",
         "count": "setup-ref",
         "myInstance": "literal-const",
+        "myLet": "setup-let",
         "plainFunc": "literal-const",
         "ref": "setup-const",
       }
