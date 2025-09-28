@@ -237,8 +237,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
           if (!sourceFile) {
             // Handle new files: add them to the ts-morph project
-            const updatedContent = await ctx.read()
-            sourceFile = project.createSourceFile(ctx.file, updatedContent, { overwrite: false })
+            sourceFile = project.addSourceFileAtPath(ctx.file)
 
             // Ensure the new file is also in Vite's module graph
             const moduleNode = ctx.server.moduleGraph.getModuleById(ctx.file)
