@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 1.1.11
+
+### Patch Changes
+
+- Fix typeof guard expression not complete for #309
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.11
+
 ## 1.1.10
 
 ### Patch Changes

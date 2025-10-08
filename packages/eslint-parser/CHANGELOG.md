@@ -1,5 +1,11 @@
 # @vue-vine/eslint-parser
 
+## 1.1.11
+
+### Patch Changes
+
+- Fix typeof guard expression not complete for #309
+
 ## 1.1.10
 
 ### Patch Changes
