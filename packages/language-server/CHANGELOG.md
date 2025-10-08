@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.7.7
+
+### Patch Changes
+
+- Fix HMR ts-morph add source file panic and unrecongnized reference for template TS code in ESLint parser.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.7
+  - @vue-vine/language-service@1.7.7
+
 ## 1.7.6
 
 ### Patch Changes

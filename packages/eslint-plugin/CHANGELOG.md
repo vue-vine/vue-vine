@@ -1,5 +1,13 @@
 # @vue-vine/eslint-plugin
 
+## 1.1.10
+
+### Patch Changes
+
+- Fix HMR ts-morph add source file panic and unrecongnized reference for template TS code in ESLint parser.
+- Updated dependencies
+  - @vue-vine/eslint-parser@1.1.10
+
 ## 1.1.9
 
 ### Patch Changes

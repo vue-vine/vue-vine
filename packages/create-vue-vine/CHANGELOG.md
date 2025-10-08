@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.7.7
+
+### Patch Changes
+
+- Fix HMR ts-morph add source file panic and unrecongnized reference for template TS code in ESLint parser.
+
 ## 1.7.6
 
 ### Patch Changes
