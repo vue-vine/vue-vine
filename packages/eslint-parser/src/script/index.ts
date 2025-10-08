@@ -341,15 +341,18 @@ function parseExpressionBody(
   debug('[script] parse expression: "0(%s)"', code)
 
   try {
+    // Use TypeScript parser for template expressions to support TS syntax
+    const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
     const result = parseScriptFragment(
       `0(${code})`,
       locationCalculator.getSubCalculatorShift(-2),
-      parserOptions,
+      parserOptionsWithTS,
     )
     const { ast } = result
     const tokens = ast.tokens || []
     const comments = ast.comments || []
-    const references = analyzeExternalReferences(result, parserOptions)
+    const references = analyzeExternalReferences(result, parserOptionsWithTS)
     const statement = ast.body[0] as ESLintExpressionStatement
     const callExpression = statement.expression as ESLintCallExpression
     const expression = callExpression.arguments[0]
@@ -574,6 +577,33 @@ export function parseScript(
 }
 
 /**
+ * Get TypeScript parser for template expressions
+ * Template expressions may contain TypeScript syntax (type annotations, as assertions, etc.)
+ * so we need to use @typescript-eslint/parser instead of espree
+ */
+function getTypescriptParser(): ParserObject {
+  try {
+    // Try to load @typescript-eslint/parser
+    return loadParser('@typescript-eslint/parser')
+  }
+  catch {
+    // Fallback to espree if @typescript-eslint/parser is not available
+    return getEspreeFromEcmaVersion('latest')
+  }
+}
+
+/**
+ * Ensure parser options include TypeScript parser for template expressions
+ * This is a helper to avoid repetitive code when parsing template expressions
+ */
+function ensureTypescriptParser(parserOptions: VineESLintParserOptions): VineESLintParserOptions {
+  return {
+    ...parserOptions,
+    parser: parserOptions.parser || getTypescriptParser(),
+  }
+}
+
+/**
  * Parse the source code of inline scripts.
  * @param code The source code of inline scripts.
  * @param locationCalculator The location calculator for the inline script.
@@ -705,12 +735,15 @@ export function parseVForExpression(
       processed.iterator,
     )
 
+    // Use TypeScript parser for template expressions to support TS syntax
+    const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
     const result = parseScriptFragment(
       `for(let ${processed.aliasesWithBrackets}${processed.delimiter}${processed.iterator});`,
       locationCalculator.getSubCalculatorShift(
         processed.hasParens ? -8 : -9,
       ),
-      parserOptions,
+      parserOptionsWithTS,
     )
     const { ast } = result
     const tokens = ast.tokens || []
@@ -718,7 +751,7 @@ export function parseVForExpression(
     const scope = analyzeVariablesAndExternalReferences(
       result,
       'v-for',
-      parserOptions,
+      parserOptionsWithTS,
     )
     const references = scope.references
     const variables = scope.variables
@@ -893,15 +926,18 @@ function parseVForAliasesForEcmaVersion5(
   locationCalculator: LocationCalculatorForHtml,
   parserOptions: VineESLintParserOptions,
 ) {
+  // Use TypeScript parser for template expressions to support TS syntax
+  const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
   const result = parseScriptFragment(
     `0(${code})`,
     locationCalculator.getSubCalculatorShift(-2),
-    parserOptions,
+    parserOptionsWithTS,
   )
   const { ast } = result
   const tokens = ast.tokens || []
   const comments = ast.comments || []
-  const variables = analyzeExternalReferences(result, parserOptions).map(
+  const variables = analyzeExternalReferences(result, parserOptionsWithTS).map(
     transformVariable,
   )
 
@@ -944,15 +980,18 @@ function parseVForIteratorForEcmaVersion5(
   locationCalculator: LocationCalculatorForHtml,
   parserOptions: VineESLintParserOptions,
 ) {
+  // Use TypeScript parser for template expressions to support TS syntax
+  const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
   const result = parseScriptFragment(
     `0(${code})`,
     locationCalculator.getSubCalculatorShift(-2),
-    parserOptions,
+    parserOptionsWithTS,
   )
   const { ast } = result
   const tokens = ast.tokens || []
   const comments = ast.comments || []
-  const references = analyzeExternalReferences(result, parserOptions)
+  const references = analyzeExternalReferences(result, parserOptionsWithTS)
 
   const statement = ast.body[0] as ESLintExpressionStatement
   const callExpression = statement.expression as ESLintCallExpression
@@ -1018,13 +1057,16 @@ function parseVOnExpressionBody(
   }
 
   try {
+    // Use TypeScript parser for template expressions to support TS syntax
+    const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
     const result = parseScriptFragment(
       `void function($event){${code}}`,
       locationCalculator.getSubCalculatorShift(-22),
-      parserOptions,
+      parserOptionsWithTS,
     )
     const { ast } = result
-    const references = analyzeExternalReferences(result, parserOptions)
+    const references = analyzeExternalReferences(result, parserOptionsWithTS)
     const outermostStatement = ast.body[0] as ESLintExpressionStatement
     const functionDecl = (
       outermostStatement.expression as ESLintUnaryExpression
@@ -1044,14 +1086,12 @@ function parseVOnExpressionBody(
           : block.range[1] - 1,
       ],
       loc: {
-        start:
-                    firstStatement != null
-                      ? firstStatement.loc.start
-                      : locationCalculator.getLocation(1),
-        end:
-                    lastStatement != null
-                      ? lastStatement.loc.end
-                      : locationCalculator.getLocation(code.length + 1),
+        start: firstStatement != null
+          ? firstStatement.loc.start
+          : locationCalculator.getLocation(1),
+        end: lastStatement != null
+          ? lastStatement.loc.end
+          : locationCalculator.getLocation(code.length + 1),
       },
       parent: DUMMY_PARENT,
       body,
@@ -1097,10 +1137,13 @@ export function parseSlotScopeExpression(
   }
 
   try {
+    // Use TypeScript parser for template expressions to support TS syntax
+    const parserOptionsWithTS = ensureTypescriptParser(parserOptions)
+
     const result = parseScriptFragment(
       `void function(${code}) {}`,
       locationCalculator.getSubCalculatorShift(-14),
-      parserOptions,
+      parserOptionsWithTS,
     )
     const { ast } = result
     const statement = ast.body[0] as ESLintExpressionStatement
@@ -1123,7 +1166,7 @@ export function parseSlotScopeExpression(
     const scope = analyzeVariablesAndExternalReferences(
       result,
       'scope',
-      parserOptions,
+      parserOptionsWithTS,
     )
     const references = scope.references
     const variables = scope.variables
