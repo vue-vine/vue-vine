@@ -46,7 +46,9 @@
   },
   "devDependencies": {
     "@typescript/native-preview": "catalog:compiler",
-    "@vue/test-utils": "catalog:vue-libs"
+    "@vue/test-utils": "catalog:vue-libs",
+    "vitest": "catalog:vitest-libs",
+    "vue": "catalog:vue-libs"
   },
   "publishConfig": {
     "access": "public",

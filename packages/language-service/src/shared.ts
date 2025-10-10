@@ -1,5 +1,5 @@
 import type { ArrowFunctionExpression, FunctionDeclaration, FunctionExpression } from '@babel/types'
-import type { VirtualCode } from '@volar/language-server/node'
+import type { VirtualCode } from '@volar/language-core'
 import type { VineDiagnostic, VineFileCtx } from '@vue-vine/compiler'
 import type { VueCodeInformation } from '@vue/language-core'
 import type { Segment } from 'muggle-string'

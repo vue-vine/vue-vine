@@ -1332,14 +1332,12 @@ export const About = (() => {
       return (_ctx, _cache) => {
         return (
           _openBlock(),
-          _createElementBlock(
-            "div",
-            null,
-            _cache[0] ||
+          _createElementBlock("div", null, [
+            ...(_cache[0] ||
               (_cache[0] = [
                 _createElementVNode("h2", null, "About page", -1 /* CACHED */),
-              ]),
-          )
+              ])),
+          ])
         );
       };
     },

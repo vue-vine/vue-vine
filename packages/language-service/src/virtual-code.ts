@@ -3,11 +3,11 @@ import type { Mapping, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { VineCodeInformation, VueVineVirtualCode } from './shared'
-import path from 'node:path/posix'
+import { dirname, relative } from 'node:path'
 import { isBlockStatement } from '@babel/types'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
-import { createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, generateComponentPropsAndContext, generatePrefixVirtualCode, generateScriptUntil, generateStyleScopedClasses, generateVirtualCodeByAstPositionSorted } from './codegen'
+import { createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, generateComponentPropsAndContext, generatePrefixVirtualCode, generateScriptUntil, generateStyleScopedClasses, generateVirtualCodeByAstPositionSorted, needsQuotes } from './codegen'
 import { generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
 import { analyzeVineForVirtualCode } from './vine-ctx'
 
@@ -16,6 +16,12 @@ const LINKED_CODE_RIGHT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TA
 
 function escapeStrForRegExp(str: string) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+
+function toPascalCase(name: string) {
+  return name.split('-').filter(Boolean).map(
+    part => part[0].toUpperCase() + part.slice(1),
+  ).join('')
 }
 
 function getLinkedCodeTagMatch(matched: RegExpExecArray) {
@@ -120,23 +126,25 @@ export function createVueVineVirtualCode(
     snapshotContent,
   }
 
-  if (typeof vueCompilerOptions.__setupedGlobalTypes === 'object') {
-    const globalTypes = vueCompilerOptions.__setupedGlobalTypes
-    let relativePath = path.relative(
-      path.dirname(vineFileCtx.fileId),
-      globalTypes.absolutePath,
+  const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
+  if (globalTypesPath) {
+    let relativePath = relative(
+      dirname(vineFileCtx.fileId),
+      globalTypesPath,
     )
     if (
-      relativePath !== globalTypes.absolutePath
-      && !relativePath.startsWith('./')
-      && !relativePath.startsWith('../')
+      relativePath !== globalTypesPath
+      && !relativePath.startsWith('.')
+      && !relativePath.startsWith('..')
     ) {
       relativePath = `./${relativePath}`
     }
+    // Normalize the path to posix path
+    relativePath = relativePath.replace(/\\/g, '/')
     tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
   }
   else {
-    tsCodeSegments.push(`/// <reference types=".vue-global-types/vine_${vueCompilerOptions.lib}_${vueCompilerOptions.target}_true" />\n`)
+    console.error('[Vue Vine] Failed to setup global types')
   }
 
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
@@ -205,6 +213,7 @@ export function createVueVineVirtualCode(
           compilerOptions,
           vueCompilerOptions,
           template: {
+            // @ts-expect-error - vue language tools upstream issue
             ast: vineCompFn.templateAst,
             errors: [],
             warnings: [],
@@ -286,7 +295,22 @@ export function createVueVineVirtualCode(
       usedComponents.add(compName)
     })
   })
-  tsCodeSegments.push(`\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map(compName => `  '${compName}': ${compName}`).join(',\n')
+
+  tsCodeSegments.push(`\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map((compName) => {
+    // Check if component name is a valid identifier
+    // If not (e.g., 'router-view', 'my-component'), convert to PascalCase
+    // TypeScript will resolve it from local definitions or imports
+    let componentRef = compName
+    if (needsQuotes(compName)) {
+      // Convert to PascalCase, which is the standard Vue component naming convention
+      // TypeScript will automatically find this identifier whether it's:
+      // - Defined locally in this file
+      // - Imported from another file
+      // - Auto-imported by unplugin-auto-import or similar tools
+      componentRef = toPascalCase(compName)
+    }
+    return `  '${compName}': ${componentRef}`
+  }).join(',\n')
   }\n};\n`)
   tsCodeSegments.push(`\nconst __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;`)
 

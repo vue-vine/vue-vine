@@ -1679,7 +1679,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
           "offset": 0,
         },
       },
-      "needArraySpread": false,
+      "needArraySpread": true,
       "needPauseTracking": false,
       "type": 20,
       "value": {
@@ -1951,7 +1951,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                       "offset": 0,
                     },
                   },
-                  "needArraySpread": false,
+                  "needArraySpread": true,
                   "needPauseTracking": false,
                   "type": 20,
                   "value": {
@@ -2093,60 +2093,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
               "value": {
                 "constType": 0,
                 "content": "1 /* STABLE */",
-                "isStatic": false,
-                "loc": {
-                  "end": {
-                    "column": 1,
-                    "line": 1,
-                    "offset": 0,
-                  },
-                  "source": "",
-                  "start": {
-                    "column": 1,
-                    "line": 1,
-                    "offset": 0,
-                  },
-                },
-                "type": 4,
-              },
-            },
-            {
-              "key": {
-                "constType": 3,
-                "content": "__",
-                "isStatic": true,
-                "loc": {
-                  "end": {
-                    "column": 1,
-                    "line": 1,
-                    "offset": 0,
-                  },
-                  "source": "",
-                  "start": {
-                    "column": 1,
-                    "line": 1,
-                    "offset": 0,
-                  },
-                },
-                "type": 4,
-              },
-              "loc": {
-                "end": {
-                  "column": 1,
-                  "line": 1,
-                  "offset": 0,
-                },
-                "source": "",
-                "start": {
-                  "column": 1,
-                  "line": 1,
-                  "offset": 0,
-                },
-              },
-              "type": 16,
-              "value": {
-                "constType": 0,
-                "content": "[0]",
                 "isStatic": false,
                 "loc": {
                   "end": {
@@ -2420,7 +2366,7 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
                   "offset": 0,
                 },
               },
-              "needArraySpread": false,
+              "needArraySpread": true,
               "needPauseTracking": false,
               "type": 20,
               "value": {
@@ -2562,60 +2508,6 @@ exports[`test Vine compiler analyze > analyze vine template 2`] = `
           "value": {
             "constType": 0,
             "content": "1 /* STABLE */",
-            "isStatic": false,
-            "loc": {
-              "end": {
-                "column": 1,
-                "line": 1,
-                "offset": 0,
-              },
-              "source": "",
-              "start": {
-                "column": 1,
-                "line": 1,
-                "offset": 0,
-              },
-            },
-            "type": 4,
-          },
-        },
-        {
-          "key": {
-            "constType": 3,
-            "content": "__",
-            "isStatic": true,
-            "loc": {
-              "end": {
-                "column": 1,
-                "line": 1,
-                "offset": 0,
-              },
-              "source": "",
-              "start": {
-                "column": 1,
-                "line": 1,
-                "offset": 0,
-              },
-            },
-            "type": 4,
-          },
-          "loc": {
-            "end": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-            "source": "",
-            "start": {
-              "column": 1,
-              "line": 1,
-              "offset": 0,
-            },
-          },
-          "type": 16,
-          "value": {
-            "constType": 0,
-            "content": "[0]",
             "isStatic": false,
             "loc": {
               "end": {

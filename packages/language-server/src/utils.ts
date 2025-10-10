@@ -1,5 +1,9 @@
 import type { LanguageServiceContext, SourceScript, VirtualCode } from '@volar/language-service'
+import type { VueCompilerOptions } from '@vue/language-core'
+import type ts from 'typescript'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { setupGlobalTypes } from '@vue-vine/language-service'
+import { getDefaultCompilerOptions } from '@vue/language-core'
 import { URI } from 'vscode-uri'
 
 export function getVueVineVirtualCode(
@@ -25,4 +29,20 @@ export function getVueVineVirtualCode(
     vineVirtualCode,
     embeddedVirtualCode,
   }
+}
+
+export function getDefaultVueCompilerOptions(
+  tsSystemHost: ts.System,
+): VueCompilerOptions {
+  const vueCompilerOptions: VueCompilerOptions = getDefaultCompilerOptions(
+    (void 0),
+    (void 0),
+    true, // enable strict templates by default
+  )
+  vueCompilerOptions.globalTypesPath = setupGlobalTypes(
+    vueCompilerOptions,
+    tsSystemHost,
+  )
+
+  return vueCompilerOptions
 }
