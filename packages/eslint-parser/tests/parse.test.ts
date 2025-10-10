@@ -127,7 +127,7 @@ describe('vine ESLint parser test 1', () => {
     expect(__(tokens[33])).toMatchInlineSnapshot(`"{"type":"HTMLTagOpen","range":[141,145],"loc":{"start":{"line":8,"column":4},"end":{"line":8,"column":8}},"value":"div"}"`)
     expect(__(tokens[34])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[145,146],"loc":{"start":{"line":8,"column":8},"end":{"line":8,"column":9}},"value":""}"`)
     expect(__(tokens[35])).toMatchInlineSnapshot(`"{"type":"VExpressionStart","range":[146,148],"loc":{"start":{"line":8,"column":9},"end":{"line":8,"column":11}},"value":"{{"}"`)
-    expect(__(tokens[36])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"v1","start":149,"end":151,"loc":{"start":{"line":8,"column":12},"end":{"line":8,"column":14}},"range":[149,151]}"`)
+    expect(__(tokens[36])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":8,"column":14},"start":{"line":8,"column":12}},"range":[149,151],"value":"v1"}"`)
     expect(__(tokens[37])).toMatchInlineSnapshot(`"{"type":"VExpressionEnd","range":[152,154],"loc":{"start":{"line":8,"column":15},"end":{"line":8,"column":17}},"value":"}}"}"`)
     expect(__(tokens[38])).toMatchInlineSnapshot(`"{"type":"HTMLEndTagOpen","range":[154,159],"loc":{"start":{"line":8,"column":17},"end":{"line":8,"column":22}},"value":"div"}"`)
     expect(__(tokens[39])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[159,160],"loc":{"start":{"line":8,"column":22},"end":{"line":8,"column":23}},"value":""}"`)
@@ -137,7 +137,7 @@ describe('vine ESLint parser test 1', () => {
     expect(__(tokens[43])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[172,175],"loc":{"start":{"column":11,"line":9},"end":{"column":14,"line":9}},"value":"num"}"`)
     expect(__(tokens[44])).toMatchInlineSnapshot(`"{"type":"HTMLAssociation","range":[175,176],"loc":{"start":{"line":9,"column":14},"end":{"line":9,"column":15}},"value":""}"`)
     expect(__(tokens[45])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[176,177],"loc":{"start":{"line":9,"column":15},"end":{"line":9,"column":16}},"value":"\\""}"`)
-    expect(__(tokens[46])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"count","start":177,"end":182,"loc":{"start":{"line":9,"column":16},"end":{"line":9,"column":21}},"range":[177,182]}"`)
+    expect(__(tokens[46])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":9,"column":21},"start":{"line":9,"column":16}},"range":[177,182],"value":"count"}"`)
     expect(__(tokens[47])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[182,183],"loc":{"start":{"line":9,"column":21},"end":{"line":9,"column":22}},"value":"\\""}"`)
     expect(__(tokens[48])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[184,185],"loc":{"start":{"column":23,"line":9},"end":{"column":24,"line":9}},"value":":"}"`)
     expect(__(tokens[49])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[185,190],"loc":{"start":{"column":24,"line":9},"end":{"column":29,"line":9}},"value":"title"}"`)
@@ -151,8 +151,8 @@ describe('vine ESLint parser test 1', () => {
     expect(__(tokens[57])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[214,219],"loc":{"start":{"column":13,"line":10},"end":{"column":18,"line":10}},"value":"click"}"`)
     expect(__(tokens[58])).toMatchInlineSnapshot(`"{"type":"HTMLAssociation","range":[219,220],"loc":{"start":{"line":10,"column":18},"end":{"line":10,"column":19}},"value":""}"`)
     expect(__(tokens[59])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[220,221],"loc":{"start":{"line":10,"column":19},"end":{"line":10,"column":20}},"value":"\\""}"`)
-    expect(__(tokens[60])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"fn2","start":221,"end":224,"loc":{"start":{"line":10,"column":20},"end":{"line":10,"column":23}},"range":[221,224]}"`)
-    expect(__(tokens[61])).toMatchInlineSnapshot(`"{"type":"Punctuator","value":"(","start":224,"end":225,"loc":{"start":{"line":10,"column":23},"end":{"line":10,"column":24}},"range":[224,225]}"`)
+    expect(__(tokens[60])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":10,"column":23},"start":{"line":10,"column":20}},"range":[221,224],"value":"fn2"}"`)
+    expect(__(tokens[61])).toMatchInlineSnapshot(`"{"type":"Punctuator","loc":{"end":{"line":10,"column":24},"start":{"line":10,"column":23}},"range":[224,225],"value":"("}"`)
   })
 })
 
@@ -215,7 +215,7 @@ describe('vine ESLint parser test 2', () => {
     expect(__(tokens[53])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[248,258],"loc":{"start":{"column":36,"line":12},"end":{"column":46,"line":12}},"value":"emit-camel"}"`)
     expect(__(tokens[54])).toMatchInlineSnapshot(`"{"type":"HTMLAssociation","range":[258,259],"loc":{"start":{"line":12,"column":46},"end":{"line":12,"column":47}},"value":""}"`)
     expect(__(tokens[55])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[259,260],"loc":{"start":{"line":12,"column":47},"end":{"line":12,"column":48}},"value":"\\""}"`)
-    expect(__(tokens[56])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"handleEmitCamel","start":260,"end":275,"loc":{"start":{"line":12,"column":48},"end":{"line":12,"column":63}},"range":[260,275]}"`)
+    expect(__(tokens[56])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":12,"column":63},"start":{"line":12,"column":48}},"range":[260,275],"value":"handleEmitCamel"}"`)
     expect(__(tokens[57])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[275,276],"loc":{"start":{"line":12,"column":63},"end":{"line":12,"column":64}},"value":"\\""}"`)
     expect(__(tokens[58])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[276,277],"loc":{"start":{"line":12,"column":64},"end":{"line":12,"column":65}},"value":""}"`)
     expect(__(tokens[59])).toMatchInlineSnapshot(`"{"type":"HTMLWhitespace","range":[277,284],"loc":{"start":{"line":12,"column":65},"end":{"line":13,"column":6}},"value":"\\n      "}"`)
@@ -224,9 +224,9 @@ describe('vine ESLint parser test 2', () => {
     expect(__(tokens[62])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[295,304],"loc":{"start":{"column":17,"line":13},"end":{"column":26,"line":13}},"value":"slotCamel"}"`)
     expect(__(tokens[63])).toMatchInlineSnapshot(`"{"type":"HTMLAssociation","range":[304,305],"loc":{"start":{"line":13,"column":26},"end":{"line":13,"column":27}},"value":""}"`)
     expect(__(tokens[64])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[305,306],"loc":{"start":{"line":13,"column":27},"end":{"line":13,"column":28}},"value":"\\""}"`)
-    expect(__(tokens[65])).toMatchInlineSnapshot(`"{"type":"Punctuator","value":"{","start":306,"end":307,"loc":{"start":{"line":13,"column":28},"end":{"line":13,"column":29}},"range":[306,307]}"`)
-    expect(__(tokens[66])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"foo","start":308,"end":311,"loc":{"start":{"line":13,"column":30},"end":{"line":13,"column":33}},"range":[308,311]}"`)
-    expect(__(tokens[67])).toMatchInlineSnapshot(`"{"type":"Punctuator","value":"}","start":312,"end":313,"loc":{"start":{"line":13,"column":34},"end":{"line":13,"column":35}},"range":[312,313]}"`)
+    expect(__(tokens[65])).toMatchInlineSnapshot(`"{"type":"Punctuator","loc":{"end":{"line":13,"column":29},"start":{"line":13,"column":28}},"range":[306,307],"value":"{"}"`)
+    expect(__(tokens[66])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":13,"column":33},"start":{"line":13,"column":30}},"range":[308,311],"value":"foo"}"`)
+    expect(__(tokens[67])).toMatchInlineSnapshot(`"{"type":"Punctuator","loc":{"end":{"line":13,"column":35},"start":{"line":13,"column":34}},"range":[312,313],"value":"}"}"`)
     expect(__(tokens[68])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[313,314],"loc":{"start":{"line":13,"column":35},"end":{"line":13,"column":36}},"value":"\\""}"`)
     expect(__(tokens[69])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[314,315],"loc":{"start":{"line":13,"column":36},"end":{"line":13,"column":37}},"value":""}"`)
     expect(__(tokens[70])).toMatchInlineSnapshot(`"{"type":"HTMLWhitespace","range":[315,324],"loc":{"start":{"line":13,"column":37},"end":{"line":14,"column":8}},"value":"\\n        "}"`)
@@ -237,7 +237,7 @@ describe('vine ESLint parser test 2', () => {
     expect(__(tokens[75])).toMatchInlineSnapshot(`"{"type":"HTMLText","range":[330,335],"loc":{"start":{"line":14,"column":14},"end":{"line":14,"column":19}},"value":"slot:"}"`)
     expect(__(tokens[76])).toMatchInlineSnapshot(`"{"type":"HTMLWhitespace","range":[335,336],"loc":{"start":{"line":14,"column":19},"end":{"line":14,"column":20}},"value":" "}"`)
     expect(__(tokens[77])).toMatchInlineSnapshot(`"{"type":"VExpressionStart","range":[336,338],"loc":{"start":{"line":14,"column":20},"end":{"line":14,"column":22}},"value":"{{"}"`)
-    expect(__(tokens[78])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"foo","start":339,"end":342,"loc":{"start":{"line":14,"column":23},"end":{"line":14,"column":26}},"range":[339,342]}"`)
+    expect(__(tokens[78])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":14,"column":26},"start":{"line":14,"column":23}},"range":[339,342],"value":"foo"}"`)
     expect(__(tokens[79])).toMatchInlineSnapshot(`"{"type":"VExpressionEnd","range":[343,345],"loc":{"start":{"line":14,"column":27},"end":{"line":14,"column":29}},"value":"}}"}"`)
     expect(__(tokens[80])).toMatchInlineSnapshot(`"{"type":"HTMLEndTagOpen","range":[345,348],"loc":{"start":{"line":14,"column":29},"end":{"line":14,"column":32}},"value":"p"}"`)
     expect(__(tokens[81])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[348,349],"loc":{"start":{"line":14,"column":32},"end":{"line":14,"column":33}},"value":""}"`)
@@ -252,7 +252,7 @@ describe('vine ESLint parser test 2', () => {
     expect(__(tokens[90])).toMatchInlineSnapshot(`"{"type":"HTMLIdentifier","range":[400,406],"loc":{"start":{"column":7,"line":17},"end":{"column":13,"line":17}},"value":"v-text"}"`)
     expect(__(tokens[91])).toMatchInlineSnapshot(`"{"type":"HTMLAssociation","range":[406,407],"loc":{"start":{"line":17,"column":13},"end":{"line":17,"column":14}},"value":""}"`)
     expect(__(tokens[92])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[407,408],"loc":{"start":{"line":17,"column":14},"end":{"line":17,"column":15}},"value":"\\""}"`)
-    expect(__(tokens[93])).toMatchInlineSnapshot(`"{"type":"Identifier","value":"content","start":408,"end":415,"loc":{"start":{"line":17,"column":15},"end":{"line":17,"column":22}},"range":[408,415]}"`)
+    expect(__(tokens[93])).toMatchInlineSnapshot(`"{"type":"Identifier","loc":{"end":{"line":17,"column":22},"start":{"line":17,"column":15}},"range":[408,415],"value":"content"}"`)
     expect(__(tokens[94])).toMatchInlineSnapshot(`"{"type":"Punctuator","range":[415,416],"loc":{"start":{"line":17,"column":22},"end":{"line":17,"column":23}},"value":"\\""}"`)
     expect(__(tokens[95])).toMatchInlineSnapshot(`"{"type":"HTMLTagClose","range":[416,417],"loc":{"start":{"line":17,"column":23},"end":{"line":17,"column":24}},"value":""}"`)
     expect(__(tokens[96])).toMatchInlineSnapshot(`"{"type":"HTMLText","range":[417,419],"loc":{"start":{"line":17,"column":24},"end":{"line":17,"column":26}},"value":"Be"}"`)
@@ -293,5 +293,118 @@ describe('vine ESLint parser test 2', () => {
 
     expect(__(vTextDirective.range)).toMatchInlineSnapshot(`"[400,416]"`)
     expect(sampleSourceCode2.slice(...vTextDirective.range)).toBe('v-text="content"')
+  })
+})
+
+const sampleSourceCode3 = `
+function App() {
+  const foo = (_some: string) => { }
+  const bar = (value: number) => console.log(value)
+
+  return vine\`
+    <div>
+      <!-- Case 1: Arrow function call inside inline arrow function (Issue #309) -->
+      <textarea @input="(e: Event) => foo((e.target as HTMLTextAreaElement).value)" />
+
+      <!-- Case 2: Direct function reference (should work) -->
+      <button @click="foo" />
+
+      <!-- Case 3: Another arrow function case -->
+      <input @change="(e: Event) => bar(Number((e.target as HTMLInputElement).value))" />
+    </div>
+  \`
+}`.trim()
+
+describe('vine ESLint parser test 3: Issue #309 - Arrow function in template', () => {
+  it('should correctly identify variables used inside inline arrow functions in templates', () => {
+    const parserOptions: VineESLintParserOptions = {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    }
+    const { ast, scopeManager } = runParse(sampleSourceCode3, parserOptions)
+
+    // Get the function declaration
+    const fnDecl = ast.body[0] as ESLintFunctionDeclaration
+    expect(fnDecl.type).toBe('FunctionDeclaration')
+
+    // Get the scope manager and check variables
+    const globalScope = scopeManager?.globalScope
+    expect(globalScope).toBeDefined()
+
+    const moduleScope = globalScope?.childScopes.find(scope => scope.type === 'module')
+    expect(moduleScope).toBeDefined()
+
+    // Find the function scope for App
+    const appFunctionScope = moduleScope?.childScopes.find(
+      scope => scope.type === 'function' && scope.block === fnDecl,
+    )
+    expect(appFunctionScope).toBeDefined()
+
+    // Check if 'foo' and 'bar' variables exist
+    const fooVariable = appFunctionScope?.variables.find(v => v.name === 'foo')
+    const barVariable = appFunctionScope?.variables.find(v => v.name === 'bar')
+
+    expect(fooVariable).toBeDefined()
+    expect(barVariable).toBeDefined()
+
+    // The key assertion: both 'foo' and 'bar' should have references
+    // indicating they are used in the template
+    expect(fooVariable?.references.length).toBeGreaterThan(1) // At least definition + template usage
+    expect(barVariable?.references.length).toBeGreaterThan(1) // At least definition + template usage
+
+    // Check for the special marker that indicates template usage
+    const fooTemplateRefs = fooVariable?.references.filter((ref: any) => ref.vueUsedInTemplate)
+    const barTemplateRefs = barVariable?.references.filter((ref: any) => ref.vueUsedInTemplate)
+
+    // Both should have at least one template reference
+    expect(fooTemplateRefs?.length).toBeGreaterThan(0)
+    expect(barTemplateRefs?.length).toBeGreaterThan(0)
+  })
+
+  it('should parse arrow function expressions in v-on directives correctly', () => {
+    const parserOptions: VineESLintParserOptions = {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    }
+    const { ast } = runParse(sampleSourceCode3, parserOptions)
+
+    const fnDecl = ast.body[0] as ESLintFunctionDeclaration
+    const fnBodyStmts = fnDecl.body?.body ?? []
+    const fnLastStmt = fnBodyStmts[fnBodyStmts.length - 1]
+    const vTemplateRoot = (fnLastStmt as ESLintReturnStatement).argument as any as VTemplateRoot
+
+    // Find the textarea element
+    const divElement = vTemplateRoot.children.find(
+      (child: any) => child.type === 'VElement' && child.name === 'div',
+    ) as VElement
+    expect(divElement).toBeDefined()
+
+    const textareaElement = divElement.children.find(
+      (child: any) => child.type === 'VElement' && child.name === 'textarea',
+    ) as VElement
+    expect(textareaElement).toBeDefined()
+
+    // Check the @input directive
+    const inputDirective = textareaElement.startTag.attributes.find(
+      (attr: any) => attr.directive && attr.key.name.name === 'on' && attr.key.argument?.name === 'input',
+    ) as VDirective
+    expect(inputDirective).toBeDefined()
+
+    // The directive should have a value with an expression container
+    expect(inputDirective.value?.type).toBe('VExpressionContainer')
+    const expressionContainer = inputDirective.value as VExpressionContainer
+
+    // The expression should be an arrow function
+    expect(expressionContainer.expression?.type).toBe('ArrowFunctionExpression')
+
+    // Check references in the expression container
+    // This should include 'foo' which is called inside the arrow function
+    const references = expressionContainer.references
+    expect(references).toBeDefined()
+    expect(references.length).toBeGreaterThan(0)
+
+    // Look for 'foo' in the references
+    const fooRef = references.find(ref => ref.id.name === 'foo')
+    expect(fooRef).toBeDefined()
   })
 })

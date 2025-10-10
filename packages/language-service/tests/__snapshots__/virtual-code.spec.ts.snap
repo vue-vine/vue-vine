@@ -208,8 +208,8 @@ const __VLS_VINE_ComponentsReferenceMap = {
   'SampleCustomElement': SampleCustomElement,
   'AnotherCustomElement': AnotherCustomElement,
   'TestCustomElement': TestCustomElement,
-  'vi-sample-custom-element': vi-sample-custom-element,
-  'vi-another-custom-element': vi-another-custom-element
+  'vi-sample-custom-element': ViSampleCustomElement,
+  'vi-another-custom-element': ViAnotherCustomElement
 };
 
 const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"

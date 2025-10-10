@@ -1,7 +1,7 @@
 {
   "name": "vue-vine",
   "type": "module",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -46,7 +46,9 @@
   },
   "devDependencies": {
     "@typescript/native-preview": "catalog:compiler",
-    "@vue/test-utils": "catalog:vue-libs"
+    "@vue/test-utils": "catalog:vue-libs",
+    "vitest": "catalog:vitest-libs",
+    "vue": "catalog:vue-libs"
   },
   "publishConfig": {
     "access": "public",

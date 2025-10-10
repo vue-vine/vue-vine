@@ -7,7 +7,7 @@ import { dirname, relative } from 'node:path'
 import { isBlockStatement } from '@babel/types'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
-import { createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, generateComponentPropsAndContext, generatePrefixVirtualCode, generateScriptUntil, generateStyleScopedClasses, generateVirtualCodeByAstPositionSorted } from './codegen'
+import { createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, generateComponentPropsAndContext, generatePrefixVirtualCode, generateScriptUntil, generateStyleScopedClasses, generateVirtualCodeByAstPositionSorted, needsQuotes } from './codegen'
 import { generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
 import { analyzeVineForVirtualCode } from './vine-ctx'
 
@@ -16,6 +16,12 @@ const LINKED_CODE_RIGHT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TA
 
 function escapeStrForRegExp(str: string) {
   return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+
+function toPascalCase(name: string) {
+  return name.split('-').filter(Boolean).map(
+    part => part[0].toUpperCase() + part.slice(1),
+  ).join('')
 }
 
 function getLinkedCodeTagMatch(matched: RegExpExecArray) {
@@ -289,7 +295,22 @@ export function createVueVineVirtualCode(
       usedComponents.add(compName)
     })
   })
-  tsCodeSegments.push(`\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map(compName => `  '${compName}': ${compName}`).join(',\n')
+
+  tsCodeSegments.push(`\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map((compName) => {
+    // Check if component name is a valid identifier
+    // If not (e.g., 'router-view', 'my-component'), convert to PascalCase
+    // TypeScript will resolve it from local definitions or imports
+    let componentRef = compName
+    if (needsQuotes(compName)) {
+      // Convert to PascalCase, which is the standard Vue component naming convention
+      // TypeScript will automatically find this identifier whether it's:
+      // - Defined locally in this file
+      // - Imported from another file
+      // - Auto-imported by unplugin-auto-import or similar tools
+      componentRef = toPascalCase(compName)
+    }
+    return `  '${compName}': ${componentRef}`
+  }).join(',\n')
   }\n};\n`)
   tsCodeSegments.push(`\nconst __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;`)
 
