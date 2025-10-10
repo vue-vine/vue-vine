@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.7.8
+
+### Patch Changes
+
+- Fix language service globalTypes and bump to volar 2.4.20
+- Updated dependencies
+  - @vue-vine/compiler@1.7.8
+  - @vue-vine/language-service@1.7.8
+
 ## 1.7.7
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.8
+
+### Patch Changes
+
+- Fix language service globalTypes and bump to volar 2.4.20
+
 ## 1.7.7
 
 ### Patch Changes
