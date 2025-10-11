@@ -3,14 +3,17 @@ shellEmulator: true
 packages:
   - packages/*
 
+overrides:
+  vite: npm:rolldown-vite@latest
+
+patchedDependencies:
+  '@vue/compiler-vapor': patches/@vue__compiler-vapor.patch
+
 defines:
-  - &vue ^3.5.22
+  - &vue ^3.6.0-alpha.2
   - &vue-lang-tools 3.0.3
   - &volar 2.4.20
   - &volar-service 0.0.65
-
-overrides:
-  vite: npm:rolldown-vite@latest
 
 catalogs:
   cli:
@@ -34,7 +37,7 @@ catalogs:
   compiler:
     '@babel/parser': ^7.28.0
     '@babel/types': ^7.28.0
-    '@typescript/native-preview': latest
+    '@typescript/native-preview': 7.0.0-dev.20250722.1
     estree-walker: ^3.0.3
     get-tsconfig: ^4.10.1
     magic-string: ^0.30.17
@@ -144,8 +147,10 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
   vue-libs:
+    '@vue/compiler-core': *vue
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
+    '@vue/compiler-vapor': *vue
     '@vue/language-core': *vue-lang-tools
     '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue
