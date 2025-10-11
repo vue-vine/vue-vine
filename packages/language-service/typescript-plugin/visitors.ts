@@ -94,23 +94,45 @@ export function getComponentProps(
     return []
   }
 
-  const compFnType = checker.getTypeOfSymbolAtLocation(compSymbol, tsSourceFile)
+  const compFnType = checker.getTypeOfSymbolAtLocation(compSymbol, vlsCompsMapNode)
   if (!compFnType) {
     return []
   }
   tsPluginLogger.info('compFnType', checker.typeToString(compFnType))
 
-  // `compFnType` is (props: ...) => { ... }
-  // we need to extract `props` type from it
-  const propsNode = compFnType.getCallSignatures()[0].getParameters()[0]!
-  const propsType = checker.getTypeOfSymbol(propsNode)
+  const propsNames = new Set<string>()
 
-  // Extract all properties
-  const propsNames = propsType
-    .getProperties()
-    .map(p => p.getName())
+  // Helper function to handle each prop symbol
+  function handlePropSymbol(prop: ts.Symbol) {
+    propsNames.add(prop.getName())
+  }
 
-  return propsNames
+  // Handle call signatures: (props: ...) => { ... }
+  for (const sig of compFnType.getCallSignatures()) {
+    if (sig.parameters.length) {
+      const propParam = sig.parameters[0]!
+      const propsType = checker.getTypeOfSymbol(propParam)
+      const props = propsType.getProperties()
+      for (const prop of props) {
+        handlePropSymbol(prop)
+      }
+    }
+  }
+
+  // Handle construct signatures: new (props: ...) => Component
+  for (const sig of compFnType.getConstructSignatures()) {
+    const instanceType = sig.getReturnType()
+    const propsSymbol = instanceType.getProperty('$props')
+    if (propsSymbol) {
+      const propsType = checker.getTypeOfSymbol(propsSymbol)
+      const props = propsType.getProperties()
+      for (const prop of props) {
+        handlePropSymbol(prop)
+      }
+    }
+  }
+
+  return Array.from(propsNames)
 }
 
 export function getElementAttrs(

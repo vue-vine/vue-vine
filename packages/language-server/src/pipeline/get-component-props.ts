@@ -23,8 +23,14 @@ export function getComponentPropsFromPipeline(
       },
       onMessageData: (response) => {
         const currentTagInfo = context.tagInfos?.get(tag)
+        const props = [...response.props]
+        console.log(`Pipeline: Got component props for '${tag}' - `, ...(
+          props.length > 5
+            ? props.slice(0, 5)
+            : props
+        ))
         context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
-          props: [...response.props],
+          props,
           events: [],
         }))
       },
