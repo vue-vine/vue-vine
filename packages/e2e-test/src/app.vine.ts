@@ -1,4 +1,4 @@
-import { useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const routes = [
   { path: '/hmr', label: 'HMR' },
