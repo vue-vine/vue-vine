@@ -6,8 +6,8 @@ type GetComponentPropsResponse = PipelineResponseInstance<'getComponentPropsResp
 
 export function handleGetComponentProps(
   context: PipelineServerContext,
-  tagName: string,
   fileName: string,
+  tagName: string,
 ): GetComponentPropsResponse {
   const { language } = context
   const volarFile = language.scripts.get(fileName)

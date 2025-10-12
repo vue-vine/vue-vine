@@ -38,7 +38,7 @@ function addPipelineHandlers(
   }
   const session = info.session
   if (!(session.addProtocolHandler as ((...args: any[]) => any) | undefined)) {
-    projectService.logger.info('Vue: there is no addProtocolHandler method.')
+    projectService.logger.info('Vue Vine: there is no addProtocolHandler method.')
     return
   }
   const pipelineContext: PipelineServerContext = {
