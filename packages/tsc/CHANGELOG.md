@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.10
+
+### Patch Changes
+
+- Refactor language service to using TS server request forwarding instead of WebSocket pipeline
+- Updated dependencies
+  - @vue-vine/language-service@1.7.10
+
 ## 1.7.9
 
 ### Patch Changes

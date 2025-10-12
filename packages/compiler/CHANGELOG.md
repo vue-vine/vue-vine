@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.10
+
+### Patch Changes
+
+- Refactor language service to using TS server request forwarding instead of WebSocket pipeline
+
 ## 1.7.9
 
 ### Patch Changes
