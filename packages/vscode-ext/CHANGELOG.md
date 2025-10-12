@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.9
+
+### Patch Changes
+
+- Improve language service stability.
+
 ## 1.7.8
 
 ### Patch Changes

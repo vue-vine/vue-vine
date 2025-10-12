@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.9
+
+### Patch Changes
+
+- Improve language service stability.
+- Updated dependencies
+  - @vue-vine/language-service@1.7.9
+
 ## 1.7.8
 
 ### Patch Changes
