@@ -1,11 +1,14 @@
+import type { Language } from '@volar/language-core'
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
-import type { WebSocketServer } from 'ws'
+import type { PipelineReqArgs, PipelineServerContext, TypeScriptSdk } from './types'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
-import { createVueVinePipelineServer } from './pipeline'
-import { allocatePort } from './port-manager'
+import { handleGetComponentDirectives } from './pipeline/get-component-directives'
+import { handleGetComponentProps } from './pipeline/get-component-props'
+import { handleGetDocumentHighlight } from './pipeline/get-document-highlight'
+import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 import { proxyLanguageServiceForVine } from './proxy-ts-lang-service'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
@@ -15,98 +18,66 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownProps = true
 }
 
-interface PipelineServerInstance {
-  server: WebSocketServer
-  cleanup: () => void
+function createPipelineResponse(res: any): ts.server.HandlerResponse {
+  return {
+    response: res,
+    responseRequired: true,
+  }
 }
 
-let pipelineServerInstance: PipelineServerInstance | undefined
-
-/**
- * Initialize the pipeline server with robust error handling and retry logic
- */
-async function initializePipelineServer(
-  ts: typeof import('typescript'),
+function addPipelineHandlers(
   info: ts.server.PluginCreateInfo,
-  language: any,
-): Promise<void> {
-  const configFileName = info.project.getProjectName()
-
-  // Prevent multiple initializations
-  if (pipelineServerInstance) {
+  ts: TypeScriptSdk,
+  language: Language,
+) {
+  const projectService = info.project.projectService
+  projectService.logger.info(`Vue Vine: called handler processing ${info.project.projectKind}`)
+  if (!info.session) {
+    projectService.logger.info('Vue Vine: there is no session in info.')
     return
   }
+  const session = info.session
+  if (!(session.addProtocolHandler as ((...args: any[]) => any) | undefined)) {
+    projectService.logger.info('Vue: there is no addProtocolHandler method.')
+    return
+  }
+  const pipelineContext: PipelineServerContext = {
+    ts,
+    language,
+    tsPluginInfo: info,
+  }
 
-  try {
-    let serverInstance: WebSocketServer | undefined
-
-    const result = await allocatePort(
-      {
-        host: ts.sys,
-        tsConfigFilePath: configFileName,
-        projectPath: configFileName,
-      },
-      async (port) => {
-        // Create server factory function
-        const server = createVueVinePipelineServer(port, {
-          ts,
-          language,
-          tsPluginInfo: info,
-        })
-
-        serverInstance = server
-        return server
-      },
+  // Initialize pipeline handlers
+  session.addProtocolHandler('_vue_vine:getComponentProps', (request) => {
+    const { tagName, fileName } = request.arguments as PipelineReqArgs<'getComponentPropsRequest'>
+    return createPipelineResponse(
+      handleGetComponentProps(pipelineContext, fileName, tagName),
     )
-
-    // Store the server instance with cleanup function
-    if (serverInstance) {
-      pipelineServerInstance = {
-        server: serverInstance,
-        cleanup: () => {
-          result.cleanup()
-          serverInstance?.close()
-        },
-      }
-    }
-
-    console.info(`Pipeline: Server successfully started on port ${result.port}`)
-  }
-  catch (err) {
-    console.error(
-      'Pipeline: Failed to initialize server. Pipeline features will be disabled.',
-      err,
+  })
+  session.addProtocolHandler('_vue_vine:getElementAttrs', (request) => {
+    const { fileName, tagName } = request.arguments as PipelineReqArgs<'getElementAttrsRequest'>
+    return createPipelineResponse(
+      handleGetElementAttrs(pipelineContext, fileName, tagName),
     )
-    // Don't throw - allow plugin to continue without pipeline server
-  }
-}
-
-/**
- * Cleanup pipeline server resources
- */
-function cleanupPipelineServer(): void {
-  if (pipelineServerInstance) {
-    try {
-      pipelineServerInstance.cleanup()
-      console.info('Pipeline: Server cleaned up successfully')
-    }
-    catch (err) {
-      console.error('Pipeline: Error during cleanup', err)
-    }
-    finally {
-      pipelineServerInstance = undefined
-    }
-  }
+  })
+  session.addProtocolHandler('_vue_vine:getComponentDirectives', (request) => {
+    const { fileName, triggerAtFnName } = request.arguments as PipelineReqArgs<'getComponentDirectivesRequest'>
+    return createPipelineResponse(
+      handleGetComponentDirectives(pipelineContext, fileName, triggerAtFnName),
+    )
+  })
+  session.addProtocolHandler('_vue_vine:getDocumentHighlight', (request) => {
+    const { fileName, position } = request.arguments as PipelineReqArgs<'getDocumentHighlightRequest'>
+    return createPipelineResponse(
+      handleGetDocumentHighlight(pipelineContext, fileName, position),
+    )
+  })
 }
 
 export interface VueVineTypeScriptPluginOptions {
-  enablePipelineServer?: boolean
+  // ...
 }
-export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOptions = {}): ts.server.PluginModuleFactory {
-  const {
-    enablePipelineServer = true,
-  } = options
-
+export function createVueVineTypeScriptPlugin(_options: VueVineTypeScriptPluginOptions = {}): ts.server.PluginModuleFactory {
   const plugin = createLanguageServicePlugin((ts, info) => {
     const configFileName = info.project.getProjectName()
     const isConfiguredTsProject = info.project.projectKind === ts.server.ProjectKind.Configured
@@ -141,15 +112,8 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
     return {
       languagePlugins: [vueVinePlugin],
       setup: (language) => {
-        // Initialize pipeline server if enabled
-        if (
-          enablePipelineServer
-          && isConfiguredTsProject
-        ) {
-          initializePipelineServer(ts, info, language).catch((err) => {
-            console.error('Pipeline: Unhandled error during initialization', err)
-          })
-        }
+        // Initialize pipeline handlers
+        addPipelineHandlers(info, ts, language)
 
         // Setup proxy for language service
         info.languageService = proxyLanguageServiceForVine(
@@ -163,6 +127,3 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
 
   return plugin
 }
-
-// Export cleanup function for testing and manual cleanup
-export { cleanupPipelineServer }

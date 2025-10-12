@@ -1,10 +1,11 @@
 import type { DocumentHighlightKind, LanguageServicePlugin } from '@volar/language-service'
+import type { PipelineClientContext, PipelineInstance } from '../pipeline/types'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
-import { getDocumentHighlightFromPipeline } from '../pipeline/get-document-highlight'
-import { createPipelineClientContext } from '../pipeline/shared'
 import { getVueVineVirtualCode } from '../utils'
 
-export function createDocumentHighlightForward(): LanguageServicePlugin {
+export function createDocumentHighlightForward(
+  pipelineClient: PipelineInstance,
+): LanguageServicePlugin {
   return {
     name: 'vine-document-highlights',
     capabilities: {
@@ -17,16 +18,11 @@ export function createDocumentHighlightForward(): LanguageServicePlugin {
           if (embeddedVirtualCode?.id !== 'source' || !isVueVineVirtualCode(vineVirtualCode)) {
             return []
           }
-          const tsConfigFileName = context.project.typescript!.configFileName!
-          const tsHost = context.project.typescript!.sys
-          const pipelineClientContext = createPipelineClientContext(
-            tsConfigFileName,
-            tsHost,
-          )
+          const pipelineClientContext: PipelineClientContext = {}
           pipelineClientContext.vineVirtualCode = vineVirtualCode
           pipelineClientContext.documentHighlights = []
 
-          await getDocumentHighlightFromPipeline(
+          await pipelineClient.getDocumentHighlight(
             pipelineClientContext,
             document.offsetAt(position),
           )

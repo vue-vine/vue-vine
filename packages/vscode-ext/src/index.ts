@@ -74,6 +74,19 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
   const outputChannel = client.outputChannel
   outputChannel.appendLine(`${getLogTimeLabel()} - Starting Vine Language Server ...`)
 
+  // TS request forwarding
+  client.onNotification('tsserver/request', ([seq, command, args]) => {
+    vscode.commands.executeCommand<{ body?: unknown } | undefined>(
+      'typescript.tsserverRequest',
+      command,
+      args,
+      { isAsync: true, lowPriority: true },
+    ).then(
+      res => client.sendNotification('tsserver/response', [seq, res?.body]),
+      () => client.sendNotification('tsserver/response', [seq, undefined]),
+    )
+  })
+
   await client.start()
   outputChannel.appendLine(`${getLogTimeLabel()} - Vine language server started`)
 

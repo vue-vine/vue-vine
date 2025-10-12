@@ -49,8 +49,7 @@
     "volar-service-typescript": "catalog:volar",
     "vscode-css-languageservice": "catalog:vscode",
     "vscode-languageserver-protocol": "catalog:vscode",
-    "vscode-languageserver-textdocument": "catalog:vscode",
-    "ws": "catalog:miscs"
+    "vscode-languageserver-textdocument": "catalog:vscode"
   },
   "devDependencies": {
     "@types/node": "catalog:types",

@@ -8,6 +8,7 @@ import {
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import { create as createEmmetService } from 'volar-service-emmet'
 import { create as createTypeScriptServices } from 'volar-service-typescript'
+import { createTsServerRequestForwardingPipeline } from './pipeline'
 import { createVineCssService } from './plugins/vine-css-service'
 import { createVineDiagnosticsPlugin } from './plugins/vine-diagnostics'
 import { createDocumentHighlightForward } from './plugins/vine-document-highlight'
@@ -17,9 +18,9 @@ import { getDefaultVueCompilerOptions } from './utils'
 
 const connection = createConnection()
 const server = createServer(connection)
+const pipeline = createTsServerRequestForwardingPipeline(connection)
 
 connection.listen()
-
 connection.onInitialize(async (params) => {
   const tsdk = loadTsdkByPath(
     params.initializationOptions.typescript.tsdk,
@@ -43,9 +44,9 @@ connection.onInitialize(async (params) => {
       createTypeScriptServices(tsdk.typescript)
         .find(plugin => plugin.name === 'typescript-syntactic'),
     ),
-    createDocumentHighlightForward(),
+    createDocumentHighlightForward(pipeline),
     // HTML Service is included here ↓
-    createVineTemplatePlugin(),
+    createVineTemplatePlugin(pipeline),
   ]
 
   const result = await server.initialize(
@@ -55,7 +56,7 @@ connection.onInitialize(async (params) => {
   )
 
   // tsserver already provides semantic tokens
-  // TODO: handle in upstream instead of here
+  // Todo: handle in upstream instead of here
   result.capabilities.semanticTokensProvider = undefined
 
   return result

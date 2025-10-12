@@ -1,44 +1,42 @@
-import type { PipelineRequestInstance, PipelineServerContext } from '../types'
+import type { PipelineResponseInstance, PipelineServerContext } from '../types'
 import { isVueVineVirtualCode } from '../../src'
-import { pipelineResponse } from '../utils'
 import { getComponentDirectives } from '../visitors'
 
+type GetComponentDirectivesResponse = PipelineResponseInstance<'getComponentDirectivesResponse'>
+
 export function handleGetComponentDirectives(
-  request: PipelineRequestInstance<'getComponentDirectivesRequest'>,
   context: PipelineServerContext,
-): void {
-  const { ws, language } = context
-  const { fileName, triggerAtFnName, requestId } = request
+  fileName: string,
+  triggerAtFnName: string,
+): GetComponentDirectivesResponse {
+  const { language } = context
+  const emptyResponse: GetComponentDirectivesResponse = {
+    type: 'getComponentDirectivesResponse',
+    fileName,
+    triggerAtFnName,
+    directives: [],
+  }
 
   const volarFile = language.scripts.get(fileName)
   if (!isVueVineVirtualCode(volarFile?.generated?.root)) {
-    return
+    return emptyResponse
   }
 
   const vineCode = volarFile.generated.root
 
   try {
     const directives = getComponentDirectives(context, vineCode, triggerAtFnName)
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getComponentDirectivesResponse',
-        requestId,
-        triggerAtFnName,
-        fileName,
-        directives,
-      }),
-    )
+    return {
+      type: 'getComponentDirectivesResponse',
+      fileName,
+      triggerAtFnName,
+      directives,
+    }
   }
   catch (err) {
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getComponentDirectivesResponse',
-        requestId,
-        triggerAtFnName,
-        fileName,
-        directives: [],
-        errMsg: err instanceof Error ? err.message : String(err),
-      }),
-    )
+    return {
+      ...emptyResponse,
+      errMsg: err instanceof Error ? err.message : String(err),
+    }
   }
 }
