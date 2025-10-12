@@ -71,7 +71,6 @@ catalogs:
     '@umami/node': ^0.4.0
     element-plus: ^2.10.3
     make-synchronized: ^0.8.0
-    ws: ^8.18.3
   nuxt-libs:
     '@nuxt/devtools': ^2.6.2
     '@nuxt/eslint-config': ^1.5.2
@@ -102,14 +101,11 @@ catalogs:
     '@baiwusanyu/utils-log': ^1.1.2
     '@changesets/changelog-github': ^0.5.1
     changelogen: ^0.6.2
-    destr: ^2.0.5
-    detect-port: ^2.1.0
     hash-sum: ^2.0.0
     line-column: ^1.0.2
     lodash: ^4.17.21
     lru-cache: ^11.1.0
     muggle-string: ^0.4.1
-    pathe: ^2.0.3
     semver: ^7.7.2
     yaml: ^2.8.0
   vite-ecosystem:

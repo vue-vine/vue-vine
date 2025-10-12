@@ -1,18 +1,25 @@
-import type { PipelineRequestInstance, PipelineServerContext } from '../types'
+import type { PipelineResponseInstance, PipelineServerContext } from '../types'
 import { isVueVineVirtualCode } from '../../src'
-import { pipelineResponse } from '../utils'
 import { getComponentProps } from '../visitors'
 
-export function handleGetComponentProps(
-  request: PipelineRequestInstance<'getComponentPropsRequest'>,
-  context: PipelineServerContext,
-): void {
-  const { ws, language } = context
-  const { requestId, componentName, fileName } = request
+type GetComponentPropsResponse = PipelineResponseInstance<'getComponentPropsResponse'>
 
+export function handleGetComponentProps(
+  context: PipelineServerContext,
+  fileName: string,
+  tagName: string,
+): GetComponentPropsResponse {
+  const { language } = context
   const volarFile = language.scripts.get(fileName)
+  const emptyResponse: GetComponentPropsResponse = {
+    type: 'getComponentPropsResponse',
+    tagName,
+    fileName,
+    props: [],
+  }
+
   if (!(isVueVineVirtualCode(volarFile?.generated?.root))) {
-    return
+    return emptyResponse
   }
   const vineCode = volarFile.generated.root
 
@@ -20,29 +27,21 @@ export function handleGetComponentProps(
     const props = getComponentProps(
       context,
       vineCode,
-      componentName,
+      tagName,
     )
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getComponentPropsResponse',
-        requestId,
-        componentName,
-        fileName,
-        props,
-      }),
-    )
+
+    return {
+      type: 'getComponentPropsResponse',
+      tagName,
+      fileName,
+      props,
+    }
   }
   catch (err) {
     // Send empty response when error
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getComponentPropsResponse',
-        requestId,
-        componentName,
-        fileName,
-        props: [],
-        errMsg: err instanceof Error ? err.message : String(err),
-      }),
-    )
+    return {
+      ...emptyResponse,
+      errMsg: err instanceof Error ? err.message : String(err),
+    }
   }
 }

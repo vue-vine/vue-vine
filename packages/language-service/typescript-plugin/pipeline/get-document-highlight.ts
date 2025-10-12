@@ -1,12 +1,17 @@
-import type { PipelineRequestInstance, PipelineServerContext } from '../types'
-import { pipelineResponse } from '../utils'
+import type { PipelineResponseInstance, PipelineServerContext } from '../types'
+
+type GetDocumentHighlightResponse = PipelineResponseInstance<'getDocumentHighlightResponse'>
 
 export function handleGetDocumentHighlight(
-  request: PipelineRequestInstance<'getDocumentHighlightRequest'>,
   context: PipelineServerContext,
-): void {
-  const { ws, tsPluginInfo } = context
-  const { fileName, position, requestId } = request
+  fileName: string,
+  position: number,
+): GetDocumentHighlightResponse {
+  const { tsPluginInfo } = context
+  const emptyResponse: GetDocumentHighlightResponse = {
+    type: 'getDocumentHighlightResponse',
+    result: [],
+  }
 
   try {
     // @ts-expect-error - Using internal tsserver API
@@ -19,18 +24,15 @@ export function handleGetDocumentHighlight(
       },
     })
 
-    ws.send(pipelineResponse(context, {
+    return {
       type: 'getDocumentHighlightResponse',
-      requestId,
       result,
-    }))
+    }
   }
   catch (err) {
-    ws.send(pipelineResponse(context, {
-      type: 'getDocumentHighlightResponse',
-      requestId,
-      result: [],
+    return {
+      ...emptyResponse,
       errMsg: err instanceof Error ? err.message : String(err),
-    }))
+    }
   }
 }

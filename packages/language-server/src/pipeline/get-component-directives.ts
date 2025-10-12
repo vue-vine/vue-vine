@@ -1,33 +1,25 @@
-import type { PipelineClientContext } from './shared'
-import { pipelineRequest } from '@vue-vine/language-service'
-import { handlePipelineResponse, mergeTagInfo } from './shared'
+import type { Connection } from '@volar/language-server'
+import type { PipelineClientContext } from './types'
+import { mergeTagInfo, sendTsServerRequest } from './shared'
 
-export function getComponentDirectivesFromPipeline(
-  tag: string,
-  triggerAtFnName: string,
-  context: PipelineClientContext,
-): Promise<void> {
-  return handlePipelineResponse(
-    context,
-    {
-      requestName: 'getComponentDirectivesRequest',
-      onSend: (ws, requestId) => {
-        ws.send(
-          pipelineRequest({
-            type: 'getComponentDirectivesRequest',
-            requestId,
-            triggerAtFnName,
-            fileName: context.vineVirtualCode?.fileName ?? '',
-          }),
-        )
-      },
-      onMessageData: (response) => {
-        const currentTagInfo = context.tagInfos?.get(tag)
-        context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
-          props: [...response.directives],
-          events: [],
-        }))
-      },
-    },
-  )
+export function getComponentDirectives(connection: Connection) {
+  return async (
+    context: PipelineClientContext,
+    tag: string,
+    triggerAtFnName: string,
+  ): Promise<void> => {
+    const response = await sendTsServerRequest<'getComponentDirectivesRequest'>(
+      connection,
+      'getComponentDirectives',
+      { triggerAtFnName, fileName: context.vineVirtualCode?.fileName ?? '' },
+    )
+
+    if (response) {
+      const currentTagInfo = context.tagInfos?.get(tag)
+      context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
+        props: [...response.directives],
+        events: [],
+      }))
+    }
+  }
 }
