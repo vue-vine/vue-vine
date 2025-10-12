@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/language-service",
   "type": "module",
-  "version": "1.7.7",
+  "version": "1.7.10",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
@@ -56,11 +56,7 @@
     "@vue-vine/compiler": "workspace:*",
     "@vue/language-core": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
-    "destr": "catalog:utils",
-    "detect-port": "catalog:utils",
-    "muggle-string": "catalog:utils",
-    "pathe": "catalog:utils",
-    "ws": "catalog:miscs"
+    "muggle-string": "catalog:utils"
   },
   "devDependencies": {
     "@babel/types": "catalog:compiler",

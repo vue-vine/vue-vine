@@ -1,33 +1,24 @@
-import type { PipelineClientContext } from './shared'
-import { pipelineRequest } from '@vue-vine/language-service'
-import { handlePipelineResponse, mergeTagInfo } from './shared'
+import type { Connection } from '@volar/language-server'
+import type { PipelineClientContext } from './types'
+import { mergeTagInfo, sendTsServerRequest } from './shared'
 
-export function getComponentPropsFromPipeline(
-  tag: string,
-  context: PipelineClientContext,
-): Promise<void> {
-  return handlePipelineResponse(
-    context,
-    {
-      requestName: 'getComponentPropsRequest',
-      onSend: (ws, requestId) => {
-        console.log(`Pipeline: Fetching component '${tag}' props, requestId: ${requestId}`)
-        ws.send(
-          pipelineRequest({
-            type: 'getComponentPropsRequest',
-            requestId,
-            componentName: tag,
-            fileName: context.vineVirtualCode?.fileName ?? '',
-          }),
-        )
-      },
-      onMessageData: (response) => {
-        const currentTagInfo = context.tagInfos?.get(tag)
-        context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
-          props: [...response.props],
-          events: [],
-        }))
-      },
-    },
-  )
+export function getComponentProps(connection: Connection) {
+  return async (
+    context: PipelineClientContext,
+    tagName: string,
+  ): Promise<void> => {
+    const response = await sendTsServerRequest<'getComponentPropsRequest'>(
+      connection,
+      'getComponentProps',
+      { tagName, fileName: context.vineVirtualCode?.fileName ?? '' },
+    )
+
+    if (response) {
+      const currentTagInfo = context.tagInfos?.get(tagName)
+      context.tagInfos?.set(tagName, mergeTagInfo(currentTagInfo, {
+        props: [...response.props],
+        events: [],
+      }))
+    }
+  }
 }

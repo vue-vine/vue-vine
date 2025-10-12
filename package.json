@@ -47,7 +47,8 @@
     "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack",
     "local-pack-ext:bump": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack --bump",
     "verify": "pnpm build && pnpm test && pnpm typecheck && pnpm lint && pnpm lint-staged",
-    "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build"
+    "version": "pnpm changeset version && pnpm upgrade-template-deps && pnpm build",
+    "remake": "pnpm run clean && pnpm run clean:deps && pnpm i && pnpm run build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint-libs",

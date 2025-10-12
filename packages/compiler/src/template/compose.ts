@@ -8,6 +8,7 @@ import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImport
 import { compile as compileVDOM, ElementTypes, NodeTypes, parse as vdomParse } from '@vue/compiler-dom'
 import { compile as compileSSR } from '@vue/compiler-ssr'
 import { compile as compileVapor, parse as vaporParse } from '@vue/compiler-vapor'
+import { NOOP } from '@vue/shared'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
@@ -48,6 +49,7 @@ function getTemplateParsedAst(
       parseMode: 'base',
       prefixIdentifiers: true,
       expressionPlugins: ['typescript'],
+      onError: NOOP, // Error tolerance for template parsing
     }),
   }
 }

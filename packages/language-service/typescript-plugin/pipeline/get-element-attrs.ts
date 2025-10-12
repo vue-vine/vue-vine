@@ -1,44 +1,42 @@
-import type { PipelineRequestInstance, PipelineServerContext } from '../types'
+import type { PipelineResponseInstance, PipelineServerContext } from '../types'
 import { isVueVineVirtualCode } from '../../src'
-import { pipelineResponse } from '../utils'
 import { getElementAttrs } from '../visitors'
 
+type GetElementAttrsResponse = PipelineResponseInstance<'getElementAttrsResponse'>
+
 export function handleGetElementAttrs(
-  request: PipelineRequestInstance<'getElementAttrsRequest'>,
   context: PipelineServerContext,
-): void {
-  const { ws, language } = context
-  const { fileName, tagName, requestId } = request
+  fileName: string,
+  tagName: string,
+): GetElementAttrsResponse {
+  const { language } = context
+  const emptyResponse: GetElementAttrsResponse = {
+    type: 'getElementAttrsResponse',
+    tagName,
+    fileName,
+    attrs: [],
+  }
 
   const volarFile = language.scripts.get(fileName)
   if (!isVueVineVirtualCode(volarFile?.generated?.root)) {
-    return
+    return emptyResponse
   }
 
   const vineCode = volarFile.generated.root
 
   try {
     const attrs = getElementAttrs(context, vineCode, tagName)
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getElementAttrsResponse',
-        requestId,
-        tagName,
-        fileName,
-        attrs,
-      }),
-    )
+    return {
+      type: 'getElementAttrsResponse',
+      tagName,
+      fileName,
+      attrs,
+    }
   }
   catch (err) {
-    context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
-    ws.send(
-      pipelineResponse(context, {
-        type: 'getElementAttrsResponse',
-        requestId,
-        tagName,
-        fileName,
-        attrs: [],
-      }),
-    )
+    return {
+      ...emptyResponse,
+      errMsg: err instanceof Error ? err.message : String(err),
+    }
   }
 }

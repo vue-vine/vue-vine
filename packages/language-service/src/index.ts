@@ -16,10 +16,6 @@ export type {
   PipelineResponse,
   PipelineResponseInstance,
 } from '../typescript-plugin/types'
-export {
-  pipelineRequest,
-  tryParsePipelineResponse,
-} from '../typescript-plugin/utils'
 
 export {
   setupGlobalTypes,

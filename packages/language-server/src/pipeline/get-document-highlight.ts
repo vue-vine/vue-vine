@@ -1,30 +1,20 @@
-import type { PipelineClientContext } from './shared'
-import { handlePipelineResponse } from './shared'
+import type { Connection } from '@volar/language-server'
+import type { PipelineClientContext } from './types'
+import { sendTsServerRequest } from './shared'
 
-export function getDocumentHighlightFromPipeline(
-  context: PipelineClientContext,
-  position: number,
-): Promise<void> {
-  return handlePipelineResponse(
-    context,
-    {
-      showConsoleLog: false,
-      requestName: 'getDocumentHighlightRequest',
-      onSend: (ws, requestId) => {
-        if (!context.vineVirtualCode) {
-          return
-        }
+export function getDocumentHighlight(connection: Connection) {
+  return async (
+    context: PipelineClientContext,
+    position: number,
+  ): Promise<void> => {
+    const response = await sendTsServerRequest<'getDocumentHighlightRequest'>(
+      connection,
+      'getDocumentHighlight',
+      { fileName: context.vineVirtualCode?.fileName ?? '', position },
+    )
 
-        ws.send(JSON.stringify({
-          type: 'getDocumentHighlightRequest',
-          requestId,
-          fileName: context.vineVirtualCode.fileName,
-          position,
-        }))
-      },
-      onMessageData: (response) => {
-        context.documentHighlights = response.result
-      },
-    },
-  )
+    if (response) {
+      context.documentHighlights = response.result
+    }
+  }
 }

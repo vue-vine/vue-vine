@@ -6,6 +6,7 @@ import type {
 import type { VineDiagnostic, VineFnCompCtx } from '@vue-vine/compiler'
 import type { VueVineVirtualCode } from '@vue-vine/language-service'
 import type { IAttributeData, IHTMLDataProvider, ITagData, TextDocument } from 'vscode-html-languageservice'
+import type { PipelineClientContext, PipelineInstance } from '../pipeline/types'
 import type { HtmlTagInfo } from '../types'
 import { VinePropsDefinitionBy } from '@vue-vine/compiler'
 import { isVueVineVirtualCode } from '@vue-vine/language-service'
@@ -13,10 +14,6 @@ import { hyphenateAttr } from '@vue/language-core'
 import { create as createHtmlService } from 'volar-service-html'
 import { newHTMLDataProvider } from 'vscode-html-languageservice'
 import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
-import { getComponentDirectivesFromPipeline } from '../pipeline/get-component-directives'
-import { getComponentPropsFromPipeline } from '../pipeline/get-component-props'
-import { getElementAttrsFromPipeline } from '../pipeline/get-element-attrs'
-import { createPipelineClientContext } from '../pipeline/shared'
 import { getVueVineVirtualCode } from '../utils'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
@@ -49,7 +46,9 @@ export function isTemplateDiagnosticOfVineCompName(vineDiag: VineDiagnostic, vin
   )
 }
 
-export function createVineTemplatePlugin(): LanguageServicePlugin {
+export function createVineTemplatePlugin(
+  pipeline: PipelineInstance,
+): LanguageServicePlugin {
   let customData: IHTMLDataProvider[] = []
 
   const onDidChangeCustomDataListeners = new Set<() => void>()
@@ -182,12 +181,8 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
           vueTemplateBuiltinData,
         )
         const vineVolarContextProvider = createVineTemplateDataProvider()
-        const tsConfigFileName = context.project.typescript!.configFileName!
-        const tsHost = context.project.typescript!.sys
-        const pipelineClientContext = createPipelineClientContext(
-          tsConfigFileName,
-          tsHost,
-        )
+        const pipelineClientContext: PipelineClientContext = {}
+        const pendingRequests: Promise<void>[] = []
         pipelineClientContext.vineVirtualCode = vineVirtualCode
         pipelineClientContext.tagInfos = tagInfos
 
@@ -198,12 +193,9 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
 
         return {
           async sync() {
-            const { pendingRequests } = pipelineClientContext
-            if (pendingRequests.size > 0) {
+            if (pendingRequests.length > 0) {
               try {
-                await Promise.allSettled(
-                  Array.from(pendingRequests.values()),
-                )
+                await Promise.allSettled(pendingRequests)
 
                 updateCustomData([
                   templateBuiltIn,
@@ -246,9 +238,11 @@ export function createVineTemplatePlugin(): LanguageServicePlugin {
               //  - references an external component
               if (!tagInfo) {
                 try {
-                  getComponentPropsFromPipeline(tag, pipelineClientContext)
-                  getElementAttrsFromPipeline(tag, pipelineClientContext)
-                  getComponentDirectivesFromPipeline(tag, triggerAtVineCompFn.fnName, pipelineClientContext)
+                  pendingRequests.push(
+                    pipeline.getComponentProps(pipelineClientContext, tag),
+                    pipeline.getElementAttrs(pipelineClientContext, tag),
+                    pipeline.getComponentDirectives(pipelineClientContext, tag, triggerAtVineCompFn.fnName),
+                  )
                 }
                 catch (err) {
                   console.error(`Failed to fetch info for tag ${tag} from pipeline:`, err)

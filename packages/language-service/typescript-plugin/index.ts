@@ -1,14 +1,15 @@
+import type { Language } from '@volar/language-core'
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
-import type { WebSocketServer } from 'ws'
-import { dirname, join } from 'node:path'
+import type { PipelineReqArgs, PipelineServerContext, TypeScriptSdk } from './types'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
-import { detect } from 'detect-port'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
-import { createVueVinePipelineServer } from './pipeline'
+import { handleGetComponentDirectives } from './pipeline/get-component-directives'
+import { handleGetComponentProps } from './pipeline/get-component-props'
+import { handleGetDocumentHighlight } from './pipeline/get-document-highlight'
+import { handleGetElementAttrs } from './pipeline/get-element-attrs'
 import { proxyLanguageServiceForVine } from './proxy-ts-lang-service'
-import { createPipelineLogger } from './utils'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownComponents = true
@@ -17,19 +18,66 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownProps = true
 }
 
-const DEFAULT_PIPELINE_PORT = 15193
-const logger = createPipelineLogger({ enabled: true })
+function createPipelineResponse(res: any): ts.server.HandlerResponse {
+  return {
+    response: res,
+    responseRequired: true,
+  }
+}
 
-let pipelineServer: WebSocketServer | undefined
+function addPipelineHandlers(
+  info: ts.server.PluginCreateInfo,
+  ts: TypeScriptSdk,
+  language: Language,
+) {
+  const projectService = info.project.projectService
+  projectService.logger.info(`Vue Vine: called handler processing ${info.project.projectKind}`)
+  if (!info.session) {
+    projectService.logger.info('Vue Vine: there is no session in info.')
+    return
+  }
+  const session = info.session
+  if (!(session.addProtocolHandler as ((...args: any[]) => any) | undefined)) {
+    projectService.logger.info('Vue Vine: there is no addProtocolHandler method.')
+    return
+  }
+  const pipelineContext: PipelineServerContext = {
+    ts,
+    language,
+    tsPluginInfo: info,
+  }
+
+  // Initialize pipeline handlers
+  session.addProtocolHandler('_vue_vine:getComponentProps', (request) => {
+    const { tagName, fileName } = request.arguments as PipelineReqArgs<'getComponentPropsRequest'>
+    return createPipelineResponse(
+      handleGetComponentProps(pipelineContext, fileName, tagName),
+    )
+  })
+  session.addProtocolHandler('_vue_vine:getElementAttrs', (request) => {
+    const { fileName, tagName } = request.arguments as PipelineReqArgs<'getElementAttrsRequest'>
+    return createPipelineResponse(
+      handleGetElementAttrs(pipelineContext, fileName, tagName),
+    )
+  })
+  session.addProtocolHandler('_vue_vine:getComponentDirectives', (request) => {
+    const { fileName, triggerAtFnName } = request.arguments as PipelineReqArgs<'getComponentDirectivesRequest'>
+    return createPipelineResponse(
+      handleGetComponentDirectives(pipelineContext, fileName, triggerAtFnName),
+    )
+  })
+  session.addProtocolHandler('_vue_vine:getDocumentHighlight', (request) => {
+    const { fileName, position } = request.arguments as PipelineReqArgs<'getDocumentHighlightRequest'>
+    return createPipelineResponse(
+      handleGetDocumentHighlight(pipelineContext, fileName, position),
+    )
+  })
+}
 
 export interface VueVineTypeScriptPluginOptions {
-  enablePipelineServer?: boolean
+  // ...
 }
-export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOptions = {}): ts.server.PluginModuleFactory {
-  const {
-    enablePipelineServer = true,
-  } = options
-
+export function createVueVineTypeScriptPlugin(_options: VueVineTypeScriptPluginOptions = {}): ts.server.PluginModuleFactory {
   const plugin = createLanguageServicePlugin((ts, info) => {
     const configFileName = info.project.getProjectName()
     const isConfiguredTsProject = info.project.projectKind === ts.server.ProjectKind.Configured
@@ -64,39 +112,10 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
     return {
       languagePlugins: [vueVinePlugin],
       setup: (language) => {
-        if (
-          enablePipelineServer
-          && isConfiguredTsProject
-          && !pipelineServer
-        ) {
-          detect(DEFAULT_PIPELINE_PORT)
-            .then((availablePort) => {
-              if (pipelineServer) {
-                return
-              }
+        // Initialize pipeline handlers
+        addPipelineHandlers(info, ts, language)
 
-              pipelineServer = createVueVinePipelineServer(availablePort, {
-                ts,
-                language,
-                tsPluginInfo: info,
-                tsPluginLogger: logger,
-              })
-              logger?.info(`Pipeline: WebSocket server created`)
-
-              writePipelineServerPortToFile(
-                ts.sys,
-                configFileName,
-                availablePort,
-              )
-            })
-            .catch((err) => {
-              logger?.error(
-                `Pipeline: Failed to detect available port for pipeline server`,
-                err,
-              )
-            })
-        }
-
+        // Setup proxy for language service
         info.languageService = proxyLanguageServiceForVine(
           ts,
           language,
@@ -107,27 +126,4 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
   })
 
   return plugin
-}
-
-function writePipelineServerPortToFile(
-  host: ts.System,
-  tsConfigFilePath: string,
-  port: number,
-) {
-  const rootDir = dirname(tsConfigFilePath)
-
-  // Find the `node_modules` directory that contains `vue-vine`
-  let dir = rootDir
-  while (!host.fileExists(join(dir, 'node_modules', 'vue-vine', 'package.json'))) {
-    const parentDir = dirname(dir)
-    if (parentDir === dir) {
-      throw new Error('Failed to find `node_modules` directory that contains \'vue-vine\'')
-    }
-    dir = parentDir
-  }
-
-  host.writeFile(
-    join(dir, 'node_modules', '.vine-pipeline-port'),
-    port.toString(),
-  )
 }
