@@ -4,7 +4,7 @@ import type { HtmlTagInfo } from '../types'
 import { randomUUID } from 'node:crypto'
 import { tryParsePipelineResponse } from '@vue-vine/language-service'
 import { WebSocket } from 'ws'
-import { getPipelineServerPort } from './get-pipeline-server-port'
+import { getPipelineServerPort } from './manage-server-port'
 
 type RequestNameToResponseName<T extends PipelineRequest['type']> = T extends `${infer R}Request` ? `${R}Response` : never
 

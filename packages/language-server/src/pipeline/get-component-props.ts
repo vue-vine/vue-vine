@@ -11,7 +11,6 @@ export function getComponentPropsFromPipeline(
     {
       requestName: 'getComponentPropsRequest',
       onSend: (ws, requestId) => {
-        console.log(`Pipeline: Fetching component '${tag}' props, requestId: ${requestId}`)
         ws.send(
           pipelineRequest({
             type: 'getComponentPropsRequest',
@@ -23,8 +22,9 @@ export function getComponentPropsFromPipeline(
       },
       onMessageData: (response) => {
         const currentTagInfo = context.tagInfos?.get(tag)
+        const props = [...response.props]
         context.tagInfos?.set(tag, mergeTagInfo(currentTagInfo, {
-          props: [...response.props],
+          props,
           events: [],
         }))
       },

@@ -11,7 +11,6 @@ export function getElementAttrsFromPipeline(
     {
       requestName: 'getElementAttrsRequest',
       onSend: (ws, requestId) => {
-        console.log(`Pipeline: Fetching element '${tag}' attrs, requestId: ${requestId}`)
         ws.send(
           pipelineRequest({
             type: 'getElementAttrsRequest',

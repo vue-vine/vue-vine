@@ -70,7 +70,7 @@ export function getComponentProps(
   vineCode: VueVineVirtualCode,
   compName: string,
 ): string[] {
-  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const { ts, tsPluginInfo } = context
   const program = tsPluginInfo.languageService.getProgram()
   if (!program) {
     return []
@@ -88,29 +88,49 @@ export function getComponentProps(
   }
 
   const vlsCompsMapType = checker.getTypeAtLocation(vlsCompsMapNode)
-  tsPluginLogger.info('vlsCompsMapType', checker.typeToString(vlsCompsMapType))
   const compSymbol = vlsCompsMapType.getProperty(compName)
   if (!compSymbol) {
     return []
   }
 
-  const compFnType = checker.getTypeOfSymbolAtLocation(compSymbol, tsSourceFile)
+  const compFnType = checker.getTypeOfSymbolAtLocation(compSymbol, vlsCompsMapNode)
   if (!compFnType) {
     return []
   }
-  tsPluginLogger.info('compFnType', checker.typeToString(compFnType))
 
-  // `compFnType` is (props: ...) => { ... }
-  // we need to extract `props` type from it
-  const propsNode = compFnType.getCallSignatures()[0].getParameters()[0]!
-  const propsType = checker.getTypeOfSymbol(propsNode)
+  const propsNames = new Set<string>()
 
-  // Extract all properties
-  const propsNames = propsType
-    .getProperties()
-    .map(p => p.getName())
+  // Helper function to handle each prop symbol
+  function handlePropSymbol(prop: ts.Symbol) {
+    propsNames.add(prop.getName())
+  }
 
-  return propsNames
+  // Handle call signatures: (props: ...) => { ... }
+  for (const sig of compFnType.getCallSignatures()) {
+    if (sig.parameters.length) {
+      const propParam = sig.parameters[0]!
+      const propsType = checker.getTypeOfSymbol(propParam)
+      const props = propsType.getProperties()
+      for (const prop of props) {
+        handlePropSymbol(prop)
+      }
+    }
+  }
+
+  // Handle construct signatures: new (props: ...) => Component
+  for (const sig of compFnType.getConstructSignatures()) {
+    const instanceType = sig.getReturnType()
+    const propsSymbol = instanceType.getProperty('$props')
+    if (propsSymbol) {
+      const propsType = checker.getTypeOfSymbol(propsSymbol)
+      const props = propsType.getProperties()
+      for (const prop of props) {
+        handlePropSymbol(prop)
+      }
+    }
+  }
+
+  return Array.from(propsNames)
 }
 
 export function getElementAttrs(
@@ -118,7 +138,7 @@ export function getElementAttrs(
   vineCode: VueVineVirtualCode,
   tagName: string,
 ): string[] {
-  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const { ts, tsPluginInfo } = context
   const program = tsPluginInfo.languageService.getProgram()
   if (!program) {
     return []
@@ -136,7 +156,6 @@ export function getElementAttrs(
 
   const attrs = checker.getTypeOfSymbol(elementType).getProperties()
   const result = attrs.map(c => c.name)
-  tsPluginLogger.info('Pipeline: Got element attrs', result)
   return result
 }
 
@@ -145,7 +164,7 @@ export function getComponentDirectives(
   vineCode: VueVineVirtualCode,
   triggerAtFnName: string,
 ): string[] {
-  const { ts, tsPluginInfo, tsPluginLogger } = context
+  const { ts, tsPluginInfo } = context
   const program = tsPluginInfo.languageService.getProgram()
   if (!program) {
     return []
@@ -154,13 +173,11 @@ export function getComponentDirectives(
   // Find vine component function that is referenced by the triggerAtFnName
   const tsSourceFile = program.getSourceFile(vineCode.fileName)
   if (!tsSourceFile) {
-    tsPluginLogger.info('No tsSourceFile found')
     return []
   }
 
   const triggerAtFnNode = searchFunctionDeclInRoot(ts, tsSourceFile, triggerAtFnName)
   if (!triggerAtFnNode) {
-    tsPluginLogger.info('No triggerAtFnNode found')
     return []
   }
 
@@ -168,20 +185,17 @@ export function getComponentDirectives(
   // this variable is generated for every vine component function
   const vlsDirectivesNode = searchVarDeclInCompFn(ts, triggerAtFnNode, '__VLS_directives')
   if (!vlsDirectivesNode) {
-    tsPluginLogger.info('No vlsDirectivesNode found')
     return []
   }
 
   const checker = program.getTypeChecker()
   const directivesType = checker.getTypeAtLocation(vlsDirectivesNode)
-  tsPluginLogger.info('directivesType', checker.typeToString(directivesType))
 
   const directivesNames = directivesType?.getProperties()
     .map(({ name }) => name)
     .filter(name => name.startsWith('v') && name.length >= 2 && name[1] === name[1].toUpperCase())
     .filter(name => !['vBind', 'vIf', 'vOn', 'VOnce', 'vShow', 'VSlot'].includes(name)) ?? []
 
-  tsPluginLogger.info('Pipeline: Got component directives', `[ ${directivesNames.join(', ')} ]`)
   return directivesNames
 }
 

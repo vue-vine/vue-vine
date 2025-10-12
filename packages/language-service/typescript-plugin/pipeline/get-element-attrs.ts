@@ -30,7 +30,6 @@ export function handleGetElementAttrs(
     )
   }
   catch (err) {
-    context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
     ws.send(
       pipelineResponse(context, {
         type: 'getElementAttrsResponse',
@@ -38,6 +37,7 @@ export function handleGetElementAttrs(
         tagName,
         fileName,
         attrs: [],
+        errMsg: err instanceof Error ? err.message : String(err),
       }),
     )
   }

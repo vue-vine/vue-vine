@@ -4,6 +4,7 @@ import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
 import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
 import { compile as ssrCompile } from '@vue/compiler-ssr'
+import { NOOP } from '@vue/shared'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
 import { VineBindingTypes } from '../constants'
@@ -318,6 +319,7 @@ export function compileVineTemplate(
       templateParsedAst: (
         getParsedAst
           ? parse(vineCompFnCtx.templateSource, {
+              onError: NOOP, // Error tolerance for template parsing
               parseMode: 'base',
               prefixIdentifiers: true,
               expressionPlugins: [
