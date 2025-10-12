@@ -1,14 +1,12 @@
 import type { VueCompilerOptions } from '@vue/language-core'
 import type * as ts from 'typescript'
 import type { WebSocketServer } from 'ws'
-import { dirname, join } from 'node:path'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
-import { detect } from 'detect-port'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
 import { createVueVinePipelineServer } from './pipeline'
+import { allocatePort } from './port-manager'
 import { proxyLanguageServiceForVine } from './proxy-ts-lang-service'
-import { createPipelineLogger } from './utils'
 
 function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownComponents = true
@@ -17,10 +15,89 @@ function ensureStrictTemplatesCheck(vueOptions: VueCompilerOptions) {
   vueOptions.checkUnknownProps = true
 }
 
-const DEFAULT_PIPELINE_PORT = 15193
-const logger = createPipelineLogger({ enabled: true })
+interface PipelineServerInstance {
+  server: WebSocketServer
+  cleanup: () => void
+}
 
-let pipelineServer: WebSocketServer | undefined
+let pipelineServerInstance: PipelineServerInstance | undefined
+
+/**
+ * Initialize the pipeline server with robust error handling and retry logic
+ */
+async function initializePipelineServer(
+  ts: typeof import('typescript'),
+  info: ts.server.PluginCreateInfo,
+  language: any,
+): Promise<void> {
+  const configFileName = info.project.getProjectName()
+
+  // Prevent multiple initializations
+  if (pipelineServerInstance) {
+    return
+  }
+
+  try {
+    let serverInstance: WebSocketServer | undefined
+
+    const result = await allocatePort(
+      {
+        host: ts.sys,
+        tsConfigFilePath: configFileName,
+        projectPath: configFileName,
+      },
+      async (port) => {
+        // Create server factory function
+        const server = createVueVinePipelineServer(port, {
+          ts,
+          language,
+          tsPluginInfo: info,
+        })
+
+        serverInstance = server
+        return server
+      },
+    )
+
+    // Store the server instance with cleanup function
+    if (serverInstance) {
+      pipelineServerInstance = {
+        server: serverInstance,
+        cleanup: () => {
+          result.cleanup()
+          serverInstance?.close()
+        },
+      }
+    }
+
+    console.info(`Pipeline: Server successfully started on port ${result.port}`)
+  }
+  catch (err) {
+    console.error(
+      'Pipeline: Failed to initialize server. Pipeline features will be disabled.',
+      err,
+    )
+    // Don't throw - allow plugin to continue without pipeline server
+  }
+}
+
+/**
+ * Cleanup pipeline server resources
+ */
+function cleanupPipelineServer(): void {
+  if (pipelineServerInstance) {
+    try {
+      pipelineServerInstance.cleanup()
+      console.info('Pipeline: Server cleaned up successfully')
+    }
+    catch (err) {
+      console.error('Pipeline: Error during cleanup', err)
+    }
+    finally {
+      pipelineServerInstance = undefined
+    }
+  }
+}
 
 export interface VueVineTypeScriptPluginOptions {
   enablePipelineServer?: boolean
@@ -64,39 +141,17 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
     return {
       languagePlugins: [vueVinePlugin],
       setup: (language) => {
+        // Initialize pipeline server if enabled
         if (
           enablePipelineServer
           && isConfiguredTsProject
-          && !pipelineServer
         ) {
-          detect(DEFAULT_PIPELINE_PORT)
-            .then((availablePort) => {
-              if (pipelineServer) {
-                return
-              }
-
-              pipelineServer = createVueVinePipelineServer(availablePort, {
-                ts,
-                language,
-                tsPluginInfo: info,
-                tsPluginLogger: logger,
-              })
-              logger?.info(`Pipeline: WebSocket server created`)
-
-              writePipelineServerPortToFile(
-                ts.sys,
-                configFileName,
-                availablePort,
-              )
-            })
-            .catch((err) => {
-              logger?.error(
-                `Pipeline: Failed to detect available port for pipeline server`,
-                err,
-              )
-            })
+          initializePipelineServer(ts, info, language).catch((err) => {
+            console.error('Pipeline: Unhandled error during initialization', err)
+          })
         }
 
+        // Setup proxy for language service
         info.languageService = proxyLanguageServiceForVine(
           ts,
           language,
@@ -109,25 +164,5 @@ export function createVueVineTypeScriptPlugin(options: VueVineTypeScriptPluginOp
   return plugin
 }
 
-function writePipelineServerPortToFile(
-  host: ts.System,
-  tsConfigFilePath: string,
-  port: number,
-) {
-  const rootDir = dirname(tsConfigFilePath)
-
-  // Find the `node_modules` directory that contains `vue-vine`
-  let dir = rootDir
-  while (!host.fileExists(join(dir, 'node_modules', 'vue-vine', 'package.json'))) {
-    const parentDir = dirname(dir)
-    if (parentDir === dir) {
-      throw new Error('Failed to find `node_modules` directory that contains \'vue-vine\'')
-    }
-    dir = parentDir
-  }
-
-  host.writeFile(
-    join(dir, 'node_modules', '.vine-pipeline-port'),
-    port.toString(),
-  )
-}
+// Export cleanup function for testing and manual cleanup
+export { cleanupPipelineServer }

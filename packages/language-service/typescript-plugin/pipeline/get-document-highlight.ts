@@ -26,11 +26,11 @@ export function handleGetDocumentHighlight(
     }))
   }
   catch (err) {
-    context.tsPluginLogger.error('Pipeline: Failed to get document highlight', err)
     ws.send(pipelineResponse(context, {
       type: 'getDocumentHighlightResponse',
       requestId,
       result: [],
+      errMsg: err instanceof Error ? err.message : String(err),
     }))
   }
 }

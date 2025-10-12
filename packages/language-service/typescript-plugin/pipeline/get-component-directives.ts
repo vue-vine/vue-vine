@@ -30,7 +30,6 @@ export function handleGetComponentDirectives(
     )
   }
   catch (err) {
-    context.tsPluginLogger.error('Pipeline: Failed to get element attrs', err)
     ws.send(
       pipelineResponse(context, {
         type: 'getComponentDirectivesResponse',
@@ -38,6 +37,7 @@ export function handleGetComponentDirectives(
         triggerAtFnName,
         fileName,
         directives: [],
+        errMsg: err instanceof Error ? err.message : String(err),
       }),
     )
   }

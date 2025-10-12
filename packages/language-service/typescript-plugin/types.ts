@@ -27,6 +27,7 @@ export type PipelineResponse
     | (_pipelineResp<{ type: 'getDocumentHighlightResponse', result: ts.DocumentHighlights[] }>)
 export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & {
   type: T
+  error?: string
 }
 
 export interface PipelineServerContext {
@@ -34,11 +35,4 @@ export interface PipelineServerContext {
   language: Language
   tsPluginInfo: TsPluginInfo
   ws: WebSocket
-  tsPluginLogger: PipelineLogger
-}
-
-export interface PipelineLogger {
-  enabled: boolean
-  info: (...msg: any[]) => void
-  error: (...msg: any[]) => void
 }

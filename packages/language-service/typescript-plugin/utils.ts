@@ -1,4 +1,4 @@
-import type { PipelineLogger, PipelineRequest, PipelineResponse, PipelineServerContext } from './types'
+import type { PipelineRequest, PipelineResponse, PipelineServerContext } from './types'
 import { safeDestr } from 'destr'
 
 export function pipelineRequest<T extends PipelineRequest>(data: T): string {
@@ -25,23 +25,4 @@ export function tryParsePipelineResponse(
     onError?.(err)
     return (void 0)
   }
-}
-
-export function createPipelineLogger({ enabled = false }: {
-  enabled?: boolean
-} = {}): PipelineLogger {
-  const logger: PipelineLogger = {
-    enabled,
-    info: (...msg: string[]) => {
-      if (!logger.enabled)
-        return
-      console.log(`[INFO] ${new Date().toLocaleString()}: `, ...msg)
-    },
-    error: (...msg: string[]) => {
-      if (!logger.enabled)
-        return
-      console.error(`[ERROR] ${new Date().toLocaleString()}: `, ...msg)
-    },
-  }
-  return logger
 }

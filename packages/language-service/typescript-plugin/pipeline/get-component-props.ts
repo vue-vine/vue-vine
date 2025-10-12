@@ -22,8 +22,6 @@ export function handleGetComponentProps(
       vineCode,
       componentName,
     )
-    context.tsPluginLogger.info('Pipeline: Got component props', props)
-
     ws.send(
       pipelineResponse(context, {
         type: 'getComponentPropsResponse',
@@ -35,7 +33,6 @@ export function handleGetComponentProps(
     )
   }
   catch (err) {
-    context.tsPluginLogger.error('Pipeline: Error on getComponentProps:', err)
     // Send empty response when error
     ws.send(
       pipelineResponse(context, {
@@ -44,6 +41,7 @@ export function handleGetComponentProps(
         componentName,
         fileName,
         props: [],
+        errMsg: err instanceof Error ? err.message : String(err),
       }),
     )
   }

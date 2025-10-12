@@ -12,7 +12,6 @@ export function getComponentDirectivesFromPipeline(
     {
       requestName: 'getComponentDirectivesRequest',
       onSend: (ws, requestId) => {
-        console.log(`Pipeline: Fetching directives when trigger at component '${triggerAtFnName}', requestId: ${requestId}`)
         ws.send(
           pipelineRequest({
             type: 'getComponentDirectivesRequest',
