@@ -395,18 +395,23 @@ function patchModuleOldWay(
       if (oCssBindingsVariables.length === 0 && nCssBindingsVariables.length === 0) {
         patchRes.type = 'style'
         patchRes.scopeId = nCompFn.scopeId
+        // Pure style change - don't reload the component
+        newVFCtx.renderOnly = true
       }
       // The variables of v-bind() before and after the change are equal
       else if (areStrArraysEqual(oCssBindingsVariables, nCssBindingsVariables)) {
         patchRes.type = 'style'
         patchRes.scopeId = nCompFn.scopeId
+        // Style with same v-bind variables - safe to keep renderOnly
+        newVFCtx.renderOnly = true
       }
       else {
+        // v-bind() variables changed - need full reload
         patchRes.type = 'module'
+        newVFCtx.renderOnly = false
       }
       patchRes.hmrCompFnsName = nCompFn.fnName
       patchRes.scopeId = nCompFn.scopeId
-      newVFCtx.renderOnly = false
     }
   }
 

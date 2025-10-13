@@ -1,0 +1,51 @@
+{
+  "name": "@vue-vine/rspack-loader",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Rspack loader for Vue Vine",
+  "author": "Vue Vine Team",
+  "license": "MIT",
+  "homepage": "https://vue-vine.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/rspack-loader"
+  },
+  "keywords": [
+    "vue-vine",
+    "rspack",
+    "loader",
+    "vue"
+  ],
+  "exports": {
+    ".": {
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./style-loader": {
+      "vine": "./src/style-loader.ts",
+      "types": "./dist/style-loader.d.ts",
+      "default": "./dist/style-loader.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
+  "peerDependencies": {
+    "@rspack/core": "catalog:rspack"
+  },
+  "dependencies": {
+    "@rspack/core": "catalog:rspack",
+    "@vue-vine/compiler": "workspace:*"
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "catalog:compiler"
+  }
+}

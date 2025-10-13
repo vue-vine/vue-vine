@@ -750,8 +750,15 @@ export function generateVineFactory(
       : '__vine'
   }\n})();`)
 
+  // HMR code generation is now handled at file level by runtime adapters
+  // Both Vite and Rspack generate HMR code in their respective plugin/loader
+  // So we skip component-level HMR code generation here
+
   // Record component function to HMR
-  if (isDev) {
+  // For Vite: createRecord is called here (Vite's file-level HMR only handles accept)
+  // For Rspack: createRecord is called in file-level HMR code (runtime adapter)
+  const adapter = compilerHooks.getCompilerCtx().options.runtimeAdapter
+  if (isDev && (!adapter || adapter.name === 'vite')) {
     ms.appendRight(
       ms.length(),
       `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
@@ -898,10 +905,10 @@ export function generateEmitsOptions(
 export function generateStyleImports(
   transformCtx: TransformContext,
 ): void {
-  const { vineFileCtx } = transformCtx
+  const { vineFileCtx, compilerHooks } = transformCtx
   // Traverse file context's `styleDefine`, and generate import statements.
   // Ordered by their import releationship.
-  const styleImportStmts = sortStyleImport(vineFileCtx)
+  const styleImportStmts = sortStyleImport(vineFileCtx, compilerHooks.getCompilerCtx())
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
   // Prepend all style import statements

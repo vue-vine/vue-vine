@@ -79,6 +79,10 @@ catalogs:
     '@nuxt/schema': ^3.17.6
     '@nuxt/test-utils': ^3.19.2
     nuxt: ^3.17.6
+  rspack:
+    '@rspack/cli': ^1.5.8
+    '@rspack/core': ^1.5.8
+    sass-loader: ^16.0.3
   styles:
     sass: ^1.89.2
     tailwindcss: ^4.1.11
@@ -151,7 +155,6 @@ catalogs:
     vue: *vue
     vue-router: ^4.5.1
     vue-tsc: *vue-lang-tools
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'

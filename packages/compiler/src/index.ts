@@ -18,6 +18,11 @@ export {
 } from './constants'
 
 export {
+  RspackRuntimeAdapter,
+  ViteRuntimeAdapter,
+} from './runtime'
+
+export {
   compileVineStyle,
 } from './style/compile'
 
@@ -36,6 +41,7 @@ export {
 } from './types'
 export type {
   HMRCompFnsName,
+  RuntimeAdapter,
   VineCompileCtx,
   VineCompilerCtx,
   VineCompilerHooks,

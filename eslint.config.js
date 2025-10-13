@@ -10,6 +10,7 @@ export default antfu(
 
       'packages/docs/.vitepress/cache',
       'packages/e2e-test/**/*.vine.ts',
+      'packages/e2e-rspack/**/*.vine.ts',
       'packages/create-vue-vine/template/**/*',
       'packages/nuxt-module/playground/*',
     ],
