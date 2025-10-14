@@ -8,6 +8,11 @@ export default defineConfig({
     testTimeout: timeout,
     hookTimeout: timeout,
     reporters: 'dot',
+    // Run tests in sequence: basic tests first, then HMR tests
+    sequence: {
+      shuffle: false,
+      hooks: 'list',
+    },
     onConsoleLog(log) {
       if (log.match(/experimental|jit engine|emitted file|tailwind/i))
         return false

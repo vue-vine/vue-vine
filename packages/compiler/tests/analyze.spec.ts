@@ -573,7 +573,7 @@ function MyBox() {
     compileVineTypeScriptFile(content, 'testSortStyleImport', { compilerHooks: mockCompilerHooks })
     const fileCtx = mockCompilerCtx.fileCtxMap.get('testSortStyleImport')
     expect(fileCtx).not.toBeUndefined()
-    const sorted = sortStyleImport(fileCtx!)
+    const sorted = sortStyleImport(fileCtx!, mockCompilerCtx)
     expect(sorted).toMatchInlineSnapshot(`
       [
         "import 'testSortStyleImport?type=vine-style&vineFileId=testSortStyleImport&scopeId=939fb36a&comp=MyApp&lang=css&index=0&virtual.css'",

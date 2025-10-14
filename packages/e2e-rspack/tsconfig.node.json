@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "customConditions": ["vine"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "include": ["rspack.config.ts"]
+}

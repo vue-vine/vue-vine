@@ -14,11 +14,12 @@ import {
   compileVineTypeScriptFile,
   createCompilerCtx,
   createTsMorph,
+  ViteRuntimeAdapter,
 } from '@vue-vine/compiler'
 import * as vite from 'vite'
 import { createLogger, transformWithEsbuild } from 'vite'
 import { QUERY_TYPE_STYLE, QUERY_TYPE_STYLE_EXTERNAL } from './constants'
-import { addHMRHelperCode, vineHMR } from './hot-update'
+import { vineHMR } from './hot-update'
 import { parseQuery } from './parse-query'
 
 type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
@@ -30,15 +31,16 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
     ...options,
     envMode: options.envMode ?? (process.env.NODE_ENV || 'development'),
     inlineTemplate: options.inlineTemplate ?? process.env.NODE_ENV === 'production',
+    runtimeAdapter: new ViteRuntimeAdapter(),
   })
 
-  const panicOnCompilerError = (pluginContext: TransformPluginContext) => {
-    if (compilerCtx.vineCompileErrors.length > 0) {
+  const panicOnCompilerError = (pluginContext: TransformPluginContext | null | undefined) => {
+    if (compilerCtx.vineCompileErrors && compilerCtx.vineCompileErrors.length > 0) {
       const allErrMsg = compilerCtx.vineCompileErrors
         .map(diagnositc => diagnositc.full)
         .join('\n')
       compilerCtx.vineCompileErrors.length = 0
-      pluginContext.error(`Vue Vine compilation failed:\n${allErrMsg}`)
+      pluginContext?.error(`Vue Vine compilation failed:\n${allErrMsg}`)
     }
   }
 
@@ -78,8 +80,22 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
     }
     compilerCtx.vineCompileWarnings.length = 0
 
-    // Inject `import.meta.hot.accept`
-    addHMRHelperCode(vineFileCtx)
+    // Inject `import.meta.hot.accept` using runtime adapter
+    const isDev = compilerCtx.options.envMode !== 'production'
+    const runtimeAdapter = compilerCtx.options.runtimeAdapter
+    if (runtimeAdapter) {
+      const hmrCode = runtimeAdapter.generateHMRCode({
+        fileCtx: vineFileCtx,
+        compFnCtx: vineFileCtx.vineCompFns[0], // Not used by Vite adapter
+        isDev,
+      })
+      if (hmrCode) {
+        vineFileCtx.fileMagicCode.appendRight(
+          vineFileCtx.fileMagicCode.length(),
+          hmrCode,
+        )
+      }
+    }
 
     // Since we skipped using vite:esbuild built-in plugin to transform .vine.ts files,
     // we need to transform them manually here.
