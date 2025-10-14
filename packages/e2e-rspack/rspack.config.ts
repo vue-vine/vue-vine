@@ -12,6 +12,10 @@ export default defineConfig({
   entry: {
     main: './src/main.ts',
   },
+  devServer: {
+    port: 15080,
+    hot: true,
+  },
   resolve: {
     extensions: ['...', '.ts', '.vue'],
     alias: {

@@ -12,6 +12,7 @@ export default antfu(
     rules: {
       'curly': 'off',
       'prefer-const': 'off',
+      'no-console': 'off',
     },
   },
   {
