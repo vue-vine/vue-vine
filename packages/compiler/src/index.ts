@@ -18,6 +18,18 @@ export {
 } from './constants'
 
 export {
+  analyzeHMRPatch,
+} from './hmr-patch'
+export type {
+  HMRPatchResult,
+} from './hmr-patch'
+
+export {
+  RspackRuntimeAdapter,
+  ViteRuntimeAdapter,
+} from './runtime'
+
+export {
   compileVineStyle,
 } from './style/compile'
 
@@ -36,6 +48,7 @@ export {
 } from './types'
 export type {
   HMRCompFnsName,
+  RuntimeAdapter,
   VineCompileCtx,
   VineCompilerCtx,
   VineCompilerHooks,

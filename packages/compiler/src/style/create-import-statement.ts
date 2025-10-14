@@ -1,12 +1,15 @@
-import type { VineCompFnCtx, VineFileCtx, VineStyleMeta } from '../types'
+import type { VineCompFnCtx, VineCompilerCtx, VineFileCtx, VineStyleMeta } from '../types'
 import { getStyleLangFileExt, showIf } from '../utils'
 
 export function createStyleImportStmt(
+  compilerCtx: VineCompilerCtx,
   vineFileCtx: VineFileCtx,
   vineCompFnCtx: VineCompFnCtx,
   styleMeta: VineStyleMeta,
   index: number,
 ): string {
+  const adapter = compilerCtx.options.runtimeAdapter
+
   if (styleMeta.isExternalFilePathSource) {
     if (!styleMeta.scoped) {
       // Just use the user-given style file path directly
@@ -17,11 +20,26 @@ export function createStyleImportStmt(
       )} '${styleMeta.source}';`
     }
 
+    if (adapter) {
+      // Use adapter for external style imports (with scoped)
+      return adapter.generateStyleImport({
+        fileId: styleMeta.source,
+        vineFileId: vineFileCtx.fileId,
+        scopeId: vineCompFnCtx.scopeId,
+        compName: vineCompFnCtx.fnName,
+        lang: styleMeta.lang,
+        index,
+        scoped: styleMeta.scoped,
+        isExternal: true,
+      })
+    }
+
+    // Default Vite format for external files
     const styleFileExt = styleMeta.source.slice(
       styleMeta.source.lastIndexOf('.'),
     )
 
-    const importStmt = [
+    return [
       'import ',
       vineCompFnCtx.isCustomElement ? `__${vineCompFnCtx.fnName.toLowerCase()}_styles from '` : '\'',
       `${styleMeta.source}?`,
@@ -34,12 +52,25 @@ export function createStyleImportStmt(
       `&index=${index}`,
       `&virtual${styleFileExt}'`,
     ].filter(Boolean).join('')
-
-    return importStmt
   }
 
+  if (adapter) {
+    // Use adapter for inline styles
+    return adapter.generateStyleImport({
+      fileId: vineFileCtx.fileId,
+      vineFileId: vineFileCtx.fileId,
+      scopeId: vineCompFnCtx.scopeId,
+      compName: vineCompFnCtx.fnName,
+      lang: styleMeta.lang,
+      index,
+      scoped: styleMeta.scoped,
+      isExternal: false,
+    })
+  }
+
+  // Default Vite format for inline styles
   const styleLangExt = getStyleLangFileExt(styleMeta.lang)
-  const importStmt = [
+  return [
     'import ',
     vineCompFnCtx.isCustomElement ? `__${vineCompFnCtx.fnName.toLowerCase()}_styles from '` : '\'',
     `${vineFileCtx.fileId.replace(/\.vine\.ts$/, '')}?`,
@@ -52,6 +83,4 @@ export function createStyleImportStmt(
     `&index=${index}`,
     `&virtual.${styleLangExt}'`,
   ].filter(Boolean).join('')
-
-  return importStmt
 }
