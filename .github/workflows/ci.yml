@@ -100,7 +100,7 @@ jobs:
 
       - name: Run Vite E2E Tests
         working-directory: packages/e2e-test
-        run: pnpm vitest run tests/e2e.spec.ts
+        run: pnpm vitest --run
         env:
           CI: true
           NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
