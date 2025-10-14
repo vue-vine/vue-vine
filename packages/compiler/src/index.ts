@@ -18,6 +18,13 @@ export {
 } from './constants'
 
 export {
+  analyzeHMRPatch,
+} from './hmr-patch'
+export type {
+  HMRPatchResult,
+} from './hmr-patch'
+
+export {
   RspackRuntimeAdapter,
   ViteRuntimeAdapter,
 } from './runtime'

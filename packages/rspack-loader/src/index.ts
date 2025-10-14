@@ -4,6 +4,7 @@ import type {
   VineCompilerOptions,
 } from '@vue-vine/compiler'
 import {
+  analyzeHMRPatch,
   compileVineTypeScriptFile,
   RspackRuntimeAdapter,
 } from '@vue-vine/compiler'
@@ -74,11 +75,9 @@ export default function vineRspackLoader(
 
   // For HMR: analyze changes and set renderOnly/hmrCompFnsName
   if (this.hot && fileCtxCache) {
-    // Simple heuristic: if source code changed, assume it's a template/style change
-    // For now, always set renderOnly to true for HMR (optimistic approach)
-    // TODO: implement proper patch analysis like Vite plugin's patchModuleOldWay
-    vineFileCtx.renderOnly = true
-    vineFileCtx.hmrCompFnsName = vineFileCtx.vineCompFns[0]?.fnName || null
+    const hmrPatchResult = analyzeHMRPatch(fileCtxCache, vineFileCtx)
+    vineFileCtx.renderOnly = hmrPatchResult.renderOnly
+    vineFileCtx.hmrCompFnsName = hmrPatchResult.hmrCompFnsName
   }
 
   // Add HMR code using runtime adapter
