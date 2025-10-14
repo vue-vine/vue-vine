@@ -50,15 +50,6 @@ export default function vineRspackLoader(
     onBindFileCtx: (fileId, fileCtx) => {
       compilerCtx.fileCtxMap.set(fileId, fileCtx)
     },
-    onEnd: () => {
-      if (compilerCtx.vineCompileErrors.length > 0) {
-        const allErrMsg = compilerCtx.vineCompileErrors
-          .map(d => d.full)
-          .join('\n')
-        compilerCtx.vineCompileErrors.length = 0
-        this.emitError(new Error(allErrMsg))
-      }
-    },
   }
 
   // Read from cache during HMR

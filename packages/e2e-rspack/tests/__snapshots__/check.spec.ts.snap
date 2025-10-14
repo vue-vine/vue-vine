@@ -1,0 +1,53 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`rspack build error check > should report invalid macro usage error 1`] = `
+"> @vue-vine/e2e-rspack@1.0.0 build [workspace]/packages/e2e-rspack
+> rspack build
+
+ERROR in ./src/app.vine.ts
+ × Module Error (from [workspace]/packages/rspack-loader/dist/index.js):
+ │ 
+ │ Error File: [workspace]/packages/e2e-rspack/src/app.vine.ts 5:2
+ │ \`vineProps\` macro call must have a type parameter to specify the prop's type
+ │
+
+ERROR in ./src/app.vine.ts
+ × Module Error (from [workspace]/packages/rspack-loader/dist/index.js):
+ │ 
+ │ Error File: [workspace]/packages/e2e-rspack/src/app.vine.ts 5:2
+ │ \`vineProp\` macro call must be inside a \`const\` variable declaration
+ │
+
+Rspack compiled with errors
+ ELIFECYCLE Command failed with exit code 1."
+`;
+
+exports[`rspack build error check > should report template syntax error 1`] = `
+"> @vue-vine/e2e-rspack@1.0.0 build [workspace]/packages/e2e-rspack
+> rspack build
+
+ERROR in ./src/app.vine.ts
+ × Module Error (from [workspace]/packages/rspack-loader/dist/index.js):
+ │ 
+ │ Error File: [workspace]/packages/e2e-rspack/src/app.vine.ts 9:1
+ │ [Vine template compile error] Invalid end tag.
+ │
+
+Rspack compiled with errors
+ ELIFECYCLE Command failed with exit code 1."
+`;
+
+exports[`rspack build error check > should report unsupported CSS language error 1`] = `
+"> @vue-vine/e2e-rspack@1.0.0 build [workspace]/packages/e2e-rspack
+> rspack build
+
+ERROR in ./src/app.vine.ts
+ × Module Error (from [workspace]/packages/rspack-loader/dist/index.js):
+ │ 
+ │ Error File: [workspace]/packages/e2e-rspack/src/app.vine.ts 18:12
+ │ vineStyle CSS language only supports: \`css\`, \`scss\`, \`sass\`, \`less\`, \`stylus\` and \`postcss\`
+ │
+
+Rspack compiled with errors
+ ELIFECYCLE Command failed with exit code 1."
+`;
