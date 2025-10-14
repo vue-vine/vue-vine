@@ -22,7 +22,8 @@ export default function vineStyleLoader(
   const { compilerCtx } = getOrCreateGlobalContext(rootContext, undefined, isDevelopment)
 
   // Get style definition from fileCtxMap
-  const vineFileId = resourcePath
+  // Normalize path for cross-platform consistency (Windows uses backslashes)
+  const vineFileId = resourcePath.replace(/\\/g, '/')
   const fileCtx = compilerCtx.fileCtxMap.get(vineFileId)
 
   if (!fileCtx) {

@@ -28,6 +28,9 @@ export default function vineRspackLoader(
     return callback(null, source)
   }
 
+  // Normalize path for cross-platform consistency (Windows uses backslashes)
+  const normalizedPath = resourcePath.replace(/\\/g, '/')
+
   // Detect development mode from loader context
   const isDevelopment = this.mode === 'development'
 
@@ -60,15 +63,15 @@ export default function vineRspackLoader(
 
   // Read from cache during HMR
   let fileCtxCache
-  if (this.hot && compilerCtx.fileCtxMap.has(resourcePath)) {
-    fileCtxCache = compilerCtx.fileCtxMap.get(resourcePath)
+  if (this.hot && compilerCtx.fileCtxMap.has(normalizedPath)) {
+    fileCtxCache = compilerCtx.fileCtxMap.get(normalizedPath)
     compilerCtx.isRunningHMR = true
   }
 
   // Compile
   const vineFileCtx = compileVineTypeScriptFile(
     source,
-    resourcePath,
+    normalizedPath,
     { compilerHooks, fileCtxCache },
     false, // SSR: not supported for now, can be passed via loader options later
   )
@@ -102,7 +105,7 @@ export default function vineRspackLoader(
   const map = vineFileCtx.fileMagicCode.generateMap({
     includeContent: true,
     hires: true,
-    source: resourcePath,
+    source: normalizedPath,
   })
 
   callback(null, code, map)

@@ -125,6 +125,9 @@ if (module.hot) {
   }: RuntimeAdapterGenStyleImportParams): string {
     // Rspack virtual module format - use resourceQuery
     // For both inline and external styles, use the same query format
-    return `import '${fileId}?vine-style&vineFileId=${vineFileId}&scopeId=${scopeId}&comp=${compName}&lang=${lang}&index=${index}${scoped ? '&scoped=true' : ''}${isExternal ? '&external=true' : ''}'`
+    // On Windows, we need to normalize the path to avoid ':' being treated as URI scheme
+    const normalizedFileId = fileId.replace(/\\/g, '/')
+    const normalizedVineFileId = vineFileId.replace(/\\/g, '/')
+    return `import '${normalizedFileId}?vine-style&vineFileId=${normalizedVineFileId}&scopeId=${scopeId}&comp=${compName}&lang=${lang}&index=${index}${scoped ? '&scoped=true' : ''}${isExternal ? '&external=true' : ''}'`
   }
 }
