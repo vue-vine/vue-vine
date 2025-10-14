@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - minor
 
   pull_request:
     branches:
       - main
+      - minor
 
 jobs:
   lint_and_typecheck:
