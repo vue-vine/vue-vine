@@ -213,7 +213,6 @@ export function createVueVineVirtualCode(
           compilerOptions,
           vueCompilerOptions,
           template: {
-            // @ts-expect-error - vue language tools upstream issue
             ast: vineCompFn.templateAst,
             errors: [],
             warnings: [],
