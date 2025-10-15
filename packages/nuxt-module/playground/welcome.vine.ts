@@ -2,6 +2,8 @@ export default function Welcome() {
   const content = vineProp<string>()
   const counter = ref(0)
   const contentColor = ref('red')
+  const increment = () => { counter.value += 1 }
+  const decrement = () => { counter.value -= 1 }
 
   vineStyle.scoped(`
     .content-view {
@@ -19,9 +21,9 @@ export default function Welcome() {
       <div>Vue Vine!</div>
       <div class="content-view">{{ content }}</div>
       <div>
-        <button @click="() => counter++">+</button>
+        <button @click="increment">+</button>
         {{ counter }}
-        <button @click="() => counter--">-</button>
+        <button @click="decrement">-</button>
       </div>
     </div>
   `
