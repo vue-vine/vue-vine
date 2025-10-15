@@ -1,7 +1,6 @@
 {
   "name": "@vue-vine/e2e-rspack",
   "type": "module",
-  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "rspack dev",
