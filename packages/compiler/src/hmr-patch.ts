@@ -67,6 +67,11 @@ export function analyzeHMRPatch(
       continue
     }
 
+    // If a previous component already requires full reload, stop checking
+    if (result.renderOnly === false) {
+      break
+    }
+
     const nCompFnTemplate = normalizeLineEndings(nCompFn.templateSource || '')
     const oCompFnTemplate = normalizeLineEndings(oCompFn.templateSource || '')
     const nCompFnStyles = nStyleDefine[nCompFn.scopeId]?.map(style => style.source ?? '') || []

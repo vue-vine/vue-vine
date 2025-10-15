@@ -4,7 +4,7 @@ import { getOrCreateGlobalContext } from './context'
 
 export default function vineStyleLoader(
   this: LoaderContext,
-  _source: string,
+  source: string,
 ): void {
   const callback = this.async()
   const { rootContext, resourcePath, resourceQuery } = this
@@ -15,31 +15,44 @@ export default function vineStyleLoader(
   const index = Number.parseInt(query.get('index') || '0')
   const lang = query.get('lang') || 'css'
   const scoped = query.has('scoped')
+  const isExternal = query.has('external')
 
   // Detect development mode from loader context
   const isDevelopment = this.mode === 'development'
 
   const { compilerCtx } = getOrCreateGlobalContext(rootContext, undefined, isDevelopment)
 
-  // Get style definition from fileCtxMap
+  // Get vineFileId: for external styles, use query param; otherwise use resourcePath
   // Normalize path for cross-platform consistency (Windows uses backslashes)
-  const vineFileId = resourcePath.replace(/\\/g, '/')
-  const fileCtx = compilerCtx.fileCtxMap.get(vineFileId)
+  const vineFileId = (query.get('vineFileId') || resourcePath).replace(/\\/g, '/')
 
-  if (!fileCtx) {
-    return callback(new Error(`File context not found for ${vineFileId}`))
+  let styleSource: string
+
+  if (isExternal) {
+    // For external styles, read the source directly
+    styleSource = source
   }
+  else {
+    // For inline styles, get from fileCtx
+    const fileCtx = compilerCtx.fileCtxMap.get(vineFileId)
 
-  const styleDefine = fileCtx.styleDefine[scopeId]?.[index]
+    if (!fileCtx) {
+      return callback(new Error(`File context not found for ${vineFileId}`))
+    }
 
-  if (!styleDefine) {
-    return callback(new Error(`Style not found: ${scopeId}[${index}]`))
+    const styleDefine = fileCtx.styleDefine[scopeId]?.[index]
+
+    if (!styleDefine) {
+      return callback(new Error(`Style not found: ${scopeId}[${index}]`))
+    }
+
+    styleSource = styleDefine.source
   }
 
   // Compile style
   compileVineStyle(compilerCtx, {
     vineFileId,
-    source: styleDefine.source,
+    source: styleSource,
     isScoped: scoped,
     scopeId,
     preprocessLang: lang as any,

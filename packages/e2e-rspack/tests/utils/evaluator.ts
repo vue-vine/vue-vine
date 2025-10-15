@@ -27,6 +27,9 @@ async function evaluateElement(
       else if (evaluationType === 'textContent') {
         return el.textContent
       }
+      else if (evaluationType === 'attribute') {
+        return el.getAttribute(property as string)
+      }
 
       return null
     },
@@ -55,6 +58,14 @@ export function createEvaluator(
     async getColor(selector: string, page?: Page): Promise<string | Nil> {
       const pageCtx = page ?? e2eTestCtx.page
       return await evaluateElement(pageCtx, selector, 'style', 'color')
+    },
+
+    /**
+     * Get element's attribute value
+     */
+    async getAttribute(selector: string, attribute: string, page?: Page): Promise<string | Nil> {
+      const pageCtx = page ?? e2eTestCtx.page
+      return await evaluateElement(pageCtx, selector, 'attribute', attribute)
     },
   }
 }

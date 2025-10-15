@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.11
+
+### Patch Changes
+
+- Refactor and ready to release (beta) Rspack support.
+
 ## 1.7.10
 
 ### Patch Changes

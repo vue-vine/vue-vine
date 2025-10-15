@@ -51,8 +51,6 @@ export async function untilUpdated(
  */
 async function startRspackServer(e2eTestCtx: E2EPlaywrightContext): Promise<void> {
   return new Promise((resolve, reject) => {
-    console.log('Starting Rspack dev server...')
-
     // Start rspack dev server
     const serverProcess = execa('pnpm', ['dev'], {
       cwd: e2eRoot,
@@ -64,14 +62,23 @@ async function startRspackServer(e2eTestCtx: E2EPlaywrightContext): Promise<void
     })
 
     e2eTestCtx.rspackServer = serverProcess
+    e2eTestCtx.rspackServerUrl = rspackTestUrl
 
     let resolved = false
+
+    // Catch unhandled promise rejection from execa
+    // This happens when the server is killed during cleanup
+    serverProcess.catch((error) => {
+      // Only log if it's not a normal termination
+      if (!error.killed && !error.signal && error.exitCode !== 0) {
+        console.error('Rspack server process error:', error.message)
+      }
+      // Don't reject - server termination is expected during cleanup
+    })
 
     // Listen for server ready
     serverProcess.stdout?.on('data', (data) => {
       const output = data.toString()
-      console.log('[Rspack]', output.trim())
-
       // Check if server is ready - support multiple output formats
       if (!resolved && (
         output.includes('compiled successfully')
@@ -83,14 +90,6 @@ async function startRspackServer(e2eTestCtx: E2EPlaywrightContext): Promise<void
         console.log('Rspack dev server is ready!')
         // Give it a bit more time to be fully ready
         setTimeout(() => resolve(), 1000)
-      }
-    })
-
-    serverProcess.stderr?.on('data', (data) => {
-      const output = data.toString()
-      // Only log non-warning stderr
-      if (!output.includes('webpack')) {
-        console.error('[Rspack Error]', output.trim())
       }
     })
 
@@ -125,11 +124,24 @@ async function stopRspackServer(e2eTestCtx: E2EPlaywrightContext): Promise<void>
   if (e2eTestCtx.rspackServer && e2eTestCtx.rspackServer.pid) {
     console.log('Stopping Rspack dev server...')
     return new Promise((resolve) => {
-      kill(e2eTestCtx.rspackServer!.pid!, 'SIGTERM', (err) => {
-        if (err) {
-          console.error('Error stopping server:', err)
+      const pid = e2eTestCtx.rspackServer!.pid!
+
+      // First try graceful shutdown with SIGTERM
+      kill(pid, 'SIGTERM', (err) => {
+        if (err && !err.message?.includes('no such process')) {
+          console.warn('SIGTERM failed, trying SIGKILL:', err.message)
+          // Force kill if graceful shutdown fails
+          kill(pid, 'SIGKILL', (killErr) => {
+            if (killErr && !killErr.message?.includes('no such process')) {
+              console.error('SIGKILL failed:', killErr.message)
+            }
+          })
         }
-        resolve()
+        // Wait longer for complete cleanup (especially for child processes)
+        setTimeout(() => {
+          console.log('Server cleanup completed')
+          resolve()
+        }, 2000)
       })
     })
   }
@@ -154,13 +166,6 @@ export async function createBrowserContext(): Promise<E2EPlaywrightContext> {
   })
   const page = await browser.newPage()
 
-  // Listen for console errors
-  page.on('console', (msg) => {
-    if (msg.type() === 'error') {
-      console.error('Browser console error:', msg.text())
-    }
-  })
-
   // Navigate to the app
   await page.goto(rspackTestUrl)
   await wait(2000) // Wait longer for initial load
@@ -175,17 +180,37 @@ export async function createBrowserContext(): Promise<E2EPlaywrightContext> {
  * Free browser context and stop server
  */
 export async function freeBrowserContext(ctx: E2EPlaywrightContext): Promise<void> {
+  // Close page
   try {
     if (ctx.page && !ctx.page.isClosed()) {
       await ctx.page.close()
     }
+  }
+  catch (error: any) {
+    console.error('Error closing page:', error?.message || error)
+  }
+
+  // Close browser
+  try {
     if (ctx.browser) {
       await ctx.browser.close()
     }
-    await stopRspackServer(ctx)
   }
-  catch (error) {
-    console.error('Error closing resources:', error)
+  catch (error: any) {
+    console.error('Error closing browser:', error?.message || error)
+  }
+
+  // Stop server
+  try {
+    await stopRspackServer(ctx)
+    // Ensure process is fully killed
+    if (ctx.rspackServer) {
+      ctx.rspackServer.kill('SIGKILL')
+      ctx.rspackServer = undefined
+    }
+  }
+  catch (error: any) {
+    console.error('Error stopping server:', error?.message || error)
   }
 }
 
@@ -203,11 +228,14 @@ export function editFile(filename: string, replacer: (code: string) => string): 
  * Helper to create a test runner with browser context
  */
 export function runTestAtPage(
+  page: string,
   browserCtx: E2EPlaywrightContext,
-  testFn: (browserCtx: E2EPlaywrightContext) => Promise<void>,
-): () => Promise<void> {
+  testRunner: () => Promise<void>,
+) {
   return async () => {
-    await testFn(browserCtx)
+    await browserCtx.page?.goto(`${browserCtx.rspackServerUrl}${page}`)
+    await wait(800)
+    await testRunner()
   }
 }
 

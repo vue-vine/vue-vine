@@ -7,7 +7,7 @@ export default defineConfig({
     include: ['./tests/**/*.spec.[tj]s'],
     testTimeout: timeout,
     hookTimeout: timeout,
-    reporters: 'dot',
+    reporters: [['default', { summary: false }]],
     // Run tests in sequence: basic tests first, then HMR tests
     sequence: {
       shuffle: false,

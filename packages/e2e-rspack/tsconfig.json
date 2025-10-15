@@ -12,7 +12,8 @@
     },
     "resolveJsonModule": true,
     "types": [
-      "vue-vine/macros"
+      "vue-vine/macros",
+      "@rspack/core/module"
     ],
     "allowImportingTsExtensions": true,
     /* Linting */

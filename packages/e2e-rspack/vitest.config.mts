@@ -8,7 +8,7 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
     include: ['./tests/**/*.spec.[tj]s'],
     testTimeout: timeout,
     hookTimeout: timeout,
-    reporters: 'dot',
+    reporters: [['default', { summary: false }]],
     sequence: {
       shuffle: false,
       hooks: 'list',

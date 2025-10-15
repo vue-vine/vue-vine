@@ -598,6 +598,9 @@ importers:
       vue:
         specifier: catalog:vue-libs
         version: 3.5.22(typescript@5.8.3)
+      vue-router:
+        specifier: catalog:vue-libs
+        version: 4.5.1(vue@3.5.22(typescript@5.8.3))
     devDependencies:
       '@rspack/cli':
         specifier: catalog:rspack
@@ -3923,7 +3926,7 @@ packages:
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
 
   '@vue/devtools-api@6.6.4':
-    resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
+    resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==, tarball: https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.6.4.tgz}
 
   '@vue/devtools-api@7.7.7':
     resolution: {integrity: sha512-lwOnNBH2e7x1fIIbVT7yF5D+YWhqELm55/4ZKf45R9T8r9dE2AIOy8HKjfqzGsoTHFbWbr337O4E0A0QADnjBg==}
@@ -9256,7 +9259,7 @@ packages:
       vue: ^3.4.37
 
   vue-router@4.5.1:
-    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
+    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==, tarball: https://registry.npmjs.org/vue-router/-/vue-router-4.5.1.tgz}
     peerDependencies:
       vue: ^3.2.0
 

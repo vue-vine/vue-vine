@@ -9,7 +9,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "vue": "catalog:vue-libs"
+    "vue": "catalog:vue-libs",
+    "vue-router": "catalog:vue-libs"
   },
   "devDependencies": {
     "@rspack/cli": "catalog:rspack",
