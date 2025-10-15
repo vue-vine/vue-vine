@@ -9,9 +9,6 @@ defines:
   - &volar 2.4.20
   - &volar-service 0.0.65
 
-overrides:
-  vite: npm:rolldown-vite@latest
-
 catalogs:
   cli:
     '@changesets/cli': ^2.29.5
@@ -74,11 +71,11 @@ catalogs:
   nuxt-libs:
     '@nuxt/devtools': ^2.6.2
     '@nuxt/eslint-config': ^1.5.2
-    '@nuxt/kit': ^3.17.6
-    '@nuxt/module-builder': ^1.0.1
-    '@nuxt/schema': ^3.17.6
+    '@nuxt/kit': ~4.0.3
+    '@nuxt/module-builder': ^1.0.2
+    '@nuxt/schema': ~4.0.3
     '@nuxt/test-utils': ^3.19.2
-    nuxt: ^3.17.6
+    nuxt: ~4.0.3
   rspack:
     '@rspack/cli': ^1.5.8
     '@rspack/core': ^1.5.8

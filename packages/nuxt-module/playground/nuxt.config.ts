@@ -1,6 +1,6 @@
+import vueVineNuxtModule from '../src/module'
+
 export default defineNuxtConfig({
-  modules: ['../src/module'],
-  vueVineNuxtModule: {},
+  modules: [vueVineNuxtModule],
   devtools: { enabled: true },
-  compatibilityDate: '2024-08-01',
 })
