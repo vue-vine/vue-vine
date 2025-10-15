@@ -1,7 +1,7 @@
 {
   "name": "vue-vine",
   "type": "module",
-  "version": "1.7.10",
+  "version": "1.7.11",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -24,6 +24,11 @@
     "./macros": {
       "types": "./types/macros.d.ts"
     },
+    "./rspack": {
+      "vine": "./src/rspack/index.ts",
+      "types": "./dist/rspack.d.ts",
+      "default": "./dist/rspack.js"
+    },
     "./slidev": {
       "vine": "./src/slidev/index.ts",
       "types": "./types/slidev.d.ts",
@@ -42,7 +47,8 @@
     "vue": ">=3.2"
   },
   "dependencies": {
-    "@vue-vine/vite-plugin": "workspace:^"
+    "@vue-vine/rspack-loader": "workspace:*",
+    "@vue-vine/vite-plugin": "workspace:*"
   },
   "devDependencies": {
     "@typescript/native-preview": "catalog:compiler",

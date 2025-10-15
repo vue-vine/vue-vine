@@ -1,0 +1,14 @@
+# Local
+.DS_Store
+*.local
+*.log*
+
+# Test fixtures (dynamically created during tests)
+src/error-report-fixture.vine.ts
+
+# Dist
+node_modules
+dist/
+
+# Profile
+.rspack-profile-*/

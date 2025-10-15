@@ -1,5 +1,5 @@
 import type { ElementNode } from '@vue/compiler-dom'
-import type { VineFileCtx } from '../types'
+import type { VineCompilerCtx, VineFileCtx } from '../types'
 import type { ComponentRelationsMap } from '../utils/topo-sort'
 import { traverseTemplate } from '../template/traverse'
 import { isComponentNode, isTemplateElementNode } from '../template/type-predicate'
@@ -15,6 +15,7 @@ import { createStyleImportStmt } from './create-import-statement'
  */
 export function sortStyleImport(
   vineFileCtx: VineFileCtx,
+  compilerCtx: VineCompilerCtx, // Add compilerCtx parameter
 ): string[] {
   const { vineCompFns, styleDefine } = vineFileCtx
   const relationsMap: ComponentRelationsMap = Object.fromEntries(
@@ -51,6 +52,7 @@ export function sortStyleImport(
   ).map(
     ([compFn, styleMetas]) => styleMetas.map(
       (styleMeta, i) => createStyleImportStmt(
+        compilerCtx,
         vineFileCtx,
         compFn,
         styleMeta,

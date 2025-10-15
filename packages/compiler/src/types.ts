@@ -78,10 +78,38 @@ export interface VineCompilerHooks {
   onEnd?: () => void
 }
 
+export interface RuntimeAdapterGenHMRCodeParams {
+  fileCtx: VineFileCtx
+  compFnCtx: VineCompFnCtx
+  isDev: boolean
+}
+
+export interface RuntimeAdapterGenStyleImportParams {
+  fileId: string
+  vineFileId: string
+  scopeId: string
+  compName: string
+  lang: string
+  index: number
+  scoped: boolean
+  isExternal: boolean
+}
+
+export interface RuntimeAdapter {
+  name: 'vite' | 'rspack'
+
+  // Generate HMR code
+  generateHMRCode: (params: RuntimeAdapterGenHMRCodeParams) => string
+
+  // Generate style virtual module import
+  generateStyleImport: (params: RuntimeAdapterGenStyleImportParams) => string
+}
+
 export interface VineCompilerOptions {
   volar?: boolean
   envMode?: string // 'development' | 'production'
   inlineTemplate?: boolean
+  runtimeAdapter?: RuntimeAdapter
   vueCompilerOptions?: CompilerOptions & {
     /** @internal */
     __enableTransformAssetsURL?: boolean

@@ -4,7 +4,8 @@
 
 <b>Before starting to use it, you're supposed to know the following conventions:</b>
 
-- Vine was designed to only support <span class="hlmark">Vue 3.0+</span> and <span class="hlmark">Vite</span>.
+- Vine was designed to only support <span class="hlmark">Vue 3.0+</span>.
+- It provides official support for <span class="hlmark">Vite</span> and <span class="hlmark">Rspack</span>.
 - Vine is designed to support <span class="hlmark">only TypeScript</span>, JavaScript-only users can't harness the complete range of functionalities.
 
 :::
@@ -17,7 +18,7 @@ Install Vue Vine ![npm](https://img.shields.io/npm/v/vue-vine) in your project:
 pnpm i vue-vine
 ```
 
-Vine provides a Vite plugin and a VSCode extension to offer feature support.
+Vine provides build tool integrations (Vite plugin and Rspack loader) and a VSCode extension to offer feature support.
 
 Besides, we also provide some other libraries that you might need during development or configuration, you can learn more details in the next section [Ecosystem](./ecosystem.md).
 
@@ -35,6 +36,84 @@ export default defineConfig({
   ],
 })
 ```
+
+## Install Rspack loader
+
+::: tip 🧪 Beta Feature
+Rspack support is currently in **beta**.
+
+Please install the beta version and [report any issues](https://github.com/vue-vine/vue-vine/issues) you encounter.
+:::
+
+Install the Rspack loader:
+
+```bash
+pnpm add -D @vue-vine/rspack-loader@beta
+```
+
+Configure the loader in `rspack.config.ts`:
+
+```ts [rspack.config.ts]
+import { defineConfig } from '@rspack/cli'
+import { rspack } from '@rspack/core'
+
+// Target browsers for transpilation
+const targets = ['last 2 versions', '> 0.2%', 'not dead']
+
+export default defineConfig({
+  module: {
+    rules: [
+      // Process .vine.ts files with chained loaders
+      // Loaders execute from right to left (bottom to top):
+      // 1. @vue-vine/rspack-loader: Transforms Vine components to TypeScript
+      // 2. builtin:swc-loader: Transforms TypeScript to JavaScript
+      {
+        test: /\.vine\.ts$/,
+        resourceQuery: { not: [/vine-style/] }, // Exclude style virtual modules
+        use: [
+          {
+            loader: 'builtin:swc-loader',
+            options: {
+              jsc: {
+                parser: { syntax: 'typescript' },
+              },
+              env: { targets },
+            },
+          },
+          {
+            loader: '@vue-vine/rspack-loader',
+          },
+        ],
+      },
+      // Process Vine style virtual modules
+      {
+        resourceQuery: /vine-style/,
+        use: [
+          {
+            loader: '@vue-vine/rspack-loader/style-loader',
+          },
+        ],
+        type: 'css',
+      },
+      // ...other rules
+    ],
+  },
+  plugins: [
+    // Required for Vue runtime
+    new rspack.DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    }),
+  ],
+})
+```
+
+::: info Why chained loaders?
+The Vine compiler outputs TypeScript code that needs to be transformed to JavaScript. Rspack's built-in `builtin:swc-loader` is used for this TypeScript-to-JavaScript transformation, providing excellent performance through native Rust implementation.
+
+The `resourceQuery: { not: [/vine-style/] }` ensures that CSS content from Vine style blocks isn't processed by the TypeScript/JavaScript loaders.
+:::
 
 ## Create project with CLI
 
