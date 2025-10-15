@@ -1,65 +1,45 @@
-import { ref } from 'vue'
-
-// Child component with counter
-export function Counter() {
-  const count = ref(0)
-
-  return vine`
-    <div class="counter">
-      <p>Count: {{ count }}</p>
-      <button class="btn" @click="count++">Increment</button>
-      <button class="btn" @click="count--">Decrement</button>
-    </div>
-  `
-}
-
-// Parent component with styles
 export function App() {
   vineStyle(`
     * {
-      font-family: Menlo, monospace;
+      margin: 0;
+      padding: 0;
     }
-
     .app {
-      max-width: 600px;
-      margin: 0 auto;
+      padding: 5rem 0;
     }
-
-    .title {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: brown;
-    }
-
-    .counter {
+    .nav-links {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-
-    .btn {
+    .nav-link {
+      width: max-content;
+      text-decoration: none;
+      color: cadetblue;
       padding: 0.5rem 1rem;
-      margin-right: 0.5rem;
-      border: none;
-      border-radius: 4px;
-      background: orange;
-      color: white;
-      cursor: pointer;
+      border-radius: 0.5rem;
+      background-color: #dddddd55;
     }
-
-    .btn:hover {
-      background: orangered;
+    .nav-link:hover {
+      color: #3451b2;
     }
   `)
 
   return vine`
     <div class="app">
-      <h1 class="title">Rspack HMR Test</h1>
-      <Counter />
+      <nav class="nav-links">
+        <router-link class="nav-link" to="/hmr">HMR Test</router-link>
+        <router-link class="nav-link" to="/vine-prop">Vine Prop</router-link>
+        <router-link class="nav-link" to="/ts-morph-complex-external"
+          >Ts Morph Complex External</router-link
+        >
+        <router-link class="nav-link" to="/style-order">Style Order</router-link>
+        <router-link class="nav-link" to="/external-style-import">External Style Import</router-link>
+        <router-link class="nav-link" to="/transform-asset-url">Transform Asset URL</router-link>
+      </nav>
+
+      <router-view />
     </div>
   `
 }

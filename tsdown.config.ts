@@ -1,9 +1,10 @@
+import type { UserConfig } from 'tsdown'
 import { join } from 'node:path'
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
 
 const isDev = process.env.NODE_ENV === 'development'
-const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
+const buildConfig: UserConfig = defineConfig({
   workspace: {
     include: ['packages/*'],
     exclude: [

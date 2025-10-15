@@ -4,7 +4,8 @@
 
 <b>在开始使用之前，您应该了解以下约定：</b>
 
-- Vine 只支持 <span class="hlmark">Vue 3.0+</span> 和 <span class="hlmark">Vite</span>。
+- Vine 只支持 <span class="hlmark">Vue 3.0+</span>。
+- 我们提供了对 <span class="hlmark">Vite</span> 和 <span class="hlmark">Rspack</span> 的支持。
 - Vine <span class="hlmark">仅支持 TypeScript</span>，JavaScript 用户无法使用完整功能。
 
 :::
@@ -17,7 +18,7 @@
 pnpm i vue-vine
 ```
 
-Vine 提供了 Vite 插件和 VSCode 扩展来支持基础功能。
+Vine 提供了构建工具集成（Vite 插件和 Rspack loader）以及 VSCode 扩展来支持基础功能。
 
 除此之外，我们还提供了其他一些开发或配置时可能会需要用到的库，你可以在下一节 [周边生态](./ecosystem.md) 中了解更多细节。
 
@@ -35,6 +36,84 @@ export default defineConfig({
   ],
 })
 ```
+
+## 安装 Rspack loader {#install-rspack-loader}
+
+::: tip 🧪 Beta 功能
+Rspack 支持目前处于 **beta** 阶段。
+
+请安装 beta 版本并[报告您遇到的任何问题](https://github.com/vue-vine/vue-vine/issues)。
+:::
+
+安装 Rspack loader：
+
+```bash
+pnpm add -D @vue-vine/rspack-loader@beta
+```
+
+在 `rspack.config.ts` 中配置 loader：
+
+```ts [rspack.config.ts]
+import { defineConfig } from '@rspack/cli'
+import { rspack } from '@rspack/core'
+
+// 目标浏览器配置，用于代码转译
+const targets = ['last 2 versions', '> 0.2%', 'not dead']
+
+export default defineConfig({
+  module: {
+    rules: [
+      // 使用链式 loader 处理 .vine.ts 文件
+      // Loader 从右到左（从下到上）执行：
+      // 1. @vue-vine/rspack-loader：将 Vine 组件转换为 TypeScript
+      // 2. builtin:swc-loader：将 TypeScript 转换为 JavaScript
+      {
+        test: /\.vine\.ts$/,
+        resourceQuery: { not: [/vine-style/] }, // 排除样式虚拟模块
+        use: [
+          {
+            loader: 'builtin:swc-loader',
+            options: {
+              jsc: {
+                parser: { syntax: 'typescript' },
+              },
+              env: { targets },
+            },
+          },
+          {
+            loader: '@vue-vine/rspack-loader',
+          },
+        ],
+      },
+      // 处理 Vine 样式虚拟模块
+      {
+        resourceQuery: /vine-style/,
+        use: [
+          {
+            loader: '@vue-vine/rspack-loader/style-loader',
+          },
+        ],
+        type: 'css',
+      },
+      // ...其他 rules
+    ],
+  },
+  plugins: [
+    // Vue 运行时所需
+    new rspack.DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    }),
+  ],
+})
+```
+
+::: info 为什么需要链式 loader？
+Vine 编译器输出的是 TypeScript 代码，需要转换为 JavaScript。Rspack 内置的 `builtin:swc-loader` 用于进行 TypeScript 到 JavaScript 的转换，通过 Rust 原生实现提供了卓越的性能。
+
+`resourceQuery: { not: [/vine-style/] }` 确保 Vine 样式块中的 CSS 内容不会被 TypeScript/JavaScript loader 处理。
+:::
 
 ## 通过项目脚手架创建项目 {#create-project-with-cli}
 

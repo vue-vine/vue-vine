@@ -25,7 +25,7 @@ const DUMMY_PARENT: any = Object.freeze({})
  */
 function propagateEndLocation(node: VElement): void {
   const lastChild
-      = (node.type === 'VElement' ? node.endTag : null) || last(node.children)
+    = (node.type === 'VElement' ? node.endTag : null) || last(node.children)
   if (lastChild != null) {
     node.range[1] = lastChild.range[1]
     node.loc.end = lastChild.loc.end
@@ -277,8 +277,8 @@ export class VineTemplateParser {
   private needConvertToDirective(node: VAttribute) {
     const attrName = node.key.rawName
     const expressionEnabled
-        = this.expressionEnabled
-          || (attrName === 'v-pre' && !this.isInVPreElement)
+      = this.expressionEnabled
+        || (attrName === 'v-pre' && !this.isInVPreElement)
 
     if (!expressionEnabled) {
       return false
@@ -395,7 +395,7 @@ export class VineTemplateParser {
     // Update the current namespace.
     const current = this.currentNode
     this.namespace
-        = current.type === 'VElement' ? current.namespace : NS.HTML
+      = current.type === 'VElement' ? current.namespace : NS.HTML
 
     // Update v-pre state.
     if (this.vPreElement === element) {

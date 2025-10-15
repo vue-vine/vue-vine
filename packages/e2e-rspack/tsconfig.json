@@ -12,7 +12,8 @@
     },
     "resolveJsonModule": true,
     "types": [
-      "vue-vine/macros"
+      "vue-vine/macros",
+      "@rspack/core/module"
     ],
     "allowImportingTsExtensions": true,
     /* Linting */
@@ -26,7 +27,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.vue"
+    "src",
+    "tests"
   ]
 }

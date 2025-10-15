@@ -25,6 +25,7 @@ export default antfu(
     files: [
       'packages/language-service/**/*.ts',
       'packages/language-server/**/*.ts',
+      'packages/e2e-rspack/tests/**/*.ts',
     ],
     rules: {
       'no-console': 'off',

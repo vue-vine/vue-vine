@@ -1,24 +1,31 @@
 {
   "name": "@vue-vine/e2e-rspack",
   "type": "module",
-  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "rspack dev",
     "build": "rspack build",
-    "preview": "rspack preview"
+    "preview": "rspack preview",
+    "test": "vitest"
   },
   "dependencies": {
-    "vue": "catalog:vue-libs"
+    "vue": "catalog:vue-libs",
+    "vue-router": "catalog:vue-libs"
   },
   "devDependencies": {
     "@rspack/cli": "catalog:rspack",
     "@rspack/core": "catalog:rspack",
+    "@types/jsdom": "catalog:types",
     "@types/node": "catalog:types",
     "@vue-vine/eslint-config": "workspace:*",
     "@vue-vine/rspack-loader": "workspace:*",
+    "execa": "catalog:cli",
+    "jsdom": "catalog:vitest-libs",
+    "playwright-chromium": "catalog:vitest-libs",
     "sass": "catalog:styles",
     "sass-loader": "catalog:rspack",
+    "tree-kill": "catalog:cli",
+    "vitest": "catalog:vitest-libs",
     "vue-vine": "workspace:*"
   }
 }

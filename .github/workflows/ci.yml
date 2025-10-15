@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - minor
 
   pull_request:
     branches:
@@ -99,8 +98,13 @@ jobs:
         run: pnpm exec playwright install
 
       - name: Run Vite E2E Tests
-        working-directory: packages/e2e-test
-        run: pnpm vitest --run
+        run: pnpm test:e2e
+        env:
+          CI: true
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
+
+      - name: Run Rspack E2E Tests
+        run: pnpm test:e2e-rspack
         env:
           CI: true
           NODE_OPTIONS: --max-old-space-size=4096 --expose-gc

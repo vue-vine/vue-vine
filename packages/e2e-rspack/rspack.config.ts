@@ -12,6 +12,11 @@ export default defineConfig({
   entry: {
     main: './src/main.ts',
   },
+  devServer: {
+    port: 15080,
+    hot: true,
+    historyApiFallback: true,
+  },
   resolve: {
     extensions: ['...', '.ts', '.vue'],
     alias: {
@@ -21,9 +26,28 @@ export default defineConfig({
   module: {
     rules: [
       // Vine loader for .vine.ts files
+      // Loaders execute from right to left (bottom to top)
+      // 1. @vue-vine/rspack-loader: Transform Vine components to TypeScript Vue components
+      // 2. builtin:swc-loader: Transform TypeScript to JavaScript
       {
         test: /\.vine\.ts$/,
-        loader: '@vue-vine/rspack-loader',
+        resourceQuery: { not: [/vine-style/] }, // Exclude style virtual modules
+        use: [
+          {
+            loader: 'builtin:swc-loader',
+            options: {
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                },
+              },
+              env: { targets },
+            },
+          },
+          {
+            loader: '@vue-vine/rspack-loader',
+          },
+        ],
       },
       // Vine style loader for virtual style modules
       {
@@ -66,7 +90,7 @@ export default defineConfig({
         type: 'css',
       },
       {
-        test: /\.svg/,
+        test: /\.(png|jpe?g|gif|svg|webp|ico)$/,
         type: 'asset/resource',
       },
     ],
