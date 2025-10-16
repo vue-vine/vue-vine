@@ -47,6 +47,7 @@
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | 语言服务集成 |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite 插件 |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader (🧪Beta) |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild 插件 (🧪Beta) |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint 自定义解析器 |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-plugin](./packages/eslint-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-plugin)](https://www.npmjs.com/package/@vue-vine/eslint-plugin) | ESLint 插件 |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-config](./packages/eslint-config) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-config)](https://www.npmjs.com/package/@vue-vine/eslint-config) | ESLint 配置 |
@@ -76,66 +77,30 @@ export default defineConfig({
 })
 ```
 
-### 使用 Rspack（Beta 🧪）
+### 使用 Rsbuild 插件（Beta 🧪）
 
-安装 Rspack loader：
-
-```bash
-ni -D @vue-vine/rspack-loader@beta
-```
-
-在 `rspack.config.ts` 中配置 loader：
+在 `rsbuild.config.ts` 中使用插件：
 
 ```ts
-import { defineConfig } from '@rspack/cli'
-import { rspack } from '@rspack/core'
-
-// 目标浏览器配置，用于代码转译
-const targets = ['last 2 versions', '> 0.2%', 'not dead']
+import { defineConfig } from '@rsbuild/core'
+import { pluginVueVine } from 'vue-vine/rsbuild'
 
 export default defineConfig({
-  module: {
-    rules: [
-      // 使用链式 loader 处理 .vine.ts 文件
-      // Loader 从右到左（从下到上）执行：
-      // 1. @vue-vine/rspack-loader：将 Vine 组件转换为 TypeScript
-      // 2. builtin:swc-loader：将 TypeScript 转换为 JavaScript
-      {
-        test: /\.vine\.ts$/,
-        resourceQuery: { not: [/vine-style/] }, // 排除样式虚拟模块
-        use: [
-          {
-            loader: 'builtin:swc-loader',
-            options: {
-              jsc: {
-                parser: { syntax: 'typescript' },
-              },
-              env: { targets },
-            },
-          },
-          {
-            loader: '@vue-vine/rspack-loader',
-          },
-        ],
-      },
-      // 处理 Vine 样式虚拟模块
-      {
-        resourceQuery: /vine-style/,
-        use: [{ loader: '@vue-vine/rspack-loader/style-loader' }],
-        type: 'css',
-      },
-      // ...其他 rules
-    ],
-  },
   plugins: [
-    new rspack.DefinePlugin({
-      __VUE_OPTIONS_API__: JSON.stringify(true),
-      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
-    }),
+    pluginVueVine({
+      // 可选的编译器选项
+      // compilerOptions: { ... }
+    })
   ],
 })
 ```
+
+Rsbuild 插件提供了更简单、更高层次的集成方式。它会自动：
+- 配置 `.vine.ts` 文件所需的 loader
+- 设置样式处理规则
+- 通过 DefinePlugin 注入 Vue 运行时标志
+
+对于需要细粒度控制 loader 配置的高级用户，请参考 [Rspack loader 文档](https://vue-vine.dev/zh/introduction/quick-start.html#install-rspack-loader)。
 
 ### TypeScript 配置
 

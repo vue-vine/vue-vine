@@ -7,5 +7,5 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },
-  "include": ["rspack.config.ts"]
+  "include": ["rsbuild.config.ts"]
 }

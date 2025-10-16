@@ -66,7 +66,10 @@ jobs:
         run: pnpm run build
 
       - name: Run Unit Tests
-        run: pnpm --filter @vue-vine/compiler --filter @vue-vine/language-service --filter @vue-vine/language-server --filter @vue-vine/eslint-parser --filter @vue-vine/eslint-plugin --filter @vue-vine/eslint-config --filter @vue-vine/nuxt --filter vue-vine run test --run
+        run: pnpm test:unit
+        env:
+          CI: true
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
 
   e2e_tests:
     runs-on: ${{ matrix.os }}
@@ -94,17 +97,10 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Install playwright
-        run: pnpm exec playwright install
-
-      - name: Run Vite E2E Tests
-        run: pnpm test:e2e
-        env:
-          CI: true
-          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
-
-      - name: Run Rspack E2E Tests
-        run: pnpm test:e2e-rspack
+      - name: Run Bundler E2E Tests
+        run: |
+          pnpm exec playwright install
+          pnpm test:e2e
         env:
           CI: true
           NODE_OPTIONS: --max-old-space-size=4096 --expose-gc

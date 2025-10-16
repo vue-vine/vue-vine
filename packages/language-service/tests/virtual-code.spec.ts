@@ -26,18 +26,18 @@ function testSnapshotForFile(relativePath: string) {
 
 describe('verify Volar virtual code snapshots', () => {
   it('key-cases.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/key-cases.vine.ts')
+    testSnapshotForFile('../../e2e-vite/src/fixtures/key-cases.vine.ts')
   })
   it('vine-model.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/vine-model.vine.ts')
+    testSnapshotForFile('../../e2e-vite/src/fixtures/vine-model.vine.ts')
   })
   it('use-template-ref-virtual-code.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/use-template-ref-virtual-code.vine.ts')
+    testSnapshotForFile('../../e2e-vite/src/fixtures/use-template-ref-virtual-code.vine.ts')
   })
   it('custom-elements.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/custom-elements.vine.ts')
+    testSnapshotForFile('../../e2e-vite/src/fixtures/custom-elements.vine.ts')
   })
   it('vapor-interop.vine.ts', () => {
-    testSnapshotForFile('../../e2e-test/src/fixtures/vapor-interop.vine.ts')
+    testSnapshotForFile('../../e2e-vite/src/fixtures/vapor-interop.vine.ts')
   })
 })

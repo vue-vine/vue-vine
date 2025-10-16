@@ -41,11 +41,17 @@ export default function vineRspackLoader(
   // Configure Rspack adapter
   compilerCtx.options.runtimeAdapter = new RspackRuntimeAdapter()
 
+  // Track if any errors occurred
+  let hasCompilationError = false
+
   // Set up compiler hooks
   const compilerHooks: VineCompilerHooks = {
     getCompilerCtx: () => compilerCtx,
     getTsMorph: () => tsMorphCache,
-    onError: err => this.emitError(new Error(err.full)),
+    onError: (err) => {
+      hasCompilationError = true
+      this.emitError(new Error(err.full))
+    },
     onWarn: warn => this.emitWarning(new Error(warn.full)),
     onBindFileCtx: (fileId, fileCtx) => {
       compilerCtx.fileCtxMap.set(fileId, fileCtx)
@@ -90,6 +96,11 @@ export default function vineRspackLoader(
         )
       }
     }
+  }
+
+  // If compilation errors occurred, fail the build
+  if (hasCompilationError) {
+    return callback(new Error(`Compilation failed for ${normalizedPath}`))
   }
 
   const code = vineFileCtx.fileMagicCode.toString()

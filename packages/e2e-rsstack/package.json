@@ -1,11 +1,11 @@
 {
-  "name": "@vue-vine/e2e-rspack",
+  "name": "@vue-vine/e2e-rsstack",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "rspack dev",
-    "build": "rspack build",
-    "preview": "rspack preview",
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
     "test": "vitest"
   },
   "dependencies": {
@@ -13,18 +13,17 @@
     "vue-router": "catalog:vue-libs"
   },
   "devDependencies": {
-    "@rspack/cli": "catalog:rspack",
-    "@rspack/core": "catalog:rspack",
+    "@rsbuild/core": "catalog:rsstack",
+    "@rsbuild/plugin-sass": "catalog:rsstack",
     "@types/jsdom": "catalog:types",
     "@types/node": "catalog:types",
     "@vue-vine/eslint-config": "workspace:*",
+    "@vue-vine/rsbuild-plugin": "workspace:*",
     "@vue-vine/rspack-loader": "workspace:*",
     "execa": "catalog:cli",
     "jsdom": "catalog:vitest-libs",
     "playwright-chromium": "catalog:vitest-libs",
     "sass": "catalog:styles",
-    "sass-loader": "catalog:rspack",
-    "tree-kill": "catalog:cli",
     "vitest": "catalog:vitest-libs",
     "vue-vine": "workspace:*"
   }
