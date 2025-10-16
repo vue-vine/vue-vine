@@ -51,7 +51,6 @@
     "@nuxt/test-utils": "catalog:nuxt-libs",
     "changelogen": "catalog:utils",
     "nuxt": "catalog:nuxt-libs",
-    "playwright-chromium": "catalog:vitest-libs",
     "vue-tsc": "catalog:vue-libs"
   }
 }

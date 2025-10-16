@@ -1,6 +1,9 @@
 packages:
   - packages/*
 
+overrides:
+  vite: npm:rolldown-vite@latest
+
 catalogs:
   cli:
     '@changesets/cli': ^2.29.5
@@ -111,7 +114,6 @@ catalogs:
     vite: ^7.0.2
     vite-plugin-inspect: ^11.3.0
   vitest-libs:
-    '@playwright/test': ^1.53.2
     jsdom: ^26.1.0
     playwright-chromium: ^1.53.2
     vitest: ^3.2.4
@@ -163,8 +165,5 @@ onlyBuiltDependencies:
   - simple-git-hooks
   - unrs-resolver
   - vue-demi
-
-overrides:
-  vite: npm:rolldown-vite@latest
 
 shellEmulator: true

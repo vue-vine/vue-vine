@@ -97,23 +97,10 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Install playwright
-        run: pnpm exec playwright install
-
-      - name: Run Vite E2E Tests
-        run: pnpm test:e2e-vite
-        env:
-          CI: true
-          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
-
-      - name: Run Rspack E2E Tests
-        run: pnpm test:e2e-rsstack
-        env:
-          CI: true
-          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
-
-      - name: Run Nuxt E2E Tests
-        run: pnpm test:e2e-nuxt
+      - name: Run Bundler E2E Tests
+        run: |
+          pnpm exec playwright install
+          pnpm test:e2e
         env:
           CI: true
           NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
