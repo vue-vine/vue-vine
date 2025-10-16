@@ -1,5 +1,5 @@
 {
-  "name": "@vue-vine/e2e-test",
+  "name": "@vue-vine/e2e-vite",
   "type": "module",
   "private": "true",
   "scripts": {

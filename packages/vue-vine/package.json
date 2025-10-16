@@ -29,6 +29,11 @@
       "types": "./dist/rspack.d.ts",
       "default": "./dist/rspack.js"
     },
+    "./rsbuild": {
+      "vine": "./src/rsbuild/index.ts",
+      "types": "./dist/rsbuild.d.ts",
+      "default": "./dist/rsbuild.js"
+    },
     "./slidev": {
       "vine": "./src/slidev/index.ts",
       "types": "./types/slidev.d.ts",
@@ -47,6 +52,7 @@
     "vue": ">=3.2"
   },
   "dependencies": {
+    "@vue-vine/rsbuild-plugin": "workspace:*",
     "@vue-vine/rspack-loader": "workspace:*",
     "@vue-vine/vite-plugin": "workspace:*"
   },

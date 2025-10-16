@@ -12,7 +12,7 @@ export function WelcomePage() {
 
   return vine`
     <div class="welcome-page">
-      <h2>Vue Vine + Rspack E2E Test</h2>
+      <h2>Vue Vine + Rsbuild E2E Test</h2>
       <p>Welcome to the test application</p>
     </div>
   `
