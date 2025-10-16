@@ -37,7 +37,40 @@ export default defineConfig({
 })
 ```
 
-## 安装 Rspack loader {#install-rspack-loader}
+## 安装 Rsbuild 插件 {#install-rsbuild-plugin}
+
+::: tip 🧪 Beta 功能
+Rsbuild 支持目前处于 **beta** 阶段。
+
+请安装 beta 版本并[报告您遇到的任何问题](https://github.com/vue-vine/vue-vine/issues)。
+:::
+
+在 `rsbuild.config.ts` 中使用插件：
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from '@rsbuild/core'
+import { pluginVueVine } from 'vue-vine/rsbuild'
+
+export default defineConfig({
+  plugins: [
+    pluginVueVine({
+      // 可选的编译器选项
+      // compilerOptions: { ... }
+    })
+  ],
+})
+```
+
+::: info 为什么使用插件？
+Rsbuild 插件相比 Rspack loader 提供了更简单、更高层次的集成方式。它会自动：
+- 配置 `.vine.ts` 文件所需的 loader
+- 设置样式处理规则
+- 通过 DefinePlugin 注入 Vue 运行时标志
+
+对于需要细粒度控制 loader 配置的高级用户，仍可以直接使用 Rspack loader（见下一节）。
+:::
+
+## 安装 Rspack loader（高级用法） {#install-rspack-loader}
 
 ::: tip 🧪 Beta 功能
 Rspack 支持目前处于 **beta** 阶段。

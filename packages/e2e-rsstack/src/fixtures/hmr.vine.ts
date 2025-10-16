@@ -7,8 +7,8 @@ export function Counter() {
   return vine`
     <div class="counter">
       <p>Count: {{ count }}</p>
-      <button class="btn" @click="count++">Increment</button>
-      <button class="btn" @click="count--">Decrement</button>
+      <button class="inc-btn" @click="count++">Increment</button>
+      <button class="dec-btn" @click="count--">Decrement</button>
     </div>
   `
 }
@@ -41,7 +41,8 @@ export function TestRspackHmrPage() {
       margin-bottom: 1rem;
     }
 
-    .btn {
+    .inc-btn,
+    .dec-btn {
       padding: 0.5rem 1rem;
       margin-right: 0.5rem;
       border: none;
@@ -58,9 +59,8 @@ export function TestRspackHmrPage() {
 
   return vine`
     <div class="hmr-test">
-      <h1 class="title">Rspack HMR Test</h1>
+      <h1 class="title">Rsbuild HMR Test</h1>
       <Counter />
     </div>
   `
 }
-

@@ -80,21 +80,23 @@ function normalizeErrorOutput(errorOutput: string): string {
   // Match any absolute path that contains 'packages/' and replace everything before 'packages/'
   // This handles both Unix (/path/to/packages/) and Windows (C:/path/to/packages/)
   normalized = normalized.replace(
-    /(?:[A-Za-z]:)?\/(?:[^/\s]+\/)*?(packages\/(?:e2e-rspack|rspack-loader))/g,
+    /(?:[A-Za-z]:)?\/(?:[^/\s]+\/)*?(packages\/(?:e2e-rsstack|rspack-loader))/g,
     '[workspace]/$1',
   )
 
   // Additional cleanup: remove any remaining Windows drive letters that might be left
   normalized = normalized.replace(/\b[A-Z]:\//gi, '/')
 
-  // Remove compilation time
+  // Normalize compilation time and messages
   normalized = normalized.replace(/compiled with \d+ errors? in [\d.]+ s/g, 'compiled with errors')
+  normalized = normalized.replace(/compiled in [\d.]+ s/g, 'compiled')
+  normalized = normalized.replace(/Build failed in [\d.]+ s/g, 'Build failed')
 
   return normalized.trim()
 }
 
 /**
- * Run rspack build and expect it to fail, returning normalized error output
+ * Run rsbuild build and expect it to fail, returning normalized error output
  * All output is suppressed from terminal but captured for snapshot testing
  */
 async function expectBuildToFail(): Promise<string> {
@@ -105,7 +107,7 @@ async function expectBuildToFail(): Promise<string> {
       env: {
         ...process.env,
         FORCE_COLOR: '0',
-        CI: '1', // Disable rspack progress bars
+        CI: '1', // Disable rsbuild progress bars
       },
       timeout: 30000,
       reject: false, // Don't throw on non-zero exit code
@@ -130,7 +132,7 @@ async function expectBuildToFail(): Promise<string> {
   }
 }
 
-describe('rspack build error check', () => {
+describe('rsbuild build error check', () => {
   const testFile = 'error-report-fixture.vine.ts'
   const testFilePath = path.resolve(srcDir, testFile)
   const mainFile = 'main.ts'
@@ -150,7 +152,7 @@ describe('rspack build error check', () => {
     const fixtureContent = createErrorReportFixture()
     fs.writeFileSync(testFilePath, fixtureContent, 'utf-8')
 
-    // Modify main.ts to import the test fixture so rspack will compile it
+    // Modify main.ts to import the test fixture so rsbuild will compile it
     const modifiedMain = `import { createApp } from 'vue'
 import { App } from './app.vine'
 // Test fixture import - will be removed after tests
@@ -187,14 +189,10 @@ createApp(App).mount('#app')
 
     const normalizedError = await expectBuildToFail()
 
-    // Verify error contains all expected messages
-    expect(normalizedError).toContain('ERROR in ./src/error-report-fixture.vine.ts')
-    expect(normalizedError).toContain('Module Error')
-    expect(normalizedError).toContain('rspack-loader')
-    expect(normalizedError).toContain('Error File:')
+    expect(normalizedError).toContain('error Build errors:')
     expect(normalizedError).toContain('error-report-fixture.vine.ts')
-    expect(normalizedError).toContain('Invalid end tag')
-    expect(normalizedError).toContain('Rspack compiled with errors')
+    expect(normalizedError).toContain('Invalid end tag.')
+    expect(normalizedError).toContain('error Rspack build failed.')
   }, 45000)
 
   it('should report unsupported CSS language error', async () => {
@@ -207,13 +205,9 @@ createApp(App).mount('#app')
 
     const normalizedError = await expectBuildToFail()
 
-    // Verify error contains all expected messages
-    expect(normalizedError).toContain('ERROR in ./src/error-report-fixture.vine.ts')
-    expect(normalizedError).toContain('Module Error')
-    expect(normalizedError).toContain('rspack-loader')
-    expect(normalizedError).toContain('Error File:')
+    expect(normalizedError).toContain('error Build errors:')
     expect(normalizedError).toContain('error-report-fixture.vine.ts')
     expect(normalizedError).toContain('vineStyle CSS language only supports')
-    expect(normalizedError).toContain('Rspack compiled with errors')
+    expect(normalizedError).toContain('error Rspack build failed.')
   }, 45000)
 })

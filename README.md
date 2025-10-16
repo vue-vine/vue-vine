@@ -47,6 +47,7 @@ Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | Language Service |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite Plugin |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader (🧪Beta) |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild Plugin (🧪Beta) |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint Parser |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-plugin](./packages/eslint-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-plugin)](https://www.npmjs.com/package/@vue-vine/eslint-plugin) | ESLint Plugin |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-config](./packages/eslint-config) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-config)](https://www.npmjs.com/package/@vue-vine/eslint-config) | ESLint Config |
@@ -76,66 +77,30 @@ export default defineConfig({
 })
 ```
 
-### Rspack loader (Beta 🧪)
+### Rsbuild plugin (Beta 🧪)
 
-Install the Rspack loader:
-
-```bash
-ni -D @vue-vine/rspack-loader@beta
-```
-
-Configure the loader in `rspack.config.ts`:
+Use the plugin in `rsbuild.config.ts`:
 
 ```ts
-import { defineConfig } from '@rspack/cli'
-import { rspack } from '@rspack/core'
-
-// Target browsers for transpilation
-const targets = ['last 2 versions', '> 0.2%', 'not dead']
+import { defineConfig } from '@rsbuild/core'
+import { pluginVueVine } from 'vue-vine/rsbuild'
 
 export default defineConfig({
-  module: {
-    rules: [
-      // Process .vine.ts files with chained loaders
-      // Loaders execute from right to left (bottom to top):
-      // 1. @vue-vine/rspack-loader: Transforms Vine components to TypeScript
-      // 2. builtin:swc-loader: Transforms TypeScript to JavaScript
-      {
-        test: /\.vine\.ts$/,
-        resourceQuery: { not: [/vine-style/] }, // Exclude style virtual modules
-        use: [
-          {
-            loader: 'builtin:swc-loader',
-            options: {
-              jsc: {
-                parser: { syntax: 'typescript' },
-              },
-              env: { targets },
-            },
-          },
-          {
-            loader: '@vue-vine/rspack-loader',
-          },
-        ],
-      },
-      // Process Vine style virtual modules
-      {
-        resourceQuery: /vine-style/,
-        use: [{ loader: '@vue-vine/rspack-loader/style-loader' }],
-        type: 'css',
-      },
-      // ...other rules
-    ],
-  },
   plugins: [
-    new rspack.DefinePlugin({
-      __VUE_OPTIONS_API__: JSON.stringify(true),
-      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
-    }),
+    pluginVueVine({
+      // Optional compiler options
+      // compilerOptions: { ... }
+    })
   ],
 })
 ```
+
+The Rsbuild plugin provides a simpler, higher-level integration. It automatically:
+- Configures the necessary loaders for `.vine.ts` files
+- Sets up style processing rules
+- Injects Vue runtime flags via DefinePlugin
+
+For advanced users who need fine-grained control over loader configuration, please refer to the [Rspack loader documentation](https://vue-vine.dev/introduction/quick-start.html#install-rspack-loader).
 
 ### TypeScript Configuration
 

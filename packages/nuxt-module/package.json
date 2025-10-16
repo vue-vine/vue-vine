@@ -49,7 +49,6 @@
     "@nuxt/module-builder": "catalog:nuxt-libs",
     "@nuxt/schema": "catalog:nuxt-libs",
     "@nuxt/test-utils": "catalog:nuxt-libs",
-    "@playwright/test": "catalog:vitest-libs",
     "changelogen": "catalog:utils",
     "nuxt": "catalog:nuxt-libs",
     "vue-tsc": "catalog:vue-libs"

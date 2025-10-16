@@ -8,8 +8,8 @@ const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
     include: ['packages/*'],
     exclude: [
       'packages/docs',
-      'packages/e2e-test',
-      'packages/e2e-rspack',
+      'packages/e2e-vite',
+      'packages/e2e-rsstack',
       'packages/nuxt-module',
       'packages/playground',
     ],

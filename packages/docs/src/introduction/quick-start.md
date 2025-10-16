@@ -37,7 +37,40 @@ export default defineConfig({
 })
 ```
 
-## Install Rspack loader
+## Install Rsbuild plugin
+
+::: tip 🧪 Beta Feature
+Rsbuild support is currently in **beta**.
+
+Please install the beta version and [report any issues](https://github.com/vue-vine/vue-vine/issues) you encounter.
+:::
+
+Use the plugin in `rsbuild.config.ts`:
+
+```ts [rsbuild.config.ts]
+import { defineConfig } from '@rsbuild/core'
+import { pluginVueVine } from 'vue-vine/rsbuild'
+
+export default defineConfig({
+  plugins: [
+    pluginVueVine({
+      // Optional compiler options
+      // compilerOptions: { ... }
+    })
+  ],
+})
+```
+
+::: info Why use the plugin?
+The Rsbuild plugin provides a simpler, higher-level integration compared to the Rspack loader. It automatically:
+- Configures the necessary loaders for `.vine.ts` files
+- Sets up style processing rules
+- Injects Vue runtime flags via DefinePlugin
+
+For advanced users who need fine-grained control over loader configuration, you can still use the Rspack loader directly (see next section).
+:::
+
+## Install Rspack loader (Advanced)
 
 ::: tip 🧪 Beta Feature
 Rspack support is currently in **beta**.

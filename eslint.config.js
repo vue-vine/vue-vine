@@ -9,8 +9,8 @@ export default antfu(
       'pnpm-lock.yaml',
 
       'packages/docs/.vitepress/cache',
-      'packages/e2e-test/**/*.vine.ts',
-      'packages/e2e-rspack/**/*.vine.ts',
+      'packages/e2e-vite/**/*.vine.ts',
+      'packages/e2e-rsstack/**/*.vine.ts',
       'packages/create-vue-vine/template/**/*',
       'packages/nuxt-module/playground/*',
     ],
@@ -25,7 +25,7 @@ export default antfu(
     files: [
       'packages/language-service/**/*.ts',
       'packages/language-server/**/*.ts',
-      'packages/e2e-rspack/tests/**/*.ts',
+      'packages/e2e-rsstack/tests/**/*.ts',
     ],
     rules: {
       'no-console': 'off',

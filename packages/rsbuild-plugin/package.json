@@ -1,20 +1,20 @@
 {
-  "name": "@vue-vine/rspack-loader",
+  "name": "@vue-vine/rsbuild-plugin",
   "type": "module",
   "version": "1.7.11-beta.2",
-  "description": "Rspack loader for Vue Vine",
+  "description": "Rsbuild plugin for Vue Vine",
   "author": "Vue Vine Team",
   "license": "MIT",
   "homepage": "https://vue-vine.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/vue-vine/vue-vine.git",
-    "directory": "packages/rspack-loader"
+    "directory": "packages/rsbuild-plugin"
   },
   "keywords": [
     "vue-vine",
-    "rspack",
-    "loader",
+    "rsbuild",
+    "plugin",
     "vue"
   ],
   "exports": {
@@ -22,11 +22,6 @@
       "vine": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./style-loader": {
-      "vine": "./src/style-loader.ts",
-      "types": "./dist/style-loader.d.ts",
-      "default": "./dist/style-loader.js"
     }
   },
   "main": "./dist/index.js",
@@ -39,13 +34,18 @@
     "typecheck": "tsgo --noEmit"
   },
   "peerDependencies": {
-    "@rspack/core": "catalog:rsstack"
+    "@rsbuild/core": ">=1.0.0"
   },
   "dependencies": {
-    "@rspack/core": "catalog:rsstack",
-    "@vue-vine/compiler": "workspace:*"
+    "@rsbuild/core": "catalog:rsstack",
+    "@vue-vine/compiler": "workspace:*",
+    "@vue-vine/rspack-loader": "workspace:*"
   },
   "devDependencies": {
     "@typescript/native-preview": "catalog:compiler"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
