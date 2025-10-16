@@ -40,7 +40,7 @@
     "publish:nuxt": "pnpm --filter @vue-vine/nuxt publish",
     "publish:tsc": "pnpm --filter vue-vine-tsc publish",
     "publish:cli": "pnpm --filter create-vue-vine publish",
-    "publish:rspack-beta": "pnpm --filter @vue-vine/rspack-loader --filter @vue-vine/rsbuild-plugin publish --tag beta --access public",
+    "publish:rsstack-beta": "pnpm --filter @vue-vine/rspack-loader --filter @vue-vine/rsbuild-plugin publish --tag beta --access public",
     "publish:main": "pnpm run verify && pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:cli && pnpm publish:ext",
     "publish:all": "pnpm publish:main && pnpm publish:eslint",
     "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine'",
