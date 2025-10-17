@@ -34,7 +34,7 @@ const install: FeatureFlag<'install', {
   readonly type: BooleanConstructor
   readonly description: 'Install dependencies'
   readonly alias: 'i'
-  readonly default: false
+  readonly default: true
 }> = defineFlagMeta({
   name: 'install',
   message: 'Install all dependencies for the project now?',
@@ -42,9 +42,9 @@ const install: FeatureFlag<'install', {
     type: Boolean,
     description: 'Install dependencies',
     alias: 'i',
-    default: false,
+    default: true,
   },
-  initialValue: false,
+  initialValue: true,
 })
 
 const metas: {
@@ -84,6 +84,22 @@ export function useFlags(): {
         },
       }
 
+      // Select build tool
+      const buildTool = await select({
+        message: 'Choose your build tool:',
+        options: [
+          { value: 'vite', label: 'Vite (Recommended)' },
+          { value: 'rsbuild', label: 'Rsbuild (Beta)' },
+        ],
+        initialValue: 'vite',
+      })
+      options.buildTool = buildTool as 'vite' | 'rsbuild'
+
+      // Initialize built-in templates first (base files that can be overridden by features)
+      const { initBuiltInTemplates } = await import('../create')
+      initBuiltInTemplates(options)
+
+      // Select CSS framework
       const css = await select({
         message: 'Using atomized css?',
         options: [
@@ -93,6 +109,7 @@ export function useFlags(): {
         ],
       })
 
+      // Confirm features
       for (const key in metas) {
         const metaKey = key as MetaKeys
         const { initialValue, message } = metas[metaKey]
@@ -103,26 +120,30 @@ export function useFlags(): {
         })
       }
 
+      // Add router templates
       if (flags.router) {
-        context.template('code/router', 'config/router')
+        context.template('shared/features/router', 'shared/config/router')
       }
 
+      // Add store templates
       if (flags.store) {
-        context.template('code/store/common', 'config/pinia')
+        context.template('shared/features/store/common', 'shared/config/pinia')
 
         if (flags.router) {
-          context.template('code/store/with-router')
+          context.template('shared/features/store/with-router')
         }
         else {
-          context.template('code/store/base')
+          context.template('shared/features/store/base')
         }
       }
 
+      // Add CSS templates
       if (css !== 'no') {
-        context.template(`code/css/${css}`)
+        context.template(`shared/features/css/${css}`)
+        context.template(`${buildTool}/${css}`)
       }
       else {
-        context.template('code/css/base')
+        context.template('shared/features/css/base')
       }
     },
   }

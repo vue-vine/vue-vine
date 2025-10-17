@@ -1,7 +1,7 @@
 {
   "name": "vue-vine",
   "type": "module",
-  "version": "1.7.11",
+  "version": "1.7.13",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -41,6 +41,8 @@
     }
   },
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "dist",
     "types"
   ],

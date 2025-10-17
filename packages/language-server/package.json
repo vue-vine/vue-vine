@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/language-server",
   "type": "module",
-  "version": "1.7.11",
+  "version": "1.7.13",
   "author": "Ray <i@mk1.io> (@so1ve)",
   "license": "MIT",
   "homepage": "https://github.com/vue-vine/vue-vine#readme",
@@ -27,6 +27,9 @@
     "vue-vine-language-server": "./bin/vue-vine-language-server.js"
   },
   "files": [
+    "README.md",
+    "README.zh-CN.md",
+    "bin",
     "dist"
   ],
   "publishConfig": {

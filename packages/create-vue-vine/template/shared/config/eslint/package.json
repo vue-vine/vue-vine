@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.16.2",
+    "@vue-vine/eslint-config": "^1.1.11",
+    "eslint": "~9.30.1"
+  }
+}

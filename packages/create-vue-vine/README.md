@@ -1,8 +1,18 @@
-# create-vue-vine <a href="https://npmjs.com/package/create-vite"><img src="https://img.shields.io/npm/v/create-vue-vine" alt="npm package"></a> <img src="https://img.shields.io/badge/experimental-aa58ff" />
+# create-vue-vine <a href="https://npmjs.com/package/create-vue-vine"><img src="https://img.shields.io/npm/v/create-vue-vine" alt="npm package"></a> <img src="https://img.shields.io/badge/experimental-aa58ff" />
+
+[中文文档](./README.zh-CN.md)
 
 The official CLI for creating your Vue Vine projects.
 
-> **Compatibility Note**: Vue Vine dev-server which is `vite` is requires Node.js version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
+> **Compatibility Note**: Vue Vine requires Node.js version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
+
+## Features
+
+- 🛠️ **Build Tool Choice**: Choose between Vite (recommended) or Rsbuild (beta)
+- 🎨 **CSS Frameworks**: Optional UnoCSS or Tailwind CSS integration
+- 🚦 **Vue Router**: Optional routing support
+- 📦 **Pinia**: Optional state management
+- 📝 **TypeScript**: Full TypeScript support out of the box
 
 With NPM:
 

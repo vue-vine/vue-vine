@@ -194,7 +194,7 @@ catalogs:
       specifier: ^1.5.17
       version: 1.5.17
     '@rsbuild/plugin-sass':
-      specifier: ^1.1.4
+      specifier: ^1.4.0
       version: 1.4.0
     '@rspack/core':
       specifier: ^1.5.8
@@ -450,7 +450,7 @@ importers:
         version: 1.2.2
       tsdown:
         specifier: catalog:cli
-        version: 0.15.7(@typescript/native-preview@7.0.0-dev.20251015.1)(typescript@5.8.3)
+        version: 0.15.7(@typescript/native-preview@7.0.0-dev.20251016.1)(typescript@5.8.3)
       tsx:
         specifier: catalog:cli
         version: 4.20.3
@@ -602,7 +602,7 @@ importers:
         version: 3.11.0
       unocss:
         specifier: catalog:styles
-        version: 66.3.3(postcss@8.5.6)(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))
+        version: 66.3.3(postcss@8.5.6)(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))
       vitepress:
         specifier: catalog:docs
         version: 2.0.0-alpha.11(@types/node@24.0.10)(async-validator@4.2.5)(esbuild@0.25.11)(fuse.js@7.1.0)(jiti@2.6.1)(jwt-decode@4.0.0)(oxc-minify@0.82.2)(postcss@8.5.6)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
@@ -1050,6 +1050,9 @@ importers:
       '@vue-vine/compiler':
         specifier: workspace:*
         version: link:../compiler
+      vite:
+        specifier: npm:rolldown-vite@latest
+        version: rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
     devDependencies:
       '@typescript/native-preview':
         specifier: catalog:compiler
@@ -1060,9 +1063,6 @@ importers:
       rollup:
         specifier: catalog:cli
         version: 4.52.4
-      vite:
-        specifier: npm:rolldown-vite@latest
-        version: rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
 
   packages/vscode-ext:
     devDependencies:
@@ -3353,8 +3353,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-nX3IvW3zVZItG6BWkSmQlyNiq23obmSU+S+Yp0bN6elR+S+yLWssutb1f8mmjOVx8zZVIB0PHuzeiTb3a89aEA==, tarball: https://registry.npmjs.org/@typescript/native-preview-darwin-arm64/-/native-preview-darwin-arm64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-TBSMWAhEaHGMwDRYxY5Lpjgr0JMdtdYEr/ha1pdvAP7g+D23EnKNsIpf2bv2FoBkWb5gsh33tT6GcZV0N2bICg==, tarball: https://registry.npmjs.org/@typescript/native-preview-darwin-arm64/-/native-preview-darwin-arm64-7.0.0-dev.20251016.1.tgz}
     cpu: [arm64]
     os: [darwin]
 
@@ -3364,8 +3364,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-cqqqChfieGbtuDbWSDZKjMz/SDlt2B0XY1rdGS3HNzHocpxYHg5cKQGGddQxwSQp/OdeRpkpEzfvRsbpWnv/ig==, tarball: https://registry.npmjs.org/@typescript/native-preview-darwin-x64/-/native-preview-darwin-x64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-NRoRafU+2T0PvfpXjxSb99tw1Qu+KrWTiq5i8AdTjGNU2nvD7yB5YeXzEn5L1vylATpxs8oxKbJ5WSHFAZkvXw==, tarball: https://registry.npmjs.org/@typescript/native-preview-darwin-x64/-/native-preview-darwin-x64-7.0.0-dev.20251016.1.tgz}
     cpu: [x64]
     os: [darwin]
 
@@ -3375,8 +3375,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-iL6uD3P4NtBslegrtxPRcobbg+PkKnck+AD7lLT/KGfNXy0vB5touFdNhWY+FoaahSTyAYuS6Fo2F/FzdzzLkw==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-arm64/-/native-preview-linux-arm64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-GCwepKA//bh1BX/VDk5Wzo8NQTe4NHcATSQyNqJo+cO1xKEYC4kZFf+0gmjUIo7QnwoHDVlK7tissY3FYIIx2Q==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-arm64/-/native-preview-linux-arm64-7.0.0-dev.20251016.1.tgz}
     cpu: [arm64]
     os: [linux]
 
@@ -3386,8 +3386,8 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-T1utGfiJ4auwPF+aOXGtJauEvyCMCSd2reGsv0P9vnE5YeJheopZ6VTtmvYkN9IsIHBvX+BLbOv4Gr3zubAY+w==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-arm/-/native-preview-linux-arm-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-4A4q5LUXUluG1vNaU6QqbflPPXxqcMYMMJstgvpz0SJ+pEKzFOeZXYhW254Qdliho6obqB0FHG9IlnQNAvorFw==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-arm/-/native-preview-linux-arm-7.0.0-dev.20251016.1.tgz}
     cpu: [arm]
     os: [linux]
 
@@ -3397,8 +3397,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-xGE8apymvrvMrV9Vt3t8nqD/xcoiC/gCgbxrFr9xM7WkoCre7ZMUbTsiSwORpgj8ELKszgGsAaNwZY6RcI2sLA==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-x64/-/native-preview-linux-x64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-qmeugyy+02ipEBWevwJrlg6lpIhrziUF5dT0LZp4Qr4moojX/yZIPAelaWzgfe092NOgbTw2bFSzaJk1KK0s6g==, tarball: https://registry.npmjs.org/@typescript/native-preview-linux-x64/-/native-preview-linux-x64-7.0.0-dev.20251016.1.tgz}
     cpu: [x64]
     os: [linux]
 
@@ -3408,8 +3408,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-QxIR7d/xLLYTLXa7UMtxb/m0jB18UNK1FhHiHFUy6udjrVlfPmcXOIv4TUZxHGFx00I2QWNzySWd5DQOs8jllQ==, tarball: https://registry.npmjs.org/@typescript/native-preview-win32-arm64/-/native-preview-win32-arm64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-7FwP4aMgHx1hcZtFT5WGyyjTliDj2jF2cG1gQcBX+GR2d+DcRUoF41E7WtaPBkBfrfrgjYdxgpliCmDLF4WHMg==, tarball: https://registry.npmjs.org/@typescript/native-preview-win32-arm64/-/native-preview-win32-arm64-7.0.0-dev.20251016.1.tgz}
     cpu: [arm64]
     os: [win32]
 
@@ -3419,8 +3419,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-vir9fC7vfpPP3xWgHZnK/GPqCwFRUCCOw8sKtXgGVf1EQcKo/H+pzCMlRTGdmHoGRBEI7eSyTn0fnQcKcnMymg==, tarball: https://registry.npmjs.org/@typescript/native-preview-win32-x64/-/native-preview-win32-x64-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-Q9FeuI8pPmCmpONwc0/mClxHZCzQVvDYbD21lZKoT/yILvtEwRL4HD5VnlTve7fzjhXCkj9R+8I+Nk+Y33n9ug==, tarball: https://registry.npmjs.org/@typescript/native-preview-win32-x64/-/native-preview-win32-x64-7.0.0-dev.20251016.1.tgz}
     cpu: [x64]
     os: [win32]
 
@@ -3429,8 +3429,8 @@ packages:
     engines: {node: '>=20.6.0'}
     hasBin: true
 
-  '@typescript/native-preview@7.0.0-dev.20251015.1':
-    resolution: {integrity: sha512-QNNVpnjvJJ5yVZf2v4vHT/fK2mAzE5VC5m4mYI+aboT0Dlt4ZgPkYs/CodG+NIsGce8fkEs7hZNk8W4RFf7biw==, tarball: https://registry.npmjs.org/@typescript/native-preview/-/native-preview-7.0.0-dev.20251015.1.tgz}
+  '@typescript/native-preview@7.0.0-dev.20251016.1':
+    resolution: {integrity: sha512-OMnnupqcqdcbf4lryAKyIDWNJHc1dP13OcKmV5aPUY2dJIYBD0ud4xgOkp/zdOoLBCpdRMIMjzziI6PYATMWdw==, tarball: https://registry.npmjs.org/@typescript/native-preview/-/native-preview-7.0.0-dev.20251016.1.tgz}
     hasBin: true
 
   '@typespec/ts-http-runtime@0.2.3':
@@ -11210,43 +11210,43 @@ snapshots:
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-darwin-x64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-linux-arm64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-linux-arm@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-linux-x64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-win32-arm64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview-win32-x64@7.0.0-dev.20250722.1':
     optional: true
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20251015.1':
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20251016.1':
     optional: true
 
   '@typescript/native-preview@7.0.0-dev.20250722.1':
@@ -11259,15 +11259,15 @@ snapshots:
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20250722.1
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20250722.1
 
-  '@typescript/native-preview@7.0.0-dev.20251015.1':
+  '@typescript/native-preview@7.0.0-dev.20251016.1':
     optionalDependencies:
-      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-linux-arm': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-linux-x64': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20251015.1
-      '@typescript/native-preview-win32-x64': 7.0.0-dev.20251015.1
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20251016.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20251016.1
     optional: true
 
   '@typespec/ts-http-runtime@0.2.3':
@@ -11298,11 +11298,11 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  '@unocss/astro@66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))':
+  '@unocss/astro@66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))':
     dependencies:
       '@unocss/core': 66.3.3
       '@unocss/reset': 66.3.3
-      '@unocss/vite': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))
+      '@unocss/vite': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))
     optionalDependencies:
       vite: rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
     transitivePeerDependencies:
@@ -11344,17 +11344,6 @@ snapshots:
   '@unocss/extractor-arbitrary-variants@66.3.3':
     dependencies:
       '@unocss/core': 66.3.3
-
-  '@unocss/inspector@66.3.3(vue@3.5.22(typescript@5.8.3))':
-    dependencies:
-      '@unocss/core': 66.3.3
-      '@unocss/rule-utils': 66.3.3
-      colorette: 2.0.20
-      gzip-size: 6.0.0
-      sirv: 3.0.2
-      vue-flow-layout: 0.1.1(vue@3.5.22(typescript@5.8.3))
-    transitivePeerDependencies:
-      - vue
 
   '@unocss/inspector@66.3.3(vue@3.6.0-alpha.2(typescript@5.8.3))':
     dependencies:
@@ -11471,12 +11460,12 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  '@unocss/vite@66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))':
+  '@unocss/vite@66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@unocss/config': 66.3.3
       '@unocss/core': 66.3.3
-      '@unocss/inspector': 66.3.3(vue@3.5.22(typescript@5.8.3))
+      '@unocss/inspector': 66.3.3(vue@3.6.0-alpha.2(typescript@5.8.3))
       chokidar: 3.6.0
       magic-string: 0.30.19
       pathe: 2.0.3
@@ -15911,7 +15900,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rolldown-plugin-dts@0.16.11(@typescript/native-preview@7.0.0-dev.20251015.1)(rolldown@1.0.0-beta.43)(typescript@5.8.3):
+  rolldown-plugin-dts@0.16.11(@typescript/native-preview@7.0.0-dev.20251016.1)(rolldown@1.0.0-beta.43)(typescript@5.8.3):
     dependencies:
       '@babel/generator': 7.28.3
       '@babel/parser': 7.28.4
@@ -15924,7 +15913,7 @@ snapshots:
       magic-string: 0.30.19
       rolldown: 1.0.0-beta.43
     optionalDependencies:
-      '@typescript/native-preview': 7.0.0-dev.20251015.1
+      '@typescript/native-preview': 7.0.0-dev.20251016.1
       typescript: 5.8.3
     transitivePeerDependencies:
       - oxc-resolver
@@ -16658,7 +16647,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  tsdown@0.15.7(@typescript/native-preview@7.0.0-dev.20251015.1)(typescript@5.8.3):
+  tsdown@0.15.7(@typescript/native-preview@7.0.0-dev.20251016.1)(typescript@5.8.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
@@ -16668,7 +16657,7 @@ snapshots:
       empathic: 2.0.0
       hookable: 5.5.3
       rolldown: 1.0.0-beta.43
-      rolldown-plugin-dts: 0.16.11(@typescript/native-preview@7.0.0-dev.20251015.1)(rolldown@1.0.0-beta.43)(typescript@5.8.3)
+      rolldown-plugin-dts: 0.16.11(@typescript/native-preview@7.0.0-dev.20251016.1)(rolldown@1.0.0-beta.43)(typescript@5.8.3)
       semver: 7.7.3
       tinyexec: 1.0.1
       tinyglobby: 0.2.15
@@ -16894,9 +16883,9 @@ snapshots:
       - supports-color
       - vue
 
-  unocss@66.3.3(postcss@8.5.6)(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3)):
+  unocss@66.3.3(postcss@8.5.6)(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3)):
     dependencies:
-      '@unocss/astro': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))
+      '@unocss/astro': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))
       '@unocss/cli': 66.3.3
       '@unocss/core': 66.3.3
       '@unocss/postcss': 66.3.3(postcss@8.5.6)
@@ -16914,7 +16903,7 @@ snapshots:
       '@unocss/transformer-compile-class': 66.3.3
       '@unocss/transformer-directives': 66.3.3
       '@unocss/transformer-variant-group': 66.3.3
-      '@unocss/vite': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.22(typescript@5.8.3))
+      '@unocss/vite': 66.3.3(rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.6.0-alpha.2(typescript@5.8.3))
     optionalDependencies:
       vite: rolldown-vite@7.1.17(@types/node@24.0.10)(esbuild@0.25.11)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
     transitivePeerDependencies:
@@ -17575,10 +17564,6 @@ snapshots:
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
-
-  vue-flow-layout@0.1.1(vue@3.5.22(typescript@5.8.3)):
-    dependencies:
-      vue: 3.5.22(typescript@5.8.3)
 
   vue-flow-layout@0.1.1(vue@3.6.0-alpha.2(typescript@5.8.3)):
     dependencies:

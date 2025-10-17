@@ -23,9 +23,16 @@ export async function renderTemplate(src: string, dest: string): Promise<void> {
 
   const filename = path.basename(src)
 
-  if (filename.startsWith('_')) {
-    // rename `_file` to `.file`
-    dest = path.resolve(path.dirname(dest), `.${filename.slice(1)}`)
+  // Handle template file prefixes to prevent IDE from treating them as project config
+  // - `__tpl_dot_` prefix: convert to `.` prefix (e.g., `__tpl_dot_gitignore` -> `.gitignore`)
+  // - `__tpl_` prefix: remove prefix (e.g., `__tpl_tsconfig.json` -> `tsconfig.json`)
+  if (filename.startsWith('__tpl_dot_')) {
+    const actualFilename = `.${filename.slice(10)}` // Remove '__tpl_dot_' and add '.'
+    dest = path.resolve(path.dirname(dest), actualFilename)
+  }
+  else if (filename.startsWith('__tpl_')) {
+    const actualFilename = filename.slice(6) // Remove '__tpl_'
+    dest = path.resolve(path.dirname(dest), actualFilename)
   }
 
   if (filename === 'package.json' && fs.existsSync(dest)) {
@@ -36,11 +43,14 @@ export async function renderTemplate(src: string, dest: string): Promise<void> {
 
     // vue-vine will only appear once,
     // so you don't need to query the coverage every time.
-    if (src.endsWith('common/package.json')) {
+    if (src.endsWith('shared/base/package.json')) {
       await setLatestVineVersion(pkg, 'vue-vine')
     }
     else if (src.endsWith('ts/package.json')) {
       await setLatestVineVersion(pkg, 'vue-vine-tsc')
+    }
+    else if (src.endsWith('rsbuild-plugin')) {
+      await setLatestVineVersion(pkg, '@vue-vine/rsbuild-plugin')
     }
 
     fs.writeFileSync(dest, `${JSON.stringify(pkg, null, 2)}\n`)

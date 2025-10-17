@@ -1,6 +1,0 @@
-{
-  "type": "module",
-  "devDependencies": {
-    "unocss": "^66.1.1"
-  }
-}

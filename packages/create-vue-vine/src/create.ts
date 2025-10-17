@@ -2,19 +2,21 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { getTemplateDirectory, renderTemplate } from './utils'
 
-const builtInTemplates = [
-  'common',
-  'code/base',
-  'config/ts',
-  'config/eslint',
-]
-
 export interface ProjectOptions {
   path: string
   name: string
   templateDir: string
-
+  buildTool: 'vite' | 'rsbuild'
   templates: string[]
+}
+
+function getBuiltInTemplates(buildTool: 'vite' | 'rsbuild'): string[] {
+  return [
+    'shared/base',
+    'shared/config/ts',
+    'shared/config/eslint',
+    `${buildTool}/base`,
+  ]
 }
 
 export function createProjectOptions(
@@ -24,6 +26,10 @@ export function createProjectOptions(
     ...params,
     templates: [],
   }
+}
+
+export function initBuiltInTemplates(options: ProjectOptions): void {
+  options.templates.push(...getBuiltInTemplates(options.buildTool))
 }
 
 export async function createProject(options: ProjectOptions): Promise<void> {
@@ -45,10 +51,7 @@ export async function createProject(options: ProjectOptions): Promise<void> {
     }, null, 2),
   )
 
-  for (const template of [
-    ...builtInTemplates,
-    ...options.templates,
-  ]) {
+  for (const template of options.templates) {
     await renderTemplate(withBase(template), options.path)
   }
 }

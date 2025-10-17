@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "run-p type-check \"rsbuild build\"",
+    "preview": "rsbuild preview",
+    "lint": "eslint src --cache",
+    "lint:fix": "eslint src --cache --fix"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.5.17",
+    "@vue-vine/rsbuild-plugin": "^1.7.13-beta.1",
+    "npm-run-all": "^4.1.5"
+  }
+}

@@ -29,6 +29,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
+    "README.zh-CN.md",
     "dist"
   ],
   "scripts": {
