@@ -7,11 +7,10 @@
 
 [Vue Vine](https://vue-vine.dev) 的 Rsbuild 插件。
 
-::: tip 🧪 Beta 功能
-Rsbuild 支持目前处于 **beta** 阶段。
-
-请安装 beta 版本并[报告您遇到的任何问题](https://github.com/vue-vine/vue-vine/issues)。
-:::
+> TIPS: 🧪 Beta 功能
+> Rsbuild 支持目前处于 **beta** 阶段。
+>
+> 请安装 beta 版本并[报告您遇到的任何问题](https://github.com/vue-vine/vue-vine/issues)。
 
 ## 安装
 
