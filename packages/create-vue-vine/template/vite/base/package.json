@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --cache",
+    "lint:fix": "eslint src --cache --fix"
+  },
+  "devDependencies": {
+    "vite": "^7.0.2"
+  }
+}

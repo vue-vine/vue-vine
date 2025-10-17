@@ -79,6 +79,7 @@ export const createCommand: Command<typeof Root, {
     path: projectPath,
     name: projectName,
     templateDir,
+    buildTool: 'vite', // Will be overwritten by executeFlags
   })
 
   await executeFlags(ctx.flags, projectOptions)

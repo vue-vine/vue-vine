@@ -1,5 +1,21 @@
 # @vue-vine/vite-plugin
 
+## 1.7.13
+
+### Patch Changes
+
+- Support initializing project with Rsbuild in scaffold CLI.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.13
+
+## 1.7.12
+
+### Patch Changes
+
+- Support rsbuild plugin and add export entry in main package.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.12
+
 ## 1.7.11
 
 ### Patch Changes

@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 import treeKill from 'tree-kill'
-import { colorful } from './color-str'
+import { colorful } from './color-str.js'
 
 export const r = (...args) => resolve(import.meta.dirname, '..', ...args)
 

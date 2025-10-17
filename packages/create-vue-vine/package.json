@@ -1,7 +1,7 @@
 {
   "name": "create-vue-vine",
   "type": "module",
-  "version": "1.7.11",
+  "version": "1.7.13",
   "description": "Official CLI for creating Vue Vine project.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -25,6 +25,8 @@
   "module": "./dist/index.js",
   "bin": "./dist/index.js",
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "bin",
     "dist",
     "template"

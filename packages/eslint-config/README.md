@@ -1,5 +1,7 @@
 # @vue-vine/eslint-config
 
+[中文文档](./README.zh-CN.md)
+
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 

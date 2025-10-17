@@ -1,21 +1,39 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { commitTemplateDepsUpgradeChanges } from './utils'
-import { colorful } from './utils/color-str'
+import { colorful } from './utils/color-str.js'
+import { commitTemplateDepsUpgradeChanges } from './utils/index.js'
 
 function run() {
   const args = process.argv.slice(2)
   const shouldCommit = args.includes('-g') || args.includes('--git')
 
+  console.log(colorful('\n📦 Upgrading template dependencies...\n', ['cyan', 'bold']))
+
   const vineVersion = getDepVersion('vue-vine')
   const tscVersion = getDepVersion('tsc')
   const eslintVersion = getDepVersion('eslint-config')
+  const rsbuildPluginVersion = getDepVersion('rsbuild-plugin')
 
   try {
-    upgradeDeps('vue-vine', ['common'], vineVersion)
-    upgradeDeps('vue-vine-tsc', ['config', 'ts'], tscVersion)
-    upgradeDeps('@vue-vine/eslint-config', ['config', 'eslint'], eslintVersion)
+    // Step 1: Upgrade internal workspace packages
+    console.log(colorful('1️⃣  Upgrading internal packages...', ['blue']))
+    upgradeDeps('vue-vine', ['shared', 'base'], vineVersion)
+    upgradeDeps('vue-vine-tsc', ['shared', 'config', 'ts'], tscVersion)
+    upgradeDeps('@vue-vine/eslint-config', ['shared', 'config', 'eslint'], eslintVersion)
+    upgradeDeps('@vue-vine/rsbuild-plugin', ['rsbuild', 'base'], rsbuildPluginVersion)
+    console.log()
+
+    // Step 2: Sync external packages from e2e projects (via catalogs)
+    console.log(colorful('2️⃣  Syncing external packages from catalogs...', ['blue']))
+    const syncScriptPath = resolve(process.cwd(), 'scripts', 'update-template-deps-from-catalogs.js')
+    if (existsSync(syncScriptPath)) {
+      execSync(`node ${syncScriptPath}`, { stdio: 'inherit' })
+    }
+    else {
+      console.log(colorful('   ⚠ update-template-deps-from-catalogs.js not found, skipping', ['yellow']))
+    }
 
     if (shouldCommit) {
       commitTemplateDepsUpgradeChanges()

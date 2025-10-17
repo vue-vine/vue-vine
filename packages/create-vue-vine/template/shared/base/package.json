@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A vue-vine app created with create-vue-vine",
+  "dependencies": {
+    "vue": "^3.5.22"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.0",
+    "vue-vine": "^1.7.13"
+  }
+}
