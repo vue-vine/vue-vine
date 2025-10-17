@@ -73,7 +73,7 @@ catalogs:
     nuxt: ~4.0.3
   rsstack:
     '@rsbuild/core': ^1.5.17
-    '@rsbuild/plugin-sass': ^1.1.4
+    '@rsbuild/plugin-sass': ^1.4.0
     '@rspack/core': ^1.5.8
   styles:
     sass: ^1.89.2

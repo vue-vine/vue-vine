@@ -5,6 +5,7 @@ const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig({
     index: './src/index.ts',
     vite: './src/vite/index.ts',
     rspack: './src/rspack/index.ts',
+    rsbuild: './src/rsbuild/index.ts',
     slidev: './src/slidev/index.ts',
   },
   external: [

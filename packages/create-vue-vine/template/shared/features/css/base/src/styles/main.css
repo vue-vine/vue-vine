@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: light-dark(#fff, #121212);
+  color: light-dark(#121212, #efefef);
+  color-scheme: light dark;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
