@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.13
+
+### Patch Changes
+
+- Support initializing project with Rsbuild in scaffold CLI.
+- Updated dependencies
+  - vue-vine@1.7.13
+
 ## 1.7.12
 
 ### Patch Changes

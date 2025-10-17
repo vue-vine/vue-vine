@@ -1,5 +1,13 @@
 # @vue-vine/rspack-loader
 
+## 1.7.13-beta.1
+
+### Patch Changes
+
+- Support initializing project with Rsbuild in scaffold CLI.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.13
+
 ## 1.7.12-beta.1
 
 ### Patch Changes

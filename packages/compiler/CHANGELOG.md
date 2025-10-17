@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.13
+
+### Patch Changes
+
+- Support initializing project with Rsbuild in scaffold CLI.
+
 ## 1.7.12
 
 ### Patch Changes
