@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "type-check": "vue-vine-tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vue-vine-tsc": "^1.7.12"
+  }
+}

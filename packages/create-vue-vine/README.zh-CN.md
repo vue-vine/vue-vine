@@ -4,7 +4,15 @@
 
 用于创建 Vue Vine 项目的官方 CLI。
 
-> **兼容性说明**：Vue Vine 开发服务器基于 `vite`，需要 Node.js 18+ 或 20+ 版本。某些模板可能需要更高的 Node.js 版本，如果包管理器有警告请升级。
+> **兼容性说明**：Vue Vine 需要 Node.js 18+ 或 20+ 版本。某些模板可能需要更高的 Node.js 版本，如果包管理器有警告请升级。
+
+## 特性
+
+- 🛠️ **构建工具选择**：可选择 Vite（推荐）或 Rsbuild（Beta）
+- 🎨 **CSS 框架**：可选 UnoCSS 或 Tailwind CSS 集成
+- 🚦 **Vue Router**：可选路由支持
+- 📦 **Pinia**：可选状态管理
+- 📝 **TypeScript**：开箱即用的完整 TypeScript 支持
 
 使用 NPM：
 

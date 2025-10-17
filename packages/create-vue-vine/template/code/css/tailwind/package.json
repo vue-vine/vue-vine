@@ -1,7 +1,0 @@
-{
-  "type": "module",
-  "devDependencies": {
-    "tailwindcss": "^4.1.7",
-    "@tailwindcss/vite": "^4.1.7"
-  }
-}

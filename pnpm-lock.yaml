@@ -194,7 +194,7 @@ catalogs:
       specifier: ^1.5.17
       version: 1.5.17
     '@rsbuild/plugin-sass':
-      specifier: ^1.1.4
+      specifier: ^1.4.0
       version: 1.4.0
     '@rspack/core':
       specifier: ^1.5.8
