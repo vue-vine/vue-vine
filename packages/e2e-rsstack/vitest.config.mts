@@ -13,6 +13,8 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
       shuffle: false,
       hooks: 'list',
     },
+    fileParallelism: false,
+    onConsoleLog: () => {}, // Suppress console logs
   },
 })
 

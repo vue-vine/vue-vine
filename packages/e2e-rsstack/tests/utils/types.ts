@@ -1,4 +1,4 @@
-import type { ResultPromise } from 'execa'
+import type { RsbuildDevServer } from '@rsbuild/core'
 import type { Browser, Page } from 'playwright-chromium'
 
 export type Nil = null | undefined
@@ -6,8 +6,8 @@ export type Nil = null | undefined
 export interface E2EPlaywrightContext {
   browser?: Browser
   page?: Page
-  rspackServer?: ResultPromise
-  rspackServerUrl?: string
+  rsbuildServer?: RsbuildDevServer
+  rsbuildTestUrl?: string
 }
 
 export type EvaluateType = 'style' | 'attribute' | 'textContent'

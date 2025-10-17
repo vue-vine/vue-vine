@@ -18,25 +18,8 @@ function ChildComp() {
   const prop5 = vineProp<PropTypeMapper<'t2'>>()
   const prop6 = vineProp.withDefault(mayGetBoolean())
 
-  vineStyle.scoped(`
-    .child-comp {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 1rem;
-      border: 2px solid #3498db;
-      border-radius: 8px;
-      background-color: #ecf0f1;
-    }
-
-    .child-comp p {
-      margin: 0;
-      padding: 0.25rem 0;
-    }
-  `)
-
   return vine`
-    <div class="child-comp">
+    <div class="child-comp col-flex gap-2">
       <p>prop1: {{ prop1 }}</p>
       <p>prop2: {{ prop2 }}</p>
       <p>prop3: {{ prop3 }}</p>
@@ -48,20 +31,8 @@ function ChildComp() {
 }
 
 export function TestVinePropPage() {
-  vineStyle(`
-    .test-vine-prop-page {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      padding: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-  `)
-
   return vine`
-    <div class="test-vine-prop-page">
-      <h2>Vine Prop Test</h2>
+    <div class="test-vine-prop-page col-flex">
       <ChildComp prop1="hello" prop2="world" :prop3="false" :prop4="true" prop5 />
     </div>
   `

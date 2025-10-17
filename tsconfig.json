@@ -23,7 +23,7 @@
   "exclude": [
     "**/dist",
     "packages/nuxt-module",
-    "packages/e2e-test",
+    "packages/e2e-vite",
     "packages/create-vue-vine/template"
   ]
 }

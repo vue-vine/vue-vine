@@ -6,7 +6,6 @@ import {
   freeBrowserContext,
   runTestAtPage,
   untilUpdated,
-  wait,
 } from './utils/test-utils'
 
 describe('e2e test suites', async () => {
@@ -104,12 +103,6 @@ describe('e2e test suites', async () => {
         '/vine-prop',
         browserCtx,
         async () => {
-        // Wait for page to load and render
-          await untilUpdated(
-            () => evaluator.getTextContent('.test-vine-prop-page h2'),
-            'Vine Prop Test',
-          )
-
           // Verify prop1 displays the passed string value
           await untilUpdated(
             () => evaluator.getTextContent('.child-comp p:nth-of-type(1)'),
@@ -204,7 +197,7 @@ describe('e2e test suites', async () => {
 
   describe('hmr test', async () => {
     afterEach(() => {
-    // Restore file changes
+      // Restore file changes
       editFile(
         'fixtures/hmr.vine.ts',
         code => code.replace('color: blue', 'color: brown'),
@@ -213,12 +206,11 @@ describe('e2e test suites', async () => {
 
     it(
       'should update style via HMR and preserve state',
-      { retry: 3 },
       runTestAtPage(
         '/hmr',
         browserCtx,
         async () => {
-        // Step 1: Verify initial state - wait for counter to appear
+          // Step 1: Verify initial state - wait for counter to appear
           await untilUpdated(
             () => evaluator.getTextContent('.counter p'),
             'Count: 0',
@@ -226,14 +218,12 @@ describe('e2e test suites', async () => {
           expect(await evaluator.getColor('.title')).toBe('rgb(165, 42, 42)') // brown
 
           // Step 2: Click increment button to change state
-          await browserCtx.page?.click('button.btn:first-of-type')
+          await browserCtx.page?.click('button.inc-btn', { clickCount: 3 })
           await untilUpdated(
             () => evaluator.getTextContent('.counter p'),
-            'Count: 1',
+            'Count: 3',
           )
-
-          // Wait a bit before triggering HMR to ensure stable state
-          await wait(500)
+          expect(await evaluator.getTextContent('.counter p')).toBe('Count: 3')
 
           // Step 3: Edit file to trigger HMR - change brown to blue
           editFile('fixtures/hmr.vine.ts', code => code.replace('color: brown', 'color: blue'))
@@ -242,14 +232,13 @@ describe('e2e test suites', async () => {
           await untilUpdated(
             () => evaluator.getColor('.title'),
             'rgb(0, 0, 255)', // blue
-            10000, // 10 seconds timeout for slower CI machines
           )
 
-          // Step 5: Verify state is preserved (count should still be 1)
+          // Step 5: Verify state is preserved (count should still be 3)
+          // This is the key test - if HMR works correctly, the state won't reset
           await untilUpdated(
             () => evaluator.getTextContent('.counter p'),
-            'Count: 1',
-            5000, // 5 seconds timeout
+            'Count: 3',
           )
         },
       ),
