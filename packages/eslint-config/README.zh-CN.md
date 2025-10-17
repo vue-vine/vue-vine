@@ -1,15 +1,13 @@
-# eslint-plugin-vue-vine
+# @vue-vine/eslint-config
 
-[中文文档](./README.zh-CN.md)
+[English](./README.md)
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-ESLint rules for [Vue Vine](https://vue-vine.dev).
+[Vue Vine](https://vue-vine.dev) 的 ESLint 配置。
 
-[Rules List](./src/rules)
-
-## License
+## 许可证
 
 MIT License © 2024-PRESENT [ShenQingchuan](https://github.com/shenqingchuan)
 

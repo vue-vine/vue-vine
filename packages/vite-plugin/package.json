@@ -25,11 +25,16 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "dist"
   ],
   "scripts": {
     "test": "vitest",
     "typecheck": "tsgo --noEmit"
+  },
+  "peerDependencies": {
+    "vite": "catalog:vite-ecosystem"
   },
   "dependencies": {
     "@vue-vine/compiler": "workspace:*"

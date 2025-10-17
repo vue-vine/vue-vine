@@ -1,41 +1,41 @@
 # create-vue-vine <a href="https://npmjs.com/package/create-vue-vine"><img src="https://img.shields.io/npm/v/create-vue-vine" alt="npm package"></a> <img src="https://img.shields.io/badge/experimental-aa58ff" />
 
-[中文文档](./README.zh-CN.md)
+[English](./README.md)
 
-The official CLI for creating your Vue Vine projects.
+用于创建 Vue Vine 项目的官方 CLI。
 
-> **Compatibility Note**: Vue Vine dev-server which is `vite` is requires Node.js version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
+> **兼容性说明**：Vue Vine 开发服务器基于 `vite`，需要 Node.js 18+ 或 20+ 版本。某些模板可能需要更高的 Node.js 版本，如果包管理器有警告请升级。
 
-With NPM:
+使用 NPM：
 
 ```bash
 $ npm create vue-vine@latest
 ```
 
-With Yarn:
+使用 Yarn：
 
 ```bash
 $ yarn create vue-vine
 ```
 
-With PNPM:
+使用 PNPM：
 
 ```bash
 $ pnpm create vue-vine
 ```
 
-With Bun:
+使用 Bun：
 
 ```bash
 $ bun create vue-vine
 ```
 
-Then follow the prompts!
+然后按照提示操作！
 
-You can also directly specify the project name and the template you want to use via additional command line options. For example, to scaffold a Vue Vine `vue-router` app, run:
+你也可以通过命令行选项直接指定项目名称和要使用的模板。例如，创建一个带有 `vue-router` 的 Vue Vine 应用：
 
 ```bash
-# npm 7+, extra double-dash is needed:
+# npm 7+，需要额外的双破折号：
 npm create vue-vine@latest my-vue-vine-app -- --router
 
 # yarn

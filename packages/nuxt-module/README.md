@@ -1,5 +1,7 @@
 # Vue Vine Module
 
+[中文文档](./README.zh-CN.md)
+
 Use Vue Vine in Nuxt.
 
 ## Quick Setup

@@ -25,6 +25,8 @@
   "module": "./dist/index.js",
   "bin": "./dist/index.js",
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "bin",
     "dist",
     "template"

@@ -17,6 +17,8 @@
     "vue-vine-tsc": "./bin/vue-vine-tsc.js"
   },
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "bin",
     "dist"
   ],

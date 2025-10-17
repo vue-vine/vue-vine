@@ -23,6 +23,8 @@
   "main": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "dist"
   ],
   "scripts": {

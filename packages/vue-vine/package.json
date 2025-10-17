@@ -41,6 +41,8 @@
     }
   },
   "files": [
+    "README.md",
+    "README.zh-CN.md",
     "dist",
     "types"
   ],
