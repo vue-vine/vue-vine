@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.12
+
+### Patch Changes
+
+- Support rsbuild plugin and add export entry in main package.
+- Updated dependencies
+  - vue-vine@1.7.12
+
 ## 1.7.11
 
 ### Patch Changes

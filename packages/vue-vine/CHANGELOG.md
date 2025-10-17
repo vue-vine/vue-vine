@@ -1,5 +1,15 @@
 # vue-vine
 
+## 1.7.12
+
+### Patch Changes
+
+- Support rsbuild plugin and add export entry in main package.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.11
+  - @vue-vine/rspack-loader@1.7.11
+  - @vue-vine/vite-plugin@1.7.12
+
 ## 1.7.11
 
 ### Patch Changes

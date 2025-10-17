@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.12
+
+### Patch Changes
+
+- Support rsbuild plugin and add export entry in main package.
+
 ## 1.7.11
 
 ### Patch Changes
