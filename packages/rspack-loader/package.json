@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/rspack-loader",
   "type": "module",
-  "version": "1.7.12-beta.1",
+  "version": "1.7.12-beta.2",
   "description": "Rspack loader for Vue Vine",
   "author": "Vue Vine Team",
   "license": "MIT",
@@ -49,5 +49,9 @@
   },
   "devDependencies": {
     "@typescript/native-preview": "catalog:compiler"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
