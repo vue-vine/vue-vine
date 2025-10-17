@@ -1,4 +1,4 @@
-import type { Options } from 'tsdown'
+import type { Options, UserConfig } from 'tsdown'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
@@ -67,7 +67,7 @@ const sharedConfig: Partial<Options> = {
   dts: false,
 }
 
-const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig(
+const tsdownConfig: UserConfig = defineConfig(
   [
     {
       entry: {

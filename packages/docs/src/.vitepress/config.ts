@@ -17,6 +17,7 @@ const vineRequiredLangs = [
   'sass',
   'less',
   'stylus',
+  'vue',
 ]
 
 // https://vitepress.dev/reference/site-config
