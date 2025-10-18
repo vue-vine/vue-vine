@@ -24,7 +24,7 @@ import {
 import { vineErr } from '../diagnostics'
 import { sortStyleImport } from '../style/order'
 import { compileCSSVars } from '../style/transform-css-var'
-import { filterJoin, showIf } from '../utils'
+import { filterJoin, replaceRange, showIf } from '../utils'
 import { mayContainAwaitExpr, registerImport, wrapWithAsyncContext } from './utils'
 
 const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
@@ -109,7 +109,8 @@ export function generateAsyncContext(
 
     const { awaitExpr, isNeedResult } = mayContain
     fnTransformCtx.hasAwait = true
-    ms.update(
+    replaceRange(
+      ms,
       awaitExpr.start!,
       awaitExpr.end!,
       wrapWithAsyncContext(
@@ -536,7 +537,8 @@ export function generatePropsDestructure(
     }
     else {
       // x --> propsAlias.x
-      vineFileCtx.fileMagicCode.overwrite(
+      replaceRange(
+        vineFileCtx.fileMagicCode,
         id.start!,
         id.end!,
         genPropsAccessExp(publicName, vineCompFnCtx.propsAlias),
