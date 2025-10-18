@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.14
+
+### Patch Changes
+
+- Refactor usage of magic-string in compiler to ensure more accurate sourcemap mapping.
+
 ## 1.7.13
 
 ### Patch Changes
