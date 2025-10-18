@@ -24,7 +24,7 @@ import {
 import { vineErr } from '../diagnostics'
 import { sortStyleImport } from '../style/order'
 import { compileCSSVars } from '../style/transform-css-var'
-import { filterJoin, replaceRange, showIf } from '../utils'
+import { filterJoin, removeRange, replaceRange, showIf } from '../utils'
 import { mayContainAwaitExpr, registerImport, wrapWithAsyncContext } from './utils'
 
 const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
@@ -147,8 +147,8 @@ export function onlyRemainFunctionBody(
   // Replace the original function delcaration start to its body's first statement's start,
   // and the last statement's end to the function declaration end.
   // Wrap all body statements into a `setup(...) { ... }`
-  ms.remove(vineCompFnStart, firstStmt.start!)
-  ms.remove(lastStmt.end!, vineCompFnEnd)
+  removeRange(ms, vineCompFnStart, firstStmt.start!)
+  removeRange(ms, lastStmt.end!, vineCompFnEnd)
 }
 
 export function removeStatementsContainsMacro(
@@ -164,7 +164,7 @@ export function removeStatementsContainsMacro(
       isStatementContainsVineMacroCall(stmt)
       || isReturnStatement(stmt)
     ) {
-      ms.remove(stmt.start!, stmt.end!)
+      removeRange(ms, stmt.start!, stmt.end!)
     }
   })
 }

@@ -86,3 +86,20 @@ export function replaceRange(
     ms.remove(index, end)
   }
 }
+
+/**
+ * Remove a range of text, preserving accurate sourcemap.
+ *
+ * This is a wrapper around replaceRange with empty string replacement.
+ *
+ * @param ms - MagicString instance
+ * @param start - The start index of the range to remove
+ * @param end - The end index of the range to remove
+ */
+export function removeRange(
+  ms: MagicString,
+  start: number,
+  end: number,
+): void {
+  replaceRange(ms, start, end, '')
+}
