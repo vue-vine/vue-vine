@@ -4,6 +4,7 @@ import { traverse } from '@babel/types'
 import MagicString from 'magic-string'
 import { babelParse } from '../babel-helpers/parse'
 import { CSS_VARS_HELPER, VineBindingTypes } from '../constants'
+import { replaceRange } from '../utils'
 
 function findIdentifierFromExp(scriptContent: string): Identifier[] {
   const identifiers: Identifier[] = []
@@ -33,9 +34,10 @@ function genCSSVarsList(
       const cssBindKeySgNodes = findIdentifierFromExp(cssBindScriptContent)
 
       cssBindKeySgNodes.forEach((node) => {
-        // overwrite binding script content
+        // Replace binding script content
         // e.g (a + b) / 2 + 'px' -> (_ctx.a + _ctx.b) / 2
-        ms.overwrite(
+        replaceRange(
+          ms,
           node.start!,
           node.end!,
           // non-inline mode only needs to rewrite the variable to `_ctx.x`
