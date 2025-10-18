@@ -229,3 +229,12 @@ Vine 提供了一个 typescript 声明文件，以帮助你使用宏时获得智
   }
 }
 ```
+
+## 下一步 {#next-steps}
+
+现在你已经成功安装了 Vue Vine，以下是一些推荐的后续步骤：
+
+- **学习基础概念**：阅读[规范文档](../specification/overview)了解 Vine 的核心概念和语法
+- **探索宏函数**：查看[宏函数](../specification/macros)指南，学习 `vineProp`、`vineEmits`、`vineSlots` 等的使用
+- **状态管理**：了解 [Vibe](../specification/vibe)，Vine 的跨组件状态管理方案
+- **查看示例**：访问我们的 [GitHub 仓库](https://github.com/vue-vine/vue-vine/tree/main/packages/e2e-vite/src)查看实际应用示例

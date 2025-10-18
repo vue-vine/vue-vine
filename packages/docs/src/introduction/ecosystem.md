@@ -4,7 +4,7 @@ Besides Vite plugin and VSCode extension, Vine also provides some other librarie
 
 ## ESLint config
 
-Since we defined a new syntax for `.vine.ts`, i.e. the tagged template string as Vue template, we need a custom ESLint parser make ESLint work. if you're curious about the internal implementation, you can check out the [source code](https://github.com/vue-vine/vue-vine/tree/main/packages/eslint-parser). In a shortnut, it will replace the ESTree node of tagged template string with a Vue template root node.
+Since we defined a new syntax for `.vine.ts`, i.e. the tagged template string as Vue template, we need a custom ESLint parser make ESLint work. if you're curious about the internal implementation, you can check out the [source code](https://github.com/vue-vine/vue-vine/tree/main/packages/eslint-parser). In a nutshell, it will replace the ESTree node of tagged template string with a Vue template root node.
 
 We indeed provide an ESLint config for Vue Vine now, and it's supposed to work with most popular rule presets like `@antfu/eslint-config`, `@sxzz/eslint-config`, etc.
 

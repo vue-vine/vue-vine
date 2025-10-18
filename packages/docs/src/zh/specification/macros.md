@@ -58,6 +58,7 @@ const myEmit = vineEmits(['update', 'delete'])
 ```
 
 Vue Vine 将会默认将所有事件视为 **必需** 的，但如果您在类型中使用 `?` 后缀或使用事件名称数组定义，它将被视为可选。
+
 ## `vineExpose` {#vineexpose}
 
 这个宏的使用方法与官方 `defineExpose` 宏完全一致。
@@ -97,6 +98,38 @@ function TestComp() {
 这个宏的使用方法与官方 `defineSlots` 宏完全一致。
 
 请在 Vue.js 官方文档的[相应部分](https://cn.vuejs.org/api/sfc-script-setup.html#defineslots)中查看描述。
+
+### 使用示例 {#vineslots-usage-example}
+
+```vue-vine
+function MyComponent() {
+  // 定义带类型注解的插槽
+  const slots = vineSlots<{
+    // 默认插槽，带作用域 props
+    default: (props: { msg: string }) => any
+    // 具名插槽，不带 props
+    header: () => any
+    // 具名插槽，带作用域 props
+    footer: (props: { year: number }) => any
+  }>()
+
+  const currentYear = new Date().getFullYear()
+
+  return vine`
+    <div class="container">
+      <header>
+        <slot name="header" />
+      </header>
+      <main>
+        <slot :msg="'Hello from parent'" />
+      </main>
+      <footer>
+        <slot name="footer" :year="currentYear" />
+      </footer>
+    </div>
+  `
+}
+```
 
 ## `vineOptions`
 

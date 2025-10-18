@@ -1,7 +1,5 @@
 import type { LanguagePlugin } from '@volar/language-core'
-import type {
-  VueCompilerOptions,
-} from '@vue/language-core'
+import type { VueCompilerOptions } from '@vue/language-core'
 import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
 import {
