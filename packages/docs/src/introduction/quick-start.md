@@ -171,6 +171,7 @@ pnpm i -g create-vue-vine
 <summary class="text-sm text-gray-500 cursor-pointer">Click here to preview the subsequent operations after running the CLI</summary>
 
 ```text
+> pnpx create-vue-vine my-vine-project
 
 ...
 
@@ -178,6 +179,14 @@ pnpm i -g create-vue-vine
 │
 ◇  Use Vue Router?
 │  Yes
+│
+◇  Use Pinia as state management?
+│  Yes
+│
+◇  Using atomized css?
+│  - UnoCSS
+│  - Tailwind
+│  - No
 │
 ◇  Install all dependencies for the project now?
 │  Yes
@@ -216,3 +225,12 @@ Vine provides a typescript declaration file to help you write macros with intell
   }
 }
 ```
+
+## Next steps
+
+Now that you've set up Vue Vine, here are some recommended next steps:
+
+- **Learn the fundamentals**: Read the [Specification](../specification/overview) to understand Vine's core concepts and syntax
+- **Explore macros**: Check out the [Macros](../specification/macros) guide to learn about `vineProp`, `vineEmits`, `vineSlots`, and more
+- **State management**: Discover [Vibe](../specification/vibe), Vine's state management solution for cross-component data sharing
+- **Check out examples**: Visit our [GitHub repository](https://github.com/vue-vine/vue-vine/tree/main/packages/e2e-vite/src) to see real-world examples

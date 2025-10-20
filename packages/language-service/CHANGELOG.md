@@ -1,5 +1,29 @@
 # @vue-vine/language-service
 
+## 1.7.16
+
+### Patch Changes
+
+- Supplement fix for empty slots props validation in compiler.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.16
+
+## 1.7.15
+
+### Patch Changes
+
+- Allow empty slot props definition and no error diagnostics.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.15
+
+## 1.7.14
+
+### Patch Changes
+
+- Refactor usage of magic-string in compiler to ensure more accurate sourcemap mapping.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.14
+
 ## 1.7.13
 
 ### Patch Changes

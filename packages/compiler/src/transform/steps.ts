@@ -25,7 +25,7 @@ import {
 import { vineErr } from '../diagnostics'
 import { sortStyleImport } from '../style/order'
 import { compileCSSVars } from '../style/transform-css-var'
-import { filterJoin, showIf } from '../utils'
+import { filterJoin, removeRange, replaceRange, showIf } from '../utils'
 import { mayContainAwaitExpr, registerImport, wrapWithAsyncContext } from './utils'
 
 const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
@@ -113,7 +113,8 @@ export function generateAsyncContext(
 
     const { awaitExpr, isNeedResult } = mayContain
     fnTransformCtx.hasAwait = true
-    ms.update(
+    replaceRange(
+      ms,
       awaitExpr.start!,
       awaitExpr.end!,
       wrapWithAsyncContext(
@@ -150,8 +151,8 @@ export function onlyRemainFunctionBody(
   // Replace the original function delcaration start to its body's first statement's start,
   // and the last statement's end to the function declaration end.
   // Wrap all body statements into a `setup(...) { ... }`
-  ms.remove(vineCompFnStart, firstStmt.start!)
-  ms.remove(lastStmt.end!, vineCompFnEnd)
+  removeRange(ms, vineCompFnStart, firstStmt.start!)
+  removeRange(ms, lastStmt.end!, vineCompFnEnd)
 }
 
 export function removeStatementsContainsMacro(
@@ -167,7 +168,7 @@ export function removeStatementsContainsMacro(
       isStatementContainsVineMacroCall(stmt)
       || isReturnStatement(stmt)
     ) {
-      ms.remove(stmt.start!, stmt.end!)
+      removeRange(ms, stmt.start!, stmt.end!)
     }
   })
 }
@@ -544,7 +545,8 @@ export function generatePropsDestructure(
     }
     else {
       // x --> propsAlias.x
-      vineFileCtx.fileMagicCode.overwrite(
+      replaceRange(
+        vineFileCtx.fileMagicCode,
         id.start!,
         id.end!,
         genPropsAccessExp(publicName, vineCompFnCtx.propsAlias),

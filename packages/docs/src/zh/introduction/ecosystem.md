@@ -4,7 +4,7 @@
 
 ## 自定义 ESLint 配置 {#eslint-config}
 
-因为我们为 `.vine.ts` 定义了一种新的语法，即将标记模板字符串作为 Vue 模板，我们需要一个自定义的 ESLint 解析器来使 ESLint 正常工作。如果你对内部实现感兴趣，可以查看[源代码](https://github.sheincorp.cn/vue-vine/vue-vine/tree/main/packages/eslint-parser)。简而言之，它将用 Vue 模板根节点替换标记模板字符串的 ESTree 节点。
+因为我们为 `.vine.ts` 定义了一种新的语法，即将标记模板字符串作为 Vue 模板，我们需要一个自定义的 ESLint 解析器来使 ESLint 正常工作。如果你对内部实现感兴趣，可以查看[源代码](https://github.com/vue-vine/vue-vine/tree/main/packages/eslint-parser)。简而言之，它将用 Vue 模板根节点替换标记模板字符串的 ESTree 节点。
 
 我们已经为 Vue Vine 提供了一份特定的 ESLint 规则包，它应该可以与大多数现有的规则预设一起工作，比如 `@antfu/eslint-config`、`@sxzz/eslint-config` 等。
 
