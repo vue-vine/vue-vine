@@ -136,7 +136,8 @@ function App(props: { foo: string }) {
   z = vineValidators(3)
 
   vineSlots<{
-    default: (props: string) => void;
+    default: (props: string) => void; // Valid
+    somethingElse: () => void; // Empty is also Valid
   }, number>()
 
   return vine\`

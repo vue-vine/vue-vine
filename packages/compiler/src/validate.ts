@@ -456,7 +456,7 @@ function assertSlotMethodSignature(
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
   const params = methodSignature.parameters
   const errMsg = 'Function signature of `vineSlots` definition can only have one parameter named `props`'
-  if (params.length !== 1) {
+  if (params.length > 1) {
     vineCompilerHooks.onError(
       vineErr(
         { vineFileCtx },
