@@ -1,5 +1,13 @@
 # @vue-vine/language-service
 
+## 1.7.15
+
+### Patch Changes
+
+- Allow empty slot props definition and no error diagnostics.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.15
+
 ## 1.7.14
 
 ### Patch Changes

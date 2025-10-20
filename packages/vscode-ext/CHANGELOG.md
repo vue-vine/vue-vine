@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.15
+
+### Patch Changes
+
+- Allow empty slot props definition and no error diagnostics.
+
 ## 1.7.14
 
 ### Patch Changes

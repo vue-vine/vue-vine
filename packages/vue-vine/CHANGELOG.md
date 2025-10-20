@@ -1,5 +1,15 @@
 # vue-vine
 
+## 1.7.15
+
+### Patch Changes
+
+- Allow empty slot props definition and no error diagnostics.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.14
+  - @vue-vine/rspack-loader@1.7.14
+  - @vue-vine/vite-plugin@1.7.15
+
 ## 1.7.14
 
 ### Patch Changes
