@@ -1,8 +1,12 @@
 import type {
   ArrayExpression,
+  ArrayPattern,
   CallExpression,
   Identifier,
   Node,
+  ObjectPattern,
+  RestElement,
+  SourceLocation,
   TraversalAncestors,
   TSMethodSignature,
   TSPropertySignature,
@@ -448,32 +452,38 @@ function assertVineEmitsUsage(
   return isVineEmitsUsageCorrect
 }
 
-function assertSlotMethodSignature(
+// Check if function signature has only one parameter named `props` with TSTypeLiteral type annotation
+function assertSlotFunctionSignature(
   validatorCtx: MacroAssertCtx,
-  methodSignature: TSMethodSignature,
+  params: Array<Identifier | RestElement | ArrayPattern | ObjectPattern>,
+  errorLocation: SourceLocation | null | undefined,
 ) {
-  // Every method's signature must have only one parameter named `props` with a TSTypeLiteral type annotation
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
-  const params = methodSignature.parameters
-  const errMsg = 'Function signature of `vineSlots` definition can only have one parameter named `props`'
-  if (params.length > 1) {
+  const errMsg = 'Function signature of `vineSlots` can only have one parameter named `props`'
+
+  if (params.length === 0) {
+    // Empty parameter in vineSlots declaration is allowed
+    return
+  }
+  else if (params.length > 1) {
     vineCompilerHooks.onError(
       vineErr(
         { vineFileCtx },
         {
           msg: errMsg,
-          location: methodSignature.loc,
+          location: errorLocation,
         },
       ),
     )
     return false
   }
-  const theSignatureOnlyParam = params[0]
+
+  const firstParam = params[0]
   let isNameNotProps = false
   if (
-    !isIdentifier(theSignatureOnlyParam)
+    !isIdentifier(firstParam)
     // eslint-disable-next-line no-cond-assign
-    || (isNameNotProps = theSignatureOnlyParam.name !== 'props')
+    || (isNameNotProps = firstParam.name !== 'props')
   ) {
     vineCompilerHooks.onError(
       vineErr(
@@ -482,64 +492,11 @@ function assertSlotMethodSignature(
           msg: `${errMsg}${
             isNameNotProps
               ? `, and its parameter name must be \`props\`, but got \`${
-                (theSignatureOnlyParam as Identifier).name
+                (firstParam as Identifier).name
               }\``
               : ''
           }`,
-          location: theSignatureOnlyParam.loc,
-        },
-      ),
-    )
-    return false
-  }
-  const paramTypeAnnotation = (theSignatureOnlyParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation
-  if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
-    vineCompilerHooks.onError(
-      vineErr(
-        { vineFileCtx },
-        {
-          msg: `${errMsg}, and its type annotation must be object literal`,
-          location: theSignatureOnlyParam.loc,
-        },
-      ),
-    )
-    return false
-  }
-  return true
-}
-
-function assertSlotPropertySignature(
-  validatorCtx: MacroAssertCtx,
-  propertySignature: TSPropertySignature,
-) {
-  // Every property's signature must have a TSTypeFunction type annotation
-  const { vineCompilerHooks, vineFileCtx } = validatorCtx
-  const typeAnnotation = propertySignature.typeAnnotation?.typeAnnotation
-  if (!typeAnnotation || !isTSFunctionType(typeAnnotation)) {
-    vineCompilerHooks.onError(
-      vineErr(
-        { vineFileCtx },
-        {
-          msg: 'Properties of `vineSlots` can only have function type annotation',
-          location: propertySignature.loc,
-        },
-      ),
-    )
-    return false
-  }
-
-  // The function type annotation must have only one parameter named `props` with a TSTypeLiteral type annotation
-  const params = typeAnnotation.parameters
-  const errMsg = 'Function signature of `vineSlots` can only have one parameter named `props`'
-  const firstParam = params[0]
-
-  if (params.length !== 1 || !isIdentifier(firstParam)) {
-    vineCompilerHooks.onError(
-      vineErr(
-        { vineFileCtx },
-        {
-          msg: errMsg,
-          location: typeAnnotation.loc,
+          location: firstParam?.loc,
         },
       ),
     )
@@ -561,6 +518,43 @@ function assertSlotPropertySignature(
   }
 
   return true
+}
+
+function assertSlotMethodSignature(
+  validatorCtx: MacroAssertCtx,
+  methodSignature: TSMethodSignature,
+) {
+  return assertSlotFunctionSignature(
+    validatorCtx,
+    methodSignature.parameters,
+    methodSignature.loc,
+  )
+}
+
+function assertSlotPropertySignature(
+  validatorCtx: MacroAssertCtx,
+  propertySignature: TSPropertySignature,
+) {
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  const typeAnnotation = propertySignature.typeAnnotation?.typeAnnotation
+  if (!typeAnnotation || !isTSFunctionType(typeAnnotation)) {
+    vineCompilerHooks.onError(
+      vineErr(
+        { vineFileCtx },
+        {
+          msg: 'Properties of `vineSlots` can only have function type annotation',
+          location: propertySignature.loc,
+        },
+      ),
+    )
+    return false
+  }
+
+  return assertSlotFunctionSignature(
+    validatorCtx,
+    typeAnnotation.parameters,
+    typeAnnotation.loc,
+  )
 }
 
 function assertVineSlotsUsage(

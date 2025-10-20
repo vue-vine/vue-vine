@@ -155,7 +155,7 @@ function App(props: { foo: string }) {
           "vineStyle CSS language only supports: \`css\`, \`scss\`, \`sass\`, \`less\`, \`stylus\` and \`postcss\`",
           "Every property of Vue Vine component function's \`vineSlots\` type must be function signature",
           "Function signature of \`vineSlots\` can only have one parameter named \`props\`, and its type annotation must be object literal",
-          "Function signature of \`vineSlots\` definition can only have one parameter named \`props\`, and its parameter name must be \`props\`, but got \`yyy\`",
+          "Function signature of \`vineSlots\` can only have one parameter named \`props\`, and its parameter name must be \`props\`, but got \`yyy\`",
           "Properties of \`vineSlots\` can only have function type annotation",
           "the declaration of \`vineModel\` macro call must be inside a variable declaration",
           "The given vineModel name must be a string literal",
@@ -316,5 +316,29 @@ export function MyComp({
           ""foo" is a destructured prop and should not be passed directly to watch(). Pass a getter () => foo instead.",
         ]
       `)
+  })
+
+  // https://github.com/vue-vine/vue-vine/issues/321
+  it('validate vineSlots with property signature should not report errors', () => {
+    const content = `
+function TestComp() {
+  vineSlots<{
+    default: () => any;
+    foo: () => any;
+  }>()
+
+  return vine\`
+    <div>
+      <slot />
+      <slot name="foo" />
+    </div>
+  \`
+}
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVineSlotsPropertySignature', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
+      .toMatchInlineSnapshot(`[]`)
   })
 })
