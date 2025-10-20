@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.16
+
+### Patch Changes
+
+- Supplement fix for empty slots props validation in compiler.
+- Updated dependencies
+  - @vue-vine/language-service@1.7.16
+
 ## 1.7.15
 
 ### Patch Changes

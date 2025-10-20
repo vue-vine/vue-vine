@@ -1,5 +1,15 @@
 # vue-vine
 
+## 1.7.16
+
+### Patch Changes
+
+- Supplement fix for empty slots props validation in compiler.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.15
+  - @vue-vine/rspack-loader@1.7.15
+  - @vue-vine/vite-plugin@1.7.16
+
 ## 1.7.15
 
 ### Patch Changes

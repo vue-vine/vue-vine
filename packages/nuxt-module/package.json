@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/nuxt",
   "type": "module",
-  "version": "1.7.15",
+  "version": "1.7.16",
   "description": "Nuxt module for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",

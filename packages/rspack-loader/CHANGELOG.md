@@ -1,5 +1,13 @@
 # @vue-vine/rspack-loader
 
+## 1.7.16-beta.1
+
+### Patch Changes
+
+- Supplement fix for empty slots props validation in compiler.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.16
+
 ## 1.7.15-beta.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-vue-vine
 
+## 1.7.16
+
+### Patch Changes
+
+- Supplement fix for empty slots props validation in compiler.
+
 ## 1.7.15
 
 ### Patch Changes
