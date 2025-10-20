@@ -94,12 +94,43 @@ function MyComponent({
 从 Vue Vine v0.2.0 版本开始，我们引入了 ts-morph 来解析 props 类型注解，因此您可以使用任何类型，而不仅仅是 `TSTypeLiteral`。
 
 ```vue-vine
+interface ProductProps {
+  id: number
+  title: string
+  price: number
+}
+
+function ProductCard(props: ProductProps) {
+  return vine`<div>{{ title }}: ${{ price }}</div>`
+}
+```
+
+**导入的类型：**
+
+```vue-vine
 import type { SomeExternalType } from '../path/to/somewhere'
 
 function MyComponent(props: SomeExternalType) {
   // ...
   return vine`...`
 }
+```
+
+**泛型组件：**
+
+```vue-vine
+// Generic component function with type parameter
+export function GenericButton<T extends keyof HTMLElementTagNameMap = 'button'>(
+  props: Partial<HTMLElementTagNameMap[T]> & { as: T },
+) {
+  return vine`
+    <component :is="as" />
+  `
+}
+
+// Usage:
+// <GenericButton as="button" type="submit" />
+// <GenericButton as="a" href="/home" />
 ```
 
 如果您发现任何异常情况，[请在 Github 上向我们提交问题](https://github.com/vue-vine/vue-vine/issues/new)。

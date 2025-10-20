@@ -1,6 +1,7 @@
 import type { PluginCreator } from 'postcss'
 import type { VineFileCtx } from '../types'
 import MagicString from 'magic-string'
+import { replaceRange } from '../utils'
 import { parseCssVars } from './analyze-css-vars'
 
 interface CSSVarsPluginOptions {
@@ -41,7 +42,7 @@ const cssVarsPlugin: PluginCreator<CSSVarsPluginOptions> = (options) => {
             })
             if (content[0] === cbKey) {
               const mg = new MagicString(ctx.value)
-              mg.overwrite(range.start!, range.end!, `--${cssBindings[cbKey]}`)
+              replaceRange(mg, range.start!, range.end!, `--${cssBindings[cbKey]}`)
               mg.replaceAll('v-bind', 'var')
               ctx.value = mg.toString()
               break

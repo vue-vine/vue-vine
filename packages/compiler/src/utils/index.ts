@@ -103,3 +103,5 @@ export function createLinkedCodeTag(
 ) {
   return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
 }
+
+export * from './magic-string-helpers'

@@ -99,6 +99,38 @@ This macro's usage is just the same with the official `defineSlots` macro.
 
 Check the description in [corresponding secion](https://vuejs.org/api/sfc-script-setup.html#defineslots) on Vue.js official documentaion.
 
+### Usage example
+
+```vue-vine
+function MyComponent() {
+  // Define slots with type annotations
+  const slots = vineSlots<{
+    // Default slot with scoped props
+    default: (props: { msg: string }) => any
+    // Named slot without props
+    header: () => any
+    // Named slot with scoped props
+    footer: (props: { year: number }) => any
+  }>()
+
+  const currentYear = new Date().getFullYear()
+
+  return vine`
+    <div class="container">
+      <header>
+        <slot name="header" />
+      </header>
+      <main>
+        <slot :msg="'Hello from parent'" />
+      </main>
+      <footer>
+        <slot name="footer" :year="currentYear" />
+      </footer>
+    </div>
+  `
+}
+```
+
 ## `vineOptions`
 
 This macro only supports you to define 2 important Vue component options: `name` and `inheritAttrs`.

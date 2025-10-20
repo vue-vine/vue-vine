@@ -94,12 +94,43 @@ function MyComponent({
 Since Vue Vine v0.2.0, we introduced [ts-morph](https://github.com/dsherret/ts-morph) to resolve props type annotation, so you're able to use any type instead of only `TSTypeLiteral`.
 
 ```vue-vine
+interface ProductProps {
+  id: number
+  title: string
+  price: number
+}
+
+function ProductCard(props: ProductProps) {
+  return vine`<div>{{ title }}: ${{ price }}</div>`
+}
+```
+
+**Imported type:**
+
+```vue-vine
 import type { SomeExternalType } from '../path/to/somewhere'
 
 function MyComponent(props: SomeExternalType) {
   // ...
   return vine`...`
 }
+```
+
+**Generic component:**
+
+```vue-vine
+// Generic component function with type parameter
+export function GenericButton<T extends keyof HTMLElementTagNameMap = 'button'>(
+  props: Partial<HTMLElementTagNameMap[T]> & { as: T },
+) {
+  return vine`
+    <component :is="as" />
+  `
+}
+
+// Usage:
+// <GenericButton as="button" type="submit" />
+// <GenericButton as="a" href="/home" />
 ```
 
 If you found any bad case, [please raise an issue](https://github.com/vue-vine/vue-vine/issues/new).
