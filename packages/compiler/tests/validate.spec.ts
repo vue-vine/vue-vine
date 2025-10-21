@@ -148,13 +148,12 @@ function App(props: { foo: string }) {
 `
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
     compileVineTypeScriptFile(content, 'testVineMacrosUsage', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`17`)
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`16`)
     expect(mockCompilerCtx.vineCompileErrors.map(err => err.msg))
       .toMatchInlineSnapshot(`
         [
           "vineStyle CSS language only supports: \`css\`, \`scss\`, \`sass\`, \`less\`, \`stylus\` and \`postcss\`",
           "Every property of Vue Vine component function's \`vineSlots\` type must be function signature",
-          "Function signature of \`vineSlots\` can only have one parameter named \`props\`, and its type annotation must be object literal",
           "Function signature of \`vineSlots\` can only have one parameter named \`props\`, and its parameter name must be \`props\`, but got \`yyy\`",
           "Properties of \`vineSlots\` can only have function type annotation",
           "the declaration of \`vineModel\` macro call must be inside a variable declaration",
