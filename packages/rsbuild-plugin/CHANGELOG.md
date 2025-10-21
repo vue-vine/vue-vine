@@ -1,5 +1,14 @@
 # @vue-vine/rsbuild-plugin
 
+## 1.7.17-beta.1
+
+### Patch Changes
+
+- Cancel error report for using typename as slot props type annotation.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.17
+  - @vue-vine/rspack-loader@1.7.17-beta.1
+
 ## 1.7.16-beta.1
 
 ### Patch Changes

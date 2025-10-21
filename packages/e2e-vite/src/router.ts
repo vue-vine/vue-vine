@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { TestTsMorphComplexExternal } from './components/ts-morph-complex-external/test-ts-morph.vine'
 import { TestBoolCastPage } from './fixtures/boolean-cast.vine'
 import { TestCustomElement } from './fixtures/custom-elements.vine'
+import { DebugVine } from './fixtures/debug.vine'
 import { TestExternalStyleImport } from './fixtures/external-style-import.vine'
 import { HmrApp } from './fixtures/hmr.vine'
 import { TestVineWithJsx } from './fixtures/mix-with-jsx.vine'
@@ -20,6 +21,7 @@ import Welcome from './welcome.vine'
 
 const routes = [
   { path: '/', component: Welcome },
+  { path: '/debug', component: DebugVine },
   { path: '/hmr', component: HmrApp },
   { path: '/style-order', component: TestStyleOrder },
   { path: '/external-style-import', component: TestExternalStyleImport },

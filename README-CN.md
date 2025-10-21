@@ -16,6 +16,16 @@
 - Open VSX 插件版本: &nbsp; [![Open VSX ext version](https://img.shields.io/open-vsx/v/shenqingchuan/vue-vine-extension)](https://open-vsx.org/extension/shenqingchuan/vue-vine-extension)
 - 要了解更多细节，请查看 [官方文档](https://vue-vine.dev)：&nbsp;[![Netlify Status](https://api.netlify.com/api/v1/badges/ff99c4c5-2766-4716-81db-599ce4346647/deploy-status)](https://app.netlify.com/sites/vue-vine/deploys)
 
+<div align="center">
+
+<br><div><strong>🎤 快来加入我们的 Discord 吧 !!</strong></div>
+
+[![](https://dcbadge.limes.pink/api/server/TyAKHJYTvg)](https://discord.gg/TyAKHJYTvg)
+
+<br>
+
+</div>
+
 <details>
   <summary>
     <b>为什么做这样一个项目？</b>
