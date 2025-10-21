@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.17
+
+### Patch Changes
+
+- Cancel error report for using typename as slot props type annotation.
+- Updated dependencies
+  - @vue-vine/language-service@1.7.17
+
 ## 1.7.16
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.7.17
+
+### Patch Changes
+
+- Cancel error report for using typename as slot props type annotation.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.17
+
 ## 1.7.16
 
 ### Patch Changes
