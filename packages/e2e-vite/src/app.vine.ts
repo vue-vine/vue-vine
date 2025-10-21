@@ -1,6 +1,7 @@
 import { useRoute } from 'vue-router'
 
 const routes = [
+  { path: '/debug', label: 'Debug' },
   { path: '/hmr', label: 'HMR' },
   { path: '/style-order', label: 'Style Order' },
   { path: '/external-style-import', label: 'External Style Import' },

@@ -458,14 +458,14 @@ function assertSlotFunctionSignature(
   params: Array<Identifier | RestElement | ArrayPattern | ObjectPattern>,
   errorLocation: SourceLocation | null | undefined,
 ) {
-  const { vineCompilerHooks, vineFileCtx } = validatorCtx
-  const errMsg = 'Function signature of `vineSlots` can only have one parameter named `props`'
-
+  // Empty parameter in vineSlots declaration is allowed
   if (params.length === 0) {
-    // Empty parameter in vineSlots declaration is allowed
     return
   }
-  else if (params.length > 1) {
+
+  const { vineCompilerHooks, vineFileCtx } = validatorCtx
+  const errMsg = 'Function signature of `vineSlots` can only have one parameter named `props`'
+  if (params.length > 1) {
     vineCompilerHooks.onError(
       vineErr(
         { vineFileCtx },
@@ -504,12 +504,12 @@ function assertSlotFunctionSignature(
   }
 
   const paramTypeAnnotation = (firstParam.typeAnnotation as TSTypeAnnotation)?.typeAnnotation
-  if (!paramTypeAnnotation || !isTSTypeLiteral(paramTypeAnnotation)) {
+  if (!paramTypeAnnotation) {
     vineCompilerHooks.onError(
       vineErr(
         { vineFileCtx },
         {
-          msg: `${errMsg}, and its type annotation must be object literal`,
+          msg: errMsg,
           location: firstParam.loc,
         },
       ),
