@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
 
@@ -218,7 +218,7 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
 import type { Directive } from 'vue'
@@ -637,7 +637,7 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineE
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE.TestCompOne_emits__['click:comp-one']
+    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE_TestCompOne_emits__['click:comp-one']
 },
 context: {}) {
   
@@ -1243,7 +1243,7 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
 import { useTemplateRef } from 'vue'
@@ -1317,7 +1317,7 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
 import { ref } from 'vue'
@@ -1396,31 +1396,108 @@ $el: __VLS_RootEl;
 return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
-type __VLS_VINE_TestAnotherVaporComp_props__ = {}
+type __VLS_VINE_TestVaporComp_props__ = {}
 
 
-function TestVaporComp() {
-  const count = ref(0)
+function TestVaporComp(
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestVaporComp_props__,
+context: {}) {
+  
+type TestVaporComp_Props = Parameters<typeof TestVaporComp>[0];
+
+const count = ref(0)
   const add = () => count.value++
   const sub = () => count.value--
 
-  return vine.vapor\`
-    <div
-      class="test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md"
-    >
-      <h3 class="text-zinc-500">Vapor Component in Virtual DOM component</h3>
-      <div class="row-flex gap-2">
-        <button @click="add">+</button>
-        <button @click="sub">-</button>
-      </div>
-      <p>Count: {{ count }}</p>
+  
+// --- Start: Template virtual code
 
-      <img class="w-60" src="@/assets/sample.jpg" alt="sample-img-in-vapor-comp" />
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
+  /* __LINKED_CODE_LEFT__#3 */add: /* __LINKED_CODE_RIGHT__#3 */add,
+  /* __LINKED_CODE_LEFT__#3 */sub: /* __LINKED_CODE_RIGHT__#3 */sub,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
+  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
+  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
+  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
+  /* No props formal params */
+});
+const __VLS_localComponents = __VLS_ctx;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
+let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
+const __VLS_components = {
+  ...{} as __VLS_GlobalComponents,
+  ...__VLS_localComponents as unknown as __VLS_LocalComponents,
+};
 
-      <slot />
-    </div>
-  \`
+type __VLS_VINE_StyleScopedClasses = {};
+__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
+...{ class: "test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md" },
+});
+__VLS_asFunctionalElement(__VLS_elements.h3, __VLS_elements.h3)({
+...{ class: "text-zinc-500" },
+});
+__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
+...{ class: "row-flex gap-2" },
+});
+__VLS_asFunctionalElement(__VLS_elements.button, __VLS_elements.button)({
+...{ onClick: (__VLS_ctx.add)},
+});
+// @ts-ignore
+[add,];
+__VLS_asFunctionalElement(__VLS_elements.button, __VLS_elements.button)({
+...{ onClick: (__VLS_ctx.sub)},
+});
+// @ts-ignore
+[sub,];
+__VLS_asFunctionalElement(__VLS_elements.p, __VLS_elements.p)({
+});
+( __VLS_ctx.count );
+// @ts-ignore
+[count,];
+__VLS_asFunctionalElement(__VLS_elements.img)({
+...{ class: "w-60" },
+src: "@/assets/sample.jpg",
+alt: "sample-img-in-vapor-comp",
+});
+var __VLS_0 = {
+};
+/** @type {__VLS_StyleScopedClasses['test-vapor-comp']} */;
+/** @type {__VLS_StyleScopedClasses['col-flex']} */;
+/** @type {__VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VLS_StyleScopedClasses['p-2']} */;
+/** @type {__VLS_StyleScopedClasses['border-1']} */;
+/** @type {__VLS_StyleScopedClasses['border-solid']} */;
+/** @type {__VLS_StyleScopedClasses['border-orange-400']} */;
+/** @type {__VLS_StyleScopedClasses['rounded-md']} */;
+/** @type {__VLS_StyleScopedClasses['text-zinc-500']} */;
+/** @type {__VLS_StyleScopedClasses['row-flex']} */;
+/** @type {__VLS_StyleScopedClasses['gap-2']} */;
+/** @type {__VLS_StyleScopedClasses['w-60']} */;
+// @ts-ignore
+var __VLS_1 = __VLS_0, ;
+type __VLS_Slots = {}
+& { default?: (props: typeof __VLS_1) => any };
+type __VLS_InheritedAttrs = {};
+type __VLS_TemplateRefs = {};
+type __VLS_RootEl = 
+| __VLS_NativeElements['div'];
+var __VLS_dollars!: {
+$slots: __VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VLS_InheritedAttrs>;
+$refs: __VLS_TemplateRefs;
+$el: __VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine.vapor\`\` as any as __VLS_VINE.VueVineComponent;
+
 }
+type __VLS_VINE_TestAnotherVaporComp_props__ = {}
+
 
 function TestAnotherVaporComp(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestAnotherVaporComp_props__,
@@ -1573,16 +1650,16 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 const __VLS_VINE_ComponentsReferenceMap = {
   'VirtualDOMComp': VirtualDOMComp,
+  'TestVaporComp': TestVaporComp,
   'TestAnotherVaporComp': TestAnotherVaporComp,
-  'VaporTestContainer': VaporTestContainer,
-  'TestVaporComp': TestVaporComp
+  'VaporTestContainer': VaporTestContainer
 };
 
 const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
-"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
 import { ref } from 'vue'

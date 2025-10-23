@@ -173,7 +173,7 @@ export function generateEmitProps(
         ? createLinkedCodeTag('left', onEmit.length)
         : ''
     }${quotedPropName}${isOptional ? '?' : ''
-    }: __VLS_VINE.${vineCompFn.fnName}_emits__['${emit}']`
+    }: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
   }).filter(Boolean).join(', ')
   }\n}`
 
