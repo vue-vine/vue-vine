@@ -1,5 +1,15 @@
 # vue-vine
 
+## 1.7.19
+
+### Patch Changes
+
+- Fix lang-service for incorrect reference emits type name.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.18
+  - @vue-vine/rspack-loader@1.7.18
+  - @vue-vine/vite-plugin@1.7.19
+
 ## 1.7.18
 
 ### Patch Changes

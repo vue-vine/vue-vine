@@ -1,5 +1,13 @@
 # @vue-vine/rspack-loader
 
+## 1.7.19-beta.1
+
+### Patch Changes
+
+- Fix lang-service for incorrect reference emits type name.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.19
+
 ## 1.7.18-beta.1
 
 ### Patch Changes
