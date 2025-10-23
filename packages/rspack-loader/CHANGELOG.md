@@ -1,5 +1,13 @@
 # @vue-vine/rspack-loader
 
+## 1.7.18-beta.1
+
+### Patch Changes
+
+- Fix language service for missing referencing type declarations in generated dts.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.18
+
 ## 1.7.17-beta.1
 
 ### Patch Changes
