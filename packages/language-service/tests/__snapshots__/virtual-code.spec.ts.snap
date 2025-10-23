@@ -1,11 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
-"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+import * as __VLS_VINE from 'vue-vine/internals';
+
 
 type __VLS_VINE_SampleCustomElement_props__ = {}
 export const SampleCustomElement = (function (
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__,
 context: {}) {
   
 type SampleCustomElement_Props = Parameters<typeof SampleCustomElement>[0];
@@ -18,7 +20,7 @@ vineCustomElement()
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#8 */addCount: /* __LINKED_CODE_RIGHT__#8 */addCount,
   /* __LINKED_CODE_LEFT__#19 */SampleCustomElement: /* __LINKED_CODE_RIGHT__#19 */SampleCustomElement,
@@ -27,8 +29,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -74,14 +76,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 } as CustomElementConstructor);
 
 
 // eslint-disable-next-line antfu/top-level-function
 export const AnotherCustomElement = ((
-  props: __VLS_VINE_VineComponentCommonProps & { foo: string },context: {},
+  props: __VLS_VINE.VineComponentCommonProps & { foo: string },context: {},
 ) => {
   
 type AnotherCustomElement_Props = Parameters<typeof AnotherCustomElement>[0];
@@ -91,15 +93,15 @@ vineCustomElement()
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#19 */SampleCustomElement: /* __LINKED_CODE_RIGHT__#19 */SampleCustomElement,
   /* __LINKED_CODE_LEFT__#20 */AnotherCustomElement: /* __LINKED_CODE_RIGHT__#20 */AnotherCustomElement,
   /* __LINKED_CODE_LEFT__#17 */TestCustomElement: /* __LINKED_CODE_RIGHT__#17 */TestCustomElement,
   ...props,
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -123,7 +125,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 } as CustomElementConstructor);
 
@@ -131,7 +133,7 @@ type __VLS_VINE_TestCustomElement_props__ = {}
 
 
 export function TestCustomElement(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCustomElement_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCustomElement_props__,
 context: {}) {
   
 type TestCustomElement_Props = Parameters<typeof TestCustomElement>[0];
@@ -142,7 +144,7 @@ customElements.define('vi-sample-custom-element', SampleCustomElement)
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#21 */ViSampleCustomElement: /* __LINKED_CODE_RIGHT__#21 */ViSampleCustomElement,
   /* __LINKED_CODE_LEFT__#22 */ViAnotherCustomElement: /* __LINKED_CODE_RIGHT__#22 */ViAnotherCustomElement,
   /* __LINKED_CODE_LEFT__#19 */SampleCustomElement: /* __LINKED_CODE_RIGHT__#19 */SampleCustomElement,
@@ -151,8 +153,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -200,7 +202,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 
@@ -216,7 +218,9 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
-"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+import * as __VLS_VINE from 'vue-vine/internals';
+
 import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
@@ -229,7 +233,7 @@ type __VLS_VINE_Comp_props__ = {
 /* __LINKED_CODE_LEFT__#3 */foo: string
 }
 function Comp(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_Comp_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_Comp_props__,
 context: {}) {
   
 type Comp_Props = Parameters<typeof Comp>[0];
@@ -239,7 +243,7 @@ const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp<string>()
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -262,8 +266,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -290,7 +294,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_SampleOne_props__ = {
@@ -302,7 +306,7 @@ type __VLS_VINE_SampleOne_props__ = {
 // - Case 1: 'vue-vine/format-vine-macros-leading'
 // - Case 2: 'vue-vine/essentials-no-child-content'
 export function SampleOne(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_SampleOne_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleOne_props__,
 context: {}) {
   
 type SampleOne_Props = Parameters<typeof SampleOne>[0];
@@ -318,7 +322,7 @@ const count = ref(0)
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#4 */Comp: /* __LINKED_CODE_RIGHT__#4 */Comp,
   /* __LINKED_CODE_LEFT__#2 */p1: /* __LINKED_CODE_RIGHT__#2 */p1,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
@@ -343,8 +347,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -392,7 +396,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_SampleTwo_props__ = {}
@@ -401,7 +405,7 @@ type __VLS_VINE_SampleTwo_props__ = {}
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_SampleTwo_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleTwo_props__,
 context: {}) {
   
 type SampleTwo_Props = Parameters<typeof SampleTwo>[0];
@@ -412,7 +416,7 @@ let count = ref('0x' + Foo + 'CAFE')
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#4 */type: /* __LINKED_CODE_RIGHT__#4 */type,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
@@ -436,8 +440,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -470,14 +474,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestPlainTextTemplate_props__ = {}
 
 
 export function TestPlainTextTemplate(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestPlainTextTemplate_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestPlainTextTemplate_props__,
 context: {}) {
   
 type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
@@ -486,7 +490,7 @@ type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -508,8 +512,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -530,7 +534,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestUnoCssAttributeMode_props__ = {}
@@ -545,7 +549,7 @@ type __VLS_VINE_TestUnoCssAttributeMode_props__ = {}
   }
  */
 export function TestUnoCssAttributeMode(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestUnoCssAttributeMode_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUnoCssAttributeMode_props__,
 context: {}) {
   
 type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[0];
@@ -559,7 +563,7 @@ const vBounce: Directive<HTMLElement> = {
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#7 */vBounce: /* __LINKED_CODE_RIGHT__#7 */vBounce,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -582,8 +586,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -613,7 +617,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestCompOne_props__ = {
@@ -623,7 +627,7 @@ type __VLS_VINE_TestCompOne_props__ = {
 /* __LINKED_CODE_LEFT__#3 */foo?: number
 }
 
-type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE_VueDefineEmits<{
+type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<{
     'click:comp-one': [boolean]
   }>>;
 
@@ -632,8 +636,8 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE_VueDefineE
 
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE_TestCompOne_emits__['click:comp-one']
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
+    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE.TestCompOne_emits__['click:comp-one']
 },
 context: {}) {
   
@@ -650,7 +654,7 @@ type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */zee: /* __LINKED_CODE_RIGHT__#3 */zee,
   /* __LINKED_CODE_LEFT__#3 */foo: /* __LINKED_CODE_RIGHT__#3 */foo,
   /* __LINKED_CODE_LEFT__#5 */emits: /* __LINKED_CODE_RIGHT__#5 */emits,
@@ -675,8 +679,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -709,14 +713,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestCompTwo_props__ = {}
 
 
 function TestCompTwo(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCompTwo_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompTwo_props__,
 context: {}) {
   
 type TestCompTwo_Props = Parameters<typeof TestCompTwo>[0];
@@ -726,7 +730,7 @@ const bar = ref('123')
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */UnknownComp: /* __LINKED_CODE_RIGHT__#11 */UnknownComp,
   /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#3 */bar: /* __LINKED_CODE_RIGHT__#3 */bar,
@@ -750,8 +754,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -795,16 +799,16 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 // #endregion
 
 // #region Test vineExpose and component ref
-function TargetComp(props: __VLS_VINE_VineComponentCommonProps & {
+function TargetComp(props: __VLS_VINE.VineComponentCommonProps & {
   foo: boolean
 },context: {
-  expose: __VLS_VINE_PickComponentExpose<typeof TargetComp>,
+  expose: __VLS_VINE.PickComponentExpose<typeof TargetComp>,
 }) {
   
 type TargetComp_Props = Parameters<typeof TargetComp>[0];
@@ -826,7 +830,7 @@ vineExpose(__VLS_VINE_ComponentExpose__)
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */TestCompOne: /* __LINKED_CODE_RIGHT__#11 */TestCompOne,
   /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
   /* __LINKED_CODE_LEFT__#14 */onClickCompOne: /* __LINKED_CODE_RIGHT__#14 */onClickCompOne,
@@ -850,8 +854,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   ...props,
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -907,14 +911,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) };
+return vine\`\` as any as __VLS_VINE.VueVineComponent & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) };
 
 }
 type __VLS_VINE_TestCompRef_props__ = {}
 
 
 export function TestCompRef(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestCompRef_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompRef_props__,
 context: {}) {
   
 type TestCompRef_Props = Parameters<typeof TestCompRef>[0];
@@ -926,7 +930,7 @@ const target = useTemplateRef<__VLS_TemplateRefs['target'], keyof __VLS_Template
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#10 */TargetComp: /* __LINKED_CODE_RIGHT__#10 */TargetComp,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -948,8 +952,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -992,7 +996,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestNoVforKeyOnChild_props__ = {}
@@ -1001,7 +1005,7 @@ type __VLS_VINE_TestNoVforKeyOnChild_props__ = {}
 
 // #region Test ESLint rule: no-v-for-key-on-child
 export function TestNoVforKeyOnChild(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestNoVforKeyOnChild_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoVforKeyOnChild_props__,
 context: {}) {
   
 type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
@@ -1011,7 +1015,7 @@ interface User { id: string, name: string }
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */users: /* __LINKED_CODE_RIGHT__#5 */users,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -1034,8 +1038,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1069,7 +1073,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestNoLifecycleHookAfterAwait_props__ = {}
@@ -1079,7 +1083,7 @@ type __VLS_VINE_TestNoLifecycleHookAfterAwait_props__ = {}
 // #region Test ESLint rule: no-lifecycle-hook-after-await
 declare const doSomethingAsync: () => Promise<void>
 export async function TestNoLifecycleHookAfterAwait(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestNoLifecycleHookAfterAwait_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoLifecycleHookAfterAwait_props__,
 context: {}) {
   
 type TestNoLifecycleHookAfterAwait_Props = Parameters<typeof TestNoLifecycleHookAfterAwait>[0];
@@ -1093,7 +1097,7 @@ await doSomethingAsync()
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
@@ -1115,8 +1119,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1140,7 +1144,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 // #endregion
@@ -1148,7 +1152,7 @@ return vine\`\` as any as __VLS_VINE_VueVineComponent;
 // #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
-  props: __VLS_VINE_VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {},
+  props: __VLS_VINE.VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {},
 ) {
   
 type TestGenericComp1_Props = Parameters<typeof TestGenericComp1>[0];
@@ -1156,7 +1160,7 @@ type TestGenericComp1_Props = Parameters<typeof TestGenericComp1>[0];
 
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#9 */component: /* __LINKED_CODE_RIGHT__#9 */component,
   /* __LINKED_CODE_LEFT__#9 */onMounted: /* __LINKED_CODE_RIGHT__#9 */onMounted,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
@@ -1179,8 +1183,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   ...props,
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1212,7 +1216,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 
@@ -1239,13 +1243,15 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
-"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+import * as __VLS_VINE from 'vue-vine/internals';
+
 import { useTemplateRef } from 'vue'
 
 
 type __VLS_VINE_TestUseTemplateRefVirtualCode_props__ = {}
 export function TestUseTemplateRefVirtualCode(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestUseTemplateRefVirtualCode_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUseTemplateRefVirtualCode_props__,
 context: {}) {
   
 type TestUseTemplateRefVirtualCode_Props = Parameters<typeof TestUseTemplateRefVirtualCode>[0];
@@ -1261,14 +1267,14 @@ const container1Ref = useTemplateRef<__VLS_TemplateRefs['container1Ref'], keyof 
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#14 */useTemplateRef: /* __LINKED_CODE_RIGHT__#14 */useTemplateRef,
   /* __LINKED_CODE_LEFT__#29 */TestUseTemplateRefVirtualCode: /* __LINKED_CODE_RIGHT__#29 */TestUseTemplateRefVirtualCode,
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1299,7 +1305,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 
@@ -1311,13 +1317,15 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
-"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+import * as __VLS_VINE from 'vue-vine/internals';
+
 import { ref } from 'vue'
 
 
 type __VLS_VINE_VirtualDOMComp_props__ = {}
 function VirtualDOMComp(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_VirtualDOMComp_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_VirtualDOMComp_props__,
 context: {}) {
   
 type VirtualDOMComp_Props = Parameters<typeof VirtualDOMComp>[0];
@@ -1327,7 +1335,7 @@ const msg = ref('')
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */msg: /* __LINKED_CODE_RIGHT__#3 */msg,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
@@ -1337,8 +1345,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1385,114 +1393,37 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
-
-}
-type __VLS_VINE_TestVaporComp_props__ = {}
-
-
-function TestVaporComp(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestVaporComp_props__,
-context: {}) {
-  
-type TestVaporComp_Props = Parameters<typeof TestVaporComp>[0];
-
-const count = ref(0)
-  const add = () => count.value++
-  const sub = () => count.value--
-
-  
-// --- Start: Template virtual code
-
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
-  /* __LINKED_CODE_LEFT__#5 */count: /* __LINKED_CODE_RIGHT__#5 */count,
-  /* __LINKED_CODE_LEFT__#3 */add: /* __LINKED_CODE_RIGHT__#3 */add,
-  /* __LINKED_CODE_LEFT__#3 */sub: /* __LINKED_CODE_RIGHT__#3 */sub,
-  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
-  /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
-  /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
-  /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
-  /* __LINKED_CODE_LEFT__#18 */VaporTestContainer: /* __LINKED_CODE_RIGHT__#18 */VaporTestContainer,
-  /* No props formal params */
-});
-const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
-let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
-const __VLS_components = {
-  ...{} as __VLS_GlobalComponents,
-  ...__VLS_localComponents as unknown as __VLS_LocalComponents,
-};
-
-type __VLS_VINE_StyleScopedClasses = {};
-__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
-...{ class: "test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md" },
-});
-__VLS_asFunctionalElement(__VLS_elements.h3, __VLS_elements.h3)({
-...{ class: "text-zinc-500" },
-});
-__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
-...{ class: "row-flex gap-2" },
-});
-__VLS_asFunctionalElement(__VLS_elements.button, __VLS_elements.button)({
-...{ onClick: (__VLS_ctx.add)},
-});
-// @ts-ignore
-[add,];
-__VLS_asFunctionalElement(__VLS_elements.button, __VLS_elements.button)({
-...{ onClick: (__VLS_ctx.sub)},
-});
-// @ts-ignore
-[sub,];
-__VLS_asFunctionalElement(__VLS_elements.p, __VLS_elements.p)({
-});
-( __VLS_ctx.count );
-// @ts-ignore
-[count,];
-__VLS_asFunctionalElement(__VLS_elements.img)({
-...{ class: "w-60" },
-src: "@/assets/sample.jpg",
-alt: "sample-img-in-vapor-comp",
-});
-var __VLS_0 = {
-};
-/** @type {__VLS_StyleScopedClasses['test-vapor-comp']} */;
-/** @type {__VLS_StyleScopedClasses['col-flex']} */;
-/** @type {__VLS_StyleScopedClasses['gap-2']} */;
-/** @type {__VLS_StyleScopedClasses['p-2']} */;
-/** @type {__VLS_StyleScopedClasses['border-1']} */;
-/** @type {__VLS_StyleScopedClasses['border-solid']} */;
-/** @type {__VLS_StyleScopedClasses['border-orange-400']} */;
-/** @type {__VLS_StyleScopedClasses['rounded-md']} */;
-/** @type {__VLS_StyleScopedClasses['text-zinc-500']} */;
-/** @type {__VLS_StyleScopedClasses['row-flex']} */;
-/** @type {__VLS_StyleScopedClasses['gap-2']} */;
-/** @type {__VLS_StyleScopedClasses['w-60']} */;
-// @ts-ignore
-var __VLS_1 = __VLS_0, ;
-type __VLS_Slots = {}
-& { default?: (props: typeof __VLS_1) => any };
-type __VLS_InheritedAttrs = {};
-type __VLS_TemplateRefs = {};
-type __VLS_RootEl = 
-| __VLS_NativeElements['div'];
-var __VLS_dollars!: {
-$slots: __VLS_Slots;
-$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VLS_InheritedAttrs>;
-$refs: __VLS_TemplateRefs;
-$el: __VLS_RootEl;
-} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
-
-// --- End: Template virtual code
-
-return vine.vapor\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestAnotherVaporComp_props__ = {}
 
 
+function TestVaporComp() {
+  const count = ref(0)
+  const add = () => count.value++
+  const sub = () => count.value--
+
+  return vine.vapor\`
+    <div
+      class="test-vapor-comp col-flex gap-2 p-2 border-1 border-solid border-orange-400 rounded-md"
+    >
+      <h3 class="text-zinc-500">Vapor Component in Virtual DOM component</h3>
+      <div class="row-flex gap-2">
+        <button @click="add">+</button>
+        <button @click="sub">-</button>
+      </div>
+      <p>Count: {{ count }}</p>
+
+      <img class="w-60" src="@/assets/sample.jpg" alt="sample-img-in-vapor-comp" />
+
+      <slot />
+    </div>
+  \`
+}
+
 function TestAnotherVaporComp(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestAnotherVaporComp_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestAnotherVaporComp_props__,
 context: {}) {
   'use vapor'
 
@@ -1502,7 +1433,7 @@ type TestAnotherVaporComp_Props = Parameters<typeof TestAnotherVaporComp>[0];
 
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
   /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
@@ -1511,8 +1442,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1555,14 +1486,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_VaporTestContainer_props__ = {}
 
 
 export function VaporTestContainer(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_VaporTestContainer_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_VaporTestContainer_props__,
 context: {}) {
   
 type VaporTestContainer_Props = Parameters<typeof VaporTestContainer>[0];
@@ -1570,7 +1501,7 @@ type VaporTestContainer_Props = Parameters<typeof VaporTestContainer>[0];
 
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#13 */TestVaporComp: /* __LINKED_CODE_RIGHT__#13 */TestVaporComp,
   /* __LINKED_CODE_LEFT__#14 */VirtualDOMComp: /* __LINKED_CODE_RIGHT__#14 */VirtualDOMComp,
   /* __LINKED_CODE_LEFT__#20 */TestAnotherVaporComp: /* __LINKED_CODE_RIGHT__#20 */TestAnotherVaporComp,
@@ -1579,8 +1510,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1636,29 +1567,31 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 
 const __VLS_VINE_ComponentsReferenceMap = {
   'VirtualDOMComp': VirtualDOMComp,
-  'TestVaporComp': TestVaporComp,
   'TestAnotherVaporComp': TestAnotherVaporComp,
-  'VaporTestContainer': VaporTestContainer
+  'VaporTestContainer': VaporTestContainer,
+  'TestVaporComp': TestVaporComp
 };
 
 const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 `;
 
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
-"/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+"/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
+import * as __VLS_VINE from 'vue-vine/internals';
+
 import { ref } from 'vue'
 import '../styles/atom.css'
 
 
 type __VLS_VINE_SimpleInput_props__ = {}
 export function SimpleInput(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_SimpleInput_props__  & {
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__  & {
     modelValue: unknown
 },
 context: {}) {
@@ -1670,7 +1603,7 @@ const value = vineModel()
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */value: /* __LINKED_CODE_RIGHT__#5 */value,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
@@ -1679,8 +1612,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1713,13 +1646,13 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_NamedModelInput_props__ = {}
 
 export function NamedModelInput(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__  & {
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__  & {
     special: unknown
 },
 context: {}) {
@@ -1731,7 +1664,7 @@ const value = vineModel('special')
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#5 */value: /* __LINKED_CODE_RIGHT__#5 */value,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
@@ -1740,8 +1673,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1774,14 +1707,14 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 type __VLS_VINE_TestVineModel_props__ = {}
 
 
 export function TestVineModel(
-  props: __VLS_VINE_VineComponentCommonProps & __VLS_VINE_TestVineModel_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestVineModel_props__,
 context: {}) {
   
 type TestVineModel_Props = Parameters<typeof TestVineModel>[0];
@@ -1794,7 +1727,7 @@ const simpleMsg = ref('')
   
 // --- Start: Template virtual code
 
-const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
   /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
   /* __LINKED_CODE_LEFT__#9 */simpleMsg: /* __LINKED_CODE_RIGHT__#9 */simpleMsg,
@@ -1804,8 +1737,8 @@ const __VLS_ctx = __VLS_VINE_CreateVineVLSCtx({
   /* No props formal params */
 });
 const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE_OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE_OmitAny<typeof __VLS_ctx>;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
 let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
 const __VLS_components = {
   ...{} as __VLS_GlobalComponents,
@@ -1900,7 +1833,7 @@ $el: __VLS_RootEl;
 
 // --- End: Template virtual code
 
-return vine\`\` as any as __VLS_VINE_VueVineComponent;
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
 

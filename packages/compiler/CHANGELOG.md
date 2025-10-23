@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.18
+
+### Patch Changes
+
+- Fix language service for missing referencing type declarations in generated dts.
+
 ## 1.7.17
 
 ### Patch Changes

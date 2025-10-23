@@ -173,7 +173,7 @@ export function generateEmitProps(
         ? createLinkedCodeTag('left', onEmit.length)
         : ''
     }${quotedPropName}${isOptional ? '?' : ''
-    }: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
+    }: __VLS_VINE.${vineCompFn.fnName}_emits__['${emit}']`
   }).filter(Boolean).join(', ')
   }\n}`
 
@@ -263,7 +263,7 @@ export function generateContextFormalParam(
   // Generate `expose: (exposed: ExposedType) => void`
   if (vineCompFn.expose) {
     contextProperties.push(
-      `expose: __VLS_VINE_PickComponentExpose<typeof ${vineCompFn.fnName}>,`,
+      `expose: __VLS_VINE.PickComponentExpose<typeof ${vineCompFn.fnName}>,`,
     )
   }
 
@@ -284,7 +284,7 @@ export function generatePropsType(
   const { tsCodeSegments } = ctx
   let propTypeBase = ''
   if (type === 'macro') {
-    propTypeBase = `__VLS_VINE_VineComponentCommonProps & __VLS_VINE_${vineCompFn.fnName}_props__`
+    propTypeBase = `__VLS_VINE.VineComponentCommonProps & __VLS_VINE_${vineCompFn.fnName}_props__`
   }
   else {
     // User provide a `props` formal parameter in the component function,
@@ -293,7 +293,7 @@ export function generatePropsType(
     if (formalParamTypeNode) {
       generateScriptUntil(ctx, formalParamTypeNode.start!)
       // Insert common props before the user provided props type
-      tsCodeSegments.push('__VLS_VINE_VineComponentCommonProps & ')
+      tsCodeSegments.push(`__VLS_VINE.VineComponentCommonProps & `)
       generateScriptUntil(ctx, formalParamTypeNode.end!)
     }
   }
@@ -322,7 +322,7 @@ export function generateComponentPropsAndContext(
     })}\n`)
   }
   if (vineCompFn.emits.length > 0) {
-    tsCodeSegments.push(`\ntype __VLS_VINE_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<__VLS_VINE_VueDefineEmits<${
+    tsCodeSegments.push(`\ntype __VLS_VINE_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<${
       vineCompFn.emitsTypeParam
         ? vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
         : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
