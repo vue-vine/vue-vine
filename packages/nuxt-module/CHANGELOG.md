@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.19
+
+### Patch Changes
+
+- Fix lang-service for incorrect reference emits type name.
+- Updated dependencies
+  - vue-vine@1.7.19
+
 ## 1.7.18
 
 ### Patch Changes
