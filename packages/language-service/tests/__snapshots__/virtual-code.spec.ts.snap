@@ -637,7 +637,7 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineE
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE.TestCompOne_emits__['click:comp-one']
+    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE_TestCompOne_emits__['click:comp-one']
 },
 context: {}) {
   
