@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.19
+
+### Patch Changes
+
+- Fix lang-service for incorrect reference emits type name.
+
 ## 1.7.18
 
 ### Patch Changes

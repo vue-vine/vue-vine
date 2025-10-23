@@ -1,5 +1,13 @@
 # vue-vine-tsc
 
+## 1.7.19
+
+### Patch Changes
+
+- Fix lang-service for incorrect reference emits type name.
+- Updated dependencies
+  - @vue-vine/language-service@1.7.19
+
 ## 1.7.18
 
 ### Patch Changes
