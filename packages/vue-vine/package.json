@@ -24,6 +24,9 @@
     "./macros": {
       "types": "./types/macros.d.ts"
     },
+    "./internals": {
+      "types": "./types/internals.d.ts"
+    },
     "./rspack": {
       "vine": "./src/rspack/index.ts",
       "types": "./dist/rspack.d.ts",
