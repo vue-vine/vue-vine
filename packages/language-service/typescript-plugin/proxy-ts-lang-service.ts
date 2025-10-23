@@ -34,18 +34,22 @@ export function proxyLanguageServiceForVine(
 const hiddenCompletions = [
   'VUE_VINE_COMPONENT',
 ]
+const hiddenModules = [
+  'vue-vine/internals',
+]
 function vineGetCompletionsAtPosition(
   originalGetCompletionsAtPosition: ts.LanguageService['getCompletionsAtPosition'],
 ): ts.LanguageService['getCompletionsAtPosition'] {
   return (fileName, position, options, formattingSettings) => {
     const result = originalGetCompletionsAtPosition(fileName, position, options, formattingSettings)
     if (result) {
-      // Filter all `__VLS_` items
+      // Filter all `__VLS_` items and internal modules
       result.entries = result.entries.filter(
-        entry => (
-          !entry.name.includes('__VLS_')
-          && !entry.labelDetails?.description?.includes('__VLS_')
-          && !hiddenCompletions.includes(entry.name)
+        entry => !(
+          entry.name.includes('__VLS_')
+          || entry.labelDetails?.description?.includes('__VLS_')
+          || hiddenCompletions.includes(entry.name)
+          || hiddenModules.some(mod => entry.source?.includes(mod))
         ),
       )
     }

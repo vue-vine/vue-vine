@@ -147,6 +147,9 @@ export function createVueVineVirtualCode(
     console.error('[Vue Vine] Failed to setup global types')
   }
 
+  // Import Vine internal types for virtual code type definitions
+  tsCodeSegments.push(`import * as __VLS_VINE from 'vue-vine/internals';\n\n`)
+
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
   if (firstVineCompFnDeclNode) {
     generateScriptUntil(codegenCtx, firstVineCompFnDeclNode.start!)
@@ -272,7 +275,7 @@ export function createVueVineVirtualCode(
       generateScriptUntil(codegenCtx, vineCompFn.templateStringNode.quasi.start!)
 
       // clear the template string
-      tsCodeSegments.push(`\`\` as any as __VLS_VINE_VueVineComponent${vineCompFn.expose
+      tsCodeSegments.push(`\`\` as any as __VLS_VINE.VueVineComponent${vineCompFn.expose
         ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) }`
         : ''
       };\n`)
