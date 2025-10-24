@@ -1688,17 +1688,15 @@ export const TestComponent = (() => {
           _createElementBlock(
             "div",
             _normalizeProps(_guardReactiveProps(_ctx.$props)),
-            [
-              ...(_cache[0] ||
-                (_cache[0] = [
-                  _createElementVNode(
-                    "h1",
-                    null,
-                    "Test Component",
-                    -1 /* CACHED */,
-                  ),
-                ])),
-            ],
+            _cache[0] ||
+              (_cache[0] = [
+                _createElementVNode(
+                  "h1",
+                  null,
+                  "Test Component",
+                  -1 /* CACHED */,
+                ),
+              ]),
             16 /* FULL_PROPS */,
           )
         );
