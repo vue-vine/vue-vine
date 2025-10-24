@@ -106,21 +106,25 @@ export type TestProps = SuccessProps | ErrorProps
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": false,
+          "nameNeedQuoted": false,
         },
         "message": {
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": false,
+          "nameNeedQuoted": false,
         },
         "title": {
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": true,
+          "nameNeedQuoted": false,
         },
         "variant": {
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": true,
+          "nameNeedQuoted": false,
         },
       }
     `)
@@ -189,11 +193,13 @@ export function TestTsMorph(props: P) {
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": true,
+          "nameNeedQuoted": false,
         },
         "bbb": {
           "isFromMacroDefine": false,
           "isMaybeBool": false,
           "isRequired": true,
+          "nameNeedQuoted": false,
         },
       }
     `)
@@ -254,5 +260,72 @@ export function TestImplictBoolean() {
     expect(vineCompFnCtx).not.toBeUndefined()
     expect(vineCompFnCtx?.props.foo.isMaybeBool).toMatchInlineSnapshot(`true`)
     expect(vineCompFnCtx?.props.bar.isMaybeBool).toMatchInlineSnapshot(`true`)
+  })
+
+  // issue#327
+  it('can handle kebab-case props from external types', () => {
+    const { vineFile, project, typeChecker } = prepareTsMorphProject(`
+import type { AriaAttributes } from './types'
+
+export function TestComponent(props: AriaAttributes) {
+  return vine\`
+    <div v-bind="$props">
+      <h1>Test Component</h1>
+    </div>
+  \`
+}
+    `)
+    project.createSourceFile('types.ts', `
+export interface AriaAttributes {
+  'aria-atomic'?: boolean | 'false' | 'true'
+  'aria-busy'?: boolean | 'false' | 'true'
+  'aria-label'?: string
+  'data-test-id'?: string
+}
+    `)
+
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx(vineFile.fileId, project, typeChecker)
+    compileVineTypeScriptFile(vineFile.content, vineFile.fileId, { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toMatchInlineSnapshot(`0`)
+    expect(mockCompilerCtx.vineCompileWarnings.length).toMatchInlineSnapshot(`0`)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get(vineFile.fileId)
+    const vineCompFnCtx = fileCtx?.vineCompFns?.find(fn => fn.fnName === 'TestComponent')
+    expect(vineCompFnCtx).not.toBeUndefined()
+
+    // Check that nameNeedQuoted is correctly set for kebab-case props
+    expect(vineCompFnCtx?.props['aria-atomic']?.nameNeedQuoted).toBe(true)
+    expect(vineCompFnCtx?.props['aria-busy']?.nameNeedQuoted).toBe(true)
+    expect(vineCompFnCtx?.props['aria-label']?.nameNeedQuoted).toBe(true)
+    expect(vineCompFnCtx?.props['data-test-id']?.nameNeedQuoted).toBe(true)
+
+    // Check that all props are correctly resolved
+    expect(vineCompFnCtx?.props).toMatchInlineSnapshot(`
+      {
+        "aria-atomic": {
+          "isFromMacroDefine": false,
+          "isMaybeBool": true,
+          "isRequired": false,
+          "nameNeedQuoted": true,
+        },
+        "aria-busy": {
+          "isFromMacroDefine": false,
+          "isMaybeBool": true,
+          "isRequired": false,
+          "nameNeedQuoted": true,
+        },
+        "aria-label": {
+          "isFromMacroDefine": false,
+          "isMaybeBool": false,
+          "isRequired": false,
+          "nameNeedQuoted": true,
+        },
+        "data-test-id": {
+          "isFromMacroDefine": false,
+          "isMaybeBool": false,
+          "isRequired": false,
+          "nameNeedQuoted": true,
+        },
+      }
+    `)
   })
 })

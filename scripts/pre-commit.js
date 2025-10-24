@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 
-const commitRE = /^(?:revert: )?(?:feat|fix|docs|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(?:\(.+\))?!?: .{1,50}/
+const commitRE = /^[a-z]+:\s*.{1,100}$/i
 
 const msgPath = join(import.meta.dirname, '..', '.git', 'COMMIT_EDITMSG')
 
@@ -19,9 +19,15 @@ async function runCommitMsgHook() {
     log('error', `
 Error: Commit message format does not meet the requirements.
 
-Please follow the commitlint format, for example:
-  feat(module): message less than 50 characters
-  fix: message less than 50 characters
+Please follow the format: <word>: <message>
+  - <word>: one English word (letters only)
+  - colon followed by optional space
+  - <message>: any characters, up to 100 characters
+
+Examples:
+  feat: add new feature
+  fix: resolve issue
+  docs: update documentation
 `)
     process.exit(1)
   }

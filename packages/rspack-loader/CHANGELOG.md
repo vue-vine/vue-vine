@@ -1,5 +1,13 @@
 # @vue-vine/rspack-loader
 
+## 1.7.20-beta.1
+
+### Patch Changes
+
+- Fix compiler for correctly handling kebab-case props in transform phase.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.20
+
 ## 1.7.19-beta.1
 
 ### Patch Changes

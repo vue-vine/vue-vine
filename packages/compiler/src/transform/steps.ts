@@ -307,7 +307,7 @@ export function generateVinePropToRefs(
     )
     const propsFromMacro = Object.entries(vineCompFnCtx.props)
       .filter(([_, meta]) => Boolean(meta.isFromMacroDefine))
-      .map(([propName, _]) => propName)
+      .map(([propName, _]) => identRE.test(propName) ? propName : `'${propName}'`)
     ms.prependLeft(
       firstStmt.start!,
       `const { ${propsFromMacro.join(', ')} } = _toRefs(${vineCompFnCtx.propsAlias});\n`,
@@ -380,10 +380,10 @@ export function generatePropsDestructure(
           acc.push(`...${name}`)
         }
         else if (data.alias) {
-          acc.push(`'${name}': ${data.alias}`)
+          acc.push(`${identRE.test(name) ? name : `'${name}'`}: ${data.alias}`)
         }
         else {
-          acc.push(name)
+          acc.push(identRE.test(name) ? name : `'${name}'`)
         }
         return acc
       }, [] as string[])
@@ -666,7 +666,9 @@ export function generatePropsDeclaration(
     propsDeclarationStmt = `const ${vineCompFnCtx.propsAlias} = _${USE_DEFAULTS_HELPER}(__props, {\n${
       Object.entries(vineCompFnCtx.props)
         .filter(([_, propMeta]) => Boolean(propMeta.default))
-        .map(([propName, propMeta]) => `  ${propName}: () => (${
+        .map(([propName, propMeta]) => `  ${
+          identRE.test(propName) ? propName : `'${propName}'`
+        }: () => (${
           ms.original.slice(
             propMeta.default!.start!,
             propMeta.default!.end!,
