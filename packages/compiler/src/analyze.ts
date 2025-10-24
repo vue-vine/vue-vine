@@ -429,6 +429,10 @@ const analyzeVineProps: AnalyzeRunner = (
           else if (isAssignmentPattern(property.value)) {
             data.default = property.value.right
             defaultsFromDestructuredProps[propItemName] = property.value.right
+            // Check if there's an alias in the assignment pattern's left side
+            if (isIdentifier(property.value.left) && property.value.left.name !== propItemName) {
+              data.alias = property.value.left.name
+            }
           }
 
           // Why we mark it as `SETUP_REF` instead of `PROPS_ALIASED`?
