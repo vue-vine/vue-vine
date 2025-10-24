@@ -1,5 +1,11 @@
 # @vue-vine/compiler
 
+## 1.7.20
+
+### Patch Changes
+
+- Fix compiler for correctly handling kebab-case props in transform phase.
+
 ## 1.7.19
 
 ### Patch Changes
