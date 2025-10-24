@@ -619,4 +619,80 @@ function MyComp() {
     expect(inlineModeResult).toMatchSnapshot()
     expect(separatedModeResult).toMatchSnapshot()
   })
+
+  // issue#327
+  it('should handle kebab-case props correctly', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export function TestComponent(props: {
+  'aria-atomic': boolean;
+  'aria-busy': boolean;
+  'data-test-id': string;
+}) {
+  return vine\`
+    <div v-bind="$props">
+      <h1>Test Component</h1>
+    </div>
+  \`
+}
+    `
+
+    compileVineTypeScriptFile(specContent, 'testKebabCaseProps', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testKebabCaseProps')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Check that kebab-case props are quoted in props option
+    expect(formated).toMatch(/"aria-atomic":/)
+    expect(formated).toMatch(/"aria-busy":/)
+    expect(formated).toMatch(/"data-test-id":/)
+    expect(formated).toMatchSnapshot()
+  })
+
+  it('should handle kebab-case props with defaults correctly', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export function TestComponent({
+  'aria-label': ariaLabel = 'default label',
+  'data-test-id': dataTestId,
+}: {
+  'aria-label'?: string,
+  'data-test-id': string,
+}) {
+  return vine\`
+    <div>
+      <span>{{ ariaLabel }}</span>
+      <span>{{ dataTestId }}</span>
+    </div>
+  \`
+}
+    `
+
+    compileVineTypeScriptFile(specContent, 'testKebabCasePropsWithDefaults', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testKebabCasePropsWithDefaults')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Check that kebab-case props are quoted in props option
+    expect(formated).toMatch(/"aria-label":/)
+    expect(formated).toMatch(/"data-test-id":/)
+    // Check that useDefaults handles kebab-case props correctly
+    expect(formated).toMatch(/"aria-label":\s*\(\)\s*=>/)
+    // Check that destructuring handles kebab-case props correctly
+    expect(formated).toMatch(/"aria-label":\s*ariaLabel/)
+    expect(formated).toMatch(/"data-test-id":\s*dataTestId/)
+    expect(formated).toMatchSnapshot()
+  })
 })

@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.20
+
+### Patch Changes
+
+- Fix compiler for correctly handling kebab-case props in transform phase.
+- Updated dependencies
+  - vue-vine@1.7.20
+
 ## 1.7.19
 
 ### Patch Changes
