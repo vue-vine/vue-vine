@@ -256,6 +256,7 @@ export interface VineCompFnCtx {
   templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
+  isVapor: boolean
   /** is web component (customElement) */
   isCustomElement: boolean
   fnName: string

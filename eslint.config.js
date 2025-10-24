@@ -8,6 +8,7 @@ export default antfu(
       'dist',
       'pnpm-lock.yaml',
 
+      'packages/docs/**/*',
       'packages/docs/.vitepress/cache',
       'packages/e2e-vite/**/*.vine.ts',
       'packages/e2e-rsstack/**/*.vine.ts',

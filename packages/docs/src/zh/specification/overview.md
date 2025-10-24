@@ -76,6 +76,34 @@ function MyComponent() {
 }
 ```
 
+### Vapor 模式 <version-tip version="1.7.0" />
+
+自 Vue 3.6 起，Vue 提供了一种不基于虚拟 DOM 的渲染机制。
+
+您可以在 Vue SFC 中通过添加 `vapor` 后缀来启用此模式：
+
+```vue
+<script setup> // [!code --]
+<script setup vapor> // [!code ++]
+```
+
+在 Vue Vine 中，请使用 `vine.vapor` 替代 `vine` 即可启用此模式。
+
+```vue-vine
+return vine`...` // [!code --]
+return vine.vapor`...` // [!code ++]
+```
+
+或者采用下面这样的指令语法：
+
+```vue-vine
+function MyComponent() {
+  'use vapor' // [!code ++]
+
+  return vine`...`
+}
+```
+
 ### setup {#setup}
 
 ::: info 提示
