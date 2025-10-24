@@ -4,6 +4,9 @@ import type { TsMorphCache, VineCompFnCtx, VineCompilerHooks, VinePropMeta } fro
 import { Node } from 'ts-morph'
 import { vineErr } from '../diagnostics'
 
+// Regular expression to test if a string is a valid JavaScript identifier
+const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
+
 function isBooleanType(
   typeChecker: TypeChecker,
   type: Type,
@@ -136,10 +139,14 @@ export function resolveVineCompFnProps(params: {
     const propType = typeChecker.getTypeOfSymbolAtLocation(prop, propsIdentifier)
 
     const propName = prop.getName()
+    // Check if prop name is not a valid identifier (e.g., kebab-case like 'aria-atomic')
+    const nameNeedQuoted = !identRE.test(propName)
+
     propsInfo[propName] = {
       isFromMacroDefine: false,
       isRequired: !prop.isOptional(),
       isMaybeBool: isBooleanType(typeChecker, propType),
+      nameNeedQuoted,
     }
     if (defaultsFromDestructuredProps[propName]) {
       propsInfo[propName].default = defaultsFromDestructuredProps[propName]

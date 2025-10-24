@@ -1653,6 +1653,130 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 "
 `;
 
+exports[`test transform > should handle kebab-case props correctly 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  createElementVNode as _createElementVNode,
+  normalizeProps as _normalizeProps,
+  guardReactiveProps as _guardReactiveProps,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+export const TestComponent = (() => {
+  const __vine = _defineComponent({
+    name: "TestComponent",
+    props: {
+      "aria-atomic": { required: true, type: Boolean },
+      "aria-busy": { required: true, type: Boolean },
+      "data-test-id": { required: true },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock(
+            "div",
+            _normalizeProps(_guardReactiveProps(_ctx.$props)),
+            [
+              ...(_cache[0] ||
+                (_cache[0] = [
+                  _createElementVNode(
+                    "h1",
+                    null,
+                    "Test Component",
+                    -1 /* CACHED */,
+                  ),
+                ])),
+            ],
+            16 /* FULL_PROPS */,
+          )
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "dabfd4e0";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(TestComponent.__hmrId, TestComponent);
+"
+`;
+
+exports[`test transform > should handle kebab-case props with defaults correctly 1`] = `
+"import { useDefaults as _useDefaults } from "vue-vine";
+import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  toRefs as _toRefs,
+  toDisplayString as _toDisplayString,
+  createElementVNode as _createElementVNode,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+} from "vue";
+
+export const TestComponent = (() => {
+  const __vine = _defineComponent({
+    name: "TestComponent",
+    props: {
+      "aria-label": {
+        /* Simple prop */
+      },
+      "data-test-id": { required: true },
+    },
+    /* No emits */
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = _useDefaults(__props, {
+        "aria-label": () => "default label",
+      });
+      const { "aria-label": ariaLabel, "data-test-id": dataTestId } =
+        _toRefs(props);
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock("div", null, [
+            _createElementVNode(
+              "span",
+              null,
+              _toDisplayString(_ctx.ariaLabel),
+              1 /* TEXT */,
+            ),
+            _createElementVNode(
+              "span",
+              null,
+              _toDisplayString(_ctx.dataTestId),
+              1 /* TEXT */,
+            ),
+          ])
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "00294b30";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(TestComponent.__hmrId, TestComponent);
+"
+`;
+
 exports[`test transform > should not export on function delcaration when already exported in somewhere 2`] = `
 "import {
   defineComponent as _defineComponent,
