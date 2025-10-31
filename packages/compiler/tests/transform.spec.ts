@@ -595,4 +595,33 @@ export function TestComponent({
     expect(formated).toMatch(/"data-test-id":\s*dataTestId/)
     expect(formated).toMatchSnapshot()
   })
+
+  // issue#329
+  it.each([
+    {
+      name: 'arrow function with block statement',
+      code: 'export default () => {\n  return vine`<div>Anonymous default export</div>`\n}',
+    },
+    {
+      name: 'arrow function with implicit return',
+      code: 'export default () => vine`<div>Anonymous default export</div>`',
+    },
+    {
+      name: 'anonymous function expression',
+      code: 'export default function () {\n  return vine`<div>Anonymous default export</div>`\n}',
+    },
+  ])('should generate correct code for export default anonymous function: $name', async ({ code }) => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(code, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(transformed, { parser: 'babel-ts' })
+
+    expect(formated).toContain('const __VineCompDefault = (() => {')
+    expect(formated).toContain('export default __VineCompDefault')
+    expect(formated).not.toContain('const default =')
+    expect(formated).not.toContain('const  =')
+    expect(formated).toContain('name: "__VineCompDefault"')
+  })
 })
