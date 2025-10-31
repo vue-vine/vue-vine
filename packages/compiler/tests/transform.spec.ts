@@ -520,56 +520,6 @@ function MyComp() {
     expect(separatedModeResult).toMatchSnapshot()
   })
 
-  // issue#329
-  it('should generate correct code for export default anonymous arrow function - 1', async () => {
-    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    const specContent = `
-export default () => {
-  return vine\`<div>Anonymous default export</div>\`
-}
-    `
-    compileVineTypeScriptFile(specContent, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
-    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
-    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
-    )
-
-    // Should use __VineCompDefault as variable name
-    expect(formated).toContain('const __VineCompDefault = (() => {')
-    expect(formated).toContain('export default __VineCompDefault')
-    // Should not have syntax errors
-    expect(formated).not.toContain('const default =')
-    expect(formated).not.toContain('const  =')
-    // Component name should be __VineCompDefault
-    expect(formated).toContain('name: "__VineCompDefault"')
-  })
-  it('should generate correct code for export default anonymous arrow function - 2', async () => {
-    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
-    const specContent = `
-export default () => vine\`<div>Anonymous default export</div>\`
-    `
-    compileVineTypeScriptFile(specContent, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
-    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
-    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
-    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
-    const formated = await format(
-      transformed,
-      { parser: 'babel-ts' },
-    )
-
-    // Should use __VineCompDefault as variable name
-    expect(formated).toContain('const __VineCompDefault = (() => {')
-    expect(formated).toContain('export default __VineCompDefault')
-    // Should not have syntax errors
-    expect(formated).not.toContain('const default =')
-    expect(formated).not.toContain('const  =')
-    // Component name should be __VineCompDefault
-    expect(formated).toContain('name: "__VineCompDefault"')
-  })
-
   // issue#327
   it('should handle kebab-case props correctly', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
@@ -644,5 +594,34 @@ export function TestComponent({
     expect(formated).toMatch(/"aria-label":\s*ariaLabel/)
     expect(formated).toMatch(/"data-test-id":\s*dataTestId/)
     expect(formated).toMatchSnapshot()
+  })
+
+  // issue#329
+  it.each([
+    {
+      name: 'arrow function with block statement',
+      code: 'export default () => {\n  return vine`<div>Anonymous default export</div>`\n}',
+    },
+    {
+      name: 'arrow function with implicit return',
+      code: 'export default () => vine`<div>Anonymous default export</div>`',
+    },
+    {
+      name: 'anonymous function expression',
+      code: 'export default function () {\n  return vine`<div>Anonymous default export</div>`\n}',
+    },
+  ])('should generate correct code for export default anonymous function: $name', async ({ code }) => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(code, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(transformed, { parser: 'babel-ts' })
+
+    expect(formated).toContain('const __VineCompDefault = (() => {')
+    expect(formated).toContain('export default __VineCompDefault')
+    expect(formated).not.toContain('const default =')
+    expect(formated).not.toContain('const  =')
+    expect(formated).toContain('name: "__VineCompDefault"')
   })
 })
