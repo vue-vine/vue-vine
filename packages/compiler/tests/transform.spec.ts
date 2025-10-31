@@ -520,6 +520,56 @@ function MyComp() {
     expect(separatedModeResult).toMatchSnapshot()
   })
 
+  // issue#329
+  it('should generate correct code for export default anonymous arrow function - 1', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    const specContent = `
+export default () => {
+  return vine\`<div>Anonymous default export</div>\`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Should use __VineCompDefault as variable name
+    expect(formated).toContain('const __VineCompDefault = (() => {')
+    expect(formated).toContain('export default __VineCompDefault')
+    // Should not have syntax errors
+    expect(formated).not.toContain('const default =')
+    expect(formated).not.toContain('const  =')
+    // Component name should be __VineCompDefault
+    expect(formated).toContain('name: "__VineCompDefault"')
+  })
+  it('should generate correct code for export default anonymous arrow function - 2', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    const specContent = `
+export default () => vine\`<div>Anonymous default export</div>\`
+    `
+    compileVineTypeScriptFile(specContent, 'testExportDefaultAnonymous', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testExportDefaultAnonymous')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Should use __VineCompDefault as variable name
+    expect(formated).toContain('const __VineCompDefault = (() => {')
+    expect(formated).toContain('export default __VineCompDefault')
+    // Should not have syntax errors
+    expect(formated).not.toContain('const default =')
+    expect(formated).not.toContain('const  =')
+    // Component name should be __VineCompDefault
+    expect(formated).toContain('name: "__VineCompDefault"')
+  })
+
   // issue#327
   it('should handle kebab-case props correctly', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
