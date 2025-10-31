@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.22
+
+### Patch Changes
+
+- Fix compiler for support simple annonymous vine arrow fn expr as default export.
+
 ## 1.7.21
 
 ### Patch Changes

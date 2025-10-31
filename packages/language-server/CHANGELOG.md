@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.7.22
+
+### Patch Changes
+
+- Fix compiler for support simple annonymous vine arrow fn expr as default export.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.22
+  - @vue-vine/language-service@1.7.22
+
 ## 1.7.21
 
 ### Patch Changes
