@@ -45,6 +45,45 @@ export default function MyComp3() { return vine\`<div>Test MyComp3</div>\` }
     expect(mockCompilerCtx.fileCtxMap.get('testAnalyzeExportCompsDecl')?.vineCompFns).toHaveLength(3)
   })
 
+  it('analyze export default arrow function components', () => {
+    const content = `
+export default () => { return vine\`<div>Test default arrow with return</div>\` }
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testExportDefaultArrowWithReturn', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.get('testExportDefaultArrowWithReturn')?.vineCompFns).toHaveLength(1)
+    const vineCompFn = mockCompilerCtx.fileCtxMap.get('testExportDefaultArrowWithReturn')?.vineCompFns[0]
+    expect(vineCompFn?.fnName).toBe('default')
+    expect(vineCompFn?.isExportDefault).toBe(true)
+  })
+
+  it('analyze export default arrow function with implicit return', () => {
+    const content = `
+export default () => vine\`<div>Test default arrow implicit return</div>\`
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testExportDefaultArrowImplicit', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.get('testExportDefaultArrowImplicit')?.vineCompFns).toHaveLength(1)
+    const vineCompFn = mockCompilerCtx.fileCtxMap.get('testExportDefaultArrowImplicit')?.vineCompFns[0]
+    expect(vineCompFn?.fnName).toBe('default')
+    expect(vineCompFn?.isExportDefault).toBe(true)
+  })
+
+  it('analyze export default function expression', () => {
+    const content = `
+export default function() { return vine\`<div>Test default function expression</div>\` }
+`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testExportDefaultFunctionExpr', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.get('testExportDefaultFunctionExpr')?.vineCompFns).toHaveLength(1)
+    const vineCompFn = mockCompilerCtx.fileCtxMap.get('testExportDefaultFunctionExpr')?.vineCompFns[0]
+    expect(vineCompFn?.fnName).toBe('')
+    expect(vineCompFn?.isExportDefault).toBe(true)
+  })
+
   it('analyze imports', () => {
     const content = `
 import { ref, reactive as VueReactive } from 'vue'

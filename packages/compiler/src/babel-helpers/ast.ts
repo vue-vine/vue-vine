@@ -64,6 +64,26 @@ export function isVineCompFnDecl(target: Node): boolean {
     return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
   }
 
+  if (isFunctionExpression(target)) {
+    const returnStmt = target.body?.body.find(node => isReturnStatement(node))
+    if (!returnStmt) {
+      return false
+    }
+    return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
+  }
+
+  if (isArrowFunctionExpression(target)) {
+    const arrowFnReturns = (
+      isBlockStatement(target.body)
+        ? target.body.body.find(node => isReturnStatement(node))
+        : target.body
+    )
+    if (isReturnStatement(arrowFnReturns)) {
+      return !!(arrowFnReturns.argument && isVineTaggedTemplateString(arrowFnReturns.argument))
+    }
+    return isVineTaggedTemplateString(arrowFnReturns)
+  }
+
   if (isVariableDeclaration(target)) {
     const declValue = target.declarations[0].init
     if (!declValue) {
@@ -269,6 +289,7 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
   }> = []
 
   let target = fnDecl
+  const isExportDefault = isExportDefaultDeclaration(fnDecl)
   if ((
     isExportNamedDeclaration(target)
     || isExportDefaultDeclaration(target)
@@ -287,7 +308,7 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
           && isIdentifier(decl.id)
         ) {
           pickedInfo.push({
-            fnDeclNode: fnDecl, // VariableDeclarator
+            fnDeclNode: fnDecl,
             fnItselfNode: decl.init,
             fnName: decl.id.name,
           })
@@ -300,11 +321,20 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
 
   if (isFunctionDeclaration(target)) {
     pickedInfo.push({
-      fnDeclNode: fnDecl, // FunctionDeclaration
+      fnDeclNode: fnDecl,
       fnItselfNode: target,
       fnName: target.id?.name ?? '',
     })
   }
+
+  if (isFunctionExpression(target) || isArrowFunctionExpression(target)) {
+    pickedInfo.push({
+      fnDeclNode: fnDecl,
+      fnItselfNode: target,
+      fnName: isExportDefault ? 'default' : '',
+    })
+  }
+
   return pickedInfo
 }
 
