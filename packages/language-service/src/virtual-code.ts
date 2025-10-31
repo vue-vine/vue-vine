@@ -211,6 +211,10 @@ export function createVueVineVirtualCode(
         // Insert `__VLS_StyleScopedClasses`
         generateStyleScopedClasses(codegenCtx)
 
+        // Insert `__VLS_elements` variable definition
+        // This variable is required by the template codegen to reference native HTML elements
+        tsCodeSegments.push(`let __VLS_elements!: __VLS_IntrinsicElements;\n`)
+
         const generatedTemplate = generateTemplate({
           ts,
           compilerOptions,
