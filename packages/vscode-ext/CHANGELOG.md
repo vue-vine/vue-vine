@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.21
+
+### Patch Changes
+
+- Set rspack/rsbuild to official and fix missing VLS_elements variable declaration.
+
 ## 1.7.20
 
 ### Patch Changes

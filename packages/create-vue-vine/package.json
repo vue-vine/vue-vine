@@ -1,7 +1,7 @@
 {
   "name": "create-vue-vine",
   "type": "module",
-  "version": "1.7.20",
+  "version": "1.7.21",
   "description": "Official CLI for creating Vue Vine project.",
   "author": "ShenQingchuan",
   "license": "MIT",

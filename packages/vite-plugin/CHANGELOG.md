@@ -1,5 +1,13 @@
 # @vue-vine/vite-plugin
 
+## 1.7.21
+
+### Patch Changes
+
+- Set rspack/rsbuild to official and fix missing VLS_elements variable declaration.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.21
+
 ## 1.7.20
 
 ### Patch Changes
