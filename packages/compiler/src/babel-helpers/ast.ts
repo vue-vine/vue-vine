@@ -115,12 +115,29 @@ export function isDescendant(node: Node, potentialDescendant: Node): boolean {
   return false
 }
 
-export function isVineTaggedTemplateString(node: Node | null | undefined): node is TaggedTemplateExpression {
+export function isVineVaporTaggedTemplateString(node: TaggedTemplateExpression): boolean {
   return (
-    isTaggedTemplateExpression(node)
-    && isIdentifier(node.tag)
-    && node.tag.name === 'vine'
+    isMemberExpression(node.tag)
+    && isIdentifier(node.tag.object)
+    && node.tag.object.name === 'vine'
+    && isIdentifier(node.tag.property)
+    && node.tag.property.name === 'vapor'
   )
+}
+
+export function isVineTaggedTemplateString(node: Node | null | undefined): node is TaggedTemplateExpression {
+  if (!node || !isTaggedTemplateExpression(node)) {
+    return false
+  }
+
+  // vine`...` or vine.vapor`...`
+  if (isIdentifier(node.tag) && node.tag.name === 'vine') {
+    return true
+  }
+  if (isVineVaporTaggedTemplateString(node)) {
+    return true
+  }
+  return false
 }
 
 function checkFunctionReturnsVineTemplate(fn: BabelFunctionNodeTypes): boolean {
