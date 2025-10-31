@@ -38,6 +38,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ class: "border-1 border-amber-100 border-solid bg-amber-100/50 p-4" },
 });
@@ -109,6 +110,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 });
 type __VLS_Slots = {};
@@ -162,6 +164,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ class: "flex flex-col gap-4" },
 });
@@ -275,6 +278,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 });
 ( __VLS_ctx.foo );
@@ -356,6 +360,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ style: {} },
 ...{ style: ({
@@ -449,6 +454,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ class: (['btn', 'btn' + __VLS_ctx.type]) },
 });
@@ -521,6 +527,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 type __VLS_Slots = {};
 type __VLS_InheritedAttrs = {};
 type __VLS_TemplateRefs = {};
@@ -595,6 +602,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 border: "1px solid red",
 });
@@ -688,6 +696,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ onClick: (...[$event]) => {
 __VLS_ctx.emits('click:comp-one', true);
@@ -763,6 +772,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 });
 ( __VLS_ctx.bar );
@@ -863,6 +873,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ onClick: (...[$event]) => {
 __VLS_ctx.count++;
@@ -961,6 +972,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 });
 const __VLS_0 = ({} as __VLS_WithComponent<'TargetComp', __VLS_LocalComponents, void, 'TargetComp', 'TargetComp', 'TargetComp'>).TargetComp;
@@ -1047,6 +1059,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ class: "user-list" },
 });
@@ -1128,6 +1141,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.p, __VLS_elements.p)({
 });
 type __VLS_Slots = {};
@@ -1192,6 +1206,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 const __VLS_0 = ((__VLS_ctx.as));
 // @ts-ignore
 const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({
@@ -1282,6 +1297,7 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ref: "container1Ref",
 });
@@ -1359,6 +1375,7 @@ type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.input)({
 ...{ class: "simple-input" },
 type: "text",
@@ -1420,6 +1437,7 @@ type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.input)({
 ...{ class: "special-input" },
 type: "text",
@@ -1484,6 +1502,7 @@ type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
  & { "show-msg": true };
+let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ class: "container" },
 });

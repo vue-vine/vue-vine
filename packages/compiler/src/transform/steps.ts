@@ -706,12 +706,16 @@ export function generateVineFactory(
 
   // Defaultly set `export` for all component functions
   // because it's required by HMR context.
+  // For export default anonymous functions, we use a temporary variable name
+  const isExportDefaultAnonymous = vineCompFnCtx.isExportDefault && (vineCompFnCtx.fnName === 'default' || vineCompFnCtx.fnName === '')
+  const tempVarName = isExportDefaultAnonymous ? '__VineCompDefault' : vineCompFnCtx.fnName
+
   ms.prependLeft(firstStmt.start!, `${
-    explicitExports.includes(vineCompFnCtx.fnName)
+    explicitExports.includes(vineCompFnCtx.fnName) || isExportDefaultAnonymous
       ? ''
       : 'export'
   } const ${
-    vineCompFnCtx.fnName
+    tempVarName
   } = (() => {\n${
     // Prepend all generated preamble statements
     generatedPreambleStmts
@@ -765,14 +769,14 @@ export function generateVineFactory(
   if (isDev && (!adapter || adapter.name === 'vite')) {
     ms.appendRight(
       ms.length(),
-      `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${vineCompFnCtx.fnName}.__hmrId, ${vineCompFnCtx.fnName});\n`,
+      `\n\ntypeof __VUE_HMR_RUNTIME__ !== "undefined" && __VUE_HMR_RUNTIME__.createRecord(${tempVarName}.__hmrId, ${tempVarName});\n`,
     )
   }
 
   if (vineCompFnCtx.isExportDefault) {
     ms.appendRight(
       ms.length(),
-      `\n\nexport default ${vineCompFnCtx.fnName};\n\n`,
+      `\n\nexport default ${tempVarName};\n\n`,
     )
   }
 }
@@ -795,12 +799,16 @@ export function generateBasicComponentOptions(
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
+  const componentName = vineCompFnCtx.fnName === 'default' || vineCompFnCtx.fnName === ''
+    ? '__VineCompDefault'
+    : vineCompFnCtx.fnName
+
   const basicOptionsFields = `${vineCompFnCtx.options
     ? `...${ms.original.slice(
       vineCompFnCtx.options.start!,
       vineCompFnCtx.options.end!,
     )},`
-    : `name: '${vineCompFnCtx.fnName}',`
+    : `name: '${componentName}',`
   }\n`
 
   ms.prependLeft(firstStmt.start!, basicOptionsFields)
