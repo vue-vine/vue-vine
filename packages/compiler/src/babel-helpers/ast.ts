@@ -310,7 +310,7 @@ export function getFunctionPickedInfos(fnDecl: Node): VineFnPickedInfo[] {
     pickedInfo.push({
       fnDeclNode: fnDecl,
       fnItselfNode: target,
-      fnName: isExportDefault ? 'default' : '',
+      fnName: isExportDefault ? (isArrowFunctionExpression(target) ? 'default' : '') : '',
     })
   }
 
