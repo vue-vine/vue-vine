@@ -56,61 +56,16 @@ export function isVineCompFnDecl(target: Node): boolean {
     target = target.declaration
   }
 
-  if (isFunctionDeclaration(target)) {
-    const returnStmt = target.body?.body.find(node => isReturnStatement(node))
-    if (!returnStmt) {
-      return false
-    }
-    return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
-  }
-
-  if (isFunctionExpression(target)) {
-    const returnStmt = target.body?.body.find(node => isReturnStatement(node))
-    if (!returnStmt) {
-      return false
-    }
-    return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
-  }
-
-  if (isArrowFunctionExpression(target)) {
-    const arrowFnReturns = (
-      isBlockStatement(target.body)
-        ? target.body.body.find(node => isReturnStatement(node))
-        : target.body
-    )
-    if (isReturnStatement(arrowFnReturns)) {
-      return !!(arrowFnReturns.argument && isVineTaggedTemplateString(arrowFnReturns.argument))
-    }
-    return isVineTaggedTemplateString(arrowFnReturns)
+  if (isBabelFunctionTypes(target)) {
+    return checkFunctionReturnsVineTemplate(target)
   }
 
   if (isVariableDeclaration(target)) {
     const declValue = target.declarations[0].init
-    if (!declValue) {
+    if (!declValue || !isBabelFunctionTypes(declValue)) {
       return false
     }
-
-    if (isFunctionExpression(declValue)) {
-      const returnStmt = declValue.body?.body.find(node => isReturnStatement(node))
-      if (!returnStmt) {
-        return false
-      }
-      return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
-    }
-
-    if (isArrowFunctionExpression(declValue)) {
-      const arrowFnReturns = (
-        isBlockStatement(declValue.body)
-          ? declValue.body.body.find(node => isReturnStatement(node))
-          : declValue.body
-      )
-      if (isReturnStatement(arrowFnReturns)) {
-        return !!(arrowFnReturns.argument && isVineTaggedTemplateString(arrowFnReturns.argument))
-      }
-      return isVineTaggedTemplateString(arrowFnReturns)
-    }
-
-    return false
+    return checkFunctionReturnsVineTemplate(declValue)
   }
 
   return false
@@ -166,6 +121,30 @@ export function isVineTaggedTemplateString(node: Node | null | undefined): node 
     && isIdentifier(node.tag)
     && node.tag.name === 'vine'
   )
+}
+
+function checkFunctionReturnsVineTemplate(fn: BabelFunctionNodeTypes): boolean {
+  if (isFunctionDeclaration(fn) || isFunctionExpression(fn)) {
+    const returnStmt = fn.body?.body.find(node => isReturnStatement(node))
+    if (!returnStmt) {
+      return false
+    }
+    return !!(returnStmt.argument && isVineTaggedTemplateString(returnStmt.argument))
+  }
+
+  if (isArrowFunctionExpression(fn)) {
+    const arrowFnReturns = (
+      isBlockStatement(fn.body)
+        ? fn.body.body.find(node => isReturnStatement(node))
+        : fn.body
+    )
+    if (isReturnStatement(arrowFnReturns)) {
+      return !!(arrowFnReturns.argument && isVineTaggedTemplateString(arrowFnReturns.argument))
+    }
+    return isVineTaggedTemplateString(arrowFnReturns)
+  }
+
+  return false
 }
 
 export function isVineMacroCallExpression(node: Node): node is CallExpression {
