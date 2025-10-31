@@ -119,7 +119,7 @@ function MyComponent(props: SomeExternalType) {
 **泛型组件：**
 
 ```vue-vine
-// Generic component function with type parameter
+// 带类型参数的通用组件函数 
 export function GenericButton<T extends keyof HTMLElementTagNameMap = 'button'>(
   props: Partial<HTMLElementTagNameMap[T]> & { as: T },
 ) {
@@ -128,7 +128,7 @@ export function GenericButton<T extends keyof HTMLElementTagNameMap = 'button'>(
   `
 }
 
-// Usage:
+// 用法：
 // <GenericButton as="button" type="submit" />
 // <GenericButton as="a" href="/home" />
 ```
