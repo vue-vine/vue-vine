@@ -119,7 +119,7 @@ function MyComponent(props: SomeExternalType) {
 **泛型组件：**
 
 ```vue-vine
-// 带类型参数的通用组件函数 
+// 带类型参数的通用组件函数
 export function GenericButton<T extends keyof HTMLElementTagNameMap = 'button'>(
   props: Partial<HTMLElementTagNameMap[T]> & { as: T },
 ) {
