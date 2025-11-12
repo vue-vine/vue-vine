@@ -13,6 +13,7 @@ export function proxyLanguageServiceForVine(
   ) => {
     switch (p) {
       case 'getCompletionsAtPosition': return vineGetCompletionsAtPosition(target[p])
+      case 'getCompletionEntryDetails': return vineGetCompletionEntryDetails(target[p])
       case 'getDefinitionAndBoundSpan': return vineGetDefinitionAndBoundSpan(ts, language, languageService, target[p])
     }
   }
@@ -169,5 +170,21 @@ function vineGetDefinitionAndBoundSpan(
         skippedDefinitions.push(definition)
       }
     }
+  }
+}
+
+function vineGetCompletionEntryDetails(
+  originalGetCompletionEntryDetails: ts.LanguageService['getCompletionEntryDetails'],
+): ts.LanguageService['getCompletionEntryDetails'] {
+  return (...args) => {
+    let result: ts.CompletionEntryDetails | undefined
+    try {
+      result = originalGetCompletionEntryDetails(...args)
+    }
+    catch (error) {
+      console.log(`[DEBUG] error:`, error)
+    }
+
+    return result
   }
 }
