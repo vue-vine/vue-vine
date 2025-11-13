@@ -48,6 +48,18 @@ function addPipelineHandlers(
   }
 
   // Initialize pipeline handlers
+  // @ts-expect-error - Untyped tsserver API
+  const handlers = session.handlers as Map<
+    string,
+    (request: ts.server.protocol.Request) => ts.server.HandlerResponse
+  >
+  if (handlers.has('_vue_vine:projectInfo')) {
+    return
+  }
+
+  session.addProtocolHandler('_vue_vine:projectInfo', (request) => {
+    return handlers.get('projectInfo')!(request)
+  })
   session.addProtocolHandler('_vue_vine:getComponentProps', (request) => {
     const { tagName, fileName } = request.arguments as PipelineReqArgs<'getComponentPropsRequest'>
     return createPipelineResponse(
