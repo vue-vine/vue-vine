@@ -54,7 +54,7 @@
     "typecheck": "tsgo --noEmit"
   },
   "peerDependencies": {
-    "vue": ">=3.2"
+    "vue": "catalog:vue-libs"
   },
   "dependencies": {
     "@vue-vine/rsbuild-plugin": "workspace:*",
