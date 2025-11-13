@@ -4,7 +4,6 @@ exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
 "/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
 
-
 type __VLS_VINE_SampleCustomElement_props__ = {}
 export const SampleCustomElement = (function (
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__,
@@ -223,7 +222,6 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 exports[`verify Volar virtual code snapshots > key-cases.vine.ts 1`] = `
 "/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
-
 import type { Directive } from 'vue'
 import { onMounted, ref, useTemplateRef, watchEffect } from 'vue'
 
@@ -1260,7 +1258,6 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 exports[`verify Volar virtual code snapshots > use-template-ref-virtual-code.vine.ts 1`] = `
 "/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
-
 import { useTemplateRef } from 'vue'
 
 
@@ -1335,7 +1332,6 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 exports[`verify Volar virtual code snapshots > vine-model.vine.ts 1`] = `
 "/// <reference types="../../../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
-
 import { ref } from 'vue'
 import '../styles/atom.css'
 
