@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/rspack-loader",
   "type": "module",
-  "version": "1.7.22",
+  "version": "1.7.23",
   "description": "Rspack loader for Vue Vine",
   "author": "Vue Vine Team",
   "license": "MIT",

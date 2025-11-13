@@ -148,7 +148,7 @@ export function createVueVineVirtualCode(
   }
 
   // Import Vine internal types for virtual code type definitions
-  tsCodeSegments.push(`import * as __VLS_VINE from 'vue-vine/internals';\n\n`)
+  tsCodeSegments.push(`import * as __VLS_VINE from 'vue-vine/internals';\n`)
 
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
   if (firstVineCompFnDeclNode) {

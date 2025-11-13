@@ -17,6 +17,7 @@ export type PipelineRequest
     | (_pipelineReq<{ type: 'getElementAttrsRequest', fileName: string, tagName: string }>)
     | (_pipelineReq<{ type: 'getComponentDirectivesRequest', fileName: string, triggerAtFnName: string }>)
     | (_pipelineReq<{ type: 'getDocumentHighlightRequest', fileName: string, position: number }>)
+    | (_pipelineReq<{ type: 'projectInfoRequest', file: string, needFileNameList: boolean }>)
 export type PipelineRequestInstance<T extends PipelineRequest['type']> = PipelineRequest & { type: T }
 export type PipelineReqArgs<T extends PipelineRequest['type']> = Omit<PipelineRequestInstance<T>, 'requestId' | 'type'>
 
@@ -25,6 +26,7 @@ export type PipelineResponse
     | (_pipelineResp<{ type: 'getElementAttrsResponse', tagName: string, fileName: string, attrs: string[] }>)
     | (_pipelineResp<{ type: 'getComponentDirectivesResponse', fileName: string, triggerAtFnName: string, directives: string[] }>)
     | (_pipelineResp<{ type: 'getDocumentHighlightResponse', result: ts.DocumentHighlights[] }>)
+    | (_pipelineResp<{ type: 'projectInfoResponse', result: ts.server.protocol.ProjectInfo | null }>)
 export type PipelineResponseInstance<T extends PipelineResponse['type']> = PipelineResponse & {
   type: T
   errMsg?: string

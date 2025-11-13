@@ -1,5 +1,14 @@
 # @vue-vine/rsbuild-plugin
 
+## 1.7.23
+
+### Patch Changes
+
+- Improve language service performance by not creating another TS project instance.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.23
+  - @vue-vine/rspack-loader@1.7.23
+
 ## 1.7.22
 
 ### Patch Changes
