@@ -182,7 +182,7 @@ function vineGetCompletionEntryDetails(
       result = originalGetCompletionEntryDetails(...args)
     }
     catch (error) {
-      console.log(`[DEBUG] error:`, error)
+      console.error(`[Vue Vine] Failed to get completion details:`, error)
     }
 
     return result
