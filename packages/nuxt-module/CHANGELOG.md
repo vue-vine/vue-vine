@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.23
+
+### Patch Changes
+
+- Improve language service performance by not creating another TS project instance.
+- Updated dependencies
+  - vue-vine@1.7.23
+
 ## 1.7.22
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.23
+
+### Patch Changes
+
+- Improve language service performance by not creating another TS project instance.
+
 ## 1.7.22
 
 ### Patch Changes
