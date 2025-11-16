@@ -1332,7 +1332,6 @@ const __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;"
 exports[`verify Volar virtual code snapshots > vapor-interop.vine.ts 1`] = `
 "/// <reference types="../../node_modules/.vue-global-types/vine_vue_99_true.d.ts" />
 import * as __VLS_VINE from 'vue-vine/internals';
-
 import { ref } from 'vue'
 
 
