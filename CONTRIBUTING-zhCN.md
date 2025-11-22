@@ -62,12 +62,12 @@ pnpm run build:ext
 4. 启动 Playground 的开发服务器
 
 ```bash
-pnpm run play
+pnpm run dev
 ```
 
-> 你可以在 `http://localhost:3333/` 查看 demo。
+> 你可以在 `http://localhost:3131/` 查看 demo。
 >
-> 你可以在 `http://localhost:3333/__inspect/` 查看变换过程。
+> 你可以在 `http://localhost:3131/__inspect/` 查看变换过程。
 
 5. 构建 VSCode 扩展后，在 VSCode 中打开“Debug”标签，启动 “Run Vine Extension” debug 会话。
 

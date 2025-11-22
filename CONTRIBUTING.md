@@ -96,12 +96,12 @@ pnpm run build:ext
 4. Start the Playground's dev server
 
 ```bash
-pnpm run play
+pnpm run dev
 ```
 
-> You can see the demo in `http://localhost:3333/`.
+> You can see the demo in `http://localhost:3131/`.
 >
-> You can inspect the transforming process in `http://localhost:3333/__inspect/`
+> You can inspect the transforming process in `http://localhost:3131/__inspect/`
 
 5. After building the VSCode extension, you can open the 'Debug' tab in VSCode, and start the **'Run Vine Extension'** debug session.
 
