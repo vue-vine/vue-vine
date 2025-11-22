@@ -134,6 +134,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -156,6 +160,10 @@ export const MyProfile = (() => {
       propAccessorsModifiers: {},
       methodAccessors: { default: "", required: true },
       methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
@@ -164,6 +172,8 @@ export const MyProfile = (() => {
       "update:count",
       "update:propAccessors",
       "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -191,6 +201,14 @@ export const MyProfile = (() => {
           return v;
         },
       });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -460,6 +478,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -482,6 +504,10 @@ export const MyProfile = (() => {
       propAccessorsModifiers: {},
       methodAccessors: { default: "", required: true },
       methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
@@ -490,6 +516,8 @@ export const MyProfile = (() => {
       "update:count",
       "update:propAccessors",
       "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -517,6 +545,14 @@ export const MyProfile = (() => {
           return v;
         },
       });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -687,7 +723,15 @@ export const SampleCustomElement = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -725,7 +769,15 @@ export const AnotherComp = (() => {
 
       customElements.define("vi-sample-custom-element", SampleCustomElement);
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -772,6 +824,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -794,6 +850,10 @@ export const MyProfile = (() => {
       propAccessorsModifiers: {},
       methodAccessors: { default: "", required: true },
       methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
@@ -802,6 +862,8 @@ export const MyProfile = (() => {
       "update:count",
       "update:propAccessors",
       "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -829,6 +891,14 @@ export const MyProfile = (() => {
           return v;
         },
       });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -857,12 +927,15 @@ export const MyProfile = (() => {
         count,
         propAccessors,
         methodAccessors,
+        spreadAccessors,
+        identifierAccessors,
         textColor,
         handleRefresh,
         v1,
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -939,6 +1012,7 @@ export const MyApp = (() => {
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -1042,7 +1116,15 @@ export const SampleCustomElement = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_ssr_render(
@@ -1088,7 +1170,15 @@ export const AnotherComp = (() => {
 
       customElements.define("vi-sample-custom-element", SampleCustomElement);
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_ssr_render(
@@ -1128,6 +1218,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const __vine = _defineComponent({
     name: "MyProfile",
@@ -1149,6 +1243,10 @@ export const MyProfile = (() => {
       propAccessorsModifiers: {},
       methodAccessors: { default: "", required: true },
       methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
@@ -1157,6 +1255,8 @@ export const MyProfile = (() => {
       "update:count",
       "update:propAccessors",
       "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -1184,6 +1284,14 @@ export const MyProfile = (() => {
           return v;
         },
       });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -1212,12 +1320,15 @@ export const MyProfile = (() => {
         count,
         propAccessors,
         methodAccessors,
+        spreadAccessors,
+        identifierAccessors,
         textColor,
         handleRefresh,
         v1,
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -1280,6 +1391,7 @@ export const MyApp = (() => {
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };

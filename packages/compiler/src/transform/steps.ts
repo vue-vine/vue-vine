@@ -252,21 +252,31 @@ export function generateVineModel(
     for (const [modelName, modelDef] of modelEntries) {
       const { varName, modelOptions } = modelDef
       let optionCode: string | undefined
-      if (modelOptions?.type === 'ObjectExpression') {
-        const filteredProps = modelOptions.properties.filter((prop) => {
-          if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
-            if (prop.key.type === 'Identifier') {
-              return accessors.includes(prop.key.name)
+      if (modelOptions) {
+        if (modelOptions.type === 'ObjectExpression') {
+          const filteredProps = modelOptions.properties.filter((prop) => {
+            if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
+              if (prop.key.type === 'Identifier') {
+                return accessors.includes(prop.key.name)
+              }
+              if (prop.key.type === 'StringLiteral') {
+                return accessors.includes(prop.key.value)
+              }
             }
-            if (prop.key.type === 'StringLiteral') {
-              return accessors.includes(prop.key.value)
-            }
-          }
-          return false
-        })
+            return true
+          })
 
-        const codeSegments = filteredProps.map(prop => ms.original.slice(prop.start!, prop.end!))
-        optionCode = codeSegments.length > 0 ? `{ ${codeSegments.join(', ')} }` : undefined
+          const codeSegments = filteredProps.map(prop => ms.original.slice(prop.start!, prop.end!))
+          optionCode = codeSegments.length > 0 ? `{ ${codeSegments.join(', ')} }` : undefined
+        }
+
+        // SpreadElement or Identifier
+        else {
+          optionCode = ms.original.slice(
+            modelOptions.start!,
+            modelOptions.end!,
+          )
+        }
       }
 
       modelCodeGen.push(
@@ -884,23 +894,33 @@ export function generatePropsOptions(
       const { modelModifiersName, modelOptions } = modelDef
       let propsCode = '{}'
 
-      if (modelOptions?.type === 'ObjectExpression') {
-        const normalProps = modelOptions.properties.filter((prop) => {
-          if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
-            if (prop.key.type === 'Identifier') {
-              return !accessors.includes(prop.key.name)
+      if (modelOptions) {
+        if (modelOptions.type === 'ObjectExpression') {
+          const normalProps = modelOptions.properties.filter((prop) => {
+            if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
+              if (prop.key.type === 'Identifier') {
+                return !accessors.includes(prop.key.name)
+              }
+              if (prop.key.type === 'StringLiteral') {
+                return !accessors.includes(prop.key.value)
+              }
             }
-            if (prop.key.type === 'StringLiteral') {
-              return !accessors.includes(prop.key.value)
-            }
-          }
-          return true
-        })
+            return true
+          })
 
-        if (normalProps.length > 0) {
-          propsCode = `{ ${normalProps.map(p =>
-            vineFileCtx.originCode.slice(p.start!, p.end!),
-          ).join(', ')} }`
+          if (normalProps.length > 0) {
+            propsCode = `{ ${normalProps.map(p =>
+              vineFileCtx.originCode.slice(p.start!, p.end!),
+            ).join(', ')} }`
+          }
+        }
+
+        // SpreadElement or Identifier
+        else {
+          propsCode = vineFileCtx.originCode.slice(
+            modelOptions.start!,
+            modelOptions.end!,
+          )
         }
       }
 
