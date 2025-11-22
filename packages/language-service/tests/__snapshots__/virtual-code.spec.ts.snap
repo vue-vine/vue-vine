@@ -1355,6 +1355,7 @@ const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
   /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
+  /* __LINKED_CODE_LEFT__#18 */AccessorModelInput: /* __LINKED_CODE_RIGHT__#18 */AccessorModelInput,
   /* __LINKED_CODE_LEFT__#13 */TestVineModel: /* __LINKED_CODE_RIGHT__#13 */TestVineModel,
   /* No props formal params */
 });
@@ -1370,6 +1371,7 @@ const __VLS_components = {
 type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
+ & { "accessor-button": true }
  & { "show-msg": true };
 let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.input)({
@@ -1417,6 +1419,7 @@ const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
   /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
+  /* __LINKED_CODE_LEFT__#18 */AccessorModelInput: /* __LINKED_CODE_RIGHT__#18 */AccessorModelInput,
   /* __LINKED_CODE_LEFT__#13 */TestVineModel: /* __LINKED_CODE_RIGHT__#13 */TestVineModel,
   /* No props formal params */
 });
@@ -1432,6 +1435,7 @@ const __VLS_components = {
 type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
+ & { "accessor-button": true }
  & { "show-msg": true };
 let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.input)({
@@ -1459,6 +1463,81 @@ $el: __VLS_RootEl;
 return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 }
+type __VLS_VINE_AccessorModelInput_props__ = {}
+
+
+export function AccessorModelInput(
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__  & {
+    modelValue: number
+},
+context: {}) {
+  
+type AccessorModelInput_Props = Parameters<typeof AccessorModelInput>[0];
+
+const value = vineModel<number>({
+    default: 0,
+    get(value) {
+      console.log('getter: ', value)
+      return value
+    },
+    set(value) {
+      return value * 2
+    },
+  })
+
+  
+// --- Start: Template virtual code
+
+const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
+  /* __LINKED_CODE_LEFT__#5 */value: /* __LINKED_CODE_RIGHT__#5 */value,
+  /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
+  /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
+  /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
+  /* __LINKED_CODE_LEFT__#18 */AccessorModelInput: /* __LINKED_CODE_RIGHT__#18 */AccessorModelInput,
+  /* __LINKED_CODE_LEFT__#13 */TestVineModel: /* __LINKED_CODE_RIGHT__#13 */TestVineModel,
+  /* No props formal params */
+});
+const __VLS_localComponents = __VLS_ctx;
+type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
+type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
+let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
+const __VLS_components = {
+  ...{} as __VLS_GlobalComponents,
+  ...__VLS_localComponents as unknown as __VLS_LocalComponents,
+};
+
+type __VLS_VINE_StyleScopedClasses = {}
+ & { "container": true }
+ & { "container": true }
+ & { "accessor-button": true }
+ & { "show-msg": true };
+let __VLS_elements!: __VLS_IntrinsicElements;
+__VLS_asFunctionalElement(__VLS_elements.button, __VLS_elements.button)({
+...{ onClick: (...[$event]) => {
+__VLS_ctx.value += 1;
+// @ts-ignore
+[value,];
+}},
+...{ class: "accessor-button" },
+});
+/** @type {__VLS_StyleScopedClasses['accessor-button']} */;
+type __VLS_Slots = {};
+type __VLS_InheritedAttrs = {};
+type __VLS_TemplateRefs = {};
+type __VLS_RootEl = 
+| __VLS_NativeElements['button'];
+var __VLS_dollars!: {
+$slots: __VLS_Slots;
+$attrs: import('vue').ComponentPublicInstance['$attrs'] & Partial<__VLS_InheritedAttrs>;
+$refs: __VLS_TemplateRefs;
+$el: __VLS_RootEl;
+} & { [K in keyof import('vue').ComponentPublicInstance]: unknown };
+
+// --- End: Template virtual code
+
+return vine\`\` as any as __VLS_VINE.VueVineComponent;
+
+}
 type __VLS_VINE_TestVineModel_props__ = {}
 
 
@@ -1470,6 +1549,7 @@ type TestVineModel_Props = Parameters<typeof TestVineModel>[0];
 
 const simpleMsg = ref('')
   const specialMsg = ref('')
+  const accessorValue = ref(0)
 
   vineStyle.scoped("...")
 
@@ -1479,8 +1559,10 @@ const simpleMsg = ref('')
 const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   /* __LINKED_CODE_LEFT__#11 */SimpleInput: /* __LINKED_CODE_RIGHT__#11 */SimpleInput,
   /* __LINKED_CODE_LEFT__#15 */NamedModelInput: /* __LINKED_CODE_RIGHT__#15 */NamedModelInput,
+  /* __LINKED_CODE_LEFT__#18 */AccessorModelInput: /* __LINKED_CODE_RIGHT__#18 */AccessorModelInput,
   /* __LINKED_CODE_LEFT__#9 */simpleMsg: /* __LINKED_CODE_RIGHT__#9 */simpleMsg,
   /* __LINKED_CODE_LEFT__#10 */specialMsg: /* __LINKED_CODE_RIGHT__#10 */specialMsg,
+  /* __LINKED_CODE_LEFT__#13 */accessorValue: /* __LINKED_CODE_RIGHT__#13 */accessorValue,
   /* __LINKED_CODE_LEFT__#3 */ref: /* __LINKED_CODE_RIGHT__#3 */ref,
   /* __LINKED_CODE_LEFT__#13 */TestVineModel: /* __LINKED_CODE_RIGHT__#13 */TestVineModel,
   /* No props formal params */
@@ -1497,6 +1579,7 @@ const __VLS_components = {
 type __VLS_VINE_StyleScopedClasses = {}
  & { "container": true }
  & { "container": true }
+ & { "accessor-button": true }
  & { "show-msg": true };
 let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
@@ -1562,6 +1645,35 @@ __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ( __VLS_ctx.specialMsg );
 // @ts-ignore
 [specialMsg,];
+const __VLS_16 = ({} as __VLS_WithComponent<'AccessorModelInput', __VLS_LocalComponents, void, 'AccessorModelInput', 'AccessorModelInput', 'AccessorModelInput'>).AccessorModelInput;
+/** @type {[typeof __VLS_components.AccessorModelInput, ]} */;
+// @ts-ignore
+AccessorModelInput;
+// @ts-ignore
+const __VLS_17 = __VLS_asFunctionalComponent(__VLS_16, new __VLS_16({
+modelValue: (__VLS_ctx.accessorValue),
+}));
+const __VLS_18 = __VLS_17({
+modelValue: (__VLS_ctx.accessorValue),
+}, ...__VLS_functionalComponentArgsRest(__VLS_17));
+let __VLS_20!: __VLS_ResolveEmits<typeof __VLS_16, typeof __VLS_19.emit>;
+let __VLS_21!: __VLS_FunctionalComponentProps<typeof __VLS_17, typeof __VLS_18>;
+const __VLS_22: __VLS_NormalizeComponentEvent<typeof __VLS_21, typeof __VLS_20, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = (
+{ 'onUpdate:modelValue': (...[$event]) => {
+__VLS_ctx.accessorValue = $event;
+}});
+// @ts-ignore
+[accessorValue,];
+var __VLS_19!: __VLS_FunctionalComponentCtx<typeof __VLS_16, typeof __VLS_18>;
+__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
+...{ class: "row-flex" },
+});
+__VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
+...{ class: "show-msg accessor-value" },
+});
+( __VLS_ctx.accessorValue );
+// @ts-ignore
+[accessorValue,];
 /** @type {__VLS_StyleScopedClasses['container']} */;
 /** @type {__VLS_StyleScopedClasses['row-flex']} */;
 /** @type {__VLS_StyleScopedClasses['show-msg']} */;
@@ -1569,6 +1681,9 @@ __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 /** @type {__VLS_StyleScopedClasses['row-flex']} */;
 /** @type {__VLS_StyleScopedClasses['show-msg']} */;
 /** @type {__VLS_StyleScopedClasses['special-msg']} */;
+/** @type {__VLS_StyleScopedClasses['row-flex']} */;
+/** @type {__VLS_StyleScopedClasses['show-msg']} */;
+/** @type {__VLS_StyleScopedClasses['accessor-value']} */;
 type __VLS_Slots = {};
 type __VLS_InheritedAttrs = {};
 type __VLS_TemplateRefs = {};
@@ -1590,6 +1705,7 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 const __VLS_VINE_ComponentsReferenceMap = {
   'SimpleInput': SimpleInput,
   'NamedModelInput': NamedModelInput,
+  'AccessorModelInput': AccessorModelInput,
   'TestVineModel': TestVineModel
 };
 

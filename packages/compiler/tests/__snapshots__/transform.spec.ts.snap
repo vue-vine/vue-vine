@@ -152,12 +152,18 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -173,6 +179,18 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -460,12 +478,18 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -481,6 +505,18 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -754,12 +790,18 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -775,6 +817,18 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -801,6 +855,8 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        propAccessors,
+        methodAccessors,
         textColor,
         handleRefresh,
         v1,
@@ -1089,12 +1145,18 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -1110,6 +1172,18 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -1136,6 +1210,8 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        propAccessors,
+        methodAccessors,
         textColor,
         handleRefresh,
         v1,

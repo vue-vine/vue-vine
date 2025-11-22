@@ -61,6 +61,8 @@ function MyProfile() {
   const defaultModelWithValue = vineModel({ default: 'test' })
   const title = vineModel('title', { default: '' })
   const count = vineModel<number>('count')
+  const propAccessors = vineModel('propAccessors', { default: '', required: true, get: (v) => v, set: (v) => v })
+  const methodAccessors = vineModel('methodAccessors', { default: '', required: true, get(v) { return v }, set(v) { return v } })
 
   vineExpose({
     age,
