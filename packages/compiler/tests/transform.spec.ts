@@ -44,6 +44,10 @@ function AnotherComp(props: {
   \`
 }
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+}
 function MyProfile() {
   const name = vineProp<string>()
   const age = vineProp.withDefault<number>(18)
@@ -61,6 +65,10 @@ function MyProfile() {
   const defaultModelWithValue = vineModel({ default: 'test' })
   const title = vineModel('title', { default: '' })
   const count = vineModel<number>('count')
+  const propAccessors = vineModel('propAccessors', { default: '', required: true, get: (v) => v, set: (v) => v })
+  const methodAccessors = vineModel('methodAccessors', { default: '', required: true, get(v) { return v }, set(v) { return v } })
+  const spreadAccessors = vineModel('spreadAccessors', { default: '', required: true, ...options })
+  const identifierAccessors = vineModel('identifierAccessors', options)
 
   vineExpose({
     age,
