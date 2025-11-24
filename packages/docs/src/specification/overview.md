@@ -80,7 +80,7 @@ function MyComponent() {
 
 ::: info 💡 TIPS
 
-We assume that you've already known about Vue 3's `<script setup>`, if you don't, please check the [Vue documentation](https://vuejs.org/guide/composition-api-introduction.html#script-setup).
+We assume that you've already known about Vue 3's `<script setup>`, if you don't, please check the [Vue documentation](https://vuejs.org/api/sfc-script-setup.html#script-setup).
 
 :::
 
