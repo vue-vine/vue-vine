@@ -61,12 +61,16 @@ declare global {
   function vineModel<T>(modelOptions: {
     default?: T
     required?: boolean
+    get?: (v: T) => any
+    set?: (v: T) => any
   }): Ref<T>
   function vineModel<T>(
     modelName: string,
     modelOptions?: {
       default?: T
       required?: boolean
+      get?: (v: T) => any
+      set?: (v: T) => any
     }
   ): Ref<T>
 
