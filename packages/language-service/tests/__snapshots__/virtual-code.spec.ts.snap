@@ -1339,7 +1339,8 @@ import '../styles/atom.css'
 type __VLS_VINE_SimpleInput_props__ = {}
 export function SimpleInput(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__  & {
-    modelValue: unknown
+    modelValue?: unknown,
+    modelModifiers?: Partial<Record<string, true | undefined>>
 },
 context: {}) {
   
@@ -1403,7 +1404,8 @@ type __VLS_VINE_NamedModelInput_props__ = {}
 
 export function NamedModelInput(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__  & {
-    special: unknown
+    special?: unknown,
+    specialModifiers?: Partial<Record<string, true | undefined>>
 },
 context: {}) {
   
@@ -1468,7 +1470,8 @@ type __VLS_VINE_AccessorModelInput_props__ = {}
 
 export function AccessorModelInput(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__  & {
-    modelValue: number
+    modelValue?: number,
+    modelModifiers?: Partial<Record<string, true | undefined>>
 },
 context: {}) {
   

@@ -250,7 +250,7 @@ export function generateVineModel(
     let modelCodeGen: string[] = []
 
     for (const [modelName, modelDef] of modelEntries) {
-      const { varName, modelOptions } = modelDef
+      const { varName, modifiersVarName, modelOptions } = modelDef
       let optionCode: string | undefined
       if (modelOptions) {
         if (modelOptions.type === 'ObjectExpression') {
@@ -279,11 +279,19 @@ export function generateVineModel(
         }
       }
 
-      modelCodeGen.push(
-        `const ${varName} = _${USE_MODEL_HELPER}(__props, '${modelName}'${
-          optionCode ? `, ${optionCode}` : ''
-        })`,
-      )
+      // Generate code based on whether modifiers are destructured
+      // - With modifiers: `const [varName, modifiersVarName] = _useModel(...)`
+      // - Without modifiers: `const varName = _useModel(...)`
+      const useModelCall = `_${USE_MODEL_HELPER}(__props, '${modelName}'${
+        optionCode ? `, ${optionCode}` : ''
+      })`
+
+      if (modifiersVarName) {
+        modelCodeGen.push(`const [${varName}, ${modifiersVarName}] = ${useModelCall}`)
+      }
+      else {
+        modelCodeGen.push(`const ${varName} = ${useModelCall}`)
+      }
     }
 
     const modelCodeGenStr = `\n${modelCodeGen.join('\n')}\n`

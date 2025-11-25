@@ -19,6 +19,7 @@ import type { CountingMacros, MacroAssertCtx, VINE_MACRO_NAMES, VineCompilerHook
 import process from 'node:process'
 import {
   isArrayExpression,
+  isArrayPattern,
   isIdentifier,
   isObjectExpression,
   isObjectPattern,
@@ -373,6 +374,106 @@ function assertMacroVariableDeclarationMustBeIdentifier(
     return false
   }
   return true
+}
+
+/**
+ * Assert vineModel variable declaration.
+ * vineModel supports both Identifier and ArrayPattern (for destructuring modifiers).
+ * - `const value = vineModel()` - Identifier
+ * - `const [value, modifiers] = vineModel()` - ArrayPattern with at most 2 elements
+ */
+function assertVineModelVariableDeclaration(
+  { vineCompilerHooks, vineFileCtx }: VineValidatorCtx,
+  macroCallNode: CallExpression,
+  parent?: TraversalAncestors,
+): boolean {
+  const varDeclaratorThatMayBeInside = parent?.find(ancestor => isVariableDeclarator(ancestor.node))
+
+  if (!varDeclaratorThatMayBeInside) {
+    vineCompilerHooks.onError(
+      vineErr(
+        { vineFileCtx },
+        {
+          msg: 'the declaration of `vineModel` macro call must be inside a variable declaration',
+          location: macroCallNode.loc,
+        },
+      ),
+    )
+    return false
+  }
+
+  const varDeclNode = varDeclaratorThatMayBeInside.node as VariableDeclarator
+  const varDeclId = varDeclNode.id
+
+  // Allow Identifier: `const value = vineModel()`
+  if (isIdentifier(varDeclId)) {
+    return true
+  }
+
+  // Allow ArrayPattern: `const [value, modifiers] = vineModel()`
+  if (isArrayPattern(varDeclId)) {
+    const elements = varDeclId.elements
+
+    // ArrayPattern must have at least 1 and at most 2 elements
+    if (elements.length === 0 || elements.length > 2) {
+      vineCompilerHooks.onError(
+        vineErr(
+          { vineFileCtx },
+          {
+            msg: '`vineModel` array destructuring must have 1 or 2 elements: [modelRef] or [modelRef, modifiers]',
+            location: varDeclId.loc,
+          },
+        ),
+      )
+      return false
+    }
+
+    // First element (model ref) must be an Identifier
+    const firstElement = elements[0]
+    if (!firstElement || !isIdentifier(firstElement)) {
+      vineCompilerHooks.onError(
+        vineErr(
+          { vineFileCtx },
+          {
+            msg: 'the first element of `vineModel` array destructuring must be an identifier for model ref',
+            location: firstElement?.loc ?? varDeclId.loc,
+          },
+        ),
+      )
+      return false
+    }
+
+    // Second element (modifiers) must be an Identifier if present
+    if (elements.length === 2) {
+      const secondElement = elements[1]
+      if (!secondElement || !isIdentifier(secondElement)) {
+        vineCompilerHooks.onError(
+          vineErr(
+            { vineFileCtx },
+            {
+              msg: 'the second element of `vineModel` array destructuring must be an identifier for modifiers',
+              location: secondElement?.loc ?? varDeclId.loc,
+            },
+          ),
+        )
+        return false
+      }
+    }
+
+    return true
+  }
+
+  // Other patterns are not allowed
+  vineCompilerHooks.onError(
+    vineErr(
+      { vineFileCtx },
+      {
+        msg: 'the declaration of `vineModel` macro call must be an identifier or array destructuring pattern',
+        location: varDeclId.loc,
+      },
+    ),
+  )
+  return false
 }
 
 function assertVineEmitsUsage(
@@ -761,17 +862,8 @@ function assertVineModelUsage(
   let isInsideVarDecl = false
 
   // vineModel macro call must be inside a variable declaration
-  if (
-    !assertMacroVariableDeclarationMustBeIdentifier(
-      validatorCtx,
-      'vineModel',
-      macroCallNode,
-      parent,
-      {
-        isMustBeInsideVarDecl: true,
-      },
-    )
-  ) {
+  // Supports both Identifier and ArrayPattern (for destructuring modifiers)
+  if (!assertVineModelVariableDeclaration(validatorCtx, macroCallNode, parent)) {
     isVineModelUsageCorrect = false
   }
   else {

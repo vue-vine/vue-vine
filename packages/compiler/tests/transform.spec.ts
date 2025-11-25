@@ -415,6 +415,39 @@ export function MyComp({
     expect(formated).toMatchSnapshot()
   })
 
+  it('should transform vineModel with array destructuring for modifiers', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export function MyComp() {
+  const [value, modifiers] = vineModel<string>()
+  const [title, titleMods] = vineModel<string>('title', { default: '' })
+
+  return vine\`
+    <div>
+      <input v-model="value" />
+      <p v-if="modifiers.trim">Trim active</p>
+    </div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformVineModelModifiers', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformVineModelModifiers')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Check that array destructuring generates correct code
+    expect(formated).toMatch('const [value, modifiers] = _useModel(__props, "modelValue")')
+    expect(formated).toMatch('const [title, titleMods] = _useModel(__props, "title"')
+    expect(formated).toMatchSnapshot()
+  })
+
   it('should not export on function delcaration when already exported in somewhere', async () => {
     const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
       envMode: 'development',
