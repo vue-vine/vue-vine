@@ -284,6 +284,8 @@ function MyComp() {
       {
         "modelModifiersName": "modelModifiers",
         "modelOptions": "{ default: 'test' }",
+        "modifiersTypeParameter": undefined,
+        "modifiersVarName": undefined,
         "typeParameter": undefined,
         "varName": "defaultModelWithValue",
       }
@@ -294,6 +296,9 @@ function MyComp() {
       {
         "modelModifiersName": "titleModifiers",
         "modelOptions": "{ default: '' }",
+        "modifiersTypeParameter": undefined,
+        "modifiersVarName": undefined,
+        "typeParameter": undefined,
         "varName": "title",
       }
     `)
@@ -303,6 +308,8 @@ function MyComp() {
       {
         "modelModifiersName": "countModifiers",
         "modelOptions": undefined,
+        "modifiersTypeParameter": undefined,
+        "modifiersVarName": undefined,
         "typeParameter": Node {
           "end": 168,
           "loc": SourceLocation {
@@ -325,6 +332,64 @@ function MyComp() {
         "varName": "count",
       }
     `)
+  })
+
+  it('analyze vineModel with array destructuring for modifiers', () => {
+    const content = `
+function MyComp() {
+  const [value, modifiers] = vineModel<string>()
+  const [title, titleMods] = vineModel<string>('title')
+
+  return vine\`<div>Test vineModel modifiers</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineModelModifiers', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    expect(mockCompilerCtx.fileCtxMap.size).toBe(1)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineModelModifiers')
+    expect(fileCtx?.vineCompFns.length).toBe(1)
+    const vineFnComp = fileCtx?.vineCompFns[0]
+
+    // Test default model with modifiers destructured
+    const defaultModel = vineFnComp?.vineModels.modelValue
+    expect(defaultModel?.varName).toBe('value')
+    expect(defaultModel?.modifiersVarName).toBe('modifiers')
+    expect(defaultModel?.modelModifiersName).toBe('modelModifiers')
+
+    // Test named model with modifiers destructured
+    const titleModel = vineFnComp?.vineModels.title
+    expect(titleModel?.varName).toBe('title')
+    expect(titleModel?.modifiersVarName).toBe('titleMods')
+    expect(titleModel?.modelModifiersName).toBe('titleModifiers')
+
+    // Check bindings include modifiers variables
+    expect(vineFnComp?.bindings.value).toBe('setup-ref')
+    expect(vineFnComp?.bindings.modifiers).toBe('setup-ref')
+    expect(vineFnComp?.bindings.title).toBe('setup-ref')
+    expect(vineFnComp?.bindings.titleMods).toBe('setup-ref')
+  })
+
+  it('analyze vineModel with array destructuring without modifiers', () => {
+    const content = `
+function MyComp() {
+  const [count] = vineModel<number>('count', { default: 0 })
+
+  return vine\`<div>Test vineModel array without modifiers</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testAnalyzeVineModelArrayNoModifiers', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testAnalyzeVineModelArrayNoModifiers')
+    const vineFnComp = fileCtx?.vineCompFns[0]
+
+    // Test array destructuring without modifiers
+    const countModel = vineFnComp?.vineModels.count
+    expect(countModel?.varName).toBe('count')
+    expect(countModel?.modifiersVarName).toBeUndefined()
+    expect(countModel?.modelModifiersName).toBe('countModifiers')
+
+    // Check bindings
+    expect(vineFnComp?.bindings.count).toBe('setup-ref')
   })
 
   it('analyze `vineExpose` and `vineOptions` macro calls', () => {

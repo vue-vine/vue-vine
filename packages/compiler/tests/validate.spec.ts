@@ -158,7 +158,7 @@ function App(props: { foo: string }) {
           "Properties of \`vineSlots\` can only have function type annotation",
           "the declaration of \`vineModel\` macro call must be inside a variable declaration",
           "The given vineModel name must be a string literal",
-          "the declaration of macro \`vineModel\` call must be an identifier",
+          "the declaration of \`vineModel\` macro call must be an identifier or array destructuring pattern",
           "Vue Vine component function can only have one default model",
           "\`vineStyle\` can only have one string argument'",
           "\`vineEmits\` macro must have a type parameter or an array of string for event names",

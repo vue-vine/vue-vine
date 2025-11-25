@@ -57,22 +57,25 @@ declare global {
     }>,
   ): void
 
-  function vineModel<T>(): Ref<T>
-  function vineModel<T>(modelOptions: {
+  // vineModel options type
+  interface VineModelOptions<T> {
     default?: T
     required?: boolean
     get?: (v: T) => any
     set?: (v: T) => any
-  }): Ref<T>
-  function vineModel<T>(
+  }
+
+  // vineModel return type that supports both direct usage and destructuring
+  type VineModelReturn<T, M extends string = string> = Ref<T> & [Ref<T>, Record<M, true | undefined>]
+
+  function vineModel<T, M extends string = string>(): VineModelReturn<T, M>
+  function vineModel<T, M extends string = string>(
+    modelOptions: VineModelOptions<T>
+  ): VineModelReturn<T, M>
+  function vineModel<T, M extends string = string>(
     modelName: string,
-    modelOptions?: {
-      default?: T
-      required?: boolean
-      get?: (v: T) => any
-      set?: (v: T) => any
-    }
-  ): Ref<T>
+    modelOptions?: VineModelOptions<T>
+  ): VineModelReturn<T, M>
 
   function vineCustomElement(): void
 
