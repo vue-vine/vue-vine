@@ -13,6 +13,7 @@ import { TestTransformAssetUrl } from './fixtures/transform-asset-url.vine'
 import { TestUseDefaults } from './fixtures/use-defaults.vine'
 import { TestVibe } from './fixtures/vibe.vine'
 import { TestVineEmitsPage } from './fixtures/vine-emits.vine'
+import { TestVineModelModifiers } from './fixtures/vine-model-modifiers.vine'
 import { TestVineModel } from './fixtures/vine-model.vine'
 import { TestVinePropPage } from './fixtures/vine-prop.vine'
 import { TestVineSlots } from './fixtures/vine-slots.vine'
@@ -31,6 +32,7 @@ const routes = [
   { path: '/vibe', component: TestVibe },
   { path: '/use-defaults', component: TestUseDefaults },
   { path: '/vine-model', component: TestVineModel },
+  { path: '/vine-model-modifiers', component: TestVineModelModifiers },
   { path: '/vine-emits', component: TestVineEmitsPage },
   { path: '/vine-validators', component: TestVineValidatorsPage },
   { path: '/todo-list', component: TodoList },

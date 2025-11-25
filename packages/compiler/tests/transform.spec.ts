@@ -44,6 +44,10 @@ function AnotherComp(props: {
   \`
 }
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+}
 function MyProfile() {
   const name = vineProp<string>()
   const age = vineProp.withDefault<number>(18)
@@ -61,6 +65,10 @@ function MyProfile() {
   const defaultModelWithValue = vineModel({ default: 'test' })
   const title = vineModel('title', { default: '' })
   const count = vineModel<number>('count')
+  const propAccessors = vineModel('propAccessors', { default: '', required: true, get: (v) => v, set: (v) => v })
+  const methodAccessors = vineModel('methodAccessors', { default: '', required: true, get(v) { return v }, set(v) { return v } })
+  const spreadAccessors = vineModel('spreadAccessors', { default: '', required: true, ...options })
+  const identifierAccessors = vineModel('identifierAccessors', options)
 
   vineExpose({
     age,
@@ -404,6 +412,39 @@ export function MyComp({
     expect(formated).toMatch('const test1 = ref(props["foo:zee"])')
     expect(formated).toMatch('() => props.bar')
     expect(formated).toMatch('const rest = _createPropsRestProxy(__props, ["foo:zee", "bar", "arr"]);')
+    expect(formated).toMatchSnapshot()
+  })
+
+  it('should transform vineModel with array destructuring for modifiers', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+export function MyComp() {
+  const [value, modifiers] = vineModel<string>()
+  const [title, titleMods] = vineModel<string>('title', { default: '' })
+
+  return vine\`
+    <div>
+      <input v-model="value" />
+      <p v-if="modifiers.trim">Trim active</p>
+    </div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformVineModelModifiers', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformVineModelModifiers')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+
+    // Check that array destructuring generates correct code
+    expect(formated).toMatch('const [value, modifiers] = _useModel(__props, "modelValue")')
+    expect(formated).toMatch('const [title, titleMods] = _useModel(__props, "title"')
     expect(formated).toMatchSnapshot()
   })
 

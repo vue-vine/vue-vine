@@ -28,6 +28,7 @@ import { filterJoin, removeRange, replaceRange, showIf } from '../utils'
 import { mayContainAwaitExpr, registerImport, wrapWithAsyncContext } from './utils'
 
 const identRE = /^[_$a-z\xA0-\uFFFF][\w$\xA0-\uFFFF]*$/i
+const accessors = ['get', 'set']
 
 export interface TransformContext {
   vineFileCtx: VineFileCtx
@@ -235,9 +236,10 @@ export function generateVineModel(
   const { mergedImportsMap } = transformCtx
   const { vineCompFnCtx, firstStmt } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
+  const modelEntries = Object.entries(vineCompFnCtx.vineModels)
 
   // Code generation for vineModel
-  if (Object.entries(vineCompFnCtx.vineModels).length > 0) {
+  if (modelEntries.length > 0) {
     registerImport(
       mergedImportsMap,
       'vue',
@@ -247,11 +249,49 @@ export function generateVineModel(
 
     let modelCodeGen: string[] = []
 
-    for (const [modelName, modelDef] of Object.entries(vineCompFnCtx.vineModels)) {
-      const { varName } = modelDef
-      modelCodeGen.push(
-        `const ${varName} = _${USE_MODEL_HELPER}(__props, '${modelName}')`,
-      )
+    for (const [modelName, modelDef] of modelEntries) {
+      const { varName, modifiersVarName, modelOptions } = modelDef
+      let optionCode: string | undefined
+      if (modelOptions) {
+        if (modelOptions.type === 'ObjectExpression') {
+          const filteredProps = modelOptions.properties.filter((prop) => {
+            if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
+              if (prop.key.type === 'Identifier') {
+                return accessors.includes(prop.key.name)
+              }
+              if (prop.key.type === 'StringLiteral') {
+                return accessors.includes(prop.key.value)
+              }
+            }
+            return true
+          })
+
+          const codeSegments = filteredProps.map(prop => ms.original.slice(prop.start!, prop.end!))
+          optionCode = codeSegments.length > 0 ? `{ ${codeSegments.join(', ')} }` : undefined
+        }
+
+        // SpreadElement or Identifier
+        else {
+          optionCode = ms.original.slice(
+            modelOptions.start!,
+            modelOptions.end!,
+          )
+        }
+      }
+
+      // Generate code based on whether modifiers are destructured
+      // - With modifiers: `const [varName, modifiersVarName] = _useModel(...)`
+      // - Without modifiers: `const varName = _useModel(...)`
+      const useModelCall = `_${USE_MODEL_HELPER}(__props, '${modelName}'${
+        optionCode ? `, ${optionCode}` : ''
+      })`
+
+      if (modifiersVarName) {
+        modelCodeGen.push(`const [${varName}, ${modifiersVarName}] = ${useModelCall}`)
+      }
+      else {
+        modelCodeGen.push(`const ${varName} = ${useModelCall}`)
+      }
     }
 
     const modelCodeGenStr = `\n${modelCodeGen.join('\n')}\n`
@@ -860,19 +900,40 @@ export function generatePropsOptions(
     .entries(vineCompFnCtx.vineModels)
     .reduce<string[]>((segments, [modelName, modelDef]) => {
       const { modelModifiersName, modelOptions } = modelDef
-      segments.push(
-        `${modelName}: ${
-          modelOptions
-            ? vineFileCtx.originCode.slice(
-                modelOptions.start!,
-                modelOptions.end!,
-              )
-            : '{}'
-        },`,
-      )
-      segments.push(
-        `${modelModifiersName}: {},`,
-      )
+      let propsCode = '{}'
+
+      if (modelOptions) {
+        if (modelOptions.type === 'ObjectExpression') {
+          const normalProps = modelOptions.properties.filter((prop) => {
+            if (prop.type === 'ObjectProperty' || prop.type === 'ObjectMethod') {
+              if (prop.key.type === 'Identifier') {
+                return !accessors.includes(prop.key.name)
+              }
+              if (prop.key.type === 'StringLiteral') {
+                return !accessors.includes(prop.key.value)
+              }
+            }
+            return true
+          })
+
+          if (normalProps.length > 0) {
+            propsCode = `{ ${normalProps.map(p =>
+              vineFileCtx.originCode.slice(p.start!, p.end!),
+            ).join(', ')} }`
+          }
+        }
+
+        // SpreadElement or Identifier
+        else {
+          propsCode = vineFileCtx.originCode.slice(
+            modelOptions.start!,
+            modelOptions.end!,
+          )
+        }
+      }
+
+      segments.push(`${modelName}: ${propsCode},`)
+      segments.push(`${modelModifiersName}: {},`)
 
       return segments
     }, [])

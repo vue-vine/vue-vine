@@ -56,8 +56,8 @@ Or you can try it online: [Vue Vine Playground](https://stackblitz.com/~/github.
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-server](./packages/language-server) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-server)](https://www.npmjs.com/package/@vue-vine/language-server) | Language Server |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | Language Service |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite Plugin |
-| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader (🧪Beta) |
-| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild Plugin (🧪Beta) |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild Plugin |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint Parser |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-plugin](./packages/eslint-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-plugin)](https://www.npmjs.com/package/@vue-vine/eslint-plugin) | ESLint Plugin |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-config](./packages/eslint-config) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-config)](https://www.npmjs.com/package/@vue-vine/eslint-config) | ESLint Config |
@@ -87,7 +87,7 @@ export default defineConfig({
 })
 ```
 
-### Rsbuild plugin (Beta 🧪)
+### Rsbuild plugin
 
 Use the plugin in `rsbuild.config.ts`:
 

@@ -186,9 +186,16 @@ export function generateModelProps(
   tabNum = 2,
 ): string {
   const { vineFileCtx } = ctx
+  const indent = ' '.repeat(tabNum + 2)
   const modelProps = `{${Object.entries(vineCompFn.vineModels).map(([modelName, model]) => {
-    const { typeParameter } = model
-    return `\n${' '.repeat(tabNum + 2)}${modelName}: ${typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'}`
+    const { typeParameter, modifiersTypeParameter, modelModifiersName } = model
+    const modelType = typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'
+    // Use specific modifier type if provided, otherwise fallback to generic string
+    const modifiersKeyType = modifiersTypeParameter
+      ? vineFileCtx.getAstNodeContent(modifiersTypeParameter)
+      : 'string'
+    // Generate both model value prop and modifiers prop
+    return `\n${indent}${modelName}?: ${modelType},\n${indent}${modelModifiersName}?: Partial<Record<${modifiersKeyType}, true | undefined>>`
   }).join(', ')
   }\n}`
   return modelProps

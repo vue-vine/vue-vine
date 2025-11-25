@@ -134,6 +134,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -152,12 +156,24 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -173,6 +189,26 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -442,6 +478,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -460,12 +500,24 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -481,6 +533,26 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -651,7 +723,15 @@ export const SampleCustomElement = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -689,7 +769,15 @@ export const AnotherComp = (() => {
 
       customElements.define("vi-sample-custom-element", SampleCustomElement);
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -736,6 +824,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const _hoisted_1 = { class: "my-profile" };
   const __vine = _defineComponent({
@@ -754,12 +846,24 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -775,6 +879,26 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -801,12 +925,17 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        propAccessors,
+        methodAccessors,
+        spreadAccessors,
+        identifierAccessors,
         textColor,
         handleRefresh,
         v1,
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -883,6 +1012,7 @@ export const MyApp = (() => {
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -986,7 +1116,15 @@ export const SampleCustomElement = (() => {
       __expose();
       const props = __props;
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_ssr_render(
@@ -1032,7 +1170,15 @@ export const AnotherComp = (() => {
 
       customElements.define("vi-sample-custom-element", SampleCustomElement);
 
-      return { v1, v2, SampleCustomElement, AnotherComp, MyProfile, MyApp };
+      return {
+        v1,
+        v2,
+        SampleCustomElement,
+        AnotherComp,
+        options,
+        MyProfile,
+        MyApp,
+      };
     },
   });
   function __sfc_ssr_render(
@@ -1072,6 +1218,10 @@ export const AnotherComp = (() => {
   return __vine;
 })();
 
+const options = {
+  get: (v) => v,
+  set: (v) => v,
+};
 export const MyProfile = (() => {
   const __vine = _defineComponent({
     name: "MyProfile",
@@ -1089,12 +1239,24 @@ export const MyProfile = (() => {
       titleModifiers: {},
       count: {},
       countModifiers: {},
+      propAccessors: { default: "", required: true },
+      propAccessorsModifiers: {},
+      methodAccessors: { default: "", required: true },
+      methodAccessorsModifiers: {},
+      spreadAccessors: { default: "", required: true, ...options },
+      spreadAccessorsModifiers: {},
+      identifierAccessors: options,
+      identifierAccessorsModifiers: {},
     },
     emits: [
       "somethingChange",
       "update:modelValue",
       "update:title",
       "update:count",
+      "update:propAccessors",
+      "update:methodAccessors",
+      "update:spreadAccessors",
+      "update:identifierAccessors",
     ],
     setup(__props, { emit: __emit, expose: __expose }) {
       const emits = __emit;
@@ -1110,6 +1272,26 @@ export const MyProfile = (() => {
       const defaultModelWithValue = _useModel(__props, "modelValue");
       const title = _useModel(__props, "title");
       const count = _useModel(__props, "count");
+      const propAccessors = _useModel(__props, "propAccessors", {
+        get: (v) => v,
+        set: (v) => v,
+      });
+      const methodAccessors = _useModel(__props, "methodAccessors", {
+        get(v) {
+          return v;
+        },
+        set(v) {
+          return v;
+        },
+      });
+      const spreadAccessors = _useModel(__props, "spreadAccessors", {
+        ...options,
+      });
+      const identifierAccessors = _useModel(
+        __props,
+        "identifierAccessors",
+        options,
+      );
       const mySlots = _useSlots();
 
       const textColor = ref("#1c1c1c");
@@ -1136,12 +1318,17 @@ export const MyProfile = (() => {
         defaultModelWithValue,
         title,
         count,
+        propAccessors,
+        methodAccessors,
+        spreadAccessors,
+        identifierAccessors,
         textColor,
         handleRefresh,
         v1,
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -1204,6 +1391,7 @@ export const MyApp = (() => {
         v2,
         SampleCustomElement,
         AnotherComp,
+        options,
         MyProfile,
         MyApp,
       };
@@ -2035,6 +2223,76 @@ export const MyComp = (() => {
 
   __vine.__vue_vine = true;
   __vine.__hmrId = "31ff5352";
+
+  return __vine;
+})();
+
+typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
+  __VUE_HMR_RUNTIME__.createRecord(MyComp.__hmrId, MyComp);
+"
+`;
+
+exports[`test transform > should transform vineModel with array destructuring for modifiers 1`] = `
+"import {
+  defineComponent as _defineComponent,
+  useCssVars as _useCssVars,
+  unref as _unref,
+  useModel as _useModel,
+  vModelText as _vModelText,
+  createElementVNode as _createElementVNode,
+  withDirectives as _withDirectives,
+  openBlock as _openBlock,
+  createElementBlock as _createElementBlock,
+  createCommentVNode as _createCommentVNode,
+} from "vue";
+
+export const MyComp = (() => {
+  const _hoisted_1 = { key: 0 };
+  const __vine = _defineComponent({
+    name: "MyComp",
+    props: {
+      modelValue: {},
+      modelModifiers: {},
+      title: { default: "" },
+      titleModifiers: {},
+    },
+    emits: ["update:modelValue", "update:title"],
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const props = __props;
+
+      const [value, modifiers] = _useModel(__props, "modelValue");
+      const [title, titleMods] = _useModel(__props, "title");
+
+      return (_ctx, _cache) => {
+        return (
+          _openBlock(),
+          _createElementBlock("div", null, [
+            _withDirectives(
+              _createElementVNode(
+                "input",
+                {
+                  "onUpdate:modelValue":
+                    _cache[0] ||
+                    (_cache[0] = ($event) => (value.value = $event)),
+                },
+                null,
+                512 /* NEED_PATCH */,
+              ),
+              [[_vModelText, value.value]],
+            ),
+            modifiers.value.trim
+              ? (_openBlock(),
+                _createElementBlock("p", _hoisted_1, "Trim active"))
+              : _createCommentVNode("v-if", true),
+          ])
+        );
+      };
+    },
+  });
+
+  __vine.__vue_vine = true;
+  __vine.__hmrId = "684965d8";
 
   return __vine;
 })();
