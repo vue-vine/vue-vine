@@ -1046,12 +1046,38 @@ const analyzeVineModel: AnalyzeRunner = (
 
   // Traverse all `vineModel` macro calls
   for (const { macroCall, parentVarDecl } of vineModelMacroCalls) {
-    if (!parentVarDecl || !isIdentifier(parentVarDecl.id)) {
+    if (!parentVarDecl) {
       continue
     }
 
-    const varName = parentVarDecl.id.name
+    // Extract varName and modifiersVarName from declaration
+    let varName: string | undefined
+    let modifiersVarName: string | undefined
+
+    // Support Identifier: `const value = vineModel()`
+    if (isIdentifier(parentVarDecl.id)) {
+      varName = parentVarDecl.id.name
+    }
+    // Support ArrayPattern: `const [value, modifiers] = vineModel()`
+    else if (isArrayPattern(parentVarDecl.id)) {
+      const elements = parentVarDecl.id.elements
+      const firstElement = elements[0]
+      const secondElement = elements[1]
+
+      if (firstElement && isIdentifier(firstElement)) {
+        varName = firstElement.name
+      }
+      if (secondElement && isIdentifier(secondElement)) {
+        modifiersVarName = secondElement.name
+      }
+    }
+
+    if (!varName) {
+      continue
+    }
+
     const typeParameter = macroCall.typeParameters?.params[0]
+    const modifiersTypeParameter = macroCall.typeParameters?.params[1]
 
     // If the macro call has no argument,
     // - its model name is 'modelValue' as default
@@ -1060,9 +1086,11 @@ const analyzeVineModel: AnalyzeRunner = (
     if (!macroCall.arguments.length) {
       vineCompFnCtx.vineModels.modelValue = {
         varName,
+        modifiersVarName,
         modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
         modelOptions: null,
         typeParameter,
+        modifiersTypeParameter,
       }
       continue
     }
@@ -1077,9 +1105,11 @@ const analyzeVineModel: AnalyzeRunner = (
         const modelName = macroCall.arguments[0].value
         vineCompFnCtx.vineModels[modelName] = {
           varName,
+          modifiersVarName,
           modelModifiersName: `${modelName}Modifiers`,
           modelOptions: null,
           typeParameter,
+          modifiersTypeParameter,
         }
       }
       // If this argument is a object literal,
@@ -1089,9 +1119,11 @@ const analyzeVineModel: AnalyzeRunner = (
       else {
         vineCompFnCtx.vineModels.modelValue = {
           varName,
+          modifiersVarName,
           modelModifiersName: DEFAULT_MODEL_MODIFIERS_NAME,
           modelOptions: macroCall.arguments[0],
           typeParameter,
+          modifiersTypeParameter,
         }
       }
     }
@@ -1103,8 +1135,11 @@ const analyzeVineModel: AnalyzeRunner = (
       const modelName = (macroCall.arguments[0] as StringLiteral).value
       vineCompFnCtx.vineModels[modelName] = {
         varName,
+        modifiersVarName,
         modelModifiersName: `${modelName}Modifiers`,
         modelOptions: macroCall.arguments[1],
+        typeParameter,
+        modifiersTypeParameter,
       }
     }
   }
@@ -1114,6 +1149,10 @@ const analyzeVineModel: AnalyzeRunner = (
     vineCompFnCtx.bindings[modelName] = VineBindingTypes.PROPS
     // If `varName` is equal to `modelName`, it would be overrided to `setup-ref`
     vineCompFnCtx.bindings[modelDef.varName] = VineBindingTypes.SETUP_REF
+    // If modifiersVarName is defined, add it as a setup-ref binding
+    if (modelDef.modifiersVarName) {
+      vineCompFnCtx.bindings[modelDef.modifiersVarName] = VineBindingTypes.SETUP_REF
+    }
   }
 }
 

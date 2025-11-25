@@ -121,6 +121,31 @@ describe('basic functionality', async () => {
     },
   ))
 
+  it('should work with vine model modifiers', runTestAtPage(
+    '/vine-model-modifiers',
+    browserCtx,
+    async () => {
+      // Test trim modifier
+      await browserCtx.page?.fill('.test-case:nth-child(2) .modifier-input', '  hello  ')
+      expect(await evaluator.getTextContent('.trim-result')).toBe('Value: "hello"')
+      expect(await evaluator.getTextContent('.test-case:nth-child(2) .has-trim')).toBe('.trim')
+
+      // Test uppercase modifier
+      await browserCtx.page?.fill('.test-case:nth-child(3) .modifier-input', 'hello')
+      expect(await evaluator.getTextContent('.uppercase-result')).toBe('Value: "HELLO"')
+      expect(await evaluator.getTextContent('.test-case:nth-child(3) .has-uppercase')).toBe('.uppercase')
+
+      // Test trim + uppercase modifiers
+      await browserCtx.page?.fill('.test-case:nth-child(4) .modifier-input', '  hello  ')
+      expect(await evaluator.getTextContent('.trim-uppercase-result')).toBe('Value: "HELLO"')
+
+      // Test named model with capitalize modifier
+      await browserCtx.page?.fill('.named-modifier-input', 'hello')
+      expect(await evaluator.getTextContent('.capitalize-result')).toBe('Value: "Hello"')
+      expect(await evaluator.getTextContent('.test-case:nth-child(5) .has-capitalize')).toBe('.capitalize')
+    },
+  ))
+
   it('should report console warning by validators', async () => {
     // Collect console warnings
     const consoleWarnings: string[] = []

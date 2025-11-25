@@ -11,6 +11,7 @@ const routes = [
   { path: '/vibe', label: 'Vibe' },
   { path: '/use-defaults', label: 'Use Defaults' },
   { path: '/vine-model', label: 'Vine Model' },
+  { path: '/vine-model-modifiers', label: 'Vine Model Modifiers' },
   { path: '/vine-emits', label: 'Vine Emits' },
   { path: '/vine-validators', label: 'Vine Validators' },
   { path: '/todo-list', label: 'Todo List' },

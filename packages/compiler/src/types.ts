@@ -287,7 +287,12 @@ export interface VineCompFnCtx {
   /** Store `vineModel` defines */
   vineModels: Record<string, {
     varName: string
+    /** User destructured modifiers variable name, e.g. `const [value, modifiers] = vineModel()` */
+    modifiersVarName?: string
+    /** First type parameter: model value type */
     typeParameter?: TSType
+    /** Second type parameter: modifiers type, e.g. 'trim' | 'capitalize' */
+    modifiersTypeParameter?: TSType
     modelModifiersName: string
     modelOptions: Node | null
   }>

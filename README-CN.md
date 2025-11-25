@@ -56,8 +56,8 @@
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-server](./packages/language-server) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-server)](https://www.npmjs.com/package/@vue-vine/language-server) | 语言服务器 |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/language-service](./packages/language-service) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/language-service)](https://www.npmjs.com/package/@vue-vine/language-service) | 语言服务集成 |
 | ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/vite-plugin](./packages/vite-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/vite-plugin)](https://www.npmjs.com/package/@vue-vine/vite-plugin) | Vite 插件 |
-| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader (🧪Beta) |
-| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild 插件 (🧪Beta) |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rspack-loader](./packages/rspack-loader) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rspack-loader)](https://www.npmjs.com/package/@vue-vine/rspack-loader) | Rspack Loader |
+| ![core](https://img.shields.io/badge/vue_vine-core-blue) | [@vue-vine/rsbuild-plugin](./packages/rsbuild-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/rsbuild-plugin)](https://www.npmjs.com/package/@vue-vine/rsbuild-plugin) | Rsbuild 插件 |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-parser](./packages/eslint-parser) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-parser)](https://www.npmjs.com/package/@vue-vine/eslint-parser) | ESLint 自定义解析器 |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-plugin](./packages/eslint-plugin) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-plugin)](https://www.npmjs.com/package/@vue-vine/eslint-plugin) | ESLint 插件 |
 | ![eslint](https://img.shields.io/badge/vue_vine-eslint-gold) | [@vue-vine/eslint-config](./packages/eslint-config) | [![NPM Version](https://img.shields.io/npm/v/@vue-vine/eslint-config)](https://www.npmjs.com/package/@vue-vine/eslint-config) | ESLint 配置 |
@@ -87,7 +87,7 @@ export default defineConfig({
 })
 ```
 
-### 使用 Rsbuild 插件（Beta 🧪）
+### 使用 Rsbuild 插件
 
 在 `rsbuild.config.ts` 中使用插件：
 
