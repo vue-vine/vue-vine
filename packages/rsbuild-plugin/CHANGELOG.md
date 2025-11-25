@@ -1,5 +1,14 @@
 # @vue-vine/rsbuild-plugin
 
+## 1.7.24
+
+### Patch Changes
+
+- Support vineModel destructure as array pattern and get modifiers.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.24
+  - @vue-vine/rspack-loader@1.7.24
+
 ## 1.7.23
 
 ### Patch Changes

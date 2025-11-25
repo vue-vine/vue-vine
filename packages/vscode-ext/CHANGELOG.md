@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.24
+
+### Patch Changes
+
+- Support vineModel destructure as array pattern and get modifiers.
+
 ## 1.7.23
 
 ### Patch Changes
