@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.25
+
+### Patch Changes
+
+- Add lint rule for recommending event names to be camelCase.
+
 ## 1.7.24
 
 ### Patch Changes

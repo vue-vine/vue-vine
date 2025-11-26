@@ -1,5 +1,14 @@
 # @vue-vine/rsbuild-plugin
 
+## 1.7.25
+
+### Patch Changes
+
+- Add lint rule for recommending event names to be camelCase.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.25
+  - @vue-vine/rspack-loader@1.7.25
+
 ## 1.7.24
 
 ### Patch Changes

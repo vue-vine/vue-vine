@@ -1,5 +1,13 @@
 # @vue-vine/nuxt
 
+## 1.7.25
+
+### Patch Changes
+
+- Add lint rule for recommending event names to be camelCase.
+- Updated dependencies
+  - vue-vine@1.7.25
+
 ## 1.7.24
 
 ### Patch Changes

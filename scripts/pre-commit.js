@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 
-const commitRE = /^[a-z]+:\s*.{1,100}$/i
+const commitRE = /^[a-z]+(?:\([a-z]+\))?:\s*.{1,100}$/i
 
 const msgPath = join(import.meta.dirname, '..', '.git', 'COMMIT_EDITMSG')
 
