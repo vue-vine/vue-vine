@@ -145,24 +145,8 @@ export function generateEmitProps(
   vineCompFn: VineCompFn,
   tabNum = 2,
 ): string {
-  const { emitsTypeParam } = vineCompFn
-  const emitsOptionalKeys = (emitsTypeParam?.members?.map(
-    member => (
-      member.type === 'TSPropertySignature'
-      && member.key
-      && isIdentifier(member.key)
-      && member.optional
-        ? member.key.name
-        : null
-    ),
-  ).filter(Boolean) ?? []) as string[]
-
   const emitParam = `{${vineCompFn.emits.map((emit) => {
     const onEmit = convertEmitToOnHandler(emit)
-    const isOptional = (
-      vineCompFn.emitsDefinitionByNames
-      || (emitsOptionalKeys.length && emitsOptionalKeys.includes(emit))
-    )
 
     // Check if the property name needs quotes in object literal
     const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
@@ -172,8 +156,7 @@ export function generateEmitProps(
       vineCompFn.emitsTypeParam
         ? createLinkedCodeTag('left', onEmit.length)
         : ''
-    }${quotedPropName}${isOptional ? '?' : ''
-    }: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
+    }${quotedPropName}?: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
   }).filter(Boolean).join(', ')
   }\n}`
 
