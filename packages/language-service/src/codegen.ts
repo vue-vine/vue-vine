@@ -119,7 +119,7 @@ export function generateScriptUntil(ctx: CodegenCtx, targetOffset: number): void
   currentOffset.value = targetOffset
 }
 
-export function generateContextSlots(
+function generateContextSlots(
   ctx: CodegenCtx,
   vineCompFn: VineCompFn,
   tabNum = 2,
@@ -141,47 +141,31 @@ export function generateContextSlots(
   return slotsParam
 }
 
-export function generateEmitProps(
-  vineCompFn: VineCompFn,
-  tabNum = 2,
-): string {
-  const emitParam = `{${vineCompFn.emits.map((emit) => {
-    const onEmit = convertEmitToOnHandler(emit)
+function generateEmitProps(vineCompFn: VineCompFn): string {
+  const indent = ' '.repeat(4)
+  const emitParam = `{${
+    vineCompFn.emits.map(
+      (emit) => {
+        const onEmit = convertEmitToOnHandler(emit)
 
-    // Check if the property name needs quotes in object literal
-    const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
+        // Check if the property name needs quotes in object literal
+        const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
+        const leftLinkCodeTag = vineCompFn.emitsTypeParam
+          ? createLinkedCodeTag('left', onEmit.length)
+          : ''
 
-    return `\n${' '.repeat(tabNum + 2)}${
-      // '/* left linkCodeTag here ... */'
-      vineCompFn.emitsTypeParam
-        ? createLinkedCodeTag('left', onEmit.length)
-        : ''
-    }${quotedPropName}?: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
-  }).filter(Boolean).join(', ')
-  }\n}`
+        return `${indent}${leftLinkCodeTag}${quotedPropName}?: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
+      },
+    ).join(', ')
+  }\n${
+    // Model names need to have 'update:modelName' format event.
+    // default as 'update:modelValue'
+    Object.keys(vineCompFn.vineModels).map((modelName) => {
+      return `${indent}'onUpdate:${modelName}'?: __VLS_VINE_${vineCompFn.fnName}_emits__['update:${modelName}']\n`
+    }).join(', ')
+  }}`
 
   return emitParam
-}
-
-export function generateModelProps(
-  ctx: CodegenCtx,
-  vineCompFn: VineCompFn,
-  tabNum = 2,
-): string {
-  const { vineFileCtx } = ctx
-  const indent = ' '.repeat(tabNum + 2)
-  const modelProps = `{${Object.entries(vineCompFn.vineModels).map(([modelName, model]) => {
-    const { typeParameter, modifiersTypeParameter, modelModifiersName } = model
-    const modelType = typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'
-    // Use specific modifier type if provided, otherwise fallback to generic string
-    const modifiersKeyType = modifiersTypeParameter
-      ? vineFileCtx.getAstNodeContent(modifiersTypeParameter)
-      : 'string'
-    // Generate both model value prop and modifiers prop
-    return `\n${indent}${modelName}?: ${modelType},\n${indent}${modelModifiersName}?: Partial<Record<${modifiersKeyType}, true | undefined>>`
-  }).join(', ')
-  }\n}`
-  return modelProps
 }
 
 export function generatePrefixVirtualCode(
@@ -289,14 +273,14 @@ export function generatePropsType(
   }
 
   const generatedEmitProps = generateEmitProps(vineCompFn)
-  const generatedModelProps = generateModelProps(ctx, vineCompFn)
-  const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedEmitProps) ? '' : ` & ${generatedEmitProps}`
-  const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedModelProps) ? '' : ` & ${generatedModelProps}`
+  const generatedModelProps = `__VLS_VINE_${vineCompFn.fnName}_models__`
+  const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedEmitProps) ? '' : generatedEmitProps
+  const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedModelProps) ? '' : generatedModelProps
   return `${[
     propTypeBase,
     emitProps,
     modelProps,
-  ].filter(Boolean).join(' ')},`
+  ].filter(Boolean).join(' & ')},`
 }
 
 export function generateComponentPropsAndContext(
@@ -311,12 +295,59 @@ export function generateComponentPropsAndContext(
       isNeedJsDoc: true,
     })}\n`)
   }
-  if (vineCompFn.emits.length > 0) {
-    tsCodeSegments.push(`\ntype __VLS_VINE_${vineCompFn.fnName}_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<${
-      vineCompFn.emitsTypeParam
-        ? vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
-        : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
-    }>>;\n`)
+  if (Object.keys(vineCompFn.vineModels).length > 0) {
+    tsCodeSegments.push(`\ntype __VLS_VINE_${vineCompFn.fnName}_models__ = {`)
+    const indent = ' '.repeat(4)
+    for (const [modelName, model] of Object.entries(vineCompFn.vineModels)) {
+      const { modelNameAstNode } = model
+      const { typeParameter, modifiersTypeParameter, modelModifiersName } = model
+      const modelType = typeParameter ? vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'
+      // Use specific modifier type if providemodifiersVarNamed, otherwise fallback to generic string
+      const modifiersKeyType = modifiersTypeParameter
+        ? vineFileCtx.getAstNodeContent(modifiersTypeParameter)
+        : 'string'
+
+      if (modelNameAstNode) {
+        tsCodeSegments.push(`\n${indent}`)
+        tsCodeSegments.push([`'${modelName}'`, undefined, modelNameAstNode.start!, FULL_FEATURES])
+        tsCodeSegments.push(`?: ${modelType},`)
+      }
+      else {
+        tsCodeSegments.push(`\n${indent}'${modelName}'?: ${modelType},`)
+      }
+      tsCodeSegments.push(`\n${indent}'${modelModifiersName}'?: Partial<Record<${modifiersKeyType}, true | undefined>>`)
+    }
+    tsCodeSegments.push(`\n};`)
+  }
+
+  const isNeedEmitsHelperType = (
+    vineCompFn.emits.length > 0
+    || Object.keys(vineCompFn.vineModels).length > 0
+  )
+  if (isNeedEmitsHelperType) {
+    tsCodeSegments.push(`\ntype __VLS_VINE_${vineCompFn.fnName}_emits__ = `)
+    const segements: string[] = []
+
+    // From vineEmits
+    if (vineCompFn.emits.length > 0) {
+      segements.push(`__VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<${
+        vineCompFn.emitsTypeParam
+          ? vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+          : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
+      }>>`)
+    }
+
+    // From vineModels
+    if (Object.keys(vineCompFn.vineModels).length > 0) {
+      segements.push(`{${
+        Object.entries(vineCompFn.vineModels).map(
+          ([modelName, model]) => `'update:${modelName}': [${model.typeParameter ? vineFileCtx.getAstNodeContent(model.typeParameter) : 'unknown'}]`,
+        ).join(', ')
+      } }`)
+    }
+
+    tsCodeSegments.push(`${segements.join(' & ')}`)
+    tsCodeSegments.push(';\n')
   }
 
   // For custom element, we need to convert to the function declaration
