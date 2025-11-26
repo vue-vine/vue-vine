@@ -1,9 +1,13 @@
 import type { SourceLocation as BabelSourceLocation, ExportNamedDeclaration, ImportDeclaration, Node } from '@babel/types'
-import type { AttributeNode, CodegenResult, CompilerOptions, NodeTransform, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { BaseCodegenResult, CompilerOptions, RootNode, SimpleExpressionNode } from '@vue/compiler-core'
+import type { AttributeNode, NodeTransform, CodegenResult as VDOMCodegenResult, SourceLocation as VueSourceLocation } from '@vue/compiler-dom'
+import type { VaporCodegenResult } from '@vue/compiler-vapor'
 import type { VineCompFnCtx, VineCompilerHooks, VineCompilerOptions, VineFileCtx } from '../types'
+import type { ImportItem } from './transform-asset-url'
 import { isExportNamedDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isImportDefaultSpecifier, isImportSpecifier } from '@babel/types'
-import { compile, ElementTypes, NodeTypes, parse } from '@vue/compiler-dom'
-import { compile as ssrCompile } from '@vue/compiler-ssr'
+import { compile as compileVDOM, ElementTypes, NodeTypes, parse as vdomParse } from '@vue/compiler-dom'
+import { compile as compileSSR } from '@vue/compiler-ssr'
+import { compile as compileVapor, parse as vaporParse } from '@vue/compiler-vapor'
 import { NOOP } from '@vue/shared'
 import lineColumn from 'line-column'
 import { babelParse } from '../babel-helpers/parse'
@@ -12,12 +16,42 @@ import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
 import { transformBooleanProp } from './transform-negative-bool'
+import { transformSrcset } from './transform-srcset'
 import { walkVueTemplateAst } from './walk'
 
-const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[^>/]+)$/
+const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[a-z][^>/]*)$/i
+const basicCompilerOptions = {
+  mode: 'module',
+  hoistStatic: true,
+  cacheHandlers: true,
+  prefixIdentifiers: true,
+  inline: true,
+} as const
 
 function toPascalCase(str: string) {
   return str.replace(/(?:^|-)(\w)/g, (_, c) => c.toUpperCase())
+}
+
+function getTemplateParsedAst(
+  vineCompFnCtx: VineCompFnCtx,
+  getParsedAst: boolean,
+) {
+  if (!getParsedAst) {
+    return
+  }
+
+  const _parse = vineCompFnCtx.isVapor
+    ? vaporParse
+    : vdomParse
+
+  return {
+    templateParsedAst: _parse(vineCompFnCtx.templateSource, {
+      parseMode: 'base',
+      prefixIdentifiers: true,
+      expressionPlugins: ['typescript'],
+      onError: NOOP, // Error tolerance for template parsing
+    }),
+  }
 }
 
 function getTransformNegativeBoolPlugin(
@@ -36,14 +70,111 @@ function getTransformNegativeBoolPlugin(
   ]
 }
 
-function getTransformBareAttrAsBoolPlugin(
+function getTransformAssetsUrlPlugin(
   enableTransformAssetsURL: Required<VineCompilerOptions>['vueCompilerOptions']['__enableTransformAssetsURL'],
 ): NodeTransform[] {
   return (
     enableTransformAssetsURL
-      ? [transformAssetUrl]
+      ? [transformAssetUrl, transformSrcset]
       : []
   )
+}
+
+type TemplateCompileFn = (
+  src: string | RootNode,
+  options?: CompilerOptions,
+) => BaseCodegenResult
+type VineCompileResult
+  = (VaporCodegenResult | VDOMCodegenResult)
+    & { templateParsedAst?: RootNode }
+    & { imports?: ImportItem[] }
+
+export function compileVineTemplate(
+  vineCompFnCtx: VineCompFnCtx,
+  compilerHooks: VineCompilerHooks,
+  params: Partial<CompilerOptions>,
+  { ssr, getParsedAst = false }: {
+    ssr: boolean
+    getParsedAst?: boolean
+  },
+): (
+  BaseCodegenResult
+  & { templateParsedAst?: RootNode }
+  & { imports?: ImportItem[] }
+) | null {
+  const { volar = false } = compilerHooks.getCompilerCtx()?.options ?? {}
+  const {
+    __enableTransformAssetsURL = true,
+    __enableTransformBareAttrAsBool = { transformNegativeBool: true },
+  } = compilerHooks.getCompilerCtx()
+    ?.options
+    ?.vueCompilerOptions ?? {}
+
+  try {
+    // vue/language-tools / #4583:
+    if (volar && SHOULD_ADD_SUFFIX_REGEXP.test(vineCompFnCtx.templateSource)) {
+      vineCompFnCtx.templateSource += '>'
+    }
+
+    const nodeTransforms = [
+      ...getTransformAssetsUrlPlugin(__enableTransformAssetsURL),
+      ...getTransformNegativeBoolPlugin(__enableTransformBareAttrAsBool),
+    ]
+
+    const compile = (
+      ssr
+        ? (compileSSR as TemplateCompileFn)
+        : vineCompFnCtx.isVapor && !volar
+          ? (compileVapor as TemplateCompileFn)
+          : compileVDOM
+    )
+
+    try {
+      const compileOptions = {
+        ...basicCompilerOptions,
+        ...params,
+        nodeTransforms: nodeTransforms.concat(
+          params.nodeTransforms ?? [],
+        ),
+      }
+
+      const codegenResult = compile(
+        vineCompFnCtx.templateSource,
+        compileOptions,
+      )
+      const templateParsedAst = getTemplateParsedAst(
+        vineCompFnCtx,
+        getParsedAst,
+      )
+      const imports = vineCompFnCtx.isVapor && !volar
+        ? ((codegenResult as VaporCodegenResult).ast).node.imports
+        : (codegenResult as VDOMCodegenResult).ast.imports
+
+      const result = {
+        ...codegenResult,
+        imports,
+        ...templateParsedAst,
+      }
+      setVineTemplateAst(vineCompFnCtx, result)
+
+      return result
+    }
+    catch (error) {
+      compilerHooks.onError(
+        vineErr(
+          {
+            vineCompFnCtx,
+            vineFileCtx: vineCompFnCtx.fileCtx,
+          },
+          { msg: (error as Error).stack ?? String(error) },
+        ),
+      )
+      return null
+    }
+  }
+  catch {
+    return null
+  }
 }
 
 interface DefaultImportSpecifierMeta { type: 'defaultSpecifier', localName: string }
@@ -187,7 +318,16 @@ function setVineTemplateAst(
   vineCompFnCtx: VineCompFnCtx,
   compileResult: ReturnType<typeof compileVineTemplate>,
 ) {
-  const { ast, templateParsedAst } = compileResult!
+  const vineCompileResult = compileResult! as VineCompileResult
+  const { templateParsedAst } = vineCompileResult!
+  let ast = vineCompileResult!.ast
+
+  // Vapor mode's `ast` is `RootIRNode`
+  // but we need `RootNode`
+  if ('node' in ast) {
+    ast = ast.node
+  }
+
   vineCompFnCtx.templateAst = ast
   vineCompFnCtx.templateParsedAst = templateParsedAst
 
@@ -273,73 +413,6 @@ export function createTemplateCompileOptions(
   }
 }
 
-export function compileVineTemplate(
-  vineCompFnCtx: VineCompFnCtx,
-  compilerHooks: VineCompilerHooks,
-  params: Partial<CompilerOptions>,
-  { ssr, getParsedAst = false }: {
-    ssr: boolean
-    getParsedAst?: boolean
-  },
-): (
-  CodegenResult
-  & { templateParsedAst?: ReturnType<typeof parse> }
-) | null {
-  const _compile = ssr ? ssrCompile : compile
-  const {
-    __enableTransformAssetsURL = true,
-    __enableTransformBareAttrAsBool = { transformNegativeBool: true },
-    __shouldAddTemplateSuffix,
-  } = compilerHooks.getCompilerCtx()
-    ?.options
-    ?.vueCompilerOptions ?? {}
-
-  try {
-    // vue/language-tools / #4583:
-    if (
-      __shouldAddTemplateSuffix
-      && SHOULD_ADD_SUFFIX_REGEXP.test(vineCompFnCtx.templateSource)
-    ) {
-      vineCompFnCtx.templateSource += '>'
-    }
-
-    const compileResult = {
-      ..._compile(vineCompFnCtx.templateSource, {
-        mode: 'module',
-        hoistStatic: true,
-        cacheHandlers: true,
-        prefixIdentifiers: true,
-        inline: true,
-        nodeTransforms: [
-          ...getTransformBareAttrAsBoolPlugin(__enableTransformAssetsURL),
-          ...getTransformNegativeBoolPlugin(__enableTransformBareAttrAsBool),
-        ],
-        ...params,
-      }),
-      templateParsedAst: (
-        getParsedAst
-          ? parse(vineCompFnCtx.templateSource, {
-              onError: NOOP, // Error tolerance for template parsing
-              parseMode: 'base',
-              prefixIdentifiers: true,
-              expressionPlugins: [
-                'typescript',
-              ],
-            })
-          : (void 0)
-      ),
-    }
-
-    // Store the template AST
-    setVineTemplateAst(vineCompFnCtx, compileResult)
-
-    return compileResult
-  }
-  catch {
-    return null
-  }
-}
-
 export function createSeparatedTemplateComposer(
   compilerHooks: VineCompilerHooks,
   ssr: boolean,
@@ -380,7 +453,17 @@ export function createSeparatedTemplateComposer(
         return ''
       }
 
-      const { code } = compileResult
+      const { code, imports } = compileResult
+
+      if (vineCompFnCtx.isVapor && imports) {
+        for (const assetImport of imports) {
+          mergedImportsMap.set(assetImport.path, {
+            type: 'defaultSpecifier',
+            localName: (assetImport.exp as SimpleExpressionNode).content,
+          })
+        }
+      }
+
       const generatedCodeAst = babelParse(code)
 
       // Find all import statements and store specifiers

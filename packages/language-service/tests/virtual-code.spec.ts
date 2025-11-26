@@ -37,4 +37,7 @@ describe('verify Volar virtual code snapshots', () => {
   it('custom-elements.vine.ts', () => {
     testSnapshotForFile('../../e2e-vite/src/fixtures/custom-elements.vine.ts')
   })
+  it('vapor-interop.vine.ts', () => {
+    testSnapshotForFile('../../e2e-vite/src/fixtures/vapor-interop.vine.ts')
+  })
 })

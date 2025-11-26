@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import process from 'node:process'
 import { log } from '@baiwusanyu/utils-log'
 
-const commitRE = /^[a-z]+:\s*.{1,100}$/i
+const commitRE = /^[a-z]+(?:\([a-z]+\))?:\s*.{1,100}$/i
 
 const msgPath = join(import.meta.dirname, '..', '.git', 'COMMIT_EDITMSG')
 
@@ -19,15 +19,16 @@ async function runCommitMsgHook() {
     log('error', `
 Error: Commit message format does not meet the requirements.
 
-Please follow the format: <word>: <message>
+Please follow the format: <word>(<scope>)?: <message>
   - <word>: one English word (letters only)
+  - (<scope>): optional scope in parentheses (one English word)
   - colon followed by optional space
   - <message>: any characters, up to 100 characters
 
 Examples:
   feat: add new feature
-  fix: resolve issue
-  docs: update documentation
+  fix(compiler): resolve issue
+  docs(readme): update documentation
 `)
     process.exit(1)
   }
