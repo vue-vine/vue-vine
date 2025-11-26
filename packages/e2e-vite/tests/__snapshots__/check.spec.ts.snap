@@ -23,13 +23,9 @@ exports[`vue-vine-tsc typecheck result > should find type errors in key-cases.vi
 > check-types
 > vue-vine-tsc --noEmit
 
-src/fixtures/import-external.vine.ts(6,8): error TS2345: Argument of type '{ zee: string; foo: number; }' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
-  Property ''onClick:comp-one'' is missing in type '{ zee: string; foo: number; }' but required in type '{ 'onClick:comp-one': (args_0: boolean) => void; }'.
 src/fixtures/key-cases.vine.ts(34,24): error TS1117: An object literal cannot have multiple properties with the same name.
 src/fixtures/key-cases.vine.ts(108,6): error TS2339: Property 'UnknownComp' does not exist on type '{}'.
 src/fixtures/key-cases.vine.ts(111,6): error TS2345: Argument of type '{}' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
   Property 'zee' is missing in type '{}' but required in type '__VLS_VINE_TestCompOne_props__'.
-src/fixtures/key-cases.vine.ts(138,6): error TS2345: Argument of type '{ zee: string; foo: number; 'onClick:compOne': any; }' is not assignable to parameter of type 'HTMLAttributes & { key?: PropertyKey | undefined; ref?: string | Ref<any, any> | ((ref: Element | ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, ... 6 more ..., any> | null, refs: Record<...>) => void) | undefined; } & __VLS_VINE_TestCompOne_props__ & { ...; }'.
-  Property ''onClick:comp-one'' is missing in type '{ zee: string; foo: number; 'onClick:compOne': any; }' but required in type '{ 'onClick:comp-one': (args_0: boolean) => void; }'.
 "
 `;

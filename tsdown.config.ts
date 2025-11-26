@@ -24,5 +24,21 @@ const buildConfig: UserConfig = defineConfig({
       conditionNames: ['vine'],
     },
   },
+  outExtensions: () => {
+    return {
+      js: '.js',
+      dts: '.d.ts',
+    }
+  },
+  outputOptions: {
+    format: 'esm',
+    banner: `
+/**
+  * Vue Vine - Another style of writing Vue components
+  * @License MIT
+  * @Author ShenQingchuan
+  */\n\n
+    `.trim(),
+  },
 })
 export default buildConfig

@@ -1,4 +1,4 @@
-import type { Options, UserConfig } from 'tsdown'
+import type { UserConfig } from 'tsdown'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
@@ -6,7 +6,7 @@ import { defineConfig } from 'tsdown'
 const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'
 
-const plugins: Options['plugins'] = [
+const plugins: UserConfig['plugins'] = [
   {
     name: 'umd2esm',
     resolveId: {
@@ -50,8 +50,7 @@ const plugins: Options['plugins'] = [
   },
 ]
 
-const sharedConfig: Partial<Options> = {
-  format: 'cjs',
+const sharedConfig: Partial<UserConfig> = {
   external: ['vscode'],
   minify: !isDev,
   sourcemap: isDev,
@@ -64,10 +63,13 @@ const sharedConfig: Partial<Options> = {
       conditionNames: ['vine', 'import'],
     },
   },
+  outputOptions: {
+    format: 'cjs',
+  },
   dts: false,
 }
 
-const tsdownConfig: UserConfig = defineConfig(
+const tsdownConfig: UserConfig[] = defineConfig(
   [
     {
       entry: {

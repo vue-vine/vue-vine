@@ -23,7 +23,7 @@ export interface AssetURLOptions {
   tags?: AssetURLTagConfig
 }
 
-export const assetUrlOptions: Required<AssetURLOptions> = {
+export const defaultAssetUrlOptions: Required<AssetURLOptions> = {
   base: null,
   includeAbsolute: false,
   tags: {
@@ -52,7 +52,7 @@ export const transformAssetUrl: NodeTransform = (
     ? (context as unknown as VaporTransformContext).options.bindingMetadata
     : context.bindingMetadata
 
-  const tags = assetUrlOptions.tags
+  const tags = defaultAssetUrlOptions.tags
   const attrs = tags[node.tag]
   const wildCardAttrs = tags['*']
   if (!attrs && !wildCardAttrs) {

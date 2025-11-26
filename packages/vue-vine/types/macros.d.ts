@@ -70,11 +70,11 @@ declare global {
 
   function vineModel<T, M extends string = string>(): VineModelReturn<T, M>
   function vineModel<T, M extends string = string>(
-    modelOptions: VineModelOptions<T>
+    modelOptions: VineModelOptions<T>,
   ): VineModelReturn<T, M>
   function vineModel<T, M extends string = string>(
     modelName: string,
-    modelOptions?: VineModelOptions<T>
+    modelOptions?: VineModelOptions<T>,
   ): VineModelReturn<T, M>
 
   function vineCustomElement(): void

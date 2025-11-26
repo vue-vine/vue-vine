@@ -126,7 +126,7 @@ export class VineTemplateParser {
 
   private templatePos: VineTemplatePositionInfo
   private postProcessForScript: ((
-    parserOptions: VineESLintParserOptions
+    parserOptions: VineESLintParserOptions,
   ) => void)[] = []
 
   private offsetFixedTokenSet: WeakSet<Location>

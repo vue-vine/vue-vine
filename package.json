@@ -2,7 +2,7 @@
   "name": "vue-vine-workspace",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.23.0",
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -76,6 +76,6 @@
     "pre-commit": "pnpm install && pnpm run verify && pnpm tsx scripts/pre-commit.js"
   },
   "lint-staged": {
-    "*": "eslint . --fix --cache"
+    "!(key-cases.vine.ts)": "eslint . --fix --cache"
   }
 }

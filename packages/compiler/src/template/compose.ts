@@ -82,7 +82,7 @@ function getTransformAssetsUrlPlugin(
 
 type TemplateCompileFn = (
   src: string | RootNode,
-  options?: CompilerOptions
+  options?: CompilerOptions,
 ) => BaseCodegenResult
 type VineCompileResult
   = (VaporCodegenResult | VDOMCodegenResult)
@@ -146,8 +146,8 @@ export function compileVineTemplate(
         vineCompFnCtx,
         getParsedAst,
       )
-      const imports = vineCompFnCtx.isVapor
-        ? ((codegenResult as VaporCodegenResult).ast).imports
+      const imports = vineCompFnCtx.isVapor && !volar
+        ? ((codegenResult as VaporCodegenResult).ast).node.imports
         : (codegenResult as VDOMCodegenResult).ast.imports
 
       const result = {

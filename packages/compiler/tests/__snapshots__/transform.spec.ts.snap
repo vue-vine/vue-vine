@@ -1522,14 +1522,12 @@ export const About = (() => {
       return (_ctx, _cache) => {
         return (
           _openBlock(),
-          _createElementBlock(
-            "div",
-            null,
-            _cache[0] ||
+          _createElementBlock("div", null, [
+            ...(_cache[0] ||
               (_cache[0] = [
                 _createElementVNode("h2", null, "About page", -1 /* CACHED */),
-              ]),
-          )
+              ])),
+          ])
         );
       };
     },
@@ -1876,15 +1874,17 @@ export const TestComponent = (() => {
           _createElementBlock(
             "div",
             _normalizeProps(_guardReactiveProps(_ctx.$props)),
-            _cache[0] ||
-              (_cache[0] = [
-                _createElementVNode(
-                  "h1",
-                  null,
-                  "Test Component",
-                  -1 /* CACHED */,
-                ),
-              ]),
+            [
+              ...(_cache[0] ||
+                (_cache[0] = [
+                  _createElementVNode(
+                    "h1",
+                    null,
+                    "Test Component",
+                    -1 /* CACHED */,
+                  ),
+                ])),
+            ],
             16 /* FULL_PROPS */,
           )
         );
@@ -2005,9 +2005,9 @@ typeof __VUE_HMR_RUNTIME__ !== "undefined" &&
 `;
 
 exports[`test transform > should transform asset url src & srcset 1`] = `
-"import _imports_104caf2d from "@/vapor-assets/test@2x.png";
+"import _imports_1 from "@/vapor-assets/test@2x.png";
 import _imports_01fb0ae2 from "@/vapor-assets/test.png";
-import _imports_656d5320 from "@/assets/sample@2x.png";
+import _imports_1 from "@/assets/sample@2x.png";
 import _imports_bb0c5ba8 from "@/assets/sample.png";
 import {
   defineComponent as _defineComponent,
@@ -2022,7 +2022,7 @@ import {
 } from "vue";
 
 export const MyComp = (() => {
-  const _hoisted_1 = _imports_bb0c5ba8 + " 1x, " + _imports_656d5320 + " 2x";
+  const _hoisted_1 = _imports_0 + " 1x, " + _imports_1 + " 2x";
   const __vine = _defineComponent({
     name: "MyComp",
     /* No props */
@@ -2074,10 +2074,17 @@ export const MyComp = (() => {
 
 export const MyVaporCompOne = (() => {
   const t0 = _template(
-    \`<img data-v-19977118 src="\${_imports_01fb0ae2}" alt="vapor-sample-src">\`,
+    '<img data-v-19977118 src="' +
+      _imports_01fb0ae2 +
+      '" alt="vapor-sample-src">',
   );
   const t1 = _template(
-    \`<img data-v-19977118 srcset="\${_imports_01fb0ae2 + " 1x, " + _imports_104caf2d + " 2x"}" alt="vapor-sample-srcset">\`,
+    '<img data-v-19977118 srcset="' +
+      _imports_0 +
+      " 1x, " +
+      _imports_1 +
+      " 2x" +
+      '" alt="vapor-sample-srcset">',
   );
   const __vine = _defineVaporComponent({
     name: "MyVaporCompOne",
@@ -2101,7 +2108,7 @@ export const MyVaporCompOne = (() => {
 
 export const MyVaporCompTwo = (() => {
   const t0 = _template(
-    \`<div data-v-1997494c>This is another vapor component</div>\`,
+    "<div data-v-1997494c>This is another vapor component</div>",
     true,
   );
   const __vine = _defineVaporComponent({

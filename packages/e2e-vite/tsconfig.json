@@ -5,6 +5,7 @@
     "jsxImportSource": "vue",
     "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
+    "customConditions": ["vine"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {

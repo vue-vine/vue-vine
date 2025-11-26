@@ -463,7 +463,6 @@ __VLS_asFunctionalElement(__VLS_elements.span, __VLS_elements.span)({
 ( __VLS_ctx.count );
 // @ts-ignore
 [count,];
-/** @type {__VLS_StyleScopedClasses['btn']} */;
 type __VLS_Slots = {};
 type __VLS_InheritedAttrs = {};
 type __VLS_TemplateRefs = {};
@@ -634,7 +633,7 @@ type __VLS_VINE_TestCompOne_props__ = {
 }
 
 type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<{
-    'click:comp-one': [boolean]
+    clickTest?: [boolean]
   }>>;
 
 
@@ -643,7 +642,7 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineE
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#16 */'onClick:comp-one': __VLS_VINE_TestCompOne_emits__['click:comp-one']
+    /* __LINKED_CODE_LEFT__#11 */onClickTest?: __VLS_VINE_TestCompOne_emits__['clickTest']
 },
 context: {}) {
   
@@ -654,7 +653,7 @@ type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
   const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
 
   const emits = vineEmits<{
-    'click:comp-one': [boolean]
+    /* __LINKED_CODE_RIGHT__#9 */clickTest?: [boolean]
   }>()
 
   
@@ -697,7 +696,7 @@ type __VLS_VINE_StyleScopedClasses = {};
 let __VLS_elements!: __VLS_IntrinsicElements;
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
 ...{ onClick: (...[$event]) => {
-__VLS_ctx.emits('click:comp-one', true);
+__VLS_ctx.emits('clickTest', true);
 // @ts-ignore
 [emits,];
 }},
