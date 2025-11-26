@@ -1,5 +1,13 @@
 # @vue-vine/eslint-config
 
+## 1.1.12
+
+### Patch Changes
+
+- Add lint rule for recommending event names to be camelCase.
+- Updated dependencies
+  - @vue-vine/eslint-plugin@1.1.12
+
 ## 1.1.11
 
 ### Patch Changes

@@ -29,6 +29,7 @@ function vueVineESLintConfigFactory(): Linter.Config[] {
         'vue-vine/format-vine-expose-at-tail': 'error',
         'vue-vine/format-vine-style-indent': ['warn', { indent: 2 }],
         'vue-vine/format-vine-template': 'warn',
+        'vue-vine/format-vine-emits-camel-case': 'warn',
         'vue-vine/format-html-self-closing': ['error', {
           html: {
             void: 'always',

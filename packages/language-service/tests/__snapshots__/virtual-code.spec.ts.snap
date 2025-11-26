@@ -633,7 +633,7 @@ type __VLS_VINE_TestCompOne_props__ = {
 }
 
 type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<{
-    clickTest?: [boolean]
+    clickTest: [boolean]
   }>>;
 
 
@@ -653,7 +653,7 @@ type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
   const /* __LINKED_CODE_RIGHT__#3 */foo = vineProp.withDefault(0)
 
   const emits = vineEmits<{
-    /* __LINKED_CODE_RIGHT__#9 */clickTest?: [boolean]
+    /* __LINKED_CODE_RIGHT__#9 */clickTest: [boolean]
   }>()
 
   
@@ -889,20 +889,20 @@ const __VLS_0 = ({} as __VLS_WithComponent<'TestCompOne', __VLS_LocalComponents,
 TestCompOne;
 // @ts-ignore
 const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({
-...{ 'onClick:compOne': {} as any },
+...{ 'onClickTest': {} as any },
 zee: "123",
 foo: (456),
 }));
 const __VLS_2 = __VLS_1({
-...{ 'onClick:compOne': {} as any },
+...{ 'onClickTest': {} as any },
 zee: "123",
 foo: (456),
 }, ...__VLS_functionalComponentArgsRest(__VLS_1));
 let __VLS_4!: __VLS_ResolveEmits<typeof __VLS_0, typeof __VLS_3.emit>;
 let __VLS_5!: __VLS_FunctionalComponentProps<typeof __VLS_1, typeof __VLS_2>;
-const __VLS_6: __VLS_NormalizeComponentEvent<typeof __VLS_5, typeof __VLS_4, 'onClick:compOne', 'click:comp-one', 'click:compOne'> = (
-{ 'click:compOne': {} as any } as typeof __VLS_4,
-{ 'onClick:compOne': (__VLS_ctx.onClickCompOne)});
+const __VLS_6: __VLS_NormalizeComponentEvent<typeof __VLS_5, typeof __VLS_4, 'onClickTest', 'clickTest', 'clickTest'> = (
+{ clickTest: {} as any } as typeof __VLS_4,
+{ onClickTest: (__VLS_ctx.onClickCompOne)});
 // @ts-ignore
 [onClickCompOne,];
 var __VLS_3!: __VLS_FunctionalComponentCtx<typeof __VLS_0, typeof __VLS_2>;

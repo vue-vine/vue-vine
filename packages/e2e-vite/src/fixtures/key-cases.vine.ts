@@ -91,7 +91,7 @@ export function TestCompOne() {
   const foo = vineProp.withDefault(0)
 
   const emits = vineEmits<{
-    clickTest?: [boolean]
+    clickTest: [boolean]
   }>()
 
   return vine`
@@ -135,7 +135,7 @@ function TargetComp(props: {
   return vine`
     <div @click="count++">Hello I'm target</div>
     <p>count: {{ count }}</p>
-    <TestCompOne zee="123" :foo="456" @click:comp-one="onClickCompOne" />
+    <TestCompOne zee="123" :foo="456" @clickTest="onClickCompOne" />
   `
 }
 

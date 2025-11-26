@@ -5,6 +5,7 @@ import type { Options as noDupeElseIfOptions } from './rules/essentials/no-dupe-
 import type { Options as formatHtmlSelfClosingOptions } from './rules/format/format-html-self-closing'
 import type { Options as preferTemplateOptions } from './rules/format/format-prefer-template'
 import type { Options as vineComponentNameFormatOptions } from './rules/format/format-vine-component-name'
+import type { Options as vineEmitsCamelCaseOptions } from './rules/format/format-vine-emits-camel-case'
 import type { Options as vineExposeAtTailOptions } from './rules/format/format-vine-expose-at-tail'
 import type { Options as vineMacrosLeadingOptions } from './rules/format/format-vine-macros-leading'
 import type { Options as vineStyleIndentOptions } from './rules/format/format-vine-style-indent'
@@ -25,6 +26,7 @@ import noVForKeyOnChild from './rules/essentials/no-v-for-key-on-child'
 import formatHtmlSelfClosing from './rules/format/format-html-self-closing'
 import preferTemplate from './rules/format/format-prefer-template'
 import vineComponentNameFormat from './rules/format/format-vine-component-name'
+import vineEmitsCamelCase from './rules/format/format-vine-emits-camel-case'
 import vineExposeAtTail from './rules/format/format-vine-expose-at-tail'
 import vineMacrosLeading from './rules/format/format-vine-macros-leading'
 import vineStyleIndent from './rules/format/format-vine-style-indent'
@@ -51,6 +53,7 @@ const plugin: ESLint.Plugin = {
     'format-prefer-template': preferTemplate,
     'format-vine-expose-at-tail': vineExposeAtTail,
     'format-html-self-closing': formatHtmlSelfClosing,
+    'format-vine-emits-camel-case': vineEmitsCamelCase,
   },
 }
 
@@ -71,6 +74,7 @@ export interface RuleOptions {
   'format-prefer-template': preferTemplateOptions
   'format-vine-expose-at-tail': vineExposeAtTailOptions
   'format-html-self-closing': formatHtmlSelfClosingOptions
+  'format-vine-emits-camel-case': vineEmitsCamelCaseOptions
 }
 
 export type Rules = {
