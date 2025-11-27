@@ -333,9 +333,10 @@ export class CodeGenerator {
     }
 
     // Add model props if not empty
-    const modelPropsStr = `__VLS_VINE_${vineCompFn.fnName}_models__`
-    if (!EMPTY_OBJECT_TYPE_REGEXP.test(modelPropsStr)) {
-      typeParts.push(modelPropsStr)
+    // Add model props type if models exist
+    if (Object.keys(vineCompFn.vineModels).length > 0) {
+       const modelPropsStr = `__VLS_VINE_${vineCompFn.fnName}_models__`
+       typeParts.push(modelPropsStr)
     }
 
     return `${typeParts.filter(Boolean).join(' & ')},`
