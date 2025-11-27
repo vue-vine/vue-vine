@@ -31,21 +31,16 @@ const FULL_FEATURES = {
 } satisfies CodeInformation
 
 const EMPTY_OBJECT_TYPE_REGEXP = /\{\s*\}/
+const INDENT_2 = '  '
+const INDENT_4 = '    '
 
 // ===================== Utility Functions =====================
 
 /**
  * Convert emit event name to Vue component props name (on-prefixed camelCase)
- * @param emit Original emit event name
- * @returns Converted props name
- *
- * @example
- * convertEmitToOnHandler('update:modelValue') // 'onUpdate:modelValue'
- * convertEmitToOnHandler('my-event') // 'onMyEvent'
- * convertEmitToOnHandler('custom_event') // 'onCustom_event'
  */
 export function convertEmitToOnHandler(emit: string): string {
-  // Check if the emit name contains special characters that need to be quoted (colon, underscore, dot, etc., but not including hyphens)
+  // Check if the emit name contains special characters (colon, underscore, dot, etc., but not hyphens)
   const hasSpecialChars = /[:_.]/.test(emit) && !/^[a-z0-9\-]+$/i.test(emit)
 
   if (hasSpecialChars) {
@@ -62,12 +57,8 @@ export function convertEmitToOnHandler(emit: string): string {
 
 /**
  * Check if a property name needs to be quoted in object literal
- * @param propName Property name to check
- * @returns true if the property name needs quotes
  */
 export function needsQuotes(propName: string): boolean {
-  // Check if property name is a valid JavaScript identifier
-  // If it contains special characters or starts with a number, it needs quotes
   return !/^[a-z_$][\w$]*$/i.test(propName)
 }
 
@@ -124,16 +115,10 @@ export class CodeGenerator {
     public readonly snapshotContent: string,
   ) {}
 
-  /**
-   * Get current offset position
-   */
   get currentOffset(): number {
     return this.offset
   }
 
-  /**
-   * Set current offset position
-   */
   set currentOffset(value: number) {
     this.offset = value
   }
@@ -153,90 +138,160 @@ export class CodeGenerator {
     this.offset = targetOffset
   }
 
-  // ===================== Component Context Generation =====================
+  // ===================== Context Slots Generation =====================
 
   /**
    * Generate context slots definition
    */
-  private generateContextSlotsStr(vineCompFn: VineCompFn, tabNum = 2): string {
-    return `slots: {${vineCompFn.slotsNamesInTemplate.map((slot) => {
+  private* contextSlots(vineCompFn: VineCompFn, tabNum = 2): Generator<CodeSegment> {
+    const innerIndent = ' '.repeat(tabNum + 2)
+    const outerIndent = ' '.repeat(tabNum)
+
+    yield 'slots: {'
+
+    for (const slot of vineCompFn.slotsNamesInTemplate) {
       const slotPropTypeLiteralNode = vineCompFn.slots[slot]?.props
-      return `\n${' '.repeat(tabNum + 2)}${
-        slot === 'default'
-          ? ''
-          : createLinkedCodeTag('left', slot.length)
-      }${slot}: ${slotPropTypeLiteralNode
-        ? `(props: ${this.vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)}) => any`
-        : 'unknown'
-      }`
-    }).join(', ')}\n${' '.repeat(tabNum)}},`
+
+      // Newline and indent
+      yield `\n${innerIndent}`
+
+      // Linked code tag for non-default slots
+      if (slot !== 'default') {
+        yield createLinkedCodeTag('left', slot.length)
+      }
+
+      // Slot name
+      yield slot
+      yield ': '
+
+      // Slot type
+      if (slotPropTypeLiteralNode) {
+        yield '(props: '
+        yield this.vineFileCtx.getAstNodeContent(slotPropTypeLiteralNode)
+        yield ') => any'
+      }
+      else {
+        yield 'unknown'
+      }
+
+      // Comma separator (except for last item, but we add it anyway for trailing comma style)
+      yield ', '
+    }
+
+    yield `\n${outerIndent}},`
+  }
+
+  // ===================== Emit Props Generation =====================
+
+  /**
+   * Generate single emit prop entry
+   */
+  private* emitPropEntry(
+    emit: string,
+    fnName: string,
+    hasTypeParam: boolean,
+  ): Generator<CodeSegment> {
+    const onEmit = convertEmitToOnHandler(emit)
+    const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
+
+    yield INDENT_4
+
+    // Linked code tag if type param exists
+    if (hasTypeParam) {
+      yield createLinkedCodeTag('left', onEmit.length)
+    }
+
+    // Property name and type
+    yield quotedPropName
+    yield `?: __VLS_VINE_${fnName}_emits__['${emit}']`
   }
 
   /**
-   * Generate emit props definition string
+   * Generate emit props object
    */
-  private generateEmitPropsStr(vineCompFn: VineCompFn): string {
-    const indent = ' '.repeat(4)
-    const emitParam = `{${
-      vineCompFn.emits.map(
-        (emit) => {
-          const onEmit = convertEmitToOnHandler(emit)
+  private* emitProps(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    yield '{'
 
-          // Check if the property name needs quotes in object literal
-          const quotedPropName = needsQuotes(onEmit) ? `'${onEmit}'` : onEmit
-          const leftLinkCodeTag = vineCompFn.emitsTypeParam
-            ? createLinkedCodeTag('left', onEmit.length)
-            : ''
+    // Emit entries
+    const emits = vineCompFn.emits
+    for (let i = 0; i < emits.length; i++) {
+      yield* this.emitPropEntry(
+        emits[i],
+        vineCompFn.fnName,
+        !!vineCompFn.emitsTypeParam,
+      )
+      if (i < emits.length - 1) {
+        yield ', '
+      }
+    }
 
-          return `${indent}${leftLinkCodeTag}${quotedPropName}?: __VLS_VINE_${vineCompFn.fnName}_emits__['${emit}']`
-        },
-      ).join(', ')
-    }\n${
-      // Model names need to have 'update:modelName' format event.
-      // default as 'update:modelValue'
-      Object.keys(vineCompFn.vineModels).map((modelName) => {
-        return `${indent}'onUpdate:${modelName}'?: __VLS_VINE_${vineCompFn.fnName}_emits__['update:${modelName}']\n`
-      }).join(', ')
-    }}`
+    yield '\n'
 
-    return emitParam
+    // Model update events
+    for (const modelName of Object.keys(vineCompFn.vineModels)) {
+      yield INDENT_4
+      yield `'onUpdate:${modelName}'`
+      yield `?: __VLS_VINE_${vineCompFn.fnName}_emits__['update:${modelName}']\n`
+    }
+
+    yield '}'
   }
 
+  // ===================== Context Formal Param Generation =====================
+
   /**
-   * Generate context formal parameter string
+   * Generate context formal parameter
    */
-  generateContextFormalParamStr(
+  * contextFormalParam(
     vineCompFn: VineCompFn,
     options: {
       tabNum?: number
       lineWrapAtStart?: boolean
     } = {},
-  ): string {
+  ): Generator<CodeSegment> {
     const { tabNum = 2, lineWrapAtStart = true } = options
-    const contextProperties: string[] = []
+    const indent = ' '.repeat(tabNum)
 
-    vineCompFn.macrosInfoForVolar.forEach(({ macroType }) => {
-      if (macroType === 'vineSlots') {
-        const slotField = this.generateContextSlotsStr(vineCompFn, tabNum)
-        if (slotField) {
-          contextProperties.push(slotField)
-        }
-      }
-    })
-
-    // Generate `expose: (exposed: ExposedType) => void`
-    if (vineCompFn.expose) {
-      contextProperties.push(
-        `expose: __VLS_VINE.PickComponentExpose<typeof ${vineCompFn.fnName}>,`,
-      )
+    // Leading newline if needed
+    if (lineWrapAtStart) {
+      yield '\n'
     }
 
-    const contextFieldsStr = (
-      contextProperties.length > 0
-        ? `\n${' '.repeat(tabNum)}${contextProperties.join(`\n${' '.repeat(tabNum)}`)}${lineWrapAtStart ? `\n  \n` : '\n'}`
-        : ''
-    )
-    return `${lineWrapAtStart ? `\n` : ''}context: {${contextFieldsStr}}`
+    yield 'context: {'
+
+    // Check if we have any context properties
+    const hasSlots = vineCompFn.macrosInfoForVolar.some(m => m.macroType === 'vineSlots')
+    const hasExpose = !!vineCompFn.expose
+
+    if (hasSlots || hasExpose) {
+      yield '\n'
+      yield indent
+
+      // Generate slots if present
+      if (hasSlots) {
+        yield* this.contextSlots(vineCompFn, tabNum)
+      }
+
+      // Generate expose if present
+      if (hasExpose) {
+        if (hasSlots) {
+          yield `\n${indent}`
+        }
+        yield 'expose: __VLS_VINE.PickComponentExpose<typeof '
+        yield vineCompFn.fnName
+        yield '>,'
+      }
+
+      // Trailing formatting
+      if (lineWrapAtStart) {
+        yield '\n  \n'
+      }
+      else {
+        yield '\n'
+      }
+    }
+
+    yield '}'
   }
 
   // ===================== Props Type Generation =====================
@@ -248,31 +303,42 @@ export class CodeGenerator {
     type: 'param' | 'macro',
     vineCompFn: VineCompFn,
   ): Generator<CodeSegment, string> {
-    let propTypeBase = ''
+    const typeParts: string[] = []
+
     if (type === 'macro') {
-      propTypeBase = `__VLS_VINE.VineComponentCommonProps & __VLS_VINE_${vineCompFn.fnName}_props__`
+      typeParts.push(`__VLS_VINE.VineComponentCommonProps & __VLS_VINE_${vineCompFn.fnName}_props__`)
     }
     else {
-      // User provide a `props` formal parameter in the component function,
-      // we should keep it in virtual code, and generate `context: ...` after it,
+      // User provided props formal parameter
       const formalParamTypeNode = vineCompFn.propsFormalParamType
       if (formalParamTypeNode) {
         yield* this.scriptUntil(formalParamTypeNode.start!)
-        // Insert common props before the user provided props type
         yield `__VLS_VINE.VineComponentCommonProps & `
         yield* this.scriptUntil(formalParamTypeNode.end!)
       }
     }
 
-    const generatedEmitProps = this.generateEmitPropsStr(vineCompFn)
-    const generatedModelProps = `__VLS_VINE_${vineCompFn.fnName}_models__`
-    const emitProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedEmitProps) ? '' : generatedEmitProps
-    const modelProps = EMPTY_OBJECT_TYPE_REGEXP.test(generatedModelProps) ? '' : generatedModelProps
-    return `${[
-      propTypeBase,
-      emitProps,
-      modelProps,
-    ].filter(Boolean).join(' & ')},`
+    // Collect emit props string
+    const emitPropsSegments: string[] = []
+    for (const seg of this.emitProps(vineCompFn)) {
+      if (typeof seg === 'string') {
+        emitPropsSegments.push(seg)
+      }
+    }
+    const emitPropsStr = emitPropsSegments.join('')
+
+    // Add emit props if not empty
+    if (!EMPTY_OBJECT_TYPE_REGEXP.test(emitPropsStr)) {
+      typeParts.push(emitPropsStr)
+    }
+
+    // Add model props if not empty
+    const modelPropsStr = `__VLS_VINE_${vineCompFn.fnName}_models__`
+    if (!EMPTY_OBJECT_TYPE_REGEXP.test(modelPropsStr)) {
+      typeParts.push(modelPropsStr)
+    }
+
+    return `${typeParts.filter(Boolean).join(' & ')},`
   }
 
   // ===================== Prefix Virtual Code =====================
@@ -281,8 +347,11 @@ export class CodeGenerator {
    * Generate prefix virtual code for component
    */
   * prefixVirtualCode(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    // __VLS_VINE_ComponentProps__
-    yield `\ntype ${vineCompFn.fnName}_Props = Parameters<typeof ${vineCompFn.fnName}>[0];\n\n`
+    yield '\ntype '
+    yield vineCompFn.fnName
+    yield '_Props = Parameters<typeof '
+    yield vineCompFn.fnName
+    yield '>[0];\n\n'
   }
 
   // ===================== Vine Expose =====================
@@ -296,23 +365,158 @@ export class CodeGenerator {
     }
 
     const { macroCall, paramObj } = vineCompFn.expose
+
+    // Generate expose variable
     yield* this.scriptUntil(macroCall.start!)
-    // __VLS_VINE_ComponentExpose__
     yield 'const __VLS_VINE_ComponentExpose__ = '
-    yield vineCompFn.expose
-      ? [
-          this.vineFileCtx.getAstNodeContent(vineCompFn.expose.paramObj),
-          undefined,
-          vineCompFn.expose.paramObj.start!,
-          FULL_FEATURES,
-        ]
-      : '{}'
+    yield [
+      this.vineFileCtx.getAstNodeContent(paramObj),
+      undefined,
+      paramObj.start!,
+      FULL_FEATURES,
+    ]
     yield ';\n'
 
+    // Replace paramObj with variable reference
     yield* this.scriptUntil(paramObj.start!)
     yield '__VLS_VINE_ComponentExpose__'
     this.offset = paramObj.end!
     yield* this.scriptUntil(macroCall.end!)
+  }
+
+  // ===================== Model Props Type =====================
+
+  /**
+   * Generate model props type definition
+   */
+  private* modelPropsType(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    yield '\ntype __VLS_VINE_'
+    yield vineCompFn.fnName
+    yield '_models__ = {'
+
+    for (const [modelName, model] of Object.entries(vineCompFn.vineModels)) {
+      const { modelNameAstNode, typeParameter, modifiersTypeParameter, modelModifiersName } = model
+      const modelType = typeParameter
+        ? this.vineFileCtx.getAstNodeContent(typeParameter)
+        : 'unknown'
+      const modifiersKeyType = modifiersTypeParameter
+        ? this.vineFileCtx.getAstNodeContent(modifiersTypeParameter)
+        : 'string'
+
+      // Model name property
+      yield `\n${INDENT_4}`
+      if (modelNameAstNode) {
+        yield [`'${modelName}'`, undefined, modelNameAstNode.start!, FULL_FEATURES]
+      }
+      else {
+        yield `'${modelName}'`
+      }
+      yield `?: ${modelType},`
+
+      // Model modifiers property
+      yield `\n${INDENT_4}'${modelModifiersName}'`
+      yield `?: Partial<Record<${modifiersKeyType}, true | undefined>>`
+    }
+
+    yield '\n};'
+  }
+
+  // ===================== Emits Helper Type =====================
+
+  /**
+   * Generate emits helper type definition
+   */
+  private* emitsHelperType(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    yield '\ntype __VLS_VINE_'
+    yield vineCompFn.fnName
+    yield '_emits__ = '
+
+    const typeParts: string[] = []
+
+    // From vineEmits
+    if (vineCompFn.emits.length > 0) {
+      const emitsType = vineCompFn.emitsTypeParam
+        ? this.vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
+        : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
+      typeParts.push(`__VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<${emitsType}>>`)
+    }
+
+    // From vineModels
+    if (Object.keys(vineCompFn.vineModels).length > 0) {
+      const modelEntries = Object.entries(vineCompFn.vineModels)
+        .map(([modelName, model]) => {
+          const modelType = model.typeParameter
+            ? this.vineFileCtx.getAstNodeContent(model.typeParameter)
+            : 'unknown'
+          return `'update:${modelName}': [${modelType}]`
+        })
+        .join(', ')
+      typeParts.push(`{${modelEntries} }`)
+    }
+
+    yield typeParts.join(' & ')
+    yield ';\n'
+  }
+
+  // ===================== Custom Element Conversion =====================
+
+  /**
+   * Handle custom element function declaration conversion
+   */
+  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    let declNode: any = vineCompFn.fnDeclNode
+    if (isExportNamedDeclaration(declNode)) {
+      declNode = declNode.declaration
+    }
+
+    if (isFunctionDeclaration(declNode) && declNode.id && declNode.body) {
+      // Convert function declaration to variable declaration with function expression
+      yield* this.scriptUntil(declNode.start!)
+      yield 'const '
+      yield vineCompFn.fnName
+      yield ' = (function '
+      this.offset = declNode.id.end!
+    }
+    else if (isVariableDeclaration(declNode) && declNode.declarations) {
+      const decl = declNode.declarations[0]
+      if (decl.init) {
+        // Wrap existing expression with parentheses
+        yield* this.scriptUntil(decl.init.start!)
+        yield '('
+      }
+    }
+  }
+
+  // ===================== Function Parameters =====================
+
+  /**
+   * Generate function parameters with props and context
+   */
+  private* functionParameters(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    // Generate until after opening parenthesis
+    yield* this.scriptUntil(
+      getIndexOfFnDeclLeftParen(
+        vineCompFn.fnItselfNode!,
+        this.vineFileCtx.root.tokens ?? [],
+      ) + 1,
+    )
+
+    if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
+      // Macro-defined props: generate props formal parameter
+      yield `\n${INDENT_2}props: `
+      const propsTypeStr: string = yield* this.propsType('macro', vineCompFn)
+      yield propsTypeStr
+      yield* this.contextFormalParam(vineCompFn)
+    }
+    else {
+      // User-defined props
+      const propsTypeStr: string = yield* this.propsType('param', vineCompFn)
+      yield propsTypeStr
+      yield* this.contextFormalParam(vineCompFn, {
+        tabNum: 2,
+        lineWrapAtStart: false,
+      })
+    }
   }
 
   // ===================== Component Props and Context =====================
@@ -323,11 +527,15 @@ export class CodeGenerator {
   * componentPropsAndContext(vineCompFn: VineCompFn): Generator<CodeSegment> {
     // Generate macro-defined props type
     if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
-      yield `\ntype __VLS_VINE_${vineCompFn.fnName}_props__ = ${vineCompFn.getPropsTypeRecordStr({
+      yield '\ntype __VLS_VINE_'
+      yield vineCompFn.fnName
+      yield '_props__ = '
+      yield vineCompFn.getPropsTypeRecordStr({
         isNeedLinkedCodeTag: true,
         joinStr: ',\n',
         isNeedJsDoc: true,
-      })}\n`
+      })
+      yield '\n'
     }
 
     // Generate model props type
@@ -353,134 +561,6 @@ export class CodeGenerator {
     yield* this.functionParameters(vineCompFn)
   }
 
-  /**
-   * Generate model props type definition
-   */
-  private* modelPropsType(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    yield `\ntype __VLS_VINE_${vineCompFn.fnName}_models__ = {`
-    const indent = ' '.repeat(4)
-
-    for (const [modelName, model] of Object.entries(vineCompFn.vineModels)) {
-      const { modelNameAstNode, typeParameter, modifiersTypeParameter, modelModifiersName } = model
-      const modelType = typeParameter ? this.vineFileCtx.getAstNodeContent(typeParameter) : 'unknown'
-      // Use specific modifier type if provided, otherwise fallback to generic string
-      const modifiersKeyType = modifiersTypeParameter
-        ? this.vineFileCtx.getAstNodeContent(modifiersTypeParameter)
-        : 'string'
-
-      if (modelNameAstNode) {
-        yield `\n${indent}`
-        yield [`'${modelName}'`, undefined, modelNameAstNode.start!, FULL_FEATURES]
-        yield `?: ${modelType},`
-      }
-      else {
-        yield `\n${indent}'${modelName}'?: ${modelType},`
-      }
-      yield `\n${indent}'${modelModifiersName}'?: Partial<Record<${modifiersKeyType}, true | undefined>>`
-    }
-    yield `\n};`
-  }
-
-  /**
-   * Generate emits helper type definition
-   */
-  private* emitsHelperType(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    yield `\ntype __VLS_VINE_${vineCompFn.fnName}_emits__ = `
-    const segments: string[] = []
-
-    // From vineEmits
-    if (vineCompFn.emits.length > 0) {
-      segments.push(`__VLS_NormalizeEmits<__VLS_VINE.VueDefineEmits<${
-        vineCompFn.emitsTypeParam
-          ? this.vineFileCtx.getAstNodeContent(vineCompFn.emitsTypeParam)
-          : `{${vineCompFn.emits.map(emit => `'${emit}': any`).join(', ')}}`
-      }>>`)
-    }
-
-    // From vineModels
-    if (Object.keys(vineCompFn.vineModels).length > 0) {
-      segments.push(`{${
-        Object.entries(vineCompFn.vineModels).map(
-          ([modelName, model]) => `'update:${modelName}': [${model.typeParameter ? this.vineFileCtx.getAstNodeContent(model.typeParameter) : 'unknown'}]`,
-        ).join(', ')
-      } }`)
-    }
-
-    yield `${segments.join(' & ')}`
-    yield ';\n'
-  }
-
-  /**
-   * Handle custom element function declaration conversion
-   */
-  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    let declNode: any = vineCompFn.fnDeclNode
-    if (isExportNamedDeclaration(declNode)) {
-      declNode = declNode.declaration
-    }
-
-    if (
-      isFunctionDeclaration(declNode)
-      && declNode.id
-      && declNode.body
-    ) {
-      // Remove the identifier, make this function declaration to a function expression,
-      // then append `as CustomElementConstructor` in the end of expression
-      yield* this.scriptUntil(declNode.start!)
-      yield `const ${vineCompFn.fnName} = (function `
-      // Move cursor to the end of identifier,
-      // to remain its original parameters
-      this.offset = declNode.id.end!
-    }
-    else if (
-      isVariableDeclaration(declNode)
-      && declNode.declarations
-    ) {
-      const decl = declNode.declarations[0]
-      if (decl.init) {
-        // since here is already a variable declaration,
-        // we just need to append `as CustomElementConstructor` in the end of expression
-        yield* this.scriptUntil(decl.init.start!)
-        yield '('
-      }
-    }
-  }
-
-  /**
-   * Generate function parameters with props and context
-   */
-  private* functionParameters(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    // Guarantee the component function has a `props` formal parameter in virtual code,
-    // This is for props intellisense on editing template tag attrs.
-    yield* this.scriptUntil(
-      getIndexOfFnDeclLeftParen(
-        vineCompFn.fnItselfNode!,
-        this.vineFileCtx.root.tokens ?? [],
-      ) + 1, // means generate after '(',
-    )
-
-    if (vineCompFn.propsDefinitionBy === VinePropsDefinitionBy.macro) {
-      // Define props by `vineProp`, no `props` formal parameter,
-      // generate a `props` formal parameter in virtual code
-      yield '\n  props: '
-      const propsTypeStr: string = yield* this.propsType('macro', vineCompFn)
-      yield propsTypeStr
-
-      // Generate `context: { ... }` after `props: ...`
-      yield this.generateContextFormalParamStr(vineCompFn)
-    }
-    else {
-      const propsTypeStr: string = yield* this.propsType('param', vineCompFn)
-      yield propsTypeStr
-
-      // Generate `context: { ... }` after `props: ...`
-      yield `${this.generateContextFormalParamStr(vineCompFn, {
-        tabNum: 2,
-        lineWrapAtStart: false,
-      })}`
-    }
-  }
-
   // ===================== Linked Code Tags =====================
 
   /**
@@ -490,8 +570,6 @@ export class CodeGenerator {
     vineCompFn: VineCompFn,
     vinePropMeta: VinePropMeta,
   ): Generator<CodeSegment> {
-    // We should generate linked code tag as block comment
-    // before the variable declared by `vineProp`
     if (vineCompFn.propsDefinitionBy !== VinePropsDefinitionBy.macro) {
       return
     }
@@ -512,22 +590,16 @@ export class CodeGenerator {
       return
     }
 
-    // Iterate every property in `vineSlots` type literal
     for (const member of vineSlotsType.members) {
       if (
         !member
-        || (
-          member.type !== 'TSMethodSignature'
-          && member.type !== 'TSPropertySignature'
-        )
+        || (member.type !== 'TSMethodSignature' && member.type !== 'TSPropertySignature')
         || !member.key
         || !isIdentifier(member.key)
       ) {
         continue
       }
 
-      // Generate linked code tag as block comment
-      // before the variable declared by `vineSlots`
       yield* this.scriptUntil(member.key.start!)
       yield createLinkedCodeTag('right', member.key.name.length)
     }
@@ -572,26 +644,24 @@ export class CodeGenerator {
     }
     const refName = templateRefName.value
 
-    const genCursor = call.callee.end!
-    yield* this.scriptUntil(genCursor)
+    yield* this.scriptUntil(call.callee.end!)
 
-    // Always generate __VLS_TemplateRefs to maintain virtual code mapping for navigation
-    yield `<__VLS_TemplateRefs[`
+    // Generate type parameter
+    yield '<__VLS_TemplateRefs['
     yield [
       `'${refName}'`,
       undefined,
-      templateRefName.start!, // inside the string literal
+      templateRefName.start!,
       FULL_FEATURES,
     ]
-    yield `], keyof __VLS_TemplateRefs>`
+    yield '], keyof __VLS_TemplateRefs>'
 
-    // Skip the original type parameters if user provided them
+    // Skip original type parameters if present
     if (call.typeParameters && call.typeParameters.params.length > 0) {
       this.offset = call.typeParameters.end!
     }
 
-    // Find the variable declaration for this useTemplateRef call to add to excludeBindings
-    // We need to traverse up the AST to find the parent variable declaration
+    // Find and add variable declaration to excludeBindings
     _breakableTraverse(
       this.vineFileCtx.root,
       (node, ancestors) => {
@@ -604,9 +674,7 @@ export class CodeGenerator {
             ),
           )?.node as (VariableDeclaration | undefined)
           if (varDecl) {
-            excludeBindings.add(
-              (varDecl.declarations[0].id as Identifier).name,
-            )
+            excludeBindings.add((varDecl.declarations[0].id as Identifier).name)
           }
           throw exitTraverse
         }
@@ -629,43 +697,71 @@ export class CodeGenerator {
     )
 
     for (const macroInfo of sortedMacros) {
-      switch (macroInfo.macroType) {
-        case 'vineProp':
-          yield* this.linkedCodeTagForVineProp(vineCompFn, macroInfo.macroMeta)
-          break
-        case 'vineSlots':
-          yield* this.linkedCodeTagForVineSlots(macroInfo.macroCall)
-          break
-        case 'vineEmits':
-          yield* this.linkedCodeTagForVineEmits(macroInfo.macroCall)
-          break
-        case 'vineExpose':
-          yield* this.vineExpose(vineCompFn)
-          break
-        case 'useTemplateRef':
-          yield* this.useTemplateRefTypeParams(macroInfo.macroCall, excludeBindings)
-          break
-        case 'vineValidators': {
-          const vineValidatorsMacroCall = macroInfo.macroCall
-          yield* this.scriptUntil(
-            vineValidatorsMacroCall.start! + 'vineValidators'.length,
-          )
-          yield `<${vineCompFn.fnName}_Props>`
-          yield* this.scriptUntil(vineValidatorsMacroCall.end!)
-          break
-        }
-        case 'vineStyle': {
-          // Skip generate `vineStyle` macro call
-          const vineStyleMacroCall = macroInfo.macroCall
-          const arg = vineStyleMacroCall.arguments[0]
-          yield* this.scriptUntil(arg.start!)
-          // Skip the argument
-          yield '"..."'
-          this.offset = arg.end!
-          break
-        }
-      }
+      yield* this.processMacro(macroInfo, vineCompFn, excludeBindings)
     }
+  }
+
+  /**
+   * Process a single macro
+   */
+  private* processMacro(
+    macroInfo: VineCompFn['macrosInfoForVolar'][number],
+    vineCompFn: VineCompFn,
+    excludeBindings: Set<string>,
+  ): Generator<CodeSegment> {
+    switch (macroInfo.macroType) {
+      case 'vineProp':
+        yield* this.linkedCodeTagForVineProp(vineCompFn, macroInfo.macroMeta)
+        break
+
+      case 'vineSlots':
+        yield* this.linkedCodeTagForVineSlots(macroInfo.macroCall)
+        break
+
+      case 'vineEmits':
+        yield* this.linkedCodeTagForVineEmits(macroInfo.macroCall)
+        break
+
+      case 'vineExpose':
+        yield* this.vineExpose(vineCompFn)
+        break
+
+      case 'useTemplateRef':
+        yield* this.useTemplateRefTypeParams(macroInfo.macroCall, excludeBindings)
+        break
+
+      case 'vineValidators':
+        yield* this.vineValidators(macroInfo.macroCall, vineCompFn.fnName)
+        break
+
+      case 'vineStyle':
+        yield* this.vineStyle(macroInfo.macroCall)
+        break
+    }
+  }
+
+  /**
+   * Generate vineValidators type parameter
+   */
+  private* vineValidators(
+    macroCall: CallExpression,
+    fnName: string,
+  ): Generator<CodeSegment> {
+    yield* this.scriptUntil(macroCall.start! + 'vineValidators'.length)
+    yield '<'
+    yield fnName
+    yield '_Props>'
+    yield* this.scriptUntil(macroCall.end!)
+  }
+
+  /**
+   * Skip vineStyle macro argument
+   */
+  private* vineStyle(macroCall: CallExpression): Generator<CodeSegment> {
+    const arg = macroCall.arguments[0]
+    yield* this.scriptUntil(arg.start!)
+    yield '"..."'
+    this.offset = arg.end!
   }
 
   // ===================== Style Scoped Classes =====================
@@ -675,6 +771,7 @@ export class CodeGenerator {
    */
   * styleScopedClasses(): Generator<CodeSegment> {
     yield '\ntype __VLS_VINE_StyleScopedClasses = {}'
+
     for (const styleDefines of Object.values(this.vineFileCtx.styleDefine)) {
       for (const { source: styleSource, range, scoped } of styleDefines) {
         if (!range || !scoped) {
@@ -683,30 +780,43 @@ export class CodeGenerator {
 
         const [rangeStart] = range
         const classNames = parseCssClassNames(styleSource)
-        for (const { offset, text: classNameWithDot } of classNames) {
-          const realOffset = rangeStart + offset
-          yield '\n & { '
-          yield* wrapWith(
-            realOffset,
-            realOffset + classNameWithDot.length,
-            { navigation: true },
-            [
-              '"',
-              [
-                classNameWithDot.slice(1),
-                undefined,
-                realOffset + 1, // after '.'
-                { __combineOffset: 1 },
-              ],
-              '"',
-            ],
-          )
 
-          yield ': true }'
+        for (const { offset, text: classNameWithDot } of classNames) {
+          yield* this.styleScopedClassEntry(rangeStart, offset, classNameWithDot)
         }
       }
     }
+
     yield ';\n'
+  }
+
+  /**
+   * Generate a single scoped class entry
+   */
+  private* styleScopedClassEntry(
+    rangeStart: number,
+    offset: number,
+    classNameWithDot: string,
+  ): Generator<CodeSegment> {
+    const realOffset = rangeStart + offset
+
+    yield '\n & { '
+    yield* wrapWith(
+      realOffset,
+      realOffset + classNameWithDot.length,
+      { navigation: true },
+      [
+        '"',
+        [
+          classNameWithDot.slice(1),
+          undefined,
+          realOffset + 1, // after '.'
+          { __combineOffset: 1 },
+        ],
+        '"',
+      ],
+    )
+    yield ': true }'
   }
 }
 
@@ -730,16 +840,12 @@ export function* createStyleEmbeddedCodes(
         return
       }
 
+      // Skip external file paths and empty styles
       if (isExternalFilePathSource || !styleSource.trim().length) {
-        // Don't recognize this string argument
-        // which is a path to an external file,
-        // as CSS syntax format area
         continue
       }
 
-      // Here we have user-defined style raw content,
-      // String content parsed by @babel/parser would always be LF,
-      // But for Volar location mapping we need to turn it back to CRLF.
+      // Convert LF to CRLF if needed for Volar location mapping
       const source = vineFileCtx.isCRLF
         ? turnBackToCRLF(styleSource)
         : styleSource
@@ -752,14 +858,12 @@ export function* createStyleEmbeddedCodes(
           getLength: () => source.length,
           getChangeRange: () => undefined,
         },
-        mappings: [
-          {
-            sourceOffsets: [range[0]],
-            generatedOffsets: [0],
-            lengths: [source.length],
-            data: FULL_FEATURES,
-          },
-        ],
+        mappings: [{
+          sourceOffsets: [range[0]],
+          generatedOffsets: [0],
+          lengths: [source.length],
+          data: FULL_FEATURES,
+        }],
         embeddedCodes: [],
       }
     }
@@ -772,11 +876,8 @@ export function* createStyleEmbeddedCodes(
 export function* createTemplateHTMLEmbeddedCodes(
   vineFileCtx: VineFileCtx,
 ): Generator<VirtualCode> {
-  for (const [i, {
-    fnName,
-    templateSource,
-    templateStringNode,
-  }] of Object.entries(vineFileCtx.vineCompFns)) {
+  for (const [i, compFn] of Object.entries(vineFileCtx.vineCompFns)) {
+    const { fnName, templateSource, templateStringNode } = compFn
     if (!templateStringNode) {
       continue
     }
@@ -793,14 +894,12 @@ export function* createTemplateHTMLEmbeddedCodes(
         getLength: () => source.length,
         getChangeRange: () => undefined,
       },
-      mappings: [
-        {
-          sourceOffsets: [templateStringNode.quasi.quasis[0].start!],
-          generatedOffsets: [0],
-          lengths: [source.length],
-          data: FULL_FEATURES,
-        },
-      ],
+      mappings: [{
+        sourceOffsets: [templateStringNode.quasi.quasis[0].start!],
+        generatedOffsets: [0],
+        lengths: [source.length],
+        data: FULL_FEATURES,
+      }],
       embeddedCodes: [],
     }
   }
@@ -820,14 +919,12 @@ export function* createSourceVirtualCode(
       getLength: () => snapshotContent.length,
       getChangeRange: () => undefined,
     },
-    mappings: [
-      {
-        sourceOffsets: [0],
-        generatedOffsets: [0],
-        lengths: [snapshotContent.length],
-        data: FULL_FEATURES,
-      },
-    ],
+    mappings: [{
+      sourceOffsets: [0],
+      generatedOffsets: [0],
+      lengths: [snapshotContent.length],
+      data: FULL_FEATURES,
+    }],
     embeddedCodes: [],
   }
 }
