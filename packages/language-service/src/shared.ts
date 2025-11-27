@@ -7,6 +7,7 @@ import type { analyzeVineForVirtualCode } from './vine-ctx'
 
 export type VineCodeInformation = VueCodeInformation
 export type Code = Segment<VineCodeInformation>
+export type CodeSegment = Segment<VineCodeInformation>
 export type VineCompFn = ReturnType<typeof analyzeVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]
 export type BabelFunctionNodeTypes = FunctionDeclaration | FunctionExpression | ArrowFunctionExpression
 

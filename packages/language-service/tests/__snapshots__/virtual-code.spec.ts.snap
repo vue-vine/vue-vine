@@ -6,7 +6,7 @@ import * as __VLS_VINE from 'vue-vine/internals';
 
 type __VLS_VINE_SampleCustomElement_props__ = {}
 export const SampleCustomElement = (function (
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__ & __VLS_VINE_SampleCustomElement_models__,
 context: {}) {
   
 type SampleCustomElement_Props = Parameters<typeof SampleCustomElement>[0];
@@ -83,7 +83,7 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
 // eslint-disable-next-line antfu/top-level-function
 export const AnotherCustomElement = ((
-  props: __VLS_VINE.VineComponentCommonProps & { foo: string },context: {},
+  props: __VLS_VINE.VineComponentCommonProps & { foo: string }__VLS_VINE_AnotherCustomElement_models__,context: {},
 ) => {
   
 type AnotherCustomElement_Props = Parameters<typeof AnotherCustomElement>[0];
@@ -134,7 +134,7 @@ type __VLS_VINE_TestCustomElement_props__ = {}
 
 
 export function TestCustomElement(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCustomElement_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCustomElement_props__ & __VLS_VINE_TestCustomElement_models__,
 context: {}) {
   
 type TestCustomElement_Props = Parameters<typeof TestCustomElement>[0];
@@ -234,7 +234,7 @@ type __VLS_VINE_Comp_props__ = {
 /* __LINKED_CODE_LEFT__#3 */foo: string
 }
 function Comp(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_Comp_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_Comp_props__ & __VLS_VINE_Comp_models__,
 context: {}) {
   
 type Comp_Props = Parameters<typeof Comp>[0];
@@ -308,7 +308,7 @@ type __VLS_VINE_SampleOne_props__ = {
 // - Case 1: 'vue-vine/format-vine-macros-leading'
 // - Case 2: 'vue-vine/essentials-no-child-content'
 export function SampleOne(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleOne_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleOne_props__ & __VLS_VINE_SampleOne_models__,
 context: {}) {
   
 type SampleOne_Props = Parameters<typeof SampleOne>[0];
@@ -408,7 +408,7 @@ type __VLS_VINE_SampleTwo_props__ = {}
 // - Case 1: 'vue-vine/format-prefer-template' with autofix in setup
 // - Case 2: 'vue-vine/format-prefer-template' not autofix in template
 export function SampleTwo(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleTwo_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleTwo_props__ & __VLS_VINE_SampleTwo_models__,
 context: {}) {
   
 type SampleTwo_Props = Parameters<typeof SampleTwo>[0];
@@ -485,7 +485,7 @@ type __VLS_VINE_TestPlainTextTemplate_props__ = {}
 
 
 export function TestPlainTextTemplate(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestPlainTextTemplate_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestPlainTextTemplate_props__ & __VLS_VINE_TestPlainTextTemplate_models__,
 context: {}) {
   
 type TestPlainTextTemplate_Props = Parameters<typeof TestPlainTextTemplate>[0];
@@ -554,7 +554,7 @@ type __VLS_VINE_TestUnoCssAttributeMode_props__ = {}
   }
  */
 export function TestUnoCssAttributeMode(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUnoCssAttributeMode_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUnoCssAttributeMode_props__ & __VLS_VINE_TestUnoCssAttributeMode_models__,
 context: {}) {
   
 type TestUnoCssAttributeMode_Props = Parameters<typeof TestUnoCssAttributeMode>[0];
@@ -642,9 +642,8 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineE
 
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#11 */onClickTest?: __VLS_VINE_TestCompOne_emits__['clickTest']
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__ & {    /* __LINKED_CODE_LEFT__#11 */onClickTest?: __VLS_VINE_TestCompOne_emits__['clickTest']
+} & __VLS_VINE_TestCompOne_models__,
 context: {}) {
   
 type TestCompOne_Props = Parameters<typeof TestCompOne>[0];
@@ -727,7 +726,7 @@ type __VLS_VINE_TestCompTwo_props__ = {}
 
 
 function TestCompTwo(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompTwo_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompTwo_props__ & __VLS_VINE_TestCompTwo_models__,
 context: {}) {
   
 type TestCompTwo_Props = Parameters<typeof TestCompTwo>[0];
@@ -815,7 +814,7 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 // #region Test vineExpose and component ref
 function TargetComp(props: __VLS_VINE.VineComponentCommonProps & {
   foo: boolean
-},context: {
+}__VLS_VINE_TargetComp_models__,context: {
   expose: __VLS_VINE.PickComponentExpose<typeof TargetComp>,
 }) {
   
@@ -927,7 +926,7 @@ type __VLS_VINE_TestCompRef_props__ = {}
 
 
 export function TestCompRef(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompRef_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompRef_props__ & __VLS_VINE_TestCompRef_models__,
 context: {}) {
   
 type TestCompRef_Props = Parameters<typeof TestCompRef>[0];
@@ -1015,7 +1014,7 @@ type __VLS_VINE_TestNoVforKeyOnChild_props__ = {}
 
 // #region Test ESLint rule: no-v-for-key-on-child
 export function TestNoVforKeyOnChild(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoVforKeyOnChild_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoVforKeyOnChild_props__ & __VLS_VINE_TestNoVforKeyOnChild_models__,
 context: {}) {
   
 type TestNoVforKeyOnChild_Props = Parameters<typeof TestNoVforKeyOnChild>[0];
@@ -1094,7 +1093,7 @@ type __VLS_VINE_TestNoLifecycleHookAfterAwait_props__ = {}
 // #region Test ESLint rule: no-lifecycle-hook-after-await
 declare const doSomethingAsync: () => Promise<void>
 export async function TestNoLifecycleHookAfterAwait(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoLifecycleHookAfterAwait_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestNoLifecycleHookAfterAwait_props__ & __VLS_VINE_TestNoLifecycleHookAfterAwait_models__,
 context: {}) {
   
 type TestNoLifecycleHookAfterAwait_Props = Parameters<typeof TestNoLifecycleHookAfterAwait>[0];
@@ -1164,7 +1163,7 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 // #region Test generics on Vine component function
 
 export function TestGenericComp1<T extends keyof HTMLElementTagNameMap = 'h1'>(
-  props: __VLS_VINE.VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T },context: {},
+  props: __VLS_VINE.VineComponentCommonProps & Partial<HTMLElementTagNameMap[T]> & { as: T }__VLS_VINE_TestGenericComp1_models__,context: {},
 ) {
   
 type TestGenericComp1_Props = Parameters<typeof TestGenericComp1>[0];
@@ -1263,7 +1262,7 @@ import { useTemplateRef } from 'vue'
 
 type __VLS_VINE_TestUseTemplateRefVirtualCode_props__ = {}
 export function TestUseTemplateRefVirtualCode(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUseTemplateRefVirtualCode_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestUseTemplateRefVirtualCode_props__ & __VLS_VINE_TestUseTemplateRefVirtualCode_models__,
 context: {}) {
   
 type TestUseTemplateRefVirtualCode_Props = Parameters<typeof TestUseTemplateRefVirtualCode>[0];
@@ -1337,11 +1336,16 @@ import '../styles/atom.css'
 
 
 type __VLS_VINE_SimpleInput_props__ = {}
+
+type __VLS_VINE_SimpleInput_models__ = {
+    'modelValue'?: unknown,
+    'modelModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_SimpleInput_emits__ = {'update:modelValue': [unknown] };
 export function SimpleInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__  & {
-    modelValue?: unknown,
-    modelModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__ & {
+    'onUpdate:modelValue'?: __VLS_VINE_SimpleInput_emits__['update:modelValue']
+} & __VLS_VINE_SimpleInput_models__,
 context: {}) {
   
 type SimpleInput_Props = Parameters<typeof SimpleInput>[0];
@@ -1402,16 +1406,21 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 }
 type __VLS_VINE_NamedModelInput_props__ = {}
 
+type __VLS_VINE_NamedModelInput_models__ = {
+    'special'?: string,
+    'specialModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_NamedModelInput_emits__ = {'update:special': [string] };
+
 export function NamedModelInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__  & {
-    special?: unknown,
-    specialModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__ & {
+    'onUpdate:special'?: __VLS_VINE_NamedModelInput_emits__['update:special']
+} & __VLS_VINE_NamedModelInput_models__,
 context: {}) {
   
 type NamedModelInput_Props = Parameters<typeof NamedModelInput>[0];
 
-const value = vineModel('special')
+const value = vineModel<string>('special')
 
   
 // --- Start: Template virtual code
@@ -1467,12 +1476,17 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 }
 type __VLS_VINE_AccessorModelInput_props__ = {}
 
+type __VLS_VINE_AccessorModelInput_models__ = {
+    'modelValue'?: number,
+    'modelModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_AccessorModelInput_emits__ = {'update:modelValue': [number] };
+
 
 export function AccessorModelInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__  & {
-    modelValue?: number,
-    modelModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__ & {
+    'onUpdate:modelValue'?: __VLS_VINE_AccessorModelInput_emits__['update:modelValue']
+} & __VLS_VINE_AccessorModelInput_models__,
 context: {}) {
   
 type AccessorModelInput_Props = Parameters<typeof AccessorModelInput>[0];
@@ -1545,7 +1559,7 @@ type __VLS_VINE_TestVineModel_props__ = {}
 
 
 export function TestVineModel(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestVineModel_props__,
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestVineModel_props__ & __VLS_VINE_TestVineModel_models__,
 context: {}) {
   
 type TestVineModel_Props = Parameters<typeof TestVineModel>[0];

@@ -307,6 +307,30 @@ function MyComp() {
     ).toMatchInlineSnapshot(`
       {
         "modelModifiersName": "countModifiers",
+        "modelNameAstNode": Node {
+          "end": 177,
+          "extra": {
+            "raw": "'count'",
+            "rawValue": "count",
+          },
+          "loc": SourceLocation {
+            "end": Position {
+              "column": 41,
+              "index": 177,
+              "line": 5,
+            },
+            "filename": undefined,
+            "identifierName": undefined,
+            "start": Position {
+              "column": 34,
+              "index": 170,
+              "line": 5,
+            },
+          },
+          "start": 170,
+          "type": "StringLiteral",
+          "value": "count",
+        },
         "modelOptions": undefined,
         "modifiersTypeParameter": undefined,
         "modifiersVarName": undefined,
