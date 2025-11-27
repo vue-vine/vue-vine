@@ -1,5 +1,14 @@
 # @vue-vine/rsbuild-plugin
 
+## 1.7.26
+
+### Patch Changes
+
+- Support reference & navigation for vineModel props.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.26
+  - @vue-vine/rspack-loader@1.7.26
+
 ## 1.7.25
 
 ### Patch Changes

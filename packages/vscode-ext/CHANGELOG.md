@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.26
+
+### Patch Changes
+
+- Support reference & navigation for vineModel props.
+
 ## 1.7.25
 
 ### Patch Changes
