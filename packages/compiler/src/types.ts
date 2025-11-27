@@ -286,6 +286,7 @@ export interface VineCompFnCtx {
   slotsNamesInTemplate: string[]
   /** Store `vineModel` defines */
   vineModels: Record<string, {
+    modelNameAstNode?: StringLiteral
     varName: string
     /** User destructured modifiers variable name, e.g. `const [value, modifiers] = vineModel()` */
     modifiersVarName?: string

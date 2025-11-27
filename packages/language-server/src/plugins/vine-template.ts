@@ -17,7 +17,7 @@ import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 import { getVueVineVirtualCode } from '../utils'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
-const CAMEL_CASE_EVENT_PREFIX = /on[A-Z]/
+const EVENT_PROP_NAME_REGEXP = /^on(?:-[a-z]|[A-Z])/
 const DIRECTIVE_LOWER_CAMEL_CASE_PREFIX = /v[A-Z]/
 
 export function transformVineDiagnostic(
@@ -270,10 +270,16 @@ export function createVineTemplatePlugin(
               const attributes: IAttributeData[] = []
 
               for (const prop of props) {
-                const isEvent = prop.startsWith('on-') || CAMEL_CASE_EVENT_PREFIX.test(prop)
-                const isDirective = DIRECTIVE_LOWER_CAMEL_CASE_PREFIX.test(prop)
+                // isModel
+                if (props.some(p => (
+                  p.startsWith(`on-update:${prop}`)
+                  || p.startsWith(`onUpdate:${prop}`)
+                ))) {
+                  attributes.push({ name: `v-model:${prop}` })
+                }
 
-                if (isEvent) {
+                // isEvent
+                if (EVENT_PROP_NAME_REGEXP.test(prop)) {
                   const propNameBase = prop.startsWith('on-')
                     ? prop.slice('on-'.length)
                     : (prop['on'.length].toLowerCase() + prop.slice('onX'.length))
@@ -283,7 +289,8 @@ export function createVineTemplatePlugin(
                     { name: `@${propNameBase}` },
                   )
                 }
-                else if (isDirective) {
+                // isDirective
+                else if (DIRECTIVE_LOWER_CAMEL_CASE_PREFIX.test(prop)) {
                   attributes.push({ name: hyphenateAttr(prop) })
                 }
                 else {

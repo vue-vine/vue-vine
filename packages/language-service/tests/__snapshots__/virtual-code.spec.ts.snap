@@ -641,8 +641,7 @@ type __VLS_VINE_TestCompOne_emits__ = __VLS_NormalizeEmits<__VLS_VINE.VueDefineE
 
 // #region Fixtures for testing component reference & props check in VSCode
 export function TestCompOne(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__  & {
-    /* __LINKED_CODE_LEFT__#11 */onClickTest?: __VLS_VINE_TestCompOne_emits__['clickTest']
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_TestCompOne_props__ & {    /* __LINKED_CODE_LEFT__#11 */onClickTest?: __VLS_VINE_TestCompOne_emits__['clickTest']
 },
 context: {}) {
   
@@ -1681,11 +1680,16 @@ import '../styles/atom.css'
 
 
 type __VLS_VINE_SimpleInput_props__ = {}
+
+type __VLS_VINE_SimpleInput_models__ = {
+    'modelValue'?: unknown,
+    'modelModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_SimpleInput_emits__ = {'update:modelValue': [unknown] };
 export function SimpleInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__  & {
-    modelValue?: unknown,
-    modelModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SimpleInput_props__ & {
+    'onUpdate:modelValue'?: __VLS_VINE_SimpleInput_emits__['update:modelValue']
+} & __VLS_VINE_SimpleInput_models__,
 context: {}) {
   
 type SimpleInput_Props = Parameters<typeof SimpleInput>[0];
@@ -1746,16 +1750,21 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 }
 type __VLS_VINE_NamedModelInput_props__ = {}
 
+type __VLS_VINE_NamedModelInput_models__ = {
+    'special'?: string,
+    'specialModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_NamedModelInput_emits__ = {'update:special': [string] };
+
 export function NamedModelInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__  & {
-    special?: unknown,
-    specialModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_NamedModelInput_props__ & {
+    'onUpdate:special'?: __VLS_VINE_NamedModelInput_emits__['update:special']
+} & __VLS_VINE_NamedModelInput_models__,
 context: {}) {
   
 type NamedModelInput_Props = Parameters<typeof NamedModelInput>[0];
 
-const value = vineModel('special')
+const value = vineModel<string>('special')
 
   
 // --- Start: Template virtual code
@@ -1811,12 +1820,17 @@ return vine\`\` as any as __VLS_VINE.VueVineComponent;
 }
 type __VLS_VINE_AccessorModelInput_props__ = {}
 
+type __VLS_VINE_AccessorModelInput_models__ = {
+    'modelValue'?: number,
+    'modelModifiers'?: Partial<Record<string, true | undefined>>
+};
+type __VLS_VINE_AccessorModelInput_emits__ = {'update:modelValue': [number] };
+
 
 export function AccessorModelInput(
-  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__  & {
-    modelValue?: number,
-    modelModifiers?: Partial<Record<string, true | undefined>>
-},
+  props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_AccessorModelInput_props__ & {
+    'onUpdate:modelValue'?: __VLS_VINE_AccessorModelInput_emits__['update:modelValue']
+} & __VLS_VINE_AccessorModelInput_models__,
 context: {}) {
   
 type AccessorModelInput_Props = Parameters<typeof AccessorModelInput>[0];

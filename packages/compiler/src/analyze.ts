@@ -1102,6 +1102,7 @@ const analyzeVineModel: AnalyzeRunner = (
       // - its model modifiers name is based on the model name
       // - its model options is null
       if (isStringLiteral(macroCall.arguments[0])) {
+        const modelNameAstNode = macroCall.arguments[0]
         const modelName = macroCall.arguments[0].value
         vineCompFnCtx.vineModels[modelName] = {
           varName,
@@ -1110,6 +1111,7 @@ const analyzeVineModel: AnalyzeRunner = (
           modelOptions: null,
           typeParameter,
           modifiersTypeParameter,
+          modelNameAstNode,
         }
       }
       // If this argument is a object literal,

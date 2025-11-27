@@ -9,7 +9,7 @@ export function SimpleInput() {
   `
 }
 export function NamedModelInput() {
-  const value = vineModel('special')
+  const value = vineModel<string>('special')
 
   return vine`
     <input class="special-input" type="text" v-model="value" />
