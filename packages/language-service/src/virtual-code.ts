@@ -2,12 +2,12 @@ import type { BlockStatement } from '@babel/types'
 import type { Mapping, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
-import type { VineCodeInformation, VueVineVirtualCode } from './shared'
+import type { CodeSegment, VineCodeInformation, VueVineVirtualCode } from './shared'
 import { dirname, relative } from 'node:path'
 import { isBlockStatement } from '@babel/types'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
-import { createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, generateComponentPropsAndContext, generatePrefixVirtualCode, generateScriptUntil, generateStyleScopedClasses, generateVirtualCodeByAstPositionSorted, needsQuotes } from './codegen'
+import { CodeGenerator, createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, needsQuotes } from './codegen'
 import { generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
 import { analyzeVineForVirtualCode } from './vine-ctx'
 
@@ -98,6 +98,13 @@ function buildMappings(chunks: Segment<VineCodeInformation>[]) {
   return mappings
 }
 
+/**
+ * Collect all segments from a generator into an array
+ */
+function collectSegments(generator: Generator<CodeSegment>): CodeSegment[] {
+  return [...generator]
+}
+
 export function createVueVineVirtualCode(
   ts: typeof import('typescript'),
   fileId: string,
@@ -116,15 +123,8 @@ export function createVueVineVirtualCode(
   // const compileTime = (performance.now() - compileStartTime).toFixed(2)
   // vlsInfoLog(`compile time cost: ${compileTime}ms -- ${fileId}`)
 
-  const currentOffset = { value: 0 }
-  const tsCodeSegments: Segment<VineCodeInformation>[] = []
-
-  const codegenCtx = {
-    currentOffset,
-    tsCodeSegments,
-    vineFileCtx,
-    snapshotContent,
-  }
+  const tsCodeSegments: CodeSegment[] = []
+  const codegen = new CodeGenerator(vineFileCtx, snapshotContent)
 
   const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
   if (globalTypesPath) {
@@ -152,7 +152,7 @@ export function createVueVineVirtualCode(
 
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
   if (firstVineCompFnDeclNode) {
-    generateScriptUntil(codegenCtx, firstVineCompFnDeclNode.start!)
+    tsCodeSegments.push(...collectSegments(codegen.scriptUntil(firstVineCompFnDeclNode.start!)))
   }
 
   for (const vineCompFn of vineFileCtx.vineCompFns) {
@@ -164,7 +164,7 @@ export function createVueVineVirtualCode(
     const tempVarDecls: string[] = []
 
     // Write out the component function's formal parameters
-    generateComponentPropsAndContext(codegenCtx, vineCompFn)
+    tsCodeSegments.push(...collectSegments(codegen.componentPropsAndContext(vineCompFn)))
 
     const isVineCompHasFnBlock = isBlockStatement(vineCompFn.fnItselfNode?.body)
     if (isVineCompHasFnBlock) {
@@ -181,16 +181,16 @@ export function createVueVineVirtualCode(
         }
       }
 
-      generateScriptUntil(codegenCtx, blockStartPos)
-      generatePrefixVirtualCode(codegenCtx, vineCompFn)
+      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(blockStartPos)))
+      tsCodeSegments.push(...collectSegments(codegen.prefixVirtualCode(vineCompFn)))
 
       // Generate function body statements
-      generateVirtualCodeByAstPositionSorted(codegenCtx, vineCompFn, {
+      tsCodeSegments.push(...collectSegments(codegen.virtualCodeByAstPositionSorted(vineCompFn, {
         excludeBindings,
-      })
+      })))
 
       // after all statements in the function body
-      generateScriptUntil(codegenCtx, vineCompFn.templateReturn.start!)
+      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateReturn.start!)))
       if (isVineCompHasFnBlock && tempVarDecls.length > 0) {
         tsCodeSegments.push(...tempVarDecls)
         tsCodeSegments.push('\n\n')
@@ -209,7 +209,7 @@ export function createVueVineVirtualCode(
         }))
 
         // Insert `__VLS_StyleScopedClasses`
-        generateStyleScopedClasses(codegenCtx)
+        tsCodeSegments.push(...collectSegments(codegen.styleScopedClasses()))
 
         // Insert `__VLS_elements` variable definition
         // This variable is required by the template codegen to reference native HTML elements
@@ -276,22 +276,22 @@ export function createVueVineVirtualCode(
         tsCodeSegments.push('\n// --- End: Template virtual code\n\n')
       }
 
-      generateScriptUntil(codegenCtx, vineCompFn.templateStringNode.quasi.start!)
+      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateStringNode.quasi.start!)))
 
       // clear the template string
       tsCodeSegments.push(`\`\` as any as __VLS_VINE.VueVineComponent${vineCompFn.expose
         ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) }`
         : ''
       };\n`)
-      currentOffset.value = vineCompFn.templateStringNode.quasi.end!
+      codegen.currentOffset = vineCompFn.templateStringNode.quasi.end!
     }
 
-    generateScriptUntil(codegenCtx, vineCompFn.fnDeclNode!.end!)
+    tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.fnDeclNode!.end!)))
     if (vineCompFn.isCustomElement) {
       tsCodeSegments.push(' as CustomElementConstructor);\n')
     }
   }
-  generateScriptUntil(codegenCtx, snapshotContent.length)
+  tsCodeSegments.push(...collectSegments(codegen.scriptUntil(snapshotContent.length)))
 
   // Generate all full collection of all used components in this file
   const usedComponents = new Set<string>()
@@ -345,9 +345,9 @@ export function createVueVineVirtualCode(
     embeddedCodes: [
       // TemplateHTML must be the first one,
       // in order to avoid emmet feature lost
-      ...createTemplateHTMLEmbeddedCodes(codegenCtx),
-      ...createStyleEmbeddedCodes(codegenCtx),
-      ...createSourceVirtualCode(codegenCtx),
+      ...createTemplateHTMLEmbeddedCodes(vineFileCtx),
+      ...createStyleEmbeddedCodes(vineFileCtx),
+      ...createSourceVirtualCode(snapshotContent),
     ],
     vineMetaCtx: {
       vineCompileErrs,
