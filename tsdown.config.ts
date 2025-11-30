@@ -10,6 +10,7 @@ const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
       'packages/docs',
       'packages/e2e-vite',
       'packages/e2e-rsstack',
+      'packages/e2e-lynx',
       'packages/nuxt-module',
       'packages/playground',
     ],

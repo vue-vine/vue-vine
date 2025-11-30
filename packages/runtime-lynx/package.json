@@ -1,0 +1,57 @@
+{
+  "name": "@vue-vine/runtime-lynx",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Vue Vine runtime for Lynx platform",
+  "author": "Vue Vine Team",
+  "license": "MIT",
+  "homepage": "https://vue-vine.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/runtime-lynx"
+  },
+  "keywords": [
+    "vue-vine",
+    "lynx",
+    "runtime",
+    "vue",
+    "cross-platform"
+  ],
+  "exports": {
+    ".": {
+      "vine": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
+  "peerDependencies": {
+    "@lynx-js/types": "catalog:lynx"
+  },
+  "peerDependenciesMeta": {
+    "@lynx-js/types": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "vue": "catalog:vue-libs"
+  },
+  "devDependencies": {
+    "@lynx-js/types": "catalog:lynx",
+    "@typescript/native-preview": "catalog:compiler"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

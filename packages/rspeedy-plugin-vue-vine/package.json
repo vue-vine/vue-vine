@@ -1,0 +1,40 @@
+{
+  "name": "@vue-vine/rspeedy-plugin-vue-vine",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Rspeedy plugin for Vue Vine on Lynx",
+  "author": "Vue Vine Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vue-vine/vue-vine.git",
+    "directory": "packages/rspeedy-plugin-vue-vine"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "peerDependencies": {
+    "@lynx-js/rspeedy": "*"
+  },
+  "dependencies": {
+    "@lynx-js/runtime-wrapper-webpack-plugin": "catalog:lynx",
+    "@lynx-js/template-webpack-plugin": "catalog:lynx",
+    "@vue-vine/compiler": "workspace:*",
+    "@vue-vine/runtime-lynx": "workspace:*"
+  },
+  "devDependencies": {
+    "@lynx-js/rspeedy": "catalog:lynx",
+    "@rsbuild/core": "catalog:rsstack",
+    "@rspack/core": "catalog:rsstack"
+  }
+}

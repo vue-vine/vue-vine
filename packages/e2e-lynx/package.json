@@ -1,0 +1,22 @@
+{
+  "name": "@vue-vine/e2e-lynx",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "rspeedy dev",
+    "build": "rspeedy build",
+    "preview": "rspeedy preview"
+  },
+  "dependencies": {
+    "@vue-vine/runtime-lynx": "workspace:*",
+    "vue": "catalog:vue-libs"
+  },
+  "devDependencies": {
+    "@lynx-js/qrcode-rsbuild-plugin": "catalog:lynx",
+    "@lynx-js/rspeedy": "catalog:lynx",
+    "@lynx-js/types": "catalog:lynx",
+    "@vue-vine/rspeedy-plugin-vue-vine": "workspace:*",
+    "typescript": "catalog:cli"
+  }
+}

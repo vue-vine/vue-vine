@@ -40,6 +40,7 @@ import type {
 import {
   isArrayExpression,
   isArrayPattern,
+  isArrowFunctionExpression,
   isAssignmentPattern,
   isBlockStatement,
   isBooleanLiteral,
@@ -48,6 +49,7 @@ import {
   isExportDefaultDeclaration,
   isExportNamedDeclaration,
   isFunctionDeclaration,
+  isFunctionExpression,
   isIdentifier,
   isImportDefaultSpecifier,
   isImportNamespaceSpecifier,
@@ -88,6 +90,7 @@ import {
   isVineCompFnDecl,
   isVineCustomElement,
   isVineEmits,
+  isVineLynxRunOnMainThread,
   isVineMacroCallExpression,
   isVineMacroOf,
   isVineModel,
@@ -1177,6 +1180,48 @@ const analyzeUseTemplateRef: AnalyzeRunner = (
   )
 }
 
+/**
+ * Analyze vineLynxMainThread macro calls.
+ *
+ * This macro allows users to define code blocks that should be executed
+ * on Lynx's main thread (UI thread) rather than the background thread.
+ *
+ * @example
+ * ```ts
+ * function App() {
+ *   vineLynxMainThread(() => {
+ *     // This code will be extracted and run on Lynx main thread
+ *     __SetClasses(el, 'active')
+ *   })
+ *
+ *   return vine`<view>...</view>`
+ * }
+ * ```
+ */
+const analyzeVineLynxRunOnMainThread: AnalyzeRunner = (
+  { vineCompFnCtx },
+  fnItselfNode,
+) => {
+  _breakableTraverse(fnItselfNode, (node) => {
+    if (isVineLynxRunOnMainThread(node)) {
+      const fnArg = node.arguments[0]
+      // vineLynxRunOnMainThread must have exactly one argument: an arrow function or function expression
+      if (
+        !fnArg
+        || (!isArrowFunctionExpression(fnArg) && !isFunctionExpression(fnArg))
+      ) {
+        return
+      }
+
+      vineCompFnCtx.lynxMainThreadBlocks.push({
+        macroCall: node,
+        fnBody: fnArg,
+        range: [node.start!, node.end!],
+      })
+    }
+  })
+}
+
 const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineProps,
   analyzeVineValidators,
@@ -1189,6 +1234,7 @@ const analyzeRunners: AnalyzeRunner[] = [
   analyzeVineStyle,
   analyzeVineCustomElement,
   analyzeUseTemplateRef,
+  analyzeVineLynxRunOnMainThread,
 ]
 
 function analyzeDifferentKindVineFunctionDecls(analyzeCtx: AnalyzeCtx) {
@@ -1305,6 +1351,7 @@ function buildVineCompFnCtx(
     cssBindings: {},
     externalStyleFilePaths: [],
     hoistSetupStmts: [],
+    lynxMainThreadBlocks: [],
 
     getPropsTypeRecordStr({
       joinStr = ', ',

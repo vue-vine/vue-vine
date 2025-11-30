@@ -7,6 +7,7 @@ export default antfu(
       'node_modules',
       'dist',
       'pnpm-lock.yaml',
+      '.research',
 
       'packages/docs/.vitepress/cache',
       'packages/e2e-vite/**/*.vine.ts',
@@ -26,6 +27,15 @@ export default antfu(
       'packages/language-service/**/*.ts',
       'packages/language-server/**/*.ts',
       'packages/e2e-rsstack/tests/**/*.ts',
+    ],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
+    files: [
+      'packages/e2e-lynx/**/*.ts',
+      'packages/rspeedy-plugin-vue-vine/**/*.ts',
     ],
     rules: {
       'no-console': 'off',

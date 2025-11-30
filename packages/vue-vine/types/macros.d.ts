@@ -79,6 +79,40 @@ declare global {
 
   function vineCustomElement(): void
 
+  /**
+   * Define a code block that should be executed on Lynx's main thread (UI thread).
+   *
+   * This macro is used for Lynx platform support, allowing developers to write
+   * code that needs to run on the main thread for performance-critical UI operations.
+   *
+   * Note: The function passed to this macro should be **synchronous** (not async),
+   * as PrimJS main thread requires fast execution for UI responsiveness.
+   * If you need to get a return value, the call will be async (returns Promise).
+   *
+   * @param fn - A synchronous function containing the main thread code
+   *
+   * @example
+   * ```ts
+   * function App() {
+   *   // Simple usage without return value
+   *   vineLynxRunOnMainThread(() => {
+   *     // This code will be extracted and run on Lynx main thread
+   *     // You can use Lynx Element PAPI here
+   *     __SetClasses(el, 'active')
+   *   })
+   *
+   *   // With return value (async call)
+   *   const getValue = vineLynxRunOnMainThread(() => {
+   *     return someMainThreadValue
+   *   })
+   *   // Call: const result = await getValue()
+   *
+   *   return vine`<view>...</view>`
+   * }
+   * ```
+   */
+  function vineLynxRunOnMainThread<R = void>(fn: () => R): () => Promise<R>
+
   const vineStyle: VineStyleMacro
 
   const vine: (template: TemplateStringsArray) => VueVineComponent
