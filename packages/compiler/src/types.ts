@@ -301,12 +301,6 @@ export interface VineCompFnCtx {
   cssBindings: Record<string, string | null>
   externalStyleFilePaths: string[]
 
-  /**
-   * Lynx main thread code blocks within this component
-   * @see VineLynxRunOnMainThreadMeta
-   */
-  lynxMainThreadBlocks: VineLynxRunOnMainThreadMeta[]
-
   getPropsTypeRecordStr: (options?: {
     joinStr?: string
     isNeedLinkedCodeTag?: boolean
@@ -320,23 +314,6 @@ export interface VineDiagnostic {
   location: SourceLocation | null | undefined
   vineCompFnCtx?: VineCompFnCtx
   rawVueTemplateLocation?: VueSourceLocation | null
-}
-
-// ===================== Lynx Platform Support =====================
-
-/**
- * Metadata for vineLynxRunOnMainThread macro call
- *
- * This macro allows users to define code blocks that should be executed
- * on Lynx's main thread (UI thread) rather than the background thread.
- */
-export interface VineLynxRunOnMainThreadMeta {
-  /** The macro call AST node */
-  macroCall: CallExpression
-  /** The function body (arrow function or function expression) */
-  fnBody: ArrowFunctionExpression | FunctionExpression
-  /** Source code range [start, end] */
-  range: [number, number]
 }
 
 export interface VineFnPickedInfo {

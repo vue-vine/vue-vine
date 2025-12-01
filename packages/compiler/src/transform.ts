@@ -15,7 +15,6 @@ import {
   generateBasicComponentOptions,
   generateDefineComponentWrapper,
   generateEmitsOptions,
-  generateLynxRunOnMainThread,
   generatePropsDeclaration,
   generatePropsDestructure,
   generatePropsOptions,
@@ -180,7 +179,6 @@ export function transformFile(
     }
 
     onlyRemainFunctionBody(transformCtx, fnTransformCtx)
-    generateLynxRunOnMainThread(transformCtx, fnTransformCtx)
     removeStatementsContainsMacro(transformCtx, fnTransformCtx)
     generateVineSlots(transformCtx, fnTransformCtx)
     generateVineModel(transformCtx, fnTransformCtx)

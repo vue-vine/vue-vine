@@ -283,6 +283,17 @@ export function pluginVueVineLynx(
             .end()
         }
 
+        // Disable code splitting for main-thread layer
+        // Main-thread must load synchronously, cannot use async chunks
+        chain.optimization.splitChunks({
+          chunks: (chunk) => {
+            // Only allow splitting for non-main-thread chunks
+            const isMainThread = chunk.name?.includes('main-thread')
+              || chunk.getEntryOptions()?.layer === LAYERS.MAIN_THREAD
+            return !isMainThread
+          },
+        })
+
         if (debug) {
           console.log(`[${PLUGIN_NAME}] Configured entries:`, Object.keys(entries))
           console.log(`[${PLUGIN_NAME}] Main thread chunks:`, mainThreadChunks)

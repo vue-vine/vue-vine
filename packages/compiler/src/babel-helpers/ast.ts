@@ -219,7 +219,6 @@ export const isVineStyle: IsVineMacroOf = isVineMacroOf([
 ])
 export const isVineCustomElement: IsVineMacroOf = isVineMacroOf('vineCustomElement')
 export const isVineValidators: IsVineMacroOf = isVineMacroOf('vineValidators')
-export const isVineLynxRunOnMainThread: IsVineMacroOf = isVineMacroOf('vineLynxRunOnMainThread')
 export function isUseTemplateRefCall(node: Node): node is CallExpression {
   return isCallOf(node, 'useTemplateRef')
 }

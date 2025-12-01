@@ -1,9 +1,8 @@
 import { defineConfig } from 'tsdown'
 
-export default defineConfig({
+const config: ReturnType<typeof defineConfig> = defineConfig({
   entry: {
     index: './src/index.ts',
-    vineLoader: './src/vineLoader.ts',
   },
   external: [
     '@lynx-js/rspeedy',
@@ -13,3 +12,4 @@ export default defineConfig({
   ],
 })
 
+export default config
