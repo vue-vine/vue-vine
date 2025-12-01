@@ -6,17 +6,18 @@ const App = {
     return () => (
       h('view', {
         style: {
-          'display': 'flex',
-          'height': '100vh',
-          'flex-direction': 'column',
-          'justify-content': 'center',
-          'align-items': 'center',
+          // Both camelCase and kebab-case are supported
+          display: 'flex',
+          height: '100vh',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
       }, [
         h('text', {
           style: {
-            'font-size': '16px',
-            'font-weight': 'bold',
+            fontSize: '16px',
+            fontWeight: 'bold',
           },
         }, 'Hello from Vue Vine!'),
       ])

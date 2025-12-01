@@ -1,7 +1,15 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
+import type { LynxElement } from '../types'
+
 const EVENT_RE = /^on[A-Z]/
+
+// Convert camelCase to kebab-case: backgroundColor -> background-color
+const HYPHENATE_RE = /\B([A-Z])/g
+function hyphenate(str: string): string {
+  return str.replace(HYPHENATE_RE, '-$1').toLowerCase()
+}
 
 /**
  * Patch element properties for Lynx platform.
@@ -42,7 +50,9 @@ function patchStyle(
   if (typeof next === 'object' && next !== null) {
     // Handle object style: { padding: '20px', backgroundColor: '#fff' }
     for (const [key, value] of Object.entries(next)) {
-      __AddInlineStyle(el, key, value)
+      // Convert camelCase to kebab-case for Lynx
+      const styleName = key.includes('-') ? key : hyphenate(key)
+      __AddInlineStyle(el, styleName, value)
     }
   }
   else if (typeof next === 'string') {
