@@ -13,4 +13,4 @@ injectCalledByNative()
 // Export public API
 export { createLynxApp, render } from './renderer'
 export * from './types'
-export * from 'vue'
+export * from '@vue/runtime-core'

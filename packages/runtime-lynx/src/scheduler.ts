@@ -1,7 +1,7 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
-import { queuePostFlushCb } from 'vue'
+import { queuePostFlushCb } from '@vue/runtime-core'
 
 /**
  * Flag to track if a flush is already scheduled.

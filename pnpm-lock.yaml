@@ -391,6 +391,9 @@ catalogs:
     '@vue/language-service':
       specifier: 3.0.3
       version: 3.0.3
+    '@vue/runtime-core':
+      specifier: ^3.5.22
+      version: 3.5.22
     '@vue/shared':
       specifier: ^3.5.22
       version: 3.5.22
@@ -1075,9 +1078,9 @@ importers:
 
   packages/runtime-lynx:
     dependencies:
-      vue:
+      '@vue/runtime-core':
         specifier: catalog:vue-libs
-        version: 3.5.22(typescript@5.8.3)
+        version: 3.5.22
     devDependencies:
       '@lynx-js/types':
         specifier: catalog:lynx

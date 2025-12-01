@@ -44,7 +44,7 @@
     }
   },
   "dependencies": {
-    "vue": "catalog:vue-libs"
+    "@vue/runtime-core": "catalog:vue-libs"
   },
   "devDependencies": {
     "@lynx-js/types": "catalog:lynx",

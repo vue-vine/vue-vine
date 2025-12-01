@@ -1,9 +1,9 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
-import type { App, Component, ComponentPublicInstance, Renderer } from 'vue'
+import type { App, Component, ComponentPublicInstance, Renderer } from '@vue/runtime-core'
 import type { LynxElement } from '../types'
-import { createRenderer } from 'vue'
+import { createRenderer } from '@vue/runtime-core'
 import { nodeOps } from './nodeOps'
 import { patchProp } from './patchProp'
 
