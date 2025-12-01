@@ -1,8 +1,14 @@
 import { createLynxApp } from '@vue-vine/runtime-lynx'
-import { h } from 'vue'
+import { h, ref } from 'vue'
 
 const App = {
   setup() {
+    const num = ref(0)
+
+    setInterval(() => {
+      num.value += 1
+    }, 1000)
+
     return () => (
       h('view', {
         style: {
@@ -19,7 +25,7 @@ const App = {
             fontSize: '16px',
             fontWeight: 'bold',
           },
-        }, 'Hello from Vue Vine!'),
+        }, `Hello from Vue Vine! num = ${num.value}`),
       ])
     )
   },

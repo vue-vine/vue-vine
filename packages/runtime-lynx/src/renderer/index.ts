@@ -88,7 +88,6 @@ export function executeMountToPage(page: LynxElement): void {
     const originalMount = (__app as any).__originalMount as (container: LynxElement) => ComponentPublicInstance
     __mountedInstance = originalMount(page)
     __mountPending = false // Reset after mount is executed
-    __FlushElementTree()
   }
 }
 

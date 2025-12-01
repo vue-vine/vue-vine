@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 import type { LynxElement } from '../types'
+import { scheduleLynxFlush } from '../scheduler'
 
 const EVENT_RE = /^on[A-Z]/
 
@@ -37,6 +38,9 @@ export function patchProp(
     // Generic attribute
     __SetAttribute(el, key, nextValue)
   }
+
+  // Schedule flush to commit changes to Lynx Native
+  scheduleLynxFlush()
 }
 
 function patchClass(el: LynxElement, value: string | null): void {

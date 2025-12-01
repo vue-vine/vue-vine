@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 import type { LynxElement } from '../types'
+import { scheduleLynxFlush } from '../scheduler'
 
 /**
  * Vue renderer node operations for Lynx platform.
@@ -41,21 +42,24 @@ export const nodeOps = {
    */
   setText(node: LynxElement, text: string): void {
     __SetAttribute(node, 'text', text)
+    scheduleLynxFlush()
   },
 
   /**
    * Set text content of an element (for <text> element)
    */
   setElementText(el: LynxElement, text: string): void {
-    // Clear existing children
-    if (el.children) {
-      for (const child of [...el.children]) {
-        __RemoveElement(el, child)
-      }
+    // Clear existing children using Lynx PAPI
+    let child = __FirstElement(el)
+    while (child) {
+      const next = __NextElement(child)
+      __RemoveElement(el, child)
+      child = next
     }
     // Append raw text node
     const textNode = __CreateRawText(text)
     __AppendElement(el, textNode)
+    scheduleLynxFlush()
   },
 
   /**
@@ -68,15 +72,17 @@ export const nodeOps = {
     else {
       __AppendElement(parent, child)
     }
+    scheduleLynxFlush()
   },
 
   /**
    * Remove a child node from its parent
    */
   remove(child: LynxElement): void {
-    const parent = child.parentElement
+    const parent = __GetParent(child)
     if (parent) {
       __RemoveElement(parent, child)
+      scheduleLynxFlush()
     }
   },
 
@@ -84,17 +90,13 @@ export const nodeOps = {
    * Get the parent node of an element
    */
   parentNode(node: LynxElement): LynxElement | null {
-    return node.parentElement ?? null
+    return __GetParent(node)
   },
 
   /**
    * Get the next sibling of an element
    */
   nextSibling(node: LynxElement): LynxElement | null {
-    const parent = node.parentElement
-    if (!parent?.children)
-      return null
-    const idx = parent.children.indexOf(node)
-    return parent.children[idx + 1] ?? null
+    return __NextElement(node) ?? null
   },
 }

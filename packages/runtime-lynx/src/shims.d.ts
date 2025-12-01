@@ -35,6 +35,9 @@ declare global {
   declare function __AppendElement(parent: LynxElement, child: LynxElement): LynxElement
   declare function __InsertElementBefore(parent: LynxElement, child: LynxElement, ref?: LynxElement): LynxElement
   declare function __RemoveElement(parent: LynxElement, child: LynxElement): LynxElement
+  declare function __FirstElement(parent: LynxElement): LynxElement | null
+  declare function __NextElement(element: LynxElement): LynxElement | null
+  declare function __GetParent(element: LynxElement): LynxElement | null
   declare function __SetAttribute(e: LynxElement, key: string, value: any): void
   declare function __SetClasses(e: LynxElement, c: string): void
   declare function __AddDataset(e: LynxElement, key: string, value: any): void
