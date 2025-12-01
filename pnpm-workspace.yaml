@@ -4,6 +4,12 @@ packages:
 overrides:
   vite: npm:rolldown-vite@latest
 
+defines:
+  - &vue-libs ^3.5.22
+  - &vue-lang-tools 3.0.3
+  - &volar-libs 2.4.20
+  - &volar-services 0.0.65
+
 catalogs:
   cli:
     '@changesets/cli': ^2.29.5
@@ -118,15 +124,15 @@ catalogs:
     playwright-chromium: ^1.53.2
     vitest: ^3.2.4
   volar:
-    '@volar/language-core': 2.4.20
-    '@volar/language-server': 2.4.20
-    '@volar/language-service': 2.4.20
-    '@volar/typescript': 2.4.20
-    '@volar/vscode': 2.4.20
-    volar-service-css: 0.0.65
-    volar-service-emmet: 0.0.65
-    volar-service-html: 0.0.65
-    volar-service-typescript: 0.0.65
+    '@volar/language-core': *volar-libs
+    '@volar/language-server': *volar-libs
+    '@volar/language-service': *volar-libs
+    '@volar/typescript': *volar-libs
+    '@volar/vscode': *volar-libs
+    volar-service-css: *volar-services
+    volar-service-emmet: *volar-services
+    volar-service-html: *volar-services
+    volar-service-typescript: *volar-services
   vscode:
     '@vscode/vsce': latest
     reactive-vscode: ^0.3.1
@@ -136,23 +142,17 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
   vue-libs:
-    '@vue/compiler-dom': ^3.5.22
-    '@vue/compiler-ssr': ^3.5.22
-    '@vue/language-core': 3.0.3
-    '@vue/language-service': 3.0.3
-    '@vue/shared': ^3.5.22
+    '@vue/compiler-dom': *vue-libs
+    '@vue/compiler-ssr': *vue-libs
+    '@vue/language-core': *vue-lang-tools
+    '@vue/language-service': *vue-lang-tools
+    '@vue/shared': *vue-libs
     '@vue/test-utils': ^2.4.6
     '@vueuse/core': ^13.5.0
     pinia: ^3.0.3
-    vue: ^3.5.22
+    vue: *vue-libs
     vue-router: ^4.5.1
-    vue-tsc: 3.0.3
-
-defines:
-  - ^3.5.22
-  - 3.0.3
-  - 2.4.20
-  - 0.0.65
+    vue-tsc: *vue-lang-tools
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
