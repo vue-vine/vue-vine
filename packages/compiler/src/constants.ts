@@ -12,8 +12,6 @@ export const DEFAULT_MODEL_NAME = 'modelValue'
 export const DEFAULT_MODEL_MODIFIERS_NAME = 'modelModifiers'
 export const WITH_ASYNC_CONTEXT_HELPER = 'withAsyncContext'
 
-// Lynx platform helpers
-export const CREATE_LYNX_MAIN_THREAD_FN_HELPER = 'createLynxMainThreadFn'
 export const CREATE_PROPS_REST_PROXY_HELPER = 'createPropsRestProxy'
 
 /**
@@ -37,7 +35,6 @@ export const DECLARATION_MACROS = [
   'vineEmits',
   'vineSlots',
   'vineModel',
-  'vineLynxRunOnMainThread',
 ] as const
 export const VINE_MACROS: Array<(typeof DECLARATION_MACROS)[number] | (typeof BARE_CALL_MACROS)[number]> = [
   ...DECLARATION_MACROS,

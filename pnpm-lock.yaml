@@ -91,10 +91,6 @@ catalogs:
     ts-morph:
       specifier: ^26.0.0
       version: 26.0.0
-  default:
-    '@lynx-js/runtime-wrapper-webpack-plugin':
-      specifier: ^0.1.3
-      version: 0.1.3
   docs:
     oxc-minify:
       specifier: ^0.82.2
@@ -168,6 +164,9 @@ catalogs:
     '@lynx-js/rspeedy':
       specifier: ^0.12.0
       version: 0.12.0
+    '@lynx-js/runtime-wrapper-webpack-plugin':
+      specifier: ^0.1.3
+      version: 0.1.3
     '@lynx-js/template-webpack-plugin':
       specifier: ^0.9.1
       version: 0.9.1
@@ -1052,7 +1051,7 @@ importers:
   packages/rspeedy-plugin-vue-vine:
     dependencies:
       '@lynx-js/runtime-wrapper-webpack-plugin':
-        specifier: 'catalog:'
+        specifier: catalog:lynx
         version: 0.1.3
       '@lynx-js/template-webpack-plugin':
         specifier: catalog:lynx
@@ -1066,10 +1065,13 @@ importers:
     devDependencies:
       '@lynx-js/rspeedy':
         specifier: catalog:lynx
-        version: 0.12.0(@rspack/core@1.6.4(@swc/helpers@0.5.17))(esbuild@0.25.11)(typescript@5.8.3)(webpack@5.103.0(esbuild@0.25.11))
+        version: 0.12.0(@rspack/core@1.5.8(@swc/helpers@0.5.17))(esbuild@0.25.11)(typescript@5.8.3)(webpack@5.103.0(esbuild@0.25.11))
       '@rsbuild/core':
         specifier: catalog:rsstack
         version: 1.5.17
+      '@rspack/core':
+        specifier: catalog:rsstack
+        version: 1.5.8(@swc/helpers@0.5.17)
 
   packages/runtime-lynx:
     dependencies:
@@ -11290,6 +11292,32 @@ snapshots:
 
   '@lynx-js/qrcode-rsbuild-plugin@0.4.3': {}
 
+  '@lynx-js/rspeedy@0.12.0(@rspack/core@1.5.8(@swc/helpers@0.5.17))(esbuild@0.25.11)(typescript@5.8.3)(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@lynx-js/cache-events-webpack-plugin': 0.0.2
+      '@lynx-js/chunk-loading-webpack-plugin': 0.3.3
+      '@lynx-js/web-rsbuild-server-middleware': 0.18.4
+      '@lynx-js/webpack-dev-transport': 0.2.0
+      '@lynx-js/websocket': 0.0.4
+      '@rsbuild/core': 1.6.7
+      '@rsbuild/plugin-css-minimizer': 1.0.3(@rsbuild/core@1.6.7)(esbuild@0.25.11)(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/rspack-plugin': 1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+    optionalDependencies:
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - '@parcel/css'
+      - '@rspack/core'
+      - '@swc/css'
+      - bufferutil
+      - clean-css
+      - csso
+      - debug
+      - esbuild
+      - lightningcss
+      - supports-color
+      - utf-8-validate
+      - webpack
+
   '@lynx-js/rspeedy@0.12.0(@rspack/core@1.6.4(@swc/helpers@0.5.17))(esbuild@0.25.11)(typescript@5.8.3)(webpack@5.103.0(esbuild@0.25.11))':
     dependencies:
       '@lynx-js/cache-events-webpack-plugin': 0.0.2
@@ -12504,6 +12532,31 @@ snapshots:
 
   '@rsdoctor/client@1.2.3': {}
 
+  '@rsdoctor/core@1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@rsbuild/plugin-check-syntax': 1.3.0(@rsbuild/core@1.6.7)
+      '@rsdoctor/graph': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/sdk': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/types': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/utils': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      axios: 1.13.2
+      browserslist-load-config: 1.0.1
+      enhanced-resolve: 5.12.0
+      filesize: 10.1.6
+      fs-extra: 11.3.2
+      lodash: 4.17.21
+      path-browserify: 1.0.1
+      semver: 7.7.2
+      source-map: 0.7.6
+    transitivePeerDependencies:
+      - '@rsbuild/core'
+      - '@rspack/core'
+      - bufferutil
+      - debug
+      - supports-color
+      - utf-8-validate
+      - webpack
+
   '@rsdoctor/core@1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
     dependencies:
       '@rsbuild/plugin-check-syntax': 1.3.0(@rsbuild/core@1.6.7)
@@ -12529,6 +12582,17 @@ snapshots:
       - utf-8-validate
       - webpack
 
+  '@rsdoctor/graph@1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@rsdoctor/types': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/utils': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      lodash.unionby: 4.8.0
+      source-map: 0.7.6
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - supports-color
+      - webpack
+
   '@rsdoctor/graph@1.2.3(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
     dependencies:
       '@rsdoctor/types': 1.2.3(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
@@ -12538,6 +12602,24 @@ snapshots:
     transitivePeerDependencies:
       - '@rspack/core'
       - supports-color
+      - webpack
+
+  '@rsdoctor/rspack-plugin@1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@rsdoctor/core': 1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/graph': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/sdk': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/types': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/utils': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      lodash: 4.17.21
+    optionalDependencies:
+      '@rspack/core': 1.5.8(@swc/helpers@0.5.17)
+    transitivePeerDependencies:
+      - '@rsbuild/core'
+      - bufferutil
+      - debug
+      - supports-color
+      - utf-8-validate
       - webpack
 
   '@rsdoctor/rspack-plugin@1.2.3(@rsbuild/core@1.6.7)(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
@@ -12554,6 +12636,30 @@ snapshots:
       - '@rsbuild/core'
       - bufferutil
       - debug
+      - supports-color
+      - utf-8-validate
+      - webpack
+
+  '@rsdoctor/sdk@1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@rsdoctor/client': 1.2.3
+      '@rsdoctor/graph': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/types': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@rsdoctor/utils': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@types/fs-extra': 11.0.4
+      body-parser: 1.20.3
+      cors: 2.8.5
+      dayjs: 1.11.13
+      fs-extra: 11.3.2
+      json-cycle: 1.5.0
+      open: 8.4.2
+      sirv: 2.0.4
+      socket.io: 4.8.1
+      source-map: 0.7.6
+      tapable: 2.2.2
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - bufferutil
       - supports-color
       - utf-8-validate
       - webpack
@@ -12582,6 +12688,16 @@ snapshots:
       - utf-8-validate
       - webpack
 
+  '@rsdoctor/types@1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@types/connect': 3.4.38
+      '@types/estree': 1.0.5
+      '@types/tapable': 2.2.7
+      source-map: 0.7.6
+    optionalDependencies:
+      '@rspack/core': 1.5.8(@swc/helpers@0.5.17)
+      webpack: 5.103.0(esbuild@0.25.11)
+
   '@rsdoctor/types@1.2.3(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
     dependencies:
       '@types/connect': 3.4.38
@@ -12591,6 +12707,30 @@ snapshots:
     optionalDependencies:
       '@rspack/core': 1.6.4(@swc/helpers@0.5.17)
       webpack: 5.103.0(esbuild@0.25.11)
+
+  '@rsdoctor/utils@1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
+    dependencies:
+      '@babel/code-frame': 7.26.2
+      '@rsdoctor/types': 1.2.3(@rspack/core@1.5.8(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))
+      '@types/estree': 1.0.5
+      acorn: 8.15.0
+      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      acorn-walk: 8.3.4
+      connect: 3.7.0
+      deep-eql: 4.1.4
+      envinfo: 7.14.0
+      filesize: 10.1.6
+      fs-extra: 11.3.2
+      get-port: 5.1.1
+      json-stream-stringify: 3.0.1
+      lines-and-columns: 2.0.4
+      picocolors: 1.1.1
+      rslog: 1.3.2
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - supports-color
+      - webpack
 
   '@rsdoctor/utils@1.2.3(@rspack/core@1.6.4(@swc/helpers@0.5.17))(webpack@5.103.0(esbuild@0.25.11))':
     dependencies:

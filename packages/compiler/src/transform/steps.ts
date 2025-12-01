@@ -10,7 +10,6 @@ import { extractIdentifiers, isFunctionType, isInDestructureAssignment, isRefere
 import { walk } from 'estree-walker'
 import { fineAllExplicitExports, isCallOf, isStatementContainsVineMacroCall } from '../babel-helpers/ast'
 import {
-  CREATE_LYNX_MAIN_THREAD_FN_HELPER,
   CREATE_PROPS_REST_PROXY_HELPER,
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
@@ -169,62 +168,6 @@ export function removeStatementsContainsMacro(
       removeRange(ms, stmt.start!, stmt.end!)
     }
   })
-}
-
-/**
- * Transform `vineLynxRunOnMainThread` macro calls to runtime function calls.
- *
- * This function converts:
- * ```ts
- * vineLynxRunOnMainThread(() => { ... })
- * ```
- * to:
- * ```ts
- * _createLynxMainThreadFn(() => { ... })
- * ```
- *
- * The runtime function handles cross-thread communication in Lynx.
- */
-export function generateLynxRunOnMainThread(
-  transformCtx: TransformContext,
-  fnTransformCtx: SingleFnCompTransformCtx,
-): void {
-  const { vineCompFnCtx, vueImportsSpecs } = fnTransformCtx
-  const { lynxMainThreadBlocks } = vineCompFnCtx
-  const ms = transformCtx.vineFileCtx.fileMagicCode
-
-  if (lynxMainThreadBlocks.length === 0) {
-    return
-  }
-
-  // Register the import for createLynxMainThreadFn from @vue-vine/runtime-lynx
-  registerImport(
-    transformCtx.mergedImportsMap,
-    '@vue-vine/runtime-lynx',
-    CREATE_LYNX_MAIN_THREAD_FN_HELPER,
-    `_${CREATE_LYNX_MAIN_THREAD_FN_HELPER}`,
-  )
-
-  // Transform each vineLynxRunOnMainThread call
-  for (const block of lynxMainThreadBlocks) {
-    const { macroCall } = block
-    const macroCallStart = macroCall.start!
-    const macroCallEnd = macroCall.end!
-
-    // Get the callee (vineLynxRunOnMainThread)
-    const callee = macroCall.callee
-    if (!callee || !('start' in callee) || !('end' in callee)) {
-      continue
-    }
-
-    // Replace 'vineLynxRunOnMainThread' with '_createLynxMainThreadFn'
-    replaceRange(
-      ms,
-      callee.start!,
-      callee.end!,
-      `_${CREATE_LYNX_MAIN_THREAD_FN_HELPER}`,
-    )
-  }
 }
 
 export function buildSetupFormalParams(
