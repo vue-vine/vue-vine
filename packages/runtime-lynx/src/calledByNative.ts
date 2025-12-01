@@ -2,44 +2,28 @@
 // Licensed under the MIT License.
 
 import { jsReady } from './lifecycle/js-ready'
-
-// Current page element
-let __page: FiberElement | null = null
+import { executeMountToPage, isMountPending } from './renderer'
 
 /**
  * Render the page - called by Lynx Native
  */
-function renderPage(data: any): void {
+function renderPage(data: unknown): void {
   // Store initial data
-  lynx.__initData = data || {}
+  lynx.__initData = (data as Record<string, unknown>) || {}
 
-  // Create root page element
-  __page = __CreatePage('0', 0)
+  // Create Lynx page element
+  const page = __CreatePage('0', 0)
 
-  // For PoC: Create a simple view with text
-  const view = __CreateView(0)
-  const text = __CreateText(0)
-
-  // Create raw text node and append to text element
-  // This is the correct way to display text in Lynx
-  const rawText = __CreateRawText('Hello from Vue Vine!')
-  __AppendElement(text, rawText)
-
-  __SetClasses(view, 'root-view')
-  __AddInlineStyle(view, 'padding', '20px')
-  __AddInlineStyle(view, 'background-color', '#f0f0f0')
-
-  __AppendElement(view, text)
-  __AppendElement(__page, view)
-
-  // Flush element tree to render
-  __FlushElementTree()
+  // Execute pending mount if app.mount() was called
+  if (isMountPending()) {
+    executeMountToPage(page)
+  }
 }
 
 /**
  * Update the page - called by Lynx Native when data changes
  */
-function updatePage(data: any, options?: UpdatePageOption): void {
+function updatePage(data: unknown, options?: UpdatePageOption): void {
   if (options?.resetPageData) {
     lynx.__initData = {}
   }
@@ -55,9 +39,7 @@ function updatePage(data: any, options?: UpdatePageOption): void {
 /**
  * Update global props
  */
-function updateGlobalProps(_data: any, _options?: UpdatePageOption): void {
-  // Simply flush the element tree
-  // Note: UpdatePageOption is not directly compatible with FlushOptions
+function updateGlobalProps(_data: unknown, _options?: UpdatePageOption): void {
   __FlushElementTree()
 }
 

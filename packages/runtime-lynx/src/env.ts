@@ -1,8 +1,6 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
-import './types'
-
 /**
  * Setup Lynx environment for main thread (Lepus)
  * This registers `processData` to globalThis

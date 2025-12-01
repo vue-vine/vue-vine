@@ -10,6 +10,7 @@ setupLynxEnv()
 // Inject native-callable functions (registers renderPage, updatePage, etc.)
 injectCalledByNative()
 
-export function createApp(..._args: any[]): any {
-  // Todo: ...
-}
+// Export public API
+export { createLynxApp, render } from './renderer'
+export * from './types'
+export * from 'vue'
