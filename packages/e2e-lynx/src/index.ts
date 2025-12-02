@@ -1,6 +1,6 @@
 import { createLynxApp, defineComponent, h, ref } from '@vue-vine/runtime-lynx'
 
-const TestComp = defineComponent({
+const TestReactiveEffect = defineComponent({
   props: {
     msg: { type: String, required: true },
   },
@@ -22,6 +22,39 @@ const TestComp = defineComponent({
   },
 })
 
+const TestEventDispatch = defineComponent({
+  setup() {
+    const count = ref(0)
+    const onTap = () => {
+      count.value++
+    }
+
+    return () => (
+      h('view', {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        },
+      }, [
+        h ('view', {
+          bindtap: onTap,
+          style: {
+            marginTop: '1rem',
+            padding: '1rem',
+            backgroundColor: 'gold',
+            borderRadius: '0.25rem',
+          },
+        }, h(
+          'text',
+          null,
+          `Tap me +1 / count = ${count.value}`,
+        )),
+      ])
+    )
+  },
+})
+
 const App = defineComponent({
   setup() {
     return () => (
@@ -35,9 +68,10 @@ const App = defineComponent({
           alignItems: 'center',
         },
       }, [
-        h(TestComp, {
+        h(TestReactiveEffect, {
           msg: 'Hello from Vue Vine!',
         }),
+        h(TestEventDispatch),
       ])
     )
   },
