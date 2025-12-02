@@ -1,14 +1,29 @@
-import { createLynxApp } from '@vue-vine/runtime-lynx'
-import { h, ref } from 'vue'
+import { createLynxApp, defineComponent, h, ref } from '@vue-vine/runtime-lynx'
 
-const App = {
-  setup() {
+const TestComp = defineComponent({
+  props: {
+    msg: { type: String, required: true },
+  },
+  setup(props) {
     const num = ref(0)
 
     setInterval(() => {
       num.value += 1
     }, 1000)
 
+    return () => (
+      h('text', {
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+        },
+      }, `num = ${num.value}, msg = ${props.msg}`)
+    )
+  },
+})
+
+const App = defineComponent({
+  setup() {
     return () => (
       h('view', {
         style: {
@@ -20,16 +35,13 @@ const App = {
           alignItems: 'center',
         },
       }, [
-        h('text', {
-          style: {
-            fontSize: '16px',
-            fontWeight: 'bold',
-          },
-        }, `Hello from Vue Vine! num = ${num.value}`),
+        h(TestComp, {
+          msg: 'Hello from Vue Vine!',
+        }),
       ])
     )
   },
-}
+})
 
 // Standard Vue API usage
 const app = createLynxApp(App)
