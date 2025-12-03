@@ -45,11 +45,6 @@ export function registerEventHandler(handler: EventHandler | string): string {
 
   const sign = generateHandlerSign()
   eventHandlers.set(sign, handler)
-
-  if (__DEV__) {
-    console.log(`[EventRegistry] Registered handler: ${sign}, total: ${eventHandlers.size}`)
-  }
-
   return sign
 }
 
@@ -99,10 +94,6 @@ export function executeEventHandler(handlerSign: string, eventData: unknown): vo
  * - Background thread: forward to main thread via callLepusMethod
  */
 export function publishEvent(handlerSign: string, eventData: unknown): void {
-  if (__DEV__) {
-    console.log(`[EventRegistry] publishEvent: sign=${handlerSign}, isMainThread=${isMainThread()}`)
-  }
-
   if (isMainThread()) {
     // Main thread: directly execute
     executeEventHandler(handlerSign, eventData)
@@ -118,29 +109,25 @@ export function publishEvent(handlerSign: string, eventData: unknown): void {
  * Uses Lynx's rLynxChange (patchUpdate) mechanism.
  */
 function forwardEventToMainThread(handlerSign: string, eventData: unknown): void {
-  console.log(`[EventRegistry] Forwarding event to main thread: ${handlerSign}`)
-
   try {
     if (typeof lynx !== 'undefined' && lynx.getNativeApp) {
       const nativeApp = lynx.getNativeApp()
-      if (nativeApp && nativeApp.callLepusMethod) {
+      if (nativeApp?.callLepusMethod) {
         // Use rLynxChange (Lynx's patchUpdate method) which is a supported method name
-        // Main thread should have a handler registered for this
         nativeApp.callLepusMethod(
-          'rLynxChange', // This is LifecycleConstant.patchUpdate in ReactLynx
+          'rLynxChange',
           { __vineEvent__: { handlerSign, eventData } },
-          () => {
-            console.log(`[EventRegistry] callLepusMethod callback executed: ${handlerSign}`)
-          },
         )
         return
       }
     }
 
-    console.warn('[Vue Vine Lynx] Cannot forward event to main thread: callLepusMethod not available')
+    if (__DEV__) {
+      console.warn('[Vue Vine Lynx] Cannot forward event: callLepusMethod not available')
+    }
   }
   catch (e) {
-    console.error('[Vue Vine Lynx] Error forwarding event to main thread:', e)
+    console.error('[Vue Vine Lynx] Error forwarding event:', e)
   }
 }
 

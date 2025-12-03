@@ -23,6 +23,16 @@
       "vine": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./entry-main": {
+      "vine": "./src/entry-main.ts",
+      "types": "./dist/entry-main.d.ts",
+      "default": "./dist/entry-main.js"
+    },
+    "./entry-background": {
+      "vine": "./src/entry-background.ts",
+      "types": "./dist/entry-background.d.ts",
+      "default": "./dist/entry-background.js"
     }
   },
   "main": "./dist/index.js",

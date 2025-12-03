@@ -32,12 +32,9 @@ function renderPage(data: unknown): void {
  * Also handles event forwarding from background thread via __vineEvent__ marker.
  */
 function updatePage(data: unknown, options?: UpdatePageOption): void {
-  console.log(`[Vue Vine Lynx] updatePage called, data:`, JSON.stringify(data))
-
   // Check if this is an event forwarded from background thread
   if (data && typeof data === 'object' && '__vineEvent__' in data) {
     const { handlerSign, eventData } = (data as { __vineEvent__: { handlerSign: string, eventData: unknown } }).__vineEvent__
-    console.log(`[Vue Vine Lynx] Main thread received forwarded event: ${handlerSign}`)
     executeEventHandler(handlerSign, eventData)
     return
   }
@@ -67,12 +64,9 @@ function updateGlobalProps(_data: unknown, _options?: UpdatePageOption): void {
  * We use this to forward events from background thread to main thread.
  */
 function rLynxChange(data: unknown): void {
-  console.log(`[Vue Vine Lynx] rLynxChange called, data:`, JSON.stringify(data))
-
   // Check if this is an event forwarded from background thread
   if (data && typeof data === 'object' && '__vineEvent__' in data) {
     const { handlerSign, eventData } = (data as { __vineEvent__: { handlerSign: string, eventData: unknown } }).__vineEvent__
-    console.log(`[Vue Vine Lynx] Main thread received forwarded event via rLynxChange: ${handlerSign}`)
     executeEventHandler(handlerSign, eventData)
   }
 }
@@ -114,10 +108,6 @@ function onLifecycleEvent([type, data]: [ELifecycleConstant, unknown]): void {
 export function injectCalledByNative(): void {
   const inMain = isMainThread()
 
-  if (__DEV__) {
-    console.log(`[Vue Vine Lynx] injectCalledByNative: isMainThread=${inMain}`)
-  }
-
   // Common functions for both threads
   const calledByNative: LynxCallByNative = {
     renderPage,
@@ -139,11 +129,8 @@ export function injectCalledByNative(): void {
         publishEvent(handlerName, data)
       },
       onLifecycleEvent,
-      // Register rLynxChange to receive events from background thread
       rLynxChange,
     })
-
-    console.log('[Vue Vine Lynx] Main thread: rLynxChange registered for cross-thread events')
   }
   else {
     // Background thread: inject to globalThis and lynxCoreInject.tt
@@ -161,10 +148,6 @@ export function injectCalledByNative(): void {
       lynxCoreInject.tt.publishEvent = publishEvent
       lynxCoreInject.tt.publicComponentEvent = (_componentId: string, handlerName: string, data: unknown) => {
         publishEvent(handlerName, data)
-      }
-
-      if (__DEV__) {
-        console.log('[Vue Vine Lynx] Background thread: publishEvent injected to lynxCoreInject.tt')
       }
     }
   }
