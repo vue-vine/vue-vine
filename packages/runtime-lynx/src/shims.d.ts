@@ -47,7 +47,27 @@ declare global {
   declare function __SetInlineStyles(e: LynxElement, value: string | object): void
   declare function __FlushElementTree(e?: LynxElement, options?: FlushOptions): void
   declare function __OnLifecycleEvent(...args: any[]): void
+  declare function __GetElementUniqueID(e: LynxElement): number
   declare function _ReportError(error: Error, options: { errorCode: number }): void
+
+  // Lynx core inject object for background thread
+  const lynxCoreInject: LynxCoreInject
+
+  interface LynxCoreInject {
+    tt: LynxTT
+  }
+
+  interface LynxTT {
+    OnLifecycleEvent?: (event: [any, unknown]) => void
+    publishEvent?: (handlerName: string, data: unknown) => void
+    publicComponentEvent?: (componentId: string, handlerName: string, data: unknown) => void
+    GlobalEventEmitter?: {
+      emit: (eventName: string, data: unknown) => void
+      trigger?: (eventName: string, data: unknown) => void
+      addListener?: (eventName: string, listener: (...args: unknown[]) => void) => void
+      removeListener?: (eventName: string, listener: (...args: unknown[]) => void) => void
+    }
+  }
 
   interface FlushOptions {
     triggerLayout?: boolean
@@ -69,8 +89,11 @@ declare global {
 
   interface LynxGlobal {
     __initData: Record<string, unknown>
+    __globalProps: Record<string, unknown>
     reportError: (e: Error) => void
     registerDataProcessors: (definition?: DataProcessorDefinition) => void
+    getJSModule: (moduleName: string) => any
+    getNativeApp: () => any
   }
 
   interface DataProcessorDefinition {

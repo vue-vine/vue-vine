@@ -1,7 +1,7 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
-import { injectCalledByNative } from './calledByNative'
+import { injectCalledByNative } from './called-by-native'
 import { setupLynxEnv } from './env'
 
 // Setup Lynx environment (registers processData)

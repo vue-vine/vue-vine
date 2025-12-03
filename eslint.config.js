@@ -36,6 +36,7 @@ export default antfu(
     files: [
       'packages/e2e-lynx/**/*.ts',
       'packages/rspeedy-plugin-vue-vine/**/*.ts',
+      'packages/runtime-lynx/**/*.ts',
     ],
     rules: {
       'no-console': 'off',

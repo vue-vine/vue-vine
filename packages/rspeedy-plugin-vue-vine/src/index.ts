@@ -271,14 +271,23 @@ export function pluginVueVineLynx(
           .use(LynxEncodePlugin, [{ inlineScripts: true }])
           .end()
 
-        // Define Vue feature flags
+        // Define Vue feature flags and Lynx build-time macros
         if (DefinePlugin) {
           chain
             .plugin(`${PLUGIN_NAME}-define`)
             .use(DefinePlugin, [{
+              // Vue feature flags
               __VUE_OPTIONS_API__: JSON.stringify(true),
               __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
               __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+              // Lynx build-time macros
+              __DEV__: JSON.stringify(isDev),
+              __JS__: JSON.stringify(true), // Running in JS context (not Lepus)
+              __LEPUS__: JSON.stringify(false), // Not running in Lepus (main thread script engine)
+              __MAIN_THREAD__: JSON.stringify(false), // Vue runtime runs in background
+              __BACKGROUND__: JSON.stringify(true), // Vue runtime runs in background
+              __PROFILE__: JSON.stringify(false),
+              __ALOG__: JSON.stringify(false),
             }])
             .end()
         }
