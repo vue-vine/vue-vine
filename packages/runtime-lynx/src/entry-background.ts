@@ -12,24 +12,29 @@
  * Note: The full Vue runtime is NOT needed here since:
  * - All rendering happens in main thread
  * - Background thread only handles event forwarding
+ *
+ * This entry uses event-forward.ts instead of eventRegistry.ts
+ * to keep the bundle minimal.
  */
 
-import { publishEvent } from './eventRegistry'
-import { LifecycleConstant } from './lifecycle/life-cycle-constants'
-import type { ELifecycleConstant } from './lifecycle/life-cycle-constants'
+import { publishEventBackground } from './event-forward'
+
+// Lifecycle constants (inline to avoid importing extra modules)
+const LIFECYCLE_PUBLISH_EVENT = 'rLynxPublishEvent'
+const LIFECYCLE_GLOBAL_EVENT = 'globalEventFromLepus'
 
 /**
  * Handle lifecycle events from Lynx Native
  */
-function onLifecycleEvent([type, data]: [ELifecycleConstant, unknown]): void {
+function onLifecycleEvent([type, data]: [string, unknown]): void {
   try {
     switch (type) {
-      case LifecycleConstant.publishEvent: {
+      case LIFECYCLE_PUBLISH_EVENT: {
         const { handlerName, data: eventData } = data as { handlerName: string, data: unknown }
-        publishEvent(handlerName, eventData)
+        publishEventBackground(handlerName, eventData)
         break
       }
-      case LifecycleConstant.globalEventFromLepus: {
+      case LIFECYCLE_GLOBAL_EVENT: {
         const [eventName, params] = data as [string, Record<string, unknown>]
         if (typeof lynx !== 'undefined' && lynx.getJSModule) {
           lynx.getJSModule('GlobalEventEmitter')?.trigger?.(eventName, params)
@@ -54,9 +59,9 @@ function onLifecycleEvent([type, data]: [ELifecycleConstant, unknown]): void {
 function injectBackgroundHandlers(): void {
   // Inject to globalThis
   Object.assign(globalThis, {
-    publishEvent,
+    publishEvent: publishEventBackground,
     publicComponentEvent: (_componentId: string, handlerName: string, data: unknown) => {
-      publishEvent(handlerName, data)
+      publishEventBackground(handlerName, data)
     },
     onLifecycleEvent,
   })
@@ -64,13 +69,12 @@ function injectBackgroundHandlers(): void {
   // Also inject to lynxCoreInject.tt if available
   if (typeof lynxCoreInject !== 'undefined' && lynxCoreInject.tt) {
     lynxCoreInject.tt.OnLifecycleEvent = onLifecycleEvent
-    lynxCoreInject.tt.publishEvent = publishEvent
+    lynxCoreInject.tt.publishEvent = publishEventBackground
     lynxCoreInject.tt.publicComponentEvent = (_componentId: string, handlerName: string, data: unknown) => {
-      publishEvent(handlerName, data)
+      publishEventBackground(handlerName, data)
     }
   }
 }
 
 // Initialize background thread handlers
 injectBackgroundHandlers()
-
