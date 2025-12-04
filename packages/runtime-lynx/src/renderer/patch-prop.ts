@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import type { LynxElement } from '../types'
-import { registerEventHandler, unregisterEventHandler } from '../eventRegistry'
+import { registerEventHandler, unregisterEventHandler } from '../event-registry'
 import { scheduleLynxFlush } from '../scheduler'
 
 // Match Vue event handlers: onTap, onClick, etc.
@@ -98,6 +98,8 @@ function patchStyle(
   }
 }
 
+type EventHandler = (...args: unknown[]) => void
+
 /**
  * Patch Vue-style event handlers (onTap, onClick, etc.)
  */
@@ -121,7 +123,7 @@ function patchEvent(
 
   if (nextValue && typeof nextValue === 'function') {
     // Register new handler and get its sign
-    const sign = registerEventHandler(nextValue as Function)
+    const sign = registerEventHandler(nextValue as EventHandler)
     elementEventSigns.set(eventKey, sign)
 
     // Call Lynx PAPI with the sign string
@@ -169,7 +171,7 @@ function patchLynxEvent(
 
   if (nextValue && typeof nextValue === 'function') {
     // Register new handler and get its sign
-    const sign = registerEventHandler(nextValue as Function)
+    const sign = registerEventHandler(nextValue as EventHandler)
     elementEventSigns.set(eventKey, sign)
 
     // Call Lynx PAPI with the sign string

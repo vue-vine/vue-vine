@@ -12,28 +12,53 @@
  */
 
 /**
- * Forward event to main thread via callLepusMethod.
- * Uses Lynx's rLynxChange (patchUpdate) mechanism.
+ * Forward event to main thread via dispatchEvent.
+ *
+ * Unlike ReactLynx which uses rLynxChange for patch updates,
+ * Vue Vine uses a direct message passing approach since Vue's
+ * custom renderer runs entirely on the main thread.
+ *
+ * Uses lynx.getCoreContext().dispatchEvent() - the standard Lynx API
+ * for background-to-main thread communication.
  */
 export function forwardEventToMainThread(handlerSign: string, eventData: unknown): void {
   try {
-    if (typeof lynx !== 'undefined' && lynx.getNativeApp) {
-      const nativeApp = lynx.getNativeApp()
-      if (nativeApp?.callLepusMethod) {
-        nativeApp.callLepusMethod(
-          'rLynxChange',
-          { __vineEvent__: { handlerSign, eventData } },
-        )
-        return
+    if (typeof lynx === 'undefined') {
+      if (__DEV__) {
+        console.warn('[Vue Vine Lynx] lynx is not defined')
       }
+      return
     }
 
-    if (__DEV__) {
-      console.warn('[Vue Vine Lynx] Cannot forward event: callLepusMethod not available')
-    }
+    // Use standard Lynx API for cross-thread communication
+    // Background thread -> Main thread: getCoreContext().dispatchEvent()
+    const coreContext = lynx.getCoreContext()
+
+    // Dispatch custom event to main thread
+    coreContext.dispatchEvent({
+      type: 'vue-vine-event',
+      data: JSON.stringify({
+        handlerSign,
+        eventData,
+      }),
+    })
   }
   catch (e) {
     console.error('[Vue Vine Lynx] Error forwarding event:', e)
+
+    // Fallback: try global function (for testing/dev environments)
+    try {
+      if (typeof globalThis.vueVineHandleEvent === 'function') {
+        globalThis.vueVineHandleEvent({
+          type: 'vue-vine-event',
+          handlerSign,
+          eventData,
+        })
+      }
+    }
+    catch (fallbackError) {
+      console.error('[Vue Vine Lynx] Fallback also failed:', fallbackError)
+    }
   }
 }
 

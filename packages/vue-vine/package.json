@@ -41,6 +41,9 @@
       "vine": "./src/slidev/index.ts",
       "types": "./types/slidev.d.ts",
       "default": "./dist/slidev.js"
+    },
+    "./lynx-shims": {
+      "types": "./types/lynx-shims.d.ts"
     }
   },
   "files": [
@@ -57,6 +60,7 @@
     "vue": ">=3.2"
   },
   "dependencies": {
+    "@lynx-js/types": "catalog:lynx",
     "@vue-vine/rsbuild-plugin": "workspace:*",
     "@vue-vine/rspack-loader": "workspace:*",
     "@vue-vine/vite-plugin": "workspace:*"

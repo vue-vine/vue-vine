@@ -64,3 +64,63 @@ export function getCombinedDefines(isDev: boolean): DefineValues {
   return getMainThreadDefines(isDev)
 }
 
+export interface SharedDefineValues {
+  // Vue feature flags
+  __VUE_OPTIONS_API__: string
+  __VUE_PROD_DEVTOOLS__: string
+  __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: string
+  // Common Lynx macros
+  __DEV__: string
+  __PROFILE__: string
+  __ALOG__: string
+}
+
+/**
+ * Get shared define values (excluding layer-specific macros)
+ * __MAIN_THREAD__, __BACKGROUND__, __JS__, __LEPUS__ are handled per-layer
+ *
+ * Note: DefinePlugin values must be JSON stringified for proper replacement
+ */
+export function getSharedDefines(isDev: boolean): SharedDefineValues {
+  return {
+    // Vue feature flags
+    __VUE_OPTIONS_API__: JSON.stringify(true),
+    __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    // Common Lynx macros
+    __DEV__: JSON.stringify(isDev),
+    __PROFILE__: JSON.stringify(false),
+    __ALOG__: JSON.stringify(false),
+  }
+}
+
+export interface LayerDefineValues {
+  __JS__: string
+  __LEPUS__: string
+  __MAIN_THREAD__: string
+  __BACKGROUND__: string
+}
+
+/**
+ * Get layer-specific define values for main thread
+ */
+export function getMainThreadLayerDefines(): LayerDefineValues {
+  return {
+    __JS__: 'false',
+    __LEPUS__: 'true',
+    __MAIN_THREAD__: 'true',
+    __BACKGROUND__: 'false',
+  }
+}
+
+/**
+ * Get layer-specific define values for background thread
+ */
+export function getBackgroundLayerDefines(): LayerDefineValues {
+  return {
+    __JS__: 'true',
+    __LEPUS__: 'false',
+    __MAIN_THREAD__: 'false',
+    __BACKGROUND__: 'true',
+  }
+}

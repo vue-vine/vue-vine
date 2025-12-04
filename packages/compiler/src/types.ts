@@ -128,6 +128,15 @@ export interface VineCompilerOptions {
     disabled?: boolean
     tsConfigPath?: string
   }
+  /** Lynx Specific Options */
+  lynx?: {
+    /**
+     * Whether to enable Lynx platform specific features
+     *
+     * default: `false`
+     */
+    enabled?: boolean
+  }
 }
 
 export interface VineStyleMeta {
@@ -138,6 +147,44 @@ export interface VineStyleMeta {
   scoped: boolean
   fileCtx: VineFileCtx
   compCtx: VineCompFnCtx
+}
+
+/**
+ * Lynx function directive types (official specification)
+ *
+ * - 'main thread': Function runs on main thread (UI thread)
+ * - 'background only': Function runs only on background thread, excluded from main-thread bundle
+ */
+export type VineLynxDirectiveType = 'main thread' | 'background only'
+
+/**
+ * Information about a function with Lynx directive
+ */
+export interface VineLynxDirectiveFnInfo {
+  /** The directive type */
+  directive: VineLynxDirectiveType
+  /** The function name or variable name */
+  fnName: string
+  /** The AST node of the function */
+  fnNode: BabelFunctionNodeTypes
+  /** Source location for error reporting */
+  loc?: SourceLocation | null
+}
+
+/**
+ * Information about a main-thread: prefixed event binding
+ */
+export interface VineLynxMainThreadEventBinding {
+  /** Component function name */
+  compFnName: string
+  /** Event attribute name (e.g., 'main-thread:bindtap') */
+  eventAttr: string
+  /** Handler expression (function name or inline function) */
+  handlerExpr: string
+  /** Whether handler is an inline function */
+  isInlineFn: boolean
+  /** Source location for error reporting */
+  loc?: VueSourceLocation | null
 }
 
 export interface VinePropMacroInfo {
@@ -210,6 +257,17 @@ export interface VineFileCtx {
 
   /* Store all ExportNamedDeclaration */
   exportNamedDeclarations: ExportNamedDeclaration[]
+
+  /**
+   * Lynx-specific context for directive functions and event bindings.
+   * Collected during analysis/transform phase for rspeedy plugin to use.
+   */
+  lynx?: {
+    /** Functions with Lynx directives ('main thread', 'background only') */
+    directiveFns: VineLynxDirectiveFnInfo[]
+    /** Event bindings with main-thread: prefix */
+    mainThreadEventBindings: VineLynxMainThreadEventBinding[]
+  }
 
   getAstNodeContent: (node: Node) => string
   getLinkedTSTypeLiteralNodeContent: (node: TSTypeLiteral) => string

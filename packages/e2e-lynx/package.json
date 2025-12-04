@@ -10,13 +10,17 @@
   },
   "dependencies": {
     "@vue-vine/runtime-lynx": "workspace:*",
-    "vue": "catalog:vue-libs"
+    "vue": "catalog:vue-libs",
+    "vue-vine": "workspace:*"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "catalog:lint-libs",
     "@lynx-js/qrcode-rsbuild-plugin": "catalog:lynx",
     "@lynx-js/rspeedy": "catalog:lynx",
     "@lynx-js/types": "catalog:lynx",
+    "@vue-vine/eslint-config": "workspace:*",
     "@vue-vine/rspeedy-plugin-vue-vine": "workspace:*",
+    "eslint": "catalog:lint-libs",
     "typescript": "catalog:cli"
   }
 }

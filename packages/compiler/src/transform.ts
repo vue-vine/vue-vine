@@ -7,6 +7,7 @@ import {
   createInlineTemplateComposer,
   createSeparatedTemplateComposer,
 } from './template/compose'
+import { transformLynxDirectiveFunctions } from './transform/lynx'
 import {
   buildSetupFormalParams,
   createVueImportsSpecs,
@@ -201,4 +202,10 @@ export function transformFile(
 
   generateStyleImports(transformCtx)
   generateAllImports(transformCtx)
+
+  // Transform Lynx directive functions (if Lynx mode is enabled)
+  const isLynxEnabled = compilerHooks.getCompilerCtx().options.lynx?.enabled
+  if (isLynxEnabled) {
+    transformLynxDirectiveFunctions(vineFileCtx)
+  }
 }

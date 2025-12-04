@@ -18,7 +18,6 @@
 
 type EventHandler = (...args: unknown[]) => void
 
-let nextEventId = 1
 const eventHandlers = new Map<string, EventHandler>()
 
 // Check if we're in main thread (has PAPI)
@@ -30,8 +29,7 @@ function isMainThread(): boolean {
  * Generate a unique handler sign for an event handler.
  */
 export function generateHandlerSign(): string {
-  const id = nextEventId++
-  return `${id}:0:`
+  return Array.from({ length: 6 }, () => Math.floor(Math.random() * 36).toString(36)).join('')
 }
 
 /**
@@ -106,25 +104,33 @@ export function publishEvent(handlerSign: string, eventData: unknown): void {
 
 /**
  * Forward event from background thread to main thread.
- * Uses Lynx's rLynxChange (patchUpdate) mechanism.
+ *
+ * Vue Vine uses a direct message passing approach instead of ReactLynx's
+ * rLynxChange mechanism, since Vue's renderer runs on the main thread.
+ *
+ * Uses lynx.getCoreContext().dispatchEvent() - the standard Lynx API.
  */
 function forwardEventToMainThread(handlerSign: string, eventData: unknown): void {
   try {
-    if (typeof lynx !== 'undefined' && lynx.getNativeApp) {
-      const nativeApp = lynx.getNativeApp()
-      if (nativeApp?.callLepusMethod) {
-        // Use rLynxChange (Lynx's patchUpdate method) which is a supported method name
-        nativeApp.callLepusMethod(
-          'rLynxChange',
-          { __vineEvent__: { handlerSign, eventData } },
-        )
-        return
+    if (typeof lynx === 'undefined') {
+      if (__DEV__) {
+        console.warn('[Vue Vine Lynx] lynx is not defined')
       }
+      return
     }
 
-    if (__DEV__) {
-      console.warn('[Vue Vine Lynx] Cannot forward event: callLepusMethod not available')
-    }
+    // Use standard Lynx API for cross-thread communication
+    // Background thread -> Main thread: getCoreContext().dispatchEvent()
+    const coreContext = lynx.getCoreContext()
+
+    // Dispatch custom event to main thread
+    coreContext.dispatchEvent({
+      type: 'vue-vine-event',
+      data: JSON.stringify({
+        handlerSign,
+        eventData,
+      }),
+    })
   }
   catch (e) {
     console.error('[Vue Vine Lynx] Error forwarding event:', e)
@@ -136,5 +142,4 @@ function forwardEventToMainThread(handlerSign: string, eventData: unknown): void
  */
 export function clearEventHandlers(): void {
   eventHandlers.clear()
-  nextEventId = 1
 }

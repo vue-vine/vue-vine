@@ -1,6 +1,7 @@
 import type {
   ArrayPattern,
   ArrowFunctionExpression,
+  BlockStatement,
   CallExpression,
   Declaration,
   FunctionExpression,
@@ -31,6 +32,8 @@ import type {
   VineDestructuredProp,
   VineFileCtx,
   VineFnPickedInfo,
+  VineLynxDirectiveFnInfo,
+  VineLynxDirectiveType,
   VinePropMeta,
   VineStyleLang,
   VineStyleMeta,
@@ -1438,4 +1441,138 @@ export function analyzeVine(
       }
     }
   }
+
+  // Analyze Lynx main thread functions (if Lynx mode is enabled)
+  const isLynxEnabled = vineCompilerHooks.getCompilerCtx().options.lynx?.enabled
+  if (isLynxEnabled) {
+    analyzeLynxDirectiveFunctions(vineFileCtx)
+  }
+}
+
+/**
+ * Analyze functions with Lynx directives in Lynx mode.
+ *
+ * Supported directives (official specification):
+ * - 'main thread': Function runs on main thread (UI thread)
+ * - 'background only': Function runs only on background thread
+ */
+function analyzeLynxDirectiveFunctions(vineFileCtx: VineFileCtx): void {
+  const directiveFns: VineLynxDirectiveFnInfo[] = []
+
+  // Traverse all component functions to find directive functions
+  for (const compFnCtx of vineFileCtx.vineCompFns) {
+    const fnBody = compFnCtx.fnItselfNode?.body
+    if (!isBlockStatement(fnBody)) {
+      continue
+    }
+
+    // Traverse statements in the function body to find function declarations/expressions
+    collectLynxDirectiveFunctions(fnBody, directiveFns)
+  }
+
+  // Also check top-level functions in the file
+  for (const stmt of vineFileCtx.root.program.body) {
+    if (isFunctionDeclaration(stmt)) {
+      const directive = getLynxDirective(stmt.body)
+      if (directive) {
+        directiveFns.push({
+          directive,
+          fnName: stmt.id?.name ?? '',
+          fnNode: stmt,
+          loc: stmt.loc,
+        })
+      }
+    }
+    else if (isVariableDeclaration(stmt)) {
+      for (const decl of stmt.declarations) {
+        if (!isVariableDeclarator(decl) || !isIdentifier(decl.id)) {
+          continue
+        }
+        const init = decl.init
+        if (
+          (isFunctionExpression(init) || isArrowFunctionExpression(init))
+          && isBlockStatement(init.body)
+        ) {
+          const directive = getLynxDirective(init.body)
+          if (directive) {
+            directiveFns.push({
+              directive,
+              fnName: decl.id.name,
+              fnNode: init,
+              loc: init.loc,
+            })
+          }
+        }
+      }
+    }
+  }
+
+  // Always initialize lynx context (mainThreadEventBindings will be filled during template transform)
+  vineFileCtx.lynx = {
+    directiveFns,
+    mainThreadEventBindings: [],
+  }
+}
+
+/**
+ * Collect functions with Lynx directives from a block statement
+ */
+function collectLynxDirectiveFunctions(
+  block: BlockStatement,
+  result: VineLynxDirectiveFnInfo[],
+): void {
+  for (const stmt of block.body) {
+    // Function declaration: function foo() { 'main thread'; ... }
+    if (isFunctionDeclaration(stmt)) {
+      const directive = getLynxDirective(stmt.body)
+      if (directive) {
+        result.push({
+          directive,
+          fnName: stmt.id?.name ?? '',
+          fnNode: stmt,
+          loc: stmt.loc,
+        })
+      }
+    }
+    // Variable declaration: const foo = () => { 'main thread'; ... }
+    else if (isVariableDeclaration(stmt)) {
+      for (const decl of stmt.declarations) {
+        if (!isVariableDeclarator(decl) || !isIdentifier(decl.id)) {
+          continue
+        }
+        const init = decl.init
+        if (
+          (isFunctionExpression(init) || isArrowFunctionExpression(init))
+          && isBlockStatement(init.body)
+        ) {
+          const directive = getLynxDirective(init.body)
+          if (directive) {
+            result.push({
+              directive,
+              fnName: decl.id.name,
+              fnNode: init,
+              loc: init.loc,
+            })
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Get Lynx directive type from a block statement, if any
+ * Returns the directive type according to official specification
+ */
+function getLynxDirective(body: BlockStatement): VineLynxDirectiveType | null {
+  if (!body.directives || body.directives.length === 0) {
+    return null
+  }
+  for (const directive of body.directives) {
+    const directiveValue = directive.value.value
+    if (directiveValue === 'main thread' || directiveValue === 'background only') {
+      return directiveValue as VineLynxDirectiveType
+    }
+  }
+  return null
 }

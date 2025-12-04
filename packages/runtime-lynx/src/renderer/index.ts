@@ -4,8 +4,8 @@
 import type { App, Component, ComponentPublicInstance, Renderer } from '@vue/runtime-core'
 import type { LynxElement } from '../types'
 import { createRenderer } from '@vue/runtime-core'
-import { nodeOps } from './nodeOps'
-import { patchProp } from './patchProp'
+import { nodeOps } from './node-ops'
+import { patchProp } from './patch-prop'
 
 /**
  * Create Vue custom renderer for Lynx platform.

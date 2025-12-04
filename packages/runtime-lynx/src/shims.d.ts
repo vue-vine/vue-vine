@@ -2,72 +2,129 @@
 // Licensed under the MIT License.
 
 /**
- * Lynx Element PAPI declarations
- * These are global functions provided by Lynx runtime
+ * Lynx Element PAPI and type declarations for Vue Vine
  */
 
 declare global {
-  // Build-time macros (will be replaced by loader)
+  // Build-time macros (will be replaced by DefinePlugin/SWC)
   const __MAIN_THREAD__: boolean
   const __BACKGROUND__: boolean
   const __LEPUS__: boolean
   const __DEV__: boolean
 
-  // Lynx global object
-  const lynx: LynxGlobal
+  // Lynx core inject object (background thread only)
+  const lynxCoreInject: LynxCoreInject | undefined
 
-  // Element PAPI
-  declare function __CreatePage(componentId: string, cssId: number): LynxElement
-  declare function __CreateElement(tag: string, parentComponentUniqueId: number, info?: object): LynxElement
-  declare function __CreateText(parentComponentUniqueId: number): LynxElement
-  declare function __CreateImage(parentComponentUniqueId: number): LynxElement
-  declare function __CreateView(parentComponentUniqueId: number): LynxElement
-  declare function __CreateScrollView(parentComponentUniqueId: number): LynxElement
-  declare function __CreateWrapperElement(parentComponentUniqueId: number): LynxElement
-  declare function __CreateRawText(s: string): LynxElement
-  declare function __CreateList(
+  // Element type (FiberElement in Lynx)
+  type LynxElement = any
+
+  // ============================================
+  // Element PAPI - Main thread only
+  // ============================================
+
+  function __CreatePage(componentId: string, cssId: number): LynxElement
+  function __CreateElement(tag: string, parentComponentUniqueId: number, info?: object): LynxElement
+  function __CreateText(parentComponentUniqueId: number): LynxElement
+  function __CreateImage(parentComponentUniqueId: number): LynxElement
+  function __CreateView(parentComponentUniqueId: number): LynxElement
+  function __CreateScrollView(parentComponentUniqueId: number): LynxElement
+  function __CreateWrapperElement(parentComponentUniqueId: number): LynxElement
+  function __CreateRawText(s: string): LynxElement
+  function __CreateList(
     parentComponentUniqueId: number,
     componentAtIndex: ComponentAtIndexCallback,
     enqueueComponent: EnqueueComponentCallback,
     info?: any,
-    componentAtIndexes: ComponentAtIndexesCallback,
+    componentAtIndexes?: ComponentAtIndexesCallback,
   ): LynxElement
-  declare function __AppendElement(parent: LynxElement, child: LynxElement): LynxElement
-  declare function __InsertElementBefore(parent: LynxElement, child: LynxElement, ref?: LynxElement): LynxElement
-  declare function __RemoveElement(parent: LynxElement, child: LynxElement): LynxElement
-  declare function __FirstElement(parent: LynxElement): LynxElement | null
-  declare function __NextElement(element: LynxElement): LynxElement | null
-  declare function __GetParent(element: LynxElement): LynxElement | null
-  declare function __SetAttribute(e: LynxElement, key: string, value: any): void
-  declare function __SetClasses(e: LynxElement, c: string): void
-  declare function __AddDataset(e: LynxElement, key: string, value: any): void
-  declare function __AddInlineStyle(e: LynxElement, key: number | string, value: any): void
-  declare function __AddEvent(e: LynxElement, eventType: string, eventName: string, event: any): void
-  declare function __SetID(e: LynxElement, id: string | undefined | null): void
-  declare function __SetInlineStyles(e: LynxElement, value: string | object): void
-  declare function __FlushElementTree(e?: LynxElement, options?: FlushOptions): void
-  declare function __OnLifecycleEvent(...args: any[]): void
-  declare function __GetElementUniqueID(e: LynxElement): number
-  declare function _ReportError(error: Error, options: { errorCode: number }): void
 
-  // Lynx core inject object for background thread
-  const lynxCoreInject: LynxCoreInject
+  function __AppendElement(parent: LynxElement, child: LynxElement): LynxElement
+  function __InsertElementBefore(parent: LynxElement, child: LynxElement, ref?: LynxElement): LynxElement
+  function __RemoveElement(parent: LynxElement, child: LynxElement): LynxElement
+  function __FirstElement(parent: LynxElement): LynxElement | null
+  function __NextElement(element: LynxElement): LynxElement | null
+  function __GetParent(element: LynxElement): LynxElement | null
+
+  function __SetAttribute(e: LynxElement, key: string, value: any): void
+  function __SetClasses(e: LynxElement, c: string): void
+  function __AddDataset(e: LynxElement, key: string, value: any): void
+  function __AddInlineStyle(e: LynxElement, key: number | string, value: any): void
+  function __AddEvent(e: LynxElement, eventType: string, eventName: string, event: any): void
+  function __SetID(e: LynxElement, id: string | undefined | null): void
+  function __SetInlineStyles(e: LynxElement, value: string | object): void
+  function __FlushElementTree(e?: LynxElement, options?: FlushOptions): void
+  function __GetElementUniqueID(e: LynxElement): number
+  function __OnLifecycleEvent(...args: any[]): void
+  function _ReportError(error: Error, options: { errorCode: number }): void
+
+  // ============================================
+  // Cross-thread Communication
+  // ============================================
+
+  /**
+   * Vue Vine event message format for cross-thread communication
+   *
+   * Background thread sends via: lynx.getCoreContext().dispatchEvent()
+   * Main thread receives via: lynx.getJSContext().addEventListener()
+   */
+  interface VueVineEventMessage {
+    type: 'vue-vine-event'
+    handlerSign: string
+    eventData: unknown
+  }
+
+  // ============================================
+  // Background Thread Interfaces
+  // ============================================
 
   interface LynxCoreInject {
     tt: LynxTT
   }
 
   interface LynxTT {
-    OnLifecycleEvent?: (event: [any, unknown]) => void
+    OnLifecycleEvent?: (event: [string, unknown]) => void
     publishEvent?: (handlerName: string, data: unknown) => void
     publicComponentEvent?: (componentId: string, handlerName: string, data: unknown) => void
-    GlobalEventEmitter?: {
-      emit: (eventName: string, data: unknown) => void
-      trigger?: (eventName: string, data: unknown) => void
-      addListener?: (eventName: string, listener: (...args: unknown[]) => void) => void
-      removeListener?: (eventName: string, listener: (...args: unknown[]) => void) => void
-    }
   }
+
+  // ============================================
+  // Lifecycle Constants
+  // ============================================
+
+  type ELifecycleConstant
+    = | 'rLynxPublishEvent'
+      | 'globalEventFromLepus'
+
+  // ============================================
+  // Callback Types
+  // ============================================
+
+  type ComponentAtIndexCallback = (
+    list: LynxElement,
+    listID: number,
+    cellIndex: number,
+    operationID: number,
+    enableReuseNotification: boolean,
+  ) => void
+
+  type EnqueueComponentCallback = (
+    list: LynxElement,
+    listID: number,
+    sign: number,
+  ) => void
+
+  type ComponentAtIndexesCallback = (
+    list: LynxElement,
+    listID: number,
+    cellIndexes: number[],
+    operationIDs: number[],
+    enableReuseNotification: boolean,
+    asyncFlush: boolean,
+  ) => void
+
+  // ============================================
+  // Options Interfaces
+  // ============================================
 
   interface FlushOptions {
     triggerLayout?: boolean
@@ -79,6 +136,10 @@ declare global {
     reloadTemplate?: boolean
   }
 
+  // ============================================
+  // Lynx Lifecycle Functions
+  // ============================================
+
   interface LynxCallByNative {
     renderPage: (data: any) => void
     updatePage: (data: any, options?: UpdatePageOption) => void
@@ -87,19 +148,20 @@ declare global {
     removeComponents: () => void
   }
 
-  interface LynxGlobal {
-    __initData: Record<string, unknown>
-    __globalProps: Record<string, unknown>
-    reportError: (e: Error) => void
-    registerDataProcessors: (definition?: DataProcessorDefinition) => void
-    getJSModule: (moduleName: string) => any
-    getNativeApp: () => any
-  }
-
   interface DataProcessorDefinition {
     defaultDataProcessor?: (data: any) => any
     dataProcessors?: Record<string, (data: any) => any>
   }
+
+  // ============================================
+  // Global function declarations
+  // ============================================
+
+  /**
+   * Vue Vine specific: Handle event forwarding from background thread
+   * This is injected by entry-main.ts
+   */
+  function vueVineHandleEvent(message: VueVineEventMessage): void
 }
 
 export {}

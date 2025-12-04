@@ -1,0 +1,29 @@
+---
+alwaysApply: true
+---
+我们当前的实验目的是实现支持 Vue Vine 能正确运行在 Lynx 上。
+
+# 参考上下文
+
+@agent.local 中有所需的所有参考资料
+
+- @agent.local/lynx-stack 是 lynx 源码
+- @agent.local/lynx-website/docs/zh 有 lynx 官方文档
+- @agent.local/vuejs-core 是 vuejs v3.5.22 源码
+
+@packages/e2e-lynx 是实验可跑的 lynx 项目
+@packages/rspeedy-plugin-vue-vine 是 rspeedy 的 vue-vine 插件
+@packages/runtime-lynx 是 lynx 的 vue vine runtime 实现
+
+# 必读资料
+
+- @agent.local/lynx-website/docs/zh/react/introduction.mdx
+- @agent.local/lynx-website/docs/zh/react/thinking-in-reactlynx.mdx
+- @agent.local/lynx-website/docs/zh/react/lifecycle.mdx
+- @agent.local/lynx-website/docs/zh/react/main-thread-script.mdx
+
+# 真理原则
+
+- Main 线程负责渲染初始界面和应用后续的 UI 更新。这是为了让用户能尽快看到第一屏内容，同时减轻主线程的负担。
+- 后台线程运行完整的 Vue 运行时，负责处理组件的生命周期和其他副作用。
+- lynx.getJSModule('GlobalEventEmitter') 不能在主线程执行

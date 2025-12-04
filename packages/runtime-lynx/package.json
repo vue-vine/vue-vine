@@ -45,19 +45,10 @@
   "scripts": {
     "typecheck": "tsgo --noEmit"
   },
-  "peerDependencies": {
-    "@lynx-js/types": "catalog:lynx"
-  },
-  "peerDependenciesMeta": {
-    "@lynx-js/types": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "@vue/runtime-core": "catalog:vue-libs"
   },
   "devDependencies": {
-    "@lynx-js/types": "catalog:lynx",
     "@typescript/native-preview": "catalog:compiler"
   },
   "publishConfig": {
