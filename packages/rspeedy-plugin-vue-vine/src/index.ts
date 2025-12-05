@@ -5,6 +5,9 @@ import type { RsbuildPlugin, RsbuildPluginAPI, Rspack, RspackChain } from '@rsbu
 
 import { createRequire } from 'node:module'
 import path from 'node:path'
+import { RuntimeWrapperWebpackPlugin } from '@lynx-js/runtime-wrapper-webpack-plugin'
+import { LynxEncodePlugin, LynxTemplatePlugin } from '@lynx-js/template-webpack-plugin'
+import { rspack } from '@rsbuild/core'
 import {
   getBackgroundLayerDefines,
   getMainThreadLayerDefines,
@@ -12,13 +15,14 @@ import {
 } from './config/define'
 import {
   DEFAULT_DIST_PATH_INTERMEDIATE,
-  DEFAULT_LYNX_TEMPLATE_OPTIONS,
   LAYERS,
   PLUGIN_NAME,
   PLUGIN_NAME_TEMPLATE,
 } from './constants'
 import { extractImports, generateEntryPaths } from './helpers/entry'
 import { MainThreadAssetMarkerPlugin } from './plugins/main-thread-marker'
+
+const require = createRequire(import.meta.url)
 
 export { LAYERS } from './constants'
 
@@ -42,11 +46,9 @@ export function pluginVueVineLynx(
   options: PluginVueVineLynxOptions = {},
 ): RsbuildPlugin {
   const { debug = false } = options
-  const mainThreadChunks: string[] = []
-
   return {
     name: PLUGIN_NAME,
-    pre: ['lynx:rsbuild:plugin-api'],
+    pre: ['lynx:rsbuild:plugin-api', 'vue-vine'],
 
     async setup(api: RsbuildPluginAPI) {
       const rspeedyAPIs = api.useExposed<{
@@ -58,13 +60,20 @@ export function pluginVueVineLynx(
         rspeedyAPIs.debug(() => `[${PLUGIN_NAME}] Plugin initialized`)
       }
 
-      // Load external plugins
-      const plugins = await loadExternalPlugins()
-      if (!plugins) {
-        return
-      }
-
-      const { LynxTemplatePlugin, LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin } = plugins
+      // Set 'all-in-one' strategy to bundle everything together (like ReactLynx)
+      api.modifyRsbuildConfig((config, { mergeRsbuildConfig }) => {
+        const userConfig = api.getRsbuildConfig('original')
+        if (!userConfig.performance?.chunkSplit?.strategy) {
+          return mergeRsbuildConfig(config, {
+            performance: {
+              chunkSplit: {
+                strategy: 'all-in-one',
+              },
+            },
+          })
+        }
+        return config
+      })
 
       api.modifyBundlerChain((chain, { environment, isDev }) => {
         if (environment.name !== 'lynx') {
@@ -76,90 +85,37 @@ export function pluginVueVineLynx(
           entries,
           isDev,
           debug,
-          mainThreadChunks,
           rspeedyAPIs,
-          plugins: { LynxTemplatePlugin, LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin },
         })
       })
     },
   }
 }
 
-interface ExternalPlugins {
-  LynxTemplatePlugin: any
-  LynxEncodePlugin: any
-  RuntimeWrapperWebpackPlugin: any
-  DefinePlugin: any
-}
-
-async function loadExternalPlugins(): Promise<ExternalPlugins | null> {
-  let LynxTemplatePlugin: any
-  let LynxEncodePlugin: any
-  let RuntimeWrapperWebpackPlugin: any
-  let DefinePlugin: any
-
-  try {
-    const templatePlugin = await import('@lynx-js/template-webpack-plugin')
-    LynxTemplatePlugin = templatePlugin.LynxTemplatePlugin
-    LynxEncodePlugin = templatePlugin.LynxEncodePlugin
-  }
-  catch (e) {
-    console.error(`[${PLUGIN_NAME}] Failed to load @lynx-js/template-webpack-plugin:`, e)
-    return null
-  }
-
-  try {
-    const runtimeWrapper = await import('@lynx-js/runtime-wrapper-webpack-plugin')
-    RuntimeWrapperWebpackPlugin = runtimeWrapper.RuntimeWrapperWebpackPlugin
-  }
-  catch (e) {
-    console.error(`[${PLUGIN_NAME}] Failed to load @lynx-js/runtime-wrapper-webpack-plugin:`, e)
-    return null
-  }
-
-  const require = createRequire(import.meta.url)
-  try {
-    const rspack = require('@rspack/core')
-    DefinePlugin = rspack.DefinePlugin
-  }
-  catch {
-    DefinePlugin = null
-  }
-
-  return { LynxTemplatePlugin, LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin }
-}
-
 interface ConfigureChainOptions {
   entries: Record<string, { values: () => Iterable<string | string[] | Rspack.EntryDescription> }>
   isDev: boolean
   debug: boolean
-  mainThreadChunks: string[]
   rspeedyAPIs: {
     config: { output?: { filename?: string | { bundle?: string } } }
     debug: (fn: () => string) => void
   } | undefined
-  plugins: ExternalPlugins
 }
 
 function configureChain(
   chain: RspackChain,
   options: ConfigureChainOptions,
 ): void {
-  const { entries, isDev, debug, mainThreadChunks, rspeedyAPIs, plugins } = options
-  const { LynxTemplatePlugin, LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin } = plugins
+  const { entries, isDev, debug, rspeedyAPIs } = options
+  const mainThreadChunks: string[] = []
 
   // Clear original entries
   chain.entryPoints.clear()
 
-  // Add Vue Vine loader for .vine.ts files
-  configureVineLoader(chain)
-
-  mainThreadChunks.length = 0
-
   // Configure entries for each original entry
   Object.entries(entries).forEach(([entryName, entryPoint]) => {
     const userImports = extractImports(entryPoint.values())
-    const entryPaths = generateEntryPaths(entryName, DEFAULT_DIST_PATH_INTERMEDIATE, path)
+    const entryPaths = generateEntryPaths(entryName, DEFAULT_DIST_PATH_INTERMEDIATE)
 
     mainThreadChunks.push(entryPaths.mainThreadFilename)
 
@@ -200,10 +156,22 @@ function configureChain(
     chain
       .plugin(`${PLUGIN_NAME_TEMPLATE}-${entryName}`)
       .use(LynxTemplatePlugin, [{
-        ...DEFAULT_LYNX_TEMPLATE_OPTIONS,
         chunks: [entryPaths.mainThreadEntry, entryPaths.backgroundEntry],
         filename: templateFilename,
         intermediate: path.posix.join(DEFAULT_DIST_PATH_INTERMEDIATE, entryName),
+        customCSSInheritanceList: [],
+        debugInfoOutside: false,
+        defaultDisplayLinear: false,
+        enableAccessibilityElement: false,
+        enableCSSInheritance: false,
+        enableCSSInvalidation: false,
+        enableCSSSelector: false,
+        enableA11y: false,
+        enableNewGesture: false,
+        enableRemoveCSSScope: false,
+        removeDescendantSelectorScope: false,
+        targetSdkVersion: '3.2',
+        cssPlugins: [],
       }])
       .end()
   })
@@ -213,15 +181,6 @@ function configureChain(
     mainThreadChunks,
     debug,
     isDev,
-    plugins: { LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin },
-  })
-
-  // Configure optimization: disable code splitting for main-thread
-  chain.optimization.splitChunks({
-    chunks: (chunk) => {
-      const isMainThread = chunk.name?.includes('main-thread')
-      return !isMainThread
-    },
   })
 
   if (debug) {
@@ -234,15 +193,13 @@ interface AddWebpackPluginsOptions {
   mainThreadChunks: string[]
   debug: boolean
   isDev: boolean
-  plugins: Pick<ExternalPlugins, 'LynxEncodePlugin' | 'RuntimeWrapperWebpackPlugin' | 'DefinePlugin'>
 }
 
 function addWebpackPlugins(
   chain: RspackChain,
   options: AddWebpackPluginsOptions,
 ): void {
-  const { mainThreadChunks, debug, isDev, plugins } = options
-  const { LynxEncodePlugin, RuntimeWrapperWebpackPlugin, DefinePlugin } = plugins
+  const { mainThreadChunks, debug, isDev } = options
 
   // Mark main thread assets
   chain
@@ -266,13 +223,10 @@ function addWebpackPlugins(
     .end()
 
   // Define plugin with build-time macros
-  // Note: __MAIN_THREAD__ and __BACKGROUND__ are handled via layer-specific rules
-  if (DefinePlugin) {
-    chain
-      .plugin(`${PLUGIN_NAME}-define`)
-      .use(DefinePlugin, [getSharedDefines(isDev)])
-      .end()
-  }
+  chain
+    .plugin(`${PLUGIN_NAME}-define`)
+    .use(rspack.DefinePlugin, [getSharedDefines(isDev)])
+    .end()
 
   // Add layer-specific module rules for __MAIN_THREAD__ and __BACKGROUND__ macros
   // These use SWC's define feature to replace macros at transpile time
@@ -280,19 +234,71 @@ function addWebpackPlugins(
 }
 
 /**
- * Configure layer-specific module rules for macro replacement.
+ * Configure layer-specific module rules for .vine.ts files and macro replacement.
  *
- * Uses SWC's `jsc.transform.optimizer.globals.vars` to replace
- * __MAIN_THREAD__ and __BACKGROUND__ macros based on the issuer layer.
+ * When using webpack/rspack layer mechanism, each layer has isolated module resolution.
+ * We need to add .vine.ts processing rules for each layer explicitly.
  */
 function configureLayerSpecificRules(chain: RspackChain): void {
   const mainThreadDefines = getMainThreadLayerDefines()
   const backgroundDefines = getBackgroundLayerDefines()
 
-  // Main thread layer: __MAIN_THREAD__ = true, __BACKGROUND__ = false
+  // .vine.ts processing for main-thread layer
+  // Loaders execute bottom-to-top: vine-loader -> swc-loader
+  chain.module
+    .rule('vue-vine-lynx-main-thread-vine')
+    .test(/\.vine\.ts$/)
+    .issuerLayer(LAYERS.MAIN_THREAD)
+    .resourceQuery({ not: [/vine-style/] })
+    .use('swc-loader')
+    .loader('builtin:swc-loader')
+    .options({
+      jsc: {
+        parser: { syntax: 'typescript', tsx: true },
+        transform: {
+          optimizer: {
+            globals: { vars: mainThreadDefines },
+          },
+        },
+      },
+    })
+    .end()
+    .use('vine-loader')
+    .loader(require.resolve('@vue-vine/rspack-loader'))
+    .options({ compilerOptions: { lynx: { enabled: true } } })
+    .end()
+
+  // .vine.ts processing for background layer
+  chain.module
+    .rule('vue-vine-lynx-background-vine')
+    .test(/\.vine\.ts$/)
+    .issuerLayer(LAYERS.BACKGROUND)
+    .resourceQuery({ not: [/vine-style/] })
+    .use('swc-loader')
+    .loader('builtin:swc-loader')
+    .options({
+      jsc: {
+        parser: { syntax: 'typescript', tsx: true },
+        transform: {
+          optimizer: {
+            globals: { vars: backgroundDefines },
+          },
+        },
+      },
+    })
+    .end()
+    .use('vine-loader')
+    .loader(require.resolve('@vue-vine/rspack-loader'))
+    .options({ compilerOptions: { lynx: { enabled: true } } })
+    .end()
+
+  // Regular .ts/.js files macro replacement for main-thread layer
   chain.module
     .rule('vue-vine-lynx-main-thread-defines')
     .test(/\.[jt]sx?$/)
+    .exclude
+    .add(/\.vine\.ts$/)
+    .end()
     .issuerLayer(LAYERS.MAIN_THREAD)
     .use('swc-define-main')
     .loader('builtin:swc-loader')
@@ -310,10 +316,13 @@ function configureLayerSpecificRules(chain: RspackChain): void {
     })
     .end()
 
-  // Background layer: __MAIN_THREAD__ = false, __BACKGROUND__ = true
+  // Regular .ts/.js files macro replacement for background layer
   chain.module
     .rule('vue-vine-lynx-background-defines')
     .test(/\.[jt]sx?$/)
+    .exclude
+    .add(/\.vine\.ts$/)
+    .end()
     .issuerLayer(LAYERS.BACKGROUND)
     .use('swc-define-background')
     .loader('builtin:swc-loader')
@@ -328,41 +337,6 @@ function configureLayerSpecificRules(chain: RspackChain): void {
           },
         },
       },
-    })
-    .end()
-}
-
-/**
- * Configure Vue Vine loader for .vine.ts files
- */
-function configureVineLoader(chain: RspackChain): void {
-  // Get the path to our loader (use package export path)
-  const loaderPath = require.resolve('@vue-vine/rspeedy-plugin-vue-vine/vine-loader')
-
-  // Add rule for .vine.ts files with 'pre' to run before default rules
-  chain.module
-    .rule('vue-vine')
-    .pre() // Run this rule before normal rules (before rspeedy's default .ts handling)
-    .test(/\.vine\.ts$/)
-    .type('javascript/auto') // Prevent default asset handling
-    // 2. Transpile TypeScript to JavaScript
-    .use('swc-loader')
-    .loader('builtin:swc-loader')
-    .options({
-      jsc: {
-        parser: {
-          syntax: 'typescript',
-          tsx: false,
-        },
-        target: 'es2020',
-      },
-    })
-    .end()
-    // 1. First compile Vue Vine syntax (outputs TS)
-    .use('vine-loader')
-    .loader(loaderPath)
-    .options({
-      lynxEnabled: true,
     })
     .end()
 }

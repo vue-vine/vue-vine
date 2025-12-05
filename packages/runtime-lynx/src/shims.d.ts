@@ -74,28 +74,6 @@ declare global {
   }
 
   // ============================================
-  // Background Thread Interfaces
-  // ============================================
-
-  interface LynxCoreInject {
-    tt: LynxTT
-  }
-
-  interface LynxTT {
-    OnLifecycleEvent?: (event: [string, unknown]) => void
-    publishEvent?: (handlerName: string, data: unknown) => void
-    publicComponentEvent?: (componentId: string, handlerName: string, data: unknown) => void
-  }
-
-  // ============================================
-  // Lifecycle Constants
-  // ============================================
-
-  type ELifecycleConstant
-    = | 'rLynxPublishEvent'
-      | 'globalEventFromLepus'
-
-  // ============================================
   // Callback Types
   // ============================================
 

@@ -4,17 +4,15 @@
 import type { App, Component, ComponentPublicInstance, Renderer } from '@vue/runtime-core'
 import type { LynxElement } from '../types'
 import { createRenderer } from '@vue/runtime-core'
-import { nodeOps } from './node-ops'
-import { patchProp } from './patch-prop'
+import { lynxVueVineRenderOptions } from './node-ops'
 
 /**
  * Create Vue custom renderer for Lynx platform.
  * LynxElement is used as HostElement directly.
  */
-const renderer: Renderer<LynxElement> = createRenderer<LynxElement, LynxElement>({
-  ...nodeOps,
-  patchProp,
-})
+const renderer: Renderer<LynxElement> = createRenderer<LynxElement, LynxElement>(
+  lynxVueVineRenderOptions,
+)
 
 const baseCreateApp = renderer.createApp
 

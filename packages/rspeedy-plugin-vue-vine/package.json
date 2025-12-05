@@ -34,6 +34,7 @@
     "@lynx-js/runtime-wrapper-webpack-plugin": "catalog:lynx",
     "@lynx-js/template-webpack-plugin": "catalog:lynx",
     "@vue-vine/compiler": "workspace:*",
+    "@vue-vine/rspack-loader": "workspace:*",
     "@vue-vine/runtime-lynx": "workspace:*"
   },
   "devDependencies": {

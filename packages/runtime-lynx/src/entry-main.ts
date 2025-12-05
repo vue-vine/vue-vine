@@ -57,5 +57,3 @@ if (typeof lynx !== 'undefined') {
 
 // Export public API for Vue applications
 export { createLynxApp, render } from './renderer'
-export * from './types'
-export * from '@vue/runtime-core'

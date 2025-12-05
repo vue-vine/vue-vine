@@ -19,6 +19,7 @@
     "@lynx-js/rspeedy": "catalog:lynx",
     "@lynx-js/types": "catalog:lynx",
     "@vue-vine/eslint-config": "workspace:*",
+    "@vue-vine/rsbuild-plugin": "workspace:*",
     "@vue-vine/rspeedy-plugin-vue-vine": "workspace:*",
     "eslint": "catalog:lint-libs",
     "typescript": "catalog:cli"

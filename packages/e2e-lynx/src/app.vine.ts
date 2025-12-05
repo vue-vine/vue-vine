@@ -77,28 +77,41 @@ function TestMainThreadEvent() {
   `
 }
 
+function TestTapEvent() {
+  const count = ref(0)
+  const onTap = () => {
+    count.value++
+  }
+
+  return vine`
+    <view :style="{ backgroundColor: 'lightskyblue', padding: '10px' }" :bindtap="onTap">
+      <text>Tap me +1 / count = {{ count }}</text>
+    </view>
+  `
+}
+
+const containerStyle = {
+  display: 'flex',
+  height: '100vh',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '20px',
+} as const
+const sectionTitleStyle = {
+  fontSize: '12px',
+  color: '#666',
+  marginTop: '20px',
+  marginBottom: '8px',
+} as const
+
 // Main App
 export function App() {
   return vine`
-    <view
-      :style="{
-        display: 'flex',
-        height: '100vh',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-      }"
-    >
-      <text
-        :style="{
-          fontSize: '12px',
-          color: '#666',
-          marginTop: '20px',
-          marginBottom: '8px',
-        }"
-        >Main Thread Event Test</text
-      >
+    <view :style="containerStyle">
+      <text :style="sectionTitleStyle">Tap Event Test</text>
+      <TestTapEvent />
+      <text :style="sectionTitleStyle">Main Thread Event Test</text>
       <TestMainThreadEvent />
     </view>
   `

@@ -14,20 +14,3 @@ export const LAYERS = {
 export const PLUGIN_NAME = 'vue-vine-lynx'
 export const PLUGIN_NAME_TEMPLATE = 'lynx:template'
 export const DEFAULT_DIST_PATH_INTERMEDIATE = '.rspeedy'
-
-/**
- * Default LynxTemplatePlugin options
- */
-export const DEFAULT_LYNX_TEMPLATE_OPTIONS = {
-  dsl: 'custom',
-  debugInfoOutside: true,
-  defaultDisplayLinear: true,
-  enableA11y: true,
-  enableCSSSelector: true,
-  enableParallelElement: true,
-  enableRemoveCSSScope: true,
-  pipelineSchedulerConfig: 0x00010000,
-  removeDescendantSelectorScope: true,
-  targetSdkVersion: '3.2',
-} as const
-

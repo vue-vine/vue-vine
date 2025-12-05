@@ -1,14 +1,21 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
+import type { RendererOptions } from 'vue'
 import type { LynxElement } from '../types'
 import { scheduleLynxFlush } from '../scheduler'
+import { patchProp } from './patch-prop'
 
 /**
  * Vue renderer node operations for Lynx platform.
  * Directly operates on LynxElement (FiberElement) returned by Lynx Native PAPI.
  */
-export const nodeOps = {
+export const lynxVueVineRenderOptions: RendererOptions = {
+  /**
+   * Patch element properties for Lynx platform.
+   */
+  patchProp,
+
   /**
    * Create a Lynx element by tag name
    */

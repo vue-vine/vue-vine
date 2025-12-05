@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 import type { Rspack } from '@rsbuild/core'
+import { join } from 'node:path'
 
 /**
  * Extract import paths from webpack entry point values
@@ -44,12 +45,11 @@ export interface EntryPaths {
 export function generateEntryPaths(
   entryName: string,
   intermediatePath: string,
-  pathModule: typeof import('node:path'),
 ): EntryPaths {
   return {
     mainThreadEntry: `${entryName}__main-thread`,
     backgroundEntry: entryName,
-    mainThreadFilename: pathModule.posix.join(intermediatePath, `${entryName}/main-thread.js`),
-    backgroundFilename: pathModule.posix.join(intermediatePath, `${entryName}/background.js`),
+    mainThreadFilename: join(intermediatePath, `${entryName}/main-thread.js`),
+    backgroundFilename: join(intermediatePath, `${entryName}/background.js`),
   }
 }

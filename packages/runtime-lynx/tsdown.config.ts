@@ -6,10 +6,6 @@ const config: ReturnType<typeof defineConfig> = defineConfig({
     'entry-main': './src/entry-main.ts',
     'entry-background': './src/entry-background.ts',
   },
-  external: [
-    '@vue/runtime-core',
-    '@lynx-js/types',
-  ],
 })
 
 export default config

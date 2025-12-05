@@ -8,8 +8,8 @@ import { scheduleLynxFlush } from '../scheduler'
 // Match Vue event handlers: onTap, onClick, etc.
 const EVENT_RE = /^on[A-Z]/
 
-// Match Lynx native event bindings: bindtap, bindtouchstart, catchtap, etc.
-const LYNX_EVENT_RE = /^(bindEvent|bind|catch|capture-bind|capture-catch)(\w+)/i
+// Match Lynx native event bindings: bindtap, catchtap, global-bindscroll, etc.
+const LYNX_EVENT_RE = /^(global-bind|bindEvent|bind|catch|capture-bind|capture-catch)(\w+)/i
 
 // Convert camelCase to kebab-case: backgroundColor -> background-color
 const HYPHENATE_RE = /\B([A-Z])/g
@@ -158,6 +158,9 @@ function patchLynxEvent(
   }
   else if (eventType === 'catch') {
     eventType = 'catchEvent'
+  }
+  else if (eventType === 'global-bind') {
+    eventType = 'global-bindEvent'
   }
 
   const eventKey = getElementEventKey(el, `${eventType}:${eventName}`)

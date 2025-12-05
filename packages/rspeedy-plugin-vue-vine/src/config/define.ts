@@ -1,6 +1,8 @@
 // Copyright 2025 Vue Vine Team. All rights reserved.
 // Licensed under the MIT License.
 
+import type { DefinePluginOptions } from '@rspack/core'
+
 export interface DefineValues {
   // Vue feature flags
   __VUE_OPTIONS_API__: string
@@ -64,24 +66,10 @@ export function getCombinedDefines(isDev: boolean): DefineValues {
   return getMainThreadDefines(isDev)
 }
 
-export interface SharedDefineValues {
-  // Vue feature flags
-  __VUE_OPTIONS_API__: string
-  __VUE_PROD_DEVTOOLS__: string
-  __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: string
-  // Common Lynx macros
-  __DEV__: string
-  __PROFILE__: string
-  __ALOG__: string
-}
-
 /**
  * Get shared define values (excluding layer-specific macros)
- * __MAIN_THREAD__, __BACKGROUND__, __JS__, __LEPUS__ are handled per-layer
- *
- * Note: DefinePlugin values must be JSON stringified for proper replacement
  */
-export function getSharedDefines(isDev: boolean): SharedDefineValues {
+export function getSharedDefines(isDev: boolean): DefinePluginOptions {
   return {
     // Vue feature flags
     __VUE_OPTIONS_API__: JSON.stringify(true),
