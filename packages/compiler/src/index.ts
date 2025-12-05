@@ -14,6 +14,7 @@ export {
 } from './babel-helpers/ast'
 
 export {
+  LYNX_BUILTIN_COMPONENTS,
   VineBindingTypes,
 } from './constants'
 

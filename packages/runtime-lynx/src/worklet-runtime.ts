@@ -143,17 +143,12 @@ interface WorkletEventData {
  * Native triggers worklet events by sending 'Lynx.Worklet.runWorkletCtx' events.
  */
 function initEventListeners(): void {
-  console.log('[VueVine:Worklet] initEventListeners called')
   const jsContext = lynx.getJSContext()
-  console.log('[VueVine:Worklet] jsContext:', jsContext)
 
   // Listen for worklet execution requests from native
   jsContext.addEventListener('Lynx.Worklet.runWorkletCtx', (event: { data: string }) => {
-    console.log('[VueVine:Worklet] runWorkletCtx event received:', event)
     const data: WorkletEventData = JSON.parse(event.data)
-    console.log('[VueVine:Worklet] parsed event data:', data)
     const result = runWorklet(data.worklet, data.params)
-    console.log('[VueVine:Worklet] worklet result:', result)
 
     // Send return value back to native if resolveId is provided
     if (data.resolveId !== undefined) {
@@ -166,7 +161,6 @@ function initEventListeners(): void {
       })
     }
   })
-  console.log('[VueVine:Worklet] event listener registered')
 }
 
 // ============================================
@@ -178,25 +172,19 @@ function initEventListeners(): void {
  * Must be called before any worklet registration or execution.
  */
 export function initWorkletRuntime(): void {
-  console.log('[VueVine:Worklet] initWorkletRuntime called')
-
   if (globalThis.lynxWorkletImpl) {
-    console.log('[VueVine:Worklet] runtime already initialized, skipping')
     return
   }
 
   globalThis.lynxWorkletImpl = {
     _workletMap: {},
   }
-  console.log('[VueVine:Worklet] lynxWorkletImpl created')
 
   globalThis.registerWorklet = registerWorklet
   globalThis.runWorklet = runWorklet
-  console.log('[VueVine:Worklet] global functions registered')
 
   // Initialize event listeners for native worklet calls
   initEventListeners()
-  console.log('[VueVine:Worklet] initWorkletRuntime completed')
 }
 
 /**
@@ -211,14 +199,11 @@ export function registerWorklet(
   id: string,
   fn: (...args: unknown[]) => unknown,
 ): void {
-  console.log('[VueVine:Worklet] registerWorklet called:', { type: _type, id, fn: fn.toString().slice(0, 100) })
-
   if (!globalThis.lynxWorkletImpl) {
-    console.warn('[VueVine:Worklet] Worklet runtime not initialized')
+    console.warn('[Vue Vine Lynx] Worklet runtime not initialized')
     return
   }
   globalThis.lynxWorkletImpl._workletMap[id] = fn
-  console.log('[VueVine:Worklet] worklet registered, current map keys:', Object.keys(globalThis.lynxWorkletImpl._workletMap))
 }
 
 /**
@@ -229,42 +214,32 @@ export function registerWorklet(
  * @returns The result of the worklet function
  */
 export function runWorklet(worklet: Worklet, params: unknown[]): unknown {
-  console.log('[VueVine:Worklet] runWorklet called:', { worklet, params })
-
   if (!globalThis.lynxWorkletImpl) {
-    console.warn('[VueVine:Worklet] Worklet runtime not initialized')
+    console.warn('[Vue Vine Lynx] Worklet runtime not initialized')
     return
   }
 
   if (!worklet || typeof worklet !== 'object' || !worklet._wkltId) {
-    console.warn('[VueVine:Worklet] Invalid worklet object:', worklet)
+    console.warn('[Vue Vine Lynx] Invalid worklet object:', worklet)
     return
   }
-
-  console.log('[VueVine:Worklet] looking up worklet:', worklet._wkltId)
-  console.log('[VueVine:Worklet] available worklets:', Object.keys(globalThis.lynxWorkletImpl._workletMap))
 
   const fn = globalThis.lynxWorkletImpl._workletMap[worklet._wkltId]
   if (!fn) {
-    console.warn('[VueVine:Worklet] Worklet not found:', worklet._wkltId)
+    console.warn('[Vue Vine Lynx] Worklet not found:', worklet._wkltId)
     return
   }
 
-  console.log('[VueVine:Worklet] worklet found, transforming params...')
   // Transform parameters to wrap elementRefptr with MainThreadElement
   // This enables methods like setStyleProperty on event.currentTarget
   for (const param of params) {
     transformWorkletParams(param)
   }
-  console.log('[VueVine:Worklet] params transformed:', params)
 
   // Bind closure context if present
   const boundFn = worklet._c ? fn.bind(worklet) : fn
 
-  console.log('[VueVine:Worklet] executing worklet function...')
-  const result = boundFn(...params)
-  console.log('[VueVine:Worklet] worklet execution result:', result)
-  return result
+  return boundFn(...params)
 }
 
 /**

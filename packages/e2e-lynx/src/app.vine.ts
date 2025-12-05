@@ -54,7 +54,7 @@ function TestMainThreadEvent() {
   const onContainerScroll = () => {}
 
   return vine`
-    <view style="display: linear; linear-direction: row; width: 100%; height: 100%">
+    <view style="display: linear; linear-direction: row; width: 100%; height: 100%; overflow: hidden">
       <scroll-view
         id="scroll"
         :bindscroll="onContainerScroll"
@@ -88,6 +88,7 @@ function TestTapEvent() {
 
 const containerStyle = {
   display: 'flex',
+  width: '100vw',
   height: '100vh',
   flexDirection: 'column',
   justifyContent: 'center',

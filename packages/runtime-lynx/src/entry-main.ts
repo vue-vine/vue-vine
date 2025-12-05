@@ -14,58 +14,24 @@
 
 import { injectCalledByNative } from './called-by-native'
 import { setupLynxEnv } from './env'
+import { setupEventsReceive } from './event-receive'
 import { initWorkletRuntime } from './worklet-runtime'
 
-console.log('[VueVine:Main] entry-main.ts loaded')
-
 // Setup Lynx environment
-console.log('[VueVine:Main] calling setupLynxEnv...')
 setupLynxEnv()
-console.log('[VueVine:Main] setupLynxEnv completed')
 
-// Initialize worklet runtime for main-thread script
-console.log('[VueVine:Main] calling initWorkletRuntime...')
-initWorkletRuntime()
-console.log('[VueVine:Main] initWorkletRuntime completed')
+injectCalledByNative()
 
 // Inject native-callable functions for main thread
-console.log('[VueVine:Main] calling injectCalledByNative...')
-injectCalledByNative()
-console.log('[VueVine:Main] injectCalledByNative completed')
 
 // Setup cross-thread message listener
 // Listen for events forwarded from background thread
 if (typeof lynx !== 'undefined') {
-  try {
-    // Main thread uses getJSContext() to receive messages from background thread
-    const jsContext = lynx.getJSContext()
+  // Initialize worklet runtime for main-thread script
+  initWorkletRuntime()
 
-    // Listen for custom event type 'vue-vine-event'
-    jsContext.addEventListener('vue-vine-event', (event) => {
-      try {
-        // Parse the message data
-        const messageData = typeof event.data === 'string'
-          ? JSON.parse(event.data)
-          : event.data
-
-        if (messageData && messageData.handlerSign) {
-          if (typeof globalThis.vueVineHandleEvent === 'function') {
-            globalThis.vueVineHandleEvent({
-              type: 'vue-vine-event',
-              handlerSign: messageData.handlerSign,
-              eventData: messageData.eventData,
-            })
-          }
-        }
-      }
-      catch (e) {
-        console.error('[Vue Vine Lynx] Error handling received event:', e)
-      }
-    })
-  }
-  catch (e) {
-    console.error('[Vue Vine Lynx] Failed to setup message listener:', e)
-  }
+  // Setup cross-thread message listener
+  setupEventsReceive()
 }
 
 // Export public API for Vue applications

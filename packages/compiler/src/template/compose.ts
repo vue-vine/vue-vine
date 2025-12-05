@@ -241,11 +241,17 @@ export function createTemplateCompileOptions(
   compilerHooks: VineCompilerHooks,
   inline: boolean = true,
 ): Partial<CompilerOptions> {
+  const compilerOptions = compilerHooks.getCompilerCtx()?.options ?? {}
+  const isLynxEnabled = compilerOptions.lynx?.enabled ?? false
+
   return {
     inline,
     scopeId: `data-v-${vineCompFnCtx.scopeId}`,
     bindingMetadata: vineCompFnCtx.bindings,
-    ...compilerHooks.getCompilerCtx()?.options?.vueCompilerOptions ?? {},
+    ...compilerOptions.vueCompilerOptions ?? {},
+    // In Lynx mode, use runtime-lynx instead of vue to avoid importing @vue/runtime-dom
+    // which contains DOM-specific code that cannot run in Lynx main thread (Lepus engine)
+    ...(isLynxEnabled ? { runtimeModuleName: '@vue-vine/runtime-lynx' } : {}),
     onError: (e) => {
       compilerHooks.onError(
         vineErr(

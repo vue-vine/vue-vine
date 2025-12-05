@@ -50,14 +50,18 @@ function transformSimpleArrowFunction(
   const tempVarName = isExportDefaultAnonymous ? '__VineCompDefault' : vineCompFnCtx.fnName
   const componentName = isExportDefaultAnonymous ? '__VineCompDefault' : vineCompFnCtx.fnName
 
+  // In Lynx mode, import from runtime-lynx instead of vue to avoid @vue/runtime-dom
+  const isLynxEnabled = compilerHooks.getCompilerCtx()?.options?.lynx?.enabled ?? false
+  const runtimeModule = isLynxEnabled ? '@vue-vine/runtime-lynx' : 'vue'
+
   // Import defineComponent
-  let vueImportsMeta = mergedImportsMap.get('vue')
+  let vueImportsMeta = mergedImportsMap.get(runtimeModule)
   if (!vueImportsMeta) {
     vueImportsMeta = {
       type: 'namedSpecifier',
       specs: new Map(),
     }
-    mergedImportsMap.set('vue', vueImportsMeta)
+    mergedImportsMap.set(runtimeModule, vueImportsMeta)
   }
   const vueImportsSpecs = (vueImportsMeta as any).specs
   if (!vueImportsSpecs.has('defineComponent')) {

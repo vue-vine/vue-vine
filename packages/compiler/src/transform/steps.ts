@@ -57,16 +57,20 @@ export function createVueImportsSpecs(
   transformCtx: TransformContext,
   vineCompFnCtx: VineCompFnCtx,
 ): Map<string, string> {
-  const { inline, mergedImportsMap } = transformCtx
+  const { inline, mergedImportsMap, compilerHooks } = transformCtx
+
+  // In Lynx mode, import from runtime-lynx instead of vue to avoid @vue/runtime-dom
+  const isLynxEnabled = compilerHooks.getCompilerCtx()?.options?.lynx?.enabled ?? false
+  const runtimeModule = isLynxEnabled ? '@vue-vine/runtime-lynx' : 'vue'
 
   // Add `defineComponent` helper function import specifier
-  let vueImportsMeta = mergedImportsMap.get('vue')
+  let vueImportsMeta = mergedImportsMap.get(runtimeModule)
   if (!vueImportsMeta) {
     vueImportsMeta = {
       type: 'namedSpecifier',
       specs: new Map(),
     } as NamedImportSpecifierMeta
-    mergedImportsMap.set('vue', vueImportsMeta)
+    mergedImportsMap.set(runtimeModule, vueImportsMeta)
   }
   const vueImportsSpecs = (vueImportsMeta as NamedImportSpecifierMeta).specs
   if (!vueImportsSpecs.has(DEFINE_COMPONENT_HELPER)) {

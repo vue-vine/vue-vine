@@ -140,3 +140,15 @@ export const VineBindingTypes = {
 } as const
 
 export const EXPECTED_ERROR = 'expected_error'
+
+export const LYNX_BUILTIN_COMPONENTS: string[] = [
+  'view',
+  'text',
+  'image',
+  'scroll-view',
+  'list',
+  'page',
+  'frame',
+  'input',
+  'textarea',
+]

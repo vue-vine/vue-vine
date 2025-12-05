@@ -48,7 +48,7 @@ export function pluginVueVineLynx(
   const { debug = false } = options
   return {
     name: PLUGIN_NAME,
-    pre: ['lynx:rsbuild:plugin-api', 'vue-vine'],
+    pre: ['lynx:rsbuild:plugin-api'],
 
     async setup(api: RsbuildPluginAPI) {
       const rspeedyAPIs = api.useExposed<{

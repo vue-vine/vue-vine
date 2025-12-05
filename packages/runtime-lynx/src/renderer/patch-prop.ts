@@ -156,18 +156,13 @@ function patchMainThreadEvent(
   _prevValue: unknown,
   nextValue: unknown,
 ): void {
-  console.log('[VueVine:PatchProp] patchMainThreadEvent called:', { key, nextValue })
-
   const match = MAIN_THREAD_EVENT_RE.exec(key)
-  if (!match) {
-    console.log('[VueVine:PatchProp] no match for main-thread event pattern')
+  if (!match)
     return
-  }
 
   // Extract event type and name from "main-thread:global-bindscroll"
   let eventType = match[1]!.toLowerCase()
   const eventName = match[2]!.toLowerCase()
-  console.log('[VueVine:PatchProp] parsed event:', { eventType, eventName })
 
   // Normalize event type to Lynx format
   if (eventType === 'bind') {
@@ -179,30 +174,23 @@ function patchMainThreadEvent(
   else if (eventType === 'global-bind') {
     eventType = 'global-bindEvent'
   }
-  console.log('[VueVine:PatchProp] normalized eventType:', eventType)
 
   if (nextValue && isWorklet(nextValue)) {
-    console.log('[VueVine:PatchProp] nextValue is worklet:', nextValue)
     // Set _workletType for Lynx engine to recognize this as a main-thread worklet
     const workletValue = nextValue as { _wkltId: string, _workletType?: string }
     workletValue._workletType = 'main-thread'
 
-    const eventArg = { type: 'worklet', value: workletValue }
-    console.log('[VueVine:PatchProp] calling __AddEvent with worklet:', { el, eventType, eventName, eventArg })
     // Pass worklet object to Lynx for main-thread execution
     // Lynx will call runWorklet(workletObj, [event]) when event fires
-    __AddEvent(el, eventType, eventName, eventArg)
-    console.log('[VueVine:PatchProp] __AddEvent completed')
+    __AddEvent(el, eventType, eventName, { type: 'worklet', value: workletValue })
   }
   else if (nextValue && typeof nextValue === 'function') {
-    console.log('[VueVine:PatchProp] nextValue is regular function, using fallback')
     // Fallback: if handler is a regular function (shouldn't happen normally)
     // Register it in event registry and pass sign
     const sign = registerEventHandler(nextValue as EventHandler)
     __AddEvent(el, eventType, eventName, sign)
   }
   else {
-    console.log('[VueVine:PatchProp] removing event binding')
     // Remove event binding
     __AddEvent(el, eventType, eventName, undefined)
   }
