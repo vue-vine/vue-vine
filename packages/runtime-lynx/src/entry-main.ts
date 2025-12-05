@@ -9,16 +9,29 @@
  * - Runs Vue application and renders UI
  * - Stores event handlers in eventRegistry
  * - Receives forwarded events from background thread via postMessage
+ * - Manages worklet runtime for main-thread script execution
  */
 
 import { injectCalledByNative } from './called-by-native'
 import { setupLynxEnv } from './env'
+import { initWorkletRuntime } from './worklet-runtime'
+
+console.log('[VueVine:Main] entry-main.ts loaded')
 
 // Setup Lynx environment
+console.log('[VueVine:Main] calling setupLynxEnv...')
 setupLynxEnv()
+console.log('[VueVine:Main] setupLynxEnv completed')
+
+// Initialize worklet runtime for main-thread script
+console.log('[VueVine:Main] calling initWorkletRuntime...')
+initWorkletRuntime()
+console.log('[VueVine:Main] initWorkletRuntime completed')
 
 // Inject native-callable functions for main thread
+console.log('[VueVine:Main] calling injectCalledByNative...')
 injectCalledByNative()
+console.log('[VueVine:Main] injectCalledByNative completed')
 
 // Setup cross-thread message listener
 // Listen for events forwarded from background thread

@@ -167,6 +167,10 @@ export interface VineLynxDirectiveFnInfo {
   fnName: string
   /** The AST node of the function */
   fnNode: BabelFunctionNodeTypes
+  /** The AST node of the containing declaration (VariableDeclaration or FunctionDeclaration) */
+  declNode: Node
+  /** The directive node within function body (for removal) */
+  directiveNode: Node
   /** Source location for error reporting */
   loc?: SourceLocation | null
 }

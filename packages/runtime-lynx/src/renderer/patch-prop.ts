@@ -4,9 +4,14 @@
 import type { LynxElement } from '../types'
 import { registerEventHandler, unregisterEventHandler } from '../event-registry'
 import { scheduleLynxFlush } from '../scheduler'
+import { isWorklet } from '../worklet-runtime'
 
 // Match Vue event handlers: onTap, onClick, etc.
 const EVENT_RE = /^on[A-Z]/
+
+// Match main-thread: prefixed event bindings (worklet events)
+// e.g., main-thread:global-bindscroll, main-thread:bindtap
+const MAIN_THREAD_EVENT_RE = /^main-thread:(global-bind|bind|catch|capture-bind|capture-catch)(\w+)/i
 
 // Match Lynx native event bindings: bindtap, catchtap, global-bindscroll, etc.
 const LYNX_EVENT_RE = /^(global-bind|bindEvent|bind|catch|capture-bind|capture-catch)(\w+)/i
@@ -52,6 +57,10 @@ export function patchProp(
   else if (EVENT_RE.test(key)) {
     // Vue style: onTap, onClick -> tap, click
     patchEvent(el, key, prevValue, nextValue, 'bindEvent')
+  }
+  else if (MAIN_THREAD_EVENT_RE.test(key)) {
+    // Main-thread worklet event: main-thread:bindtap, main-thread:global-bindscroll
+    patchMainThreadEvent(el, key, prevValue, nextValue)
   }
   else if (LYNX_EVENT_RE.test(key)) {
     // Lynx native style: bindtap, catchtap, etc.
@@ -130,6 +139,70 @@ function patchEvent(
     __AddEvent(el, eventType, eventName, sign)
   }
   else if (!nextValue && prevSign) {
+    // Remove event binding
+    __AddEvent(el, eventType, eventName, undefined)
+  }
+}
+
+/**
+ * Patch main-thread worklet event bindings.
+ * These events are handled directly on main thread via worklet runtime.
+ *
+ * Format: main-thread:global-bindscroll, main-thread:bindtap
+ */
+function patchMainThreadEvent(
+  el: LynxElement,
+  key: string,
+  _prevValue: unknown,
+  nextValue: unknown,
+): void {
+  console.log('[VueVine:PatchProp] patchMainThreadEvent called:', { key, nextValue })
+
+  const match = MAIN_THREAD_EVENT_RE.exec(key)
+  if (!match) {
+    console.log('[VueVine:PatchProp] no match for main-thread event pattern')
+    return
+  }
+
+  // Extract event type and name from "main-thread:global-bindscroll"
+  let eventType = match[1]!.toLowerCase()
+  const eventName = match[2]!.toLowerCase()
+  console.log('[VueVine:PatchProp] parsed event:', { eventType, eventName })
+
+  // Normalize event type to Lynx format
+  if (eventType === 'bind') {
+    eventType = 'bindEvent'
+  }
+  else if (eventType === 'catch') {
+    eventType = 'catchEvent'
+  }
+  else if (eventType === 'global-bind') {
+    eventType = 'global-bindEvent'
+  }
+  console.log('[VueVine:PatchProp] normalized eventType:', eventType)
+
+  if (nextValue && isWorklet(nextValue)) {
+    console.log('[VueVine:PatchProp] nextValue is worklet:', nextValue)
+    // Set _workletType for Lynx engine to recognize this as a main-thread worklet
+    const workletValue = nextValue as { _wkltId: string, _workletType?: string }
+    workletValue._workletType = 'main-thread'
+
+    const eventArg = { type: 'worklet', value: workletValue }
+    console.log('[VueVine:PatchProp] calling __AddEvent with worklet:', { el, eventType, eventName, eventArg })
+    // Pass worklet object to Lynx for main-thread execution
+    // Lynx will call runWorklet(workletObj, [event]) when event fires
+    __AddEvent(el, eventType, eventName, eventArg)
+    console.log('[VueVine:PatchProp] __AddEvent completed')
+  }
+  else if (nextValue && typeof nextValue === 'function') {
+    console.log('[VueVine:PatchProp] nextValue is regular function, using fallback')
+    // Fallback: if handler is a regular function (shouldn't happen normally)
+    // Register it in event registry and pass sign
+    const sign = registerEventHandler(nextValue as EventHandler)
+    __AddEvent(el, eventType, eventName, sign)
+  }
+  else {
+    console.log('[VueVine:PatchProp] removing event binding')
     // Remove event binding
     __AddEvent(el, eventType, eventName, undefined)
   }

@@ -11,7 +11,6 @@ import { VineBindingTypes } from '../constants'
 import { vineErr, vineWarn } from '../diagnostics'
 import { appendToMapArray } from '../utils'
 import { transformAssetUrl } from './transform-asset-url'
-import { getLynxEventTransformPlugin } from './transform-lynx-event'
 import { transformBooleanProp } from './transform-negative-bool'
 import { walkVueTemplateAst } from './walk'
 
@@ -293,8 +292,6 @@ export function compileVineTemplate(
     __enableTransformBareAttrAsBool = { transformNegativeBool: true },
     __shouldAddTemplateSuffix,
   } = compilerOptions.vueCompilerOptions ?? {}
-  const __enableLynx = compilerOptions.lynx?.enabled ?? false
-  const vueCompilerOnError = params.onError
 
   try {
     // vue/language-tools / #4583:
@@ -315,7 +312,6 @@ export function compileVineTemplate(
         nodeTransforms: [
           ...getTransformBareAttrAsBoolPlugin(__enableTransformAssetsURL),
           ...getTransformNegativeBoolPlugin(__enableTransformBareAttrAsBool),
-          ...getLynxEventTransformPlugin(__enableLynx, vueCompilerOnError, vineCompFnCtx.fileCtx, vineCompFnCtx),
         ],
         ...params,
       }),

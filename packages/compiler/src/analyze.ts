@@ -1473,12 +1473,14 @@ function analyzeLynxDirectiveFunctions(vineFileCtx: VineFileCtx): void {
   // Also check top-level functions in the file
   for (const stmt of vineFileCtx.root.program.body) {
     if (isFunctionDeclaration(stmt)) {
-      const directive = getLynxDirective(stmt.body)
-      if (directive) {
+      const directiveResult = getLynxDirective(stmt.body)
+      if (directiveResult) {
         directiveFns.push({
-          directive,
+          directive: directiveResult.type,
           fnName: stmt.id?.name ?? '',
           fnNode: stmt,
+          declNode: stmt,
+          directiveNode: directiveResult.node,
           loc: stmt.loc,
         })
       }
@@ -1493,12 +1495,14 @@ function analyzeLynxDirectiveFunctions(vineFileCtx: VineFileCtx): void {
           (isFunctionExpression(init) || isArrowFunctionExpression(init))
           && isBlockStatement(init.body)
         ) {
-          const directive = getLynxDirective(init.body)
-          if (directive) {
+          const directiveResult = getLynxDirective(init.body)
+          if (directiveResult) {
             directiveFns.push({
-              directive,
+              directive: directiveResult.type,
               fnName: decl.id.name,
               fnNode: init,
+              declNode: stmt,
+              directiveNode: directiveResult.node,
               loc: init.loc,
             })
           }
@@ -1524,12 +1528,14 @@ function collectLynxDirectiveFunctions(
   for (const stmt of block.body) {
     // Function declaration: function foo() { 'main thread'; ... }
     if (isFunctionDeclaration(stmt)) {
-      const directive = getLynxDirective(stmt.body)
-      if (directive) {
+      const directiveResult = getLynxDirective(stmt.body)
+      if (directiveResult) {
         result.push({
-          directive,
+          directive: directiveResult.type,
           fnName: stmt.id?.name ?? '',
           fnNode: stmt,
+          declNode: stmt,
+          directiveNode: directiveResult.node,
           loc: stmt.loc,
         })
       }
@@ -1545,12 +1551,14 @@ function collectLynxDirectiveFunctions(
           (isFunctionExpression(init) || isArrowFunctionExpression(init))
           && isBlockStatement(init.body)
         ) {
-          const directive = getLynxDirective(init.body)
-          if (directive) {
+          const directiveResult = getLynxDirective(init.body)
+          if (directiveResult) {
             result.push({
-              directive,
+              directive: directiveResult.type,
               fnName: decl.id.name,
               fnNode: init,
+              declNode: stmt,
+              directiveNode: directiveResult.node,
               loc: init.loc,
             })
           }
@@ -1561,17 +1569,28 @@ function collectLynxDirectiveFunctions(
 }
 
 /**
- * Get Lynx directive type from a block statement, if any
- * Returns the directive type according to official specification
+ * Result of getLynxDirective function
  */
-function getLynxDirective(body: BlockStatement): VineLynxDirectiveType | null {
+interface LynxDirectiveResult {
+  type: VineLynxDirectiveType
+  node: Node
+}
+
+/**
+ * Get Lynx directive type from a block statement, if any
+ * Returns the directive type and node according to official specification
+ */
+function getLynxDirective(body: BlockStatement): LynxDirectiveResult | null {
   if (!body.directives || body.directives.length === 0) {
     return null
   }
   for (const directive of body.directives) {
     const directiveValue = directive.value.value
     if (directiveValue === 'main thread' || directiveValue === 'background only') {
-      return directiveValue as VineLynxDirectiveType
+      return {
+        type: directiveValue as VineLynxDirectiveType,
+        node: directive,
+      }
     }
   }
   return null

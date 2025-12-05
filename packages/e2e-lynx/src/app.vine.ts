@@ -31,13 +31,9 @@ function MainThreadDraggable() {
     'main thread'
 
     const detail = event.detail.scrollTop
-    const newPos = {
-      x: 0,
-      y: 500 - detail,
-    }
     event.currentTarget.setStyleProperty(
       'transform',
-      `translate(${newPos.x}px, ${newPos.y}px)`,
+      `translate(0, ${500 - detail}px)`,
     )
   }
   const style = computed(() => ({
