@@ -17,21 +17,30 @@ import { setupLynxEnv } from './env'
 import { setupEventsReceive } from './event-receive'
 import { initWorkletRuntime } from './worklet-runtime'
 
-// Setup Lynx environment
-setupLynxEnv()
+function bootstrapMainThread(): void {
+  // Setup Lynx environment
+  setupLynxEnv()
 
-injectCalledByNative()
+  injectCalledByNative()
 
-// Inject native-callable functions for main thread
-
-// Setup cross-thread message listener
-// Listen for events forwarded from background thread
-if (typeof lynx !== 'undefined') {
-  // Initialize worklet runtime for main-thread script
-  initWorkletRuntime()
+  // Inject native-callable functions for main thread
 
   // Setup cross-thread message listener
-  setupEventsReceive()
+  // Listen for events forwarded from background thread
+  if (typeof lynx !== 'undefined') {
+  // Initialize worklet runtime for main-thread script
+    initWorkletRuntime()
+
+    // Setup cross-thread message listener
+    setupEventsReceive()
+  }
+}
+
+try {
+  bootstrapMainThread()
+}
+catch (e) {
+  console.error('[Vue Vine Lynx] Failed to bootstrap main thread:', e)
 }
 
 // Export public API for Vue applications

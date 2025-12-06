@@ -27,6 +27,7 @@ declare global {
   function __CreateText(parentComponentUniqueId: number): LynxElement
   function __CreateImage(parentComponentUniqueId: number): LynxElement
   function __CreateView(parentComponentUniqueId: number): LynxElement
+  function __CreateFrame(parentComponentUniqueId: number): LynxElement
   function __CreateScrollView(parentComponentUniqueId: number): LynxElement
   function __CreateWrapperElement(parentComponentUniqueId: number): LynxElement
   function __CreateRawText(s: string): LynxElement

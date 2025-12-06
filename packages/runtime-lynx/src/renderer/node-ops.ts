@@ -6,6 +6,8 @@ import type { LynxElement } from '../types'
 import { scheduleLynxFlush } from '../scheduler'
 import { patchProp } from './patch-prop'
 
+const ROOT_COMPONENT_ID = 0
+
 /**
  * Vue renderer node operations for Lynx platform.
  * Directly operates on LynxElement (FiberElement) returned by Lynx Native PAPI.
@@ -22,11 +24,21 @@ export const lynxVueVineRenderOptions: RendererOptions = {
   createElement(type: string): LynxElement {
     switch (type) {
       case 'view':
-        return __CreateView(0)
+        return __CreateView(ROOT_COMPONENT_ID)
       case 'text':
-        return __CreateText(0)
+        return __CreateText(ROOT_COMPONENT_ID)
+      case 'image':
+        return __CreateImage(ROOT_COMPONENT_ID)
+      case 'scroll-view':
+        return __CreateScrollView(ROOT_COMPONENT_ID)
+      case 'list':
+        return __CreateList(ROOT_COMPONENT_ID, () => null, () => null)
+      case 'frame':
+        return __CreateFrame(ROOT_COMPONENT_ID)
+      case 'page':
+        return __CreatePage('', 0)
       default:
-        return __CreateElement(type, 0)
+        return __CreateElement(type, ROOT_COMPONENT_ID)
     }
   },
 
