@@ -31,7 +31,9 @@
     "dist",
     "template"
   ],
-  "scripts": {},
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
   "dependencies": {
     "@clack/prompts": "catalog:cli",
     "clerc": "catalog:cli",

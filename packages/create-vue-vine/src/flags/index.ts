@@ -1,3 +1,4 @@
+import type { Parser } from 'clerc'
 import type { ProjectOptions } from '../create'
 import type { FeatureFlag, FeatureFlagActionCtx } from '../utils'
 import { confirm, defineFlagMeta, select } from '../utils'
@@ -13,7 +14,7 @@ const router: FeatureFlag<'router', {
     type: Boolean,
     description: 'Add Vue Router',
     default: true,
-  } as const,
+  },
   initialValue: true,
 })
 const store: FeatureFlag<'store', {
@@ -27,7 +28,7 @@ const store: FeatureFlag<'store', {
     type: Boolean,
     description: 'Add Pinia',
     default: true,
-  } as const,
+  },
   initialValue: true,
 })
 const install: FeatureFlag<'install', {
@@ -67,9 +68,7 @@ const flags: Flags = Object.entries(metas).reduce((acc, [key, value]) => {
 
 type MetaKeys = keyof typeof metas
 
-export type ParsedFlags = {
-  [K in MetaKeys]: boolean
-}
+export type ParsedFlags = Parser.InferFlags<Flags>
 
 export function useFlags(): {
   flags: typeof flags
