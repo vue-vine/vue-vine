@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/rsbuild-plugin",
   "type": "module",
-  "version": "1.7.26",
+  "version": "1.7.27",
   "description": "Rsbuild plugin for Vue Vine",
   "author": "Vue Vine Team",
   "license": "MIT",
