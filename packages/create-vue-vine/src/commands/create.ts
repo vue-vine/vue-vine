@@ -3,7 +3,7 @@ import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import process from 'node:process'
 import { intro, log, outro, spinner } from '@clack/prompts'
-import { defineCommand, Root } from 'clerc'
+import { defineCommand } from 'clerc'
 import { bold, green } from 'yoctocolors'
 import { createProject, createProjectOptions } from '../create'
 import { useFlags } from '../flags'
@@ -11,14 +11,11 @@ import { cancel, confirm, exists, formatPmCommand, getPmCommand, getTemplateDire
 
 const { flags, executeFlags } = useFlags()
 const defaultProjectName = 'vue-vine-project'
-const parameters: ['[projectName]'] = ['[projectName]']
 
-export const createCommand: Command<typeof Root, {
-  parameters: typeof parameters
-}> = defineCommand({
-  name: Root,
+export const createCommand: Command = defineCommand({
+  name: '',
   description: 'Create a Vue Vine project',
-  parameters,
+  parameters: ['[project name]'],
   flags: {
     force: {
       type: Boolean,

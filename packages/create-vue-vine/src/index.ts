@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-import { Clerc, friendlyErrorPlugin, helpPlugin, notFoundPlugin, strictFlagsPlugin } from 'clerc'
+import { Cli, friendlyErrorPlugin, notFoundPlugin, strictFlagsPlugin } from 'clerc'
 
 import { description, name, version } from '../package.json'
 import { createCommand } from './commands/create'
 
-Clerc.create(name, version, description)
-  .use(helpPlugin())
-  .use(notFoundPlugin())
+Cli({ scriptName: name, version, description })
   .use(strictFlagsPlugin())
   .use(notFoundPlugin())
   .use(friendlyErrorPlugin())

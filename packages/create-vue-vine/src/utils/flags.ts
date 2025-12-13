@@ -1,10 +1,10 @@
-import type { FlagOptions } from 'clerc'
+import type { ClercFlagOptions } from 'clerc'
 
 export interface FeatureFlagActionCtx {
   template: (...path: string[]) => void
 }
 
-export interface FeatureFlag<N extends string, T extends FlagOptions> {
+export interface FeatureFlag<N extends string, T extends ClercFlagOptions> {
   name: N
   message: string
   flag: T
@@ -13,6 +13,6 @@ export interface FeatureFlag<N extends string, T extends FlagOptions> {
 
 export type ParsedFeatureFlag = Record<string, boolean>
 
-export function defineFlagMeta<N extends string, T extends FlagOptions>(flag: FeatureFlag<N, T>): FeatureFlag<N, T> {
+export function defineFlagMeta<N extends string, T extends ClercFlagOptions>(flag: FeatureFlag<N, T>): FeatureFlag<N, T> {
   return flag
 }
