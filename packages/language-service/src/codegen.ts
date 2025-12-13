@@ -315,6 +315,13 @@ export class CodeGenerator {
         yield* this.scriptUntil(formalParamTypeNode.start!)
         yield `__VLS_VINE.VineComponentCommonProps & `
         yield* this.scriptUntil(formalParamTypeNode.end!)
+        // For param type, we don't add props to typeParts here because
+        // the props type is already yielded above for linked code tags.
+        // We only need to collect emits and models for the return string.
+      }
+      else {
+        // No user props, but we still need base props in the return string
+        typeParts.push('__VLS_VINE.VineComponentCommonProps')
       }
     }
 
@@ -336,6 +343,11 @@ export class CodeGenerator {
     if (Object.keys(vineCompFn.vineModels).length > 0) {
       const modelPropsStr = `__VLS_VINE_${vineCompFn.fnName}_models__`
       typeParts.push(modelPropsStr)
+    }
+
+    // For param type with user props, we need to prepend ' & ' to connect with the yielded props type
+    if (type === 'param' && vineCompFn.propsFormalParamType && typeParts.length > 0) {
+      return ` & ${typeParts.filter(Boolean).join(' & ')},`
     }
 
     return `${typeParts.filter(Boolean).join(' & ')},`

@@ -37,6 +37,9 @@ describe('verify Volar virtual code snapshots', () => {
   it('custom-elements.vine.ts', () => {
     testSnapshotForFile('../../e2e-vite/src/fixtures/custom-elements.vine.ts')
   })
+  it('props-with-emits.vine.ts - props formal parameter with type annotation and emits', () => {
+    testSnapshotForFile('../../e2e-vite/src/fixtures/props-with-emits.vine.ts')
+  })
   it('vapor-interop.vine.ts', () => {
     testSnapshotForFile('../../e2e-vite/src/fixtures/vapor-interop.vine.ts')
   })

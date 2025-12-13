@@ -1,5 +1,25 @@
 # vue-vine
 
+## 1.7.27
+
+### Patch Changes
+
+- Fix language service for broken on concating props type in virtual code.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.27
+  - @vue-vine/rspack-loader@1.7.27
+  - @vue-vine/vite-plugin@1.7.27
+
+## 1.7.26
+
+### Patch Changes
+
+- Support reference & navigation for vineModel props.
+- Updated dependencies
+  - @vue-vine/rsbuild-plugin@1.7.26
+  - @vue-vine/rspack-loader@1.7.26
+  - @vue-vine/vite-plugin@1.7.26
+
 ## 1.7.25
 
 ### Patch Changes
