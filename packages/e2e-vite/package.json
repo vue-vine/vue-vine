@@ -6,7 +6,9 @@
     "test": "vitest",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-types": "vue-vine-tsc --noEmit",
+    "check-lint": "eslint ."
   },
   "devDependencies": {
     "@iconify-json/carbon": "catalog:icons",
@@ -26,6 +28,7 @@
     "unocss": "catalog:styles",
     "unplugin-auto-import": "catalog:vite-ecosystem",
     "vite-plugin-inspect": "catalog:vite-ecosystem",
+    "vue": "catalog:vue-libs",
     "vue-router": "catalog:vue-libs",
     "vue-tsc": "catalog:vue-libs",
     "vue-vine": "workspace:*",

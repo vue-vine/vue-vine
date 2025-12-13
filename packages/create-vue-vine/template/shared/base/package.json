@@ -8,6 +8,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.16.0",
-    "vue-vine": "^1.7.26"
+    "vue-vine": "^1.7.27"
   }
 }

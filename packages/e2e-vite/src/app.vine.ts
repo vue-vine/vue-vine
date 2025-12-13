@@ -1,4 +1,4 @@
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const routes = [
   { path: '/debug', label: 'Debug' },
@@ -20,6 +20,7 @@ const routes = [
   { path: '/vine-prop', label: 'vineProp macro' },
   { path: '/vine-slots', label: 'vineSlots macro' },
   { path: '/custom-elements', label: 'Custom Elements' },
+  { path: '/vapor-interop', label: 'Vapor Interop' },
 ]
 
 export function NavList() {

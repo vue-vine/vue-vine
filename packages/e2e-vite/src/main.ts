@@ -1,5 +1,5 @@
 import { createPinia } from 'pinia'
-import { createApp } from 'vue'
+import { createApp, vaporInteropPlugin } from 'vue'
 import { App } from './app.vine'
 import router from './router'
 
@@ -11,4 +11,6 @@ const app = createApp(App)
 
 app.use(router)
 app.use(pinia)
+app.use(vaporInteropPlugin)
+
 app.mount('#app')

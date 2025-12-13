@@ -13,7 +13,7 @@ type DefineVibeResult<T> = [
    * Initialize the vibe store.
    */
   initVibe: (
-    initFn?: (store: T) => MaybePromise<void>
+    initFn?: (store: T) => MaybePromise<void>,
   ) => T,
 ]
 

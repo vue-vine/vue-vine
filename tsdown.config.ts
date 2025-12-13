@@ -1,9 +1,10 @@
+import type { UserConfig } from 'tsdown'
 import { join } from 'node:path'
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
 
 const isDev = process.env.NODE_ENV === 'development'
-const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
+const buildConfig: UserConfig = defineConfig({
   workspace: {
     include: ['packages/*'],
     exclude: [
@@ -22,6 +23,22 @@ const buildConfig: ReturnType<typeof defineConfig> = defineConfig({
     resolve: {
       conditionNames: ['vine'],
     },
+  },
+  outExtensions: () => {
+    return {
+      js: '.js',
+      dts: '.d.ts',
+    }
+  },
+  outputOptions: {
+    format: 'esm',
+    banner: `
+/**
+  * Vue Vine - Another style of writing Vue components
+  * @License MIT
+  * @Author ShenQingchuan
+  */\n\n
+    `.trim(),
   },
 })
 export default buildConfig

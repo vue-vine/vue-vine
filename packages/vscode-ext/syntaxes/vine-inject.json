@@ -5,10 +5,11 @@
   "patterns": [
     {
       "name": "source.vine-vue-template.embedded.ts",
-      "begin": "vine(`)",
+      "begin": "vine(?:\\.)?(vapor)?(`)",
       "beginCaptures": {
         "0": { "name": "entity.name.function.macro.vine-template.ts" },
-        "1": { "name": "punctuation.definition.string.begin.vine-template.ts" }
+        "1": { "name": "entity.name.function.macro.vapor-tag.ts" },
+        "2": { "name": "punctuation.definition.string.begin.vine-template.ts" }
       },
       "end": "`",
       "endCaptures": {

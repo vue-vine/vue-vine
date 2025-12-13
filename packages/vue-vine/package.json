@@ -1,7 +1,7 @@
 {
   "name": "vue-vine",
   "type": "module",
-  "version": "1.7.26",
+  "version": "1.7.27",
   "description": "Another style to write Vue.js",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -54,7 +54,7 @@
     "typecheck": "tsgo --noEmit"
   },
   "peerDependencies": {
-    "vue": ">=3.2"
+    "vue": "catalog:vue-libs"
   },
   "dependencies": {
     "@vue-vine/rsbuild-plugin": "workspace:*",

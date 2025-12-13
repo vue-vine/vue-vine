@@ -1,6 +1,7 @@
+import type { UserConfig } from 'tsdown'
 import { defineConfig } from 'tsdown'
 
-const tsdownConfig: ReturnType<typeof defineConfig> = defineConfig({
+const tsdownConfig: UserConfig = defineConfig({
   external: [
     'vite',
     '@babel/types',

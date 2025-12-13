@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/compiler",
   "type": "module",
-  "version": "1.7.26",
+  "version": "1.7.27",
   "description": "Compiler for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -37,8 +37,10 @@
   "dependencies": {
     "@babel/parser": "catalog:compiler",
     "@babel/types": "catalog:compiler",
+    "@vue/compiler-core": "catalog:vue-libs",
     "@vue/compiler-dom": "catalog:vue-libs",
     "@vue/compiler-ssr": "catalog:vue-libs",
+    "@vue/compiler-vapor": "catalog:vue-libs",
     "@vue/shared": "catalog:vue-libs",
     "get-tsconfig": "catalog:compiler",
     "hash-sum": "catalog:utils",

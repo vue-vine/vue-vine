@@ -5,6 +5,7 @@
     "jsxImportSource": "vue",
     "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
+    "customConditions": ["vine"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
@@ -28,6 +29,7 @@
   ],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "**/*.virtual.ts"
   ]
 }

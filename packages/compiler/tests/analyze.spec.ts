@@ -655,6 +655,20 @@ function MyComp() {
       `)
     expect(mockCompilerCtx.vineCompileWarnings.length).toBe(0)
   })
+
+  it('analyze vine vapor template', () => {
+    const content = `
+    function MyComp() {
+      return vine.vapor\`<div>Test vine vapor template</div>\`
+    }
+    `
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testVineVaporTemplate', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testVineVaporTemplate')
+    const MyComp = fileCtx?.vineCompFns[0]
+    expect(MyComp?.isVapor).toBe(true)
+  })
 })
 
 describe('test other helpers for compiler', () => {

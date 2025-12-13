@@ -1,5 +1,14 @@
 # @vue-vine/language-server
 
+## 1.7.27
+
+### Patch Changes
+
+- Fix language service for broken on concating props type in virtual code.
+- Updated dependencies
+  - @vue-vine/compiler@1.7.27
+  - @vue-vine/language-service@1.7.27
+
 ## 1.7.26
 
 ### Patch Changes
