@@ -60,7 +60,6 @@ export const App = defineComponent({
     return () => (
       h('view', {
         style: {
-          // Both camelCase and kebab-case are supported
           display: 'flex',
           height: '100vh',
           flexDirection: 'column',
