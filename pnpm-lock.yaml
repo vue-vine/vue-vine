@@ -13,8 +13,8 @@ catalogs:
       specifier: ^0.11.0
       version: 0.11.0
     clerc:
-      specifier: ^1.0.0-beta.12
-      version: 1.0.0-beta.17
+      specifier: ^1.0.1
+      version: 1.0.1
     consola:
       specifier: ^3.4.2
       version: 3.4.2
@@ -545,7 +545,7 @@ importers:
         version: 0.11.0
       clerc:
         specifier: catalog:cli
-        version: 1.0.0-beta.17
+        version: 1.0.1(cac@6.7.14)(citty@0.1.6)
       execa:
         specifier: catalog:cli
         version: 9.6.0
@@ -1410,6 +1410,21 @@ packages:
     peerDependencies:
       ansi-colors: ^4.1.3
 
+  '@bomb.sh/tab@0.0.10':
+    resolution: {integrity: sha512-6ALS2rh/4LKn0Yxwm35V6LcgQuSiECHbqQo7+9g4rkgGyXZ0siOc8K+IuWIq/4u0Zkv2mevP9QSqgKhGIvLJMw==}
+    hasBin: true
+    peerDependencies:
+      cac: ^6.7.14
+      citty: ^0.1.6
+      commander: ^13.1.0
+    peerDependenciesMeta:
+      cac:
+        optional: true
+      citty:
+        optional: true
+      commander:
+        optional: true
+
   '@bufbuild/protobuf@2.9.0':
     resolution: {integrity: sha512-rnJenoStJ8nvmt9Gzye8nkYd6V22xUAnu4086ER7h1zJ508vStko4pMvDeQ446ilDTFpV5wnoc5YS7XvMwwMqA==}
 
@@ -1480,39 +1495,43 @@ packages:
   '@clack/prompts@0.11.0':
     resolution: {integrity: sha512-pMN5FcrEw9hUkZA4f+zLlzivQSeQf5dRGJjSUbvVYDLvpKCdQx5OaknvKzgbtXOizhP+SJJJjqEbOe55uKKfAw==}
 
-  '@clerc/core@1.0.0-beta.17':
-    resolution: {integrity: sha512-sF+8U5juiH8bZ+QB8qNT4aQxYacsQdVejMvFjMD9gqaDwn9dbHPibZxNEQrG3oimhu5x8Rp7XoYr+freQf9Byg==}
+  '@clerc/advanced-types@1.0.1':
+    resolution: {integrity: sha512-ltmiPzs9PTF/e05kt4LuBBxUceoI6fuCXVYmX2C69+tsPUde0WXXjWmM2PiuxHxUNEKgDivkWRIcYPWHRSx88w==}
 
-  '@clerc/parser@1.0.0-beta.17':
-    resolution: {integrity: sha512-JXrYiPZ/aFUWPysXPMzWtsUpVGC0Hg8TPljx6bc5TtbqL8gySXtAOv0+7sUdum3YQLnrH1UGJQmyP8STFglk6A==}
+  '@clerc/core@1.0.1':
+    resolution: {integrity: sha512-SKt6fPRoPdjlIx14uuzanx8msaxnPMosFgQBepwpwxEhdNsewPB5vef09bKK/vrEsi4gMYLAd3vVoq7C8YMnLg==}
 
-  '@clerc/plugin-completions@1.0.0-beta.17':
-    resolution: {integrity: sha512-v4K/7dQnOlXXnIxQJ9NsDzI73d0tilcmoNL+xzEstm3n8kw/p/hRFYsiOah9V7zJPyKUgrsVzR5dYAv25gSVBg==}
+  '@clerc/parser@1.0.1':
+    resolution: {integrity: sha512-epA3naBSv8yex4aj9ca8EUQgOxetz8hZRpktLmfm81YOTgT8qXf1aElqaAx5toPAiHKaQp5zs5LFpruBq5uOPw==}
+
+  '@clerc/plugin-completions@1.0.1':
+    resolution: {integrity: sha512-DqHDZ9QeEAhw+4ewOw0CiA5R9wIxce4ZQOMfqVouWm6ppZxHhpTvXELXuT10iH83pneR3bV3/bRN/Bnz1kp2RQ==}
+    hasBin: true
     peerDependencies:
       '@clerc/core': '*'
 
-  '@clerc/plugin-friendly-error@1.0.0-beta.17':
-    resolution: {integrity: sha512-9xe+hFPluzydUgf4pcSc+2XRzIKnPZNK2w2+BDhnsUT4faAdSqI1cMS9yMnxSOQE44wUs5S+BbwtviaUzqhiUg==}
+  '@clerc/plugin-friendly-error@1.0.1':
+    resolution: {integrity: sha512-MWgbWlthFOiVz/upYIH6enXn6cyduEVMxAeXUhxWdLhC1w32nFALkRcj15N3kpx79wFY1uKOYaUtWz0BGpLN3w==}
     peerDependencies:
       '@clerc/core': '*'
 
-  '@clerc/plugin-help@1.0.0-beta.17':
-    resolution: {integrity: sha512-RMoJjo6+4VruktaS8k7cIv0fiFhT3wT3il5v8Y9YCGEWDKi68cIvGBmpRNbyGjDedi2Ytdp1edJ87cjb9vTkRQ==}
+  '@clerc/plugin-help@1.0.1':
+    resolution: {integrity: sha512-hmShvxyM2TjfQesel9W6j0Dwk502fH4B8Q3RS7BJWx3wLOhiv2TwKQyYIBhuspFwswtXTx0rlpaRBEHWa7Yfxw==}
     peerDependencies:
       '@clerc/core': '*'
 
-  '@clerc/plugin-not-found@1.0.0-beta.17':
-    resolution: {integrity: sha512-rhLpdjn7TPk0WZJiK9MblyfG4ydl6XHg1kEv41+8O3OErSOmww9t3aQqnvRRhf62PxOT4oPwtcAwge+jvyhgHw==}
+  '@clerc/plugin-not-found@1.0.1':
+    resolution: {integrity: sha512-mKLZariN3S/d3ZN5EDH4y92UUZB+IXb4yxskxvZ0Shxeqo7qUuUicYgjoDG8JyCBV9ckQ+9SAy/x61Z6zR1B0A==}
     peerDependencies:
       '@clerc/core': '*'
 
-  '@clerc/plugin-strict-flags@1.0.0-beta.17':
-    resolution: {integrity: sha512-frTFviRuAoje4eDi0KO1w/ND7veFP34E6m90fV8K12FNd2UOqvq0iAoyqHOe9kaPP7v8TjSpSumCl9ug/bw/EA==}
+  '@clerc/plugin-strict-flags@1.0.1':
+    resolution: {integrity: sha512-kihgEWMkkOL4EyVXLOJOE+UzaI7kQgyH350SBACJOxdnVgrrdnQVHj2P9pLPLnbrzYfT5Bpt3dcT2z504Eh4iA==}
     peerDependencies:
       '@clerc/core': '*'
 
-  '@clerc/plugin-version@1.0.0-beta.17':
-    resolution: {integrity: sha512-cBhUFqCdNX9z4KRDQseZElwljq/RwpDA9Suatd42y3xiIm2KDrJa7jnS8jDBiJncZmbtXnoivN9BTQjcoPsnoQ==}
+  '@clerc/plugin-version@1.0.1':
+    resolution: {integrity: sha512-lNM/k5w8IX8IXtBG1L5Et4MILBCR55M6eUu40HdzqyXedqzq2efxHJHlny1H3IMsmSBkoZRkJUO28CNiGpJSZQ==}
     peerDependencies:
       '@clerc/core': '*'
 
@@ -2853,10 +2872,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@pnpm/tabtab@0.5.4':
-    resolution: {integrity: sha512-bWLDlHsBlgKY/05wDN/V3ETcn5G2SV/SiA2ZmNvKGGlmVX4G5li7GRDhHcgYvHJHyJ8TUStqg2xtHmCs0UbAbg==}
-    engines: {node: '>=18'}
-
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
@@ -4108,6 +4123,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@uttr/tint@0.1.3':
+    resolution: {integrity: sha512-nQlAxBriuQ7NPxvMlxCXdw0n4alhEAIzsjFNNyU4CR7AitUwMFp1A5e/47JYQ7NMcooaI06OEQKylYhNhbpuIA==}
+
   '@vercel/nft@0.30.4':
     resolution: {integrity: sha512-wE6eAGSXScra60N2l6jWvNtVK0m+sh873CpfZW4KI2v8EHuUQp+mSEi4T+IcdPCSEDgCdAS/7bizbhQlkjzrSA==}
     engines: {node: '>=18'}
@@ -4934,8 +4952,8 @@ packages:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
     engines: {node: '>=4'}
 
-  clerc@1.0.0-beta.17:
-    resolution: {integrity: sha512-T3AfMTxKknFw7sq5g6V5/t7rMHQslCbKKpPKEia41VsCin7PyIh2BXZWTev6Fb4pjvoP3QX/6IuQ77ppz63wcQ==}
+  clerc@1.0.1:
+    resolution: {integrity: sha512-UZE1T9oRCQVQfMhbJUbSKf8Q0cdAz3gtnHQVywgS395PL/6zjiJ7e79yUfqQl2Tvg/uRLlgQq8y8F93aFvf4nQ==}
 
   cli-cursor@5.0.0:
     resolution: {integrity: sha512-aCj4O5wKyszjMmDT4tZj93kxyydN/K5zPWSCe6/0AV/AA1pqe5ZBIw0a2ZfPQV7lL5/yb5HsUreJ6UFAF1tEQw==}
@@ -6643,8 +6661,8 @@ packages:
     resolution: {integrity: sha512-ME4Fb83LgEgwNw96RKNvKV4VTLuXfoKudAmm2lP8Kk87KaMK0/Xrx/aAkMWmT8mDb+3MlFDspfbCs7adjRxA2g==}
     engines: {node: '>=20.0.0'}
 
-  lite-emit@3.1.0:
-    resolution: {integrity: sha512-S7lPT1iPnJEjz8UX/zEnWjfvwhOp/lK/msYqXklDSlyr0ukgUa2JOIIY2K1TjgSZ6Y5qxxM1HizlF0yOoHp4MA==}
+  lite-emit@4.0.0:
+    resolution: {integrity: sha512-8krVeIZLS7JbkXz4R9xYziqHcxga6UgmomVWb45g21aB4M8qzDwr7FTEW3PJa80PTUASXeqbfipveKCB5YZdug==}
 
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
@@ -9032,10 +9050,6 @@ packages:
       uploadthing:
         optional: true
 
-  untildify@4.0.0:
-    resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
-    engines: {node: '>=8'}
-
   untun@0.1.3:
     resolution: {integrity: sha512-4luGP9LMYszMRZwsvyUd9MrxgEGZdZuZgpVQHEEX0lCYFESasVRvZd0EYpCkOIbJKHMuv0LskpXc/8Un+MJzEQ==}
     hasBin: true
@@ -10079,6 +10093,11 @@ snapshots:
     dependencies:
       ansi-colors: 4.1.3
 
+  '@bomb.sh/tab@0.0.10(cac@6.7.14)(citty@0.1.6)':
+    optionalDependencies:
+      cac: 6.7.14
+      citty: 0.1.6
+
   '@bufbuild/protobuf@2.9.0': {}
 
   '@changesets/apply-release-plan@7.0.13':
@@ -10251,46 +10270,51 @@ snapshots:
       picocolors: 1.1.1
       sisteransi: 1.0.5
 
-  '@clerc/core@1.0.0-beta.17':
-    dependencies:
-      '@clerc/parser': 1.0.0-beta.17
-      lite-emit: 3.1.0
+  '@clerc/advanced-types@1.0.1': {}
 
-  '@clerc/parser@1.0.0-beta.17': {}
-
-  '@clerc/plugin-completions@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/core@1.0.1':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
-      '@pnpm/tabtab': 0.5.4
+      '@clerc/advanced-types': 1.0.1
+      '@clerc/parser': 1.0.1
+      lite-emit: 4.0.0
+
+  '@clerc/parser@1.0.1': {}
+
+  '@clerc/plugin-completions@1.0.1(@clerc/core@1.0.1)(cac@6.7.14)(citty@0.1.6)':
+    dependencies:
+      '@bomb.sh/tab': 0.0.10(cac@6.7.14)(citty@0.1.6)
+      '@clerc/core': 1.0.1
     transitivePeerDependencies:
-      - supports-color
+      - cac
+      - citty
+      - commander
 
-  '@clerc/plugin-friendly-error@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/plugin-friendly-error@1.0.1(@clerc/core@1.0.1)':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
+      '@clerc/core': 1.0.1
       kons: 0.7.1
 
-  '@clerc/plugin-help@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/plugin-help@1.0.1(@clerc/core@1.0.1)':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
+      '@clerc/core': 1.0.1
       '@types/text-table': 0.2.5
+      '@uttr/tint': 0.1.3
       string-width: 8.1.0
       text-table: 0.2.0
-      yoctocolors: 2.1.2
 
-  '@clerc/plugin-not-found@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/plugin-not-found@1.0.1(@clerc/core@1.0.1)':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
+      '@clerc/core': 1.0.1
+      '@uttr/tint': 0.1.3
       didyoumean2: 7.0.4
-      yoctocolors: 2.1.2
 
-  '@clerc/plugin-strict-flags@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/plugin-strict-flags@1.0.1(@clerc/core@1.0.1)':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
+      '@clerc/core': 1.0.1
 
-  '@clerc/plugin-version@1.0.0-beta.17(@clerc/core@1.0.0-beta.17)':
+  '@clerc/plugin-version@1.0.1(@clerc/core@1.0.1)':
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
+      '@clerc/core': 1.0.1
 
   '@cloudflare/kv-asset-handler@0.4.0':
     dependencies:
@@ -11634,15 +11658,6 @@ snapshots:
       playwright: 1.56.0
     optional: true
 
-  '@pnpm/tabtab@0.5.4':
-    dependencies:
-      debug: 4.4.3
-      enquirer: 2.4.1
-      minimist: 1.2.8
-      untildify: 4.0.0
-    transitivePeerDependencies:
-      - supports-color
-
   '@polka/url@1.0.0-next.29': {}
 
   '@poppinss/colors@4.1.5':
@@ -12860,6 +12875,8 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
+  '@uttr/tint@0.1.3': {}
+
   '@vercel/nft@0.30.4(rollup@4.53.3)':
     dependencies:
       '@mapbox/node-pre-gyp': 2.0.0
@@ -13985,17 +14002,19 @@ snapshots:
     dependencies:
       escape-string-regexp: 1.0.5
 
-  clerc@1.0.0-beta.17:
+  clerc@1.0.1(cac@6.7.14)(citty@0.1.6):
     dependencies:
-      '@clerc/core': 1.0.0-beta.17
-      '@clerc/plugin-completions': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
-      '@clerc/plugin-friendly-error': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
-      '@clerc/plugin-help': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
-      '@clerc/plugin-not-found': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
-      '@clerc/plugin-strict-flags': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
-      '@clerc/plugin-version': 1.0.0-beta.17(@clerc/core@1.0.0-beta.17)
+      '@clerc/core': 1.0.1
+      '@clerc/plugin-completions': 1.0.1(@clerc/core@1.0.1)(cac@6.7.14)(citty@0.1.6)
+      '@clerc/plugin-friendly-error': 1.0.1(@clerc/core@1.0.1)
+      '@clerc/plugin-help': 1.0.1(@clerc/core@1.0.1)
+      '@clerc/plugin-not-found': 1.0.1(@clerc/core@1.0.1)
+      '@clerc/plugin-strict-flags': 1.0.1(@clerc/core@1.0.1)
+      '@clerc/plugin-version': 1.0.1(@clerc/core@1.0.1)
     transitivePeerDependencies:
-      - supports-color
+      - cac
+      - citty
+      - commander
 
   cli-cursor@5.0.0:
     dependencies:
@@ -15849,7 +15868,7 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.0
 
-  lite-emit@3.1.0: {}
+  lite-emit@4.0.0: {}
 
   loader-utils@2.0.4:
     dependencies:
@@ -16378,7 +16397,8 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.2
 
-  minimist@1.2.8: {}
+  minimist@1.2.8:
+    optional: true
 
   minipass@7.1.2: {}
 
@@ -18742,8 +18762,6 @@ snapshots:
       '@netlify/blobs': 9.1.2
       db0: 0.3.4
       ioredis: 5.8.2
-
-  untildify@4.0.0: {}
 
   untun@0.1.3:
     dependencies:
