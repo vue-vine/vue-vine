@@ -14,7 +14,7 @@ catalogs:
   cli:
     '@changesets/cli': ^2.29.7
     '@clack/prompts': ^0.11.0
-    clerc: ^1.0.1
+    clerc: ^1.0.2
     consola: ^3.4.2
     debug: ^4.4.3
     del: ^8.0.1
