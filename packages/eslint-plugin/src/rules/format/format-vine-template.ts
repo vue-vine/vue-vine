@@ -58,11 +58,11 @@ function getPrettierFormatted(
     },
   )
 
-  // Remove '<template>' and '</template>' line
+  // Remove '<template>' and placeholders line
   let formattedLines = formattedRaw.split('\n')
   formattedLines = formattedLines.slice(layer + 1, -layer - 2)
   formattedLines.unshift('') // Add an empty leading line
-  formattedLines.push(baseIndent) // Add an empty trailing line
+  formattedLines.push(baseIndent) // Add a line trailing line
   const formatted = formattedLines.join('\n')
 
   return formatted
