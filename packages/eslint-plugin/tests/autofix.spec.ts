@@ -166,5 +166,30 @@ function TestComp() {
       `)
       },
     }, // Case 5
+
+    {
+      description: 'should correctly process <pre> tag - case 6',
+      code: `
+function TestComp() {
+  return vine\`
+    <pre>
+      HelloWorld
+    </pre>
+  \`
+}\n`.trim(),
+      output(result) {
+        expectSnapshot(result, `
+ ┌───┬────────────────────────────────
+ │ 1 │function TestComp() {
+ │ 2 │  return vine\`
+ │ 3 │    <pre>
+ │ 4 │      HelloWorld
+ │ 5 │    </pre>
+ │ 6 │  \`
+ │ 7 │}
+ └───┴────────────────────────────────
+            `)
+      },
+    }, // Case 6
   ],
 })
