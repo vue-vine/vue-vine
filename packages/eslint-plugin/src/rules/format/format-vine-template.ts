@@ -68,12 +68,12 @@ function getPrettierFormatted(
   return formatted
 }
 
-function wrapperRawTemplate(rawTemplate: string, ident: string): { template: string, layer: number } {
+function wrapperRawTemplate(rawTemplate: string, indent: string): { template: string, layer: number } {
   const TAG_NAME = 'v'.repeat(100) // a long enough tag name, must be warped
   const TAG_START = `<${TAG_NAME}>`
   const TAG_END = `</${TAG_NAME}>`
 
-  const layer = Math.floor(ident.length / 2)
+  const layer = Math.floor(indent.length / 2)
   return {
     template: `<template>${TAG_START.repeat(layer)}\n${rawTemplate}\n${TAG_END.repeat(layer)}</template>`,
     layer,
