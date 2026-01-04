@@ -171,8 +171,7 @@ function TestComp() {
       description: 'should correctly process <pre> tag - case 6',
       code: `
 function TestComp() {
-  return vine\`
-    <pre>
+  return vine\`<pre>
       HelloWorld
     </pre>
   \`
@@ -188,7 +187,7 @@ function TestComp() {
  │ 6 │  \`
  │ 7 │}
  └───┴────────────────────────────────
-            `)
+      `)
       },
     }, // Case 6
   ],
