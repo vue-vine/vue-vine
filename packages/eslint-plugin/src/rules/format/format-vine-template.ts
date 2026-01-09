@@ -45,9 +45,11 @@ function getPrettierFormatted(
       .slice(lineStartIndex)
       .match(/^\s*/)?.[0] ?? ''
   )
-  // Remove '<template>' and '</template>' line
+
+  // Format with Prettier
+  const { template, layer } = wrapperRawTemplate(templateRawContent, baseIndent)
   const formattedRaw = syncPrettier.format(
-    `<template>\n${templateRawContent}</template>`,
+    template,
     {
       parser: 'vue',
       filepath: context.filename,
@@ -55,56 +57,27 @@ function getPrettierFormatted(
       ...formatOptions,
     },
   )
+
+  // Remove '<template>' and placeholders line
   let formattedLines = formattedRaw.split('\n')
-  if (formattedLines.length <= 2) {
-    // Maybe case like this:
-    // ```
-    // 1| <template>hello</template>
-    // 2|
-    // ```
-    // Then we should remove '<template>' and '</template>' by RegExp
-    formattedLines[0] = baseIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
-    formattedLines.unshift('') // Add an empty leading line
-  }
-  else {
-    formattedLines = formattedLines.slice(1, -2)
-    formattedLines.unshift('') // Add an empty leading line
-    formattedLines.push('') // Add an empty trailing line
-  }
-
-  let isInsideComment = false
-  const formatted = formattedLines
-    .map((formattedLine, i) => {
-      if (i === 0)
-        return formattedLine
-      if (i === formattedLines.length - 1)
-        return `${baseIndent}${formattedLine}`
-      if (formattedLine.trim() === '')
-        return formattedLine // Don't change anything if it's empty, avoid conflicting with other stylistic rules
-
-      if (
-        formattedLine.includes('<!--') // Open a comment node
-        && !formattedLine.includes('-->') // Doesn't end comment in the same line
-      ) {
-        isInsideComment = true
-        return `${baseIndent}${formattedLine}` // But still apply base indent on start
-      }
-      else if (
-        formattedLine.includes('-->') // Close a comment node
-        && !formattedLine.includes('<!--') // Doesn't start a new comment in the same line
-      ) {
-        isInsideComment = false
-        return formattedLine // Don't apply base indent on end
-      }
-
-      if (isInsideComment) {
-        return formattedLine
-      }
-      return `${baseIndent}${formattedLine}`
-    })
-    .join('\n')
+  formattedLines = formattedLines.slice(layer + 1, -layer - 2)
+  formattedLines.unshift('') // Add an empty leading line
+  formattedLines.push(baseIndent) // Add a line trailing line
+  const formatted = formattedLines.join('\n')
 
   return formatted
+}
+
+function wrapperRawTemplate(rawTemplate: string, indent: string): { template: string, layer: number } {
+  const TAG_NAME = 'v'.repeat(100) // a long enough tag name, must be warped
+  const TAG_START = `<${TAG_NAME}>`
+  const TAG_END = `</${TAG_NAME}>`
+
+  const layer = Math.floor(indent.length / 2)
+  return {
+    template: `<template>${TAG_START.repeat(layer)}\n${rawTemplate}\n${TAG_END.repeat(layer)}</template>`,
+    layer,
+  }
 }
 
 const rule: RuleModule<Options> = createEslintRule<Options, string>({
