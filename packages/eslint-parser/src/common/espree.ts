@@ -3,7 +3,6 @@ import type { BasicParserObject } from './parser-object'
 
 import path from 'node:path'
 import process from 'node:process'
-// @ts-expect-error -- ignore
 import * as dependencyEspree from 'espree'
 import { lt, lte } from 'semver'
 
@@ -63,7 +62,7 @@ export function getEspreeFromLinter(): Espree {
   if (!espreeCache) {
     espreeCache = getLinterRequire()?.('espree')
     if (!espreeCache) {
-      espreeCache = dependencyEspree
+      espreeCache = dependencyEspree as unknown as Espree
     }
   }
 
@@ -80,13 +79,13 @@ function getNewestEspree(): Espree {
     linterEspree.version != null
     && lte(newest.version, linterEspree.version)
   ) {
-    newest = linterEspree
+    newest = linterEspree as unknown as typeof dependencyEspree
   }
   const userEspree = getEspreeFromUser()
   if (userEspree.version != null && lte(newest.version, userEspree.version)) {
-    newest = userEspree
+    newest = userEspree as unknown as typeof dependencyEspree
   }
-  return newest
+  return newest as unknown as Espree
 }
 
 export function getEcmaVersionIfUseEspree(

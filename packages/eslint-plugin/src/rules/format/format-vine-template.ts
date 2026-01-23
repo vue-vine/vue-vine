@@ -166,7 +166,10 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
           )
 
           for (const difference of differences) {
-            const { operation, offset, deleteText = '', insertText = '' } = difference
+            const { operation, offset } = difference
+            const deleteText = 'deleteText' in difference ? difference.deleteText : ''
+            const insertText = 'insertText' in difference ? difference.insertText : ''
+
             const range: [number, number] = [
               templatePositionInfo.templateStartOffset + offset,
               templatePositionInfo.templateStartOffset + offset + deleteText.length,

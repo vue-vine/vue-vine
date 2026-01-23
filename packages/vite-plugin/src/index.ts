@@ -8,6 +8,7 @@ import type {
 import type { TransformPluginContext } from 'rolldown'
 import type { HmrContext, PluginOption, TransformResult } from 'vite'
 import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 import process from 'node:process'
 import {
   compileVineStyle,
@@ -154,6 +155,7 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
   return {
     name: 'vite:vue-vine',
+    enforce: 'pre',
     config(config) {
       if (!config.esbuild) {
         config.esbuild = {}
@@ -175,15 +177,20 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
       return config
     },
-    async resolveId(id) {
-      const { query } = parseQuery(id)
+    async resolveId(id, importer) {
+      const { filePath, query } = parseQuery(id)
 
       // serve vine style requests as virtual modules
-      if (
-        query.type === QUERY_TYPE_STYLE
-        || query.type === QUERY_TYPE_STYLE_EXTERNAL
-      ) {
+      if (query.type === QUERY_TYPE_STYLE) {
         return id
+      }
+
+      // External style: resolve relative path to absolute path
+      if (query.type === QUERY_TYPE_STYLE_EXTERNAL && importer) {
+        const importerDir = path.dirname(importer)
+        const absolutePath = path.resolve(importerDir, filePath)
+        const queryStr = id.slice(id.indexOf('?'))
+        return `${absolutePath}${queryStr}`
       }
     },
     async load(id) {
