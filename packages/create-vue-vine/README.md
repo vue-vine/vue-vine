@@ -8,7 +8,7 @@ The official CLI for creating your Vue Vine projects.
 
 ## Features
 
-- 🛠️ **Build Tool Choice**: Choose between Vite (recommended) or Rsbuild (beta)
+- 🛠️ **Build Tool Choice**: Choose between Vite (recommended) or Rsbuild
 - 🎨 **CSS Frameworks**: Optional UnoCSS or Tailwind CSS integration
 - 🚦 **Vue Router**: Optional routing support
 - 📦 **Pinia**: Optional state management

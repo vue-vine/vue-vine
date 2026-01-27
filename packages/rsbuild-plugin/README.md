@@ -7,15 +7,10 @@
 
 Rsbuild plugin for [Vue Vine](https://vue-vine.dev).
 
-> TIPS: 🧪 Beta Feature
-> Rsbuild support is currently in **beta**.
->
-> Please install the beta version and [report any issues](https://github.com/vue-vine/vue-vine/issues) you encounter.
-
 ## Installation
 
 ```bash
-pnpm add -D @vue-vine/rsbuild-plugin@beta
+pnpm add -D @vue-vine/rsbuild-plugin
 ```
 
 ## Usage
