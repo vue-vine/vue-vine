@@ -5,7 +5,9 @@ import type { VueCodeInformation } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type { analyzeVineForVirtualCode } from './vine-ctx'
 
-export type VineCodeInformation = VueCodeInformation
+export type VineCodeInformation = VueCodeInformation & {
+  __combineOffset?: number
+}
 export type Code = Segment<VineCodeInformation>
 export type CodeSegment = Segment<VineCodeInformation>
 export type VineCompFn = ReturnType<typeof analyzeVineForVirtualCode>['vineFileCtx']['vineCompFns'][number]

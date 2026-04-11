@@ -51,7 +51,12 @@ const plugins: UserConfig['plugins'] = [
 ]
 
 const sharedConfig: Partial<UserConfig> = {
-  external: ['vscode'],
+  deps: {
+    onlyBundle: false,
+    neverBundle: [
+      'vscode',
+    ]
+  },
   minify: !isDev,
   sourcemap: isDev,
   define: {

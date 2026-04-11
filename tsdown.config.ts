@@ -1,7 +1,51 @@
 import type { UserConfig } from 'tsdown'
-import { join } from 'node:path'
+import { copyFile, mkdir, readFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { defineConfig } from 'tsdown'
+
+const repoRoot = import.meta.dirname
+
+/**
+ * Resolve installed `@vue/language-core` from a workspace package that depends on it,
+ * then copy `types/template-helpers.d.ts` to `vue-vine/dist/vls-helpers.d.ts` on build (published as `vue-vine/vls-helpers`).
+ */
+function copyVueVineVlsHelpersDts() {
+  const require = createRequire(join(repoRoot, 'package.json'))
+  const langCoreRoot = dirname(
+    require.resolve('@vue/language-core/package.json', {
+      paths: [join(repoRoot, 'packages/language-service')],
+    }),
+  )
+  const sourceFile = join(langCoreRoot, 'types/template-helpers.d.ts')
+
+  return {
+    name: 'vue-vine:copy-vls-helpers-dts',
+    async writeBundle(outputOptions: { dir?: string }) {
+      const outDir = outputOptions.dir
+      if (!outDir)
+        return
+
+      const pkgDir = dirname(outDir)
+      let pkgName: string
+      try {
+        pkgName = JSON.parse(
+          await readFile(join(pkgDir, 'package.json'), 'utf-8'),
+        ).name
+      }
+      catch {
+        return
+      }
+      if (pkgName !== 'vue-vine')
+        return
+
+      const destFile = join(pkgDir, 'dist/vls-helpers.d.ts')
+      await mkdir(dirname(destFile), { recursive: true })
+      await copyFile(sourceFile, destFile)
+    },
+  }
+}
 
 const isDev = process.env.NODE_ENV === 'development'
 const buildConfig: UserConfig = defineConfig({
@@ -14,6 +58,11 @@ const buildConfig: UserConfig = defineConfig({
       'packages/nuxt-module',
       'packages/playground',
     ],
+  },
+  // @eslint/plugin-kit ships `types.cts` (not `types.d.cts`); rolldown-plugin-dts
+  // resolves `./types.cts` to a missing `types.d.cts` and fails. Keep it external for DTS.
+  deps: {
+    neverBundle: ['@eslint/plugin-kit'],
   },
   dts: true,
   tsconfig: join(import.meta.dirname, 'tsconfig.json'),
@@ -40,5 +89,9 @@ const buildConfig: UserConfig = defineConfig({
   */\n\n
     `.trim(),
   },
+
+  plugins: [
+    copyVueVineVlsHelpersDts(),
+  ],
 })
 export default buildConfig

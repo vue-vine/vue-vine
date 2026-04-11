@@ -15,7 +15,7 @@ function removePlatformConflictLines(output: string) {
 describe('vue-vine-tsc typecheck result', () => {
   const e2eTestDir = path.resolve(import.meta.dirname, '..')
 
-  it('should find type errors in key-cases.vine.ts', () => {
+  it('should find type errors', () => {
     let output = ''
     try {
       execSync('npm run check-types', {
@@ -30,7 +30,7 @@ describe('vue-vine-tsc typecheck result', () => {
     expect(output).toMatchSnapshot()
   })
 
-  it('should find lint errors in key-cases.vine.ts', () => {
+  it('should find lint errors', () => {
     let output = ''
     try {
       execSync('npm run check-lint', {

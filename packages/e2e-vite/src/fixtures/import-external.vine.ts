@@ -1,4 +1,4 @@
-import { TestCompOne } from './key-cases.vine'
+import { TestCompOne } from './generic-type-in-vine-comp.vine'
 
 export function DebugPage() {
   return vine`

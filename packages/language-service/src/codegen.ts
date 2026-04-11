@@ -39,9 +39,11 @@ const INDENT_4 = '    '
 /**
  * Convert emit event name to Vue component props name (on-prefixed camelCase)
  */
+const SPECIAL_CHARS_REGEXP = /[:_.]/
+const COMP_NAME_REGEXP = /^[a-z0-9\-]+$/i
 export function convertEmitToOnHandler(emit: string): string {
   // Check if the emit name contains special characters (colon, underscore, dot, etc., but not hyphens)
-  const hasSpecialChars = /[:_.]/.test(emit) && !/^[a-z0-9\-]+$/i.test(emit)
+  const hasSpecialChars = SPECIAL_CHARS_REGEXP.test(emit) && !COMP_NAME_REGEXP.test(emit)
 
   if (hasSpecialChars) {
     // For complex property names, keep the original format, add only the on prefix and capitalize the first letter
@@ -58,8 +60,9 @@ export function convertEmitToOnHandler(emit: string): string {
 /**
  * Check if a property name needs to be quoted in object literal
  */
+const NEEDS_QUOTES_REGEXP = /^[a-z_$][\w$]*$/i
 export function needsQuotes(propName: string): boolean {
-  return !/^[a-z_$][\w$]*$/i.test(propName)
+  return !NEEDS_QUOTES_REGEXP.test(propName)
 }
 
 function getIndexOfFnDeclLeftParen(
@@ -257,7 +260,7 @@ export class CodeGenerator {
       yield '\n'
     }
 
-    yield 'context: {'
+    yield '  context: {'
 
     // Check if we have any context properties
     const hasSlots = vineCompFn.macrosInfoForVolar.some(m => m.macroType === 'vineSlots')
@@ -291,7 +294,7 @@ export class CodeGenerator {
       }
     }
 
-    yield '}'
+    yield '}\n'
   }
 
   // ===================== Props Type Generation =====================
@@ -811,6 +814,7 @@ export class CodeGenerator {
     classNameWithDot: string,
   ): Generator<CodeSegment> {
     const realOffset = rangeStart + offset
+    const scopedClassToken = Symbol('scopedClass')
 
     yield '\n & { '
     yield* wrapWith(
@@ -823,7 +827,7 @@ export class CodeGenerator {
           classNameWithDot.slice(1),
           undefined,
           realOffset + 1, // after '.'
-          { __combineOffset: 1 },
+          { __combineToken: scopedClassToken },
         ],
         '"',
       ],

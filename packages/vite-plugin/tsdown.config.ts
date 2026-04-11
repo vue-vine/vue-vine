@@ -2,16 +2,19 @@ import type { UserConfig } from 'tsdown'
 import { defineConfig } from 'tsdown'
 
 const tsdownConfig: UserConfig = defineConfig({
-  external: [
+  deps: {
+    neverBundle: [
     'vite',
-    '@babel/types',
-    '@babel/parser',
-    'estree-walker',
-    'magic-string',
-    '@vue/compiler-dom',
-    'merge-source-map',
-    'postcss',
-    'postcss-selector-parser',
-  ],
+      'vite',
+      '@babel/types',
+      '@babel/parser',
+      'estree-walker',
+      'magic-string',
+      '@vue/compiler-dom',
+      'merge-source-map',
+      'postcss',
+      'postcss-selector-parser',
+    ]
+  },
 })
 export default tsdownConfig

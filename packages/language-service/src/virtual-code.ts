@@ -3,8 +3,8 @@ import type { Mapping, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
 import type { CodeSegment, VineCodeInformation, VueVineVirtualCode } from './shared'
-import { dirname, relative } from 'node:path'
 import { isBlockStatement } from '@babel/types'
+import { VineBindingTypes } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
 import { CodeGenerator, createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, needsQuotes } from './codegen'
@@ -61,38 +61,34 @@ function getLinkedCodeMappings(tsCode: string): Mapping[] {
 function buildMappings(chunks: Segment<VineCodeInformation>[]) {
   let length = 0
   let lastValidMapping: Mapping<VineCodeInformation> | undefined
-
   const mappings: Mapping<VineCodeInformation>[] = []
+
   for (const segment of chunks) {
+    // Simple string segment, just increase the length
     if (typeof segment === 'string') {
       length += segment.length
+      continue
+    }
+
+    const mapping: Mapping<VineCodeInformation> = {
+      lengths: [segment[0].length],
+      generatedOffsets: [length],
+      sourceOffsets: [segment[2]],
+      data: segment[3]!,
+    }
+
+    // Handling combine mapping
+    if (mapping.data.__combineOffset && lastValidMapping) {
+      lastValidMapping.sourceOffsets.push(...mapping.sourceOffsets)
+      lastValidMapping.generatedOffsets.push(...mapping.generatedOffsets)
+      lastValidMapping.lengths.push(...mapping.lengths)
     }
     else {
-      const mapping: Mapping<VineCodeInformation> = {
-        lengths: [segment[0].length],
-        generatedOffsets: [length],
-        sourceOffsets: [segment[2]],
-        data: segment[3]!,
-      }
-
-      // Handling combine mapping
-      const isNeedCombine = (
-        mapping.data.__combineOffset
-        // ... maybe more conditions
-      )
-
-      if (isNeedCombine && lastValidMapping) {
-        lastValidMapping.sourceOffsets.push(...mapping.sourceOffsets)
-        lastValidMapping.generatedOffsets.push(...mapping.generatedOffsets)
-        lastValidMapping.lengths.push(...mapping.lengths)
-      }
-      else {
-        mappings.push(mapping)
-        lastValidMapping = mapping
-      }
-
-      length += segment[0].length
+      mappings.push(mapping)
+      lastValidMapping = mapping
     }
+
+    length += segment[0].length
   }
 
   return mappings
@@ -126,28 +122,10 @@ export function createVueVineVirtualCode(
   const tsCodeSegments: CodeSegment[] = []
   const codegen = new CodeGenerator(vineFileCtx, snapshotContent)
 
-  const globalTypesPath = vueCompilerOptions.globalTypesPath(vineFileCtx.fileId)
-  if (globalTypesPath) {
-    let relativePath = relative(
-      dirname(vineFileCtx.fileId),
-      globalTypesPath,
-    )
-    if (
-      relativePath !== globalTypesPath
-      && !relativePath.startsWith('.')
-      && !relativePath.startsWith('..')
-    ) {
-      relativePath = `./${relativePath}`
-    }
-    // Normalize the path to posix path
-    relativePath = relativePath.replace(/\\/g, '/')
-    tsCodeSegments.push(`/// <reference types="${relativePath}" />\n`)
-  }
-  else {
-    console.error('[Vue Vine] Failed to setup global types')
-  }
-
+  // Vue language core static type helpers
   // Import Vine internal types for virtual code type definitions
+  tsCodeSegments.push(`/// <reference types="vue-vine/vls-helpers" />\n`)
+  tsCodeSegments.push(`/// <reference types="vue-vine/macros" />\n`)
   tsCodeSegments.push(`import * as __VLS_VINE from 'vue-vine/internals';\n`)
 
   const firstVineCompFnDeclNode = vineFileCtx.vineCompFns[0]?.fnDeclNode
@@ -197,9 +175,6 @@ export function createVueVineVirtualCode(
       }
 
       // Generate the template virtual code
-      const templateRefNames = vineCompFn.templateRefNames
-      const destructuredPropNames = new Set(Object.keys(vineCompFn.propsDestructuredNames))
-
       for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
         tsCodeSegments.push('\n// --- Start: Template virtual code\n')
 
@@ -211,17 +186,25 @@ export function createVueVineVirtualCode(
         // Insert `__VLS_StyleScopedClasses`
         tsCodeSegments.push(...collectSegments(codegen.styleScopedClasses()))
 
-        // Insert `__VLS_elements` variable definition
-        // This variable is required by the template codegen to reference native HTML elements
-        tsCodeSegments.push(`let __VLS_elements!: __VLS_IntrinsicElements;\n`)
+        // Collect all setup consts and refs
+        const setupConsts = new Set<string>()
+        const setupRefs = new Set<string>()
+        for (const [name, bindingType] of Object.entries(vineCompFn.bindings)) {
+          if (bindingType === VineBindingTypes.SETUP_CONST) {
+            setupConsts.add(name)
+          }
+          else if (bindingType === VineBindingTypes.SETUP_REF) {
+            setupRefs.add(name)
+          }
+        }
 
         const generatedTemplate = generateTemplate({
-          ts,
-          compilerOptions,
+          typescript: ts,
           vueCompilerOptions,
+          componentName: vineCompFn.fnName,
           template: {
-            // @ts-expect-error - `templateAst` type is not correct before Vapor finalized
-            ast: vineCompFn.templateAst,
+            // `templateAst` type is not correct before Vapor finalized
+            ast: vineCompFn.templateAst as any,
             errors: [],
             warnings: [],
             name: 'template',
@@ -233,18 +216,16 @@ export function createVueVineVirtualCode(
             content: vineCompFn.templateSource,
             attrs: {},
           },
-          scriptSetupBindingNames: new Set(),
-          scriptSetupImportComponentNames: new Set(),
+          setupConsts,
+          setupRefs,
           inheritAttrs: false,
-          templateRefNames,
-          destructuredPropNames,
 
           // Slots type virtual code helper
           hasDefineSlots: Object.keys(vineCompFn.slots).length > 0,
           slotsAssignName: 'context.slots',
         })
 
-        for (const segment of generatedTemplate) {
+        for (const segment of generatedTemplate.codes) {
           if (typeof segment === 'string') {
             tsCodeSegments.push(segment)
           }
@@ -319,7 +300,6 @@ export function createVueVineVirtualCode(
     return `  '${compName}': ${componentRef}`
   }).join(',\n')
   }\n};\n`)
-  tsCodeSegments.push(`\nconst __VLS_IntrinsicElements = {} as __VLS_IntrinsicElements;`)
 
   const tsCode = toString(tsCodeSegments)
   const tsCodeMappings = buildMappings(tsCodeSegments)
