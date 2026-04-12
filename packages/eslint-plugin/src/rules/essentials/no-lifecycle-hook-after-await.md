@@ -1,4 +1,4 @@
-# no-lifecycle-hook-after-await ![](https://img.shields.io/badge/vue_vine-essentials-blue)
+# no-lifecycle-hook-after-await ![essentials](https://img.shields.io/badge/vue_vine-essentials-blue)
 
 This rule reports the lifecycle hooks after await expression.
 

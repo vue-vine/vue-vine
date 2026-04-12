@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner.png" width="480">
+  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner.png" width="480" alt="Vue Vine information banner">
 </div>
 <br>
 <br>
@@ -20,7 +20,7 @@ Another style of writing Vue components.
 
 <br><div><strong>🎤 Come and join us on Discrod now !!</strong></div>
 
-[![](https://dcbadge.limes.pink/api/server/TyAKHJYTvg)](https://discord.gg/TyAKHJYTvg)
+[![Discord server](https://dcbadge.limes.pink/api/server/TyAKHJYTvg)](https://discord.gg/TyAKHJYTvg)
 
 <br>
 

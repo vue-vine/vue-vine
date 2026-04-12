@@ -2,6 +2,7 @@ import type { RuleModule } from '../../utils'
 import { unindent } from '@antfu/utils'
 import { createEslintRule } from '../../utils'
 
+const RE_LEADING_WHITESPACE = /^\s*/
 const messageId = 'format-vine-style-indent' as const
 export type MessageIds = typeof messageId
 export type Options = [{
@@ -61,7 +62,7 @@ const rule: RuleModule<Options> = createEslintRule<Options, MessageIds>({
           line: node.loc.start.line,
           column: 0,
         })
-        const baseIndent = context.sourceCode.text.slice(lineStartIndex).match(/^\s*/)?.[0] ?? ''
+        const baseIndent = context.sourceCode.text.slice(lineStartIndex).match(RE_LEADING_WHITESPACE)?.[0] ?? ''
         const targetIndent = baseIndent + ' '.repeat(indent)
         const pure = unindent(value)
         let final = pure

@@ -52,7 +52,8 @@ export function isVineCompFnDecl(target: Node): boolean {
     (
       isExportNamedDeclaration(target)
       || isExportDefaultDeclaration(target)
-    ) && target.declaration) {
+    ) && target.declaration
+  ) {
     target = target.declaration
   }
 

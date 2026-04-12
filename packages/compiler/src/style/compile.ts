@@ -7,6 +7,8 @@ import { processors } from './preprocessor'
 import { scopedPlugin } from './scoped-plugin'
 import { trimPlugin } from './trim-plugin'
 
+const RE_DATA_V_PREFIX = /^data-v-/
+
 export async function compileVineStyle(
   compilerCtx: VineCompilerCtx,
   params: {
@@ -59,7 +61,7 @@ export async function compileVineStyle(
     ...userPostcssPlugins,
   ]
   if (isScoped) {
-    const shortId = scopeId.replace(/^data-v-/, '')
+    const shortId = scopeId.replace(RE_DATA_V_PREFIX, '')
     const longId = `data-v-${shortId}`
     postcssPlugins.push(
       scopedPlugin({

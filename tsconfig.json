@@ -24,6 +24,7 @@
     "**/dist",
     "packages/nuxt-module",
     "packages/e2e-vite",
+    "packages/e2e-rsstack",
     "packages/create-vue-vine/template"
   ]
 }

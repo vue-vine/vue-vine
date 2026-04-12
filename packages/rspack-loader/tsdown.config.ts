@@ -9,7 +9,7 @@ const tsdownConfig: UserConfig = defineConfig({
   deps: {
     neverBundle: [
       '@rspack/core',
-    ]
+    ],
   },
 })
 export default tsdownConfig

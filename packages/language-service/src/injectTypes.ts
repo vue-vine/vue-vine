@@ -1,5 +1,5 @@
-import type { CodeSegment } from './shared'
 import type { VineFnCompCtx } from '@vue-vine/compiler'
+import type { CodeSegment } from './shared'
 import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
 
 function mayNeedPropsAlias(vineCompFn: VineFnCompCtx) {
@@ -69,9 +69,9 @@ export function* generateVLSContext(
   yield 'const __VLS_localComponents = __VLS_ctx;\n\n'
   yield 'type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;\n'
   yield 'type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;\n'
-  yield "type __VLS_GlobalComponents = import('vue').GlobalComponents;\n\n"
-  yield "let __VLS_directives!: __VLS_LocalDirectives & import('vue').GlobalDirectives;\n"
-  yield "let __VLS_intrinsics!: import('vue/jsx-runtime').JSX.IntrinsicElements;\n\n"
+  yield 'type __VLS_GlobalComponents = import(\'vue\').GlobalComponents;\n\n'
+  yield 'let __VLS_directives!: __VLS_LocalDirectives & import(\'vue\').GlobalDirectives;\n'
+  yield 'let __VLS_intrinsics!: import(\'vue/jsx-runtime\').JSX.IntrinsicElements;\n\n'
   yield 'const __VLS_components = {\n'
   yield '  ...{} as __VLS_GlobalComponents,\n'
   yield '  ...__VLS_localComponents as unknown as __VLS_LocalComponents,\n'

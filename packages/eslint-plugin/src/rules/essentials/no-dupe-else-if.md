@@ -1,4 +1,4 @@
-# no-dupe-else-if ![](https://img.shields.io/badge/vue_vine-essentials-blue)
+# no-dupe-else-if ![essentials](https://img.shields.io/badge/vue_vine-essentials-blue)
 
 Disallow duplicate conditions in v-if / v-else-if chains
 

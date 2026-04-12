@@ -55,7 +55,7 @@ const sharedConfig: Partial<UserConfig> = {
     onlyBundle: false,
     neverBundle: [
       'vscode',
-    ]
+    ],
   },
   minify: !isDev,
   sourcemap: isDev,

@@ -8,6 +8,9 @@ import { generateDifferences, showInvisibles } from 'prettier-linter-helpers'
 import syncPrettier from '../../sync-prettier'
 import { createEslintRule } from '../../utils'
 
+const RE_LEADING_WHITESPACE = /^\s*/
+const RE_TEMPLATE_UNWRAP = /^<template>([\s\S]*)<\/template>$/
+
 const messageId = 'format-vine-template' as const
 export type MessageIds = typeof messageId
 export type Options = [{ indent: number }]
@@ -43,7 +46,7 @@ function getPrettierFormatted(
   const baseIndent = (
     context.sourceCode.text
       .slice(lineStartIndex)
-      .match(/^\s*/)?.[0] ?? ''
+      .match(RE_LEADING_WHITESPACE)?.[0] ?? ''
   )
   // Remove '<template>' and '</template>' line
   const formattedRaw = syncPrettier.format(
@@ -63,7 +66,7 @@ function getPrettierFormatted(
     // 2|
     // ```
     // Then we should remove '<template>' and '</template>' by RegExp
-    formattedLines[0] = baseIndent + formattedLines[0].replace(/^<template>([\s\S]*)<\/template>$/, '$1')
+    formattedLines[0] = baseIndent + formattedLines[0].replace(RE_TEMPLATE_UNWRAP, '$1')
     formattedLines.unshift('') // Add an empty leading line
   }
   else {

@@ -14,7 +14,7 @@ const tsdownConfig: UserConfig = defineConfig({
       '@vue-vine/vite-plugin',
       '@vue-vine/rspack-loader',
       'vue',
-    ]
+    ],
   },
 })
 export default tsdownConfig

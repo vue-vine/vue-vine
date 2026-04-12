@@ -1,6 +1,10 @@
 import type { EnvironmentConfig, RsbuildPlugin } from '@rsbuild/core'
 import type { VineCompilerOptions } from '@vue-vine/compiler'
 
+const RE_VINE_STYLE = /vine-style/
+const RE_VINE_TS = /\.vine\.ts$/
+const RE_VUE_JS = /\.vue.js$/
+
 export interface VineRsbuildPluginOptions {
   /**
    * Vue Vine compiler options
@@ -46,7 +50,7 @@ export function pluginVueVine(
             // Exclude vine-style queries from CSS rules
             if (rule.test instanceof RegExp && rule.test.test('.css')) {
               if (!rule.resourceQuery) {
-                rule.resourceQuery = { not: [/vine-style/] }
+                rule.resourceQuery = { not: [RE_VINE_STYLE] }
               }
               else if (typeof rule.resourceQuery === 'object' && 'not' in rule.resourceQuery) {
                 const existingNot = rule.resourceQuery.not
@@ -55,11 +59,11 @@ export function pluginVueVine(
                     r instanceof RegExp && r.source === 'vine-style',
                   )
                   if (!hasVineStyle) {
-                    existingNot.push(/vine-style/)
+                    existingNot.push(RE_VINE_STYLE)
                   }
                 }
                 else if (existingNot) {
-                  rule.resourceQuery.not = [existingNot, /vine-style/]
+                  rule.resourceQuery.not = [existingNot, RE_VINE_STYLE]
                 }
               }
             }
@@ -68,20 +72,20 @@ export function pluginVueVine(
             if (rule.test instanceof RegExp && (rule.test.test('.ts') || rule.test.test('.js'))) {
               // Exclude .vine.ts files from being processed by default TS rules
               if (!rule.exclude) {
-                rule.exclude = [/\.vine\.ts$/]
+                rule.exclude = [RE_VINE_TS]
               }
               else if (Array.isArray(rule.exclude)) {
                 if (!rule.exclude.some(e => e instanceof RegExp && e.source === '\\.vine\\.ts$')) {
-                  rule.exclude.push(/\.vine\.ts$/)
+                  rule.exclude.push(RE_VINE_TS)
                 }
               }
               else if (rule.exclude instanceof RegExp) {
-                rule.exclude = [rule.exclude, /\.vine\.ts$/]
+                rule.exclude = [rule.exclude, RE_VINE_TS]
               }
 
               // Also exclude vine-style queries
               if (!rule.resourceQuery) {
-                rule.resourceQuery = { not: [/vine-style/] }
+                rule.resourceQuery = { not: [RE_VINE_STYLE] }
               }
               else if (typeof rule.resourceQuery === 'object' && 'not' in rule.resourceQuery) {
                 const existingNot = rule.resourceQuery.not
@@ -90,11 +94,11 @@ export function pluginVueVine(
                     r instanceof RegExp && r.source === 'vine-style',
                   )
                   if (!hasVineStyle) {
-                    existingNot.push(/vine-style/)
+                    existingNot.push(RE_VINE_STYLE)
                   }
                 }
                 else if (existingNot) {
-                  rule.resourceQuery.not = [existingNot, /vine-style/]
+                  rule.resourceQuery.not = [existingNot, RE_VINE_STYLE]
                 }
               }
             }
@@ -104,7 +108,7 @@ export function pluginVueVine(
         // Add processing rules for Vine style virtual modules
         // IMPORTANT: Must be added first to have higher priority than other rules
         config.module.rules.unshift({
-          resourceQuery: /vine-style/,
+          resourceQuery: RE_VINE_STYLE,
           use: [
             {
               loader: '@vue-vine/rspack-loader/style-loader',
@@ -118,8 +122,8 @@ export function pluginVueVine(
         // 1. @vue-vine/rspack-loader: Transform Vine components to TypeScript
         // 2. builtin:swc-loader: Transform TypeScript to JavaScript
         config.module.rules.unshift({
-          test: /\.vine\.ts$/,
-          resourceQuery: { not: [/vine-style/] },
+          test: RE_VINE_TS,
+          resourceQuery: { not: [RE_VINE_STYLE] },
           use: [
             {
               loader: 'builtin:swc-loader',
@@ -160,7 +164,7 @@ export function pluginVueVine(
               __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
             },
             // should transpile all scripts from Vue SFC
-            include: [/\.vue.js$/],
+            include: [RE_VUE_JS],
           },
         }
 
