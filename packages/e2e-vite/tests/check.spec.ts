@@ -8,7 +8,8 @@ function removePlatformConflictLines(output: string) {
     if (pathStartIndex > -1) {
       return ''
     }
-    return line
+    // Strip leading line:col from ESLint error lines (e.g. "  12:23  error  ..." → "error  ...")
+    return line.replace(/^\s*\d+:\d+\s+/, '')
   }).filter(Boolean).join('\n')
 }
 

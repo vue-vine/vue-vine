@@ -1,4 +1,4 @@
-import { onMounted } from "vue";
+import { onMounted } from 'vue'
 
 export function SampleOne() {
   const count = ref(0)

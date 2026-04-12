@@ -59,10 +59,16 @@ const buildConfig: UserConfig = defineConfig({
       'packages/playground',
     ],
   },
-  // @eslint/plugin-kit ships `types.cts` (not `types.d.cts`); rolldown-plugin-dts
-  // resolves `./types.cts` to a missing `types.d.cts` and fails. Keep it external for DTS.
+  // - @eslint/plugin-kit ships `types.cts` (not `types.d.cts`); rolldown-plugin-dts
+  //   resolves `./types.cts` to a missing `types.d.cts` and fails. Keep it external for DTS.
+  // - @typescript-eslint/typescript-estree: rolldown-plugin-dts falsely warns about
+  //   `ThrowStatement` import from TS 6.0 (the export exists, but the DTS resolver
+  //   fails on the very long type-union line). Keep it external to silence the warning.
   deps: {
-    neverBundle: ['@eslint/plugin-kit'],
+    neverBundle: [
+      '@eslint/plugin-kit',
+      '@typescript-eslint/typescript-estree',
+    ],
   },
   dts: true,
   tsconfig: join(import.meta.dirname, 'tsconfig.json'),

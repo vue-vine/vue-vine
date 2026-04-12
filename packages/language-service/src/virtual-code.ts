@@ -8,15 +8,8 @@ import { VineBindingTypes } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
 import { toString } from 'muggle-string'
 import { CodeGenerator, createSourceVirtualCode, createStyleEmbeddedCodes, createTemplateHTMLEmbeddedCodes, needsQuotes } from './codegen'
-import { generateVLSContext, LINKED_CODE_TAG_PREFIX, LINKED_CODE_TAG_SUFFIX } from './injectTypes'
+import { generateVLSContext } from './injectTypes'
 import { analyzeVineForVirtualCode } from './vine-ctx'
-
-const LINKED_CODE_LEFT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_LEFT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
-const LINKED_CODE_RIGHT_REGEXP = new RegExp(`${escapeStrForRegExp(LINKED_CODE_TAG_PREFIX)}_RIGHT__#(?<itemLength>\\d+)${escapeStrForRegExp(LINKED_CODE_TAG_SUFFIX)}`, 'g')
-
-function escapeStrForRegExp(str: string) {
-  return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
-}
 
 function toPascalCase(name: string) {
   return name.split('-').filter(Boolean).map(
@@ -24,74 +17,73 @@ function toPascalCase(name: string) {
   ).join('')
 }
 
-function getLinkedCodeTagMatch(matched: RegExpExecArray) {
-  return {
-    index: matched.index,
-    tagLength: matched[0]?.length ?? 0,
-    itemLength: Number(matched.groups?.itemLength ?? 0),
-  }
-}
-
-function getLinkedCodeMappings(tsCode: string): Mapping[] {
-  const linkedCodeMappings: Mapping[] = []
-
-  const linkedCodeLeftFounds = [...tsCode.matchAll(LINKED_CODE_LEFT_REGEXP)].map(getLinkedCodeTagMatch)
-  const linkedCodeRightFounds = [...tsCode.matchAll(LINKED_CODE_RIGHT_REGEXP)].map(getLinkedCodeTagMatch)
-  for (let i = 0; i < linkedCodeLeftFounds.length; i++) {
-    const foundLeft = linkedCodeLeftFounds[i]
-    const foundRight = linkedCodeRightFounds[i]
-    if (!foundLeft || !foundRight) {
-      continue
-    }
-
-    const start = foundLeft.index + foundLeft.tagLength
-    const end = foundRight.index + foundRight.tagLength
-    const length = foundLeft.itemLength
-    linkedCodeMappings.push({
-      sourceOffsets: [start],
-      generatedOffsets: [end],
-      lengths: [length],
-      data: void 0,
-    })
-  }
-
-  return linkedCodeMappings
-}
-
 function buildMappings(chunks: Segment<VineCodeInformation>[]) {
   let length = 0
-  let lastValidMapping: Mapping<VineCodeInformation> | undefined
   const mappings: Mapping<VineCodeInformation>[] = []
-
   for (const segment of chunks) {
-    // Simple string segment, just increase the length
     if (typeof segment === 'string') {
       length += segment.length
+    }
+    else {
+      mappings.push({
+        sourceOffsets: [segment[2]],
+        generatedOffsets: [length],
+        lengths: [segment[0].length],
+        data: segment[3]!,
+      })
+      length += segment[0].length
+    }
+  }
+  return mappings
+}
+
+function postProcessMappings(mappings: Mapping<VineCodeInformation>[]) {
+  const newMappings: Mapping<VineCodeInformation>[] = []
+  const linkedCodeMappings: Mapping[] = []
+  const combineTokenMappings = new Map<symbol, Mapping>()
+  const linkedTokenMappings = new Map<symbol, Mapping>()
+
+  for (let i = 0; i < mappings.length; i++) {
+    const mapping = mappings[i]
+
+    // __combineToken: merge mappings sharing the same Symbol token
+    if (mapping.data.__combineToken !== undefined) {
+      const token = mapping.data.__combineToken
+      if (combineTokenMappings.has(token)) {
+        const firstMapping = combineTokenMappings.get(token)!
+        firstMapping.sourceOffsets.push(...mapping.sourceOffsets)
+        firstMapping.generatedOffsets.push(...mapping.generatedOffsets)
+        firstMapping.lengths.push(...mapping.lengths)
+      }
+      else {
+        combineTokenMappings.set(token, mapping)
+        newMappings.push(mapping)
+      }
       continue
     }
 
-    const mapping: Mapping<VineCodeInformation> = {
-      lengths: [segment[0].length],
-      generatedOffsets: [length],
-      sourceOffsets: [segment[2]],
-      data: segment[3]!,
+    // __linkedToken: create linked code mapping between two locations
+    if (mapping.data.__linkedToken !== undefined) {
+      const token = mapping.data.__linkedToken
+      if (linkedTokenMappings.has(token)) {
+        const prevMapping = linkedTokenMappings.get(token)!
+        linkedCodeMappings.push({
+          sourceOffsets: [prevMapping.generatedOffsets[0]],
+          generatedOffsets: [mapping.generatedOffsets[0]],
+          lengths: [Number(token.description)],
+          data: undefined,
+        })
+      }
+      else {
+        linkedTokenMappings.set(token, mapping)
+      }
+      continue
     }
 
-    // Handling combine mapping
-    if (mapping.data.__combineOffset && lastValidMapping) {
-      lastValidMapping.sourceOffsets.push(...mapping.sourceOffsets)
-      lastValidMapping.generatedOffsets.push(...mapping.generatedOffsets)
-      lastValidMapping.lengths.push(...mapping.lengths)
-    }
-    else {
-      mappings.push(mapping)
-      lastValidMapping = mapping
-    }
-
-    length += segment[0].length
+    newMappings.push(mapping)
   }
 
-  return mappings
+  return { mappings: newMappings, linkedCodeMappings }
 }
 
 /**
@@ -179,9 +171,9 @@ export function createVueVineVirtualCode(
         tsCodeSegments.push('\n// --- Start: Template virtual code\n')
 
         // Insert all component bindings to __VLS_ctx
-        tsCodeSegments.push(generateVLSContext(vineCompFn, {
+        tsCodeSegments.push(...collectSegments(generateVLSContext(vineCompFn, {
           excludeBindings,
-        }))
+        })))
 
         // Insert `__VLS_StyleScopedClasses`
         tsCodeSegments.push(...collectSegments(codegen.styleScopedClasses()))
@@ -276,11 +268,15 @@ export function createVueVineVirtualCode(
   tsCodeSegments.push(...collectSegments(codegen.scriptUntil(snapshotContent.length)))
 
   // Generate all full collection of all used components in this file
+  // Only include templateComponentNames that actually exist in bindings,
+  // so that truly unknown components are not silently resolved.
   const usedComponents = new Set<string>()
   vineFileCtx.vineCompFns.forEach((vineCompFn) => {
     usedComponents.add(vineCompFn.fnName)
     vineCompFn.templateComponentNames.forEach((compName) => {
-      usedComponents.add(compName)
+      if (compName in vineCompFn.bindings) {
+        usedComponents.add(compName)
+      }
     })
   })
 
@@ -302,8 +298,8 @@ export function createVueVineVirtualCode(
   }\n};\n`)
 
   const tsCode = toString(tsCodeSegments)
-  const tsCodeMappings = buildMappings(tsCodeSegments)
-  const linkedCodeMappings: Mapping[] = getLinkedCodeMappings(tsCode)
+  const rawMappings = buildMappings(tsCodeSegments)
+  const { mappings: tsCodeMappings, linkedCodeMappings } = postProcessMappings(rawMappings)
 
   return {
     __VUE_VINE_VIRTUAL_CODE__: true,

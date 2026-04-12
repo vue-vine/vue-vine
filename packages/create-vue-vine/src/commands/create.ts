@@ -45,7 +45,7 @@ export const createCommand: Command = defineCommand(
         message: 'Project name:',
         placeholder: defaultProjectName,
         defaultValue: defaultProjectName,
-        validate: (value) => {
+        validate: (value: string) => {
           if (!validateProjectName(value)) {
             return 'Invalid project name'
           }

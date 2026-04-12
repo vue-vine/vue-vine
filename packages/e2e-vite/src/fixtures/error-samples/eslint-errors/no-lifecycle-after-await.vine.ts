@@ -1,4 +1,4 @@
-declare const doSomethingAsync: () => Promise<void>;
+declare const doSomethingAsync: () => Promise<void>
 
 export async function TestNoLifecycleHookAfterAwait() {
   await doSomethingAsync()
