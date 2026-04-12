@@ -3,9 +3,10 @@ import process from 'node:process'
 import { execa, execaSync } from 'execa'
 
 const userAgentEnv = process.env.npm_config_user_agent ?? ''
+const RE_PACKAGE_MANAGER = /pnpm|yarn|bun/
 
 function detectPackageManager() {
-  const [fromUserAgent] = userAgentEnv.match(/pnpm|yarn|bun/) || []
+  const [fromUserAgent] = userAgentEnv.match(RE_PACKAGE_MANAGER) || []
 
   if (fromUserAgent)
     return fromUserAgent

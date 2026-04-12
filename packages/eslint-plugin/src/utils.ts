@@ -80,13 +80,13 @@ function createRule<
     ): RuleListener => {
       const optionsWithDefault = context.options.map((options, index) => {
         return {
-          ...defaultOptions[index] || {},
+          ...defaultOptions?.[index] || {},
           ...options || {},
         }
       }) as unknown as TOptions
       return create(context, optionsWithDefault)
     }) as any,
-    defaultOptions,
+    defaultOptions: defaultOptions as TOptions,
     meta: meta as any,
   }
 }
@@ -247,8 +247,9 @@ export function isCustomComponent(node: VElement, ignoreElementNamespaces = fals
   )
 }
 
+const RE_PASCAL_CASE = /^[A-Z][a-zA-Z0-9]*$/
 export function checkPascalCase(fnName: string): boolean {
-  return /^[A-Z][a-zA-Z0-9]*$/.test(fnName)
+  return RE_PASCAL_CASE.test(fnName)
 }
 
 export function prettierSnapshot(result: string): string {

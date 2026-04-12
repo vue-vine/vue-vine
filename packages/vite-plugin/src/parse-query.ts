@@ -10,7 +10,7 @@ export function parseQuery(id: string): {
   const [filePath, queryRawStr] = id.split('?', 2) as [fileId: string, queryRawStr?: string]
   const rawQuery = Object.fromEntries(new URLSearchParams(queryRawStr)) as VineQueryRaw
   const query: VineQuery = {
-    type: rawQuery.type == null ? QUERY_TYPE_SCRIPT : rawQuery.type,
+    type: rawQuery.type ?? QUERY_TYPE_SCRIPT,
     lang: rawQuery.lang,
     scopeId: rawQuery.scopeId,
     scoped: rawQuery.scoped === 'true',

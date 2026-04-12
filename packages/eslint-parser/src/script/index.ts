@@ -60,6 +60,7 @@ import {
 const ALIAS_ITERATOR = /^([\s\S]*?(?:\s|\)))(\bin\b|\bof\b)([\s\S]*)$/u
 const PARENS = /^(\s*\()([\s\S]*?)(\)\s*)$/u
 const DUMMY_PARENT: any = {}
+const RE_SPACES = /^\s*/u
 
 // Like Vue, it judges whether it is a function expression or not.
 // https://github.com/vuejs/vue/blob/0948d999f2fddf9f90991956493f976273c5da1f/src/compiler/codegen/events.js#L3
@@ -417,7 +418,7 @@ function parseFilter(
 
     // Parse the callee.
     if (calleeCode.trim()) {
-      const spaces = /^\s*/u.exec(calleeCode)![0]
+      const spaces = RE_SPACES.exec(calleeCode)![0]
       const subCalculator = locationCalculator.getSubCalculatorShift(
         spaces.length,
       )

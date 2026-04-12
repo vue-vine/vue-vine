@@ -6,8 +6,10 @@ const tsdownConfig: UserConfig = defineConfig({
     'index': './src/index.ts',
     'style-loader': './src/style-loader.ts',
   },
-  external: [
-    '@rspack/core',
-  ],
+  deps: {
+    neverBundle: [
+      '@rspack/core',
+    ],
+  },
 })
 export default tsdownConfig

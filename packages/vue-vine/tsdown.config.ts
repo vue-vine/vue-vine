@@ -9,10 +9,12 @@ const tsdownConfig: UserConfig = defineConfig({
     rsbuild: './src/rsbuild/index.ts',
     slidev: './src/slidev/index.ts',
   },
-  external: [
-    '@vue-vine/vite-plugin',
-    '@vue-vine/rspack-loader',
-    'vue',
-  ],
+  deps: {
+    neverBundle: [
+      '@vue-vine/vite-plugin',
+      '@vue-vine/rspack-loader',
+      'vue',
+    ],
+  },
 })
 export default tsdownConfig

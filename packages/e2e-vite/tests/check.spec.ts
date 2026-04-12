@@ -8,14 +8,15 @@ function removePlatformConflictLines(output: string) {
     if (pathStartIndex > -1) {
       return ''
     }
-    return line
+    // Strip leading line:col from ESLint error lines (e.g. "  12:23  error  ..." → "error  ...")
+    return line.replace(/^\s*\d+:\d+\s+/, '')
   }).filter(Boolean).join('\n')
 }
 
 describe('vue-vine-tsc typecheck result', () => {
   const e2eTestDir = path.resolve(import.meta.dirname, '..')
 
-  it('should find type errors in key-cases.vine.ts', () => {
+  it('should find type errors', () => {
     let output = ''
     try {
       execSync('npm run check-types', {
@@ -30,7 +31,7 @@ describe('vue-vine-tsc typecheck result', () => {
     expect(output).toMatchSnapshot()
   })
 
-  it('should find lint errors in key-cases.vine.ts', () => {
+  it('should find lint errors', () => {
     let output = ''
     try {
       execSync('npm run check-lint', {

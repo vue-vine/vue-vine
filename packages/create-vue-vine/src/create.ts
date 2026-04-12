@@ -32,6 +32,7 @@ export function initBuiltInTemplates(options: ProjectOptions): void {
   options.templates.push(...getBuiltInTemplates(options.buildTool))
 }
 
+const RE_SPLIT_NAME = /^[./]+|-+$/
 export async function createProject(options: ProjectOptions): Promise<void> {
   const templateDirectory = (await getTemplateDirectory())!
   const withBase = (path: string) => join(templateDirectory, path)
@@ -42,7 +43,7 @@ export async function createProject(options: ProjectOptions): Promise<void> {
   const splitName = options.name.startsWith('@')
     ? options.name
     // ../foo/ -> foo
-    : options.name.replace('/', '-').replace(/^[./]+|-+$/, '')
+    : options.name.replace('/', '-').replace(RE_SPLIT_NAME, '')
 
   await writeFile(
     join(options.path, 'package.json'),

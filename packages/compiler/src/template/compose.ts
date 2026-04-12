@@ -20,6 +20,8 @@ import { transformSrcset } from './transform-srcset'
 import { walkVueTemplateAst } from './walk'
 
 const SHOULD_ADD_SUFFIX_REGEXP = /(?<=<[a-z][^>/]*)$/i
+const RE_SETUP_FN_RETURN_SUFFIX = /, $/
+
 const basicCompilerOptions = {
   mode: 'module',
   hoistStatic: true,
@@ -560,7 +562,7 @@ export function createSeparatedTemplateComposer(
           setupFnReturns += `${key}, `
         }
       }
-      setupFnReturns = `${setupFnReturns.replace(/, $/, '')} }`
+      setupFnReturns = `${setupFnReturns.replace(RE_SETUP_FN_RETURN_SUFFIX, '')} }`
       return setupFnReturns
     },
   }

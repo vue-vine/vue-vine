@@ -118,23 +118,16 @@ export function parseCssClassNames(css: string): {
   return classNames
 }
 
-export function wrapWith(
+export function* wrapWith(
   startOffset: number,
   endOffset: number,
   features: VueCodeInformation,
-  codes: Code[],
-): Code[] {
-  const results: Code[] = []
-
-  results.push(['', undefined, startOffset, features])
-  let offset = 1
+  ...codes: Code[]
+): Generator<Code> {
+  const token = Symbol('combineToken')
+  yield ['', undefined, startOffset, { ...features, __combineToken: token }]
   for (const code of codes) {
-    if (typeof code !== 'string') {
-      offset++
-    }
-    results.push(code)
+    yield code
   }
-  results.push(['', undefined, endOffset, { __combineOffset: offset }])
-
-  return results
+  yield ['', undefined, endOffset, { __combineToken: token }]
 }

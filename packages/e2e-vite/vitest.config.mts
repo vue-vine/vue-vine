@@ -2,6 +2,8 @@ import process from 'node:process'
 import { defineConfig } from 'vitest/config'
 
 const timeout = process.env.CI ? 50000 : 30000
+const regex = /experimental|jit engine|emitted file|tailwind/i
+
 export default defineConfig({
   test: {
     include: ['./tests/**/*.spec.[tj]s'],
@@ -14,7 +16,7 @@ export default defineConfig({
       hooks: 'list',
     },
     onConsoleLog(log) {
-      if (log.match(/experimental|jit engine|emitted file|tailwind/i))
+      if (regex.test(log))
         return false
     },
   },

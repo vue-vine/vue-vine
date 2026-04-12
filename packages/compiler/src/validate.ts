@@ -1060,8 +1060,7 @@ function validateVineModel(
       modelCtx,
       macroCall,
       parent,
-    )
-    ) {
+    )) {
       isVineModelUsageCorrect = false
     }
   }

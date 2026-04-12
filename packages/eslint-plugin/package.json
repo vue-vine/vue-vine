@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint-libs",
-    "@types/eslint": "catalog:types",
     "@types/prettier-linter-helpers": "catalog:types",
     "@typescript-eslint/types": "catalog:lint-libs",
     "@typescript-eslint/typescript-estree": "catalog:lint-libs",

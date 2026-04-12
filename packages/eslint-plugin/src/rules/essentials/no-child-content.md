@@ -1,4 +1,4 @@
-# no-child-content ![](https://img.shields.io/badge/vue_vine-essentials-blue)
+# no-child-content ![essentials](https://img.shields.io/badge/vue_vine-essentials-blue)
 
 Disallow element's child contents which would be overwritten by a directive like `v-html` or `v-text`
 

@@ -6,6 +6,8 @@ import type {
 } from '../types'
 import { getStyleLangFileExt } from '../utils'
 
+const RE_VINE_TS = /\.vine\.ts$/
+
 export class ViteRuntimeAdapter implements RuntimeAdapter {
   name = 'vite' as const
 
@@ -55,7 +57,7 @@ if (import.meta.hot) {
     }
 
     // Inline style: remove .vine.ts suffix from fileId for the import path
-    const importPath = fileId.replace(/\.vine\.ts$/, '')
+    const importPath = fileId.replace(RE_VINE_TS, '')
     return `import '${importPath}?type=vine-style&vineFileId=${vineFileId}&scopeId=${scopeId}&comp=${compName}&lang=${lang}&index=${index}${scoped ? '&scoped=true' : ''}&virtual.${styleLangExt}'`
   }
 }

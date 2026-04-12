@@ -1,4 +1,4 @@
-# format-vine-expose-at-tail ![](https://img.shields.io/badge/vue_vine-format-emerald)
+# format-vine-expose-at-tail ![format](https://img.shields.io/badge/vue_vine-format-emerald)
 
 Enforce `vineExpose` to be at the tail of the component function body.
 

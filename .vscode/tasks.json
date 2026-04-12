@@ -17,9 +17,9 @@
           "fileLocation": "absolute",
           "severity": "error",
           "background": {
-            "activeOnStart": true,
-            "beginsPattern": "Build start",
-            "endsPattern": "Build complete"
+            "activeOnStart": false,
+            "beginsPattern": "\\[vue-vine-extension\\] dist/server\\.js",
+            "endsPattern": "Rebuilt in \\d+ms"
           }
         }
       ],
