@@ -25,9 +25,8 @@ jobs:
         run: pnpm run build
 
       - name: pkg-new:publish
-        # Workaround: pnpm dlx inherits trustPolicy from workspace (pnpm/pnpm#10988),
-        # and `pnpm run` re-injects it into child env, overriding our override.
-        # Call pnpx directly with env var unset to bypass both layers.
+        # Workaround for pnpm/pnpm#10988: pnpm dlx inherits workspace trustPolicy,
+        # must call pnpx directly (not via pnpm run) with trust_policy unset.
         run: >-
           npm_config_trust_policy=
           pnpx pkg-pr-new publish --pnpm
