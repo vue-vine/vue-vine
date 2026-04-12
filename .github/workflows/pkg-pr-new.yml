@@ -29,5 +29,5 @@ jobs:
         # lost provenance attestation, triggering pnpm's trust downgrade check.
         # Safe to bypass here as this only affects the pnpx dlx sandbox.
         run: |
-          echo "check-trust-downgrade=false" >> .npmrc
+          pnpm config set check-trust-downgrade false --global
           pnpm run pkg-new:publish
