@@ -26,3 +26,8 @@ jobs:
 
       - name: pkg-new:publish
         run: pnpm run pkg-new:publish
+        env:
+          # Workaround: pkg-pr-new's dep @octokit/plugin-paginate-rest@9.2.2
+          # lost provenance attestation, triggering pnpm's trust downgrade check.
+          # Safe to bypass here as this only affects the pnpx dlx sandbox.
+          PNPM_CONFIG_CHECK_TRUST_DOWNGRADE: "false"
