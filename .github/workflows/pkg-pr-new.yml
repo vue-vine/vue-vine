@@ -26,8 +26,21 @@ jobs:
 
       - name: pkg-new:publish
         # Workaround: pnpm dlx inherits trustPolicy from workspace (pnpm/pnpm#10988),
-        # causing ERR_PNPM_TRUST_DOWNGRADE for pkg-pr-new's transitive dep
-        # @octokit/plugin-paginate-rest@9.2.2 which lost provenance attestation.
-        run: pnpm run pkg-new:publish
-        env:
-          npm_config_trust_policy: ""
+        # and `pnpm run` re-injects it into child env, overriding our override.
+        # Call pnpx directly with env var unset to bypass both layers.
+        run: >-
+          npm_config_trust_policy=
+          pnpx pkg-pr-new publish --pnpm
+          './packages/compiler'
+          './packages/language-service'
+          './packages/language-server'
+          './packages/vite-plugin'
+          './packages/eslint-parser'
+          './packages/eslint-plugin'
+          './packages/eslint-config'
+          './packages/nuxt-module'
+          './packages/tsc'
+          './packages/vue-vine'
+          './packages/create-vue-vine'
+          './packages/rspack-loader'
+          './packages/rsbuild-plugin'
