@@ -25,9 +25,21 @@ jobs:
         run: pnpm run build
 
       - name: pkg-new:publish
-        # Workaround: pkg-pr-new's dep @octokit/plugin-paginate-rest@9.2.2
-        # lost provenance attestation, triggering pnpm's trust downgrade check.
-        # Safe to bypass here as this only affects the pnpx dlx sandbox.
-        run: |
-          pnpm config set check-trust-downgrade false --global
-          pnpm run pkg-new:publish
+        # Workaround for pnpm/pnpm#10988: pnpm dlx inherits workspace trustPolicy,
+        # must call pnpx directly (not via pnpm run) with trust_policy unset.
+        run: >-
+          npm_config_trust_policy=
+          pnpx pkg-pr-new publish --pnpm
+          './packages/compiler'
+          './packages/language-service'
+          './packages/language-server'
+          './packages/vite-plugin'
+          './packages/eslint-parser'
+          './packages/eslint-plugin'
+          './packages/eslint-config'
+          './packages/nuxt-module'
+          './packages/tsc'
+          './packages/vue-vine'
+          './packages/create-vue-vine'
+          './packages/rspack-loader'
+          './packages/rsbuild-plugin'
