@@ -1,6 +1,7 @@
 import type { VueVineVirtualCode } from '@vue-vine/language-service'
 import type ts from 'typescript'
 import type { HtmlTagInfo } from '../types'
+import type { getAutoImportSuggestions } from './get-auto-import-suggestions'
 import type { getComponentDirectives } from './get-component-directives'
 import type { getComponentProps } from './get-component-props'
 import type { getDocumentHighlight } from './get-document-highlight'
@@ -20,4 +21,5 @@ export interface PipelineInstance {
   getComponentDirectives: ReturnType<typeof getComponentDirectives>
   getElementAttrs: ReturnType<typeof getElementAttrs>
   getDocumentHighlight: ReturnType<typeof getDocumentHighlight>
+  getAutoImportSuggestions: ReturnType<typeof getAutoImportSuggestions>
 }

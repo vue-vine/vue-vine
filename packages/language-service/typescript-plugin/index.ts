@@ -5,6 +5,7 @@ import type { PipelineReqArgs, PipelineServerContext, TypeScriptSdk } from './ty
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
 import { createVueVineLanguagePlugin } from '../src/index'
+import { handleGetAutoImportSuggestions } from './pipeline/get-auto-import-suggestions'
 import { handleGetComponentDirectives } from './pipeline/get-component-directives'
 import { handleGetComponentProps } from './pipeline/get-component-props'
 import { handleGetDocumentHighlight } from './pipeline/get-document-highlight'
@@ -82,6 +83,12 @@ function addPipelineHandlers(
     const { fileName, position } = request.arguments as PipelineReqArgs<'getDocumentHighlightRequest'>
     return createPipelineResponse(
       handleGetDocumentHighlight(pipelineContext, fileName, position),
+    )
+  })
+  session.addProtocolHandler('_vue_vine:getAutoImportSuggestions', (request) => {
+    const { fileName, position } = request.arguments as PipelineReqArgs<'getAutoImportSuggestionsRequest'>
+    return createPipelineResponse(
+      handleGetAutoImportSuggestions(pipelineContext, fileName, position, session),
     )
   })
 }

@@ -1,5 +1,6 @@
 import type { Connection } from '@volar/language-server'
 import type { PipelineInstance } from './types'
+import { getAutoImportSuggestions } from './get-auto-import-suggestions'
 import { getComponentDirectives } from './get-component-directives'
 import { getComponentProps } from './get-component-props'
 import { getDocumentHighlight } from './get-document-highlight'
@@ -19,5 +20,6 @@ export function createTsServerRequestForwardingPipeline(
     getDocumentHighlight: getDocumentHighlight(connection),
     getComponentProps: getComponentProps(connection),
     getComponentDirectives: getComponentDirectives(connection),
+    getAutoImportSuggestions: getAutoImportSuggestions(connection),
   }
 }

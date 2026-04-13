@@ -1,8 +1,9 @@
 import type { BlockStatement } from '@babel/types'
+import type { VineFileCtx } from '@vue-vine/compiler'
 import type { Mapping, VueCompilerOptions } from '@vue/language-core'
 import type { Segment } from 'muggle-string'
 import type ts from 'typescript'
-import type { CodeSegment, VineCodeInformation, VueVineVirtualCode } from './shared'
+import type { CodeSegment, VineCodeInformation, VineCompFn, VueVineVirtualCode } from './shared'
 import { isBlockStatement } from '@babel/types'
 import { VineBindingTypes } from '@vue-vine/compiler'
 import { generateTemplate } from '@vue/language-core'
@@ -93,23 +94,208 @@ function collectSegments(generator: Generator<CodeSegment>): CodeSegment[] {
   return [...generator]
 }
 
+interface TemplateVirtualCodeContext {
+  ts: typeof import('typescript')
+  vueCompilerOptions: VueCompilerOptions
+  vineCompFn: VineCompFn
+  vineFileCtx: VineFileCtx
+  codegen: CodeGenerator
+  excludeBindings: Set<string>
+}
+
+function generateTemplateVirtualCode(
+  ctx: TemplateVirtualCodeContext,
+): CodeSegment[] {
+  const { ts, vueCompilerOptions, vineCompFn, vineFileCtx, codegen, excludeBindings } = ctx
+  const segments: CodeSegment[] = []
+
+  for (const quasi of vineCompFn.templateStringNode!.quasi.quasis) {
+    segments.push('\n// --- Start: Template virtual code\n')
+
+    // Insert all component bindings to __VLS_ctx
+    segments.push(...collectSegments(generateVLSContext(vineCompFn, {
+      excludeBindings,
+    })))
+
+    // Insert `__VLS_StyleScopedClasses`
+    segments.push(...collectSegments(codegen.styleScopedClasses()))
+
+    // Collect all setup consts and refs
+    const setupConsts = new Set<string>()
+    const setupRefs = new Set<string>()
+    for (const [name, bindingType] of Object.entries(vineCompFn.bindings)) {
+      if (bindingType === VineBindingTypes.SETUP_CONST) {
+        setupConsts.add(name)
+      }
+      else if (bindingType === VineBindingTypes.SETUP_REF) {
+        setupRefs.add(name)
+      }
+    }
+
+    // For custom element tags, generate PascalCase variable aliases
+    // and add to setupConsts so template codegen produces navigation-enabled segments.
+    // Use __linkedToken to link the alias back to the original component function name.
+    const ceRegistrations = vineFileCtx.customElementRegistrations
+    for (const tagName of vineCompFn.templateComponentNames) {
+      const componentFnName = ceRegistrations.get(tagName)
+      if (componentFnName) {
+        const pascalName = toPascalCase(tagName)
+        setupConsts.add(pascalName)
+        const token = Symbol(pascalName.length.toString())
+        segments.push('const ')
+        segments.push(['', undefined, 0, { __linkedToken: token }])
+        segments.push(`${pascalName} = `)
+        segments.push(['', undefined, 0, { __linkedToken: token }])
+        segments.push(`${componentFnName};\n`)
+      }
+    }
+
+    const generatedTemplate = generateTemplate({
+      typescript: ts,
+      vueCompilerOptions,
+      componentName: vineCompFn.fnName,
+      template: {
+        // `templateAst` type is not correct before Vapor finalized
+        ast: vineCompFn.templateAst as any,
+        errors: [],
+        warnings: [],
+        name: 'template',
+        start: vineCompFn.templateStringNode!.start!,
+        end: vineCompFn.templateStringNode!.end!,
+        startTagEnd: quasi.start!,
+        endTagStart: quasi.end!,
+        lang: 'html',
+        content: vineCompFn.templateSource,
+        attrs: {},
+      },
+      setupConsts,
+      setupRefs,
+      inheritAttrs: false,
+
+      // Slots type virtual code helper
+      hasDefineSlots: Object.keys(vineCompFn.slots).length > 0,
+      slotsAssignName: 'context.slots',
+    })
+
+    for (const segment of generatedTemplate.codes) {
+      if (typeof segment === 'string') {
+        segments.push(segment)
+      }
+      else if (segment[1] === 'template') {
+        segments.push([
+          segment[0],
+          undefined,
+          segment[2] + quasi.start!,
+          segment[3],
+        ])
+      }
+      else {
+        segments.push(segment[0])
+      }
+    }
+    segments.push('\n// --- End: Template virtual code\n\n')
+  }
+
+  return segments
+}
+
+function generateComponentVirtualCode(
+  ctx: TemplateVirtualCodeContext,
+): CodeSegment[] {
+  const { vineCompFn, codegen } = ctx
+  const segments: CodeSegment[] = []
+
+  const excludeBindings = new Set<string>()
+  const tempVarDecls: string[] = []
+
+  // Write out the component function's formal parameters
+  segments.push(...collectSegments(codegen.componentPropsAndContext(vineCompFn)))
+
+  const isVineCompHasFnBlock = isBlockStatement(vineCompFn.fnItselfNode?.body)
+  if (isVineCompHasFnBlock) {
+    // Generate until the first function body statement
+    const firstStmt = (vineCompFn.fnItselfNode?.body as BlockStatement).body[0]
+    let blockStartPos = firstStmt.start!
+
+    // If the first statement has JSDoc,
+    // the start position should be the start of the JSDoc
+    if (firstStmt.leadingComments?.length) {
+      const jsDocStartPos = firstStmt.leadingComments[0].start!
+      if (jsDocStartPos < blockStartPos) {
+        blockStartPos = jsDocStartPos
+      }
+    }
+
+    segments.push(...collectSegments(codegen.scriptUntil(blockStartPos)))
+    segments.push(...collectSegments(codegen.prefixVirtualCode(vineCompFn)))
+
+    // Generate function body statements
+    segments.push(...collectSegments(codegen.virtualCodeByAstPositionSorted(vineCompFn, {
+      excludeBindings,
+    })))
+
+    // after all statements in the function body
+    segments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateReturn!.start!)))
+    if (tempVarDecls.length > 0) {
+      segments.push(...tempVarDecls)
+      segments.push('\n\n')
+    }
+
+    // Generate the template virtual code
+    segments.push(...generateTemplateVirtualCode({ ...ctx, excludeBindings }))
+
+    segments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateStringNode!.quasi.start!)))
+
+    // clear the template string
+    segments.push(`\`\` as any as __VLS_VINE.VueVineComponent${vineCompFn.expose
+      ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) }`
+      : ''
+    };\n`)
+    codegen.currentOffset = vineCompFn.templateStringNode!.quasi.end!
+  }
+
+  segments.push(...collectSegments(codegen.scriptUntil(vineCompFn.fnDeclNode!.end!)))
+  if (vineCompFn.isCustomElement) {
+    segments.push(');\n')
+  }
+
+  return segments
+}
+
+function generateComponentsReferenceMap(vineFileCtx: VineFileCtx): string {
+  const usedComponents = new Set<string>()
+  vineFileCtx.vineCompFns.forEach((vineCompFn) => {
+    usedComponents.add(vineCompFn.fnName)
+    vineCompFn.templateComponentNames.forEach((compName) => {
+      if (compName in vineCompFn.bindings) {
+        usedComponents.add(compName)
+      }
+    })
+  })
+
+  return `\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map((compName) => {
+    let componentRef = compName
+    if (needsQuotes(compName)) {
+      componentRef = toPascalCase(compName)
+    }
+    return `  '${compName}': ${componentRef}`
+  }).join(',\n')
+  }\n};\n`
+}
+
 export function createVueVineVirtualCode(
   ts: typeof import('typescript'),
   fileId: string,
   snapshotContent: string,
-  compilerOptions: ts.CompilerOptions,
+  tsCompilerOptions: ts.CompilerOptions,
   vueCompilerOptions: VueCompilerOptions,
   _target: 'extension' | 'tsc',
 ): VueVineVirtualCode {
-  // Compile `.vine.ts` with Vine's own compiler
-  // const compileStartTime = performance.now()
   const {
     vineCompileErrs,
     vineCompileWarns,
     vineFileCtx,
   } = analyzeVineForVirtualCode(fileId, snapshotContent)
-  // const compileTime = (performance.now() - compileStartTime).toFixed(2)
-  // vlsInfoLog(`compile time cost: ${compileTime}ms -- ${fileId}`)
 
   const tsCodeSegments: CodeSegment[] = []
   const codegen = new CodeGenerator(vineFileCtx, snapshotContent)
@@ -129,173 +315,18 @@ export function createVueVineVirtualCode(
     if (!vineCompFn.templateStringNode || !vineCompFn.templateReturn) {
       continue
     }
-
-    const excludeBindings = new Set<string>()
-    const tempVarDecls: string[] = []
-
-    // Write out the component function's formal parameters
-    tsCodeSegments.push(...collectSegments(codegen.componentPropsAndContext(vineCompFn)))
-
-    const isVineCompHasFnBlock = isBlockStatement(vineCompFn.fnItselfNode?.body)
-    if (isVineCompHasFnBlock) {
-      // Generate until the first function body statement
-      const firstStmt = (vineCompFn.fnItselfNode?.body as BlockStatement).body[0]
-      let blockStartPos = firstStmt.start!
-
-      // If the first statement has JSDoc,
-      // the start position should be the start of the JSDoc
-      if (firstStmt.leadingComments?.length) {
-        const jsDocStartPos = firstStmt.leadingComments[0].start!
-        if (jsDocStartPos < blockStartPos) {
-          blockStartPos = jsDocStartPos
-        }
-      }
-
-      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(blockStartPos)))
-      tsCodeSegments.push(...collectSegments(codegen.prefixVirtualCode(vineCompFn)))
-
-      // Generate function body statements
-      tsCodeSegments.push(...collectSegments(codegen.virtualCodeByAstPositionSorted(vineCompFn, {
-        excludeBindings,
-      })))
-
-      // after all statements in the function body
-      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateReturn.start!)))
-      if (isVineCompHasFnBlock && tempVarDecls.length > 0) {
-        tsCodeSegments.push(...tempVarDecls)
-        tsCodeSegments.push('\n\n')
-      }
-
-      // Generate the template virtual code
-      for (const quasi of vineCompFn.templateStringNode.quasi.quasis) {
-        tsCodeSegments.push('\n// --- Start: Template virtual code\n')
-
-        // Insert all component bindings to __VLS_ctx
-        tsCodeSegments.push(...collectSegments(generateVLSContext(vineCompFn, {
-          excludeBindings,
-        })))
-
-        // Insert `__VLS_StyleScopedClasses`
-        tsCodeSegments.push(...collectSegments(codegen.styleScopedClasses()))
-
-        // Collect all setup consts and refs
-        const setupConsts = new Set<string>()
-        const setupRefs = new Set<string>()
-        for (const [name, bindingType] of Object.entries(vineCompFn.bindings)) {
-          if (bindingType === VineBindingTypes.SETUP_CONST) {
-            setupConsts.add(name)
-          }
-          else if (bindingType === VineBindingTypes.SETUP_REF) {
-            setupRefs.add(name)
-          }
-        }
-
-        const generatedTemplate = generateTemplate({
-          typescript: ts,
-          vueCompilerOptions,
-          componentName: vineCompFn.fnName,
-          template: {
-            // `templateAst` type is not correct before Vapor finalized
-            ast: vineCompFn.templateAst as any,
-            errors: [],
-            warnings: [],
-            name: 'template',
-            start: vineCompFn.templateStringNode.start!,
-            end: vineCompFn.templateStringNode.end!,
-            startTagEnd: quasi.start!,
-            endTagStart: quasi.end!,
-            lang: 'html',
-            content: vineCompFn.templateSource,
-            attrs: {},
-          },
-          setupConsts,
-          setupRefs,
-          inheritAttrs: false,
-
-          // Slots type virtual code helper
-          hasDefineSlots: Object.keys(vineCompFn.slots).length > 0,
-          slotsAssignName: 'context.slots',
-        })
-
-        for (const segment of generatedTemplate.codes) {
-          if (typeof segment === 'string') {
-            tsCodeSegments.push(segment)
-          }
-          else if (segment[1] === 'template') {
-            if (
-              typeof segment[3].completion === 'object'
-              && segment[3].completion.isAdditional
-            ) {
-              // - fix https://github.com/vue-vine/vue-vine/pull/149#issuecomment-2347047385
-              if (!segment[3].completion.onlyImport) {
-                segment[3].completion.onlyImport = true
-              }
-              else {
-                // - fix https://github.com/vue-vine/vue-vine/issues/218
-                segment[3].completion = {}
-              }
-            }
-
-            tsCodeSegments.push([
-              segment[0],
-              undefined,
-              segment[2] + quasi.start!,
-              segment[3],
-            ])
-          }
-          else {
-            tsCodeSegments.push(segment[0])
-          }
-        }
-        tsCodeSegments.push('\n// --- End: Template virtual code\n\n')
-      }
-
-      tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.templateStringNode.quasi.start!)))
-
-      // clear the template string
-      tsCodeSegments.push(`\`\` as any as __VLS_VINE.VueVineComponent${vineCompFn.expose
-        ? ` & { exposed: (import('vue').ShallowUnwrapRef<typeof __VLS_VINE_ComponentExpose__>) }`
-        : ''
-      };\n`)
-      codegen.currentOffset = vineCompFn.templateStringNode.quasi.end!
-    }
-
-    tsCodeSegments.push(...collectSegments(codegen.scriptUntil(vineCompFn.fnDeclNode!.end!)))
-    if (vineCompFn.isCustomElement) {
-      tsCodeSegments.push(' as CustomElementConstructor);\n')
-    }
+    tsCodeSegments.push(...generateComponentVirtualCode({
+      ts,
+      vueCompilerOptions,
+      vineCompFn,
+      vineFileCtx,
+      codegen,
+      excludeBindings: new Set(),
+    }))
   }
   tsCodeSegments.push(...collectSegments(codegen.scriptUntil(snapshotContent.length)))
 
-  // Generate all full collection of all used components in this file
-  // Only include templateComponentNames that actually exist in bindings,
-  // so that truly unknown components are not silently resolved.
-  const usedComponents = new Set<string>()
-  vineFileCtx.vineCompFns.forEach((vineCompFn) => {
-    usedComponents.add(vineCompFn.fnName)
-    vineCompFn.templateComponentNames.forEach((compName) => {
-      if (compName in vineCompFn.bindings) {
-        usedComponents.add(compName)
-      }
-    })
-  })
-
-  tsCodeSegments.push(`\nconst __VLS_VINE_ComponentsReferenceMap = {\n${[...usedComponents].map((compName) => {
-    // Check if component name is a valid identifier
-    // If not (e.g., 'router-view', 'my-component'), convert to PascalCase
-    // TypeScript will resolve it from local definitions or imports
-    let componentRef = compName
-    if (needsQuotes(compName)) {
-      // Convert to PascalCase, which is the standard Vue component naming convention
-      // TypeScript will automatically find this identifier whether it's:
-      // - Defined locally in this file
-      // - Imported from another file
-      // - Auto-imported by unplugin-auto-import or similar tools
-      componentRef = toPascalCase(compName)
-    }
-    return `  '${compName}': ${componentRef}`
-  }).join(',\n')
-  }\n};\n`)
+  tsCodeSegments.push(generateComponentsReferenceMap(vineFileCtx))
 
   const tsCode = toString(tsCodeSegments)
   const rawMappings = buildMappings(tsCodeSegments)

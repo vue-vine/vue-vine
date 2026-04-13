@@ -6,7 +6,7 @@ exports[`verify Volar virtual code snapshots > custom-elements.vine.ts 1`] = `
 import * as __VLS_VINE from 'vue-vine/internals';
 
 type __VLS_VINE_SampleCustomElement_props__ = {}
-export const SampleCustomElement = (function (
+export const SampleCustomElement = __VLS_VINE.AsCustomElement(function (
   props: __VLS_VINE.VineComponentCommonProps & __VLS_VINE_SampleCustomElement_props__,
   context: {}
 ) {
@@ -74,11 +74,11 @@ type __VLS_RootEl =
 
 return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
-} as CustomElementConstructor);
+});
 
 
 // eslint-disable-next-line antfu/top-level-function
-export const AnotherCustomElement = ((
+export const AnotherCustomElement = __VLS_VINE.AsCustomElement((
   props: __VLS_VINE.VineComponentCommonProps & { foo: string },  context: {}
 ,
 ) => {
@@ -121,7 +121,7 @@ type __VLS_RootEl =
 
 return vine\`\` as any as __VLS_VINE.VueVineComponent;
 
-} as CustomElementConstructor);
+});
 
 type __VLS_VINE_TestCustomElement_props__ = {}
 
@@ -143,6 +143,10 @@ const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
   SampleCustomElement: SampleCustomElement,
   AnotherCustomElement: AnotherCustomElement,
   TestCustomElement: TestCustomElement,
+  'vi-sample-custom-element': SampleCustomElement,
+  ViSampleCustomElement: SampleCustomElement,
+  'vi-another-custom-element': AnotherCustomElement,
+  ViAnotherCustomElement: AnotherCustomElement,
   /* No props formal params */
 });
 
@@ -161,6 +165,8 @@ const __VLS_components = {
 };
 
 type __VLS_VINE_StyleScopedClasses = {};
+const ViSampleCustomElement = SampleCustomElement;
+const ViAnotherCustomElement = AnotherCustomElement;
 __VLS_asFunctionalElement0(__VLS_intrinsics.div, __VLS_intrinsics.div)({
 ...{ class: "flex flex-col gap-4" },
 });
@@ -169,17 +175,13 @@ __VLS_asFunctionalElement0(__VLS_intrinsics.div, __VLS_intrinsics.div)({
 /** @type {__VLS_StyleScopedClasses['gap-4']} */;
 __VLS_asFunctionalElement0(__VLS_intrinsics.h3, __VLS_intrinsics.h3)({
 });
-let __VLS_0!: __VLS_WithComponent<'vi-sample-custom-element', __VLS_LocalComponents, __VLS_GlobalComponents, void, 'ViSampleCustomElement', 'viSampleCustomElement', 'vi-sample-custom-element'>['vi-sample-custom-element'];
-/** @ts-ignore @type {typeof __VLS_components.viSampleCustomElement | typeof __VLS_components.ViSampleCustomElement} */
-viSampleCustomElement;
+const __VLS_0 = ViSampleCustomElement;
 // @ts-ignore
 const __VLS_1 = __VLS_asFunctionalComponent0(__VLS_0, new __VLS_0({
 }));
 const __VLS_2 = __VLS_1({
 }, ...__VLS_functionalComponentArgsRest(__VLS_1));
-let __VLS_5!: __VLS_WithComponent<'vi-another-custom-element', __VLS_LocalComponents, __VLS_GlobalComponents, void, 'ViAnotherCustomElement', 'viAnotherCustomElement', 'vi-another-custom-element'>['vi-another-custom-element'];
-/** @ts-ignore @type {typeof __VLS_components.viAnotherCustomElement | typeof __VLS_components.ViAnotherCustomElement} */
-viAnotherCustomElement;
+const __VLS_5 = ViAnotherCustomElement;
 // @ts-ignore
 const __VLS_6 = __VLS_asFunctionalComponent0(__VLS_5, new __VLS_5({
 }));

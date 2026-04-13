@@ -17,6 +17,7 @@ import { vueTemplateBuiltinData } from '../data/vue-template-built-in'
 import { getVueVineVirtualCode } from '../utils'
 
 const EMBEDDED_TEMPLATE_SUFFIX = /_template$/
+const AUTO_IMPORT_PLACEHOLDER = 'AutoImportsPlaceholder'
 const EVENT_PROP_NAME_REGEXP = /^on(?:-[a-z]|[A-Z])/
 const DIRECTIVE_LOWER_CAMEL_CASE_PREFIX = /v[A-Z]/
 
@@ -134,6 +135,16 @@ export function createVineTemplatePlugin(
             triggerCharToken,
           )
 
+          // Resolve auto-import placeholder with actual suggestions from tsserver
+          if (htmlComplete) {
+            await resolveAutoImportPlaceholder(
+              htmlComplete,
+              vineVirtualCode,
+              document,
+              position,
+            )
+          }
+
           return htmlComplete
         },
         async provideDiagnostics(document) {
@@ -171,6 +182,72 @@ export function createVineTemplatePlugin(
         },
       }
 
+      async function resolveAutoImportPlaceholder(
+        htmlComplete: NonNullable<Awaited<ReturnType<NonNullable<typeof baseServiceInstance.provideCompletionItems>>>>,
+        vineVirtualCode: VueVineVirtualCode,
+        document: TextDocument,
+        position: { line: number, character: number },
+      ) {
+        const placeholderIndex = htmlComplete.items.findIndex(
+          item => item.label === AUTO_IMPORT_PLACEHOLDER,
+        )
+        if (placeholderIndex === -1) {
+          return
+        }
+
+        const offset = document.offsetAt(position)
+
+        // Map the HTML embedded code offset to the source (.vine.ts) offset.
+        // The offset in the HTML embedded code corresponds to the template content,
+        // which starts at the quasi start in the .vine.ts file.
+        let sourceOffset = offset
+        for (const embeddedCode of vineVirtualCode.embeddedCodes ?? []) {
+          if (embeddedCode.id.endsWith('_template') && embeddedCode.mappings.length > 0) {
+            const mapping = embeddedCode.mappings[0]!
+            if (mapping.sourceOffsets[0] !== undefined) {
+              sourceOffset = offset + mapping.sourceOffsets[0]
+              break
+            }
+          }
+        }
+
+        try {
+          const autoImportResult = await pipeline.getAutoImportSuggestions(
+            vineVirtualCode.fileName,
+            sourceOffset,
+          )
+
+          if (autoImportResult?.entries.length) {
+            const placeholder = htmlComplete.items[placeholderIndex]!
+            const autoImportItems = autoImportResult.entries.map((entry) => {
+              const item: typeof htmlComplete.items[number] = {
+                label: entry.name,
+                kind: 6, // CompletionItemKind.Variable
+                sortText: entry.sortText,
+                labelDetails: entry.source
+                  ? { description: entry.source }
+                  : undefined,
+              }
+              // Reuse the placeholder's textEdit range so the tag name gets properly replaced
+              if (placeholder.textEdit && 'range' in placeholder.textEdit) {
+                item.textEdit = {
+                  range: placeholder.textEdit.range,
+                  newText: entry.name,
+                }
+              }
+              return item
+            })
+            htmlComplete.items.splice(placeholderIndex, 1, ...autoImportItems)
+          }
+          else {
+            htmlComplete.items.splice(placeholderIndex, 1)
+          }
+        }
+        catch {
+          htmlComplete.items.splice(placeholderIndex, 1)
+        }
+      }
+
       function provideHtmlData(
         tagInfos: Map<string, HtmlTagInfo>,
         vineVirtualCode: VueVineVirtualCode,
@@ -186,9 +263,18 @@ export function createVineTemplatePlugin(
         pipelineClientContext.vineVirtualCode = vineVirtualCode
         pipelineClientContext.tagInfos = tagInfos
 
+        const autoImportProvider: IHTMLDataProvider = {
+          getId: () => 'vine-auto-imports',
+          isApplicable: () => true,
+          provideTags: () => [{ name: AUTO_IMPORT_PLACEHOLDER, attributes: [] }],
+          provideAttributes: () => [],
+          provideValues: () => [],
+        }
+
         updateCustomData([
           templateBuiltIn,
           vineVolarContextProvider,
+          autoImportProvider,
         ])
 
         return {

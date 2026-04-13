@@ -19,6 +19,9 @@ type MakeVLSCtx<T extends object>
 
 declare const CreateVineVLSCtx: <T>(ctx: T) => MakeVLSCtx<import('vue').ShallowUnwrapRef<T>>
 
+/** Wraps a Vine component function to also satisfy CustomElementConstructor */
+declare const AsCustomElement: <F extends (...args: any[]) => any>(fn: F) => F & { new (...args: any[]): HTMLElement }
+
 type VueVineComponent = import('vue/jsx-runtime').JSX.Element & { [VUE_VINE_COMPONENT]: true }
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never
@@ -51,6 +54,7 @@ export type {
 }
 
 export {
+  AsCustomElement,
   CreateVineVLSCtx,
   VUE_VINE_COMPONENT,
 }

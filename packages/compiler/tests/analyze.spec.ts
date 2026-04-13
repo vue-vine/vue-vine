@@ -761,6 +761,105 @@ function MyBox() {
   })
 })
 
+describe('test customElements.define() analysis', () => {
+  it('should detect customElements.define() calls inside a component function body', () => {
+    const content = `
+export function SampleCE() {
+  vineCustomElement()
+  return vine\`<div>Sample CE</div>\`
+}
+
+export function AppComp() {
+  customElements.define('vi-sample-ce', SampleCE)
+  return vine\`
+    <div>
+      <vi-sample-ce />
+    </div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testCEDefineInBody', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testCEDefineInBody')
+    expect(fileCtx?.customElementRegistrations.size).toBe(1)
+    expect(fileCtx?.customElementRegistrations.get('vi-sample-ce')).toBe('SampleCE')
+  })
+
+  it('should detect customElements.define() calls at file top level', () => {
+    const content = `
+export function SampleCE() {
+  vineCustomElement()
+  return vine\`<div>Sample CE</div>\`
+}
+
+customElements.define('vi-sample-ce', SampleCE)
+
+export function AppComp() {
+  return vine\`
+    <div>
+      <vi-sample-ce />
+    </div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testCEDefineTopLevel', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testCEDefineTopLevel')
+    expect(fileCtx?.customElementRegistrations.size).toBe(1)
+    expect(fileCtx?.customElementRegistrations.get('vi-sample-ce')).toBe('SampleCE')
+  })
+
+  it('should detect multiple customElements.define() calls', () => {
+    const content = `
+export function CE1() {
+  vineCustomElement()
+  return vine\`<div>CE1</div>\`
+}
+export function CE2() {
+  vineCustomElement()
+  return vine\`<div>CE2</div>\`
+}
+
+customElements.define('my-ce-1', CE1)
+customElements.define('my-ce-2', CE2)
+
+export function AppComp() {
+  return vine\`
+    <div>
+      <my-ce-1 />
+      <my-ce-2 />
+    </div>
+  \`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testMultipleCEDefine', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testMultipleCEDefine')
+    expect(fileCtx?.customElementRegistrations.size).toBe(2)
+    expect(fileCtx?.customElementRegistrations.get('my-ce-1')).toBe('CE1')
+    expect(fileCtx?.customElementRegistrations.get('my-ce-2')).toBe('CE2')
+  })
+
+  it('should ignore customElements.define() with non-literal tag name', () => {
+    const content = `
+export function SampleCE() {
+  vineCustomElement()
+  return vine\`<div>Sample CE</div>\`
+}
+
+const tagName = 'my-ce'
+customElements.define(tagName, SampleCE)
+
+export function AppComp() {
+  return vine\`<div>App</div>\`
+}`
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx()
+    compileVineTypeScriptFile(content, 'testCEDefineNonLiteral', { compilerHooks: mockCompilerHooks })
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testCEDefineNonLiteral')
+    expect(fileCtx?.customElementRegistrations.size).toBe(0)
+  })
+})
+
 describe('test component bindings analysis', () => {
   it('should contain top level declarations', () => {
     const content = `

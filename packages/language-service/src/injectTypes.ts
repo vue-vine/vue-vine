@@ -60,6 +60,18 @@ export function* generateVLSContext(
     yield ['', undefined, 0, { __linkedToken: token }]
     yield `${name},\n`
   }
+  // Inject custom element tag-name -> component mappings
+  // for tags used in this component's template
+  const ceRegistrations = vineCompFn.fileCtx.customElementRegistrations
+  for (const tagName of vineCompFn.templateComponentNames) {
+    const componentFnName = ceRegistrations.get(tagName)
+    if (componentFnName) {
+      // kebab-case for __VLS_WithComponent N3 type resolution
+      yield `  '${tagName}': ${componentFnName},\n`
+      // PascalCase for navigation (template codegen accesses e.g. ViSampleCustomElement)
+      yield `  ${toPascalCase(tagName)}: ${componentFnName},\n`
+    }
+  }
   yield `  ${
     vineCompFn.propsDefinitionBy !== VinePropsDefinitionBy.macro
       ? mayNeedPropsAlias(vineCompFn)

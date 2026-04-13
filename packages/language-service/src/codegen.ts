@@ -482,35 +482,6 @@ export class CodeGenerator {
     yield ';\n'
   }
 
-  // ===================== Custom Element Conversion =====================
-
-  /**
-   * Handle custom element function declaration conversion
-   */
-  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    let declNode: any = vineCompFn.fnDeclNode
-    if (isExportNamedDeclaration(declNode)) {
-      declNode = declNode.declaration
-    }
-
-    if (isFunctionDeclaration(declNode) && declNode.id && declNode.body) {
-      // Convert function declaration to variable declaration with function expression
-      yield* this.scriptUntil(declNode.start!)
-      yield 'const '
-      yield vineCompFn.fnName
-      yield ' = (function '
-      this.offset = declNode.id.end!
-    }
-    else if (isVariableDeclaration(declNode) && declNode.declarations) {
-      const decl = declNode.declarations[0]
-      if (decl.init) {
-        // Wrap existing expression with parentheses
-        yield* this.scriptUntil(decl.init.start!)
-        yield '('
-      }
-    }
-  }
-
   // ===================== Function Parameters =====================
 
   /**
@@ -604,6 +575,40 @@ export class CodeGenerator {
 
     // Generate function parameters
     yield* this.functionParameters(vineCompFn)
+  }
+
+  // ===================== Custom Element Conversion =====================
+
+  /**
+   * Wrap custom element component with AsCustomElement helper
+   * so the resulting type satisfies both the component function signature
+   * and CustomElementConstructor (for customElements.define() calls).
+   */
+  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    let declNode: any = vineCompFn.fnDeclNode
+    if (isExportNamedDeclaration(declNode)) {
+      declNode = declNode.declaration
+    }
+
+    if (isFunctionDeclaration(declNode) && declNode.id && declNode.body) {
+      // Convert function declaration to variable declaration wrapped with AsCustomElement
+      // Emit everything before `function` keyword (e.g. `export `)
+      yield* this.scriptUntil(declNode.start!)
+      yield 'const '
+      // Skip `function ` keyword, advance to identifier start
+      this.offset = declNode.id.start!
+      // Emit function name WITH source mapping (for cmd+click navigation)
+      yield* this.scriptUntil(declNode.id.end!)
+      yield ' = __VLS_VINE.AsCustomElement(function '
+    }
+    else if (isVariableDeclaration(declNode) && declNode.declarations) {
+      const decl = declNode.declarations[0]
+      if (decl.init) {
+        // Wrap existing expression with AsCustomElement
+        yield* this.scriptUntil(decl.init.start!)
+        yield '__VLS_VINE.AsCustomElement('
+      }
+    }
   }
 
   // ===================== Linked Code Tags =====================
