@@ -106,6 +106,7 @@ export function createVineFileCtx(
     fileMagicCode: new MagicString(code),
     vineCompFns: [],
     exportNamedDeclarations: findAllExportNamedDeclarations(root),
+    customElementRegistrations: new Map<string, string>(),
     userImports: {},
     styleDefine: {},
     vueImportAliases: {},

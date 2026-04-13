@@ -65,6 +65,7 @@ const buildConfig: UserConfig = defineConfig({
   //   `ThrowStatement` import from TS 6.0 (the export exists, but the DTS resolver
   //   fails on the very long type-union line). Keep it external to silence the warning.
   deps: {
+    onlyBundle: false,
     neverBundle: [
       '@eslint/plugin-kit',
       '@typescript-eslint/typescript-estree',

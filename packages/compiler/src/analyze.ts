@@ -1469,4 +1469,25 @@ export function analyzeVine(
       }
     }
   }
+
+  // Analyze customElements.define() calls across the entire file
+  // to build tag-name -> component-name mappings for template type checking.
+  // These calls can be at the file top level or inside any function body.
+  _breakableTraverse(vineFileCtx.root, (node) => {
+    if (
+      node.type === 'CallExpression'
+      && node.callee.type === 'MemberExpression'
+      && isIdentifier(node.callee.object)
+      && node.callee.object.name === 'customElements'
+      && isIdentifier(node.callee.property)
+      && node.callee.property.name === 'define'
+      && node.arguments.length >= 2
+      && isStringLiteral(node.arguments[0])
+      && isIdentifier(node.arguments[1])
+    ) {
+      const tagName = node.arguments[0].value
+      const componentFnName = node.arguments[1].name
+      vineFileCtx.customElementRegistrations.set(tagName, componentFnName)
+    }
+  })
 }
