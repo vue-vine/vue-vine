@@ -82,7 +82,7 @@ function TargetComp() {
 
 // b.vine.ts
 function TestComp() {
-  const target = ref<ReturnType<typeof TargetComp>>()
+  const target = useTemplateRef<InstanceType<typeof TargetComp>>('target')
   console.log('target count: ', target.value?.count)
 
   return vine`
