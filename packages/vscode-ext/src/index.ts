@@ -27,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
     vscodeVersion: vscode.version,
     extensionVersion: context.extension.packageJSON.version,
     machineId: vscode.env.machineId,
-    isTrackDisabled: !extensionConfigs.dataTrack.value,
+    isTrackDisabled: !extensionConfigs.dataTrack,
   }
 
   const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js')

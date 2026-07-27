@@ -23,10 +23,9 @@
     "dist"
   ],
   "scripts": {
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@typescript/native-preview": "catalog:compiler",
     "@volar/language-core": "catalog:volar",
     "@volar/typescript": "catalog:volar",
     "@vue-vine/language-service": "workspace:*",

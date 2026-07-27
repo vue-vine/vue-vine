@@ -200,7 +200,7 @@ export function getVineMacroCalleeName(node: CallExpression): string {
 
 export function getVinePropCallTypeParams(node: CallExpression): TSType | undefined {
   // We restricted the `vineProp` can only have 1 type parameter
-  return node.typeParameters?.params?.[0]
+  return node.typeArguments?.params?.[0] as TSType | undefined
 }
 
 /**

@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vue-vine/eslint-plugin": "workspace:*",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint-libs",
     "@stylistic/eslint-plugin": "catalog:lint-libs",
-    "@typescript/native-preview": "catalog:compiler",
-    "eslint-vitest-rule-tester": "catalog:lint-libs"
+    "eslint-vitest-rule-tester": "catalog:lint-libs",
+    "typescript": "catalog:cli"
   }
 }

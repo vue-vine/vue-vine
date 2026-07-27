@@ -1,5 +1,7 @@
 import type { LanguagePlugin } from '@volar/language-core'
 import type { VueCompilerOptions } from '@vue/language-core'
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
 import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import {
@@ -11,7 +13,15 @@ import {
 const windowsPathReg = /\\/g
 
 export function run(): void {
-  const tscSdk = require.resolve('typescript/lib/tsc')
+  const tscShim = require.resolve('typescript/lib/tsc')
+  const typescriptPackagePath = require.resolve('typescript/package.json')
+  const typescriptRequire = createRequire(typescriptPackagePath)
+  const typescriptPackageName = JSON.parse(
+    readFileSync(typescriptPackagePath, 'utf8'),
+  ).name
+  const tscSdk = typescriptPackageName === '@typescript/typescript6'
+    ? typescriptRequire.resolve('@typescript/old/lib/tsc.js')
+    : tscShim
   const main = () => {
     // Type check for `.vine.ts` files
     runTsc(

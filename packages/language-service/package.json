@@ -48,7 +48,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@umami/node": "catalog:miscs",
@@ -64,7 +64,6 @@
     "@babel/types": "catalog:compiler",
     "@types/node": "catalog:types",
     "@types/ws": "catalog:types",
-    "@typescript/native-preview": "catalog:compiler",
     "vscode-uri": "catalog:vscode"
   }
 }

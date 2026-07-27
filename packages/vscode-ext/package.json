@@ -106,12 +106,11 @@
     "pack:ext": "vsce pack",
     "publish:ext": "vsce publish",
     "publish:osvx": "ovsx publish",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@changesets/changelog-github": "catalog:utils",
     "@types/vscode": "catalog:types",
-    "@typescript/native-preview": "catalog:compiler",
     "@volar/vscode": "catalog:volar",
     "@vscode/vsce": "catalog:vscode",
     "@vue-vine/language-server": "workspace:*",

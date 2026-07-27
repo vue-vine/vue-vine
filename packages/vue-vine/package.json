@@ -54,7 +54,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "vue": "catalog:vue-libs"
@@ -65,7 +65,6 @@
     "@vue-vine/vite-plugin": "workspace:*"
   },
   "devDependencies": {
-    "@typescript/native-preview": "catalog:compiler",
     "@vue/test-utils": "catalog:vue-libs",
     "vitest": "catalog:vitest-libs",
     "vue": "catalog:vue-libs"

@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@typescript-eslint/parser": "catalog:lint-libs",
@@ -52,8 +52,8 @@
     "@types/node": "catalog:types",
     "@types/semver": "catalog:types",
     "@typescript-eslint/types": "catalog:lint-libs",
-    "@typescript/native-preview": "catalog:compiler",
     "eslint": "catalog:lint-libs",
-    "lodash": "catalog:utils"
+    "lodash": "catalog:utils",
+    "typescript": "catalog:cli"
   }
 }

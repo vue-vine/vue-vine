@@ -3,7 +3,7 @@
     "type-check": "vue-vine-tsc --noEmit"
   },
   "devDependencies": {
-    "typescript": "~6.0.2",
+    "typescript": "~7.0.2",
     "vue-vine-tsc": "^1.7.27"
   }
 }
