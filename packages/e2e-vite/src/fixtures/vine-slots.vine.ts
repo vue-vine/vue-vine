@@ -63,6 +63,13 @@ export function NamedSlotComponent() {
 
 // Component with scoped slots
 export function ScopedSlotComponent() {
+  vineSlots<{
+    default: (props: {
+      item: { id: number, name: string, price: number }
+      itemIndex: number
+    }) => any
+  }>()
+
   const items = ref([
     { id: 1, name: 'Apple', price: 1.5 },
     { id: 2, name: 'Banana', price: 0.8 },

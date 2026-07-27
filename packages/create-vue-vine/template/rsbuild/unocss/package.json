@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@unocss/postcss": "^66.6.8",
-    "unocss": "^66.6.8"
+    "@unocss/postcss": "^66.7.5",
+    "unocss": "^66.7.5"
   }
 }

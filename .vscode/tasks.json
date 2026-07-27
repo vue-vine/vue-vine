@@ -4,8 +4,16 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "watch:ext",
+      "label": "watch:ext",
+      "type": "process",
+      "command": "/bin/zsh",
+      "args": [
+        "-lic",
+        "pnpm run watch:ext"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "isBackground": true,
       "presentation": {
         "reveal": "never"
@@ -18,8 +26,8 @@
           "severity": "error",
           "background": {
             "activeOnStart": false,
-            "beginsPattern": "\\[vue-vine-extension\\] dist/server\\.js",
-            "endsPattern": "Rebuilt in \\d+ms"
+            "beginsPattern": "dist/server\\.js",
+            "endsPattern": "Rebuilt in \\d+ms\\."
           }
         }
       ],

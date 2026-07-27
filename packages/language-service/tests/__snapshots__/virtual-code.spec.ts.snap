@@ -259,14 +259,14 @@ __VLS_asFunctionalElement0(__VLS_intrinsics.p, __VLS_intrinsics.p)({
 }
 __VLS_asFunctionalElement0(__VLS_intrinsics.button, __VLS_intrinsics.button)({
 ...{ onClick: (...[$event]) => {
-emits('submit', __VLS_ctx.name);
+return (emits('submit', __VLS_ctx.name));
 // @ts-ignore
 [name,name,age,age,];
 }},
 });
 __VLS_asFunctionalElement0(__VLS_intrinsics.button, __VLS_intrinsics.button)({
 ...{ onClick: (...[$event]) => {
-emits('cancel');
+return (emits('cancel'));
 // @ts-ignore
 [];
 }},
@@ -340,15 +340,17 @@ name: "John",
 age: (30),
 }, ...__VLS_functionalComponentArgsRest(__VLS_1));
 let __VLS_5!: __VLS_ResolveEmits<typeof __VLS_0, typeof __VLS_3.emit>;
-const __VLS_6: __VLS_NormalizeComponentEvent<typeof __VLS_4, typeof __VLS_5, 'onSubmit', 'submit', 'submit'> = (
-{ submit: {} as any } as typeof __VLS_5,
-{ onSubmit: (handleSubmit)});
-const __VLS_7: __VLS_NormalizeComponentEvent<typeof __VLS_4, typeof __VLS_5, 'onCancel', 'cancel', 'cancel'> = (
-{ cancel: {} as any } as typeof __VLS_5,
-{ onCancel: (handleCancel)});
-var __VLS_8 = {} as (Parameters<NonNullable<typeof __VLS_3['expose']>>[0] | null);
-var __VLS_3!: __VLS_FunctionalComponentCtx<typeof __VLS_0, typeof __VLS_2>;
-var __VLS_4!: __VLS_FunctionalComponentProps<typeof __VLS_0, typeof __VLS_2>;
+const __VLS_6: __VLS_ResolveEvent<typeof __VLS_4, typeof __VLS_5, 'onSubmit', 'submit', 'submit'> = {
+/** @type {typeof __VLS_5.submit} */
+onSubmit: (handleSubmit),
+};
+const __VLS_7: __VLS_ResolveEvent<typeof __VLS_4, typeof __VLS_5, 'onCancel', 'cancel', 'cancel'> = {
+/** @type {typeof __VLS_5.cancel} */
+onCancel: (handleCancel),
+};
+var __VLS_8!: Parameters<NonNullable<typeof __VLS_3['expose']>>[0];
+var __VLS_3!: __VLS_ExtractComponentContext<typeof __VLS_0, typeof __VLS_2>;
+var __VLS_4!: __VLS_ExtractComponentProps<typeof __VLS_0, typeof __VLS_2>;
 type __VLS_RootEl = 
 | NonNullable<typeof __VLS_8>['$el'];
 
@@ -724,7 +726,7 @@ const __VLS_7 = __VLS_asFunctionalComponent0(__VLS_6, new __VLS_6({
 }));
 const __VLS_8 = __VLS_7({
 }, ...__VLS_functionalComponentArgsRest(__VLS_7));
-var __VLS_3!: __VLS_FunctionalComponentCtx<typeof __VLS_0, typeof __VLS_2>;
+var __VLS_3!: __VLS_ExtractComponentContext<typeof __VLS_0, typeof __VLS_2>;
 const __VLS_11 = TestAnotherVaporComp;
 // @ts-ignore
 const __VLS_12 = __VLS_asFunctionalComponent0(__VLS_11, new __VLS_11({
@@ -949,7 +951,7 @@ type __VLS_VINE_StyleScopedClasses = {}
  & { "show-msg": true };
 __VLS_asFunctionalElement0(__VLS_intrinsics.button, __VLS_intrinsics.button)({
 ...{ onClick: (...[$event]) => {
-value.value += 1;
+return (value.value += 1);
 }},
 ...{ class: "accessor-button" },
 });
@@ -1027,12 +1029,13 @@ const __VLS_2 = __VLS_1({
 modelValue: (simpleMsg.value),
 }, ...__VLS_functionalComponentArgsRest(__VLS_1));
 let __VLS_5!: __VLS_ResolveEmits<typeof __VLS_0, typeof __VLS_3.emit>;
-const __VLS_6: __VLS_NormalizeComponentEvent<typeof __VLS_4, typeof __VLS_5, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = (
-{ 'onUpdate:modelValue': (...[$event]) => {
+const __VLS_6: __VLS_ResolveEvent<typeof __VLS_4, typeof __VLS_5, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = {
+'onUpdate:modelValue': (...[$event]) => {
 simpleMsg.value = $event;
-}});
-var __VLS_3!: __VLS_FunctionalComponentCtx<typeof __VLS_0, typeof __VLS_2>;
-var __VLS_4!: __VLS_FunctionalComponentProps<typeof __VLS_0, typeof __VLS_2>;
+},
+};
+var __VLS_3!: __VLS_ExtractComponentContext<typeof __VLS_0, typeof __VLS_2>;
+var __VLS_4!: __VLS_ExtractComponentProps<typeof __VLS_0, typeof __VLS_2>;
 __VLS_asFunctionalElement0(__VLS_intrinsics.div, __VLS_intrinsics.div)({
 ...{ class: "row-flex" },
 });
@@ -1052,12 +1055,13 @@ const __VLS_9 = __VLS_8({
 special: (specialMsg.value),
 }, ...__VLS_functionalComponentArgsRest(__VLS_8));
 let __VLS_12!: __VLS_ResolveEmits<typeof __VLS_7, typeof __VLS_10.emit>;
-const __VLS_13: __VLS_NormalizeComponentEvent<typeof __VLS_11, typeof __VLS_12, 'onUpdate:special', 'update:special', 'update:special'> = (
-{ 'onUpdate:special': (...[$event]) => {
+const __VLS_13: __VLS_ResolveEvent<typeof __VLS_11, typeof __VLS_12, 'onUpdate:special', 'update:special', 'update:special'> = {
+'onUpdate:special': (...[$event]) => {
 specialMsg.value = $event;
-}});
-var __VLS_10!: __VLS_FunctionalComponentCtx<typeof __VLS_7, typeof __VLS_9>;
-var __VLS_11!: __VLS_FunctionalComponentProps<typeof __VLS_7, typeof __VLS_9>;
+},
+};
+var __VLS_10!: __VLS_ExtractComponentContext<typeof __VLS_7, typeof __VLS_9>;
+var __VLS_11!: __VLS_ExtractComponentProps<typeof __VLS_7, typeof __VLS_9>;
 __VLS_asFunctionalElement0(__VLS_intrinsics.div, __VLS_intrinsics.div)({
 ...{ class: "row-flex" },
 });
@@ -1077,12 +1081,13 @@ const __VLS_16 = __VLS_15({
 modelValue: (accessorValue.value),
 }, ...__VLS_functionalComponentArgsRest(__VLS_15));
 let __VLS_19!: __VLS_ResolveEmits<typeof __VLS_14, typeof __VLS_17.emit>;
-const __VLS_20: __VLS_NormalizeComponentEvent<typeof __VLS_18, typeof __VLS_19, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = (
-{ 'onUpdate:modelValue': (...[$event]) => {
+const __VLS_20: __VLS_ResolveEvent<typeof __VLS_18, typeof __VLS_19, 'onUpdate:modelValue', 'update:model-value', 'update:modelValue'> = {
+'onUpdate:modelValue': (...[$event]) => {
 accessorValue.value = $event;
-}});
-var __VLS_17!: __VLS_FunctionalComponentCtx<typeof __VLS_14, typeof __VLS_16>;
-var __VLS_18!: __VLS_FunctionalComponentProps<typeof __VLS_14, typeof __VLS_16>;
+},
+};
+var __VLS_17!: __VLS_ExtractComponentContext<typeof __VLS_14, typeof __VLS_16>;
+var __VLS_18!: __VLS_ExtractComponentProps<typeof __VLS_14, typeof __VLS_16>;
 __VLS_asFunctionalElement0(__VLS_intrinsics.div, __VLS_intrinsics.div)({
 ...{ class: "row-flex" },
 });

@@ -144,12 +144,8 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: {
-        /* Simple prop */
-      },
-      bio: {
-        /* Simple prop */
-      },
+      age: {/* Simple prop */},
+      bio: {/* Simple prop */},
       modelValue: { default: "test" },
       modelModifiers: {},
       title: { default: "" },
@@ -488,12 +484,8 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: {
-        /* Simple prop */
-      },
-      bio: {
-        /* Simple prop */
-      },
+      age: {/* Simple prop */},
+      bio: {/* Simple prop */},
       modelValue: { default: "test" },
       modelModifiers: {},
       title: { default: "" },
@@ -834,12 +826,8 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: {
-        /* Simple prop */
-      },
-      bio: {
-        /* Simple prop */
-      },
+      age: {/* Simple prop */},
+      bio: {/* Simple prop */},
       modelValue: { default: "test" },
       modelModifiers: {},
       title: { default: "" },
@@ -1228,12 +1216,8 @@ export const MyProfile = (() => {
     name: "MyProfile",
     props: {
       name: { required: true },
-      age: {
-        /* Simple prop */
-      },
-      bio: {
-        /* Simple prop */
-      },
+      age: {/* Simple prop */},
+      bio: {/* Simple prop */},
       modelValue: { default: "test" },
       modelModifiers: {},
       title: { default: "" },
@@ -1920,9 +1904,7 @@ export const TestComponent = (() => {
   const __vine = _defineComponent({
     name: "TestComponent",
     props: {
-      "aria-label": {
-        /* Simple prop */
-      },
+      "aria-label": {/* Simple prop */},
       "data-test-id": { required: true },
     },
     /* No emits */
@@ -2075,6 +2057,7 @@ export const MyComp = (() => {
 export const MyVaporCompOne = (() => {
   const t0 = _template(
     '<img data-v-19977118 src="' + _imports_01fb0ae2 + '"alt=vapor-sample-src>',
+    2,
   );
   const t1 = _template(
     '<img data-v-19977118 srcset="' +
@@ -2083,6 +2066,7 @@ export const MyVaporCompOne = (() => {
       _imports_1 +
       " 2x" +
       '"alt=vapor-sample-srcset>',
+    2,
   );
   const __vine = _defineVaporComponent({
     name: "MyVaporCompOne",
@@ -2107,7 +2091,7 @@ export const MyVaporCompOne = (() => {
 export const MyVaporCompTwo = (() => {
   const t0 = _template(
     "<div data-v-1997494c>This is another vapor component",
-    true,
+    3,
   );
   const __vine = _defineVaporComponent({
     name: "MyVaporCompTwo",
@@ -2159,9 +2143,7 @@ export const MyComp = (() => {
     name: "MyComp",
     props: {
       "foo:zee": { required: true },
-      bar: {
-        /* Simple prop */
-      },
+      bar: {/* Simple prop */},
       arr: { required: true },
       other1: { required: true },
       other2: { required: true },

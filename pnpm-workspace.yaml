@@ -1,6 +1,7 @@
 shellEmulator: true
 
-trustPolicy: no-downgrade
+# eslint-disable-next-line pnpm/yaml-enforce-settings
+trustPolicy: off
 
 packages:
   - packages/*
@@ -8,15 +9,15 @@ packages:
 overrides:
 
 defines:
-  - &vue ^3.6.0-beta.9
-  - &vue-lang-tools 3.2.6
+  - &vue ^3.6.0-rc.2
+  - &vue-lang-tools 3.3.8
   - &volar-libs 2.4.28
   - &volar-services 0.0.65
 
 catalogs:
   cli:
-    '@changesets/cli': ^2.30.0
-    '@clack/prompts': ^1.2.0
+    '@changesets/cli': ^2.31.1
+    '@clack/prompts': ^1.7.0
     clerc: ^1.3.1
     consola: ^3.4.2
     debug: ^4.4.3
@@ -25,81 +26,81 @@ catalogs:
     lint-staged: ^16.4.0
     ovsx: latest
     pkg-dir: ^9.0.0
-    rollup: ^4.60.1
+    rollup: ^4.62.3
     simple-git-hooks: ^2.13.1
     tree-kill: ^1.2.2
-    tsdown: ^0.21.7
-    tsx: ^4.21.0
+    tsdown: ^0.22.14
+    tsx: ^4.23.1
     typescript: ~6.0.2
-    yoctocolors: ^2.1.2
+    yoctocolors: ^2.2.0
   compiler:
-    '@babel/parser': ^7.29.2
-    '@babel/types': ^7.29.0
+    '@babel/parser': ^7.29.7
+    '@babel/types': ^7.29.7
     '@typescript/native-preview': 7.0.0-dev.20260411.1
     estree-walker: ^3.0.3
-    get-tsconfig: ^4.13.7
+    get-tsconfig: ^4.14.0
     magic-string: ^0.30.21
     merge-source-map: ^1.1.0
-    postcss: ^8.5.9
-    postcss-selector-parser: ^7.1.1
+    postcss: ^8.5.23
+    postcss-selector-parser: ^7.1.4
     source-map-js: ^1.2.1
     ts-morph: ^27.0.2
   docs:
     oxc-minify: ^0.124.0
-    shiki: ^4.0.2
-    vitepress: ^2.0.0-alpha.17
-    vitepress-plugin-group-icons: ^1.7.3
+    shiki: ^4.3.1
+    vitepress: ^2.0.0-alpha.18
+    vitepress-plugin-group-icons: ^1.7.5
   icons:
-    '@iconify-json/carbon': ^1.2.20
+    '@iconify-json/carbon': ^1.2.24
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/mdi': ^1.2.3
     '@iconify-json/twemoji': ^1.2.5
   lint-libs:
-    '@antfu/eslint-config': ^8.1.1
+    '@antfu/eslint-config': ^8.3.0
     '@stylistic/eslint-plugin': ^5.10.0
-    '@typescript-eslint/parser': ~8.58.1
-    '@typescript-eslint/scope-manager': ~8.58.1
-    '@typescript-eslint/types': ~8.58.1
-    '@typescript-eslint/typescript-estree': ~8.58.1
-    '@typescript-eslint/utils': ~8.58.1
-    eslint: ~10.2.0
+    '@typescript-eslint/parser': ~8.65.0
+    '@typescript-eslint/scope-manager': ~8.65.0
+    '@typescript-eslint/types': ~8.65.0
+    '@typescript-eslint/typescript-estree': ~8.65.0
+    '@typescript-eslint/utils': ~8.65.0
+    eslint: ~10.8.0
     eslint-scope: ^9.1.2
     eslint-vitest-rule-tester: ^3.1.0
     espree: ^11.2.0
-    prettier: ^3.8.2
+    prettier: ^3.9.6
     prettier-linter-helpers: ^1.0.1
   miscs:
     '@umami/node': ^0.4.0
-    element-plus: ^2.13.7
+    element-plus: ^2.14.3
     make-synchronized: ^0.8.0
   nuxt-libs:
-    '@nuxt/devtools': ^3.2.4
-    '@nuxt/eslint-config': ^1.15.2
-    '@nuxt/kit': ~4.4.2
-    '@nuxt/module-builder': ^1.0.2
-    '@nuxt/schema': ~4.4.2
-    '@nuxt/test-utils': ^4.0.2
-    nuxt: ~4.4.2
+    '@nuxt/devtools': ^3.3.1
+    '@nuxt/eslint-config': ^1.16.0
+    '@nuxt/kit': ~4.5.0
+    '@nuxt/module-builder': ^1.0.3
+    '@nuxt/schema': ~4.5.0
+    '@nuxt/test-utils': ^4.0.3
+    nuxt: ~4.5.0
     vitest: 3.2.4 # @nuxt/test-utils requires Vitest v3
   rsstack:
-    '@rsbuild/core': ^1.7.5
-    '@rsbuild/plugin-sass': ^1.5.1
-    '@rspack/core': ^1.7.11
+    '@rsbuild/core': ^1.7.6
+    '@rsbuild/plugin-sass': ^1.5.3
+    '@rspack/core': ^1.7.12
   styles:
-    sass: ^1.99.0
-    tailwindcss: ^4.2.2
-    unocss: ^66.6.8
+    sass: ^1.102.0
+    tailwindcss: ^4.3.3
+    unocss: ^66.7.5
   types:
     '@types/debug': ^4.1.13
-    '@types/estree': ^1.0.8
+    '@types/estree': ^1.0.9
     '@types/hash-sum': ^1.0.2
-    '@types/jsdom': ^28.0.1
+    '@types/jsdom': ^28.0.3
     '@types/line-column': ^1.0.2
     '@types/lodash': ^4.17.24
-    '@types/node': ^25.6.0
+    '@types/node': ^25.9.5
     '@types/prettier-linter-helpers': ^1.0.4
     '@types/semver': ^7.7.1
-    '@types/vscode': ~1.115.0
+    '@types/vscode': ~1.125.0
     '@types/ws': ^8.18.1
   utils:
     '@antfu/utils': ^9.3.0
@@ -109,23 +110,23 @@ catalogs:
     hash-sum: ^2.0.0
     line-column: ^1.0.2
     lodash: ^4.18.1
-    lru-cache: ^11.3.3
+    lru-cache: ^11.5.2
     muggle-string: ^0.4.1
-    semver: ^7.7.4
-    yaml: ^2.8.3
+    semver: ^7.8.5
+    yaml: ^2.9.0
   vite-ecosystem:
-    '@tailwindcss/vite': ^4.2.2
-    '@vitejs/plugin-vue': ^6.0.5
-    '@vitejs/plugin-vue-jsx': ^5.1.5
+    '@tailwindcss/vite': ^4.3.3
+    '@vitejs/plugin-vue': ^6.0.8
+    '@vitejs/plugin-vue-jsx': ^5.1.6
     rolldown: latest
     unplugin-auto-import: ^21.0.0
     vite: ^8.0.8
-    vite-plugin-inspect: ^11.3.3
+    vite-plugin-inspect: ^11.4.1
   vitest-libs:
-    jsdom: ^29.0.2
-    playwright-chromium: ^1.59.1
+    jsdom: ^29.1.1
+    playwright-chromium: ^1.62.0
     # eslint-disable-next-line pnpm/yaml-no-duplicate-catalog-item
-    vitest: ^4.1.4 # For the rest of this repository, we use the newer version of Vitest
+    vitest: ^4.1.10 # For the rest of this repository, we use the newer version of Vitest
   volar:
     '@volar/language-core': *volar-libs
     '@volar/language-server': *volar-libs
@@ -141,7 +142,7 @@ catalogs:
     reactive-vscode: ^0.4.1
     vscode-css-languageservice: ^6.3.10
     vscode-html-languageservice: ^5.6.2
-    vscode-languageserver-protocol: ^3.17.5
+    vscode-languageserver-protocol: ^3.18.2
     vscode-languageserver-textdocument: ^1.0.12
     vscode-uri: ^3.1.0
   vue-libs:
@@ -152,11 +153,11 @@ catalogs:
     '@vue/language-core': *vue-lang-tools
     '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue
-    '@vue/test-utils': ^2.4.6
-    '@vueuse/core': ^14.2.1
+    '@vue/test-utils': ^2.4.11
+    '@vueuse/core': ^14.3.0
     pinia: ^3.0.4
     vue: *vue
-    vue-router: ^5.0.4
+    vue-router: ^5.2.0
     vue-tsc: *vue-lang-tools
 
 onlyBuiltDependencies:

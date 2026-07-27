@@ -162,7 +162,8 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
         config.oxc = {}
       }
 
-      // Exclude vine files from Oxc transform pipeline
+      // @vitejs/plugin-vue-jsx enables Oxc's TypeScript transform for all .ts
+      // files. Keep Vine files intact until this plugin has compiled its macros.
       const existing = config.oxc.exclude
       config.oxc.exclude = [
         ...(existing ? (Array.isArray(existing) ? existing : [existing]) : []),

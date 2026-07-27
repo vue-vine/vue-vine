@@ -76,6 +76,9 @@ const buildConfig: UserConfig = defineConfig({
   entry: ['src/index.ts'],
   sourcemap: isDev,
   inputOptions: {
+    // TypeScript 6 still publishes CommonJS-style declarations (`export = ts`),
+    // which rolldown-plugin-dts cannot bundle as ESM declarations.
+    external: /^typescript(?:\/|$)/,
     resolve: {
       conditionNames: ['vine'],
     },

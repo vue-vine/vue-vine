@@ -51,6 +51,10 @@ const plugins: UserConfig['plugins'] = [
 ]
 
 const sharedConfig: Partial<UserConfig> = {
+  suppressWarnings: [
+    /Could not resolve 'vscode'/,
+    /Use of direct `eval` function is strongly discouraged/,
+  ],
   deps: {
     onlyBundle: false,
     neverBundle: [

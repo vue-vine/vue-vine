@@ -154,6 +154,7 @@ function generateTemplateVirtualCode(
       typescript: ts,
       vueCompilerOptions,
       componentName: vineCompFn.fnName,
+      isVapor: vineCompFn.isVapor,
       template: {
         // `templateAst` type is not correct before Vapor finalized
         ast: vineCompFn.templateAst as any,
