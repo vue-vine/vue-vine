@@ -318,7 +318,7 @@ function assertMacroCanOnlyHaveOneTypeParam(
   macroCallNode: CallExpression,
 ) {
   const macroCallee = macroCallNode.callee as Identifier
-  const typeParams = macroCallNode.typeParameters?.params
+  const typeParams = macroCallNode.typeArguments?.params
   const typeParamsLength = typeParams?.length
   const errMsg = `\`${macroCallee.name}\` ${
     (typeParamsLength && typeParamsLength > 1) ? 'can only' : 'must'
@@ -485,7 +485,7 @@ function assertVineEmitsUsage(
   let isVineEmitsUsageCorrect = true
 
   const callArgs = macroCallNode.arguments
-  const typeParams = macroCallNode.typeParameters?.params
+  const typeParams = macroCallNode.typeArguments?.params
   if (!typeParams || typeParams.length === 0) {
     // No type parameter and no argument, it's a invalid usage
     // which doesn't provide emits key for Vue component
@@ -627,7 +627,7 @@ function assertSlotMethodSignature(
 ) {
   return assertSlotFunctionSignature(
     validatorCtx,
-    methodSignature.parameters,
+    methodSignature.params,
     methodSignature.loc,
   )
 }
@@ -653,7 +653,7 @@ function assertSlotPropertySignature(
 
   return assertSlotFunctionSignature(
     validatorCtx,
-    typeAnnotation.parameters,
+    typeAnnotation.params,
     typeAnnotation.loc,
   )
 }
@@ -670,7 +670,7 @@ function assertVineSlotsUsage(
     isVineSlotsUsageCorrect = false
   }
   else {
-    const typeParams = macroCallNode.typeParameters?.params
+    const typeParams = macroCallNode.typeArguments?.params
     const theOnlyTypeParam = typeParams?.[0]
     if (!isTSTypeLiteral(theOnlyTypeParam)) {
       vineCompilerHooks.onError(
@@ -799,7 +799,7 @@ function assertVineModelUsage(
   const { vineCompilerHooks, vineFileCtx } = validatorCtx
   let isVineModelUsageCorrect = true
 
-  const typeParams = macroCallNode.typeParameters?.params
+  const typeParams = macroCallNode.typeArguments?.params
   const macroCallArgs = macroCallNode.arguments
   const firstArg = macroCallArgs?.[0]
   const lastArg = macroCallArgs?.[macroCallArgs.length - 1]
@@ -1093,7 +1093,7 @@ function validatePropsForSingelFC(
           return
         }
         if (macroCalleeName !== 'vineProp.withDefault') {
-          const typeParamsLength = node.typeParameters?.params.length
+          const typeParamsLength = node.typeArguments?.params.length
           if (typeParamsLength !== 1) {
             vineCompilerHooks.onError(
               vineErr(

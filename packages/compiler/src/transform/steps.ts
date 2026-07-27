@@ -901,7 +901,7 @@ export function generatePropsOptions(
         : propName
     }: { ${
       showIf(
-        metaFields.filter(Boolean).length > 0,
+        metaFields.some(Boolean),
         filterJoin(metaFields, ', '),
         '/* Simple prop */',
       )

@@ -636,7 +636,7 @@ export class CodeGenerator {
    * Generate linked code tag for vineSlots
    */
   * linkedCodeTagForVineSlots(macroCall: CallExpression): Generator<CodeSegment> {
-    const vineSlotsType = macroCall.typeParameters?.params?.[0]
+    const vineSlotsType = macroCall.typeArguments?.params?.[0]
     if (!vineSlotsType || !isTSTypeLiteral(vineSlotsType)) {
       return
     }
@@ -661,7 +661,7 @@ export class CodeGenerator {
    * Generate linked code tag for vineEmits
    */
   * linkedCodeTagForVineEmits(macroCall: CallExpression): Generator<CodeSegment> {
-    const vineEmitsType = macroCall.typeParameters?.params?.[0]
+    const vineEmitsType = macroCall.typeArguments?.params?.[0]
     if (!vineEmitsType || !isTSTypeLiteral(vineEmitsType)) {
       return
     }
@@ -710,8 +710,8 @@ export class CodeGenerator {
     yield '], keyof __VLS_TemplateRefs>'
 
     // Skip original type parameters if present
-    if (call.typeParameters && call.typeParameters.params.length > 0) {
-      this.offset = call.typeParameters.end!
+    if (call.typeArguments && call.typeArguments.params.length > 0) {
+      this.offset = call.typeArguments.end!
     }
 
     // Find and add variable declaration to excludeBindings

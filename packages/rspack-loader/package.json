@@ -38,7 +38,7 @@
     "dist"
   ],
   "scripts": {
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@rspack/core": "catalog:rsstack"
@@ -46,9 +46,6 @@
   "dependencies": {
     "@rspack/core": "catalog:rsstack",
     "@vue-vine/compiler": "workspace:*"
-  },
-  "devDependencies": {
-    "@typescript/native-preview": "catalog:compiler"
   },
   "publishConfig": {
     "access": "public",

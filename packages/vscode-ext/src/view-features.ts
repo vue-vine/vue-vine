@@ -2,7 +2,6 @@ import type * as lsp from '@volar/vscode/node'
 import type { ShallowRef } from 'reactive-vscode'
 import type { useExtensionConfigs } from './config'
 import {
-  executeCommand,
   nextTick,
   useCommand,
   useStatusBarItem,
@@ -14,7 +13,7 @@ import * as vscode from 'vscode'
 export async function useDataTrackWarning(
   extensionConfigs: ReturnType<typeof useExtensionConfigs>,
 ): Promise<void> {
-  const isNeedHideWarning = extensionConfigs.hideDataTrackWarning.value
+  const isNeedHideWarning = extensionConfigs.hideDataTrackWarning
   if (isNeedHideWarning)
     return
 
@@ -28,13 +27,13 @@ export async function useDataTrackWarning(
   )
   switch (result) {
     case 'Why?':
-      await executeCommand('vscode.open', vscode.Uri.parse('https://github.com/vue-vine/vue-vine/pull/283'))
+      await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse('https://github.com/vue-vine/vue-vine/pull/283'))
       break
     case 'Turn off':
-      extensionConfigs.dataTrack.value = false
+      extensionConfigs.dataTrack = false
       break
     case 'Don\'t show again':
-      extensionConfigs.hideDataTrackWarning.value = true
+      extensionConfigs.hideDataTrackWarning = true
       break
   }
 }
@@ -44,7 +43,7 @@ export function useVineExtensionViewFeatures(
   outputChannelRef: ShallowRef<vscode.OutputChannel | null>,
 ): void {
   useCommand('vine.action.restartServer', async () => {
-    await executeCommand('typescript.restartTsServer')
+    await vscode.commands.executeCommand('typescript.restartTsServer')
     await client.stop()
     await client.start()
 

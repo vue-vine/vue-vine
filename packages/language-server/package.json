@@ -36,7 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@volar/language-core": "catalog:volar",
@@ -57,7 +57,6 @@
   "devDependencies": {
     "@types/node": "catalog:types",
     "@types/ws": "catalog:types",
-    "@typescript/native-preview": "catalog:compiler",
     "@vue/shared": "catalog:vue-libs",
     "vscode-html-languageservice": "catalog:vscode",
     "vscode-uri": "catalog:vscode"

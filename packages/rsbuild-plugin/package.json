@@ -33,7 +33,7 @@
     "dist"
   ],
   "scripts": {
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@rsbuild/core": ">=1.0.0"
@@ -42,9 +42,6 @@
     "@rsbuild/core": "catalog:rsstack",
     "@vue-vine/compiler": "workspace:*",
     "@vue-vine/rspack-loader": "workspace:*"
-  },
-  "devDependencies": {
-    "@typescript/native-preview": "catalog:compiler"
   },
   "publishConfig": {
     "access": "public",

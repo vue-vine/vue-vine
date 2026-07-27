@@ -24,9 +24,6 @@ exports[`test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\`
           Node {
             "computed": false,
             "end": 62,
-            "extra": {
-              "shorthand": true,
-            },
             "key": Node {
               "end": 62,
               "loc": SourceLocation {
@@ -150,9 +147,6 @@ exports[`test Vine compiler analyze > analyze \`vineExpose\` and \`vineOptions\`
       Node {
         "computed": false,
         "end": 62,
-        "extra": {
-          "shorthand": true,
-        },
         "key": Node {
           "end": 62,
           "loc": SourceLocation {

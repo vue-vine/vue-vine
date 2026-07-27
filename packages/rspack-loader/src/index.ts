@@ -110,5 +110,5 @@ export default function vineRspackLoader(
     source: normalizedPath,
   })
 
-  callback(null, code, map)
+  callback(null, code, map.toString())
 }

@@ -31,8 +31,11 @@
     "dist",
     "template"
   ],
+  "engines": {
+    "node": ">=24.15.0"
+  },
   "scripts": {
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@clack/prompts": "catalog:cli",
@@ -44,7 +47,6 @@
   "devDependencies": {
     "@tailwindcss/vite": "catalog:vite-ecosystem",
     "@types/node": "catalog:types",
-    "@typescript/native-preview": "catalog:compiler",
     "tailwindcss": "catalog:styles",
     "unocss": "catalog:styles",
     "unplugin-auto-import": "catalog:vite-ecosystem",

@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "vite": "catalog:vite-ecosystem"
@@ -40,7 +40,6 @@
     "@vue-vine/compiler": "workspace:*"
   },
   "devDependencies": {
-    "@typescript/native-preview": "catalog:compiler",
     "rolldown": "catalog:vite-ecosystem",
     "rollup": "catalog:cli",
     "vite": "catalog:vite-ecosystem"

@@ -12,6 +12,7 @@ import type {
   TaggedTemplateExpression,
   TSFunctionType,
   TSPropertySignature,
+  TSType,
   TSTypeAnnotation,
   TSTypeLiteral,
   TSTypeParameterDeclaration,
@@ -698,7 +699,7 @@ const analyzeVineEmits: AnalyzeRunner = (
   if (!vineEmitsMacroCall) {
     return
   }
-  const typeParam = vineEmitsMacroCall.typeParameters?.params[0]
+  const typeParam = vineEmitsMacroCall.typeArguments?.params[0]
   const callArg = vineEmitsMacroCall.arguments[0]
 
   if (typeParam && isTSTypeLiteral(typeParam)) {
@@ -987,7 +988,7 @@ const analyzeVineSlots: AnalyzeRunner = (
   }
 
   // Traverse vineSlots type parameter and save all the property sigantures' name and its type annotation
-  const typeParam = vineSlotsMacroCall.typeParameters?.params[0]
+  const typeParam = vineSlotsMacroCall.typeArguments?.params[0]
   if (!typeParam) {
     return
   }
@@ -997,7 +998,7 @@ const analyzeVineSlots: AnalyzeRunner = (
     if (isTSPropertySignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
         = ((prop.typeAnnotation?.typeAnnotation as TSFunctionType | Nil)
-          ?.parameters?.[0]
+          ?.params?.[0]
           ?.typeAnnotation as TSTypeAnnotation)
           ?.typeAnnotation as TSTypeLiteral
 
@@ -1009,7 +1010,7 @@ const analyzeVineSlots: AnalyzeRunner = (
     }
     else if (isTSMethodSignature(prop) && isIdentifier(prop.key)) {
       const fnFirstParamType
-        = (prop.parameters[0]!.typeAnnotation as TSTypeAnnotation)
+        = (prop.params[0]!.typeAnnotation as TSTypeAnnotation)
           .typeAnnotation as TSTypeLiteral
 
       vineCompFnCtx.slots[prop.key.name] = {
@@ -1076,8 +1077,8 @@ const analyzeVineModel: AnalyzeRunner = (
       continue
     }
 
-    const typeParameter = macroCall.typeParameters?.params[0]
-    const modifiersTypeParameter = macroCall.typeParameters?.params[1]
+    const typeParameter = macroCall.typeArguments?.params[0] as TSType | undefined
+    const modifiersTypeParameter = macroCall.typeArguments?.params[1] as TSType | undefined
 
     // If the macro call has no argument,
     // - its model name is 'modelValue' as default

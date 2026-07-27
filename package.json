@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/vue-vine/vue-vine.git"
   },
+  "engines": {
+    "node": ">=24.15.0"
+  },
   "scripts": {
     "init": "pnpm clean && pnpm clean:deps && pnpm install && pnpm build",
     "dev": "pnpm --filter @vue-vine/e2e-vite run dev",
@@ -56,6 +59,7 @@
     "@baiwusanyu/utils-log": "catalog:utils",
     "@changesets/cli": "catalog:cli",
     "@types/node": "catalog:types",
+    "@typescript/native": "catalog:cli",
     "del": "catalog:cli",
     "eslint": "catalog:lint-libs",
     "lint-staged": "catalog:cli",
