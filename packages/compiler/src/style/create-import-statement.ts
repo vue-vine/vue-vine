@@ -1,6 +1,8 @@
 import type { VineCompFnCtx, VineCompilerCtx, VineFileCtx, VineStyleMeta } from '../types'
 import { getStyleLangFileExt, showIf } from '../utils'
 
+const RE_VINE_TS = /\.vine\.ts$/
+
 export function createStyleImportStmt(
   compilerCtx: VineCompilerCtx,
   vineFileCtx: VineFileCtx,
@@ -73,7 +75,7 @@ export function createStyleImportStmt(
   return [
     'import ',
     vineCompFnCtx.isCustomElement ? `__${vineCompFnCtx.fnName.toLowerCase()}_styles from '` : '\'',
-    `${vineFileCtx.fileId.replace(/\.vine\.ts$/, '')}?`,
+    `${vineFileCtx.fileId.replace(RE_VINE_TS, '')}?`,
     `type=vine-style`,
     `&vineFileId=${vineFileCtx.fileId}`,
     `&scopeId=${vineCompFnCtx.scopeId}`,

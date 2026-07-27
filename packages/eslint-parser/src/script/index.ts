@@ -60,12 +60,13 @@ import {
 const ALIAS_ITERATOR = /^([\s\S]*?(?:\s|\)))(\bin\b|\bof\b)([\s\S]*)$/u
 const PARENS = /^(\s*\()([\s\S]*?)(\)\s*)$/u
 const DUMMY_PARENT: any = {}
+const RE_SPACES = /^\s*/u
 
 // Like Vue, it judges whether it is a function expression or not.
 // https://github.com/vuejs/vue/blob/0948d999f2fddf9f90991956493f976273c5da1f/src/compiler/codegen/events.js#L3
 const IS_FUNCTION_EXPRESSION = /^\s*(?:[\w$]+|\([^)]*\))\s*=>|^function\s*\(/u
 const IS_SIMPLE_PATH
-    = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*'\]|\["[^"]*"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/u
+  = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*'\]|\["[^"]*"\]|\[\d+\]|\[[A-Za-z_$][\w$]*\])*$/u
 
 /**
  * Parse the alias and iterator of 'v-for' directive values.
@@ -417,7 +418,7 @@ function parseFilter(
 
     // Parse the callee.
     if (calleeCode.trim()) {
-      const spaces = /^\s*/u.exec(calleeCode)![0]
+      const spaces = RE_SPACES.exec(calleeCode)![0]
       const subCalculator = locationCalculator.getSubCalculatorShift(
         spaces.length,
       )
@@ -560,11 +561,11 @@ export function parseScript(
   parserOptions: VineESLintParserOptions,
 ): ESLintExtendedProgram {
   const parser: ParserObject
-        = typeof parserOptions.parser === 'string'
-          ? loadParser(parserOptions.parser)
-          : isParserObject(parserOptions.parser)
-            ? parserOptions.parser
-            : getEspreeFromEcmaVersion(parserOptions.ecmaVersion)
+    = typeof parserOptions.parser === 'string'
+      ? loadParser(parserOptions.parser)
+      : isParserObject(parserOptions.parser)
+        ? parserOptions.parser
+        : getEspreeFromEcmaVersion(parserOptions.ecmaVersion)
 
   const result: any = isEnhancedParserObject(parser)
     ? parser.parseForESLint(code, parserOptions)
@@ -622,9 +623,9 @@ export function parseExpression(
   debug('[script] parse expression: "%s"', code)
 
   const [mainCode, ...filterCodes]
-        = allowFilters
-          ? splitFilters(code)
-          : [code]
+    = allowFilters
+      ? splitFilters(code)
+      : [code]
   if (filterCodes.length === 0) {
     return parseExpressionBody(
       code,

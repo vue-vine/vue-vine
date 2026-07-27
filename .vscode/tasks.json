@@ -4,8 +4,16 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "watch:ext",
+      "label": "watch:ext",
+      "type": "process",
+      "command": "/bin/zsh",
+      "args": [
+        "-lic",
+        "pnpm run watch:ext"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "isBackground": true,
       "presentation": {
         "reveal": "never"
@@ -17,9 +25,9 @@
           "fileLocation": "absolute",
           "severity": "error",
           "background": {
-            "activeOnStart": true,
-            "beginsPattern": "Build start",
-            "endsPattern": "Build complete"
+            "activeOnStart": false,
+            "beginsPattern": "dist/server\\.js",
+            "endsPattern": "Rebuilt in \\d+ms\\."
           }
         }
       ],

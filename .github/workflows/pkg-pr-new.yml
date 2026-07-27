@@ -7,13 +7,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4.1.0
 
       - name: Set node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: lts/*
           cache: pnpm
@@ -25,4 +25,21 @@ jobs:
         run: pnpm run build
 
       - name: pkg-new:publish
-        run: pnpm run pkg-new:publish
+        # Workaround for pnpm/pnpm#10988: pnpm dlx inherits workspace trustPolicy,
+        # must call pnpx directly (not via pnpm run) with trust_policy unset.
+        run: >-
+          npm_config_trust_policy=
+          pnpx pkg-pr-new publish --pnpm
+          './packages/compiler'
+          './packages/language-service'
+          './packages/language-server'
+          './packages/vite-plugin'
+          './packages/eslint-parser'
+          './packages/eslint-plugin'
+          './packages/eslint-config'
+          './packages/nuxt-module'
+          './packages/tsc'
+          './packages/vue-vine'
+          './packages/create-vue-vine'
+          './packages/rspack-loader'
+          './packages/rsbuild-plugin'

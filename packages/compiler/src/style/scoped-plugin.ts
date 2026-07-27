@@ -6,6 +6,9 @@ import { vineWarn } from '../diagnostics'
 
 const animationNameRE = /^(?:-\w+-)?animation-name$/
 const animationRE = /^(?:-\w+-)?animation$/
+const RE_DATA_V_PREFIX = /^data-v-/
+const RE_KEYFRAMES_SUFFIX = /-?keyframes$/
+const RE_SPACE_COMBINATOR = /^\s+$/
 
 const processedRules = new WeakSet<Rule>()
 
@@ -20,7 +23,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
 ) => {
   const { id = '', fileCtx, compilerCtx } = options ?? {}
   const keyframes = Object.create(null)
-  const shortId = id.replace(/^data-v-/, '')
+  const shortId = id.replace(RE_DATA_V_PREFIX, '')
 
   function onPluginWarn(params: DiagnosticParams) {
     compilerCtx?.vineCompileWarnings.push(
@@ -33,7 +36,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
       processedRules.has(rule)
       || (rule.parent
         && rule.parent.type === 'atrule'
-        && /-?keyframes$/.test((rule.parent as AtRule).name))
+        && RE_KEYFRAMES_SUFFIX.test((rule.parent as AtRule).name))
     ) {
       return
     }
@@ -169,7 +172,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
   }
 
   function isSpaceCombinator(node: selectorParser.Node) {
-    return node.type === 'combinator' && /^\s+$/.test(node.value)
+    return node.type === 'combinator' && RE_SPACE_COMBINATOR.test(node.value)
   }
 
   return {
@@ -179,7 +182,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
     },
     AtRule(node) {
       if (
-        /-?keyframes$/.test(node.name)
+        RE_KEYFRAMES_SUFFIX.test(node.name)
         && !node.params.endsWith(`-${shortId}`)
       ) {
         // register keyframes
@@ -205,7 +208,7 @@ const scopedPlugin: PluginCreator<ScopedPluginOptions> = (
             decl.value = decl.value
               .split(',')
               .map((v) => {
-                const vals = v.trim().split(/\s+/)
+                const vals = v.trim().split(RE_SPACE_COMBINATOR)
                 const i = vals.findIndex(val => keyframes[val])
                 if (i !== -1) {
                   vals.splice(i, 1, keyframes[vals[i]])

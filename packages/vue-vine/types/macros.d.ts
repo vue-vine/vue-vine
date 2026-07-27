@@ -70,18 +70,21 @@ declare global {
 
   function vineModel<T, M extends string = string>(): VineModelReturn<T, M>
   function vineModel<T, M extends string = string>(
-    modelOptions: VineModelOptions<T>
+    modelOptions: VineModelOptions<T>,
   ): VineModelReturn<T, M>
   function vineModel<T, M extends string = string>(
     modelName: string,
-    modelOptions?: VineModelOptions<T>
+    modelOptions?: VineModelOptions<T>,
   ): VineModelReturn<T, M>
 
   function vineCustomElement(): void
 
   const vineStyle: VineStyleMacro
 
-  const vine: (template: TemplateStringsArray) => VueVineComponent
+  const vine: {
+    (template: TemplateStringsArray): VueVineComponent
+    vapor: (template: TemplateStringsArray) => VueVineComponent
+  }
 
   // CSS lang types helpers
   const css: (style: TemplateStringsArray) => VineStyle

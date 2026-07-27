@@ -1,4 +1,4 @@
-# no-dupe-attributes ![](https://img.shields.io/badge/vue_vine-essentials-blue)
+# no-dupe-attributes ![essentials](https://img.shields.io/badge/vue_vine-essentials-blue)
 
 disallow duplication of attributes
 

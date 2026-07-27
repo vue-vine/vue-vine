@@ -155,8 +155,7 @@ export class VineHMRManager {
         if (query.type === QUERY_TYPE_STYLE
           && patchRes?.type
           && patchRes.scopeId === query.scopeId
-          && patchRes.hmrCompFnsName
-        ) {
+          && patchRes.hmrCompFnsName) {
           affectedModules.add(im)
         }
       })

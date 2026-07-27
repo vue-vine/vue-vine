@@ -10,7 +10,7 @@ export type StylePreprocessor = (
   source: string,
   map: RawSourceMap | undefined,
   options: Record<string, any>,
-  load?: (id: string) => any
+  load?: (id: string) => any,
 ) => StylePreprocessorResults
 
 export interface StylePreprocessorResults {

@@ -1,6 +1,10 @@
-import type { ExpressionNode, NodeTransform, SimpleExpressionNode, SourceLocation, TransformContext } from '@vue/compiler-dom'
-import { ConstantTypes, createSimpleExpression, NodeTypes } from '@vue/compiler-dom'
+import type { BindingMetadata, ExpressionNode, NodeTransform, SimpleExpressionNode, SourceLocation, TransformContext } from '@vue/compiler-core'
+import type { TransformContext as VaporTransformContext } from '@vue/compiler-vapor'
+import { ConstantTypes, createSimpleExpression, NodeTypes, BindingTypes as VueBindingTypes } from '@vue/compiler-core'
+import hashId from 'hash-sum'
 import { isDataUrl, isExternalUrl, isRelativeUrl, parseUrl } from '../utils/template'
+
+export type ImportItem = TransformContext['imports'][number]
 
 export interface AssetURLTagConfig {
   [name: string]: string[]
@@ -19,7 +23,7 @@ export interface AssetURLOptions {
   tags?: AssetURLTagConfig
 }
 
-export const assetUrlOptions: Required<AssetURLOptions> = {
+export const defaultAssetUrlOptions: Required<AssetURLOptions> = {
   base: null,
   includeAbsolute: false,
   tags: {
@@ -43,7 +47,12 @@ export const transformAssetUrl: NodeTransform = (
     return
   }
 
-  const tags = assetUrlOptions.tags
+  const isVapor = 'ir' in context
+  const bindingMetadata = isVapor
+    ? (context as unknown as VaporTransformContext).options.bindingMetadata
+    : context.bindingMetadata
+
+  const tags = defaultAssetUrlOptions.tags
   const attrs = tags[node.tag]
   const wildCardAttrs = tags['*']
   if (!attrs && !wildCardAttrs) {
@@ -68,7 +77,13 @@ export const transformAssetUrl: NodeTransform = (
     // this assumes a bundler will resolve the import into the correct
     // absolute url (e.g. webpack file-loader)
     const url = parseUrl(attr.value.content)
-    const exp = getImportsExpressionExp(url.path, url.hash, attr.loc, context)
+    const exp = getImportsExpressionExp(
+      url.path,
+      url.hash,
+      attr.loc,
+      context,
+      bindingMetadata,
+    )
     node.props[index] = {
       type: NodeTypes.DIRECTIVE,
       name: 'bind',
@@ -85,17 +100,19 @@ function getImportsExpressionExp(
   hash: string | null,
   loc: SourceLocation,
   context: TransformContext,
+  bindingMetadata: BindingMetadata,
 ): ExpressionNode {
   if (path) {
     let name: string
     let exp: SimpleExpressionNode
     const existingIndex = context.imports.findIndex(i => i.path === path)
+    const pathHashId = hashId(path)
     if (existingIndex > -1) {
-      name = `_imports_${existingIndex}`
+      name = `_imports_${pathHashId}`
       exp = context.imports[existingIndex].exp as SimpleExpressionNode
     }
     else {
-      name = `_imports_${context.imports.length}`
+      name = `_imports_${pathHashId}`
       exp = createSimpleExpression(
         name,
         false,
@@ -109,6 +126,7 @@ function getImportsExpressionExp(
         exp,
         path: decodeURIComponent(path),
       })
+      bindingMetadata[name] = VueBindingTypes.LITERAL_CONST
     }
 
     if (!hash) {

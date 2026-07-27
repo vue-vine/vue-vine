@@ -112,7 +112,7 @@ function parseAttributeValue(
   | VForExpression
   | VOnExpression
   | VSlotScopeExpression
-  > {
+> {
   const firstChar = code[node.range[0]]
   const quoted = firstChar === '"' || firstChar === '\''
   const locationCalculator = globalLocationCalculator.getSubCalculatorAfter(
@@ -323,7 +323,7 @@ function parseDirectiveKeyStatically(
     && !directiveKey.modifiers.some(isPropModifier)
   ) {
     const pos
-          = (directiveKey.argument || directiveKey.name).range[1] - offset
+      = (directiveKey.argument || directiveKey.name).range[1] - offset
     const propModifier = createIdentifier(pos, pos, 'prop')
     directiveKey.modifiers.unshift(propModifier)
   }

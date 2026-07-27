@@ -2,7 +2,7 @@ import type {
   ConstantTypes,
   NodeTransform,
   NodeTypes,
-} from '@vue/compiler-dom'
+} from '@vue/compiler-core'
 
 // Copied from https://github.com/vue-macros/vue-macros/blob/main/packages/boolean-prop/src/core/transformer.ts - MIT License
 export function transformBooleanProp({

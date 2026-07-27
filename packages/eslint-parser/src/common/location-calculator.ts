@@ -51,14 +51,14 @@ export class LocationCalculatorForHtml
     gapOffsets: number[],
     ltOffsets: number[],
     baseOffset?: number,
-        shiftOffset = 0,
+    shiftOffset = 0,
   ) {
     super(ltOffsets)
     this.gapOffsets = gapOffsets
     this.ltOffsets = ltOffsets
     this.baseOffset = baseOffset || 0
     this.baseIndexOfGap
-            = this.baseOffset === 0
+      = this.baseOffset === 0
         ? 0
         : sortedLastIndex(gapOffsets, this.baseOffset)
     this.shiftOffset = shiftOffset

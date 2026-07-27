@@ -15,7 +15,7 @@
         "${workspaceFolder}/packages/vscode-ext/node_modules/@vue-vine/typescript-plugin/**/*",
         "${workspaceFolder}/packages/vscode-ext/dist/**/*"
       ],
-      "preLaunchTask": "npm: watch:ext"
+      "preLaunchTask": "watch:ext"
     },
     {
       "name": "Attach to Server",

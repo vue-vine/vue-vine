@@ -15,54 +15,42 @@ describe('basic functionality', async () => {
   const browserCtx = await createBrowserContext()
   const evaluator = createEvaluator(browserCtx)
 
-  it(
-    'should be aligned with SFC style order',
-    runTestAtPage(
-      '/style-order',
-      browserCtx,
-      async () => {
-        expect(await evaluator.getColor('.test-style-order h2.test')).toBe('rgb(255, 0, 0)')
-        expect(await evaluator.getColor('.child-comp span.test')).toBe('rgb(255, 0, 0)')
-      },
-    ),
-  )
+  it('should be aligned with SFC style order', runTestAtPage(
+    '/style-order',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getColor('.test-style-order h2.test')).toBe('rgb(255, 0, 0)')
+      expect(await evaluator.getColor('.child-comp span.test')).toBe('rgb(255, 0, 0)')
+    },
+  ))
 
-  it(
-    'should apply external imported style',
-    runTestAtPage(
-      '/external-style-import',
-      browserCtx,
-      async () => {
-        expect(await evaluator.getColor('.container .test-me')).toBe('rgb(0, 0, 0)')
-        expect(await evaluator.getColor('.child-comp .test-me')).toBe('rgb(255, 0, 0)')
-      },
-    ),
-  )
+  it('should apply external imported style', runTestAtPage(
+    '/external-style-import',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getColor('.container .test-me')).toBe('rgb(0, 0, 0)')
+      expect(await evaluator.getColor('.child-comp .test-me')).toBe('rgb(255, 0, 0)')
+    },
+  ))
 
-  it(
-    'should transform asset url',
-    runTestAtPage(
-      '/transform-asset-url',
-      browserCtx,
-      async () => {
-        expect(await evaluator.getAssetUrl('.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
-      },
-    ),
-  )
+  it('should transform asset url', runTestAtPage(
+    '/transform-asset-url',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getAssetUrl('.test-transform-asset-url img')).toBe('/src/assets/sample.jpg')
+    },
+  ))
 
-  it(
-    'should recongnize props destructure',
-    runTestAtPage(
-      '/props-destructure',
-      browserCtx,
-      async () => {
-        expect(await evaluator.getTextContent('#item-1')).toBe('foo: hello')
-        expect(await evaluator.getTextContent('#item-2')).toBe('bar: 1')
-        expect(await evaluator.getTextContent('#item-3')).toBe('other: true')
-        expect(await evaluator.getTextContent('#item-4')).toBe('doubleBar: 2')
-      },
-    ),
-  )
+  it('should recongnize props destructure', runTestAtPage(
+    '/props-destructure',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('#item-1')).toBe('foo: hello')
+      expect(await evaluator.getTextContent('#item-2')).toBe('bar: 1')
+      expect(await evaluator.getTextContent('#item-3')).toBe('other: true')
+      expect(await evaluator.getTextContent('#item-4')).toBe('doubleBar: 2')
+    },
+  ))
 
   it('should transform bare attr as bool', runTestAtPage(
     '/boolean-cast',
@@ -365,6 +353,30 @@ describe('basic functionality', async () => {
       },
     ),
   )
+
+  it('should work in vapor interop mode', runTestAtPage(
+    '/vapor-interop',
+    browserCtx,
+    async () => {
+      expect(await evaluator.getTextContent('.test-vapor-comp h3')).toBe('Vapor Component in Virtual DOM component')
+      expect(await evaluator.getTextContent('.test-vdom-comp h3')).toBe('Virtual DOM Component in Vapor slot')
+
+      await browserCtx.page?.fill('.test-vdom-comp input', 'hello')
+      expect(await evaluator.getTextContent('.test-vdom-comp p')).toBe('hello')
+
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 0')
+      await browserCtx.page?.click('.test-vapor-comp button')
+      expect(await evaluator.getTextContent('.test-vapor-comp p')).toBe('Count: 1')
+
+      expect(await evaluator.getTextContent('.test-another-vapor-comp span')).toBe('Another Vapor Component')
+
+      expect(await evaluator.getAssetUrl('img[alt="sample-img-in-vapor-comp"]')).toBe('/src/assets/sample.jpg')
+      expect(await evaluator.isImageLoaded('img[alt="sample-img-in-vapor-comp"]')).toBe(true)
+
+      expect(await evaluator.getAssetUrl('img[alt="remote-img-as-placeholder"]')).toBe('https://placehold.co/200x100')
+      expect(await evaluator.isImageLoaded('img[alt="remote-img-as-placeholder"]')).toBe(true)
+    },
+  ))
 })
 
 describe('hmr', () => {

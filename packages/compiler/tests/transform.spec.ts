@@ -513,6 +513,106 @@ export function App() {
     expect(formated).toMatchSnapshot()
   })
 
+  it('should be able to correctly add suffix to template in volar environment', async () => {
+    const shouldBeSuffixedSamples = [
+      '<div',
+      '<MyComp',
+      '<my-comp',
+      '<div class="foo"',
+      '<div\n  class="foo"',
+      '<div id="app" class="container"',
+      '<div class="a" \n v-if="b"',
+    ]
+
+    const shouldNotBeSuffixedSamples = [
+      '<div>',
+      '<div />',
+      '<div class="foo"> bar',
+      'const a = 1 < 2',
+      '<',
+      '<MyComp></MyComp>',
+      '',
+      'abc',
+      ' <',
+    ]
+
+    const runTest = (template: string, compilerOptions: any) => {
+      const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx(compilerOptions)
+      const content = `
+function MyComp() {
+  return vine\`${template}\`
+}
+    `
+      compileVineTypeScriptFile(content, 'test-volar-suffix', { compilerHooks: mockCompilerHooks })
+      const fileCtx = mockCompilerCtx.fileCtxMap.get('test-volar-suffix')
+      return fileCtx?.vineCompFns[0].templateSource ?? ''
+    }
+
+    // Test with volar: true
+    for (const sample of shouldBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: true,
+      })
+      expect(updatedSource).toBe(`${sample}>`)
+    }
+
+    for (const sample of shouldNotBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: true,
+      })
+      expect(updatedSource).toBe(sample)
+    }
+
+    // Test with volar: false
+    for (const sample of shouldBeSuffixedSamples) {
+      const updatedSource = runTest(sample, {
+        envMode: 'development',
+        volar: false,
+      })
+      expect(updatedSource).toBe(sample)
+    }
+  })
+
+  it('should transform asset url src & srcset', async () => {
+    const { mockCompilerCtx, mockCompilerHooks } = createMockTransformCtx({
+      envMode: 'development',
+    })
+    const specContent = `
+function MyComp() {
+  return vine\`
+    <img src="@/assets/sample.png" alt="sample-src" />
+    <img srcset="@/assets/sample.png 1x, @/assets/sample@2x.png 2x" alt="sample-srcset" />
+  \`
+}
+
+function MyVaporCompOne() {
+  return vine.vapor\`
+    <img src="@/vapor-assets/test.png" alt="vapor-sample-src" />
+    <img srcset="@/vapor-assets/test.png 1x, @/vapor-assets/test@2x.png 2x" alt="vapor-sample-srcset" />
+  \`
+}
+
+function MyVaporCompTwo() {
+  'use vapor'
+  return vine.vapor\`
+    <div>This is another vapor component</div>
+  \`
+}
+    `
+    compileVineTypeScriptFile(specContent, 'testTransformAssetUrlSrcSet', { compilerHooks: mockCompilerHooks })
+    expect(mockCompilerCtx.vineCompileErrors.length).toBe(0)
+
+    const fileCtx = mockCompilerCtx.fileCtxMap.get('testTransformAssetUrlSrcSet')
+    const transformed = fileCtx?.fileMagicCode.toString() ?? ''
+    const formated = await format(
+      transformed,
+      { parser: 'babel-ts' },
+    )
+    expect(formated).toMatchSnapshot()
+  })
+
   it('should generate top level declaration bindings in setup returns', async () => {
     const specContent = `
 import { ref } from 'vue'

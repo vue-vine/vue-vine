@@ -4,11 +4,11 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "lib": ["DOM", "ESNext"],
-    "baseUrl": ".",
+    "customConditions": ["vine"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "types": [
@@ -23,11 +23,12 @@
     "skipLibCheck": true
   },
   "include": [
-    "src",
-    "tests"
+    "src/**/*.ts",
+    "tests/**/*.ts"
   ],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "**/*.virtual.ts"
   ]
 }

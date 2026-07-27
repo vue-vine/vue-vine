@@ -19,15 +19,16 @@ async function runCommitMsgHook() {
     log('error', `
 Error: Commit message format does not meet the requirements.
 
-Please follow the format: <word>: <message>
+Please follow the format: <word>(<scope>)?: <message>
   - <word>: one English word (letters only)
+  - (<scope>): optional scope in parentheses (one English word)
   - colon followed by optional space
   - <message>: any characters, up to 100 characters
 
 Examples:
   feat: add new feature
-  fix: resolve issue
-  docs: update documentation
+  fix(compiler): resolve issue
+  docs(readme): update documentation
 `)
     process.exit(1)
   }

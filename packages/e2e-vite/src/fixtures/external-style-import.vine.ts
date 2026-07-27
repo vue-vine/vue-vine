@@ -3,7 +3,7 @@ function ScopedImportExternalStyle() {
 
   return vine`
     <div class="child-comp">
-      <p class="test-me">Inside</p>
+      <p class="test-me">Inside: should be red</p>
     </div>
   `
 }
@@ -11,7 +11,7 @@ function ScopedImportExternalStyle() {
 export function TestExternalStyleImport() {
   return vine`
     <div class="container">
-      <p class="test-me">Outside</p>
+      <p class="test-me">Outside: should not be red</p>
       <ScopedImportExternalStyle />
     </div>
   `

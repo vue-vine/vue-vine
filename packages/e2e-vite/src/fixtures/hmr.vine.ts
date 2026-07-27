@@ -10,7 +10,7 @@ export function TestTsMorph(props: TestProps) {
 }
 
 export function TestComplexTsMorph(props: WatermarkProps) {
-  const isShow = computed(() => props.zIndex > 10)
+  const isShow = computed(() => props.zIndex && props.zIndex > 10)
 
   return vine`
     <div v-show="isShow" class="test-complex-ts-morph">

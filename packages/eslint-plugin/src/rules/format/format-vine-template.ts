@@ -8,6 +8,8 @@ import { generateDifferences, showInvisibles } from 'prettier-linter-helpers'
 import syncPrettier from '../../sync-prettier'
 import { createEslintRule } from '../../utils'
 
+const RE_LEADING_WHITESPACE = /^\s*/
+
 const messageId = 'format-vine-template' as const
 export type MessageIds = typeof messageId
 export type Options = [{ indent: number }]
@@ -43,7 +45,7 @@ function getPrettierFormatted(
   const baseIndent = (
     context.sourceCode.text
       .slice(lineStartIndex)
-      .match(/^\s*/)?.[0] ?? ''
+      .match(RE_LEADING_WHITESPACE)?.[0] ?? ''
   )
 
   // Format with Prettier
@@ -139,7 +141,10 @@ const rule: RuleModule<Options> = createEslintRule<Options, string>({
           )
 
           for (const difference of differences) {
-            const { operation, offset, deleteText = '', insertText = '' } = difference
+            const { operation, offset } = difference
+            const deleteText = 'deleteText' in difference ? difference.deleteText : ''
+            const insertText = 'insertText' in difference ? difference.insertText : ''
+
             const range: [number, number] = [
               templatePositionInfo.templateStartOffset + offset,
               templatePositionInfo.templateStartOffset + offset + deleteText.length,

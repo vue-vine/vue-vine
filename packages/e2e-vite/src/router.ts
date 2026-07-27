@@ -11,6 +11,7 @@ import { TestStyleOrder } from './fixtures/style-order.vine'
 import { TodoList } from './fixtures/todo-list.vine'
 import { TestTransformAssetUrl } from './fixtures/transform-asset-url.vine'
 import { TestUseDefaults } from './fixtures/use-defaults.vine'
+import { VaporTestContainer } from './fixtures/vapor-interop.vine'
 import { TestVibe } from './fixtures/vibe.vine'
 import { TestVineEmitsPage } from './fixtures/vine-emits.vine'
 import { TestVineModelModifiers } from './fixtures/vine-model-modifiers.vine'
@@ -41,6 +42,7 @@ const routes = [
   { path: '/vine-prop', component: TestVinePropPage },
   { path: '/vine-slots', component: TestVineSlots },
   { path: '/custom-elements', component: TestCustomElement },
+  { path: '/vapor-interop', component: VaporTestContainer },
 ]
 
 const router = createRouter({

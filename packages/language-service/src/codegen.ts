@@ -12,8 +12,7 @@ import {
   isVariableDeclaration,
 } from '@babel/types'
 import { _breakableTraverse, exitTraverse, VinePropsDefinitionBy } from '@vue-vine/compiler'
-import { createLinkedCodeTag } from './injectTypes'
-import { parseCssClassNames, turnBackToCRLF, wrapWith } from './shared'
+import { parseCssClassNames, turnBackToCRLF } from './shared'
 
 // ===================== Types =====================
 
@@ -39,9 +38,11 @@ const INDENT_4 = '    '
 /**
  * Convert emit event name to Vue component props name (on-prefixed camelCase)
  */
+const SPECIAL_CHARS_REGEXP = /[:_.]/
+const COMP_NAME_REGEXP = /^[a-z0-9\-]+$/i
 export function convertEmitToOnHandler(emit: string): string {
   // Check if the emit name contains special characters (colon, underscore, dot, etc., but not hyphens)
-  const hasSpecialChars = /[:_.]/.test(emit) && !/^[a-z0-9\-]+$/i.test(emit)
+  const hasSpecialChars = SPECIAL_CHARS_REGEXP.test(emit) && !COMP_NAME_REGEXP.test(emit)
 
   if (hasSpecialChars) {
     // For complex property names, keep the original format, add only the on prefix and capitalize the first letter
@@ -58,8 +59,9 @@ export function convertEmitToOnHandler(emit: string): string {
 /**
  * Check if a property name needs to be quoted in object literal
  */
+const NEEDS_QUOTES_REGEXP = /^[a-z_$][\w$]*$/i
 export function needsQuotes(propName: string): boolean {
-  return !/^[a-z_$][\w$]*$/i.test(propName)
+  return !NEEDS_QUOTES_REGEXP.test(propName)
 }
 
 function getIndexOfFnDeclLeftParen(
@@ -109,11 +111,19 @@ function getIndexOfFnDeclLeftParen(
  */
 export class CodeGenerator {
   private offset = 0
+  private linkedTokens = new Map<string, symbol>()
 
   constructor(
     public readonly vineFileCtx: VineFileCtx,
     public readonly snapshotContent: string,
   ) {}
+
+  getOrCreateLinkedToken(key: string, length: number): symbol {
+    if (!this.linkedTokens.has(key)) {
+      this.linkedTokens.set(key, Symbol(length.toString()))
+    }
+    return this.linkedTokens.get(key)!
+  }
 
   get currentOffset(): number {
     return this.offset
@@ -157,7 +167,8 @@ export class CodeGenerator {
 
       // Linked code tag for non-default slots
       if (slot !== 'default') {
-        yield createLinkedCodeTag('left', slot.length)
+        const token = this.getOrCreateLinkedToken(`slot:${slot}`, slot.length)
+        yield ['', undefined, 0, { __linkedToken: token }]
       }
 
       // Slot name
@@ -198,7 +209,8 @@ export class CodeGenerator {
 
     // Linked code tag if type param exists
     if (hasTypeParam) {
-      yield createLinkedCodeTag('left', onEmit.length)
+      const token = this.getOrCreateLinkedToken(`emit:${emit}`, onEmit.length)
+      yield ['', undefined, 0, { __linkedToken: token }]
     }
 
     // Property name and type
@@ -257,7 +269,7 @@ export class CodeGenerator {
       yield '\n'
     }
 
-    yield 'context: {'
+    yield '  context: {'
 
     // Check if we have any context properties
     const hasSlots = vineCompFn.macrosInfoForVolar.some(m => m.macroType === 'vineSlots')
@@ -291,7 +303,7 @@ export class CodeGenerator {
       }
     }
 
-    yield '}'
+    yield '}\n'
   }
 
   // ===================== Props Type Generation =====================
@@ -470,35 +482,6 @@ export class CodeGenerator {
     yield ';\n'
   }
 
-  // ===================== Custom Element Conversion =====================
-
-  /**
-   * Handle custom element function declaration conversion
-   */
-  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
-    let declNode: any = vineCompFn.fnDeclNode
-    if (isExportNamedDeclaration(declNode)) {
-      declNode = declNode.declaration
-    }
-
-    if (isFunctionDeclaration(declNode) && declNode.id && declNode.body) {
-      // Convert function declaration to variable declaration with function expression
-      yield* this.scriptUntil(declNode.start!)
-      yield 'const '
-      yield vineCompFn.fnName
-      yield ' = (function '
-      this.offset = declNode.id.end!
-    }
-    else if (isVariableDeclaration(declNode) && declNode.declarations) {
-      const decl = declNode.declarations[0]
-      if (decl.init) {
-        // Wrap existing expression with parentheses
-        yield* this.scriptUntil(decl.init.start!)
-        yield '('
-      }
-    }
-  }
-
   // ===================== Function Parameters =====================
 
   /**
@@ -534,6 +517,31 @@ export class CodeGenerator {
   // ===================== Component Props and Context =====================
 
   /**
+   * Generate props type record with __linkedToken for each prop name
+   */
+  private* propsTypeRecord(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    const entries = Object.entries(vineCompFn.props)
+    if (entries.length === 0) {
+      yield '{}'
+      return
+    }
+    yield '{\n'
+    for (const [propName, propMeta] of entries) {
+      if (propMeta.jsDocComments) {
+        for (const comment of propMeta.jsDocComments) {
+          yield `/*${comment.value}*/\n`
+        }
+      }
+      const token = this.getOrCreateLinkedToken(`prop:${propName}`, propName.length)
+      yield ['', undefined, 0, { __linkedToken: token }]
+      yield propName
+      yield propMeta.isRequired ? '' : '?'
+      yield `: ${propMeta.typeAnnotationRaw ?? 'any'},\n`
+    }
+    yield '}'
+  }
+
+  /**
    * Generate component props and context definitions
    */
   * componentPropsAndContext(vineCompFn: VineCompFn): Generator<CodeSegment> {
@@ -542,11 +550,7 @@ export class CodeGenerator {
       yield '\ntype __VLS_VINE_'
       yield vineCompFn.fnName
       yield '_props__ = '
-      yield vineCompFn.getPropsTypeRecordStr({
-        isNeedLinkedCodeTag: true,
-        joinStr: ',\n',
-        isNeedJsDoc: true,
-      })
+      yield* this.propsTypeRecord(vineCompFn)
       yield '\n'
     }
 
@@ -573,6 +577,40 @@ export class CodeGenerator {
     yield* this.functionParameters(vineCompFn)
   }
 
+  // ===================== Custom Element Conversion =====================
+
+  /**
+   * Wrap custom element component with AsCustomElement helper
+   * so the resulting type satisfies both the component function signature
+   * and CustomElementConstructor (for customElements.define() calls).
+   */
+  private* customElementConversion(vineCompFn: VineCompFn): Generator<CodeSegment> {
+    let declNode: any = vineCompFn.fnDeclNode
+    if (isExportNamedDeclaration(declNode)) {
+      declNode = declNode.declaration
+    }
+
+    if (isFunctionDeclaration(declNode) && declNode.id && declNode.body) {
+      // Convert function declaration to variable declaration wrapped with AsCustomElement
+      // Emit everything before `function` keyword (e.g. `export `)
+      yield* this.scriptUntil(declNode.start!)
+      yield 'const '
+      // Skip `function ` keyword, advance to identifier start
+      this.offset = declNode.id.start!
+      // Emit function name WITH source mapping (for cmd+click navigation)
+      yield* this.scriptUntil(declNode.id.end!)
+      yield ' = __VLS_VINE.AsCustomElement(function '
+    }
+    else if (isVariableDeclaration(declNode) && declNode.declarations) {
+      const decl = declNode.declarations[0]
+      if (decl.init) {
+        // Wrap existing expression with AsCustomElement
+        yield* this.scriptUntil(decl.init.start!)
+        yield '__VLS_VINE.AsCustomElement('
+      }
+    }
+  }
+
   // ===================== Linked Code Tags =====================
 
   /**
@@ -590,7 +628,8 @@ export class CodeGenerator {
       return
     }
     yield* this.scriptUntil(propsVarIdAstNode.start!)
-    yield createLinkedCodeTag('right', propsVarIdAstNode.name.length)
+    const token = this.getOrCreateLinkedToken(`prop:${propsVarIdAstNode.name}`, propsVarIdAstNode.name.length)
+    yield ['', undefined, 0, { __linkedToken: token }]
   }
 
   /**
@@ -613,7 +652,8 @@ export class CodeGenerator {
       }
 
       yield* this.scriptUntil(member.key.start!)
-      yield createLinkedCodeTag('right', member.key.name.length)
+      const token = this.getOrCreateLinkedToken(`slot:${member.key.name}`, member.key.name.length)
+      yield ['', undefined, 0, { __linkedToken: token }]
     }
   }
 
@@ -637,7 +677,8 @@ export class CodeGenerator {
       }
 
       yield* this.scriptUntil(member.key.start!)
-      yield createLinkedCodeTag('right', member.key.name.length)
+      const token = this.getOrCreateLinkedToken(`emit:${member.key.name}`, member.key.name.length)
+      yield ['', undefined, 0, { __linkedToken: token }]
     }
   }
 
@@ -811,23 +852,19 @@ export class CodeGenerator {
     classNameWithDot: string,
   ): Generator<CodeSegment> {
     const realOffset = rangeStart + offset
+    const token = Symbol('combineToken')
 
     yield '\n & { '
-    yield* wrapWith(
-      realOffset,
-      realOffset + classNameWithDot.length,
-      { navigation: true },
-      [
-        '"',
-        [
-          classNameWithDot.slice(1),
-          undefined,
-          realOffset + 1, // after '.'
-          { __combineOffset: 1 },
-        ],
-        '"',
-      ],
-    )
+    yield ['', undefined, realOffset, { navigation: true, __combineToken: token }]
+    yield '"'
+    yield [
+      classNameWithDot.slice(1),
+      undefined,
+      realOffset + 1, // after '.'
+      { __combineToken: token },
+    ]
+    yield '"'
+    yield ['', undefined, realOffset + classNameWithDot.length, { __combineToken: token }]
     yield ': true }'
   }
 }

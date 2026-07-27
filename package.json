@@ -2,7 +2,7 @@
   "name": "vue-vine-workspace",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.34.5",
   "description": "Yet another style to write Vue.js components",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -43,7 +43,6 @@
     "publish:rsstack": "pnpm --filter @vue-vine/rspack-loader --filter @vue-vine/rsbuild-plugin publish --access public",
     "publish:main": "pnpm run verify && pnpm publish:core && pnpm publish:nuxt && pnpm publish:tsc && pnpm publish:cli && pnpm publish:ext && pnpm publish:rsstack",
     "publish:all": "pnpm publish:main && pnpm publish:eslint",
-    "pkg-new:publish": "pnpx pkg-pr-new publish --pnpm './packages/compiler' './packages/language-service' './packages/language-server' './packages/vite-plugin' './packages/eslint-parser' './packages/eslint-plugin' './packages/eslint-config' './packages/nuxt-module' './packages/tsc' './packages/vue-vine' './packages/create-vue-vine' './packages/rspack-loader' './packages/rsbuild-plugin'",
     "typecheck": "pnpm --parallel -r typecheck",
     "upgrade-template-deps": "pnpm tsx scripts/upgrade-template-deps.js",
     "local-pack-ext": "pnpm build:ext && pnpm tsx scripts/vscode-ext-pack.js pack",
@@ -76,6 +75,6 @@
     "pre-commit": "pnpm install && pnpm run verify && pnpm tsx scripts/pre-commit.js"
   },
   "lint-staged": {
-    "*": "eslint . --fix --cache"
+    "!(key-cases.vine.ts)": "eslint --config eslint.config.js --fix --cache --no-warn-ignored"
   }
 }

@@ -91,6 +91,25 @@ export type ExtractVineTemplateResult = Array<{
   bindVineTemplateESTree: (vineESTree: FinalProcessTemplateInfo) => void
 }>
 
+function isVineTemplateNode(node: TSESTree.Node): node is TSESTree.TaggedTemplateExpression {
+  const isVine = (
+    node.type === 'TaggedTemplateExpression'
+    && node.tag.type === 'Identifier'
+    && node.tag.name === 'vine'
+  )
+
+  const isVineVapor = (
+    node.type === 'TaggedTemplateExpression'
+    && node.tag.type === 'MemberExpression'
+    && node.tag.object.type === 'Identifier'
+    && node.tag.object.name === 'vine'
+    && node.tag.property.type === 'Identifier'
+    && node.tag.property.name === 'vapor'
+  )
+
+  return isVine || isVineVapor
+}
+
 export function extractForVineTemplate(
   ast: TsESLintParseForESLint['ast'],
 ): ExtractVineTemplateResult {
@@ -101,11 +120,7 @@ export function extractForVineTemplate(
     tsESLintTravese(ast, {
       enter(node, parent) {
         // Find all tagged template expressions which are tagged with 'vine'.
-        if (
-          node.type === 'TaggedTemplateExpression'
-          && node.tag.type === 'Identifier'
-          && node.tag.name === 'vine'
-        ) {
+        if (isVineTemplateNode(node)) {
           const templateNode = node
           if (extractedTemplateNodes.has(templateNode)) {
             return

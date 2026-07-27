@@ -6,6 +6,8 @@ import { createEslintRule, notVineCompFn } from '../../utils'
 const RULE_NAME = 'format-vine-emits-camel-case' as const
 const MESSAGE_ID = 'preferCamelCase' as const
 const CASE_REGEXP = /^[a-z][a-z0-9]*$/i
+const RE_KEBAB_CASE = /[-_]/
+const RE_PASCAL_CASE = /^[A-Z]/
 
 export type MessageIds = typeof MESSAGE_ID
 export type Options = []
@@ -136,7 +138,7 @@ function toCamelCase(str: string): string {
   // Handle kebab-case and snake_case
   if (str.includes('-') || str.includes('_')) {
     return str
-      .split(/[-_]/)
+      .split(RE_KEBAB_CASE)
       .map((part, index) =>
         index === 0
           ? part.toLowerCase()
@@ -146,7 +148,7 @@ function toCamelCase(str: string): string {
   }
 
   // Handle PascalCase -> camelCase
-  if (/^[A-Z]/.test(str)) {
+  if (RE_PASCAL_CASE.test(str)) {
     return str.charAt(0).toLowerCase() + str.slice(1)
   }
 

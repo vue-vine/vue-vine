@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`vue-vine-tsc typecheck result > should find lint errors 1`] = `
+"> check-lint
+> eslint .
+error  Child content is disallowed because it will be overwritten by directive v-text  vue-vine/essentials-no-child-content
+error  The key of the <template v-for> should be placed on the <template> tag          vue-vine/essentials-no-v-for-key-on-child
+error  Unexpected string concatenation. Please use template literals                                     vue-vine/format-prefer-template
+error  Not recommend string concatenation in vine template. Please extract it to a variable or computed  vue-vine/format-prefer-template
+error  Move vine macro to the leading of component function body  vue-vine/format-vine-macros-leading
+error  Move vine macro to the leading of component function body  vue-vine/format-vine-macros-leading
+error  Lifecycle hooks should be registered synchronously before await expressions  vue-vine/essentials-no-lifecycle-hook-after-await
+✖ 7 problems (7 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the \`--fix\` option."
+`;
+
+exports[`vue-vine-tsc typecheck result > should find type errors 1`] = `
+"
+> check-types
+> vue-vine-tsc --noEmit
+
+src/fixtures/error-samples/type-errors/missing-unocss-declare.vine.ts(19,19): error TS2353: Object literal may only specify known properties, and 'border' does not exist in type 'HTMLAttributes & ReservedProps'.
+src/fixtures/error-samples/type-errors/props-references.vine.ts(25,6): error TS2339: Property 'UnknownComp' does not exist on type '{}'.
+src/fixtures/error-samples/type-errors/props-references.vine.ts(28,19): error TS2322: Type 'number' is not assignable to type 'string'.
+"
+`;

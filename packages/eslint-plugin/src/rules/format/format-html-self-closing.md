@@ -1,4 +1,4 @@
-# format-html-self-closing ![](https://img.shields.io/badge/vue_vine-format-emerald)
+# format-html-self-closing ![format](https://img.shields.io/badge/vue_vine-format-emerald)
 
 This rule aims to enforce the self-closing sign as the configured style.
 

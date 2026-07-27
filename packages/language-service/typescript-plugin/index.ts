@@ -4,7 +4,8 @@ import type * as ts from 'typescript'
 import type { PipelineReqArgs, PipelineServerContext, TypeScriptSdk } from './types'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import { createParsedCommandLine, getDefaultCompilerOptions } from '@vue/language-core'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '../src/index'
+import { createVueVineLanguagePlugin } from '../src/index'
+import { handleGetAutoImportSuggestions } from './pipeline/get-auto-import-suggestions'
 import { handleGetComponentDirectives } from './pipeline/get-component-directives'
 import { handleGetComponentProps } from './pipeline/get-component-props'
 import { handleGetDocumentHighlight } from './pipeline/get-document-highlight'
@@ -84,6 +85,12 @@ function addPipelineHandlers(
       handleGetDocumentHighlight(pipelineContext, fileName, position),
     )
   })
+  session.addProtocolHandler('_vue_vine:getAutoImportSuggestions', (request) => {
+    const { fileName, position } = request.arguments as PipelineReqArgs<'getAutoImportSuggestionsRequest'>
+    return createPipelineResponse(
+      handleGetAutoImportSuggestions(pipelineContext, fileName, position, session),
+    )
+  })
 }
 
 export interface VueVineTypeScriptPluginOptions {
@@ -104,13 +111,6 @@ export function createVueVineTypeScriptPlugin(_options: VueVineTypeScriptPluginO
     )
     // enable strict templates check by default in Vue Vine
     ensureStrictTemplatesCheck(vueOptions)
-
-    if (isConfiguredTsProject) {
-      vueOptions.globalTypesPath = setupGlobalTypes(
-        vueOptions,
-        ts.sys,
-      )
-    }
 
     const vueVinePlugin = createVueVineLanguagePlugin(
       ts,

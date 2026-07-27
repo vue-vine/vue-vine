@@ -1,96 +1,6 @@
 import type { VineFnCompCtx } from '@vue-vine/compiler'
-import type { VueCompilerOptions } from '@vue/language-core'
-import { dirname, join } from 'node:path'
+import type { CodeSegment } from './shared'
 import { VineBindingTypes, VinePropsDefinitionBy } from '@vue-vine/compiler'
-import { generateGlobalTypes as _generateGlobalTypes } from '@vue/language-core'
-
-interface SystemHost {
-  fileExists: (path: string) => boolean
-  writeFile?: (path: string, data: string) => void
-}
-
-function findGlobalTypesPath(
-  host: SystemHost,
-  fileName: string,
-  vueOptions: VueCompilerOptions,
-) {
-  let dir = dirname(fileName)
-  while (!host.fileExists(join(dir, 'node_modules', vueOptions.lib, 'package.json'))) {
-    const parentDir = dirname(dir)
-    if (dir === parentDir) {
-      throw new Error(`Failed to locate node_modules/${vueOptions.lib}/package.json.`)
-    }
-    dir = parentDir
-  }
-  const globalTypesPath = join(dir, 'node_modules', '.vue-global-types', `vine_${vueOptions.lib}_${vueOptions.target}_true.d.ts`)
-  return globalTypesPath
-}
-
-function writeGlobalTypes(
-  host: SystemHost,
-  globalTypesPath: string,
-  vueOptions: VueCompilerOptions,
-) {
-  if (!host.writeFile) {
-    return
-  }
-
-  const globalTypesContents = `// @ts-nocheck\nexport {};\n${generateGlobalTypes(vueOptions)}`
-  host.writeFile(globalTypesPath, globalTypesContents)
-}
-
-export function setupGlobalTypes(
-  vueOptions: VueCompilerOptions,
-  host: SystemHost,
-): VueCompilerOptions['globalTypesPath'] {
-  return (fileName) => {
-    try {
-      const globalTypesPath = findGlobalTypesPath(host, fileName, vueOptions)
-      const isGlobalTypesExists = host.fileExists(globalTypesPath)
-
-      if (!isGlobalTypesExists) {
-        writeGlobalTypes(host, globalTypesPath, vueOptions)
-      }
-
-      return globalTypesPath
-    }
-    catch {
-      return void 0
-    }
-  }
-}
-
-export function generateGlobalTypes(vueOptions: VueCompilerOptions): string {
-  let globalTypes = _generateGlobalTypes(vueOptions)
-
-  // Replace __VLS_Element to include VUE_VINE_COMPONENT marker
-  globalTypes = globalTypes
-    .replace(
-      'type __VLS_Element = import(\'vue/jsx-runtime\').JSX.Element;',
-      'type __VLS_Element = import(\'vue/jsx-runtime\').JSX.Element & { [VUE_VINE_COMPONENT]: true };',
-    )
-
-  // Insert Vine-specific global declarations
-  // Note: The actual type definitions are injected directly into virtual code
-  // to ensure they are included in generated .d.ts files
-  globalTypes = globalTypes.replace(
-    /declare global\s*\{/,
-    `declare global {
-  const VUE_VINE_COMPONENT: unique symbol;
-    `,
-  )
-
-  return globalTypes
-}
-
-export const LINKED_CODE_TAG_PREFIX = '/* __LINKED_CODE'
-export const LINKED_CODE_TAG_SUFFIX = ' */'
-export function createLinkedCodeTag(
-  side: 'left' | 'right',
-  itemLength: number,
-) {
-  return `/* __LINKED_CODE_${side.toUpperCase()}__#${itemLength} */`
-}
 
 function mayNeedPropsAlias(vineCompFn: VineFnCompCtx) {
   const { propsDestructuredNames } = vineCompFn
@@ -110,23 +20,23 @@ function toPascalCase(name: string) {
 interface GenerateVLSContextOptions {
   excludeBindings?: Set<string>
 }
-export function generateVLSContext(
+export function* generateVLSContext(
   vineCompFn: VineFnCompCtx,
   {
     excludeBindings = new Set(),
   }: GenerateVLSContextOptions,
-): string {
+): Generator<CodeSegment> {
   // Deduplicate same binding keys
+  // Only include templateComponentNames that actually exist in bindings,
+  // so that truly unknown components are reported as type errors.
+  const bindings = vineCompFn.bindings
   const bindingEntries = Object.entries(
     Object.fromEntries(
       [
-        // https://github.com/vue-vine/vue-vine/issues/171
-        // Maybe component is auto-imported so we remain
-        // that ability to resolve it.
-        ...[...vineCompFn.templateComponentNames].map(
-          compName => [compName, VineBindingTypes.SETUP_CONST] as const,
-        ),
-        ...Object.entries(vineCompFn.bindings),
+        ...[...vineCompFn.templateComponentNames]
+          .filter(compName => compName in bindings)
+          .map(compName => [compName, VineBindingTypes.SETUP_CONST] as const),
+        ...Object.entries(bindings),
       ]
         .filter(([bindingName]) => !excludeBindings.has(bindingName)),
     ),
@@ -138,36 +48,44 @@ export function generateVLSContext(
     ),
   )
 
-  const __VINE_CONTEXT_TYPES = `
-const __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({
-${notPropsBindings.map(([name]) => {
-  // `name` maybe 'router-view' format,
-  // so we need to convert it to PascalCase: `RouterView`
-  if (name.includes('-')) {
-    name = toPascalCase(name)
+  yield '\nconst __VLS_ctx = __VLS_VINE.CreateVineVLSCtx({\n'
+  for (const [rawName] of notPropsBindings) {
+    // `name` maybe 'router-view' format,
+    // so we need to convert it to PascalCase: `RouterView`
+    const name = rawName.includes('-') ? toPascalCase(rawName) : rawName
+    const token = Symbol(name.length.toString())
+    yield '  '
+    yield ['', undefined, 0, { __linkedToken: token }]
+    yield `${name}: `
+    yield ['', undefined, 0, { __linkedToken: token }]
+    yield `${name},\n`
   }
-
-  return `  ${
-    createLinkedCodeTag('left', name.length)
-  }${name}: ${
-    createLinkedCodeTag('right', name.length)
-  }${name},`
-}).join('\n')}
-  ${
+  // Inject custom element tag-name -> component mappings
+  // for tags used in this component's template
+  const ceRegistrations = vineCompFn.fileCtx.customElementRegistrations
+  for (const tagName of vineCompFn.templateComponentNames) {
+    const componentFnName = ceRegistrations.get(tagName)
+    if (componentFnName) {
+      // kebab-case for __VLS_WithComponent N3 type resolution
+      yield `  '${tagName}': ${componentFnName},\n`
+      // PascalCase for navigation (template codegen accesses e.g. ViSampleCustomElement)
+      yield `  ${toPascalCase(tagName)}: ${componentFnName},\n`
+    }
+  }
+  yield `  ${
     vineCompFn.propsDefinitionBy !== VinePropsDefinitionBy.macro
       ? mayNeedPropsAlias(vineCompFn)
       : '/* No props formal params */'
-  }
-});
-const __VLS_localComponents = __VLS_ctx;
-type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;
-type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;
-let __VLS_directives!: __VLS_LocalDirectives & __VLS_GlobalDirectives;
-const __VLS_components = {
-  ...{} as __VLS_GlobalComponents,
-  ...__VLS_localComponents as unknown as __VLS_LocalComponents,
-};
-`
-
-  return __VINE_CONTEXT_TYPES
+  }\n`
+  yield '});\n\n'
+  yield 'const __VLS_localComponents = __VLS_ctx;\n\n'
+  yield 'type __VLS_LocalComponents = __VLS_VINE.OmitAny<typeof __VLS_localComponents>;\n'
+  yield 'type __VLS_LocalDirectives = __VLS_VINE.OmitAny<typeof __VLS_ctx>;\n'
+  yield 'type __VLS_GlobalComponents = import(\'vue\').GlobalComponents;\n\n'
+  yield 'let __VLS_directives!: __VLS_LocalDirectives & import(\'vue\').GlobalDirectives;\n'
+  yield 'let __VLS_intrinsics!: import(\'vue/jsx-runtime\').JSX.IntrinsicElements;\n\n'
+  yield 'const __VLS_components = {\n'
+  yield '  ...{} as __VLS_GlobalComponents,\n'
+  yield '  ...__VLS_localComponents as unknown as __VLS_LocalComponents,\n'
+  yield '};\n'
 }

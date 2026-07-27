@@ -8,6 +8,7 @@ import type {
 import type { TransformPluginContext } from 'rolldown'
 import type { HmrContext, PluginOption, TransformResult } from 'vite'
 import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 import process from 'node:process'
 import {
   compileVineStyle,
@@ -25,6 +26,7 @@ import { parseQuery } from './parse-query'
 type TsMorphCache = ReturnType<Required<VineCompilerHooks>['getTsMorph']>
 
 const isTsFileRegex = /\.[cm]?tsx?$/
+const RE_VINE_TS = /\.vine\.ts$/
 
 function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
   const compilerCtx = createCompilerCtx({
@@ -154,36 +156,36 @@ function createVinePlugin(options: VineCompilerOptions = {}): PluginOption {
 
   return {
     name: 'vite:vue-vine',
+    enforce: 'pre',
     config(config) {
-      if (!config.esbuild) {
-        config.esbuild = {}
+      if (!config.oxc) {
+        config.oxc = {}
       }
 
-      // Exclude vine files from esbuild
-      config.esbuild.exclude = [
-        ...(
-          config.esbuild.exclude
-            ? (
-                Array.isArray(config.esbuild.exclude)
-                  ? config.esbuild.exclude
-                  : [config.esbuild.exclude]
-              )
-            : []
-        ),
-        /\.vine\.ts$/,
+      // @vitejs/plugin-vue-jsx enables Oxc's TypeScript transform for all .ts
+      // files. Keep Vine files intact until this plugin has compiled its macros.
+      const existing = config.oxc.exclude
+      config.oxc.exclude = [
+        ...(existing ? (Array.isArray(existing) ? existing : [existing]) : []),
+        RE_VINE_TS,
       ]
 
       return config
     },
-    async resolveId(id) {
-      const { query } = parseQuery(id)
+    async resolveId(id, importer) {
+      const { filePath, query } = parseQuery(id)
 
       // serve vine style requests as virtual modules
-      if (
-        query.type === QUERY_TYPE_STYLE
-        || query.type === QUERY_TYPE_STYLE_EXTERNAL
-      ) {
+      if (query.type === QUERY_TYPE_STYLE) {
         return id
+      }
+
+      // External style: resolve relative path to absolute path
+      if (query.type === QUERY_TYPE_STYLE_EXTERNAL && importer) {
+        const importerDir = path.dirname(importer)
+        const absolutePath = path.resolve(importerDir, filePath)
+        const queryStr = id.slice(id.indexOf('?'))
+        return `${absolutePath}${queryStr}`
       }
     },
     async load(id) {

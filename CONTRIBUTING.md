@@ -2,14 +2,14 @@
 
 Hello!, We are very excited that you are interested in contributing with Vue Vine. However, before submitting your contribution, be sure to take a moment and read the following guidelines.
 
-### Tooling
+## Tooling
 
 - [PNPM](https://pnpm.io/) to manage packages and dependencies
 - [tsdown](https://tsdown.dev/) to bundle packages
 - [Changeset](https://github.com/atlassian/changesets) for changes
   documentation, changelog generation, and release management.
 
-### Commit Convention
+## Commit Convention
 
 Before you create a Pull Request, please check whether your commits comply with
 the commit conventions used in this repository.
@@ -53,7 +53,7 @@ https://www.conventionalcommits.org/ or check out the
   - Provide a detailed description of the error in the PR. Favorite live demo.
   - Add the appropriate test coverage, if applicable.
 
-### Steps to PR
+## Steps to PR
 
 1. Fork of the Vue Vine repository and clone your fork.
 

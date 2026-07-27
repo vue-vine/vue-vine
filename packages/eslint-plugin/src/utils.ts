@@ -5,10 +5,10 @@ import type { Rule } from 'eslint'
 import type { VineESLintDocs } from './types'
 import { NS } from '@vue-vine/eslint-parser'
 import { expect } from 'vitest'
-import HTML_ELEMENTS from './data/html-elements.json'
-import MATH_ELEMENTS from './data/math-elements.json'
-import SVG_ELEMENTS from './data/svg-elements.json'
-import VOID_ELEMENTS from './data/void-elements.json'
+import HTML_ELEMENTS from './data/html-elements'
+import MATH_ELEMENTS from './data/math-elements'
+import SVG_ELEMENTS from './data/svg-elements'
+import VOID_ELEMENTS from './data/void-elements'
 
 export interface RuleModule<
   T extends readonly unknown[],
@@ -80,13 +80,13 @@ function createRule<
     ): RuleListener => {
       const optionsWithDefault = context.options.map((options, index) => {
         return {
-          ...defaultOptions[index] || {},
+          ...defaultOptions?.[index] || {},
           ...options || {},
         }
       }) as unknown as TOptions
       return create(context, optionsWithDefault)
     }) as any,
-    defaultOptions,
+    defaultOptions: defaultOptions as TOptions,
     meta: meta as any,
   }
 }
@@ -100,7 +100,7 @@ export const createEslintRule = RuleCreator(
   TMessageIds extends string,
   TDocs extends VineESLintDocs = VineESLintDocs,
 >(
-  { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, TDocs>>
+  { name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds, TDocs>>,
 ) => RuleModule<TOptions>
 
 export function notVineCompFn(node: any): boolean {
@@ -247,8 +247,9 @@ export function isCustomComponent(node: VElement, ignoreElementNamespaces = fals
   )
 }
 
+const RE_PASCAL_CASE = /^[A-Z][a-zA-Z0-9]*$/
 export function checkPascalCase(fnName: string): boolean {
-  return /^[A-Z][a-zA-Z0-9]*$/.test(fnName)
+  return RE_PASCAL_CASE.test(fnName)
 }
 
 export function prettierSnapshot(result: string): string {

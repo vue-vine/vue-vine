@@ -7,6 +7,6 @@
     "lint:fix": "eslint src --cache --fix"
   },
   "devDependencies": {
-    "vite": "^7.0.2"
+    "vite": "^8.0.8"
   }
 }

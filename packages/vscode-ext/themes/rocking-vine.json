@@ -609,6 +609,12 @@
       }
     },
     {
+      "scope": "entity.name.function.macro.vapor-tag",
+      "settings": {
+        "foreground": "#bab699ff"
+      }
+    },
+    {
       "scope": "support.name.macro",
       "settings": {
         "foreground": "#FDC54DFF"

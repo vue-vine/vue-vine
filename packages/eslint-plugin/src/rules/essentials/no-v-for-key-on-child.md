@@ -1,4 +1,4 @@
-# no-v-for-key-on-child ![](https://img.shields.io/badge/vue_vine-essentials-blue)
+# no-v-for-key-on-child ![essentials](https://img.shields.io/badge/vue_vine-essentials-blue)
 
 This rule reports the key of the <template v-for> placed on the child elements.
 

@@ -9,6 +9,7 @@ import type {
   ObjectPattern,
   Statement,
   StringLiteral,
+  TaggedTemplateExpression,
   TSFunctionType,
   TSPropertySignature,
   TSTypeAnnotation,
@@ -94,6 +95,7 @@ import {
   isVineSlots,
   isVineStyle,
   isVineValidators,
+  isVineVaporTaggedTemplateString,
   tryInferExpressionTSType,
 } from './babel-helpers/ast'
 import { DEFAULT_MODEL_MODIFIERS_NAME, SUPPORTED_STYLE_FILE_EXTS, VineBindingTypes } from './constants'
@@ -1254,6 +1256,36 @@ function analyzeFileImportStmts(
   vineFileCtx.importsLastLine = lastImportStmt.loc
 }
 
+/**
+ * Check if the function is a Vapor Vine component function
+ * @param fnItselfNode - The function AST node itself
+ * @param templateStringNode - The template string node
+ * @returns True if the function is a Vapor Vine component function, false otherwise
+ */
+function isVaporVineCompFn(
+  fnItselfNode: BabelFunctionNodeTypes | undefined,
+  templateStringNode: TaggedTemplateExpression | undefined,
+): boolean {
+  // function MyComp() {
+  //   'use vapor'
+  // }
+  if (fnItselfNode && isBlockStatement(fnItselfNode.body)) {
+    const hasUseVaporDirective = fnItselfNode.body.directives?.some(
+      directive => directive.value.value === 'use vapor',
+    )
+    if (hasUseVaporDirective) {
+      return true
+    }
+  }
+
+  // return vine.vapor`...`
+  if (templateStringNode && isVineVaporTaggedTemplateString(templateStringNode)) {
+    return true
+  }
+
+  return false
+}
+
 function buildVineCompFnCtx(
   vineCompilerHooks: VineCompilerHooks,
   vineFileCtx: VineFileCtx,
@@ -1281,6 +1313,7 @@ function buildVineCompFnCtx(
     isExportDefault: isExportDefaultDeclaration(fnDeclNode),
     isAsync: fnItselfNode?.async ?? false,
     isCustomElement: false,
+    isVapor: isVaporVineCompFn(fnItselfNode, templateStringNode),
     fnName,
     scopeId,
     fnDeclNode,
@@ -1436,4 +1469,25 @@ export function analyzeVine(
       }
     }
   }
+
+  // Analyze customElements.define() calls across the entire file
+  // to build tag-name -> component-name mappings for template type checking.
+  // These calls can be at the file top level or inside any function body.
+  _breakableTraverse(vineFileCtx.root, (node) => {
+    if (
+      node.type === 'CallExpression'
+      && node.callee.type === 'MemberExpression'
+      && isIdentifier(node.callee.object)
+      && node.callee.object.name === 'customElements'
+      && isIdentifier(node.callee.property)
+      && node.callee.property.name === 'define'
+      && node.arguments.length >= 2
+      && isStringLiteral(node.arguments[0])
+      && isIdentifier(node.arguments[1])
+    ) {
+      const tagName = node.arguments[0].value
+      const componentFnName = node.arguments[1].name
+      vineFileCtx.customElementRegistrations.set(tagName, componentFnName)
+    }
+  })
 }

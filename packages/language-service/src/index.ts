@@ -18,9 +18,6 @@ export type {
 } from '../typescript-plugin/types'
 
 export {
-  setupGlobalTypes,
-} from './injectTypes'
-export {
   isVueVineVirtualCode,
   VLS_ErrorLog,
   vlsInfoLog,

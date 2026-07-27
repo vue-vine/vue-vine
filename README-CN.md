@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner-cn.png" width="480">
+  <img src="https://cdn.jsdelivr.net/gh/vue-vine/assets/vue-vine-info-banner-cn.png" width="480" alt="Vue Vine 信息横幅">
 </div>
 <br>
 <br>
@@ -20,7 +20,7 @@
 
 <br><div><strong>🎤 快来加入我们的 Discord 吧 !!</strong></div>
 
-[![](https://dcbadge.limes.pink/api/server/TyAKHJYTvg)](https://discord.gg/TyAKHJYTvg)
+[![Discord 服务器](https://dcbadge.limes.pink/api/server/TyAKHJYTvg)](https://discord.gg/TyAKHJYTvg)
 
 <br>
 

@@ -1,5 +1,5 @@
 import type { InlineConfig } from 'vite'
-import type { E2EPlaywrightContext, Nil } from './types'
+import type { E2EPlaywrightContext, EvaluateResult } from './types'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
@@ -129,7 +129,7 @@ export async function freeBrowserContext(ctx: E2EPlaywrightContext) {
 }
 
 export async function untilUpdated(
-  poll: () => (string | Nil) | Promise<(string | Nil)>,
+  poll: () => EvaluateResult | Promise<EvaluateResult>,
   expected: string,
 ) {
   const maxTries = process.env.CI ? 200 : 50
@@ -141,7 +141,7 @@ export async function untilUpdated(
       const actual = (await poll()) ?? ''
       consecutiveErrors = 0 // Reset error count on successful poll
 
-      if (actual.includes(expected) || tries === maxTries - 1) {
+      if ((typeof actual === 'string' && actual.includes(expected)) || tries === maxTries - 1) {
         expect(actual).toMatch(expected)
         break
       }

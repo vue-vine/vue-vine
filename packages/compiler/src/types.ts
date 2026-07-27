@@ -211,6 +211,9 @@ export interface VineFileCtx {
   /* Store all ExportNamedDeclaration */
   exportNamedDeclarations: ExportNamedDeclaration[]
 
+  /** Map of custom element tag name -> component function name, from customElements.define() calls */
+  customElementRegistrations: Map<string, string>
+
   getAstNodeContent: (node: Node) => string
   getLinkedTSTypeLiteralNodeContent: (node: TSTypeLiteral) => string
 }
@@ -256,6 +259,7 @@ export interface VineCompFnCtx {
   templateRefNames: Set<string>
   isExportDefault: boolean
   isAsync: boolean
+  isVapor: boolean
   /** is web component (customElement) */
   isCustomElement: boolean
   fnName: string

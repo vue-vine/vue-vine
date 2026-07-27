@@ -248,7 +248,7 @@ export class IntermediateTokenizer {
     if (this.expressionStartToken != null) {
       // Defer this token until a VExpressionEnd token or a non-text token appear.
       const lastToken
-                = last(this.expressionTokens) || this.expressionStartToken
+        = last(this.expressionTokens) || this.expressionStartToken
       if (lastToken.range[1] === token.range[0]) {
         this.expressionTokens.push(token)
         return null
@@ -542,8 +542,8 @@ export class IntermediateTokenizer {
       return this.processText(token)
     }
     const separated
-            = this.currentToken != null
-              && this.currentToken.range[1] !== token.range[0]
+      = this.currentToken != null
+        && this.currentToken.range[1] !== token.range[0]
     const result = separated ? this.commit() : null
 
     this.tokens.push(token)

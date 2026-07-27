@@ -200,8 +200,8 @@ function analyze(
   parserOptions: VineESLintParserOptions,
 ): escopeTypes.Scope {
   const scopeManager
-        = parserResult.scopeManager
-          || analyzeScope(parserResult.ast, parserOptions)
+    = parserResult.scopeManager
+      || analyzeScope(parserResult.ast, parserOptions)
   return scopeManager.globalScope
 }
 

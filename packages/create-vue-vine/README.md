@@ -1,4 +1,4 @@
-# create-vue-vine <a href="https://npmjs.com/package/create-vue-vine"><img src="https://img.shields.io/npm/v/create-vue-vine" alt="npm package"></a> <img src="https://img.shields.io/badge/experimental-aa58ff" />
+# create-vue-vine <a href="https://npmjs.com/package/create-vue-vine"><img src="https://img.shields.io/npm/v/create-vue-vine" alt="npm package"></a> <img src="https://img.shields.io/badge/experimental-aa58ff" alt="experimental badge" />
 
 [中文文档](./README.zh-CN.md)
 
@@ -8,7 +8,7 @@ The official CLI for creating your Vue Vine projects.
 
 ## Features
 
-- 🛠️ **Build Tool Choice**: Choose between Vite (recommended) or Rsbuild (beta)
+- 🛠️ **Build Tool Choice**: Choose between Vite (recommended) or Rsbuild
 - 🎨 **CSS Frameworks**: Optional UnoCSS or Tailwind CSS integration
 - 🚦 **Vue Router**: Optional routing support
 - 📦 **Pinia**: Optional state management

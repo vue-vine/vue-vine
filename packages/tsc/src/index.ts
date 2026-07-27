@@ -1,7 +1,7 @@
 import type { LanguagePlugin } from '@volar/language-core'
 import type { VueCompilerOptions } from '@vue/language-core'
 import { runTsc } from '@volar/typescript/lib/quickstart/runTsc'
-import { createVueVineLanguagePlugin, setupGlobalTypes } from '@vue-vine/language-service'
+import { createVueVineLanguagePlugin } from '@vue-vine/language-service'
 import {
   createParsedCommandLine,
   createVueLanguagePlugin,
@@ -25,10 +25,9 @@ export function run(): void {
           vueOptions = createParsedCommandLine(ts, ts.sys, configFilePath.replace(windowsPathReg, '/')).vueOptions
           // enable strict templates by default
           vueOptions.checkUnknownComponents = true
-          vueOptions.globalTypesPath = setupGlobalTypes(
-            vueOptions,
-            ts.sys,
-          )
+          vueOptions.checkUnknownDirectives = true
+          vueOptions.checkUnknownEvents = true
+          vueOptions.checkUnknownProps = true
         }
         else {
           vueOptions = getDefaultCompilerOptions(

@@ -14,6 +14,7 @@ import {
   CSS_VARS_HELPER,
   DEFINE_COMPONENT_HELPER,
   DEFINE_CUSTOM_ELEMENT_HELPER,
+  DEFINE_VAPOR_COMPONENT_HELPER,
   TO_REFS_HELPER,
   UN_REF_HELPER,
   USE_DEFAULTS_HELPER,
@@ -74,6 +75,9 @@ export function createVueImportsSpecs(
   }
   if (vineCompFnCtx.isCustomElement && !vueImportsSpecs.has(DEFINE_CUSTOM_ELEMENT_HELPER)) {
     vueImportsSpecs.set(DEFINE_CUSTOM_ELEMENT_HELPER, `_${DEFINE_CUSTOM_ELEMENT_HELPER}`)
+  }
+  if (vineCompFnCtx.isVapor && !vueImportsSpecs.has(DEFINE_VAPOR_COMPONENT_HELPER)) {
+    vueImportsSpecs.set(DEFINE_VAPOR_COMPONENT_HELPER, `_${DEFINE_VAPOR_COMPONENT_HELPER}`)
   }
   // add useCssVars
   if (!vueImportsSpecs.has(CSS_VARS_HELPER) && vineCompFnCtx.cssBindings) {
@@ -399,7 +403,11 @@ export function generateSetupReturns(
   })
 
   // Insert setup function's return statement
-  ms.appendRight(lastStmt.end!, `\nreturn ${setupFnReturns};`)
+  ms.appendRight(lastStmt.end!, `\n${
+    transformCtx.inline && vineCompFnCtx.isVapor
+      ? '' // Vapor mode has already generated return statement
+      : 'return '
+  }${setupFnReturns};`)
 }
 
 export function generatePropsDestructure(
@@ -825,10 +833,14 @@ export function generateDefineComponentWrapper(
   transformCtx: TransformContext,
   fnTransformCtx: SingleFnCompTransformCtx,
 ): void {
-  const { firstStmt, lastStmt } = fnTransformCtx
+  const { firstStmt, lastStmt, vineCompFnCtx } = fnTransformCtx
   const ms = transformCtx.vineFileCtx.fileMagicCode
 
-  ms.prependLeft(firstStmt.start!, `const __vine = _${DEFINE_COMPONENT_HELPER}({\n`)
+  ms.prependLeft(firstStmt.start!, `const __vine = _${
+    vineCompFnCtx.isVapor
+      ? DEFINE_VAPOR_COMPONENT_HELPER
+      : DEFINE_COMPONENT_HELPER
+  }({\n`)
   ms.appendRight(lastStmt.end!, '\n})')
 }
 

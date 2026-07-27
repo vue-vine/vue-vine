@@ -8,9 +8,12 @@ export default antfu(
       'dist',
       'pnpm-lock.yaml',
 
+      // E2E Tests has their own eslint config
+      'packages/e2e-vite',
+      'packages/e2e-rsstack',
+
+      'packages/docs/**/*',
       'packages/docs/.vitepress/cache',
-      'packages/e2e-vite/**/*.vine.ts',
-      'packages/e2e-rsstack/**/*.vine.ts',
       'packages/create-vue-vine/template/**/*',
       'packages/nuxt-module/playground/*',
     ],
@@ -25,7 +28,6 @@ export default antfu(
     files: [
       'packages/language-service/**/*.ts',
       'packages/language-server/**/*.ts',
-      'packages/e2e-rsstack/tests/**/*.ts',
     ],
     rules: {
       'no-console': 'off',

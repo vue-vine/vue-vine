@@ -25,9 +25,6 @@ function testSnapshotForFile(relativePath: string) {
 }
 
 describe('verify Volar virtual code snapshots', () => {
-  it('key-cases.vine.ts', () => {
-    testSnapshotForFile('../../e2e-vite/src/fixtures/key-cases.vine.ts')
-  })
   it('vine-model.vine.ts', () => {
     testSnapshotForFile('../../e2e-vite/src/fixtures/vine-model.vine.ts')
   })
@@ -39,5 +36,8 @@ describe('verify Volar virtual code snapshots', () => {
   })
   it('props-with-emits.vine.ts - props formal parameter with type annotation and emits', () => {
     testSnapshotForFile('../../e2e-vite/src/fixtures/props-with-emits.vine.ts')
+  })
+  it('vapor-interop.vine.ts', () => {
+    testSnapshotForFile('../../e2e-vite/src/fixtures/vapor-interop.vine.ts')
   })
 })
