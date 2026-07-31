@@ -47,12 +47,12 @@ catalogs:
     get-tsconfig: ^4.14.0
     magic-string: ^1.1.0
     merge-source-map: ^1.1.0
-    postcss: ^8.5.23
+    postcss: ^8.5.24
     postcss-selector-parser: ^7.1.4
     source-map-js: ^1.2.1
     ts-morph: ^28.0.0
   docs:
-    oxc-minify: ^0.141.0
+    oxc-minify: ^0.142.0
     shiki: ^4.3.1
     vitepress: ^2.0.0-alpha.18
     vitepress-plugin-group-icons: ^1.7.5
@@ -85,13 +85,13 @@ catalogs:
     '@nuxt/kit': ~4.5.1
     '@nuxt/module-builder': ^1.0.3
     '@nuxt/schema': ~4.5.1
-    '@nuxt/test-utils': ^4.0.3
+    '@nuxt/test-utils': ^4.1.0
     nuxt: ~4.5.1
     vitest: 4.1.10 # @nuxt/test-utils requires Vitest v4
   rsstack:
     '@rsbuild/core': ^2.1.8
     '@rsbuild/plugin-sass': ^2.0.1
-    '@rspack/core': ^2.1.5
+    '@rspack/core': ^2.1.6
   styles:
     sass: ^1.102.0
     tailwindcss: ^4.3.3
@@ -103,7 +103,7 @@ catalogs:
     '@types/jsdom': ^28.0.3
     '@types/line-column': ^1.0.2
     '@types/lodash': ^4.17.24
-    '@types/node': ^26.1.1
+    '@types/node': ^26.1.2
     '@types/prettier-linter-helpers': ^1.0.4
     '@types/semver': ^7.7.1
     '@types/vscode': ~1.125.0
