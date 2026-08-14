@@ -15,7 +15,7 @@ overrides:
   '@typescript-eslint/utils>typescript': npm:@typescript/typescript6@^6.0.2
 
 defines:
-  - &vue ^3.6.0-rc.2
+  - &vue ^3.6.0-rc.3
   - &vue-lang-tools 3.3.8
   - &volar-libs 2.4.28
   - &volar-services 0.0.65
