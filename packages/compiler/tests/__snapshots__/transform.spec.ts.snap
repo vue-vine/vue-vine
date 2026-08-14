@@ -2056,7 +2056,9 @@ export const MyComp = (() => {
 
 export const MyVaporCompOne = (() => {
   const t0 = _template(
-    '<img data-v-19977118 src="' + _imports_01fb0ae2 + '"alt=vapor-sample-src>',
+    '<img data-v-19977118 src="' +
+      _imports_01fb0ae2 +
+      '" alt=vapor-sample-src>',
     2,
   );
   const t1 = _template(
@@ -2065,7 +2067,7 @@ export const MyVaporCompOne = (() => {
       " 1x, " +
       _imports_1 +
       " 2x" +
-      '"alt=vapor-sample-srcset>',
+      '" alt=vapor-sample-srcset>',
     2,
   );
   const __vine = _defineVaporComponent({

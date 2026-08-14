@@ -2,10 +2,15 @@ import { execSync } from 'node:child_process'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
+const ANTFU_EDITOR_NOTICE = '[@antfu/eslint-config] Detected running in editor'
+
 function removePlatformConflictLines(output: string) {
   return output.split('\n').map((line) => {
     const pathStartIndex = line.indexOf(['', 'packages', 'e2e-vite', ''].join(path.sep))
     if (pathStartIndex > -1) {
+      return ''
+    }
+    if (line.includes(ANTFU_EDITOR_NOTICE)) {
       return ''
     }
     // Strip leading line:col from ESLint error lines (e.g. "  12:23  error  ..." → "error  ...")
