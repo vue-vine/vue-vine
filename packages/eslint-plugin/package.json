@@ -52,6 +52,7 @@
     "@typescript-eslint/utils": "catalog:lint-libs",
     "eslint": "catalog:lint-libs",
     "eslint-vitest-rule-tester": "catalog:lint-libs",
-    "typescript": "catalog:cli"
+    "typescript": "catalog:cli",
+    "vitest": "catalog:vitest-libs"
   }
 }
