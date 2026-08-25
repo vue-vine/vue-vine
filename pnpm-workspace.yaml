@@ -132,7 +132,7 @@ catalogs:
     jsdom: ^30.0.1
     playwright-chromium: ^1.62.1
     # eslint-disable-next-line pnpm/yaml-no-duplicate-catalog-item
-    vitest: ^4.1.10 # For the rest of this repository, we use the newer version of Vitest
+    vitest: 4.1.10 # Keep aligned with nuxt-libs; caret floats break eslint-vitest-rule-tester peers
   volar:
     '@volar/language-core': *volar-libs
     '@volar/language-server': *volar-libs

@@ -44,6 +44,7 @@
     "@antfu/eslint-config": "catalog:lint-libs",
     "@stylistic/eslint-plugin": "catalog:lint-libs",
     "eslint-vitest-rule-tester": "catalog:lint-libs",
-    "typescript": "catalog:cli"
+    "typescript": "catalog:cli",
+    "vitest": "catalog:vitest-libs"
   }
 }
