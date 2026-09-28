@@ -145,7 +145,7 @@ catalogs:
     '@volar/language-service': *volar-libs
     '@volar/typescript': *volar-libs
     '@volar/vscode': *volar-libs
-    volar-service-css: &volar-services 0.0.65
+    volar-service-css: &volar-services 0.0.71
     volar-service-emmet: *volar-services
     volar-service-html: *volar-services
     volar-service-typescript: *volar-services
@@ -158,7 +158,7 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.14
     vscode-uri: ^3.2.0
   vue-libs:
-    '@vue/compiler-core': &vue 3.6.0-rc.5
+    '@vue/compiler-core': &vue 3.6.0-rc.9
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
     '@vue/compiler-vapor': *vue
