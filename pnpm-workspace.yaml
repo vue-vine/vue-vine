@@ -1,7 +1,7 @@
-shellEmulator: true
-
+minimumReleaseAgeExcludePrune: true
 # eslint-disable-next-line pnpm/yaml-enforce-settings
 trustPolicy: off
+shellEmulator: true
 
 packages:
   - packages/*
@@ -19,6 +19,18 @@ defines:
   - &vue-lang-tools 3.3.8
   - &volar-libs 2.4.28
   - &volar-services 0.0.65
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - '@vscode/vsce-sign'
+  - core-js
+  - esbuild
+  - keytar
+  - playwright-chromium
+  - simple-git-hooks
+  - unrs-resolver
+  - vue-demi
 
 catalogs:
   cli:
@@ -165,15 +177,3 @@ catalogs:
     vue: *vue
     vue-router: ^5.3.1
     vue-tsc: *vue-lang-tools
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - '@vscode/vsce-sign'
-  - core-js
-  - esbuild
-  - keytar
-  - playwright-chromium
-  - simple-git-hooks
-  - unrs-resolver
-  - vue-demi
