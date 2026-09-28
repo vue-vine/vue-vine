@@ -14,23 +14,17 @@ overrides:
   '@typescript-eslint/typescript-estree>typescript': npm:@typescript/typescript6@^6.0.2
   '@typescript-eslint/utils>typescript': npm:@typescript/typescript6@^6.0.2
 
-defines:
-  - &vue 3.6.0-rc.5
-  - &vue-lang-tools 3.3.8
-  - &volar-libs 2.4.28
-  - &volar-services 0.0.65
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
-  - '@vscode/vsce-sign'
-  - core-js
-  - esbuild
-  - keytar
-  - playwright-chromium
-  - simple-git-hooks
-  - unrs-resolver
-  - vue-demi
+allowBuilds:
+  '@parcel/watcher': true
+  '@tailwindcss/oxide': true
+  '@vscode/vsce-sign': true
+  core-js: true
+  esbuild: true
+  keytar: true
+  playwright-chromium: true
+  simple-git-hooks: true
+  unrs-resolver: true
+  vue-demi: true
 
 catalogs:
   cli:
@@ -146,12 +140,12 @@ catalogs:
     # eslint-disable-next-line pnpm/yaml-no-duplicate-catalog-item
     vitest: 5.0.1 # Keep aligned with nuxt-libs; caret floats break eslint-vitest-rule-tester peers
   volar:
-    '@volar/language-core': *volar-libs
+    '@volar/language-core': &volar-libs 2.4.28
     '@volar/language-server': *volar-libs
     '@volar/language-service': *volar-libs
     '@volar/typescript': *volar-libs
     '@volar/vscode': *volar-libs
-    volar-service-css: *volar-services
+    volar-service-css: &volar-services 0.0.65
     volar-service-emmet: *volar-services
     volar-service-html: *volar-services
     volar-service-typescript: *volar-services
@@ -164,11 +158,11 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.14
     vscode-uri: ^3.2.0
   vue-libs:
-    '@vue/compiler-core': *vue
+    '@vue/compiler-core': &vue 3.6.0-rc.5
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
     '@vue/compiler-vapor': *vue
-    '@vue/language-core': *vue-lang-tools
+    '@vue/language-core': &vue-lang-tools 3.3.8
     '@vue/language-service': *vue-lang-tools
     '@vue/shared': *vue
     '@vue/test-utils': ^2.5.1
