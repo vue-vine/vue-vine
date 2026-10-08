@@ -1,7 +1,7 @@
 {
   "name": "@vue-vine/vite-plugin",
   "type": "module",
-  "version": "1.7.27",
+  "version": "1.8.0-beta.0",
   "description": "Official Vite plugin for Vue Vine",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -34,7 +34,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "vite": "catalog:vite-ecosystem"
+    "vite": "^8.0.0"
   },
   "dependencies": {
     "@vue-vine/compiler": "workspace:*"
