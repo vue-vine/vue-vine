@@ -1,5 +1,11 @@
 # vue-vine-extension
 
+## 1.7.28
+
+### Patch Changes
+
+- Update language features for Vue Vine 1.8.0-beta.0.
+
 ## 1.7.27
 
 ### Patch Changes
