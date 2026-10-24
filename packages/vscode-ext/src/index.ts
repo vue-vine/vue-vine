@@ -2,7 +2,6 @@ import type { LabsInfo } from '@volar/vscode'
 import { activateAutoInsertion, createLabsInfo, getTsdk } from '@volar/vscode'
 import * as lsp from '@volar/vscode/node'
 import * as vscode from 'vscode'
-import { useExtensionConfigs } from './config'
 import { useVineOutputChannel } from './output-channel'
 import { useVineExtensionViewFeatures } from './view-features'
 
@@ -22,12 +21,10 @@ export function getLogTimeLabel(): string {
 let client: lsp.BaseLanguageClient
 
 export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
-  const extensionConfigs = useExtensionConfigs()
   const envInfo = {
     vscodeVersion: vscode.version,
     extensionVersion: context.extension.packageJSON.version,
     machineId: vscode.env.machineId,
-    isTrackDisabled: !extensionConfigs.dataTrack,
   }
 
   const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js')

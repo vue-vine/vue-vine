@@ -93,12 +93,6 @@
         "title": "Restart Vue Vine and TS servers",
         "category": "Vue Vine"
       }
-    ],
-    "configuration": [
-      {
-        "title": "Vue Vine",
-        "properties": {}
-      }
     ]
   },
   "scripts": {
