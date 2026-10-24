@@ -1,14 +1,14 @@
 {
   "name": "@vue-vine/rsbuild-plugin",
   "type": "module",
-  "version": "1.7.27",
+  "version": "1.8.0-beta.0",
   "description": "Rsbuild plugin for Vue Vine",
   "author": "Vue Vine Team",
   "license": "MIT",
   "homepage": "https://vue-vine.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vue-vine/vue-vine.git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
     "directory": "packages/rsbuild-plugin"
   },
   "keywords": [

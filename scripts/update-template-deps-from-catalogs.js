@@ -40,10 +40,12 @@ function parseCatalogs() {
   const workspace = parse(content)
 
   // Flatten all catalogs to { pkgName: version } format
+  // Bare versions (e.g. the `&vue 3.6.0-rc.13` anchor) are pinned in the monorepo,
+  // but scaffolded projects should accept later patches, so they get a caret range.
   const catalogs = {}
   for (const [, packages] of Object.entries(workspace.catalogs || {})) {
     for (const [pkgName, version] of Object.entries(packages)) {
-      catalogs[pkgName] = version
+      catalogs[pkgName] = /^\d/.test(version) ? `^${version}` : version
     }
   }
 

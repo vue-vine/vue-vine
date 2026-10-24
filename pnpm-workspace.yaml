@@ -1,4 +1,17 @@
 minimumReleaseAgeExcludePrune: true
+minimumReleaseAgeExclude:
+  - '@vue/compiler-core@3.6.0-rc.13'
+  - '@vue/compiler-dom@3.6.0-rc.13'
+  - '@vue/compiler-sfc@3.6.0-rc.13'
+  - '@vue/compiler-ssr@3.6.0-rc.13'
+  - '@vue/compiler-vapor@3.6.0-rc.13'
+  - '@vue/reactivity@3.6.0-rc.13'
+  - '@vue/runtime-core@3.6.0-rc.13'
+  - '@vue/runtime-dom@3.6.0-rc.13'
+  - '@vue/runtime-vapor@3.6.0-rc.13'
+  - '@vue/server-renderer@3.6.0-rc.13'
+  - '@vue/shared@3.6.0-rc.13'
+  - vue@3.6.0-rc.13
 # eslint-disable-next-line pnpm/yaml-enforce-settings
 trustPolicy: off
 shellEmulator: true
@@ -158,7 +171,7 @@ catalogs:
     vscode-languageserver-textdocument: ^1.0.15
     vscode-uri: ^3.2.0
   vue-libs:
-    '@vue/compiler-core': &vue 3.6.0-rc.9
+    '@vue/compiler-core': &vue 3.6.0-rc.13
     '@vue/compiler-dom': *vue
     '@vue/compiler-ssr': *vue
     '@vue/compiler-vapor': *vue

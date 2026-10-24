@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { copyFile, mkdir, readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
+import { version as cliVersion } from '../../package.json'
 import deepMerge from './deepMerge'
 import sortDependencies from './sortDependencies'
 
@@ -43,13 +44,14 @@ export async function renderTemplate(src: string, dest: string): Promise<void> {
 
     // vue-vine will only appear once,
     // so you don't need to query the coverage every time.
-    if (src.endsWith('shared/base/package.json')) {
+    const srcPosix = src.split(path.sep).join('/')
+    if (srcPosix.endsWith('shared/base/package.json')) {
       await setLatestVineVersion(pkg, 'vue-vine')
     }
-    else if (src.endsWith('ts/package.json')) {
+    else if (srcPosix.endsWith('ts/package.json')) {
       await setLatestVineVersion(pkg, 'vue-vine-tsc')
     }
-    else if (src.endsWith('rsbuild-plugin')) {
+    else if (srcPosix.endsWith('rsbuild/base/package.json')) {
       await setLatestVineVersion(pkg, '@vue-vine/rsbuild-plugin')
     }
 
@@ -61,6 +63,10 @@ export async function renderTemplate(src: string, dest: string): Promise<void> {
 }
 
 let isLastFetchTimeout = false
+
+// A prerelease CLI (e.g. 1.8.0-beta.0) scaffolds packages from the matching
+// dist-tag, so `npm create vue-vine@beta` pairs with the beta runtime packages.
+const vineDistTag = cliVersion.match(/-([a-z]+)/i)?.[1] ?? 'latest'
 
 async function getLatestVineVersion(dep: string): Promise<string | undefined> {
   // If the last query has timed out,
@@ -79,7 +85,7 @@ async function getLatestVineVersion(dep: string): Promise<string | undefined> {
   }, 3000)
 
   try {
-    const res = await fetch(`https://npm.antfu.dev/${dep}@latest`, {
+    const res = await fetch(`https://npm.antfu.dev/${dep}@${vineDistTag}`, {
       signal: controller.signal,
     })
     const pkg = await res.json()
