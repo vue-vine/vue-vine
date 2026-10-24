@@ -34,86 +34,86 @@ catalogs:
     clerc: ^1.3.1
     consola: ^3.4.2
     debug: ^4.4.3
-    del: ^8.0.1
-    execa: ^10.0.1
-    lint-staged: ^17.5.1
-    ovsx: ^1.2.0
+    del: ^9.0.1
+    execa: ^10.2.0
+    lint-staged: ^17.6.0
+    ovsx: ^1.3.0
     pkg-dir: ^9.0.0
-    rollup: ^4.63.4
+    rollup: ^4.64.12
     simple-git-hooks: ^2.14.0
     tree-kill: ^1.2.2
-    tsdown: ^0.23.0
+    tsdown: ^0.23.1
     tsx: ^4.23.15
     typescript: npm:@typescript/typescript6@^6.0.2
     yoctocolors: ^2.2.0
   compiler:
-    '@babel/parser': ^8.0.6
+    '@babel/parser': ^8.0.7
     '@babel/types': ^8.0.6
     estree-walker: ^3.0.3
     get-tsconfig: ^4.14.3
-    magic-string: ^1.4.1
+    magic-string: ^1.4.3
     merge-source-map: ^1.1.0
     postcss: ^8.5.28
-    postcss-selector-parser: ^7.1.6
+    postcss-selector-parser: ^7.1.7
     source-map-js: ^1.2.1
     ts-morph: ^28.0.0
   docs:
-    oxc-minify: ^0.151.0
-    shiki: ^4.4.3
+    oxc-minify: ^0.155.0
+    shiki: ^4.5.0
     vitepress: ^2.0.0-alpha.20
-    vitepress-plugin-group-icons: ^1.7.6
+    vitepress-plugin-group-icons: ^1.8.1
   icons:
-    '@iconify-json/carbon': ^1.2.27
-    '@iconify-json/logos': ^1.2.14
+    '@iconify-json/carbon': ^1.2.28
+    '@iconify-json/logos': ^1.2.17
     '@iconify-json/mdi': ^1.2.3
     '@iconify-json/twemoji': ^1.2.5
   lint-libs:
     '@antfu/eslint-config': ^9.5.1
     '@stylistic/eslint-plugin': ^5.10.0
-    '@typescript-eslint/parser': ~8.70.1
-    '@typescript-eslint/scope-manager': ~8.70.1
-    '@typescript-eslint/types': ~8.70.1
-    '@typescript-eslint/typescript-estree': ~8.70.1
-    '@typescript-eslint/utils': ~8.70.1
-    eslint: ~10.11.0
+    '@typescript-eslint/parser': ~8.72.0
+    '@typescript-eslint/scope-manager': ~8.72.0
+    '@typescript-eslint/types': ~8.72.0
+    '@typescript-eslint/typescript-estree': ~8.72.0
+    '@typescript-eslint/utils': ~8.72.0
+    eslint: ~10.13.0
     eslint-scope: ^9.1.2
     eslint-vitest-rule-tester: ^3.2.0
     espree: ^11.2.0
-    prettier: ^3.9.8
+    prettier: ^3.9.10
     prettier-linter-helpers: ^1.0.1
   miscs:
     '@umami/node': ^0.4.0
-    element-plus: ^2.14.6
+    element-plus: ^2.14.7
     make-synchronized: ^0.8.0
   nuxt-libs:
-    '@nuxt/devtools': ^3.4.2
+    '@nuxt/devtools': ^3.4.4
     '@nuxt/eslint-config': ^1.17.0
-    '@nuxt/kit': ~4.5.2
+    '@nuxt/kit': ~4.6.2
     '@nuxt/module-builder': ^1.0.3
-    '@nuxt/schema': ~4.5.2
-    '@nuxt/test-utils': ^4.3.2
-    nuxt: ~4.5.2
-    vitest: 5.0.1 # @nuxt/test-utils requires Vitest v4
+    '@nuxt/schema': ~4.6.2
+    '@nuxt/test-utils': ^4.3.4
+    nuxt: ~4.6.2
+    vitest: 5.0.5 # @nuxt/test-utils requires Vitest v4
   rsstack:
-    '@rsbuild/core': ^2.2.8
+    '@rsbuild/core': ^2.2.14
     '@rsbuild/plugin-sass': ^2.0.1
-    '@rspack/core': ^2.2.6
+    '@rspack/core': ^2.2.9
   styles:
-    sass: ^1.104.1
+    sass: ^1.105.2
     tailwindcss: ^4.3.3
-    unocss: ^66.10.5
+    unocss: ^66.11.0
   types:
     '@types/debug': ^4.1.13
     '@types/estree': ^1.0.9
     '@types/hash-sum': ^1.0.2
     '@types/jsdom': ^30.0.0
     '@types/line-column': ^1.0.2
-    '@types/lodash': ^4.17.25
-    '@types/node': ^26.6.2
+    '@types/lodash': ^4.17.26
+    '@types/node': ^26.6.5
     '@types/prettier-linter-helpers': ^1.0.4
     '@types/semver': ^7.8.0
-    '@types/vscode': ~1.138.0
-    '@types/ws': ^8.18.1
+    '@types/vscode': ~1.140.0
+    '@types/ws': ^8.18.2
   utils:
     '@antfu/utils': ^9.3.0
     '@baiwusanyu/utils-log': ^1.1.2
@@ -128,17 +128,17 @@ catalogs:
     yaml: ^2.9.1
   vite-ecosystem:
     '@tailwindcss/vite': ^4.3.3
-    '@vitejs/plugin-vue': ^6.0.9
+    '@vitejs/plugin-vue': ^6.0.10
     '@vitejs/plugin-vue-jsx': ^5.1.6
-    rolldown: ^1.2.9
+    rolldown: ^1.2.11
     unplugin-auto-import: ^21.1.0
-    vite: ^8.3.0
-    vite-plugin-inspect: ^12.0.2
+    vite: ^8.3.1
+    vite-plugin-inspect: ^12.1.0
   vitest-libs:
-    jsdom: ^30.1.1
-    playwright-chromium: ^1.63.0
+    jsdom: ^30.1.3
+    playwright-chromium: ^1.64.1
     # eslint-disable-next-line pnpm/yaml-no-duplicate-catalog-item
-    vitest: 5.0.1 # Keep aligned with nuxt-libs; caret floats break eslint-vitest-rule-tester peers
+    vitest: 5.0.5 # Keep aligned with nuxt-libs; caret floats break eslint-vitest-rule-tester peers
   volar:
     '@volar/language-core': &volar-libs 2.4.28
     '@volar/language-server': *volar-libs
@@ -154,8 +154,8 @@ catalogs:
     reactive-vscode: ^1.0.2
     vscode-css-languageservice: ^6.3.10
     vscode-html-languageservice: ^5.6.2
-    vscode-languageserver-protocol: ^3.18.3
-    vscode-languageserver-textdocument: ^1.0.14
+    vscode-languageserver-protocol: ^3.18.4
+    vscode-languageserver-textdocument: ^1.0.15
     vscode-uri: ^3.2.0
   vue-libs:
     '@vue/compiler-core': &vue 3.6.0-rc.9
@@ -167,7 +167,7 @@ catalogs:
     '@vue/shared': *vue
     '@vue/test-utils': ^2.5.1
     '@vueuse/core': ^15.0.0
-    pinia: ^4.0.3
+    pinia: ^4.1.0
     vue: *vue
     vue-router: ^5.3.1
     vue-tsc: *vue-lang-tools
