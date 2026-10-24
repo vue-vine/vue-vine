@@ -1,0 +1,50 @@
+name: Release
+
+# Publishes to npm through Trusted Publishing (OIDC): no NPM_TOKEN is involved.
+# Every published package must list this workflow file (`release.yml`) as its
+# trusted publisher on npmjs.com, so keep the file name stable.
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Release channel
+        type: choice
+        options:
+          - beta
+        default: beta
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Set node
+        uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install
+        run: pnpm i --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install
+
+      - name: Verify and publish
+        run: pnpm run publish:${{ inputs.channel }}
+        env:
+          CI: true
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc

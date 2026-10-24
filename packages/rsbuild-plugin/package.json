@@ -8,7 +8,7 @@
   "homepage": "https://vue-vine.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vue-vine/vue-vine.git",
+    "url": "git+https://github.com/vue-vine/vue-vine.git",
     "directory": "packages/rsbuild-plugin"
   },
   "keywords": [

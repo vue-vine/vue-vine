@@ -57,7 +57,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "vue": "^3.6.0-rc.9"
+    "vue": "^3.6.0-rc.13"
   },
   "dependencies": {
     "@vue-vine/rsbuild-plugin": "workspace:*",
